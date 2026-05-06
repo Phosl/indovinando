@@ -122,9 +122,10 @@ export default function GamePlayView({game, questions, bottles}) {
         <div className={styles.questionsList}>
           {questions.map((q, idx) => (
             <div key={q.id} className={styles.questionBlock}>
-              <p className={styles.questionTitle}>
-                {idx + 1}. {q.text}
-              </p>
+              <div className={styles.questionHeader}>
+                <span className={styles.questionNumber}>Domanda {idx + 1}</span>
+                <p className={styles.questionTitle}>{q.text}</p>
+              </div>
 
               <div className={styles.options}>
                 {q.options.map((opt) => {
@@ -149,22 +150,26 @@ export default function GamePlayView({game, questions, bottles}) {
         </div>
 
         {!submitted ? (
-          <button className="btn primary" onClick={handleSubmitRound}>
-            Conferma risposte
-          </button>
+          <div className={styles.bottomToolbar}>
+            <button className="btn primary" onClick={handleSubmitRound}>
+              Conferma risposte
+            </button>
+          </div>
         ) : (
           <div className={styles.resultBox}>
             <p>Risposte salvate. Passa alla prossima bottiglia.</p>
 
-            {roundIndex < bottles.length - 1 ? (
-              <button className="btn primary" onClick={handleNextRound}>
-                Prossima bottiglia
-              </button>
-            ) : (
-              <button className="btn primary" onClick={() => setCompletedRounds(bottles.length)}>
-                Termina partita
-              </button>
-            )}
+            <div className={styles.bottomToolbar}>
+              {roundIndex < bottles.length - 1 ? (
+                <button className="btn primary" onClick={handleNextRound}>
+                  Prossima bottiglia
+                </button>
+              ) : (
+                <button className="btn primary" onClick={() => setCompletedRounds(bottles.length)}>
+                  Termina partita
+                </button>
+              )}
+            </div>
           </div>
         )}
       </div>

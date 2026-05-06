@@ -386,9 +386,10 @@ export default function PlayerLiveClient({
           <div className={styles.answerSection}>
             {liveQuestions.map((question, index) => (
               <div key={question.id} className={styles.questionBlock}>
-                <h2 className={styles.question}>
-                  {index + 1}. {question.text}
-                </h2>
+                <div className={styles.questionHeader}>
+                  <span className={styles.questionNumber}>Domanda {index + 1}</span>
+                  <h2 className={styles.question}>{question.text}</h2>
+                </div>
 
                 <div className={styles.optionsGrid}>
                   {question.game_question_options
@@ -408,12 +409,14 @@ export default function PlayerLiveClient({
               </div>
             ))}
 
-            <button
-              onClick={handleSubmitAnswers}
-              disabled={submitted || !liveQuestions.every((q) => selectedAnswers[q.id])}
-              className={styles.submitButton}>
-              {submitted ? '✓ Risposte Inviate' : 'Invia Risposte'}
-            </button>
+            <div className={styles.toolBar}>
+              <button
+                onClick={handleSubmitAnswers}
+                disabled={submitted || !liveQuestions.every((q) => selectedAnswers[q.id])}
+                className={styles.submitButton}>
+                {submitted ? '✓ Risposte Inviate' : 'Invia Risposte'}
+              </button>
+            </div>
           </div>
         ) : (
           <div className={styles.resultsSection}>

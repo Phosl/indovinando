@@ -11,6 +11,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
   background: var(--foreground);
   border: 2px solid var(--button-secondary-border);
   padding: 12px 16px;
@@ -22,6 +24,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
 
   .avatar {
     font-size: 1.6rem;
@@ -32,6 +35,10 @@
     font-weight: 700;
     font-size: 0.95rem;
     color: var(--text-primary);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
@@ -85,12 +92,37 @@
 }
 
 .question {
-  margin: 0 0 24px;
-  font-size: 1.3rem;
+  margin: 0;
+  font-size: 1.4rem;
   font-weight: 900;
   line-height: 1.4;
-  text-align: center;
+  text-align: left;
   color: var(--text-primary);
+}
+
+.questionBlock {
+  margin-bottom: 18px;
+}
+
+.questionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.questionNumber {
+  display: inline-flex;
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 2px solid var(--button-secondary-border);
+  background: var(--background);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .answerSection,
@@ -159,6 +191,16 @@
     opacity: 0.6;
     cursor: not-allowed;
   }
+}
+
+.toolBar {
+  margin-top: 4px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.toolBar .submitButton {
+  min-width: 210px;
 }
 
 .resultCard {
@@ -321,12 +363,21 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    margin: 12px auto;
+    padding: 12px;
+  }
+
+  .header {
+    padding: 10px 12px;
+  }
+
   .card {
     padding: 16px;
   }
 
   .question {
-    font-size: 1.1rem;
+    font-size: 1.18rem;
   }
 
   .optionsGrid {
@@ -336,5 +387,36 @@
   .optionButton {
     padding: 14px;
     font-size: 0.95rem;
+  }
+
+  .toolBar {
+    justify-content: stretch;
+  }
+
+  .toolBar .submitButton {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .progress {
+    width: 100%;
+    text-align: center;
+    border-radius: 10px;
+  }
+
+  .correct,
+  .incorrect {
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.92rem;
+  }
+
+  .correct .icon,
+  .incorrect .icon {
+    width: 24px;
+    height: 24px;
+    font-size: 1rem;
   }
 }

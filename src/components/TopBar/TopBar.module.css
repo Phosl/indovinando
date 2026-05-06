@@ -55,7 +55,7 @@
   font-weight: 900;
   color: var(--text-primary);
   text-align: center;
-  min-width: 100px;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -74,14 +74,50 @@
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
-  flex-shrink: 0;
+  flex-shrink: 1;
   align-items: center;
-  min-width: 90px;
+  min-width: 0;
   justify-content: flex-end;
 }
 
 .actionsNoTitle {
   margin-left: auto;
+}
+
+@media (max-width: 480px) {
+  .bar {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .back {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .backArrow {
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+  }
+
+  .title {
+    flex-basis: 100%;
+    order: 3;
+    text-align: left;
+    font-size: 14px;
+  }
+
+  .actions,
+  .actionsNoTitle {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+
+  .placeholder {
+    display: none;
+  }
 }
 
 /* never print navigation bars */

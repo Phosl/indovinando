@@ -151,6 +151,39 @@
   }
 }
 
+@media (max-width: 480px) {
+  .container {
+    margin: 16px auto;
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .lobbyCard {
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .linkBox {
+    flex-direction: column;
+
+    .copyButton {
+      width: 100%;
+    }
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .startButton,
+  .cancelButton {
+    width: 100%;
+    min-width: 0;
+    padding: 11px 14px;
+    font-size: 14px;
+  }
+}
+
 .cancelButton {
   flex: 1;
   min-width: 120px;
