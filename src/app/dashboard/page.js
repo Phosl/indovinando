@@ -43,14 +43,20 @@ export default async function Dashboard() {
             <div className={styles.gamesList}>
               {games.map((game) => (
                 <div key={game.id} className={styles.gameCard}>
-                  <h3>{game.name}</h3>
-                  <p className={styles.statusRow}>
-                    Stato:{' '}
-                    <span
-                      className={`${styles.statusBadge} ${game.status === 'published' ? styles.published : styles.draft}`}>
-                      {game.status === 'published' ? 'Pubblicato' : 'Bozza'}
-                    </span>
-                  </p>
+        <TopBar back={null} title="Dashboard" />
+
+        <section className={styles.arcadeHero}>
+          <h1>INDOVINANDO</h1>
+          <p>Benvenuto, {profile?.username || data.user.email}!</p>
+          <div className={styles.heroActions}>
+            <a href="/game/create-quick" className="btn primary">
+              ⚡ Crea Gioco Veloce
+            </a>
+            <a href="/game/create" className="btn secondary">
+              + Crea Gioco
+            </a>
+          </div>
+        </section>
                   <p className={styles.date}>
                     Creato: {new Date(game.created_at).toLocaleDateString('it-IT')}
                   </p>
@@ -72,7 +78,7 @@ export default async function Dashboard() {
         ) : (
           <div className={styles.emptyState}>
             <p>Non hai ancora creato giochi. Inizia ora!</p>
-          </div>
+                    <a href={`/game/${game.id}/live`} className={styles.liveAction}>
         )}
       </div>
     </main>

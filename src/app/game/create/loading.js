@@ -23,7 +23,7 @@ export default function GameCreateLoading() {
     <main
       style={{
         padding: '16px',
-        maxWidth: 800,
+        maxWidth: 960,
         margin: '0 auto',
         display: 'flex',
         flexDirection: 'column',

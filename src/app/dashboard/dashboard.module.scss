@@ -13,6 +13,41 @@
   gap: 24px;
 }
 
+.arcadeHero {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(176, 65, 137, 0.12), transparent 42%),
+    radial-gradient(circle at 80% 0%, rgba(126, 45, 97, 0.18), transparent 38%),
+    var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 16px;
+  box-shadow: 0px 5px 0px 0px var(--gray-light);
+  padding: 26px 20px;
+  text-align: center;
+
+  h1 {
+    margin: 0;
+    font-size: clamp(28px, 5vw, 44px);
+    letter-spacing: 0.08em;
+    font-weight: 900;
+    color: var(--text-primary);
+  }
+
+  p {
+    margin: 10px 0 0 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-secondary);
+  }
+}
+
+.heroActions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .header {
   text-align: center;
 
@@ -113,6 +148,27 @@
   margin-top: 0;
 }
 
+.liveAction {
+  padding: 8px 16px;
+  border-radius: 12px;
+  color: #ffffff;
+  border: 1px solid #b04189;
+  background-color: #b04189;
+  box-shadow: 0px 3px 0px 0px #7e2d61;
+  font-weight: 900;
+  font-size: 14px;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.liveAction:active {
+  box-shadow: none;
+  transform: translateY(3px);
+}
+
 .emptyState {
   text-align: center;
   padding: 40px;
@@ -137,6 +193,14 @@
 
   .gamesList {
     grid-template-columns: 1fr;
+  }
+
+  .heroActions {
+    flex-direction: column;
+  }
+
+  .liveAction {
+    width: 100%;
   }
 
   .gameActions {
