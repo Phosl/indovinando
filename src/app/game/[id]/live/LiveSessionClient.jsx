@@ -3,6 +3,7 @@
 import {useEffect, useState, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
+import TopBar from '@/components/TopBar'
 import styles from './liveSessions.module.scss'
 
 export default function LiveSessionClient({gameId, gameName, questions, bottles, userId}) {
@@ -105,12 +106,7 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
 
   return (
     <div className={styles.container}>
-      <div className={styles.topBar}>
-        <a href="/dashboard" className={`btn secondary`}>
-          ← Dashboard
-        </a>
-      </div>
-      <h1>{gameName}</h1>
+      <TopBar title={gameName} />
 
       <div className={styles.lobbyCard}>
         <div className={styles.section}>

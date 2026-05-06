@@ -46,21 +46,27 @@
     order: -1;
     padding-top: 24px;
 
-    .medal { font-size: 2.5rem; }
+    .medal {
+      font-size: 2.5rem;
+    }
   }
 
   &.pos2 {
     background: var(--foreground);
     align-self: flex-end;
     margin-bottom: 16px;
-    .medal { font-size: 2rem; }
+    .medal {
+      font-size: 2rem;
+    }
   }
 
   &.pos3 {
     background: var(--foreground);
     align-self: flex-end;
     margin-bottom: 16px;
-    .medal { font-size: 2rem; }
+    .medal {
+      font-size: 2rem;
+    }
   }
 
   .medal {
@@ -181,8 +187,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 768px) {
@@ -196,9 +206,15 @@
       align-self: auto !important;
       margin-bottom: 0 !important;
 
-      &.pos1 { order: 1; }
-      &.pos2 { order: 2; }
-      &.pos3 { order: 3; }
+      &.pos1 {
+        order: 1;
+      }
+      &.pos2 {
+        order: 2;
+      }
+      &.pos3 {
+        order: 3;
+      }
     }
   }
 
@@ -207,7 +223,11 @@
     padding: 8px 10px;
     font-size: 0.85rem;
 
-    .playerAvatar { font-size: 1.3rem; }
-    .playerScore { font-size: 0.9rem; }
+    .playerAvatar {
+      font-size: 1.3rem;
+    }
+    .playerScore {
+      font-size: 0.9rem;
+    }
   }
 }

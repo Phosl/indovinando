@@ -4,6 +4,7 @@ import Link from 'next/link'
 import {useRouter} from 'next/navigation'
 import {useState} from 'react'
 import GamePlayView from '@/components/game/GamePlayView'
+import TopBar from '@/components/TopBar'
 import styles from './GamePlayPage.module.css'
 
 export default function GamePlayPageClient({
@@ -38,34 +39,32 @@ export default function GamePlayPageClient({
   return (
     <main className="flex-container">
       <div className="flex-column" style={{width: '100%'}}>
-        <div className={styles.pageHeader}>
-          <a href="/dashboard" className={`btn type-text ${styles.backLink}`}>
-            ← Dashboard
+        <TopBar title={game.name}>
+          <a href={`/game/${game.id}/live`} className="btn primary">
+            Gioca Live
           </a>
-
-          <h1 className={styles.gameTitle}>{game.name}</h1>
-
-          <div className={styles.headerActions}>
-            <a href={`/game/${game.id}/live`} className="btn primary">Gioca Live</a>
-            <a href={`/game/${game.id}/print`} className="btn secondary">Stampa Scheda</a>
-            {isOwner && (
-              <>
-                <Link href={`/game/${game.id}/edit`} className="btn secondary">Modifica</Link>
-                <button
-                  onClick={handleToggleStatus}
-                  className={`btn ${game.status === 'published' ? 'secondary' : 'primary'}`}>
-                  {game.status === 'published' ? 'Bozza' : 'Pubblica'}
-                </button>
-                <button
-                  onClick={handleDelete}
-                  disabled={isDeleting}
-                  className={`${styles.dangerAction} ${isDeleting ? styles.disabledAction : ''}`}>
-                  {isDeleting ? '...' : 'Elimina'}
-                </button>
-              </>
-            )}
-          </div>
-        </div>
+          <a href={`/game/${game.id}/print`} className="btn secondary">
+            Stampa Scheda
+          </a>
+          {isOwner && (
+            <>
+              <Link href={`/game/${game.id}/edit`} className="btn secondary">
+                Modifica
+              </Link>
+              <button
+                onClick={handleToggleStatus}
+                className={`btn ${game.status === 'published' ? 'secondary' : 'primary'}`}>
+                {game.status === 'published' ? 'Bozza' : 'Pubblica'}
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className={`${styles.dangerAction} ${isDeleting ? styles.disabledAction : ''}`}>
+                {isDeleting ? '...' : 'Elimina'}
+              </button>
+            </>
+          )}
+        </TopBar>
 
         <GamePlayView game={game} questions={questions} bottles={bottles} />
       </div>

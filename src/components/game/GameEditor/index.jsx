@@ -8,6 +8,7 @@ import QuestionModal from '../QuestionModal'
 import GameStepsBreadcrumbs from '../GameStepsBreadcrumbs'
 import BottlesList from '../BottlesList'
 import BottleModal from '../BottleModal'
+import TopBar from '@/components/TopBar'
 import {
   validateGameName,
   validateQuestionnaire,
@@ -600,12 +601,7 @@ export default function GameEditor({
 
   return (
     <div className={styles.editor}>
-      <div className={styles.editorTopBar}>
-        <a href="/dashboard" className="btn type-text">
-          ← Dashboard
-        </a>
-      </div>
-      <h2 className={styles.title}>{isEditMode ? 'Modifica Gioco' : 'Game Editor'}</h2>
+      <TopBar title={isEditMode ? 'Modifica Gioco' : 'Crea Gioco'} />
       <GameStepsBreadcrumbs
         steps={STEPS}
         currentStep={step}

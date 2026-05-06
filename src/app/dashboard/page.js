@@ -1,5 +1,6 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import TopBar from '@/components/TopBar'
 import styles from './dashboard.module.scss'
 
 export default async function Dashboard() {
@@ -27,19 +28,14 @@ export default async function Dashboard() {
   return (
     <main className={styles.dashboard}>
       <div className={styles.container}>
-        <div className={styles.header}>
-          <h1>Benvenuto, {profile?.username || data.user.email}!</h1>
-          <p className={styles.subtitle}>Gestisci i tuoi giochi</p>
-        </div>
-
-        <div className={styles.actionSection}>
+        <TopBar back={null} title={`Benvenuto, ${profile?.username || data.user.email}!`}>
           <a href="/game/create" className="btn primary">
             + Crea Nuovo Gioco
           </a>
           <a href="/game/create-quick" className="btn secondary">
             ⚡ Crea Gioco Veloce
           </a>
-        </div>
+        </TopBar>
 
         {games && games.length > 0 ? (
           <div className={styles.gamesSection}>
@@ -65,9 +61,7 @@ export default async function Dashboard() {
                     <a href={`/game/${game.id}/live`} className="btn secondary">
                       Gioca Live
                     </a>
-                    <a
-                      href={`/game/${game.id}/print`}
-                      className="btn secondary">
+                    <a href={`/game/${game.id}/print`} className="btn secondary">
                       Stampa Scheda
                     </a>
                   </div>

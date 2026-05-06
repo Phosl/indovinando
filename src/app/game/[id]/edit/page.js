@@ -1,4 +1,5 @@
-import {notFound, redirect, revalidatePath} from 'next/navigation'
+import {notFound, redirect} from 'next/navigation'
+import {revalidatePath} from 'next/cache'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import GameEditClient from './GameEditClient'
 

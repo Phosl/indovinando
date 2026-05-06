@@ -30,10 +30,7 @@ export default function DashboardLoading() {
           <Bone w="180px" h="20px" style={{marginBottom: 16}} />
           <div className={styles.gamesList}>
             {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className={styles.gameCard}
-                style={{minHeight: 56, gap: 12}}>
+              <div key={i} className={styles.gameCard} style={{minHeight: 56, gap: 12}}>
                 <Bone w="40%" h="18px" />
                 <Bone w="60px" h="20px" style={{borderRadius: 999}} />
                 <Bone w="70px" h="14px" />

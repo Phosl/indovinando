@@ -1,29 +1,23 @@
 'use client'
 
 import {useRouter} from 'next/navigation'
-import styles from './print.module.scss'
+import TopBar from '@/components/TopBar'
 
 export default function PrintSheetClient({gameId}) {
   const router = useRouter()
   return (
-    <div className={styles.toolbar}>
-      <button
-        type="button"
-        onClick={() => router.push('/dashboard')}
-        className={styles.toolbarAction}>
-        ← Dashboard
-      </button>
+    <TopBar title="Stampa Scheda">
       {gameId && (
         <button
           type="button"
-          onClick={() => router.push(`/game/${gameId}?step=4`)}
-          className={styles.toolbarAction}>
+          className="btn secondary"
+          onClick={() => router.push(`/game/${gameId}?step=4`)}>
           Inserisci risultati
         </button>
       )}
-      <button type="button" onClick={() => window.print()} className={styles.printAction}>
+      <button type="button" className="btn primary" onClick={() => window.print()}>
         Stampa
       </button>
-    </div>
+    </TopBar>
   )
 }

@@ -20,7 +20,15 @@ const cardStyle = {
 
 export default function GameCreateLoading() {
   return (
-    <main style={{padding: '16px', maxWidth: 800, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16}}>
+    <main
+      style={{
+        padding: '16px',
+        maxWidth: 800,
+        margin: '0 auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16,
+      }}>
       {/* Top bar */}
       <Bone w="90px" h="32px" style={{borderRadius: 12}} />
 

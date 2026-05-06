@@ -3,6 +3,7 @@
 import {useState, useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
+import TopBar from '@/components/TopBar'
 import styles from './playerJoin.module.scss'
 
 const APPLE_AVATARS = [
@@ -204,7 +205,7 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
 
   return (
     <div className={styles.container}>
-      <h1>🎮 {gameName}</h1>
+      <TopBar back={null} title={`🎮 ${gameName}`} />
 
       {gameStarted ? (
         <div className={styles.waitingCard}>

@@ -3,6 +3,7 @@
 import {useState, useEffect, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
+import TopBar from '@/components/TopBar'
 import styles from './hostLive.module.scss'
 
 export default function HostLiveClient({
@@ -187,7 +188,7 @@ export default function HostLiveClient({
 
   return (
     <div className={styles.container}>
-      <h1>🎮 {gameName}</h1>
+      <TopBar title={`🎮 ${gameName}`} />
 
       {sessionFinished ? (
         <div className={styles.finishedCard}>
