@@ -1,0 +1,116 @@
+@use '../styles/reset';
+@use '../styles/buttons';
+
+body {
+  --background: #fafafa;
+  --foreground: #fff;
+  --text-primary: #000;
+  --text-secondary: #666;
+  --button-primary-hover: #383838;
+  --button-secondary-hover: #f2f2f2;
+  --button-secondary-border: #ebebeb;
+  --error-message-background: #fee;
+  --error-message-color: #900;
+  --accept: #2ec748;
+  --accept-light: #30da4c;
+  --accept-dark: #27aa3d;
+
+  --selected: #833bac;
+  --selected-light: #9c4ed8;
+  --selected-extra-light: #f0e5fa;
+  --selected-dark: #6b2f8e;
+
+  --white: #fff;
+  --gray: #bdbdbd;
+  --gray-light: #e4e4e4;
+  --button: rgb(57, 57, 57);
+  --button-dark: rgb(27, 27, 27);
+  background-color: var(--background);
+  font-family: var(--font-geist-sans);
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    --background: #000;
+    --foreground: #000;
+
+    --text-primary: #ededed;
+    --text-secondary: #999;
+
+    --button-primary-hover: #ccc;
+    --button-secondary-hover: #1a1a1a;
+    --button-secondary-border: #1a1a1a;
+  }
+}
+
+input {
+  border: 1px solid var(--text-secondary);
+  padding: 12px;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.flex-container {
+  margin-top: 60px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+main.flex-container {
+  margin-top: 0px;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.error-message {
+  padding: 12;
+  margin-bottom: 20px;
+  background-color: var(--error-message-background);
+  color: var(--error-message-color);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.item-option {
+  display: flex;
+  margin-bottom: 15px;
+  input {
+    border-radius: 8px 0px 0px 8px;
+    border: 1px solid var(--text-secondary);
+    border-right: 0px;
+    flex-grow: 1;
+    margin-right: 0;
+  }
+  input[type='radio'] {
+    margin-top: 0;
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 40px;
+    height: auto;
+    position: relative;
+    //hide default radio
+    appearance: none;
+    border-radius: 0px 8px 8px 0px;
+    border: 1px solid var(--text-secondary);
+    overflow: hidden;
+    &::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0px;
+      left: 0px;
+      background-color: var(--accept);
+      border-radius: 0px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    &:checked::after {
+      opacity: 1;
+    }
+  }
+}

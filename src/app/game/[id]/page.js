@@ -1,0 +1,95 @@
+import {notFound, redirect} from 'next/navigation'
+import {createServerSupabase} from '@/lib/supabaseServer'
+import GamePlayView from '@/components/game/GamePlayView'
+import GamePlayPageClient from './GamePlayPageClient'
+import {toggleGameStatus, deleteGame} from './actions'
+
+export default async function GamePlayPage({params}) {
+  const supabase = await createServerSupabase()
+  const resolvedParams = typeof params?.then === 'function' ? await params : params
+  const gameId = resolvedParams?.id
+
+  if (!gameId) notFound()
+
+  const {data: game, error: gameError} = await supabase
+    .from('games')
+    .select('id, name, status, created_by')
+    .eq('id', gameId)
+    .single()
+
+  if (gameError || !game) {
+    notFound()
+  }
+
+  const {
+    data: {user},
+  } = await supabase.auth.getUser()
+
+  const isOwner = user?.id === game.created_by
+
+  if (game.status !== 'published' && !isOwner) {
+    redirect('/auth')
+  }
+
+  const {data: rawQuestions, error: questionsError} = await supabase
+    .from('game_questions')
+    .select('id, text, display_order, game_question_options(id, text, option_order)')
+    .eq('game_id', gameId)
+    .order('display_order', {ascending: true})
+
+  const {data: rawBottles, error: bottlesError} = await supabase
+    .from('game_bottles')
+    .select('id, name, producer, year, bottle_order, game_bottle_answers(question_id, option_id)')
+    .eq('game_id', gameId)
+    .order('bottle_order', {ascending: true})
+
+  if (questionsError || bottlesError) {
+    return (
+      <main className="flex-container">
+        <div className="flex-column">
+          <h1>Errore caricamento partita</h1>
+          <p>{questionsError?.message || bottlesError?.message}</p>
+        </div>
+      </main>
+    )
+  }
+
+  const questions = (rawQuestions || []).map((q) => ({
+    id: q.id,
+    text: q.text,
+    options: [...(q.game_question_options || [])].sort((a, b) => a.option_order - b.option_order),
+  }))
+
+  const bottles = (rawBottles || []).map((b) => ({
+    id: b.id,
+    name: b.name,
+    producer: b.producer,
+    year: b.year,
+    answers: b.game_bottle_answers || [],
+  }))
+
+  if (questions.length === 0 || bottles.length === 0) {
+    return (
+      <main className="flex-container">
+        <div className="flex-column">
+          <h1>{game.name}</h1>
+          <p>Questo gioco non è ancora pronto per essere giocato.</p>
+          <a href={`/game/${game.id}/edit?step=4`} className="btn primary">
+            Inserisci i risultati
+          </a>
+        </div>
+      </main>
+    )
+  }
+
+  return (
+    <GamePlayPageClient
+      game={game}
+      questions={questions}
+      bottles={bottles}
+      isOwner={isOwner}
+      onToggleStatus={toggleGameStatus}
+      onDelete={deleteGame}
+    />
+  )
+}

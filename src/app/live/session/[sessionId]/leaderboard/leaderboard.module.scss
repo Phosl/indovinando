@@ -1,0 +1,213 @@
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  h1 {
+    text-align: center;
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--text-primary);
+  }
+}
+
+.gameName {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.podium {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  perspective: 1000px;
+}
+
+.position {
+  text-align: center;
+  border-radius: 12px;
+  padding: 16px;
+  position: relative;
+  border: 2px solid var(--button-secondary-border);
+  box-shadow: 0px 4px 0px 0px var(--gray-light);
+
+  &.pos1 {
+    background: #fffbeb;
+    border-color: #d97706;
+    box-shadow: 0px 4px 0px 0px #d97706;
+    grid-column: 2;
+    order: -1;
+    padding-top: 24px;
+
+    .medal { font-size: 2.5rem; }
+  }
+
+  &.pos2 {
+    background: var(--foreground);
+    align-self: flex-end;
+    margin-bottom: 16px;
+    .medal { font-size: 2rem; }
+  }
+
+  &.pos3 {
+    background: var(--foreground);
+    align-self: flex-end;
+    margin-bottom: 16px;
+    .medal { font-size: 2rem; }
+  }
+
+  .medal {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .avatar {
+    font-size: 2.5rem;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--background);
+    border: 2px solid var(--button-secondary-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  .nickname {
+    margin: 10px 0 4px;
+    font-size: 1rem;
+    font-weight: 700;
+    word-break: break-word;
+    color: var(--text-primary);
+  }
+
+  .score {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--text-secondary);
+  }
+}
+
+.ranking {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0px 4px 0px 0px var(--gray-light);
+
+  h3 {
+    margin: 0 0 14px;
+    font-size: 0.9rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+}
+
+.rankingList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rankingRow {
+  display: grid;
+  grid-template-columns: 36px 44px 1fr 72px;
+  align-items: center;
+  gap: 10px;
+  background: var(--background);
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 2px solid var(--button-secondary-border);
+
+  .rank {
+    font-weight: 900;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .playerAvatar {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .playerName {
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text-primary);
+  }
+
+  .playerScore {
+    text-align: right;
+    font-weight: 900;
+    font-size: 1rem;
+    color: var(--text-primary);
+  }
+}
+
+.homeButton {
+  display: block;
+  margin: 0 auto;
+  padding: 12px 30px;
+  background-color: var(--accept);
+  color: var(--background);
+  border: 1px solid var(--accept);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0px 3px 0px 0px var(--accept-dark);
+
+  &:hover {
+    background: var(--accept-light);
+  }
+
+  &:active {
+    box-shadow: none;
+    transform: translateY(3px);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .podium {
+    grid-template-columns: 1fr;
+    gap: 10px;
+
+    .position {
+      grid-column: auto !important;
+      order: auto !important;
+      align-self: auto !important;
+      margin-bottom: 0 !important;
+
+      &.pos1 { order: 1; }
+      &.pos2 { order: 2; }
+      &.pos3 { order: 3; }
+    }
+  }
+
+  .rankingRow {
+    grid-template-columns: 28px 36px 1fr 56px;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+
+    .playerAvatar { font-size: 1.3rem; }
+    .playerScore { font-size: 0.9rem; }
+  }
+}

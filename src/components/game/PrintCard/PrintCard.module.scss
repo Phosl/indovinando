@@ -1,0 +1,201 @@
+.printButton {
+  padding: 10px 16px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #1976D2;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.printContainer {
+  display: none;
+
+  @media print {
+    display: block;
+  }
+}
+
+// Stili per il print
+@page {
+  size: A4;
+  margin: 0;
+}
+
+.header {
+  text-align: center;
+  padding: 20px;
+  page-break-after: avoid;
+
+  h1 {
+    margin: 0 0 20px 0;
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+  }
+}
+
+.infoSection {
+  display: flex;
+  justify-content: space-around;
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+.infoField {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  label {
+    font-weight: 600;
+    min-width: 60px;
+  }
+
+  .underline {
+    flex: 1;
+    min-width: 150px;
+    border-bottom: 1px solid #333;
+  }
+}
+
+.bottlesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 20px 20px 20px;
+}
+
+.bottleCard {
+  page-break-inside: avoid;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 4px;
+  background-color: #fafafa;
+}
+
+.bottleTable {
+  display: flex;
+  gap: 20px;
+}
+
+.bottleColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+  page-break-inside: avoid;
+
+  .bottleIcon {
+    font-size: 48px;
+    margin-bottom: 10px;
+  }
+
+  .bottleInfo {
+    text-align: center;
+    font-size: 11px;
+
+    .bottleLabel {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .bottleProducer {
+      font-size: 10px;
+      color: #666;
+    }
+
+    .bottleYear {
+      font-size: 10px;
+      color: #666;
+    }
+  }
+}
+
+.questionsGrid {
+  display: flex;
+  gap: 15px;
+  flex: 1;
+  page-break-inside: avoid;
+}
+
+.questionColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  page-break-inside: avoid;
+
+  .questionTitle {
+    font-weight: 700;
+    font-size: 11px;
+    color: #333;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #2196F3;
+  }
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 10px;
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  .checkbox {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  label {
+    flex: 1;
+    cursor: pointer;
+    color: #555;
+    word-break: break-word;
+  }
+}
+
+// Responsive per schermo (non usa il responsive in realtà, ma per visualizzazione preview)
+@media screen {
+  .printContainer {
+    display: block;
+    background-color: white;
+    padding: 40px;
+    margin: 20px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    page-break-after: always;
+
+    // Simula il formato A4 per la preview
+    max-width: 210mm;
+    min-height: 297mm;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .bottleCard {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+}

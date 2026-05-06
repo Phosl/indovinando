@@ -1,0 +1,171 @@
+@page {
+  size: A4 portrait;
+  margin: 6mm;
+}
+
+.page {
+  background: #f7f7f7;
+  min-height: 100vh;
+  padding: 10px;
+}
+
+.toolbar {
+  max-width: 210mm;
+  margin: 0 auto 8px auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.toolbarAction {
+  border: 1px solid #333;
+  background: #fff;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.printAction {
+  border: 1px solid #333;
+  background: #fff;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.sheet {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  background: #fff;
+  padding: 5mm;
+  box-sizing: border-box;
+}
+
+.header {
+  margin-bottom: 30px;
+
+  h1 {
+    margin: 0 0 2mm 0;
+    font-size: 20px;
+    line-height: 1.1;
+    text-align: center;
+    margin-bottom: 60px;
+    margin-top: 60px;
+  }
+}
+
+.playerRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  max-width: 300px;
+  margin: 0 auto;
+
+  .line {
+    border-bottom: 1px solid #333;
+    height: 10px;
+    flex: 1;
+  }
+}
+
+.tablesWrap {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.tableCard {
+  padding: 0;
+  page-break-inside: avoid;
+}
+
+.peach {
+  background: #f2dcd0;
+}
+
+.white {
+  background: #ffffff;
+}
+
+.questionsGrid {
+  display: grid;
+  grid-template-columns: 1.8cm repeat(5, minmax(0, 1fr));
+  border-top: 1px solid #222;
+  border-left: 1px solid #222;
+}
+
+.bottleImageCol {
+  border-right: 1px solid #222;
+  border-bottom: 1px solid #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1mm;
+}
+
+.bottleImage {
+  width: 1.5cm;
+  height: 2.5cm;
+  object-fit: contain;
+}
+
+.questionCol {
+  border-right: 1px solid #222;
+  border-bottom: 1px solid #222;
+  padding: 8px 16px;
+  padding-bottom: 4px;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    justify-items: start;
+    column-gap: 2px;
+    font-size: 12px;
+    line-height: 1.2;
+    span {
+      font-weight: 600;
+    }
+  }
+
+  input {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    flex-shrink: 0;
+    appearance: none;
+    border: 0.5px solid #222;
+    background: #fff;
+    padding: 0px;
+    margin-right: 8px;
+  }
+}
+
+@media print {
+  .page {
+    background: #fff;
+    padding: 0;
+  }
+
+  .toolbar {
+    display: none;
+  }
+
+  .sheet {
+    width: auto;
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+  }
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 100" role="img" aria-label="Bottiglia">
+  <rect x="25" y="4" width="10" height="18" rx="3" fill="#6e3b2f"/>
+  <path d="M20 22h20v8l8 20v40a8 8 0 0 1-8 8H20a8 8 0 0 1-8-8V50l8-20z" fill="#8a4b3a"/>
+  <rect x="18" y="52" width="24" height="26" rx="2" fill="#f4e3d4" opacity="0.95"/>
+  <circle cx="30" cy="65" r="7" fill="#d48e69"/>
+</svg>

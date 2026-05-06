@@ -1,0 +1,32 @@
+/* Reset base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  color: #111;
+  line-height: 1.5;
+  height: 100%;
+}
+
+main {
+  min-height: 100vh;
+}
+
+button {
+  cursor: pointer;
+}
+
+input,
+button {
+  font-family: inherit;
+}
