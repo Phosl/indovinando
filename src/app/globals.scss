@@ -29,20 +29,6 @@ body {
   font-family: var(--font-geist-sans);
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    --background: #000;
-    --foreground: #000;
-
-    --text-primary: #ededed;
-    --text-secondary: #999;
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
-  }
-}
-
 input {
   border: 1px solid var(--text-secondary);
   padding: 12px;
@@ -130,11 +116,4 @@ main.flex-container {
   background-size: 200% 100%;
   animation: skeletonShimmer 1.4s ease infinite;
   border-radius: 8px;
-}
-
-@media (prefers-color-scheme: dark) {
-  .skeleton {
-    background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%);
-    background-size: 200% 100%;
-  }
 }
