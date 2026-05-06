@@ -15,7 +15,16 @@ const TEMPLATE_QUESTIONS = [
   },
   {
     text: 'Uvaggio',
-    options: ['Blend', 'Sangiovese', 'Pinot Nero', 'Aglianico', 'Nebbiolo', 'Merlot', 'Syrah', 'Verdicchio'],
+    options: [
+      'Blend',
+      'Sangiovese',
+      'Pinot Nero',
+      'Aglianico',
+      'Nebbiolo',
+      'Merlot',
+      'Syrah',
+      'Verdicchio',
+    ],
   },
   {
     text: 'Anno',
@@ -23,7 +32,7 @@ const TEMPLATE_QUESTIONS = [
   },
   {
     text: 'Prezzo',
-    options: ['5', '10', '20', '30', '40', '60', '80'],
+    options: ['5€', '10€', '20€', '30€', '40€', '60€', '80€'],
   },
 ]
 
@@ -31,7 +40,7 @@ export default function GameCreateClient({userId}) {
   return (
     <main className="flex-container">
       <div className="flex-column">
-        <GameEditor 
+        <GameEditor
           initialQuestions={TEMPLATE_QUESTIONS}
           initialGameName="Indovinando"
           userId={userId}

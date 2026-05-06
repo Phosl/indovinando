@@ -39,7 +39,7 @@ export default function GamePlayPageClient({
   return (
     <main className="flex-container">
       <div className="flex-column" style={{width: '100%', maxWidth: 960, margin: '0 auto'}}>
-        <TopBar title={game.name}>
+        <TopBar>
           <a href={`/game/${game.id}/live`} className="btn primary">
             Gioca Live
           </a>

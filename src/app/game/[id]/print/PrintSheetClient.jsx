@@ -2,11 +2,18 @@
 
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
+import styles from './print.module.scss'
 
 export default function PrintSheetClient({gameId}) {
   const router = useRouter()
   return (
-    <TopBar title="Stampa Scheda">
+    <TopBar
+      title="Stampa Scheda"
+      className={styles.toolbar}
+      titleClassName={styles.toolbarTitle}
+      actionsClassName={styles.toolbarActions}
+      maxWidth="210mm"
+      wrapTitle>
       {gameId && (
         <button
           type="button"

@@ -12,25 +12,27 @@
 .toolbar {
   max-width: 210mm;
   margin: 0 auto 8px auto;
-  display: flex;
+  width: 100%;
+}
+
+.toolbarTitle {
+  white-space: normal;
+  text-wrap: balance;
+}
+
+.toolbarActions {
   justify-content: flex-end;
-  gap: 8px;
 }
 
-.toolbarAction {
-  border: 1px solid #333;
-  background: #fff;
-  padding: 6px 10px;
-  cursor: pointer;
-  font-weight: 600;
+.toolbarActions :global(.btn) {
+  white-space: nowrap;
 }
 
-.printAction {
-  border: 1px solid #333;
-  background: #fff;
-  padding: 6px 10px;
-  cursor: pointer;
-  font-weight: 600;
+@media (max-width: 768px) {
+  .toolbarActions {
+    width: 100%;
+    justify-content: flex-start;
+  }
 }
 
 .sheet {
@@ -50,8 +52,8 @@
     font-size: 20px;
     line-height: 1.1;
     text-align: center;
-    margin-bottom: 60px;
-    margin-top: 60px;
+    margin-bottom: 48px;
+    margin-top: 48px;
   }
 }
 
@@ -74,15 +76,18 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
+  overflow: hidden;
 }
 
 .tableCard {
   padding: 0;
   page-break-inside: avoid;
+  border: 1px solid #7e2d61;
+  border-radius: 8px;
 }
 
 .peach {
-  background: #f2dcd0;
+  background: #f9f5f7;
 }
 
 .white {
@@ -92,13 +97,9 @@
 .questionsGrid {
   display: grid;
   grid-template-columns: 1.8cm repeat(5, minmax(0, 1fr));
-  border-top: 1px solid #222;
-  border-left: 1px solid #222;
 }
 
 .bottleImageCol {
-  border-right: 1px solid #222;
-  border-bottom: 1px solid #222;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -107,13 +108,13 @@
 
 .bottleImage {
   width: 1.5cm;
-  height: 2.5cm;
+  height: 3.5cm;
   object-fit: contain;
 }
 
 .questionCol {
-  border-right: 1px solid #222;
-  border-bottom: 1px solid #222;
+  border-left: 1px solid #939393;
+
   padding: 8px 16px;
   padding-bottom: 4px;
 
@@ -145,7 +146,7 @@
     margin: 0;
     flex-shrink: 0;
     appearance: none;
-    border: 0.5px solid #222;
+    border: 0.5px solid #444444;
     background: #fff;
     padding: 0px;
     margin-right: 8px;

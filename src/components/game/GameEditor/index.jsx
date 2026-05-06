@@ -631,7 +631,6 @@ export default function GameEditor({
       {/* STEP 2 */}
       {step === 2 && (
         <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>Crea questionario</h3>
           <QuestionsList
             questions={questionDraft}
             onEditQuestion={openQuestionModal}

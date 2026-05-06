@@ -152,7 +152,6 @@ export function Step2Questions({ questions, onSave, onBack }) {
 
   return (
     <div className={styles.section}>
-      <h3>Crea questionario</h3>
       <QuestionsList
         questions={questionDraft}
         onEditQuestion={...}
