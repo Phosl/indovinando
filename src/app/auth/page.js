@@ -1,6 +1,6 @@
 'use client'
 
-import {useState} from 'react'
+import {useState, Suspense} from 'react'
 import {createClient} from '@/lib/supabaseClient'
 import {useRouter, useSearchParams} from 'next/navigation'
 
@@ -9,7 +9,7 @@ const MIN_PASSWORD_LENGTH = 6
 const USERNAME_REGEX = /^[a-zA-Z0-9_]+$/
 const MIN_USERNAME_LENGTH = 3
 
-export default function AuthPage() {
+function AuthForm() {
   const supabase = createClient()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -201,5 +201,13 @@ export default function AuthPage() {
         </button>
       </div>
     </main>
+  )
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense>
+      <AuthForm />
+    </Suspense>
   )
 }
