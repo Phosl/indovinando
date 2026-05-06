@@ -12,13 +12,23 @@ function Bone({w, h, style}) {
 export default function LiveSessionLoading() {
   return (
     <div className={styles.container}>
-      {/* Back button */}
-      <div className={styles.topBar}>
-        <Bone w="110px" h="36px" style={{borderRadius: 12}} />
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          padding: '10px 14px',
+          marginBottom: 4,
+          background: 'var(--foreground)',
+          border: '2px solid var(--button-secondary-border)',
+          borderRadius: 12,
+          boxShadow: '0px 3px 0px 0px var(--gray-light)',
+          flexWrap: 'wrap',
+        }}>
+        <Bone w="90px" h="32px" style={{borderRadius: 12}} />
+        <Bone w="220px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
+        <div style={{minWidth: 90}} />
       </div>
-
-      {/* Title */}
-      <Bone w="240px" h="28px" style={{alignSelf: 'center', borderRadius: 6}} />
 
       {/* Lobby card */}
       <div className={styles.lobbyCard}>

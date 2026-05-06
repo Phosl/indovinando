@@ -29,8 +29,25 @@ export default function GameCreateLoading() {
         flexDirection: 'column',
         gap: 16,
       }}>
-      {/* Top bar */}
-      <Bone w="90px" h="32px" style={{borderRadius: 12}} />
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          width: '100%',
+          padding: '10px 14px',
+          marginBottom: 4,
+          background: 'var(--foreground)',
+          border: '2px solid var(--button-secondary-border)',
+          borderRadius: 12,
+          boxShadow: '0px 3px 0px 0px var(--gray-light)',
+          flexWrap: 'wrap',
+          boxSizing: 'border-box',
+        }}>
+        <Bone w="90px" h="32px" style={{borderRadius: 12}} />
+        <Bone w="170px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
+        <div style={{minWidth: 90}} />
+      </div>
 
       {/* Breadcrumbs */}
       <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>

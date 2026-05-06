@@ -1,5 +1,3 @@
-import styles from './GamePlayPage.module.css'
-
 function Bone({w, h, style}) {
   return (
     <div
@@ -12,11 +10,22 @@ function Bone({w, h, style}) {
 export default function GameLoading() {
   return (
     <main style={{padding: '16px', maxWidth: 960, margin: '0 auto'}}>
-      {/* Header bar */}
-      <div className={styles.pageHeader}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          padding: '10px 14px',
+          marginBottom: 16,
+          background: 'var(--foreground)',
+          border: '2px solid var(--button-secondary-border)',
+          borderRadius: 12,
+          boxShadow: '0px 3px 0px 0px var(--gray-light)',
+          flexWrap: 'wrap',
+        }}>
         <Bone w="90px" h="32px" style={{borderRadius: 12}} />
-        <Bone w="200px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
-        <div className={styles.headerActions}>
+        <Bone w="220px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
+        <div style={{display: 'flex', gap: 6, marginLeft: 'auto', flexWrap: 'wrap'}}>
           <Bone w="110px" h="36px" style={{borderRadius: 12}} />
           <Bone w="120px" h="36px" style={{borderRadius: 12}} />
         </div>

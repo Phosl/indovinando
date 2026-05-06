@@ -12,8 +12,25 @@ function Bone({w, h, style}) {
 export default function PlayerJoinLoading() {
   return (
     <div className={styles.container}>
-      {/* Game title */}
-      <Bone w="260px" h="30px" style={{alignSelf: 'center', borderRadius: 6}} />
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          width: '100%',
+          padding: '10px 14px',
+          marginBottom: 4,
+          background: 'var(--foreground)',
+          border: '2px solid var(--button-secondary-border)',
+          borderRadius: 12,
+          boxShadow: '0px 3px 0px 0px var(--gray-light)',
+          flexWrap: 'wrap',
+          boxSizing: 'border-box',
+        }}>
+        <div style={{minWidth: 90}} />
+        <Bone w="240px" h="22px" style={{margin: '0 auto', borderRadius: 6}} />
+        <div style={{minWidth: 90}} />
+      </div>
 
       {/* Join card */}
       <div className={styles.joinCard}>

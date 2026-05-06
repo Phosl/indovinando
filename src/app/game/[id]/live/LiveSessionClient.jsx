@@ -2,6 +2,7 @@
 
 import {useEffect, useState, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
+import Loader from '@/components/Loader'
 import {supabaseClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
 import styles from './liveSessions.module.scss'
@@ -101,7 +102,11 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
   }
 
   if (loading) {
-    return <div className={styles.container}>Creazione sessione...</div>
+    return (
+      <div className={styles.container}>
+        <Loader label="Creazione sessione" />
+      </div>
+    )
   }
 
   return (

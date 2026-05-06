@@ -3,6 +3,7 @@
 import {Suspense, useState} from 'react'
 import {createClient} from '@/lib/supabaseClient'
 import GameEditor from '@/components/game/GameEditor'
+import Loader from '@/components/Loader'
 import OnboardingModal from '@/components/game/OnboardingModal'
 
 function GameEditorWrapper() {
@@ -33,7 +34,7 @@ export default function GameCreateClient({initialShowOnboarding, userId}) {
           />
         )}
 
-        <Suspense fallback={<div>Caricamento...</div>}>
+        <Suspense fallback={<Loader label="Caricamento editor" />}>
           <GameEditorWrapper />
         </Suspense>
       </div>

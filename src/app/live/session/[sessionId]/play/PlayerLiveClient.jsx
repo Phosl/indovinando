@@ -2,6 +2,7 @@
 
 import {useState, useEffect, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
+import Loader from '@/components/Loader'
 import {supabaseClient} from '@/lib/supabaseClient'
 import styles from './playerLive.module.scss'
 
@@ -28,6 +29,7 @@ export default function PlayerLiveClient({
   const [allPlayers, setAllPlayers] = useState([])
   const [sessionFinished, setSessionFinished] = useState(false)
   const [roundAnswers, setRoundAnswers] = useState({}) // { questionId: { optionId, isCorrect, points } }
+  const [correctOptionByQuestion, setCorrectOptionByQuestion] = useState({})
   const [submitted, setSubmitted] = useState(false)
   const [resolvingPlayer, setResolvingPlayer] = useState(true)
   const [loadingGameData, setLoadingGameData] = useState((questions || []).length === 0)
@@ -182,6 +184,7 @@ export default function PlayerLiveClient({
         if (session?.current_question_index !== prev) {
           setSelectedAnswers({})
           setRoundAnswers({})
+          setCorrectOptionByQuestion({})
           setSubmitted(false)
         }
         return session?.current_question_index || 0
@@ -243,6 +246,25 @@ export default function PlayerLiveClient({
     checkAnswers()
   }, [playerData, liveQuestions, sessionId])
 
+  useEffect(() => {
+    if (roundStatus !== 'showing_results' || !currentBottle?.id) return
+
+    const loadCorrectAnswers = async () => {
+      const {data} = await supabaseClient
+        .from('game_bottle_answers')
+        .select('question_id, option_id')
+        .eq('bottle_id', currentBottle.id)
+
+      const nextMap = {}
+      ;(data || []).forEach((row) => {
+        nextMap[row.question_id] = row.option_id
+      })
+      setCorrectOptionByQuestion(nextMap)
+    }
+
+    loadCorrectAnswers()
+  }, [roundStatus, currentBottle?.id])
+
   const handleSelect = useCallback((questionId, optionId) => {
     setSelectedAnswers((prev) => {
       if (prev[questionId] === optionId) return prev
@@ -300,11 +322,19 @@ export default function PlayerLiveClient({
   }
 
   if (resolvingPlayer) {
-    return <div className={styles.container}>Caricamento...</div>
+    return (
+      <div className={styles.container}>
+        <Loader label="Caricamento partita" />
+      </div>
+    )
   }
 
   if (loadingGameData) {
-    return <div className={styles.container}>Caricamento...</div>
+    return (
+      <div className={styles.container}>
+        <Loader label="Caricamento partita" />
+      </div>
+    )
   }
 
   if (!playerData) {
@@ -348,9 +378,8 @@ export default function PlayerLiveClient({
 
       <div className={styles.card}>
         <div className={styles.bottleSection}>
-          <h3>🍾 Bottiglia in degustazione:</h3>
-          <p className={styles.bottleName}>{currentBottle.name}</p>
-          {currentBottle.year && <p className={styles.bottleYear}>Annata: {currentBottle.year}</p>}
+          Bottiglia <span className={styles.bottleNumber}>{currentBottleIndex + 1}</span>/
+          {liveBottles.length}
         </div>
 
         {roundStatus === 'waiting_answers' ? (
@@ -393,6 +422,9 @@ export default function PlayerLiveClient({
               const selectedText = question.game_question_options?.find(
                 (o) => o.id === currentAnswer?.optionId,
               )?.text
+              const correctOptionText = question.game_question_options?.find(
+                (o) => o.id === correctOptionByQuestion[question.id],
+              )?.text
 
               return (
                 <div key={question.id} className={styles.resultCard}>
@@ -410,7 +442,7 @@ export default function PlayerLiveClient({
                   ) : (
                     <div className={styles.incorrect}>
                       <span className={styles.icon}>✗</span>
-                      <span>Non corretta</span>
+                      <span>{correctOptionText || 'Risposta non disponibile'}</span>
                     </div>
                   )}
                 </div>
