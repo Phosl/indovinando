@@ -558,11 +558,12 @@ export default function PlayerLiveClient({
   }, [])
 
   const handleExitGame = useCallback(() => {
+    const shouldGoDashboard = isHostUser || Boolean(playerData?.is_host)
     localStorage.removeItem(playerStorageKey)
     localStorage.removeItem(nicknameStorageKey)
     setExitModalOpen(false)
-    router.push(`/live/session/${sessionId}`)
-  }, [nicknameStorageKey, playerStorageKey, router, sessionId])
+    router.push(shouldGoDashboard ? '/dashboard' : `/live/session/${sessionId}`)
+  }, [isHostUser, nicknameStorageKey, playerData, playerStorageKey, router, sessionId])
 
   const renderTopActions = () => (
     <div className={styles.topActions}>
@@ -572,7 +573,10 @@ export default function PlayerLiveClient({
       <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
         Classifica
       </button>
-      <button className={styles.exitButton} onClick={handleOpenExitModal} aria-label="Esci dal gioco">
+      <button
+        className={styles.exitButton}
+        onClick={handleOpenExitModal}
+        aria-label="Esci dal gioco">
         X
       </button>
     </div>
@@ -625,7 +629,9 @@ export default function PlayerLiveClient({
 
       {exitModalOpen && (
         <div className={styles.sheetBackdrop} onClick={() => setExitModalOpen(false)}>
-          <div className={`${styles.sheet} ${styles.exitSheet}`} onClick={(e) => e.stopPropagation()}>
+          <div
+            className={`${styles.sheet} ${styles.exitSheet}`}
+            onClick={(e) => e.stopPropagation()}>
             <div className={styles.sheetHandle} />
             <div className={styles.exitLottiePlaceholder} aria-hidden="true">
               😟
@@ -732,8 +738,12 @@ export default function PlayerLiveClient({
                   />
                 ))}
               </div>
-              <p className={styles.transitionSubtitle}>Bottiglia {nextBottleNum}/{liveBottles.length}</p>
-              <h2 className={styles.transitionTitle}>{getBottleLabel(nextBottleIndex)} bottiglia!</h2>
+              <p className={styles.transitionSubtitle}>
+                Bottiglia {nextBottleNum}/{liveBottles.length}
+              </p>
+              <h2 className={styles.transitionTitle}>
+                {getBottleLabel(nextBottleIndex)} bottiglia!
+              </h2>
               <p className={styles.readyHint}>Inizia!</p>
             </div>
           )}
