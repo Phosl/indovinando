@@ -13,16 +13,13 @@ export default function LiveSessionLoading() {
   return (
     <div className={styles.container}>
       <div
+        className="skeleton-frame"
         style={{
           display: 'flex',
           alignItems: 'center',
           gap: 12,
           padding: '10px 14px',
           marginBottom: 4,
-          background: 'var(--foreground)',
-          border: '2px solid var(--button-secondary-border)',
-          borderRadius: 12,
-          boxShadow: '0px 3px 0px 0px var(--gray-light)',
           flexWrap: 'wrap',
         }}>
         <Bone w="90px" h="32px" style={{borderRadius: 12}} />

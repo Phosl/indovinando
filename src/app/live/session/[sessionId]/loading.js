@@ -13,6 +13,7 @@ export default function PlayerJoinLoading() {
   return (
     <div className={styles.container}>
       <div
+        className="skeleton-frame"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -20,10 +21,6 @@ export default function PlayerJoinLoading() {
           width: '100%',
           padding: '10px 14px',
           marginBottom: 4,
-          background: 'var(--foreground)',
-          border: '2px solid var(--button-secondary-border)',
-          borderRadius: 12,
-          boxShadow: '0px 3px 0px 0px var(--gray-light)',
           flexWrap: 'wrap',
           boxSizing: 'border-box',
         }}>

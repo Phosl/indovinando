@@ -32,7 +32,7 @@ export default async function Dashboard() {
             <a href="/game/create-quick" className="btn primary">
               ⚡ Crea Gioco Veloce
             </a>
-            <a href="/game/create" className="btn secondary">
+            <a href="/game/create" className="btn accent">
               + Crea Gioco
             </a>
           </div>

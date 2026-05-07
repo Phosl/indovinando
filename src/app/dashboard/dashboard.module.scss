@@ -196,6 +196,10 @@
 
   .heroActions {
     flex-direction: column;
+
+    :global(.btn) {
+      width: 100%;
+    }
   }
 
   .liveAction {
@@ -204,6 +208,10 @@
 
   .gameActions {
     flex-direction: column;
+
+    :global(.btn) {
+      width: 100%;
+    }
   }
 
   .secondaryButton {
