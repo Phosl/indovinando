@@ -485,3 +485,19 @@
   cursor: pointer;
   font-size: 0.95rem;
 }
+
+@media (max-width: 768px) {
+  .mobileCheckFixed {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    width: min(640px, 100%);
+    transform: translateX(-50%);
+    z-index: 20;
+    box-shadow: 0px -8px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .mobileCheckSpacing {
+    padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px));
+  }
+}

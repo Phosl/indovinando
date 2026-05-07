@@ -850,7 +850,8 @@ export default function PlayerLiveClient({
       {renderTopBar({withProgress: true})}
 
       {/* ── Question content ── */}
-      <div className={`${styles.slideContent} ${slideMotionClass}`}>
+      <div
+        className={`${styles.slideContent} ${slideMotionClass} ${!isChecked ? styles.mobileCheckSpacing : ''}`}>
         <div className={styles.bottleBadge}>
           Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
         </div>
@@ -892,7 +893,7 @@ export default function PlayerLiveClient({
 
       {/* ── Fixed bottom panel ── */}
       <div
-        className={`${styles.bottomPanel} ${
+        className={`${styles.bottomPanel} ${!isChecked ? styles.mobileCheckFixed : ''} ${
           isChecked ? (checkResult?.isCorrect ? styles.bottomCorrect : styles.bottomWrong) : ''
         }`}>
         {isChecked && (
