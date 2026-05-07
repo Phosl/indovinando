@@ -1,7 +1,9 @@
 .btn {
   padding: 8px 16px;
   border-radius: 12px;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--background);
   border: 0px solid var(--button);
   background-color: var(--button);

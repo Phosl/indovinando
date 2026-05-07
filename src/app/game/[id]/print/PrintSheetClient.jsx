@@ -4,7 +4,7 @@ import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import styles from './print.module.scss'
 
-export default function PrintSheetClient({gameId}) {
+export default function PrintSheetClient({gameId, hasResults}) {
   const router = useRouter()
   return (
     <TopBar
@@ -14,7 +14,7 @@ export default function PrintSheetClient({gameId}) {
       actionsClassName={styles.toolbarActions}
       maxWidth="210mm"
       wrapTitle>
-      {gameId && (
+      {gameId && !hasResults && (
         <button
           type="button"
           className="btn secondary"

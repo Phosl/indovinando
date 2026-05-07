@@ -19,6 +19,10 @@ body {
   --accept: #2ec748;
   --accept-light: #30da4c;
   --accept-dark: #27aa3d;
+  --success-surface: #effff2;
+  --danger-surface: #fff1f2;
+  --danger-border: #db2a32;
+  --danger-text: #b91c1c;
 
   --selected: #833bac;
   --selected-light: #9c4ed8;
@@ -59,7 +63,7 @@ main.flex-container {
 }
 
 .error-message {
-  padding: 12;
+  padding: 12px;
   margin-bottom: 20px;
   background-color: var(--error-message-background);
   color: var(--error-message-color);

@@ -10,7 +10,6 @@ const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓
 
 export default function PlayerLiveClient({
   sessionId,
-  gameName,
   questions,
   bottles,
   initialStatus,
@@ -20,7 +19,6 @@ export default function PlayerLiveClient({
 }) {
   const router = useRouter()
   const isHostUser = Boolean(userId && hostUserId && userId === hostUserId)
-  const transitionLockRef = useRef('')
 
   const [liveQuestions, setLiveQuestions] = useState(questions || [])
   const [liveBottles, setLiveBottles] = useState(bottles || [])
@@ -33,11 +31,8 @@ export default function PlayerLiveClient({
   const [roundAnswersByPlayer, setRoundAnswersByPlayer] = useState({})
   const [roundAnswers, setRoundAnswers] = useState({})
   const [correctOptionByQuestion, setCorrectOptionByQuestion] = useState({})
-  const [submitted, setSubmitted] = useState(false)
   const [resolvingPlayer, setResolvingPlayer] = useState(true)
   const [loadingGameData, setLoadingGameData] = useState((questions || []).length === 0)
-  const [resultsSince, setResultsSince] = useState(null)
-  const [readyPlayers, setReadyPlayers] = useState({})
   const [clickedReady, setClickedReady] = useState(false)
   const [leaderboardOpen, setLeaderboardOpen] = useState(false)
   // Slide-based question navigation
@@ -255,16 +250,6 @@ export default function PlayerLiveClient({
     setResolvingPlayer(false)
   }, [isHostUser, nicknameStorageKey, playerStorageKey, sessionId, userId])
 
-  const buildReadyMap = useCallback((players, readySince) => {
-    if (!readySince) return {}
-    const threshold = new Date(readySince).getTime()
-    const nextMap = {}
-    players.forEach((player) => {
-      nextMap[player.id] = new Date(player.updated_at).getTime() >= threshold
-    })
-    return nextMap
-  }, [])
-
   const syncScoresFromAnswers = useCallback(
     async (players, answersByPlayer) => {
       if (!isHostUser || players.length === 0) return
@@ -330,7 +315,6 @@ export default function PlayerLiveClient({
       setSelectedAnswers({})
       setRoundAnswers({})
       setRoundAnswersByPlayer({})
-      setReadyPlayers({})
       setClickedReady(false)
       setCurrentSlideIndex(0)
       setCheckedQuestions({})
@@ -363,8 +347,6 @@ export default function PlayerLiveClient({
           setRoundAnswers({})
           setRoundAnswersByPlayer({})
           setCorrectOptionByQuestion({})
-          setSubmitted(false)
-          setReadyPlayers({})
           setClickedReady(false)
           setCurrentSlideIndex(0)
           setCheckedQuestions({})
@@ -374,9 +356,6 @@ export default function PlayerLiveClient({
       })
 
       setRoundStatus(session?.round_status)
-      if (session?.round_status === 'showing_results') {
-        setResultsSince(session?.updated_at || null)
-      }
 
       if (!playerData) {
         await resolvePlayer()
@@ -434,7 +413,6 @@ export default function PlayerLiveClient({
             })
             return merged
           })
-          setSubmitted(liveQuestions.every((q) => serverSelected[q.id]))
         }
 
         const allPlayersCompleted =
@@ -447,16 +425,7 @@ export default function PlayerLiveClient({
     }, 1200)
 
     return () => clearInterval(pollSession)
-  }, [
-    sessionId,
-    resolvePlayer,
-    router,
-    playerData,
-    liveQuestions,
-    isHostUser,
-    currentBottleIndex,
-    buildReadyMap,
-  ])
+  }, [sessionId, resolvePlayer, router, playerData, liveQuestions, isHostUser, currentBottleIndex])
 
   useEffect(() => {
     if (!currentBottle?.id) return
@@ -547,7 +516,6 @@ export default function PlayerLiveClient({
           .eq('id', playerData.id)
         setClickedReady(true)
         setResultsOpenedBottleIndex(currentBottleIndex)
-        setReadyPlayers((prev) => ({...prev, [playerData.id]: true}))
       } catch (err) {
         console.error('Error setting ready status:', err)
       }
@@ -567,19 +535,59 @@ export default function PlayerLiveClient({
     [allPlayers],
   )
 
-  const hostPlayer = useMemo(() => allPlayers.find((p) => p.is_host) || null, [allPlayers])
+  const renderTopActions = () => (
+    <div className={styles.topActions}>
+      <button className={styles.audioButton} onClick={toggleAudio}>
+        {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+      </button>
+      <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
+        Classifica
+      </button>
+    </div>
+  )
 
-  const allAnsweredCount = useMemo(() => {
-    if (liveQuestions.length === 0) return 0
-    return allPlayers.filter((player) =>
-      liveQuestions.every((question) => roundAnswersByPlayer[player.id]?.[question.id]?.optionId),
-    ).length
-  }, [allPlayers, liveQuestions, roundAnswersByPlayer])
+  const renderTopBar = ({withProgress = false} = {}) => (
+    <div className={styles.topBar}>
+      <div className={styles.playerInfo}>
+        <span className={styles.avatar}>{APPLE_AVATARS[playerData.avatar_id - 1] || '👤'}</span>
+        <span className={styles.nickname}>{playerData.nickname}</span>
+      </div>
+      {withProgress && (
+        <div className={styles.progressPills}>
+          {liveQuestions.map((_, idx) => (
+            <span
+              key={idx}
+              className={`${styles.pill} ${idx < currentSlideIndex ? styles.pillDone : ''} ${
+                idx === currentSlideIndex ? styles.pillActive : ''
+              }`}
+            />
+          ))}
+        </div>
+      )}
+      {renderTopActions()}
+    </div>
+  )
 
-  const readyCount = useMemo(() => {
-    if (!hostPlayer) return 0
-    return readyPlayers[hostPlayer.id] ? 1 : 0
-  }, [hostPlayer, readyPlayers])
+  const leaderboardSheet = leaderboardOpen ? (
+    <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
+      <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.sheetHandle} />
+        <h3>Classifica Live</h3>
+        <div className={styles.sheetList}>
+          {sortedLeaderboard.map((player, idx) => (
+            <div key={player.id} className={styles.sheetRow}>
+              <span className={styles.sheetRank}>#{idx + 1}</span>
+              <span className={styles.sheetName}>{player.nickname}</span>
+              <span className={styles.sheetScore}>{player.total_score || 0}</span>
+            </div>
+          ))}
+        </div>
+        <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
+          Chiudi
+        </button>
+      </div>
+    </div>
+  ) : null
 
   if (sessionFinished) {
     return (
@@ -641,20 +649,7 @@ export default function PlayerLiveClient({
     const isLastNextBottle = nextBottleNum > liveBottles.length
     return (
       <div className={styles.fullPage}>
-        <div className={styles.topBar}>
-          <div className={styles.playerInfo}>
-            <span className={styles.avatar}>{APPLE_AVATARS[playerData.avatar_id - 1] || '👤'}</span>
-            <span className={styles.nickname}>{playerData.nickname}</span>
-          </div>
-          <div className={styles.topActions}>
-            <button className={styles.audioButton} onClick={toggleAudio}>
-              {audioEnabled ? '🔊 ON' : '🔇 OFF'}
-            </button>
-            <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
-              Classifica
-            </button>
-          </div>
-        </div>
+        {renderTopBar()}
 
         <div className={styles.slideContent}>
           <div className={styles.bottleBadge}>
@@ -680,26 +675,7 @@ export default function PlayerLiveClient({
           )}
         </div>
 
-        {leaderboardOpen && (
-          <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
-            <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
-              <div className={styles.sheetHandle} />
-              <h3>Classifica Live</h3>
-              <div className={styles.sheetList}>
-                {sortedLeaderboard.map((player, idx) => (
-                  <div key={player.id} className={styles.sheetRow}>
-                    <span className={styles.sheetRank}>#{idx + 1}</span>
-                    <span className={styles.sheetName}>{player.nickname}</span>
-                    <span className={styles.sheetScore}>{player.total_score || 0}</span>
-                  </div>
-                ))}
-              </div>
-              <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
-                Chiudi
-              </button>
-            </div>
-          </div>
-        )}
+        {leaderboardSheet}
       </div>
     )
   }
@@ -708,20 +684,7 @@ export default function PlayerLiveClient({
   if (roundStatus === 'showing_results' && resultsOpenedBottleIndex !== currentBottleIndex) {
     return (
       <div className={styles.fullPage}>
-        <div className={styles.topBar}>
-          <div className={styles.playerInfo}>
-            <span className={styles.avatar}>{APPLE_AVATARS[playerData.avatar_id - 1] || '👤'}</span>
-            <span className={styles.nickname}>{playerData.nickname}</span>
-          </div>
-          <div className={styles.topActions}>
-            <button className={styles.audioButton} onClick={toggleAudio}>
-              {audioEnabled ? '🔊 ON' : '🔇 OFF'}
-            </button>
-            <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
-              Classifica
-            </button>
-          </div>
-        </div>
+        {renderTopBar()}
 
         <div className={styles.slideContent}>
           <div className={styles.bottleBadge}>
@@ -739,26 +702,7 @@ export default function PlayerLiveClient({
           </button>
         </div>
 
-        {leaderboardOpen && (
-          <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
-            <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
-              <div className={styles.sheetHandle} />
-              <h3>Classifica Live</h3>
-              <div className={styles.sheetList}>
-                {sortedLeaderboard.map((player, idx) => (
-                  <div key={player.id} className={styles.sheetRow}>
-                    <span className={styles.sheetRank}>#{idx + 1}</span>
-                    <span className={styles.sheetName}>{player.nickname}</span>
-                    <span className={styles.sheetScore}>{player.total_score || 0}</span>
-                  </div>
-                ))}
-              </div>
-              <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
-                Chiudi
-              </button>
-            </div>
-          </div>
-        )}
+        {leaderboardSheet}
       </div>
     )
   }
@@ -767,20 +711,7 @@ export default function PlayerLiveClient({
   if (roundStatus === 'showing_results') {
     return (
       <div className={styles.fullPage}>
-        <div className={styles.topBar}>
-          <div className={styles.playerInfo}>
-            <span className={styles.avatar}>{APPLE_AVATARS[playerData.avatar_id - 1] || '👤'}</span>
-            <span className={styles.nickname}>{playerData.nickname}</span>
-          </div>
-          <div className={styles.topActions}>
-            <button className={styles.audioButton} onClick={toggleAudio}>
-              {audioEnabled ? '🔊 ON' : '🔇 OFF'}
-            </button>
-            <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
-              Classifica
-            </button>
-          </div>
-        </div>
+        {renderTopBar()}
 
         <div className={styles.slideContent}>
           <div className={styles.bottleBadge}>
@@ -822,35 +753,11 @@ export default function PlayerLiveClient({
           )}
         </div>
 
-        {leaderboardOpen && (
-          <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
-            <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
-              <div className={styles.sheetHandle} />
-              <h3>Classifica Live</h3>
-              <div className={styles.sheetList}>
-                {sortedLeaderboard.map((player, idx) => (
-                  <div key={player.id} className={styles.sheetRow}>
-                    <span className={styles.sheetRank}>#{idx + 1}</span>
-                    <span className={styles.sheetName}>{player.nickname}</span>
-                    <span className={styles.sheetScore}>{player.total_score || 0}</span>
-                  </div>
-                ))}
-              </div>
-              <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
-                Chiudi
-              </button>
-            </div>
-          </div>
-        )}
+        {leaderboardSheet}
       </div>
     )
   }
 
-  // ── Schermata: Host ha finito, aspetta altri giocatori ──
-  const hostPlayerId = allPlayers.find((p) => p.is_host)?.id || null
-  const hostCompletedRound = hostPlayerId
-    ? liveQuestions.every((q) => roundAnswersByPlayer[hostPlayerId]?.[q.id]?.optionId)
-    : false
   const allPlayersCompletedThisRound =
     allPlayers.length > 0 &&
     allPlayers.every((p) =>
@@ -874,20 +781,7 @@ export default function PlayerLiveClient({
   ) {
     return (
       <div className={styles.fullPage}>
-        <div className={styles.topBar}>
-          <div className={styles.playerInfo}>
-            <span className={styles.avatar}>{APPLE_AVATARS[playerData.avatar_id - 1] || '👤'}</span>
-            <span className={styles.nickname}>{playerData.nickname}</span>
-          </div>
-          <div className={styles.topActions}>
-            <button className={styles.audioButton} onClick={toggleAudio}>
-              {audioEnabled ? '🔊 ON' : '🔇 OFF'}
-            </button>
-            <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
-              Classifica
-            </button>
-          </div>
-        </div>
+        {renderTopBar()}
 
         <div className={styles.slideContent}>
           <div className={styles.bottleBadge}>
@@ -928,95 +822,7 @@ export default function PlayerLiveClient({
           )}
         </div>
 
-        {leaderboardOpen && (
-          <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
-            <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
-              <div className={styles.sheetHandle} />
-              <h3>Classifica Live</h3>
-              <div className={styles.sheetList}>
-                {sortedLeaderboard.map((player, idx) => (
-                  <div key={player.id} className={styles.sheetRow}>
-                    <span className={styles.sheetRank}>#{idx + 1}</span>
-                    <span className={styles.sheetName}>{player.nickname}</span>
-                    <span className={styles.sheetScore}>{player.total_score || 0}</span>
-                  </div>
-                ))}
-              </div>
-              <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
-                Chiudi
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  if (
-    roundStatus === 'waiting_answers' &&
-    hostCompletedRound &&
-    !allPlayersCompletedThisRound &&
-    isHostUser
-  ) {
-    const playersStillAnswering = allPlayers.filter(
-      (p) => !liveQuestions.every((q) => roundAnswersByPlayer[p.id]?.[q.id]?.optionId),
-    )
-    return (
-      <div className={styles.fullPage}>
-        <div className={styles.topBar}>
-          <div className={styles.playerInfo}>
-            <span className={styles.avatar}>{APPLE_AVATARS[playerData.avatar_id - 1] || '👤'}</span>
-            <span className={styles.nickname}>{playerData.nickname}</span>
-          </div>
-          <div className={styles.topActions}>
-            <button className={styles.audioButton} onClick={toggleAudio}>
-              {audioEnabled ? '🔊 ON' : '🔇 OFF'}
-            </button>
-            <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
-              Classifica
-            </button>
-          </div>
-        </div>
-
-        <div className={styles.slideContent}>
-          <div className={styles.bottleBadge}>
-            Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
-          </div>
-          <h2 className={styles.waitTitle}>✅ Hai finito!</h2>
-          <p className={styles.readyHint}>Aspetta gli altri giocatori...</p>
-          <div className={styles.summaryRow} style={{marginTop: '24px'}}>
-            <span className={styles.summaryText}>Giocatori che stanno rispondendo:</span>
-          </div>
-          {playersStillAnswering.map((player) => (
-            <div key={player.id} className={styles.summaryRow} style={{opacity: 0.7}}>
-              <span className={styles.summaryIndex}>
-                {APPLE_AVATARS[player.avatar_id - 1] || '👤'}
-              </span>
-              <span className={styles.summaryText}>{player.nickname}</span>
-            </div>
-          ))}
-        </div>
-
-        {leaderboardOpen && (
-          <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
-            <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
-              <div className={styles.sheetHandle} />
-              <h3>Classifica Live</h3>
-              <div className={styles.sheetList}>
-                {sortedLeaderboard.map((player, idx) => (
-                  <div key={player.id} className={styles.sheetRow}>
-                    <span className={styles.sheetRank}>#{idx + 1}</span>
-                    <span className={styles.sheetName}>{player.nickname}</span>
-                    <span className={styles.sheetScore}>{player.total_score || 0}</span>
-                  </div>
-                ))}
-              </div>
-              <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
-                Chiudi
-              </button>
-            </div>
-          </div>
-        )}
+        {leaderboardSheet}
       </div>
     )
   }
@@ -1041,30 +847,7 @@ export default function PlayerLiveClient({
   return (
     <div className={styles.fullPage}>
       {/* ── Top bar ── */}
-      <div className={styles.topBar}>
-        <div className={styles.playerInfo}>
-          <span className={styles.avatar}>{APPLE_AVATARS[playerData.avatar_id - 1] || '👤'}</span>
-          <span className={styles.nickname}>{playerData.nickname}</span>
-        </div>
-        <div className={styles.progressPills}>
-          {liveQuestions.map((_, idx) => (
-            <span
-              key={idx}
-              className={`${styles.pill} ${idx < currentSlideIndex ? styles.pillDone : ''} ${
-                idx === currentSlideIndex ? styles.pillActive : ''
-              }`}
-            />
-          ))}
-        </div>
-        <div className={styles.topActions}>
-          <button className={styles.audioButton} onClick={toggleAudio}>
-            {audioEnabled ? '🔊 ON' : '🔇 OFF'}
-          </button>
-          <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
-            Classifica
-          </button>
-        </div>
-      </div>
+      {renderTopBar({withProgress: true})}
 
       {/* ── Question content ── */}
       <div className={`${styles.slideContent} ${slideMotionClass}`}>
@@ -1152,26 +935,7 @@ export default function PlayerLiveClient({
       </div>
 
       {/* ── Leaderboard sheet ── */}
-      {leaderboardOpen && (
-        <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
-          <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.sheetHandle} />
-            <h3>Classifica Live</h3>
-            <div className={styles.sheetList}>
-              {sortedLeaderboard.map((player, idx) => (
-                <div key={player.id} className={styles.sheetRow}>
-                  <span className={styles.sheetRank}>#{idx + 1}</span>
-                  <span className={styles.sheetName}>{player.nickname}</span>
-                  <span className={styles.sheetScore}>{player.total_score || 0}</span>
-                </div>
-              ))}
-            </div>
-            <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
-              Chiudi
-            </button>
-          </div>
-        </div>
-      )}
+      {leaderboardSheet}
     </div>
   )
 }

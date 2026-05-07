@@ -64,7 +64,6 @@ export default async function PlayerPlayPage({params}) {
   return (
     <PlayerLiveClient
       sessionId={sessionId}
-      gameName={session?.games?.name || 'Gioco'}
       questions={questions}
       bottles={bottles}
       initialStatus={session?.round_status || 'waiting_answers'}

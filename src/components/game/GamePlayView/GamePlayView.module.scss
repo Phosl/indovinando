@@ -1,3 +1,20 @@
+%framedCard {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+}
+
+%capsuleBadge {
+  display: inline-flex;
+  width: fit-content;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 999px;
+  background: var(--background);
+  color: var(--text-secondary);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
 .container {
   width: 100%;
   max-width: 960px;
@@ -30,10 +47,8 @@
 }
 
 .bottleCard {
+  @extend %framedCard;
   scroll-snap-align: start;
-  border: 2px solid var(--button-secondary-border);
-  background: var(--foreground);
-  border-radius: 12px;
   padding: 14px;
   text-align: left;
   cursor: pointer;
@@ -56,16 +71,10 @@
 }
 
 .bottleIndex {
-  display: inline-flex;
-  width: fit-content;
-  border: 2px solid var(--button-secondary-border);
-  border-radius: 999px;
-  background: var(--background);
-  color: var(--text-secondary);
+  @extend %capsuleBadge;
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  font-weight: 900;
   padding: 4px 9px;
 }
 
@@ -76,9 +85,7 @@
 }
 
 .card {
-  background: var(--foreground);
-  border: 2px solid var(--button-secondary-border);
-  border-radius: 12px;
+  @extend %framedCard;
   padding: 18px;
   box-shadow: 0px 4px 0px 0px var(--gray-light);
 }
@@ -108,10 +115,9 @@
 }
 
 .questionBlock {
+  @extend %framedCard;
   padding: 12px;
   border-radius: 10px;
-  border: 2px solid var(--button-secondary-border);
-  background: var(--foreground);
 }
 
 .questionHeader {
@@ -122,15 +128,9 @@
 }
 
 .questionNumber {
-  display: inline-flex;
-  width: fit-content;
+  @extend %capsuleBadge;
   padding: 4px 10px;
-  border-radius: 999px;
-  border: 2px solid var(--button-secondary-border);
-  background: var(--background);
-  color: var(--text-secondary);
   font-size: 12px;
-  font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -174,7 +174,7 @@
 
 .correct {
   border-color: var(--accept-dark);
-  background: #effff2;
+  background: var(--success-surface);
   box-shadow: 0px 2px 0px 0px var(--accept-dark);
 
   .optionIcon {
