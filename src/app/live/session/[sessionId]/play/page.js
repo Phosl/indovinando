@@ -17,6 +17,7 @@ export default async function PlayerPlayPage({params}) {
       id,
       status,
       game_id,
+      host_user_id,
       current_question_index,
       round_status,
       games(name)
@@ -63,12 +64,12 @@ export default async function PlayerPlayPage({params}) {
   return (
     <PlayerLiveClient
       sessionId={sessionId}
-      gameName={session.games?.name || 'Gioco'}
+      gameName={session?.games?.name || 'Gioco'}
       questions={questions}
       bottles={bottles}
       initialStatus={session?.round_status || 'waiting_answers'}
       initialQuestionIndex={session?.current_question_index || 0}
-      sessionStatus={session?.status || 'playing'}
+      hostUserId={session?.host_user_id || null}
       userId={user?.id || null}
     />
   )
