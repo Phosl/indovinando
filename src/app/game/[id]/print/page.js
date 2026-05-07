@@ -52,9 +52,18 @@ export default async function GamePrintPage({params}) {
     }))
     .slice(0, 5)
 
+  const {data: bottleResults} = await supabase
+    .from('game_bottles')
+    .select('id, game_bottle_answers(id)')
+    .eq('game_id', gameId)
+
+  const hasResults = (bottleResults || []).some(
+    (bottle) => (bottle.game_bottle_answers || []).length > 0,
+  )
+
   return (
     <main className={styles.page}>
-      <PrintSheetClient gameId={gameId} />
+      <PrintSheetClient gameId={gameId} hasResults={hasResults} />
 
       <section className={styles.sheet}>
         <header className={styles.header}>

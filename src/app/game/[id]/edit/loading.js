@@ -7,17 +7,6 @@ function Bone({w, h, style}) {
   )
 }
 
-const cardStyle = {
-  background: 'var(--foreground)',
-  border: '2px solid var(--button-secondary-border)',
-  borderRadius: 12,
-  boxShadow: '0px 4px 0px 0px var(--gray-light)',
-  padding: '20px 24px',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 16,
-}
-
 export default function GameEditLoading() {
   return (
     <main
@@ -30,6 +19,7 @@ export default function GameEditLoading() {
         gap: 16,
       }}>
       <div
+        className="skeleton-frame"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -37,10 +27,6 @@ export default function GameEditLoading() {
           width: '100%',
           padding: '10px 14px',
           marginBottom: 4,
-          background: 'var(--foreground)',
-          border: '2px solid var(--button-secondary-border)',
-          borderRadius: 12,
-          boxShadow: '0px 3px 0px 0px var(--gray-light)',
           flexWrap: 'wrap',
           boxSizing: 'border-box',
         }}>
@@ -57,7 +43,9 @@ export default function GameEditLoading() {
       </div>
 
       {/* Content card */}
-      <div style={cardStyle}>
+      <div
+        className="skeleton-card"
+        style={{padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 16}}>
         <Bone w="180px" h="22px" />
         {[1, 2].map((i) => (
           <div key={i} style={{display: 'flex', flexDirection: 'column', gap: 10}}>

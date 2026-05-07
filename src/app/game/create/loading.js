@@ -7,17 +7,6 @@ function Bone({w, h, style}) {
   )
 }
 
-const cardStyle = {
-  background: 'var(--foreground)',
-  border: '2px solid var(--button-secondary-border)',
-  borderRadius: 12,
-  boxShadow: '0px 4px 0px 0px var(--gray-light)',
-  padding: '20px 24px',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 16,
-}
-
 export default function GameCreateLoading() {
   return (
     <main
@@ -30,6 +19,7 @@ export default function GameCreateLoading() {
         gap: 16,
       }}>
       <div
+        className="skeleton-frame"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -37,10 +27,6 @@ export default function GameCreateLoading() {
           width: '100%',
           padding: '10px 14px',
           marginBottom: 4,
-          background: 'var(--foreground)',
-          border: '2px solid var(--button-secondary-border)',
-          borderRadius: 12,
-          boxShadow: '0px 3px 0px 0px var(--gray-light)',
           flexWrap: 'wrap',
           boxSizing: 'border-box',
         }}>
@@ -57,7 +43,9 @@ export default function GameCreateLoading() {
       </div>
 
       {/* Form card */}
-      <div style={cardStyle}>
+      <div
+        className="skeleton-card"
+        style={{padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 16}}>
         <Bone w="160px" h="22px" />
         <Bone w="100%" h="48px" style={{borderRadius: 10}} />
         <Bone w="140px" h="44px" style={{borderRadius: 12, marginTop: 8}} />

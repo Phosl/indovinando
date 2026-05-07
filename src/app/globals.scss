@@ -19,6 +19,12 @@ body {
   --accept: #2ec748;
   --accept-light: #30da4c;
   --accept-dark: #27aa3d;
+  --success-surface: #effff2;
+  --danger-surface: #fff1f2;
+  --danger-border: #db2a32;
+  --danger-text: #b91c1c;
+  --skeleton-base: #ece7e2;
+  --skeleton-highlight: #f8f5f2;
 
   --selected: #833bac;
   --selected-light: #9c4ed8;
@@ -59,7 +65,7 @@ main.flex-container {
 }
 
 .error-message {
-  padding: 12;
+  padding: 12px;
   margin-bottom: 20px;
   background-color: var(--error-message-background);
   color: var(--error-message-color);
@@ -118,8 +124,37 @@ main.flex-container {
 }
 
 .skeleton {
-  background: linear-gradient(90deg, var(--gray-light) 25%, #f5f5f5 50%, var(--gray-light) 75%);
+  display: block;
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-base) 20%,
+    var(--skeleton-highlight) 50%,
+    var(--skeleton-base) 80%
+  );
   background-size: 200% 100%;
   animation: skeletonShimmer 1.4s ease infinite;
   border-radius: 8px;
+  overflow: hidden;
+}
+
+.skeleton-frame {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  box-shadow: 0px 3px 0px 0px var(--gray-light);
+}
+
+.skeleton-card {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  box-shadow: 0px 4px 0px 0px var(--gray-light);
+}
+
+.skeleton-pill {
+  border-radius: 999px;
+}
+
+.skeleton-button {
+  border-radius: 12px;
 }

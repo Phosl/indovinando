@@ -11,16 +11,13 @@ export default function GameLoading() {
   return (
     <main style={{padding: '16px', maxWidth: 960, margin: '0 auto'}}>
       <div
+        className="skeleton-frame"
         style={{
           display: 'flex',
           alignItems: 'center',
           gap: 12,
           padding: '10px 14px',
           marginBottom: 16,
-          background: 'var(--foreground)',
-          border: '2px solid var(--button-secondary-border)',
-          borderRadius: 12,
-          boxShadow: '0px 3px 0px 0px var(--gray-light)',
           flexWrap: 'wrap',
         }}>
         <Bone w="90px" h="32px" style={{borderRadius: 12}} />
@@ -33,11 +30,8 @@ export default function GameLoading() {
 
       {/* Content card — question list placeholder */}
       <div
+        className="skeleton-card"
         style={{
-          background: 'var(--foreground)',
-          border: '2px solid var(--button-secondary-border)',
-          borderRadius: 12,
-          boxShadow: '0px 4px 0px 0px var(--gray-light)',
           padding: '24px 20px',
           display: 'flex',
           flexDirection: 'column',
