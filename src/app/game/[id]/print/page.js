@@ -67,12 +67,26 @@ export default async function GamePrintPage({params}) {
 
       <section className={styles.sheet}>
         <header className={styles.header}>
-          <h1>Indovinando</h1>
+          <h1>{game.name}</h1>
           <div className={styles.playerRow}>
-            <span>Nome:</span>
+            <span>Giocatore:</span>
             <div className={styles.line} />
           </div>
         </header>
+
+        <div className={styles.questionsHeaderCard}>
+          <div className={styles.questionsHeaderGrid}>
+            <div className={styles.questionsHeaderLabel}>Domande</div>
+            {Array.from({length: 5}).map((_, questionIndex) => {
+              const question = questions[questionIndex]
+              return (
+                <div key={`qh-${questionIndex}`} className={styles.questionHeaderCol}>
+                  <p className={styles.questionHeaderText}>{question?.text || '—'}</p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
 
         <div className={styles.tablesWrap}>
           {Array.from({length: 5}).map((_, bottleIndex) => (
