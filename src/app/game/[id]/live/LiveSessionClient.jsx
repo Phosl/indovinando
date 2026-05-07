@@ -73,6 +73,26 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
 
   const handleStartGame = async () => {
     try {
+      // Ensure host partecipa come giocatore nella stessa sessione.
+      const {data: existingHostPlayer} = await supabaseClient
+        .from('live_players')
+        .select('id')
+        .eq('session_id', sessionId)
+        .eq('user_id', userId)
+        .limit(1)
+        .maybeSingle()
+
+      if (!existingHostPlayer) {
+        const hostNickname = 'Host'
+        await supabaseClient.from('live_players').insert({
+          session_id: sessionId,
+          nickname: hostNickname,
+          avatar_id: 1,
+          user_id: userId,
+          is_host: true,
+        })
+      }
+
       // Aggiorna sessione: cambio status a 'playing'
       await supabaseClient
         .from('live_sessions')
@@ -80,11 +100,12 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
           status: 'playing',
           started_at: new Date().toISOString(),
           round_status: 'waiting_answers',
+          updated_at: new Date().toISOString(),
         })
         .eq('id', sessionId)
 
-      // Vai alla pagina host
-      router.push(`/live/session/${sessionId}/host`)
+      // Host e giocatori condividono la stessa esperienza di gioco.
+      router.push(`/live/session/${sessionId}/play`)
     } catch (err) {
       console.error('Error starting game:', err)
     }
@@ -127,7 +148,7 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
         <div className={styles.section}>
           <h2>Partecipanti: {playersCount}</h2>
           <p className={styles.info}>
-            Aspetta che i giocatori si uniscano, poi premi "Inizia Gioco"
+            Aspetta che i giocatori si uniscano, poi premi Inizia Gioco.
           </p>
         </div>
 

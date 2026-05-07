@@ -1,8 +1,7 @@
 import {notFound, redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
-import GamePlayView from '@/components/game/GamePlayView'
 import GamePlayPageClient from './GamePlayPageClient'
-import {toggleGameStatus, deleteGame} from './actions'
+import {deleteGame} from './actions'
 
 export default async function GamePlayPage({params}) {
   const supabase = await createServerSupabase()
@@ -88,7 +87,6 @@ export default async function GamePlayPage({params}) {
       questions={questions}
       bottles={bottles}
       isOwner={isOwner}
-      onToggleStatus={toggleGameStatus}
       onDelete={deleteGame}
     />
   )

@@ -69,23 +69,42 @@ Click "Inizia Gioco" → /live/session/[sessionId]/host
 - Giocatori redirected → /live/session/[sessionId]/play
 ```
 
-### **Fase 4: Round Domanda-Risposta**
+### **Fase 4: Round Domanda-Risposta (Flusso Completo)**
+
+**Nessuno è interrotto**: Giocatori completano le domande al proprio ritmo.
 
 ```
-HOST: Vede lista giocatori e conta risposte
+PLAYER: Vede slide con domanda
+- Seleziona risposta
+- Clicca "Controlla"
+- Ottiene feedback immediato (Corretto! / Sbagliato: risposta giusta è...)
+- Clicca "Continua" per prossima domanda
 ↓
-PLAYER: Vede domanda, sceglie risposta, invia
-- Polling salva risposta in `live_round_answers`
+ULTIMO GIOCATORE A FINIRE:
+- Segna tutte le domande come finito
+- Continua a leggere i risultati finché non va ai risultati
 ↓
-HOST: Clicca "Mostra Risultati"
-- Calcola correct/incorrect
-- Aggiorna `total_score` giocatore
-- Session cambia `round_status`: 'showing_results'
+HOST (dopo aver finito):
+- Vede schermata "✅ Hai finito!"
+- Lista mostra quali giocatori stanno ancora ottenendo risposte
+- ASPETTA che tutti gli altri finiscano
 ↓
-PLAYER: Vede risultati e classifica interim
+TUTTI I GIOCATORI (quando finiscono):
+- Automaticamente vedono "Bottiglia completata!" (risultati)
+- Mostrati: domanda, tua risposta, risposta corretta, punti
 ↓
-HOST: Clicca "Prossima Domanda" o "Termina Gioco"
+HOST (vede bottone "Prossima bottiglia"):
+- Clicca "Prossima bottiglia"
+- Appare schermata transizione "🍾 Bottiglia N"
+- Clicca "Iniziamo" per partire con nuove domande
+↓
+ALTRI GIOCATORI (da risultati):
+- Vedono "In attesa dell'host..."
+- Quando host clicca "Iniziamo", partono le nuove domande
 ```
+
+**Vantaggi:** ✅ Nessun giocatore è interrotto ✅ Tutti possono rivedere i risultati a proprio tempo
+✅ Host comanda il ritmo senza pressione
 
 ### **Fase 5: Classifica Finale**
 

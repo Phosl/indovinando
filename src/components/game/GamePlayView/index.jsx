@@ -4,174 +4,76 @@ import {useMemo, useState} from 'react'
 import styles from './GamePlayView.module.scss'
 
 export default function GamePlayView({game, questions, bottles}) {
-  const [roundIndex, setRoundIndex] = useState(0)
-  const [answers, setAnswers] = useState({})
-  const [submitted, setSubmitted] = useState(false)
-  const [roundAnswers, setRoundAnswers] = useState([])
-  const [completedRounds, setCompletedRounds] = useState(0)
+  const [activeBottleIndex, setActiveBottleIndex] = useState(0)
 
-  const currentBottle = bottles[roundIndex]
+  const activeBottle = bottles[activeBottleIndex]
 
-  const totalQuestions = questions.length
-  const isGameCompleted = completedRounds === bottles.length
-
-  const finalResult = useMemo(() => {
-    if (!isGameCompleted) return null
-
-    let totalCorrectAnswers = 0
-    const perBottle = bottles.map((bottle, idx) => {
-      const savedRound = roundAnswers[idx]?.answers || {}
-      const keyMap = new Map((bottle.answers || []).map((a) => [a.question_id, a.option_id]))
-
-      const correct = questions.reduce((acc, q) => {
-        return acc + (savedRound[q.id] === keyMap.get(q.id) ? 1 : 0)
-      }, 0)
-
-      totalCorrectAnswers += correct
-
-      return {
-        bottleName: `${bottle.name} (${bottle.producer} - ${bottle.year})`,
-        correct,
-      }
-    })
-
-    return {
-      totalCorrectAnswers,
-      maxScore: bottles.length * questions.length,
-      perBottle,
-    }
-  }, [bottles, isGameCompleted, questions, roundAnswers])
-
-  function handleSelect(questionId, optionId) {
-    if (submitted) return
-    setAnswers((prev) => ({...prev, [questionId]: optionId}))
-  }
-
-  function handleSubmitRound() {
-    if (submitted) return
-
-    if (Object.keys(answers).length !== totalQuestions) {
-      alert('Rispondi a tutte le domande prima di confermare.')
-      return
-    }
-
-    setRoundAnswers((prev) => {
-      const updated = [...prev]
-      updated[roundIndex] = {
-        bottleId: currentBottle.id,
-        answers: {...answers},
-      }
-      return updated
-    })
-
-    setSubmitted(true)
-  }
-
-  function handleNextRound() {
-    setCompletedRounds((prev) => prev + 1)
-    setRoundIndex((prev) => prev + 1)
-    setAnswers({})
-    setSubmitted(false)
-  }
-
-  function restartGame() {
-    setRoundIndex(0)
-    setAnswers({})
-    setSubmitted(false)
-    setRoundAnswers([])
-    setCompletedRounds(0)
-  }
-
-  if (isGameCompleted) {
-    return (
-      <div className={styles.container}>
-        <h1>{game.name}</h1>
-        <div className={styles.summaryCard}>
-          <h2>Partita completata 🎉</h2>
-          <p>
-            Punteggio finale: <strong>{finalResult?.totalCorrectAnswers || 0}</strong> /{' '}
-            {finalResult?.maxScore || 0}
-          </p>
-
-          <div className={styles.finalList}>
-            {(finalResult?.perBottle || []).map((row, idx) => (
-              <p key={`${row.bottleName}-${idx}`} className={styles.finalRow}>
-                {idx + 1}. {row.bottleName} → <strong>{row.correct}</strong> / {questions.length}
-              </p>
-            ))}
-          </div>
-
-          <button className="btn primary" onClick={restartGame}>
-            Rigioca
-          </button>
-        </div>
-      </div>
-    )
-  }
+  const answerMap = useMemo(() => {
+    if (!activeBottle) return new Map()
+    return new Map((activeBottle.answers || []).map((a) => [a.question_id, a.option_id]))
+  }, [activeBottle])
 
   return (
     <div className={styles.container}>
-      <h1>{game.name}</h1>
-      <p className={styles.progress}>
-        Bottiglia {roundIndex + 1} di {bottles.length}
-      </p>
+      <h1 className={styles.gameTitle}>{game.name}</h1>
 
-      <div className={styles.card}>
-        <h2>Indovina la bottiglia 🍷</h2>
-
-        <div className={styles.questionsList}>
-          {questions.map((q, idx) => (
-            <div key={q.id} className={styles.questionBlock}>
-              <div className={styles.questionHeader}>
-                <span className={styles.questionNumber}>Domanda {idx + 1}</span>
-                <p className={styles.questionTitle}>{q.text}</p>
-              </div>
-
-              <div className={styles.options}>
-                {q.options.map((opt) => {
-                  const isSelected = answers[q.id] === opt.id
-
-                  let optionClass = styles.option
-                  if (!submitted && isSelected) optionClass += ` ${styles.selected}`
-
-                  return (
-                    <button
-                      key={opt.id}
-                      className={optionClass}
-                      onClick={() => handleSelect(q.id, opt.id)}
-                      disabled={submitted}>
-                      {opt.text}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
+      <section className={styles.sliderSection} aria-label="Bottiglie del gioco">
+        <div className={styles.sliderTrack}>
+          {bottles.map((bottle, idx) => (
+            <button
+              key={bottle.id}
+              className={`${styles.bottleCard} ${idx === activeBottleIndex ? styles.activeBottle : ''}`}
+              onClick={() => setActiveBottleIndex(idx)}>
+              <span className={styles.bottleIndex}>Bottiglia {idx + 1}</span>
+              <h3>{bottle.name || 'Senza nome'}</h3>
+              <p>{bottle.producer || 'Produttore non indicato'}</p>
+              <p>{bottle.year || 'Anno non indicato'}</p>
+            </button>
           ))}
         </div>
+      </section>
 
-        {!submitted ? (
-          <div className={styles.bottomToolbar}>
-            <button className="btn primary" onClick={handleSubmitRound}>
-              Conferma risposte
-            </button>
-          </div>
-        ) : (
-          <div className={styles.resultBox}>
-            <p>Risposte salvate. Passa alla prossima bottiglia.</p>
+      <div className={styles.card}>
+        <div className={styles.bottleHeader}>
+          <span className={styles.questionNumber}>
+            Bottiglia {activeBottleIndex + 1} di {bottles.length}
+          </span>
+          <h2>{activeBottle?.name || 'Bottiglia'}</h2>
+          <p>
+            {activeBottle?.producer || 'Produttore non indicato'} -{' '}
+            {activeBottle?.year || 'Anno N/A'}
+          </p>
+        </div>
 
-            <div className={styles.bottomToolbar}>
-              {roundIndex < bottles.length - 1 ? (
-                <button className="btn primary" onClick={handleNextRound}>
-                  Prossima bottiglia
-                </button>
-              ) : (
-                <button className="btn primary" onClick={() => setCompletedRounds(bottles.length)}>
-                  Termina partita
-                </button>
-              )}
-            </div>
-          </div>
-        )}
+        <div className={styles.questionsList}>
+          {questions.map((q, idx) => {
+            const correctOptionId = answerMap.get(q.id)
+            return (
+              <div key={q.id} className={styles.questionBlock}>
+                <div className={styles.questionHeader}>
+                  <span className={styles.questionNumber}>Domanda {idx + 1}</span>
+                  <p className={styles.questionTitle}>{q.text}</p>
+                </div>
+
+                <div className={styles.options}>
+                  {q.options.map((opt) => {
+                    const isCorrect = opt.id === correctOptionId
+                    return (
+                      <div
+                        key={opt.id}
+                        className={`${styles.option} ${isCorrect ? styles.correct : styles.wrong}`}>
+                        <span className={styles.optionIcon}>{isCorrect ? '✓' : '✗'}</span>
+                        <span>{opt.text}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                <p className={styles.correctLabel}>Risposta corretta evidenziata in verde</p>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

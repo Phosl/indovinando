@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, useEffect, useCallback} from 'react'
+import {useState, useEffect, useCallback, useMemo, useRef} from 'react'
 import {useRouter} from 'next/navigation'
 import Loader from '@/components/Loader'
 import {supabaseClient} from '@/lib/supabaseClient'
@@ -15,28 +15,98 @@ export default function PlayerLiveClient({
   bottles,
   initialStatus,
   initialQuestionIndex,
-  sessionStatus,
+  hostUserId,
   userId,
 }) {
   const router = useRouter()
+  const isHostUser = Boolean(userId && hostUserId && userId === hostUserId)
+  const transitionLockRef = useRef('')
 
   const [liveQuestions, setLiveQuestions] = useState(questions || [])
   const [liveBottles, setLiveBottles] = useState(bottles || [])
   const [currentBottleIndex, setCurrentBottleIndex] = useState(initialQuestionIndex)
-  const [roundStatus, setRoundStatus] = useState(initialStatus) // 'waiting_answers' | 'showing_results'
+  const [roundStatus, setRoundStatus] = useState(initialStatus)
   const [selectedAnswers, setSelectedAnswers] = useState({})
   const [playerData, setPlayerData] = useState(null)
   const [allPlayers, setAllPlayers] = useState([])
   const [sessionFinished, setSessionFinished] = useState(false)
-  const [roundAnswers, setRoundAnswers] = useState({}) // { questionId: { optionId, isCorrect, points } }
+  const [roundAnswersByPlayer, setRoundAnswersByPlayer] = useState({})
+  const [roundAnswers, setRoundAnswers] = useState({})
   const [correctOptionByQuestion, setCorrectOptionByQuestion] = useState({})
   const [submitted, setSubmitted] = useState(false)
   const [resolvingPlayer, setResolvingPlayer] = useState(true)
   const [loadingGameData, setLoadingGameData] = useState((questions || []).length === 0)
+  const [resultsSince, setResultsSince] = useState(null)
+  const [readyPlayers, setReadyPlayers] = useState({})
+  const [clickedReady, setClickedReady] = useState(false)
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false)
+  // Slide-based question navigation
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
+  const [checkedQuestions, setCheckedQuestions] = useState({})
+  const [slideMotion, setSlideMotion] = useState('idle')
+  const [audioEnabled, setAudioEnabled] = useState(true)
+  const slideTimerRef = useRef(null)
+  const slideTransitionMs = 220
+  const [showBottleTransition, setShowBottleTransition] = useState(false)
+  const [resultsOpenedBottleIndex, setResultsOpenedBottleIndex] = useState(null)
+  const [waitingForOthersOnNext, setWaitingForOthersOnNext] = useState(false)
+  const soundsRef = useRef({correct: null, wrong: null, bottleCompleted: null})
+  const playedBottleSoundRef = useRef(null)
 
   const currentBottle = liveBottles[currentBottleIndex]
+  const isLastBottle = currentBottleIndex >= liveBottles.length - 1
   const playerStorageKey = `live_player_id_${sessionId}`
   const nicknameStorageKey = `live_player_nickname_${sessionId}`
+  const audioPreferenceKey = 'live_audio_enabled'
+
+  const toggleAudio = useCallback(() => {
+    setAudioEnabled((prev) => {
+      const next = !prev
+      localStorage.setItem(audioPreferenceKey, next ? 'on' : 'off')
+      return next
+    })
+  }, [audioPreferenceKey])
+
+  const playSound = useCallback(
+    (soundKey) => {
+      if (!audioEnabled) return
+      const sound = soundsRef.current[soundKey]
+      if (!sound) return
+      sound.currentTime = 0
+      sound.play().catch(() => {})
+    },
+    [audioEnabled],
+  )
+
+  useEffect(() => {
+    return () => {
+      if (slideTimerRef.current) clearTimeout(slideTimerRef.current)
+    }
+  }, [])
+
+  useEffect(() => {
+    const savedPreference = localStorage.getItem(audioPreferenceKey)
+    if (savedPreference === 'off') setAudioEnabled(false)
+
+    soundsRef.current = {
+      correct: new Audio('/indovianando-correct.mp3'),
+      wrong: new Audio('/indovianando-wrong.mp3'),
+      bottleCompleted: new Audio('/indovianando-bottle-completed.mp3'),
+    }
+
+    Object.values(soundsRef.current).forEach((audio) => {
+      if (!audio) return
+      audio.preload = 'auto'
+      audio.volume = 0.9
+    })
+  }, [audioPreferenceKey])
+
+  useEffect(() => {
+    if (roundStatus !== 'showing_results') return
+    if (playedBottleSoundRef.current === currentBottleIndex) return
+    playedBottleSoundRef.current = currentBottleIndex
+    playSound('bottleCompleted')
+  }, [roundStatus, currentBottleIndex, playSound])
 
   useEffect(() => {
     const bootstrapGameData = async () => {
@@ -122,7 +192,7 @@ export default function PlayerLiveClient({
     if (userId) {
       const {data: byUser} = await supabaseClient
         .from('live_players')
-        .select('id, nickname, avatar_id, user_id')
+        .select('id, nickname, avatar_id, user_id, is_host')
         .eq('session_id', sessionId)
         .eq('user_id', userId)
         .limit(1)
@@ -140,7 +210,7 @@ export default function PlayerLiveClient({
     if (storedNickname) {
       const {data: byNickname} = await supabaseClient
         .from('live_players')
-        .select('id, nickname, avatar_id, user_id')
+        .select('id, nickname, avatar_id, user_id, is_host')
         .eq('session_id', sessionId)
         .eq('nickname', storedNickname)
         .order('joined_at', {ascending: false})
@@ -161,93 +231,235 @@ export default function PlayerLiveClient({
       }
     }
 
-    setResolvingPlayer(false)
-  }, [nicknameStorageKey, playerStorageKey, sessionId, userId])
+    if (isHostUser) {
+      const fallbackNickname = 'Host'
+      const {data: created, error: createErr} = await supabaseClient
+        .from('live_players')
+        .insert({
+          session_id: sessionId,
+          nickname: fallbackNickname,
+          avatar_id: 1,
+          user_id: userId,
+          is_host: true,
+        })
+        .select('id, nickname, avatar_id, user_id, is_host')
+        .maybeSingle()
 
-  // Polling: controlla stato della sessione e della domanda corrente
+      if (!createErr && created) {
+        localStorage.setItem(playerStorageKey, created.id)
+        localStorage.setItem(nicknameStorageKey, created.nickname)
+        setPlayerData(created)
+      }
+    }
+
+    setResolvingPlayer(false)
+  }, [isHostUser, nicknameStorageKey, playerStorageKey, sessionId, userId])
+
+  const buildReadyMap = useCallback((players, readySince) => {
+    if (!readySince) return {}
+    const threshold = new Date(readySince).getTime()
+    const nextMap = {}
+    players.forEach((player) => {
+      nextMap[player.id] = new Date(player.updated_at).getTime() >= threshold
+    })
+    return nextMap
+  }, [])
+
+  const syncScoresFromAnswers = useCallback(
+    async (players, answersByPlayer) => {
+      if (!isHostUser || players.length === 0) return
+
+      const scoreByPlayer = {}
+      players.forEach((player) => {
+        scoreByPlayer[player.id] = 0
+      })
+
+      Object.entries(answersByPlayer).forEach(([playerId, perQuestion]) => {
+        Object.values(perQuestion || {}).forEach((answer) => {
+          scoreByPlayer[playerId] = (scoreByPlayer[playerId] || 0) + (answer.points || 0)
+        })
+      })
+
+      await Promise.all(
+        players.map((player) =>
+          supabaseClient
+            .from('live_players')
+            .update({total_score: scoreByPlayer[player.id] || 0})
+            .eq('id', player.id),
+        ),
+      )
+    },
+    [isHostUser],
+  )
+
+  const transitionToNextBottle = useCallback(async () => {
+    if (!isHostUser) return
+    setShowBottleTransition(true)
+  }, [isHostUser])
+
+  const advanceToNextBottleOrFinish = useCallback(async () => {
+    try {
+      if (isLastBottle) {
+        await supabaseClient
+          .from('live_sessions')
+          .update({
+            status: 'finished',
+            finished_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', sessionId)
+        return
+      }
+
+      await supabaseClient.from('live_round_answers').delete().eq('session_id', sessionId)
+
+      const nextIndex = currentBottleIndex + 1
+      await supabaseClient
+        .from('live_sessions')
+        .update({
+          current_question_index: nextIndex,
+          round_status: 'waiting_answers',
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', sessionId)
+
+      setShowBottleTransition(false)
+      setCurrentBottleIndex(nextIndex)
+      setRoundStatus('waiting_answers')
+      setWaitingForOthersOnNext(false)
+      setSelectedAnswers({})
+      setRoundAnswers({})
+      setRoundAnswersByPlayer({})
+      setReadyPlayers({})
+      setClickedReady(false)
+      setCurrentSlideIndex(0)
+      setCheckedQuestions({})
+      setSlideMotion('idle')
+    } catch (err) {
+      console.error('Errore in advanceToNextBottleOrFinish:', err)
+      setShowBottleTransition(false)
+    }
+  }, [currentBottleIndex, isLastBottle, sessionId])
+
   useEffect(() => {
     const pollSession = setInterval(async () => {
-      // Carica session
       const {data: session} = await supabaseClient
         .from('live_sessions')
-        .select('current_question_index, round_status, status')
+        .select('current_question_index, round_status, status, updated_at')
         .eq('id', sessionId)
         .single()
 
       if (session?.status === 'finished') {
         setSessionFinished(true)
-        setTimeout(() => router.push(`/live/session/${sessionId}/leaderboard`), 1000)
+        setTimeout(() => router.push(`/live/session/${sessionId}/leaderboard`), 900)
       }
 
-      // Aggiorna indice bottiglia e resetta risposte
       setCurrentBottleIndex((prev) => {
         if (session?.current_question_index !== prev) {
+          setShowBottleTransition(false)
+          setResultsOpenedBottleIndex(null)
+          setWaitingForOthersOnNext(false)
           setSelectedAnswers({})
           setRoundAnswers({})
+          setRoundAnswersByPlayer({})
           setCorrectOptionByQuestion({})
           setSubmitted(false)
+          setReadyPlayers({})
+          setClickedReady(false)
+          setCurrentSlideIndex(0)
+          setCheckedQuestions({})
+          setSlideMotion('idle')
         }
         return session?.current_question_index || 0
       })
 
-      // Aggiorna stato round
       setRoundStatus(session?.round_status)
+      if (session?.round_status === 'showing_results') {
+        setResultsSince(session?.updated_at || null)
+      }
 
-      // Carica player data se non esiste
       if (!playerData) {
         await resolvePlayer()
       }
 
-      // Carica lista giocatori
       const {data: players} = await supabaseClient
         .from('live_players')
-        .select('id, nickname, avatar_id')
+        .select('id, nickname, avatar_id, total_score, updated_at, is_host')
         .eq('session_id', sessionId)
         .order('joined_at')
 
-      setAllPlayers(players || [])
-    }, 1500) // Aumentato a 1500ms per ridurre carico DB
+      const playersSafe = players || []
+      setAllPlayers(playersSafe)
+
+      if (liveQuestions.length > 0) {
+        const {data: answers} = await supabaseClient
+          .from('live_round_answers')
+          .select('player_id, question_id, selected_option_id, is_correct, points')
+          .eq('session_id', sessionId)
+          .in(
+            'question_id',
+            liveQuestions.map((q) => q.id),
+          )
+
+        const selectedByPlayer = {}
+        const nextByPlayer = {}
+
+        ;(answers || []).forEach((answer) => {
+          if (!selectedByPlayer[answer.player_id]) {
+            selectedByPlayer[answer.player_id] = {}
+            nextByPlayer[answer.player_id] = {}
+          }
+
+          selectedByPlayer[answer.player_id][answer.question_id] = answer.selected_option_id
+          nextByPlayer[answer.player_id][answer.question_id] = {
+            optionId: answer.selected_option_id,
+            isCorrect: answer.is_correct,
+            points: answer.points,
+          }
+        })
+
+        setRoundAnswersByPlayer(nextByPlayer)
+
+        if (playerData?.id) {
+          const serverSelected = selectedByPlayer[playerData.id] || {}
+          const serverRoundAnswers = nextByPlayer[playerData.id] || {}
+
+          // Keep local picks until they are checked/saved server-side.
+          setSelectedAnswers((prev) => ({...prev, ...serverSelected}))
+          setRoundAnswers(serverRoundAnswers)
+          setCheckedQuestions((prev) => {
+            const merged = {...prev}
+            Object.keys(serverRoundAnswers).forEach((questionId) => {
+              merged[questionId] = true
+            })
+            return merged
+          })
+          setSubmitted(liveQuestions.every((q) => serverSelected[q.id]))
+        }
+
+        const allPlayersCompleted =
+          playersSafe.length > 0 &&
+          playersSafe.every((p) => liveQuestions.every((q) => selectedByPlayer[p.id]?.[q.id]))
+        if (allPlayersCompleted) {
+          setWaitingForOthersOnNext(false)
+        }
+      }
+    }, 1200)
 
     return () => clearInterval(pollSession)
-  }, [sessionId, resolvePlayer, router, playerData])
-
-  // Carica risposte del player per il round corrente
-  useEffect(() => {
-    if (!playerData || liveQuestions.length === 0) return
-
-    const checkAnswers = async () => {
-      const {data: answers} = await supabaseClient
-        .from('live_round_answers')
-        .select('question_id, selected_option_id, is_correct, points')
-        .eq('session_id', sessionId)
-        .eq('player_id', playerData.id)
-        .in(
-          'question_id',
-          liveQuestions.map((q) => q.id),
-        )
-
-      const selectedMap = {}
-      const answersMap = {}
-
-      answers?.forEach((answer) => {
-        selectedMap[answer.question_id] = answer.selected_option_id
-        answersMap[answer.question_id] = {
-          optionId: answer.selected_option_id,
-          isCorrect: answer.is_correct,
-          points: answer.points,
-        }
-      })
-
-      setSelectedAnswers(selectedMap)
-      setRoundAnswers(answersMap)
-      setSubmitted((answers || []).length === liveQuestions.length)
-    }
-
-    checkAnswers()
-  }, [playerData, liveQuestions, sessionId])
+  }, [
+    sessionId,
+    resolvePlayer,
+    router,
+    playerData,
+    liveQuestions,
+    isHostUser,
+    currentBottleIndex,
+    buildReadyMap,
+  ])
 
   useEffect(() => {
-    if (roundStatus !== 'showing_results' || !currentBottle?.id) return
+    if (!currentBottle?.id) return
 
     const loadCorrectAnswers = async () => {
       const {data} = await supabaseClient
@@ -263,7 +475,7 @@ export default function PlayerLiveClient({
     }
 
     loadCorrectAnswers()
-  }, [roundStatus, currentBottle?.id])
+  }, [currentBottle?.id])
 
   const handleSelect = useCallback((questionId, optionId) => {
     setSelectedAnswers((prev) => {
@@ -272,48 +484,107 @@ export default function PlayerLiveClient({
     })
   }, [])
 
-  const handleSubmitAnswers = useCallback(async () => {
-    if (!playerData) return
+  const handleCheck = useCallback(
+    async (questionId, optionId) => {
+      if (!playerData || roundStatus !== 'waiting_answers') return
+      if (checkedQuestions[questionId]) return
+      if (!optionId) return
 
-    const allAnswered = liveQuestions.every((q) => selectedAnswers[q.id])
-    if (!allAnswered) return
+      const isCorrect = correctOptionByQuestion[questionId] === optionId
+      const points = isCorrect ? 10 : 0
 
-    try {
-      const payload = liveQuestions.map((question) => ({
-        session_id: sessionId,
-        player_id: playerData.id,
-        question_id: question.id,
-        selected_option_id: selectedAnswers[question.id],
-      }))
+      try {
+        const {error} = await supabaseClient.from('live_round_answers').upsert(
+          {
+            session_id: sessionId,
+            player_id: playerData.id,
+            question_id: questionId,
+            selected_option_id: optionId,
+            is_correct: isCorrect,
+            points,
+          },
+          {onConflict: 'session_id,player_id,question_id'},
+        )
 
-      const {error} = await supabaseClient.from('live_round_answers').upsert(payload, {
-        onConflict: 'session_id,player_id,question_id',
-      })
+        if (error) throw error
 
-      if (error) throw error
+        setRoundAnswers((prev) => ({
+          ...prev,
+          [questionId]: {optionId, isCorrect, points},
+        }))
+        setCheckedQuestions((prev) => ({...prev, [questionId]: true}))
+        playSound(isCorrect ? 'correct' : 'wrong')
+      } catch (err) {
+        console.error('Error evaluating answer:', err)
+      }
+    },
+    [playerData, roundStatus, checkedQuestions, correctOptionByQuestion, sessionId, playSound],
+  )
 
-      setRoundAnswers((prev) => {
-        const next = {...prev}
-        liveQuestions.forEach((question) => {
-          next[question.id] = {
-            optionId: selectedAnswers[question.id],
-            isCorrect: null,
-            points: 0,
-          }
-        })
-        return next
-      })
+  const handleContinue = useCallback(
+    async (questionId) => {
+      const isLastSlide = currentSlideIndex >= liveQuestions.length - 1
+      if (!isLastSlide) {
+        if (slideMotion !== 'idle') return
 
-      setSubmitted(true)
-    } catch (err) {
-      console.error('Error submitting answers:', err)
-    }
-  }, [playerData, liveQuestions, selectedAnswers, sessionId])
+        setSlideMotion('exiting')
+        slideTimerRef.current = setTimeout(() => {
+          setCurrentSlideIndex((prev) => prev + 1)
+          setSlideMotion('entering')
+
+          slideTimerRef.current = setTimeout(() => {
+            setSlideMotion('idle')
+          }, slideTransitionMs)
+        }, slideTransitionMs)
+        return
+      }
+      // Last slide: mark ready
+      if (!playerData || clickedReady) return
+      try {
+        await supabaseClient
+          .from('live_players')
+          .update({updated_at: new Date().toISOString()})
+          .eq('id', playerData.id)
+        setClickedReady(true)
+        setResultsOpenedBottleIndex(currentBottleIndex)
+        setReadyPlayers((prev) => ({...prev, [playerData.id]: true}))
+      } catch (err) {
+        console.error('Error setting ready status:', err)
+      }
+    },
+    [
+      currentSlideIndex,
+      liveQuestions.length,
+      playerData,
+      clickedReady,
+      slideMotion,
+      currentBottleIndex,
+    ],
+  )
+
+  const sortedLeaderboard = useMemo(
+    () => [...allPlayers].sort((a, b) => (b.total_score || 0) - (a.total_score || 0)),
+    [allPlayers],
+  )
+
+  const hostPlayer = useMemo(() => allPlayers.find((p) => p.is_host) || null, [allPlayers])
+
+  const allAnsweredCount = useMemo(() => {
+    if (liveQuestions.length === 0) return 0
+    return allPlayers.filter((player) =>
+      liveQuestions.every((question) => roundAnswersByPlayer[player.id]?.[question.id]?.optionId),
+    ).length
+  }, [allPlayers, liveQuestions, roundAnswersByPlayer])
+
+  const readyCount = useMemo(() => {
+    if (!hostPlayer) return 0
+    return readyPlayers[hostPlayer.id] ? 1 : 0
+  }, [hostPlayer, readyPlayers])
 
   if (sessionFinished) {
     return (
-      <div className={styles.container}>
-        <div className={styles.finishedCard}>
+      <div className={styles.fullPage}>
+        <div className={styles.centeredCard}>
           <h2>🎉 Gioco Terminato!</h2>
           <p>Redirezione alla classifica...</p>
         </div>
@@ -323,7 +594,7 @@ export default function PlayerLiveClient({
 
   if (resolvingPlayer) {
     return (
-      <div className={styles.container}>
+      <div className={styles.fullPage}>
         <Loader label="Caricamento partita" />
       </div>
     )
@@ -331,7 +602,7 @@ export default function PlayerLiveClient({
 
   if (loadingGameData) {
     return (
-      <div className={styles.container}>
+      <div className={styles.fullPage}>
         <Loader label="Caricamento partita" />
       </div>
     )
@@ -339,12 +610,12 @@ export default function PlayerLiveClient({
 
   if (!playerData) {
     return (
-      <div className={styles.container}>
-        <div className={styles.finishedCard}>
+      <div className={styles.fullPage}>
+        <div className={styles.centeredCard}>
           <h2>👤 Partecipante non trovato</h2>
           <p>Rientra dalla pagina di accesso alla sessione con il tuo nickname.</p>
           <button
-            className={styles.submitButton}
+            className={styles.checkButton}
             onClick={() => router.push(`/live/session/${sessionId}`)}>
             Torna al Join
           </button>
@@ -355,107 +626,552 @@ export default function PlayerLiveClient({
 
   if (!currentBottle || liveQuestions.length === 0) {
     return (
-      <div className={styles.container}>
-        <div className={styles.finishedCard}>
+      <div className={styles.fullPage}>
+        <div className={styles.centeredCard}>
           <h2>🕒 Sessione non pronta</h2>
-          <p>Attendi l'avvio del gioco da parte dell'host.</p>
+          <p>Attendi l avvio del gioco.</p>
         </div>
       </div>
     )
   }
 
+  // ── Schermata transizione bottiglia (solo locale host) ──
+  if (showBottleTransition) {
+    const nextBottleNum = currentBottleIndex + 2
+    const isLastNextBottle = nextBottleNum > liveBottles.length
+    return (
+      <div className={styles.fullPage}>
+        <div className={styles.topBar}>
+          <div className={styles.playerInfo}>
+            <span className={styles.avatar}>{APPLE_AVATARS[playerData.avatar_id - 1] || '👤'}</span>
+            <span className={styles.nickname}>{playerData.nickname}</span>
+          </div>
+          <div className={styles.topActions}>
+            <button className={styles.audioButton} onClick={toggleAudio}>
+              {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+            </button>
+            <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
+              Classifica
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.slideContent}>
+          <div className={styles.bottleBadge}>
+            Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
+          </div>
+          <h2 className={styles.waitTitle}>
+            {isLastNextBottle ? '🎉 Ultimi risultati!' : `🍾 Bottiglia ${nextBottleNum}`}
+          </h2>
+          <p className={styles.readyHint}>
+            {isLastNextBottle
+              ? 'Tra poco vedrai la classifica finale.'
+              : `Preparati per le prossime domande.`}
+          </p>
+        </div>
+
+        <div className={styles.bottomPanel}>
+          {isHostUser ? (
+            <button className={styles.continueButton} onClick={() => advanceToNextBottleOrFinish()}>
+              {isLastNextBottle ? 'Concludi' : 'Iniziamo'}
+            </button>
+          ) : (
+            <p className={styles.readyHint}>In attesa dell&apos;host...</p>
+          )}
+        </div>
+
+        {leaderboardOpen && (
+          <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
+            <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.sheetHandle} />
+              <h3>Classifica Live</h3>
+              <div className={styles.sheetList}>
+                {sortedLeaderboard.map((player, idx) => (
+                  <div key={player.id} className={styles.sheetRow}>
+                    <span className={styles.sheetRank}>#{idx + 1}</span>
+                    <span className={styles.sheetName}>{player.nickname}</span>
+                    <span className={styles.sheetScore}>{player.total_score || 0}</span>
+                  </div>
+                ))}
+              </div>
+              <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
+                Chiudi
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // ── Step intermedio: conferma apertura risultati ──
+  if (roundStatus === 'showing_results' && resultsOpenedBottleIndex !== currentBottleIndex) {
+    return (
+      <div className={styles.fullPage}>
+        <div className={styles.topBar}>
+          <div className={styles.playerInfo}>
+            <span className={styles.avatar}>{APPLE_AVATARS[playerData.avatar_id - 1] || '👤'}</span>
+            <span className={styles.nickname}>{playerData.nickname}</span>
+          </div>
+          <div className={styles.topActions}>
+            <button className={styles.audioButton} onClick={toggleAudio}>
+              {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+            </button>
+            <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
+              Classifica
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.slideContent}>
+          <div className={styles.bottleBadge}>
+            Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
+          </div>
+          <h2 className={styles.waitTitle}>Tutte le risposte sono arrivate</h2>
+          <p className={styles.readyHint}>Quando vuoi, apri il riepilogo della bottiglia.</p>
+        </div>
+
+        <div className={styles.bottomPanel}>
+          <button
+            className={styles.continueButton}
+            onClick={() => setResultsOpenedBottleIndex(currentBottleIndex)}>
+            Vedi risultati
+          </button>
+        </div>
+
+        {leaderboardOpen && (
+          <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
+            <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.sheetHandle} />
+              <h3>Classifica Live</h3>
+              <div className={styles.sheetList}>
+                {sortedLeaderboard.map((player, idx) => (
+                  <div key={player.id} className={styles.sheetRow}>
+                    <span className={styles.sheetRank}>#{idx + 1}</span>
+                    <span className={styles.sheetName}>{player.nickname}</span>
+                    <span className={styles.sheetScore}>{player.total_score || 0}</span>
+                  </div>
+                ))}
+              </div>
+              <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
+                Chiudi
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // ── Schermata "mostra risultati / in attesa della prossima bottiglia" ──
+  if (roundStatus === 'showing_results') {
+    return (
+      <div className={styles.fullPage}>
+        <div className={styles.topBar}>
+          <div className={styles.playerInfo}>
+            <span className={styles.avatar}>{APPLE_AVATARS[playerData.avatar_id - 1] || '👤'}</span>
+            <span className={styles.nickname}>{playerData.nickname}</span>
+          </div>
+          <div className={styles.topActions}>
+            <button className={styles.audioButton} onClick={toggleAudio}>
+              {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+            </button>
+            <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
+              Classifica
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.slideContent}>
+          <div className={styles.bottleBadge}>
+            Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
+          </div>
+          <h2 className={styles.waitTitle}>Bottiglia completata!</h2>
+          <p className={styles.readyHint}>
+            {isLastBottle
+              ? 'Tra poco vedrai la classifica finale.'
+              : `Passiamo alla bottiglia ${currentBottleIndex + 2}.`}
+          </p>
+          {liveQuestions.map((question, index) => {
+            const ans = roundAnswers[question.id]
+            const correctText = question.game_question_options?.find(
+              (o) => o.id === correctOptionByQuestion[question.id],
+            )?.text
+            return (
+              <div key={question.id} className={styles.summaryRow}>
+                <span className={styles.summaryIndex}>{index + 1}</span>
+                <span className={styles.summaryText}>{question.text}</span>
+                <span className={ans?.isCorrect ? styles.summaryCorrect : styles.summaryWrong}>
+                  {ans?.isCorrect ? `+${ans.points}` : `✗ ${correctText || ''}`}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className={styles.bottomPanel}>
+          {isHostUser ? (
+            <>
+              <p className={styles.readyHint}>Clicca per avanzare</p>
+              <button className={styles.continueButton} onClick={() => transitionToNextBottle()}>
+                {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
+              </button>
+            </>
+          ) : (
+            <p className={styles.readyHint}>In attesa dell&apos;host...</p>
+          )}
+        </div>
+
+        {leaderboardOpen && (
+          <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
+            <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.sheetHandle} />
+              <h3>Classifica Live</h3>
+              <div className={styles.sheetList}>
+                {sortedLeaderboard.map((player, idx) => (
+                  <div key={player.id} className={styles.sheetRow}>
+                    <span className={styles.sheetRank}>#{idx + 1}</span>
+                    <span className={styles.sheetName}>{player.nickname}</span>
+                    <span className={styles.sheetScore}>{player.total_score || 0}</span>
+                  </div>
+                ))}
+              </div>
+              <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
+                Chiudi
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // ── Schermata: Host ha finito, aspetta altri giocatori ──
+  const hostPlayerId = allPlayers.find((p) => p.is_host)?.id || null
+  const hostCompletedRound = hostPlayerId
+    ? liveQuestions.every((q) => roundAnswersByPlayer[hostPlayerId]?.[q.id]?.optionId)
+    : false
+  const allPlayersCompletedThisRound =
+    allPlayers.length > 0 &&
+    allPlayers.every((p) =>
+      liveQuestions.every((q) => roundAnswersByPlayer[p.id]?.[q.id]?.optionId),
+    )
+
+  const handleNextBottleClick = async () => {
+    if (!isHostUser) return
+    if (!allPlayersCompletedThisRound) {
+      setWaitingForOthersOnNext(true)
+      return
+    }
+    await syncScoresFromAnswers(allPlayers, roundAnswersByPlayer)
+    transitionToNextBottle()
+  }
+
+  if (
+    roundStatus === 'waiting_answers' &&
+    clickedReady &&
+    resultsOpenedBottleIndex === currentBottleIndex
+  ) {
+    return (
+      <div className={styles.fullPage}>
+        <div className={styles.topBar}>
+          <div className={styles.playerInfo}>
+            <span className={styles.avatar}>{APPLE_AVATARS[playerData.avatar_id - 1] || '👤'}</span>
+            <span className={styles.nickname}>{playerData.nickname}</span>
+          </div>
+          <div className={styles.topActions}>
+            <button className={styles.audioButton} onClick={toggleAudio}>
+              {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+            </button>
+            <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
+              Classifica
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.slideContent}>
+          <div className={styles.bottleBadge}>
+            Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
+          </div>
+          <h2 className={styles.waitTitle}>Risultati bottiglia</h2>
+          {liveQuestions.map((question, index) => {
+            const ans = roundAnswers[question.id]
+            const correctAnswerText = question.game_question_options?.find(
+              (o) => o.id === correctOptionByQuestion[question.id],
+            )?.text
+            return (
+              <div key={question.id} className={styles.summaryRow}>
+                <span className={styles.summaryIndex}>{index + 1}</span>
+                <span className={styles.summaryText}>{question.text}</span>
+                <span className={ans?.isCorrect ? styles.summaryCorrect : styles.summaryWrong}>
+                  {ans?.isCorrect ? `+${ans.points}` : `✗ ${correctAnswerText || ''}`}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className={styles.bottomPanel}>
+          {isHostUser ? (
+            <>
+              <p className={styles.readyHint}>
+                {waitingForOthersOnNext
+                  ? 'In attesa che gli altri giocatori finiscano...'
+                  : 'Quando vuoi, passa alla prossima bottiglia.'}
+              </p>
+              <button className={styles.continueButton} onClick={handleNextBottleClick}>
+                {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
+              </button>
+            </>
+          ) : (
+            <p className={styles.readyHint}>In attesa dell&apos;host...</p>
+          )}
+        </div>
+
+        {leaderboardOpen && (
+          <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
+            <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.sheetHandle} />
+              <h3>Classifica Live</h3>
+              <div className={styles.sheetList}>
+                {sortedLeaderboard.map((player, idx) => (
+                  <div key={player.id} className={styles.sheetRow}>
+                    <span className={styles.sheetRank}>#{idx + 1}</span>
+                    <span className={styles.sheetName}>{player.nickname}</span>
+                    <span className={styles.sheetScore}>{player.total_score || 0}</span>
+                  </div>
+                ))}
+              </div>
+              <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
+                Chiudi
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  if (
+    roundStatus === 'waiting_answers' &&
+    hostCompletedRound &&
+    !allPlayersCompletedThisRound &&
+    isHostUser
+  ) {
+    const playersStillAnswering = allPlayers.filter(
+      (p) => !liveQuestions.every((q) => roundAnswersByPlayer[p.id]?.[q.id]?.optionId),
+    )
+    return (
+      <div className={styles.fullPage}>
+        <div className={styles.topBar}>
+          <div className={styles.playerInfo}>
+            <span className={styles.avatar}>{APPLE_AVATARS[playerData.avatar_id - 1] || '👤'}</span>
+            <span className={styles.nickname}>{playerData.nickname}</span>
+          </div>
+          <div className={styles.topActions}>
+            <button className={styles.audioButton} onClick={toggleAudio}>
+              {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+            </button>
+            <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
+              Classifica
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.slideContent}>
+          <div className={styles.bottleBadge}>
+            Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
+          </div>
+          <h2 className={styles.waitTitle}>✅ Hai finito!</h2>
+          <p className={styles.readyHint}>Aspetta gli altri giocatori...</p>
+          <div className={styles.summaryRow} style={{marginTop: '24px'}}>
+            <span className={styles.summaryText}>Giocatori che stanno rispondendo:</span>
+          </div>
+          {playersStillAnswering.map((player) => (
+            <div key={player.id} className={styles.summaryRow} style={{opacity: 0.7}}>
+              <span className={styles.summaryIndex}>
+                {APPLE_AVATARS[player.avatar_id - 1] || '👤'}
+              </span>
+              <span className={styles.summaryText}>{player.nickname}</span>
+            </div>
+          ))}
+        </div>
+
+        {leaderboardOpen && (
+          <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
+            <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.sheetHandle} />
+              <h3>Classifica Live</h3>
+              <div className={styles.sheetList}>
+                {sortedLeaderboard.map((player, idx) => (
+                  <div key={player.id} className={styles.sheetRow}>
+                    <span className={styles.sheetRank}>#{idx + 1}</span>
+                    <span className={styles.sheetName}>{player.nickname}</span>
+                    <span className={styles.sheetScore}>{player.total_score || 0}</span>
+                  </div>
+                ))}
+              </div>
+              <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
+                Chiudi
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // ── Domanda corrente (slide) ──
+  const currentQuestion = liveQuestions[currentSlideIndex]
+  const isLastSlide = currentSlideIndex >= liveQuestions.length - 1
+  const isSlideTransitioning = slideMotion !== 'idle'
+  const slideMotionClass =
+    slideMotion === 'exiting'
+      ? styles.slideExitLeft
+      : slideMotion === 'entering'
+        ? styles.slideEnterRight
+        : ''
+  const selectedOption = selectedAnswers[currentQuestion?.id]
+  const isChecked = Boolean(checkedQuestions[currentQuestion?.id])
+  const checkResult = roundAnswers[currentQuestion?.id]
+  const correctText = currentQuestion?.game_question_options?.find(
+    (o) => o.id === correctOptionByQuestion[currentQuestion?.id],
+  )?.text
+
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
+    <div className={styles.fullPage}>
+      {/* ── Top bar ── */}
+      <div className={styles.topBar}>
         <div className={styles.playerInfo}>
           <span className={styles.avatar}>{APPLE_AVATARS[playerData.avatar_id - 1] || '👤'}</span>
           <span className={styles.nickname}>{playerData.nickname}</span>
         </div>
-        <div className={styles.progress}>
+        <div className={styles.progressPills}>
+          {liveQuestions.map((_, idx) => (
+            <span
+              key={idx}
+              className={`${styles.pill} ${idx < currentSlideIndex ? styles.pillDone : ''} ${
+                idx === currentSlideIndex ? styles.pillActive : ''
+              }`}
+            />
+          ))}
+        </div>
+        <div className={styles.topActions}>
+          <button className={styles.audioButton} onClick={toggleAudio}>
+            {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+          </button>
+          <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
+            Classifica
+          </button>
+        </div>
+      </div>
+
+      {/* ── Question content ── */}
+      <div className={`${styles.slideContent} ${slideMotionClass}`}>
+        <div className={styles.bottleBadge}>
           Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
         </div>
-      </div>
+        <p className={styles.questionCounter}>
+          Domanda {currentSlideIndex + 1} di {liveQuestions.length}
+        </p>
+        <h2 className={styles.questionText}>{currentQuestion?.text}</h2>
 
-      <div className={styles.card}>
-        <div className={styles.bottleSection}>
-          Bottiglia <span className={styles.bottleNumber}>{currentBottleIndex + 1}</span>/
-          {liveBottles.length}
-        </div>
-
-        {roundStatus === 'waiting_answers' ? (
-          <div className={styles.answerSection}>
-            {liveQuestions.map((question, index) => (
-              <div key={question.id} className={styles.questionBlock}>
-                <div className={styles.questionHeader}>
-                  <span className={styles.questionNumber}>Domanda {index + 1}</span>
-                  <h2 className={styles.question}>{question.text}</h2>
-                </div>
-
-                <div className={styles.optionsGrid}>
-                  {question.game_question_options
-                    ?.sort((a, b) => a.option_order - b.option_order)
-                    .map((option) => (
-                      <button
-                        key={option.id}
-                        className={`${styles.optionButton} ${
-                          selectedAnswers[question.id] === option.id ? styles.selected : ''
-                        } ${submitted ? styles.disabled : ''}`}
-                        onClick={() => handleSelect(question.id, option.id)}
-                        disabled={submitted}>
-                        {option.text}
-                      </button>
-                    ))}
-                </div>
-              </div>
-            ))}
-
-            <div className={styles.toolBar}>
-              <button
-                onClick={handleSubmitAnswers}
-                disabled={submitted || !liveQuestions.every((q) => selectedAnswers[q.id])}
-                className={styles.submitButton}>
-                {submitted ? '✓ Risposte Inviate' : 'Invia Risposte'}
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className={styles.resultsSection}>
-            {liveQuestions.map((question, index) => {
-              const currentAnswer = roundAnswers[question.id]
-              const selectedText = question.game_question_options?.find(
-                (o) => o.id === currentAnswer?.optionId,
-              )?.text
-              const correctOptionText = question.game_question_options?.find(
-                (o) => o.id === correctOptionByQuestion[question.id],
-              )?.text
-
+        <div className={styles.optionsList}>
+          {currentQuestion?.game_question_options
+            ?.sort((a, b) => a.option_order - b.option_order)
+            .map((option) => {
+              const isSelected = selectedOption === option.id
+              const isCorrectOption = correctOptionByQuestion[currentQuestion?.id] === option.id
+              let optClass = styles.optionButton
+              if (isChecked) {
+                if (isCorrectOption) optClass = `${styles.optionButton} ${styles.optCorrect}`
+                else if (isSelected) optClass = `${styles.optionButton} ${styles.optWrong}`
+                else optClass = `${styles.optionButton} ${styles.optDimmed}`
+              } else if (isSelected) {
+                optClass = `${styles.optionButton} ${styles.optSelected}`
+              }
               return (
-                <div key={question.id} className={styles.resultCard}>
-                  <h3>
-                    {index + 1}. {question.text}
-                  </h3>
-                  <p className={styles.selectedAnswer}>{selectedText || 'N/A'}</p>
-
-                  {currentAnswer?.isCorrect ? (
-                    <div className={styles.correct}>
-                      <span className={styles.icon}>✓</span>
-                      <span>Corretta!</span>
-                      <span className={styles.points}>+{currentAnswer.points || 0}</span>
-                    </div>
-                  ) : (
-                    <div className={styles.incorrect}>
-                      <span className={styles.icon}>✗</span>
-                      <span>{correctOptionText || 'Risposta non disponibile'}</span>
-                    </div>
+                <button
+                  key={option.id}
+                  className={optClass}
+                  onClick={() => !isChecked && handleSelect(currentQuestion.id, option.id)}
+                  disabled={isChecked || isSlideTransitioning}>
+                  {isChecked && isCorrectOption && <span className={styles.optIcon}>✓</span>}
+                  {isChecked && isSelected && !isCorrectOption && (
+                    <span className={styles.optIcon}>✗</span>
                   )}
-                </div>
+                  {option.text}
+                </button>
               )
             })}
+        </div>
+      </div>
 
-            <p className={styles.waitingNext}>In attesa della prossima bottiglia...</p>
+      {/* ── Fixed bottom panel ── */}
+      <div
+        className={`${styles.bottomPanel} ${
+          isChecked ? (checkResult?.isCorrect ? styles.bottomCorrect : styles.bottomWrong) : ''
+        }`}>
+        {isChecked && (
+          <div className={styles.resultFeedback}>
+            {checkResult?.isCorrect ? (
+              <>
+                <span className={styles.feedbackIcon}>🎉</span>
+                <span className={styles.feedbackLabel}>Corretto! +{checkResult.points}</span>
+              </>
+            ) : (
+              <>
+                <span className={styles.feedbackIcon}>💡</span>
+                <span className={styles.feedbackLabel}>
+                  Risposta corretta: <strong>{correctText}</strong>
+                </span>
+              </>
+            )}
           </div>
         )}
+
+        {!isChecked ? (
+          <button
+            className={styles.checkButton}
+            onClick={() => handleCheck(currentQuestion.id, selectedOption)}
+            disabled={!selectedOption || isSlideTransitioning}>
+            Controlla
+          </button>
+        ) : (
+          <button
+            className={styles.continueButton}
+            onClick={() => handleContinue(currentQuestion.id)}
+            disabled={isSlideTransitioning}>
+            {isLastSlide
+              ? clickedReady
+                ? 'In attesa degli altri...'
+                : 'Vedi risultati'
+              : 'Continua'}
+          </button>
+        )}
       </div>
+
+      {/* ── Leaderboard sheet ── */}
+      {leaderboardOpen && (
+        <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
+          <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.sheetHandle} />
+            <h3>Classifica Live</h3>
+            <div className={styles.sheetList}>
+              {sortedLeaderboard.map((player, idx) => (
+                <div key={player.id} className={styles.sheetRow}>
+                  <span className={styles.sheetRank}>#{idx + 1}</span>
+                  <span className={styles.sheetName}>{player.nickname}</span>
+                  <span className={styles.sheetScore}>{player.total_score || 0}</span>
+                </div>
+              ))}
+            </div>
+            <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
+              Chiudi
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
