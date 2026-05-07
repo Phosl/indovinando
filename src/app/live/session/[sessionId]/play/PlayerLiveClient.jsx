@@ -7,6 +7,18 @@ import {supabaseClient} from '@/lib/supabaseClient'
 import styles from './playerLive.module.scss'
 
 const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
+const BOTTLE_ORDINALS = [
+  'Prima',
+  'Seconda',
+  'Terza',
+  'Quarta',
+  'Quinta',
+  'Sesta',
+  'Settima',
+  'Ottava',
+  'Nona',
+  'Decima',
+]
 
 export default function PlayerLiveClient({
   sessionId,
@@ -35,6 +47,7 @@ export default function PlayerLiveClient({
   const [loadingGameData, setLoadingGameData] = useState((questions || []).length === 0)
   const [clickedReady, setClickedReady] = useState(false)
   const [leaderboardOpen, setLeaderboardOpen] = useState(false)
+  const [exitModalOpen, setExitModalOpen] = useState(false)
   // Slide-based question navigation
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
   const [checkedQuestions, setCheckedQuestions] = useState({})
@@ -97,11 +110,11 @@ export default function PlayerLiveClient({
   }, [audioPreferenceKey])
 
   useEffect(() => {
-    if (roundStatus !== 'showing_results') return
-    if (playedBottleSoundRef.current === currentBottleIndex) return
-    playedBottleSoundRef.current = currentBottleIndex
+    if (!showBottleTransition) return
+    if (playedBottleSoundRef.current === `transition-${currentBottleIndex}`) return
+    playedBottleSoundRef.current = `transition-${currentBottleIndex}`
     playSound('bottleCompleted')
-  }, [roundStatus, currentBottleIndex, playSound])
+  }, [showBottleTransition, currentBottleIndex, playSound])
 
   useEffect(() => {
     const bootstrapGameData = async () => {
@@ -535,6 +548,22 @@ export default function PlayerLiveClient({
     [allPlayers],
   )
 
+  const getBottleLabel = useCallback((index) => {
+    return BOTTLE_ORDINALS[index] || `${index + 1}a`
+  }, [])
+
+  const handleOpenExitModal = useCallback(() => {
+    setLeaderboardOpen(false)
+    setExitModalOpen(true)
+  }, [])
+
+  const handleExitGame = useCallback(() => {
+    localStorage.removeItem(playerStorageKey)
+    localStorage.removeItem(nicknameStorageKey)
+    setExitModalOpen(false)
+    router.push(`/live/session/${sessionId}`)
+  }, [nicknameStorageKey, playerStorageKey, router, sessionId])
+
   const renderTopActions = () => (
     <div className={styles.topActions}>
       <button className={styles.audioButton} onClick={toggleAudio}>
@@ -542,6 +571,9 @@ export default function PlayerLiveClient({
       </button>
       <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
         Classifica
+      </button>
+      <button className={styles.exitButton} onClick={handleOpenExitModal} aria-label="Esci dal gioco">
+        X
       </button>
     </div>
   )
@@ -568,26 +600,53 @@ export default function PlayerLiveClient({
     </div>
   )
 
-  const leaderboardSheet = leaderboardOpen ? (
-    <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
-      <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.sheetHandle} />
-        <h3>Classifica Live</h3>
-        <div className={styles.sheetList}>
-          {sortedLeaderboard.map((player, idx) => (
-            <div key={player.id} className={styles.sheetRow}>
-              <span className={styles.sheetRank}>#{idx + 1}</span>
-              <span className={styles.sheetName}>{player.nickname}</span>
-              <span className={styles.sheetScore}>{player.total_score || 0}</span>
+  const overlaySheets = (
+    <>
+      {leaderboardOpen && (
+        <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
+          <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.sheetHandle} />
+            <h3>Classifica Live</h3>
+            <div className={styles.sheetList}>
+              {sortedLeaderboard.map((player, idx) => (
+                <div key={player.id} className={styles.sheetRow}>
+                  <span className={styles.sheetRank}>#{idx + 1}</span>
+                  <span className={styles.sheetName}>{player.nickname}</span>
+                  <span className={styles.sheetScore}>{player.total_score || 0}</span>
+                </div>
+              ))}
             </div>
-          ))}
+            <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
+              Chiudi
+            </button>
+          </div>
         </div>
-        <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
-          Chiudi
-        </button>
-      </div>
-    </div>
-  ) : null
+      )}
+
+      {exitModalOpen && (
+        <div className={styles.sheetBackdrop} onClick={() => setExitModalOpen(false)}>
+          <div className={`${styles.sheet} ${styles.exitSheet}`} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.sheetHandle} />
+            <div className={styles.exitLottiePlaceholder} aria-hidden="true">
+              😟
+            </div>
+            <h3>Vuoi uscire dal gioco?</h3>
+            <p className={styles.exitHint}>
+              Potrai rientrare dalla sessione, ma lascerai questa schermata.
+            </p>
+            <div className={styles.exitActions}>
+              <button className={styles.exitSecondary} onClick={() => setExitModalOpen(false)}>
+                Annulla
+              </button>
+              <button className={styles.exitDanger} onClick={handleExitGame}>
+                Esci dal gioco
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
 
   if (sessionFinished) {
     return (
@@ -647,22 +706,37 @@ export default function PlayerLiveClient({
   if (showBottleTransition) {
     const nextBottleNum = currentBottleIndex + 2
     const isLastNextBottle = nextBottleNum > liveBottles.length
+    const nextBottleIndex = currentBottleIndex + 1
     return (
       <div className={styles.fullPage}>
         {renderTopBar()}
 
         <div className={styles.slideContent}>
-          <div className={styles.bottleBadge}>
-            Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
-          </div>
-          <h2 className={styles.waitTitle}>
-            {isLastNextBottle ? '🎉 Ultimi risultati!' : `🍾 Bottiglia ${nextBottleNum}`}
-          </h2>
-          <p className={styles.readyHint}>
-            {isLastNextBottle
-              ? 'Tra poco vedrai la classifica finale.'
-              : `Preparati per le prossime domande.`}
-          </p>
+          {isLastNextBottle ? (
+            <>
+              <h2 className={styles.waitTitle}>🎉 Ultimi risultati!</h2>
+              <p className={styles.readyHint}>Tra poco vedrai la classifica finale.</p>
+            </>
+          ) : (
+            <div className={styles.transitionHero}>
+              <div className={styles.confettiBurst} aria-hidden="true">
+                {Array.from({length: 18}).map((_, idx) => (
+                  <span
+                    key={idx}
+                    className={styles.confettiPiece}
+                    style={{
+                      '--c-delay': `${idx * 45}ms`,
+                      '--c-x': `${(idx % 6) * 18 - 40}px`,
+                      '--c-rot': `${(idx % 2 === 0 ? 1 : -1) * (18 + idx * 2)}deg`,
+                    }}
+                  />
+                ))}
+              </div>
+              <p className={styles.transitionSubtitle}>Bottiglia {nextBottleNum}/{liveBottles.length}</p>
+              <h2 className={styles.transitionTitle}>{getBottleLabel(nextBottleIndex)} bottiglia!</h2>
+              <p className={styles.readyHint}>Inizia!</p>
+            </div>
+          )}
         </div>
 
         <div className={styles.bottomPanel}>
@@ -675,7 +749,7 @@ export default function PlayerLiveClient({
           )}
         </div>
 
-        {leaderboardSheet}
+        {overlaySheets}
       </div>
     )
   }
@@ -702,7 +776,7 @@ export default function PlayerLiveClient({
           </button>
         </div>
 
-        {leaderboardSheet}
+        {overlaySheets}
       </div>
     )
   }
@@ -733,7 +807,7 @@ export default function PlayerLiveClient({
                 <span className={styles.summaryIndex}>{index + 1}</span>
                 <span className={styles.summaryText}>{question.text}</span>
                 <span className={ans?.isCorrect ? styles.summaryCorrect : styles.summaryWrong}>
-                  {ans?.isCorrect ? `+${ans.points}` : `✗ ${correctText || ''}`}
+                  {ans?.isCorrect ? `+${ans.points}` : `Corretta: ${correctText || '-'}`}
                 </span>
               </div>
             )
@@ -753,7 +827,7 @@ export default function PlayerLiveClient({
           )}
         </div>
 
-        {leaderboardSheet}
+        {overlaySheets}
       </div>
     )
   }
@@ -798,7 +872,7 @@ export default function PlayerLiveClient({
                 <span className={styles.summaryIndex}>{index + 1}</span>
                 <span className={styles.summaryText}>{question.text}</span>
                 <span className={ans?.isCorrect ? styles.summaryCorrect : styles.summaryWrong}>
-                  {ans?.isCorrect ? `+${ans.points}` : `✗ ${correctAnswerText || ''}`}
+                  {ans?.isCorrect ? `+${ans.points}` : `Corretta: ${correctAnswerText || '-'}`}
                 </span>
               </div>
             )
@@ -822,7 +896,7 @@ export default function PlayerLiveClient({
           )}
         </div>
 
-        {leaderboardSheet}
+        {overlaySheets}
       </div>
     )
   }
@@ -880,10 +954,6 @@ export default function PlayerLiveClient({
                   className={optClass}
                   onClick={() => !isChecked && handleSelect(currentQuestion.id, option.id)}
                   disabled={isChecked || isSlideTransitioning}>
-                  {isChecked && isCorrectOption && <span className={styles.optIcon}>✓</span>}
-                  {isChecked && isSelected && !isCorrectOption && (
-                    <span className={styles.optIcon}>✗</span>
-                  )}
                   {option.text}
                 </button>
               )
@@ -936,7 +1006,7 @@ export default function PlayerLiveClient({
       </div>
 
       {/* ── Leaderboard sheet ── */}
-      {leaderboardSheet}
+      {overlaySheets}
     </div>
   )
 }
