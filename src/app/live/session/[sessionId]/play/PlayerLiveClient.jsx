@@ -339,105 +339,121 @@ export default function PlayerLiveClient({
   }, [currentBottleIndex, isLastBottle, sessionId])
 
   useEffect(() => {
+    // Setup Realtime listeners (primary data source)
+    const sessionChannel = supabaseClient
+      .channel(`live_sessions:${sessionId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'live_sessions',
+          filter: `id=eq.${sessionId}`,
+        },
+        (payload) => {
+          const updated = payload.new
+          if (updated?.status === 'finished') {
+            setSessionFinished(true)
+            setTimeout(() => router.push(`/live/session/${sessionId}/leaderboard`), 900)
+          }
+          if (updated?.current_question_index !== currentBottleIndex) {
+            setShowBottleTransition(false)
+            setResultsOpenedBottleIndex(null)
+            setWaitingForOthersOnNext(false)
+            setSelectedAnswers({})
+            setRoundAnswers({})
+            setRoundAnswersByPlayer({})
+            setCorrectOptionByQuestion({})
+            setClickedReady(false)
+            setCurrentSlideIndex(0)
+            setCheckedQuestions({})
+            setSlideMotion('idle')
+            setCurrentBottleIndex(updated?.current_question_index || 0)
+          }
+          if (updated?.round_status) {
+            setRoundStatus(updated.round_status)
+          }
+        },
+      )
+      .subscribe()
+
+    const playersChannel = supabaseClient
+      .channel(`live_players:${sessionId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'live_players',
+          filter: `session_id=eq.${sessionId}`,
+        },
+        async () => {
+          const {data: players} = await supabaseClient
+            .from('live_players')
+            .select('id, nickname, avatar_id, total_score, updated_at, is_host')
+            .eq('session_id', sessionId)
+            .order('joined_at')
+          setAllPlayers(players || [])
+        },
+      )
+      .subscribe()
+
+    const answersChannel = supabaseClient
+      .channel(`live_round_answers:${sessionId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'live_round_answers',
+          filter: `session_id=eq.${sessionId}`,
+        },
+        (payload) => {
+          const answer = payload.new
+          if (!answer) return
+          setRoundAnswersByPlayer((prev) => {
+            const updated = {...prev}
+            if (!updated[answer.player_id]) {
+              updated[answer.player_id] = {}
+            }
+            updated[answer.player_id][answer.question_id] = {
+              optionId: answer.selected_option_id,
+              isCorrect: answer.is_correct,
+              points: answer.points,
+            }
+            return updated
+          })
+          if (playerData?.id === answer.player_id) {
+            setRoundAnswers((prev) => ({
+              ...prev,
+              [answer.question_id]: {
+                optionId: answer.selected_option_id,
+                isCorrect: answer.is_correct,
+                points: answer.points,
+              },
+            }))
+            setCheckedQuestions((prev) => ({
+              ...prev,
+              [answer.question_id]: true,
+            }))
+          }
+        },
+      )
+      .subscribe()
+
+    // Fallback polling every 10s for sync/robustness
     const pollSession = setInterval(async () => {
-      const {data: session} = await supabaseClient
-        .from('live_sessions')
-        .select('current_question_index, round_status, status, updated_at')
-        .eq('id', sessionId)
-        .single()
-
-      if (session?.status === 'finished') {
-        setSessionFinished(true)
-        setTimeout(() => router.push(`/live/session/${sessionId}/leaderboard`), 900)
-      }
-
-      setCurrentBottleIndex((prev) => {
-        if (session?.current_question_index !== prev) {
-          setShowBottleTransition(false)
-          setResultsOpenedBottleIndex(null)
-          setWaitingForOthersOnNext(false)
-          setSelectedAnswers({})
-          setRoundAnswers({})
-          setRoundAnswersByPlayer({})
-          setCorrectOptionByQuestion({})
-          setClickedReady(false)
-          setCurrentSlideIndex(0)
-          setCheckedQuestions({})
-          setSlideMotion('idle')
-        }
-        return session?.current_question_index || 0
-      })
-
-      setRoundStatus(session?.round_status)
-
       if (!playerData) {
         await resolvePlayer()
       }
+    }, 10000)
 
-      const {data: players} = await supabaseClient
-        .from('live_players')
-        .select('id, nickname, avatar_id, total_score, updated_at, is_host')
-        .eq('session_id', sessionId)
-        .order('joined_at')
-
-      const playersSafe = players || []
-      setAllPlayers(playersSafe)
-
-      if (liveQuestions.length > 0) {
-        const {data: answers} = await supabaseClient
-          .from('live_round_answers')
-          .select('player_id, question_id, selected_option_id, is_correct, points')
-          .eq('session_id', sessionId)
-          .in(
-            'question_id',
-            liveQuestions.map((q) => q.id),
-          )
-
-        const selectedByPlayer = {}
-        const nextByPlayer = {}
-
-        ;(answers || []).forEach((answer) => {
-          if (!selectedByPlayer[answer.player_id]) {
-            selectedByPlayer[answer.player_id] = {}
-            nextByPlayer[answer.player_id] = {}
-          }
-
-          selectedByPlayer[answer.player_id][answer.question_id] = answer.selected_option_id
-          nextByPlayer[answer.player_id][answer.question_id] = {
-            optionId: answer.selected_option_id,
-            isCorrect: answer.is_correct,
-            points: answer.points,
-          }
-        })
-
-        setRoundAnswersByPlayer(nextByPlayer)
-
-        if (playerData?.id) {
-          const serverSelected = selectedByPlayer[playerData.id] || {}
-          const serverRoundAnswers = nextByPlayer[playerData.id] || {}
-
-          // Keep local picks until they are checked/saved server-side.
-          setSelectedAnswers((prev) => ({...prev, ...serverSelected}))
-          setRoundAnswers(serverRoundAnswers)
-          setCheckedQuestions((prev) => {
-            const merged = {...prev}
-            Object.keys(serverRoundAnswers).forEach((questionId) => {
-              merged[questionId] = true
-            })
-            return merged
-          })
-        }
-
-        const allPlayersCompleted =
-          playersSafe.length > 0 &&
-          playersSafe.every((p) => liveQuestions.every((q) => selectedByPlayer[p.id]?.[q.id]))
-        if (allPlayersCompleted) {
-          setWaitingForOthersOnNext(false)
-        }
-      }
-    }, 1200)
-
-    return () => clearInterval(pollSession)
+    return () => {
+      clearInterval(pollSession)
+      sessionChannel.unsubscribe()
+      playersChannel.unsubscribe()
+      answersChannel.unsubscribe()
+    }
   }, [sessionId, resolvePlayer, router, playerData, liveQuestions, isHostUser, currentBottleIndex])
 
   useEffect(() => {
@@ -542,6 +558,29 @@ export default function PlayerLiveClient({
       currentBottleIndex,
     ],
   )
+
+  // Auto-advance when host is waiting and all players complete
+  useEffect(() => {
+    // Only auto-advance if we're in results screen
+    if (roundStatus !== 'showing_results' || liveQuestions.length === 0) return
+    if (allPlayers.length === 0) return
+
+    // Check if all players completed THIS round's questions
+    const allDone = allPlayers.every((p) =>
+      liveQuestions.every((q) => roundAnswersByPlayer[p.id]?.[q.id]?.optionId),
+    )
+
+    if (!allDone) return
+
+    // All players completed, auto-advance after 2s delay to display results
+    const timer = setTimeout(() => {
+      setShowBottleTransition(true)
+      setResultsOpenedBottleIndex(null)
+      setWaitingForOthersOnNext(false)
+    }, 2000)
+
+    return () => clearTimeout(timer)
+  }, [roundStatus, liveQuestions, allPlayers, roundAnswersByPlayer])
 
   const sortedLeaderboard = useMemo(
     () => [...allPlayers].sort((a, b) => (b.total_score || 0) - (a.total_score || 0)),
