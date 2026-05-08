@@ -128,7 +128,11 @@ export function QuestionSlideScreen({
             className={styles.continueButton}
             onClick={() => onContinue(currentQuestion.id)}
             disabled={isSlideTransitioning}>
-            {isLastSlide ? (clickedReady ? 'In attesa degli altri...' : 'Vedi risultati') : 'Continua'}
+            {isLastSlide
+              ? clickedReady
+                ? 'In attesa degli altri...'
+                : 'Vedi risultati'
+              : 'Continua'}
           </button>
         )}
       </div>

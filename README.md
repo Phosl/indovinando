@@ -3,7 +3,9 @@ Game).
 
 ## 🎮 Indovinando - Overview
 
-A live multiplayer trivia game about wine. Players compete in real-time to guess blind-tasted wine bottles by answering multiple-choice questions about each one — varietal, region, vintage, producer, etc.
+A live multiplayer trivia game about wine. Players compete in real-time to guess blind-tasted wine
+bottles by answering multiple-choice questions about each one — varietal, region, vintage, producer,
+etc.
 
 **Key Features:**
 
@@ -86,15 +88,16 @@ more details.
 
 #### 🏆 Scoring
 
-| Condition | Points |
-|---|---|
-| Wrong answer | 0 |
-| Correct answer | +10 |
-| Correct — 2 in a row (combo) | +15 |
-| Correct — 3 in a row | +20 |
-| Correct — 4+ in a row | +25 (cap) |
+| Condition                    | Points    |
+| ---------------------------- | --------- |
+| Wrong answer                 | 0         |
+| Correct answer               | +10       |
+| Correct — 2 in a row (combo) | +15       |
+| Correct — 3 in a row         | +20       |
+| Correct — 4+ in a row        | +25 (cap) |
 
-Combo resets on any wrong answer or when the bottle changes. Scores are accumulated on `live_players.total_score` by the host after each bottle.
+Combo resets on any wrong answer or when the bottle changes. Scores are accumulated on
+`live_players.total_score` by the host after each bottle.
 
 #### 📱 UX/UI
 
@@ -114,18 +117,19 @@ Full documentation: [DATABASE.md](./DATABASE.md)
 
 Key tables:
 
-| Table | Purpose |
-|---|---|
-| `games` | Game definitions (name, status, creator) |
-| `game_questions` | Questions shared across all bottles of a game |
-| `game_question_options` | Multiple-choice options per question |
-| `game_bottles` | Wine bottles (name, producer, year, order) |
-| `game_bottle_answers` | Correct option per (bottle, question) pair |
-| `live_sessions` | Active game sessions (status, current bottle index, round status) |
-| `live_players` | Participants with avatar, score, host flag |
-| `live_round_answers` | Per-round answer submissions (cleared between bottles) |
+| Table                   | Purpose                                                           |
+| ----------------------- | ----------------------------------------------------------------- |
+| `games`                 | Game definitions (name, status, creator)                          |
+| `game_questions`        | Questions shared across all bottles of a game                     |
+| `game_question_options` | Multiple-choice options per question                              |
+| `game_bottles`          | Wine bottles (name, producer, year, order)                        |
+| `game_bottle_answers`   | Correct option per (bottle, question) pair                        |
+| `live_sessions`         | Active game sessions (status, current bottle index, round status) |
+| `live_players`          | Participants with avatar, score, host flag                        |
+| `live_round_answers`    | Per-round answer submissions (cleared between bottles)            |
 
-See [SUPABASE_LIVE_SESSIONS.sql](./SUPABASE_LIVE_SESSIONS.sql) for the full schema with RLS policies.
+See [SUPABASE_LIVE_SESSIONS.sql](./SUPABASE_LIVE_SESSIONS.sql) for the full schema with RLS
+policies.
 
 ---
 

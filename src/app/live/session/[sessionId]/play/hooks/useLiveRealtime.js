@@ -81,5 +81,13 @@ export function useLiveRealtime({
       playersChannel.unsubscribe()
       answersChannel.unsubscribe()
     }
-  }, [sessionId, playerData, currentBottleIndex, resolvePlayer, onSessionUpdate, onPlayersUpdate, onAnswerInsert])
+  }, [
+    sessionId,
+    playerData,
+    currentBottleIndex,
+    resolvePlayer,
+    onSessionUpdate,
+    onPlayersUpdate,
+    onAnswerInsert,
+  ])
 }
