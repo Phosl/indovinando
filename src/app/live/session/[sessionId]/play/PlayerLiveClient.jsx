@@ -284,7 +284,15 @@ export default function PlayerLiveClient({
         playersReadyCount={playersReadyCount}
         currentPlayerData={playerData}
         onNextBottle={handleNextBottleClick}
-        onViewLeaderboard={() => router.push(`/live/session/${sessionId}/leaderboard`)}
+        onViewLeaderboard={isLastBottle
+          ? async () => {
+              if (isHostUser) {
+                await syncScoresFromAnswers(roundAnswersByPlayer)
+                await advanceToNextBottleOrFinish()
+              }
+              router.push(`/live/session/${sessionId}/leaderboard`)
+            }
+          : () => router.push(`/live/session/${sessionId}/leaderboard`)}
         topBar={<TopBar {...topBarProps} />}
         overlays={overlays}
       />

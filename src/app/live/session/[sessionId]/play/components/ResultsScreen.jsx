@@ -126,48 +126,34 @@ export function ResultsScreen({
       </div>
 
       <div className={styles.bottomPanel}>
-        {isHostUser ? (
-          <>
-            <p className={styles.readyHint}>
-              {allPlayersCompletedThisRound
-                ? isLastBottle
-                  ? 'Tutti hanno finito!'
-                  : 'Tutti hanno finito: puoi passare alla prossima bottiglia.'
-                : `${playersReadyCount}/${allPlayers.length} giocatori pronti...`}
-            </p>
-            <button
-              className={styles.continueButton}
-              onClick={onNextBottle}
-              disabled={!allPlayersCompletedThisRound}>
-              {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
-            </button>
-            {isLastBottle && allPlayersCompletedThisRound && (
-              <button className={styles.secondaryButton} onClick={onViewLeaderboard}>
-                Vedi classifica
-              </button>
-            )}
-          </>
+        <p className={styles.readyHint}>
+          {allPlayersCompletedThisRound
+            ? isLastBottle
+              ? 'Tutti hanno finito!'
+              : isHostUser
+                ? 'Tutti hanno finito: puoi passare alla prossima bottiglia.'
+                : playerMarkedNext
+                  ? `In attesa che l'host avanzi...`
+                  : 'Tutti hanno finito!'
+            : `${playersReadyCount}/${allPlayers.length} giocatori pronti...`}
+        </p>
+
+        {isLastBottle ? (
+          <button
+            className={styles.continueButton}
+            onClick={onViewLeaderboard}
+            disabled={!allPlayersCompletedThisRound}>
+            Vedi classifica
+          </button>
         ) : (
-          <>
-            <p className={styles.readyHint}>
-              {playerMarkedNext
-                ? `In attesa che l'host avanzi...`
-                : allPlayersCompletedThisRound
-                  ? 'Tutti hanno finito!'
-                  : `${playersReadyCount}/${allPlayers.length} giocatori pronti...`}
-            </p>
-            <button
-              className={styles.continueButton}
-              onClick={onNextBottle}
-              disabled={!allPlayersCompletedThisRound || playerMarkedNext}>
-              {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
-            </button>
-            {isLastBottle && allPlayersCompletedThisRound && (
-              <button className={styles.secondaryButton} onClick={onViewLeaderboard}>
-                Vedi classifica
-              </button>
-            )}
-          </>
+          <button
+            className={styles.continueButton}
+            onClick={isHostUser ? onNextBottle : onNextBottle}
+            disabled={
+              !allPlayersCompletedThisRound || (!isHostUser && playerMarkedNext)
+            }>
+            Prossima bottiglia
+          </button>
         )}
       </div>
 
