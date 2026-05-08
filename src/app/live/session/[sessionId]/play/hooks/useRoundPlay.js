@@ -101,32 +101,7 @@ export function useRoundPlay({
     [setCurrentBottleIndex, setRoundStatus],
   )
 
-  // ── One-time fetch when player marks ready (sync any existing answers) ─────
-  useEffect(() => {
-    if (!clickedReady || liveQuestions.length === 0) return
-    const questionIds = liveQuestions.map((q) => q.id)
-    const syncExisting = async () => {
-      const {data: answers} = await supabaseClient
-        .from('live_round_answers')
-        .select('player_id, question_id, selected_option_id, is_correct, points')
-        .eq('session_id', sessionId)
-        .in('question_id', questionIds)
-      if (!answers) return
-      setRoundAnswersByPlayer((prev) => {
-        const updated = {...prev}
-        answers.forEach((a) => {
-          if (!updated[a.player_id]) updated[a.player_id] = {}
-          updated[a.player_id][a.question_id] = {
-            optionId: a.selected_option_id,
-            isCorrect: a.is_correct,
-            points: a.points,
-          }
-        })
-        return updated
-      })
-    }
-    syncExisting()
-  }, [clickedReady, sessionId, liveQuestions])
+  // (syncExisting removed — see combined effect below handleAnswerInsert)
 
   // ── Derive allPlayersCompleted from local state (no polling) ───────────────
   const allPlayersCompletedThisRound = useMemo(() => {
@@ -221,6 +196,15 @@ export function useRoundPlay({
       return updated
     })
   }, [sessionId, liveQuestions])
+
+  // ── Re-sync answers on ready or any player change (fallback when realtime INSERT misses) ──
+  // Fires when: current player marks ready (clickedReady), OR any player updates
+  // live_players (onPlayersUpdate → setAllPlayers). The latter happens when a player
+  // clicks "Continua" on the last slide — by then all their answers are already in DB.
+  useEffect(() => {
+    if (!clickedReady) return
+    handleAnswerInsert()
+  }, [allPlayers, clickedReady, handleAnswerInsert])
 
   // ── Answer interaction handlers ────────────────────────────────────────────
   const handleSelect = useCallback((questionId, optionId) => {
