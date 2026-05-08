@@ -57,6 +57,7 @@ export default function PlayerLiveClient({
   const slideTransitionMs = 220
   const [showBottleTransition, setShowBottleTransition] = useState(false)
   const [resultsOpenedBottleIndex, setResultsOpenedBottleIndex] = useState(null)
+  const [allPlayersCompletedThisRound, setAllPlayersCompletedThisRound] = useState(false)
   const soundsRef = useRef({correct: null, wrong: null, bottleCompleted: null})
   const playedBottleSoundRef = useRef(null)
 
@@ -572,13 +573,18 @@ export default function PlayerLiveClient({
     ],
   )
 
-  // When a player reaches the results screen, re-sync both players and answers from DB
-  // (catches up if Realtime events were missed before subscription)
+  // Poll DB every 2s while waiting for all players to complete.
+  // Direct DB check avoids relying on Realtime events that can be missed.
   useEffect(() => {
-    if (!clickedReady || liveQuestions.length === 0) return
+    if (!clickedReady || liveQuestions.length === 0) {
+      setAllPlayersCompletedThisRound(false)
+      return
+    }
 
-    const resync = async () => {
-      const [{data: playersData}, {data: answersData}] = await Promise.all([
+    const questionIds = liveQuestions.map((q) => q.id)
+
+    const checkAll = async () => {
+      const [{data: players}, {data: answers}] = await Promise.all([
         supabaseClient
           .from('live_players')
           .select('id, nickname, avatar_id, total_score, updated_at, is_host')
@@ -588,34 +594,37 @@ export default function PlayerLiveClient({
           .from('live_round_answers')
           .select('player_id, question_id, selected_option_id, is_correct, points')
           .eq('session_id', sessionId)
-          .in(
-            'question_id',
-            liveQuestions.map((q) => q.id),
-          ),
+          .in('question_id', questionIds),
       ])
 
-      if (playersData) setAllPlayers(playersData)
+      if (players) setAllPlayers(players)
 
-      if (answersData && answersData.length > 0) {
+      if (answers) {
         setRoundAnswersByPlayer((prev) => {
           const updated = {...prev}
-          answersData.forEach((a) => {
+          answers.forEach((a) => {
             if (!updated[a.player_id]) updated[a.player_id] = {}
-            updated[a.player_id] = {
-              ...updated[a.player_id],
-              [a.question_id]: {
-                optionId: a.selected_option_id,
-                isCorrect: a.is_correct,
-                points: a.points,
-              },
+            updated[a.player_id][a.question_id] = {
+              optionId: a.selected_option_id,
+              isCorrect: a.is_correct,
+              points: a.points,
             }
           })
           return updated
         })
       }
+
+      const answerSet = new Set((answers || []).map((a) => `${a.player_id}:${a.question_id}`))
+      const allDone =
+        (players || []).length > 0 &&
+        (players || []).every((p) => questionIds.every((qId) => answerSet.has(`${p.id}:${qId}`)))
+
+      setAllPlayersCompletedThisRound(allDone)
     }
 
-    resync()
+    checkAll()
+    const interval = setInterval(checkAll, 2000)
+    return () => clearInterval(interval)
   }, [clickedReady, sessionId, liveQuestions])
 
   const sortedLeaderboard = useMemo(
@@ -782,12 +791,6 @@ export default function PlayerLiveClient({
       </div>
     )
   }
-
-  const allPlayersCompletedThisRound =
-    allPlayers.length > 0 &&
-    allPlayers.every((p) =>
-      liveQuestions.every((q) => roundAnswersByPlayer[p.id]?.[q.id]?.optionId),
-    )
 
   const handleNextBottleClick = async () => {
     if (!allPlayersCompletedThisRound) return
