@@ -58,6 +58,7 @@ export default function PlayerLiveClient({
   const [showBottleTransition, setShowBottleTransition] = useState(false)
   const [resultsOpenedBottleIndex, setResultsOpenedBottleIndex] = useState(null)
   const [allPlayersCompletedThisRound, setAllPlayersCompletedThisRound] = useState(false)
+  const [playerMarkedNext, setPlayerMarkedNext] = useState(false)
   const soundsRef = useRef({correct: null, wrong: null, bottleCompleted: null})
   const playedBottleSoundRef = useRef(null)
 
