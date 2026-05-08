@@ -3,15 +3,16 @@ Game).
 
 ## 🎮 Indovinando - Overview
 
-A live multiplayer trivia game about wine. Players compete in real-time to answer questions and earn
-points.
+A live multiplayer trivia game about wine. Players compete in real-time to guess blind-tasted wine bottles by answering multiple-choice questions about each one — varietal, region, vintage, producer, etc.
 
 **Key Features:**
 
 - 🎯 Create custom trivia games (questions + wine bottles with correct answers)
-- 👥 Live multiplayer with real-time polling
-- 🏆 Scoring system based on correct answers
-- 📱 Mobile-first Duolingo-style UI with Slide animations
+- 👥 Live multiplayer sessions with real-time sync via Supabase Realtime + polling fallback
+- 🔥 Combo system: consecutive correct answers grant bonus points (+5/+10/+15)
+- 🏆 Live leaderboard during the game, full leaderboard at the end
+- 🍷 Bottle reveal at the end of each round (name, producer, year)
+- 📱 Mobile-first Duolingo-style UI with slide animations
 
 ## Getting Started
 
@@ -62,7 +63,7 @@ more details.
 ### Architecture & Guides
 
 - [Live Multiplayer Guide](./LIVE_MULTIPLAYER_GUIDE.md) - Complete live multiplayer setup & flow
-- [Live Flow (Updated)](./LIVE_FLOW_UPDATED.md) - Latest flow diagram + no-interruption logic
+- [Database Schema](./DATABASE.md) - Full table reference with RLS policies and scoring logic
 - [Code Analysis](./CODE_ANALYSIS.md) - Detailed component & database architecture
 - [Quick Start](./QUICK_START.md) - Dev environment setup
 
@@ -78,15 +79,22 @@ more details.
 
 - Host creates session and shares link
 - Players join with nickname + avatar
-- Real-time gameplay with polling (1200ms interval)
-- **No interruptions:** Host waits for all players to complete round before showing results
+- Real-time gameplay: Supabase Realtime WebSocket as primary sync + polling every 2s as fallback
+- **No interruptions:** the host waits for all players to complete the round before advancing
 - Slide-based UI with Duolingo-style animations (220ms transitions)
+- Guests can join anonymously (identified by `localStorage` + nickname)
 
 #### 🏆 Scoring
 
-- +10 points for correct answer
-- +0 points for incorrect
-- Live leaderboard during and after game
+| Condition | Points |
+|---|---|
+| Wrong answer | 0 |
+| Correct answer | +10 |
+| Correct — 2 in a row (combo) | +15 |
+| Correct — 3 in a row | +20 |
+| Correct — 4+ in a row | +25 (cap) |
+
+Combo resets on any wrong answer or when the bottle changes. Scores are accumulated on `live_players.total_score` by the host after each bottle.
 
 #### 📱 UX/UI
 
@@ -94,22 +102,30 @@ more details.
 - Emoji avatars (10 Apple-style options)
 - Smooth left/right slide animations
 - Bottom-fixed panel for actions
-- Progress pills tracking question completion
+- Progress pills tracking question completion within a bottle
+- In-game leaderboard sheet (refreshed from DB on open)
+- "Vedi classifica" shortcut button on the last bottle
 
 ---
 
 ## 🗄️ Database Schema (Supabase)
 
+Full documentation: [DATABASE.md](./DATABASE.md)
+
 Key tables:
 
-- `games` - Game definitions
-- `game_questions` - Q&A structure
-- `game_bottles` - Wine bottles with correct answers
-- `live_sessions` - Active game sessions
-- `live_players` - Players in session
-- `live_round_answers` - Answer submissions per round
+| Table | Purpose |
+|---|---|
+| `games` | Game definitions (name, status, creator) |
+| `game_questions` | Questions shared across all bottles of a game |
+| `game_question_options` | Multiple-choice options per question |
+| `game_bottles` | Wine bottles (name, producer, year, order) |
+| `game_bottle_answers` | Correct option per (bottle, question) pair |
+| `live_sessions` | Active game sessions (status, current bottle index, round status) |
+| `live_players` | Participants with avatar, score, host flag |
+| `live_round_answers` | Per-round answer submissions (cleared between bottles) |
 
-See `SUPABASE_LIVE_SESSIONS.sql` for full schema with RLS policies.
+See [SUPABASE_LIVE_SESSIONS.sql](./SUPABASE_LIVE_SESSIONS.sql) for the full schema with RLS policies.
 
 ---
 
