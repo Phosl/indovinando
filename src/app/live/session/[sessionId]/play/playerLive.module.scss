@@ -365,60 +365,79 @@
 }
 
 .summaryRow {
-  display: grid;
-  grid-template-columns: 24px 1fr;
-  gap: 8px;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-radius: 12px;
+  padding: 12px 14px;
+  border-left: 4px solid transparent;
   background: var(--foreground);
-  border: 2px solid var(--button-secondary-border);
-  border-radius: 10px;
-  padding: 10px 12px;
+  border: 1.5px solid var(--button-secondary-border);
+  border-left-width: 4px;
 }
 
-.summaryIndex {
-  font-weight: 900;
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-  padding-top: 1px;
+.summaryRowCorrect {
+  border-color: var(--accept-dark);
+  background: color-mix(in srgb, var(--accept) 8%, var(--foreground));
+}
+
+.summaryRowWrong {
+  border-color: var(--danger-border);
+  background: color-mix(in srgb, var(--danger-border) 6%, var(--foreground));
 }
 
 .summaryText {
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   color: var(--text-primary);
   line-height: 1.4;
 }
 
 .summaryCorrect {
-  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
   color: var(--accept-dark);
   font-size: 0.88rem;
+}
+
+.summaryPoints {
+  display: inline-flex;
+  align-items: center;
+  background: var(--accept-dark);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 900;
+  padding: 1px 8px;
+  border-radius: 999px;
   white-space: nowrap;
 }
 
 .summaryWrong {
   font-weight: 700;
   color: var(--danger-text);
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   line-height: 1.3;
 }
 
 .summaryBody {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
 }
 
 .summaryAnswer {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .summaryCorrectHint {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--accept-dark);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
+  opacity: 0.9;
 }
 
 .bottleReveal {
@@ -572,21 +591,23 @@
 
 // ── Live standings in results screen ──────────────────────────
 .standingsSection {
-  margin-top: 24px;
-  border-top: 1.5px solid var(--button-secondary-border);
-  padding-top: 16px;
+  margin-top: 20px;
+  border-radius: 14px;
+  background: var(--foreground);
+  border: 1.5px solid var(--button-secondary-border);
+  padding: 14px 12px 10px;
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
 .standingsTitle {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   color: var(--text-secondary);
-  margin: 0 0 6px;
+  margin: 0 0 8px;
 }
 
 .standingRow {
@@ -596,24 +617,25 @@
   padding: 8px 10px;
   border-radius: 10px;
   background: var(--background);
-  border: 1.5px solid var(--button-secondary-border);
+  border: 1.5px solid transparent;
+  transition: background 0.15s;
 }
 
 .standingRowMe {
   border-color: var(--selected-dark);
-  background: color-mix(in srgb, var(--selected-dark) 6%, var(--background));
+  background: color-mix(in srgb, var(--selected-dark) 8%, var(--background));
 }
 
 .standingRank {
   font-weight: 900;
   color: var(--text-secondary);
-  font-size: 0.85rem;
-  min-width: 24px;
+  font-size: 1rem;
+  min-width: 26px;
   text-align: center;
 }
 
 .standingAvatar {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   line-height: 1;
 }
 
@@ -624,18 +646,41 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--text-primary);
+}
+
+.standingMe {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--selected-dark);
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 999px;
+  margin-left: 4px;
+  vertical-align: middle;
 }
 
 .standingScore {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-weight: 900;
   font-size: 0.9rem;
-  color: var(--selected-dark);
+  color: var(--text-primary);
 }
 
 .standingDelta {
-  font-size: 0.75rem;
-  color: #38a169;
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.72rem;
+  color: #fff;
+  background: #38a169;
+  font-weight: 900;
+  padding: 1px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
 }
 
 // ── Centered fallback cards ──────────────────────────────────────────────────

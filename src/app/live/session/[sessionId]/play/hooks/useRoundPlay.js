@@ -347,6 +347,7 @@ export function useRoundPlay({
     handleCheck,
     handleContinue,
     handleNextBottleClick,
+    syncScoresFromAnswers,
     advanceToNextBottleOrFinish,
     // progress
     playersReadyCount,

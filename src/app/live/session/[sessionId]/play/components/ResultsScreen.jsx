@@ -1,4 +1,4 @@
-import {useMemo} from 'react'
+import {useMemo, useRef} from 'react'
 import styles from '../playerLive.module.scss'
 
 const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
@@ -25,7 +25,20 @@ export function ResultsScreen({
   topBar,
   overlays,
 }) {
-  // Projected standings: DB total + points earned this round
+  // Freeze baseline total_score per player when the results screen first opens for
+  // a given bottle. This prevents a brief double-count caused by the host's
+  // syncScoresFromAnswers updating allPlayers via Realtime while roundAnswersByPlayer
+  // still contains the current round's points.
+  const baselineRef = useRef({bottleIndex: -1, scores: {}})
+  if (baselineRef.current.bottleIndex !== currentBottleIndex) {
+    baselineRef.current = {
+      bottleIndex: currentBottleIndex,
+      scores: Object.fromEntries(allPlayers.map((p) => [p.id, p.total_score || 0])),
+    }
+  }
+  const baselineScores = baselineRef.current.scores
+
+  // Projected standings: frozen baseline + points earned this round
   const standings = useMemo(() => {
     return [...allPlayers]
       .map((p) => {
@@ -33,9 +46,10 @@ export function ResultsScreen({
           (sum, a) => sum + (a.points || 0),
           0,
         )
-        return {...p, roundPts, projected: (p.total_score || 0) + roundPts}
+        return {...p, roundPts, projected: (baselineScores[p.id] ?? p.total_score ?? 0) + roundPts}
       })
       .sort((a, b) => b.projected - a.projected)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allPlayers, roundAnswersByPlayer])
   return (
     <div className={styles.fullPage}>
@@ -66,16 +80,20 @@ export function ResultsScreen({
           const correctOptionText = question.game_question_options?.find(
             (o) => o.id === correctOptionByQuestion[question.id],
           )?.text
+          const rowClass = ans?.isCorrect
+            ? `${styles.summaryRow} ${styles.summaryRowCorrect}`
+            : `${styles.summaryRow} ${styles.summaryRowWrong}`
           return (
-            <div key={question.id} className={styles.summaryRow}>
-              <span className={styles.summaryIndex}>{index + 1}</span>
+            <div key={question.id} className={rowClass}>
               <div className={styles.summaryBody}>
                 <span className={styles.summaryText}>{question.text}</span>
                 <div className={styles.summaryAnswer}>
                   {ans?.isCorrect ? (
                     <span className={styles.summaryCorrect}>
-                      ✅ {selectedOptionText} · +{ans.points}
-                      {ans.comboBonus > 0 ? ` 🔥 combo` : ''}
+                      ✅ {selectedOptionText}
+                      <span className={styles.summaryPoints}>
+                        +{ans.points}{ans.comboBonus > 0 ? ' 🔥' : ''}
+                      </span>
                     </span>
                   ) : (
                     <>
@@ -83,7 +101,7 @@ export function ResultsScreen({
                         ❌ {selectedOptionText || 'Non risposto'}
                       </span>
                       <span className={styles.summaryCorrectHint}>
-                        ✓ {correctOptionText || '-'}
+                        Risposta corretta: {correctOptionText || '-'}
                       </span>
                     </>
                   )}
@@ -96,7 +114,7 @@ export function ResultsScreen({
         {/* ── Live standings ──────────────────────────────────────────────── */}
         {standings.length > 0 && (
           <div className={styles.standingsSection}>
-            <h4 className={styles.standingsTitle}>📊 Classifica</h4>
+            <h4 className={styles.standingsTitle}>🏆 Classifica Live</h4>
             {standings.map((player, idx) => {
               const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : null
               const isMe = player.id === currentPlayerData?.id
@@ -110,12 +128,12 @@ export function ResultsScreen({
                   </span>
                   <span className={styles.standingName}>
                     {player.nickname}
-                    {isMe ? ' (tu)' : ''}
+                    {isMe ? <span className={styles.standingMe}> tu</span> : ''}
                   </span>
                   <span className={styles.standingScore}>
                     {player.projected} pt
                     {player.roundPts > 0 && (
-                      <span className={styles.standingDelta}> +{player.roundPts}</span>
+                      <span className={styles.standingDelta}>+{player.roundPts}</span>
                     )}
                   </span>
                 </div>
@@ -149,9 +167,7 @@ export function ResultsScreen({
           <button
             className={styles.continueButton}
             onClick={isHostUser ? onNextBottle : onNextBottle}
-            disabled={
-              !allPlayersCompletedThisRound || (!isHostUser && playerMarkedNext)
-            }>
+            disabled={!allPlayersCompletedThisRound || (!isHostUser && playerMarkedNext)}>
             Prossima bottiglia
           </button>
         )}

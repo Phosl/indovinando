@@ -78,6 +78,7 @@ export default function PlayerLiveClient({
     handleCheck,
     handleContinue,
     handleNextBottleClick,
+    syncScoresFromAnswers,
     advanceToNextBottleOrFinish,
     playersReadyCount,
   } = useRoundPlay({
@@ -284,15 +285,17 @@ export default function PlayerLiveClient({
         playersReadyCount={playersReadyCount}
         currentPlayerData={playerData}
         onNextBottle={handleNextBottleClick}
-        onViewLeaderboard={isLastBottle
-          ? async () => {
-              if (isHostUser) {
-                await syncScoresFromAnswers(roundAnswersByPlayer)
-                await advanceToNextBottleOrFinish()
+        onViewLeaderboard={
+          isLastBottle
+            ? async () => {
+                if (isHostUser) {
+                  await syncScoresFromAnswers(roundAnswersByPlayer)
+                  await advanceToNextBottleOrFinish()
+                }
+                router.push(`/live/session/${sessionId}/leaderboard`)
               }
-              router.push(`/live/session/${sessionId}/leaderboard`)
-            }
-          : () => router.push(`/live/session/${sessionId}/leaderboard`)}
+            : () => router.push(`/live/session/${sessionId}/leaderboard`)
+        }
         topBar={<TopBar {...topBarProps} />}
         overlays={overlays}
       />
