@@ -8,7 +8,8 @@ const COMBO_MESSAGES = [
   {emoji: '💥', label: 'Combo x3!!'},
   {emoji: '⚡️', label: 'Combo x4!!!'},
 ]
-const getComboMsg = (n) => (n >= 5 ? {emoji: '🤯', label: `Combo x${n}!!!!`} : (COMBO_MESSAGES[n] ?? null))
+const getComboMsg = (n) =>
+  n >= 5 ? {emoji: '🤯', label: `Combo x${n}!!!!`} : (COMBO_MESSAGES[n] ?? null)
 
 export function QuestionSlideScreen({
   currentQuestion,

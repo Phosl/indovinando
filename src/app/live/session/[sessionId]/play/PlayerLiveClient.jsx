@@ -32,12 +32,17 @@ export default function PlayerLiveClient({
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
 
   const {
-    liveQuestions, liveBottles,
-    currentBottleIndex, setCurrentBottleIndex,
-    roundStatus, setRoundStatus,
+    liveQuestions,
+    liveBottles,
+    currentBottleIndex,
+    setCurrentBottleIndex,
+    roundStatus,
+    setRoundStatus,
     loadingGameData,
-    allPlayers, setAllPlayers,
-    sessionFinished, setSessionFinished,
+    allPlayers,
+    setAllPlayers,
+    sessionFinished,
+    setSessionFinished,
   } = useGameDataLoader({
     sessionId,
     initialQuestions: questions,
@@ -46,49 +51,83 @@ export default function PlayerLiveClient({
     initialQuestionIndex,
   })
 
-  const {
-    playerData, resolvingPlayer, resolvePlayer,
-    playerStorageKey, nicknameStorageKey,
-  } = usePlayerResolver({sessionId, userId, isHostUser})
+  const {playerData, resolvingPlayer, resolvePlayer, playerStorageKey, nicknameStorageKey} =
+    usePlayerResolver({sessionId, userId, isHostUser})
 
   const currentBottle = liveBottles[currentBottleIndex]
   const isLastBottle = currentBottleIndex >= liveBottles.length - 1
 
   const {
-    selectedAnswers, roundAnswers, roundAnswersByPlayer, correctOptionByQuestion,
-    clickedReady, allPlayersCompletedThisRound, playerMarkedNext,
-    resultsOpenedBottleIndex, setResultsOpenedBottleIndex,
+    selectedAnswers,
+    roundAnswers,
+    roundAnswersByPlayer,
+    correctOptionByQuestion,
+    clickedReady,
+    allPlayersCompletedThisRound,
+    playerMarkedNext,
+    resultsOpenedBottleIndex,
+    setResultsOpenedBottleIndex,
     showBottleTransition,
-    currentSlideIndex, checkedQuestions, slideMotion, comboCount,
+    currentSlideIndex,
+    checkedQuestions,
+    slideMotion,
+    comboCount,
     resetRoundState,
-    handleAnswerInsert, handleSelect, handleCheck, handleContinue,
-    handleNextBottleClick, advanceToNextBottleOrFinish,
+    handleAnswerInsert,
+    handleSelect,
+    handleCheck,
+    handleContinue,
+    handleNextBottleClick,
+    advanceToNextBottleOrFinish,
   } = useRoundPlay({
-    sessionId, playerData, liveQuestions, allPlayers, currentBottleIndex, roundStatus,
-    isHostUser, isLastBottle, currentBottle,
-    setCurrentBottleIndex, setRoundStatus, setAllPlayers,
+    sessionId,
+    playerData,
+    liveQuestions,
+    allPlayers,
+    currentBottleIndex,
+    roundStatus,
+    isHostUser,
+    isLastBottle,
+    currentBottle,
+    setCurrentBottleIndex,
+    setRoundStatus,
+    setAllPlayers,
     playSound,
   })
 
   const {
-    leaderboardOpen, setLeaderboardOpen,
-    exitModalOpen, setExitModalOpen,
+    leaderboardOpen,
+    setLeaderboardOpen,
+    exitModalOpen,
+    setExitModalOpen,
     sortedLeaderboard,
-    openLeaderboard, openExit, exitGame,
+    openLeaderboard,
+    openExit,
+    exitGame,
   } = useOverlays({
-    sessionId, playerData, allPlayers, setAllPlayers,
-    isHostUser, playerStorageKey, nicknameStorageKey,
+    sessionId,
+    playerData,
+    allPlayers,
+    setAllPlayers,
+    isHostUser,
+    playerStorageKey,
+    nicknameStorageKey,
   })
 
   useLiveRealtime({
-    sessionId, playerData, resolvePlayer,
+    sessionId,
+    playerData,
+    resolvePlayer,
     onSessionUpdate: (updated) => {
       if (updated?.status === 'finished') {
         setSessionFinished(true)
         setTimeout(() => router.push(`/live/session/${sessionId}/leaderboard`), 900)
       }
       if (updated?.current_question_index !== currentBottleIndex) {
-        resetRoundState(updated?.current_question_index || 0, updated?.round_status || 'waiting_answers')
+        resetRoundState(
+          updated?.current_question_index || 0,
+          updated?.round_status || 'waiting_answers',
+        )
       }
       if (updated?.round_status) setRoundStatus(updated.round_status)
     },
@@ -98,7 +137,15 @@ export default function PlayerLiveClient({
 
   // ── Shared UI atoms ────────────────────────────────────────────────────────
   const topBarProps = playerData
-    ? {playerData, liveQuestions, currentSlideIndex, audioEnabled, onToggleAudio: toggleAudio, onOpenLeaderboard: openLeaderboard, onOpenExit: openExit}
+    ? {
+        playerData,
+        liveQuestions,
+        currentSlideIndex,
+        audioEnabled,
+        onToggleAudio: toggleAudio,
+        onOpenLeaderboard: openLeaderboard,
+        onOpenExit: openExit,
+      }
     : null
 
   const overlays = playerData ? (
@@ -126,7 +173,11 @@ export default function PlayerLiveClient({
   }
 
   if (resolvingPlayer || loadingGameData) {
-    return <div className={styles.fullPage}><Loader label="Caricamento partita" /></div>
+    return (
+      <div className={styles.fullPage}>
+        <Loader label="Caricamento partita" />
+      </div>
+    )
   }
 
   if (!playerData) {
@@ -135,7 +186,9 @@ export default function PlayerLiveClient({
         <div className={styles.centeredCard}>
           <h2>👤 Partecipante non trovato</h2>
           <p>Rientra dalla pagina di accesso alla sessione con il tuo nickname.</p>
-          <button className={styles.checkButton} onClick={() => router.push(`/live/session/${sessionId}`)}>
+          <button
+            className={styles.checkButton}
+            onClick={() => router.push(`/live/session/${sessionId}`)}>
             Torna al Join
           </button>
         </div>
@@ -176,12 +229,16 @@ export default function PlayerLiveClient({
       <div className={styles.fullPage}>
         <TopBar {...topBarProps} />
         <div className={styles.slideContent}>
-          <div className={styles.bottleBadge}>Bottiglia {currentBottleIndex + 1}/{liveBottles.length}</div>
+          <div className={styles.bottleBadge}>
+            Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
+          </div>
           <h2 className={styles.waitTitle}>Tutte le risposte sono arrivate</h2>
           <p className={styles.readyHint}>Quando vuoi, apri il riepilogo della bottiglia.</p>
         </div>
         <div className={styles.bottomPanel}>
-          <button className={styles.continueButton} onClick={() => setResultsOpenedBottleIndex(currentBottleIndex)}>
+          <button
+            className={styles.continueButton}
+            onClick={() => setResultsOpenedBottleIndex(currentBottleIndex)}>
             Vedi risultati
           </button>
         </div>
@@ -192,12 +249,18 @@ export default function PlayerLiveClient({
 
   if (
     roundStatus === 'showing_results' ||
-    (roundStatus === 'waiting_answers' && clickedReady && resultsOpenedBottleIndex === currentBottleIndex)
+    (roundStatus === 'waiting_answers' &&
+      clickedReady &&
+      resultsOpenedBottleIndex === currentBottleIndex)
   ) {
-    const title = roundStatus === 'showing_results' ? 'Bottiglia completata!' : 'Risultati bottiglia'
-    const subtitle = roundStatus === 'showing_results'
-      ? isLastBottle ? 'Tra poco vedrai la classifica finale.' : `Passiamo alla bottiglia ${currentBottleIndex + 2}.`
-      : null
+    const title =
+      roundStatus === 'showing_results' ? 'Bottiglia completata!' : 'Risultati bottiglia'
+    const subtitle =
+      roundStatus === 'showing_results'
+        ? isLastBottle
+          ? 'Tra poco vedrai la classifica finale.'
+          : `Passiamo alla bottiglia ${currentBottleIndex + 2}.`
+        : null
     return (
       <ResultsScreen
         title={title}
@@ -224,9 +287,11 @@ export default function PlayerLiveClient({
   const currentQuestion = liveQuestions[currentSlideIndex]
   const isLastSlide = currentSlideIndex >= liveQuestions.length - 1
   const slideMotionClass =
-    slideMotion === 'exiting' ? styles.slideExitLeft
-    : slideMotion === 'entering' ? styles.slideEnterRight
-    : ''
+    slideMotion === 'exiting'
+      ? styles.slideExitLeft
+      : slideMotion === 'entering'
+        ? styles.slideEnterRight
+        : ''
 
   return (
     <QuestionSlideScreen

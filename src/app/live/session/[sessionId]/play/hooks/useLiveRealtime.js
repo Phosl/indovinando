@@ -21,11 +21,21 @@ export function useLiveRealtime({
   const resolvePlayerRef = useRef(resolvePlayer)
   const playerDataRef = useRef(playerData)
 
-  useEffect(() => { onSessionUpdateRef.current = onSessionUpdate }, [onSessionUpdate])
-  useEffect(() => { onPlayersUpdateRef.current = onPlayersUpdate }, [onPlayersUpdate])
-  useEffect(() => { onAnswerInsertRef.current = onAnswerInsert }, [onAnswerInsert])
-  useEffect(() => { resolvePlayerRef.current = resolvePlayer }, [resolvePlayer])
-  useEffect(() => { playerDataRef.current = playerData }, [playerData])
+  useEffect(() => {
+    onSessionUpdateRef.current = onSessionUpdate
+  }, [onSessionUpdate])
+  useEffect(() => {
+    onPlayersUpdateRef.current = onPlayersUpdate
+  }, [onPlayersUpdate])
+  useEffect(() => {
+    onAnswerInsertRef.current = onAnswerInsert
+  }, [onAnswerInsert])
+  useEffect(() => {
+    resolvePlayerRef.current = resolvePlayer
+  }, [resolvePlayer])
+  useEffect(() => {
+    playerDataRef.current = playerData
+  }, [playerData])
 
   useEffect(() => {
     const sessionChannel = supabaseClient
@@ -57,7 +67,12 @@ export function useLiveRealtime({
       .channel(`live_round_answers:${sessionId}`)
       .on(
         'postgres_changes',
-        {event: 'INSERT', schema: 'public', table: 'live_round_answers', filter: `session_id=eq.${sessionId}`},
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'live_round_answers',
+          filter: `session_id=eq.${sessionId}`,
+        },
         (payload) => {
           if (payload.new) onAnswerInsertRef.current(payload.new)
         },

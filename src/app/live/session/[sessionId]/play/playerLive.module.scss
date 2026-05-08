@@ -531,7 +531,7 @@
 .comboEmoji {
   font-size: 2.8rem;
   line-height: 1;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
 }
 
 .comboLabel {
@@ -548,11 +548,26 @@
 }
 
 @keyframes comboPop {
-  0%   { opacity: 0;   transform: translateX(-50%) scale(0.5);  }
-  15%  { opacity: 1;   transform: translateX(-50%) scale(1.25); }
-  30%  { opacity: 1;   transform: translateX(-50%) scale(1.0);  }
-  60%  { opacity: 1;   transform: translateX(-50%) scale(1.0);  }
-  100% { opacity: 0;   transform: translateX(-50%) scale(0.85) translateY(-18px); }
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.25);
+  }
+  30% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.85) translateY(-18px);
+  }
 }
 
 // ── Centered fallback cards ────────────────────────────────────
