@@ -272,8 +272,16 @@ export default function PlayerLiveClient({
   }, [isHostUser, nicknameStorageKey, playerStorageKey, sessionId, userId])
 
   const syncScoresFromAnswers = useCallback(
-    async (players, answersByPlayer) => {
-      if (!isHostUser || players.length === 0) return
+    async (answersByPlayer) => {
+      if (!isHostUser) return
+
+      // Fetch fresh player scores from DB to avoid stale state
+      const {data: players} = await supabaseClient
+        .from('live_players')
+        .select('id, total_score')
+        .eq('session_id', sessionId)
+
+      if (!players || players.length === 0) return
 
       const scoreByPlayer = {}
       players.forEach((player) => {
@@ -282,7 +290,9 @@ export default function PlayerLiveClient({
 
       Object.entries(answersByPlayer).forEach(([playerId, perQuestion]) => {
         Object.values(perQuestion || {}).forEach((answer) => {
-          scoreByPlayer[playerId] = (scoreByPlayer[playerId] || 0) + (answer.points || 0)
+          if (scoreByPlayer[playerId] !== undefined) {
+            scoreByPlayer[playerId] += answer.points || 0
+          }
         })
       })
 
@@ -295,7 +305,7 @@ export default function PlayerLiveClient({
         ),
       )
     },
-    [isHostUser],
+    [isHostUser, sessionId],
   )
 
   const transitionToNextBottle = useCallback(async () => {
@@ -829,7 +839,7 @@ export default function PlayerLiveClient({
     if (!allPlayersCompletedThisRound) return
 
     if (isHostUser) {
-      await syncScoresFromAnswers(allPlayers, roundAnswersByPlayer)
+      await syncScoresFromAnswers(roundAnswersByPlayer)
       setResultsOpenedBottleIndex(null)
       transitionToNextBottle()
     } else {
