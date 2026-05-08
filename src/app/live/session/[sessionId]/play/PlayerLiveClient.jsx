@@ -277,7 +277,7 @@ export default function PlayerLiveClient({
 
       const scoreByPlayer = {}
       players.forEach((player) => {
-        scoreByPlayer[player.id] = 0
+        scoreByPlayer[player.id] = player.total_score || 0
       })
 
       Object.entries(answersByPlayer).forEach(([playerId, perQuestion]) => {
@@ -590,7 +590,7 @@ export default function PlayerLiveClient({
       const [{data: session}, {data: players}, {data: answers}] = await Promise.all([
         supabaseClient
           .from('live_sessions')
-          .select('current_question_index, round_status')
+          .select('current_question_index, round_status, status')
           .eq('id', sessionId)
           .maybeSingle(),
         supabaseClient
@@ -604,6 +604,13 @@ export default function PlayerLiveClient({
           .eq('session_id', sessionId)
           .in('question_id', questionIds),
       ])
+
+      // Session finished — redirect (Realtime fallback)
+      if (session && session.status === 'finished') {
+        setSessionFinished(true)
+        router.push(`/live/session/${sessionId}/leaderboard`)
+        return
+      }
 
       // Host has already advanced — reset player state (Realtime fallback)
       if (session && session.current_question_index !== currentBottleIndex) {
