@@ -506,6 +506,16 @@ export default function PlayerLiveClient({
           ...prev,
           [questionId]: {optionId, isCorrect, points},
         }))
+        // Also update roundAnswersByPlayer directly (don't rely solely on Realtime echo)
+        setRoundAnswersByPlayer((prev) => {
+          const updated = {...prev}
+          if (!updated[playerData.id]) updated[playerData.id] = {}
+          updated[playerData.id] = {
+            ...updated[playerData.id],
+            [questionId]: {optionId, isCorrect, points},
+          }
+          return updated
+        })
         setCheckedQuestions((prev) => ({...prev, [questionId]: true}))
         playSound(isCorrect ? 'correct' : 'wrong')
       } catch (err) {
@@ -554,6 +564,42 @@ export default function PlayerLiveClient({
       currentBottleIndex,
     ],
   )
+
+  // When a player reaches the results screen, load any already-submitted answers from DB
+  // (catches up if Realtime events were missed before subscription)
+  useEffect(() => {
+    if (!clickedReady || liveQuestions.length === 0) return
+
+    const loadExistingAnswers = async () => {
+      const {data} = await supabaseClient
+        .from('live_round_answers')
+        .select('player_id, question_id, selected_option_id, is_correct, points')
+        .eq('session_id', sessionId)
+        .in(
+          'question_id',
+          liveQuestions.map((q) => q.id),
+        )
+
+      if (!data || data.length === 0) return
+      setRoundAnswersByPlayer((prev) => {
+        const updated = {...prev}
+        data.forEach((a) => {
+          if (!updated[a.player_id]) updated[a.player_id] = {}
+          updated[a.player_id] = {
+            ...updated[a.player_id],
+            [a.question_id]: {
+              optionId: a.selected_option_id,
+              isCorrect: a.is_correct,
+              points: a.points,
+            },
+          }
+        })
+        return updated
+      })
+    }
+
+    loadExistingAnswers()
+  }, [clickedReady, sessionId, liveQuestions])
 
   const sortedLeaderboard = useMemo(
     () => [...allPlayers].sort((a, b) => (b.total_score || 0) - (a.total_score || 0)),
