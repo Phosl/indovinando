@@ -267,14 +267,6 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
             <div className={styles.waitingJoinStart}>
               <h2>✅ Sei dentro come {joinedPlayer.nickname}</h2>
               <p>Attendi che l'host faccia partire il gioco.</p>
-              {!userId && (
-                <button
-                  type="button"
-                  className={styles.authButton}
-                  onClick={() => router.push(authReturnUrl)}>
-                  Registrati / Accedi (opzionale)
-                </button>
-              )}
             </div>
           )}
 

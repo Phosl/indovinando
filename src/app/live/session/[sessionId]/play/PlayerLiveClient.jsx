@@ -6,19 +6,14 @@ import Loader from '@/components/Loader'
 import {supabaseClient} from '@/lib/supabaseClient'
 import styles from './playerLive.module.scss'
 
+import {useGameAudio} from './hooks/useGameAudio'
+import {useLiveRealtime} from './hooks/useLiveRealtime'
+import {GameOverlays} from './components/GameOverlays'
+import {BottleTransitionScreen} from './components/BottleTransitionScreen'
+import {ResultsScreen} from './components/ResultsScreen'
+import {QuestionSlideScreen} from './components/QuestionSlideScreen'
+
 const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
-const BOTTLE_ORDINALS = [
-  'Prima',
-  'Seconda',
-  'Terza',
-  'Quarta',
-  'Quinta',
-  'Sesta',
-  'Settima',
-  'Ottava',
-  'Nona',
-  'Decima',
-]
 
 export default function PlayerLiveClient({
   sessionId,
@@ -32,86 +27,65 @@ export default function PlayerLiveClient({
   const router = useRouter()
   const isHostUser = Boolean(userId && hostUserId && userId === hostUserId)
 
+  // ── Game data ──────────────────────────────────────────────────────────────
   const [liveQuestions, setLiveQuestions] = useState(questions || [])
   const [liveBottles, setLiveBottles] = useState(bottles || [])
   const [currentBottleIndex, setCurrentBottleIndex] = useState(initialQuestionIndex)
   const [roundStatus, setRoundStatus] = useState(initialStatus)
-  const [selectedAnswers, setSelectedAnswers] = useState({})
+  const [loadingGameData, setLoadingGameData] = useState((questions || []).length === 0)
+
+  // ── Player ─────────────────────────────────────────────────────────────────
   const [playerData, setPlayerData] = useState(null)
+  const [resolvingPlayer, setResolvingPlayer] = useState(true)
   const [allPlayers, setAllPlayers] = useState([])
+  const playerStorageKey = `live_player_id_${sessionId}`
+  const nicknameStorageKey = `live_player_nickname_${sessionId}`
+
+  // ── Session ────────────────────────────────────────────────────────────────
   const [sessionFinished, setSessionFinished] = useState(false)
+
+  // ── Round state ────────────────────────────────────────────────────────────
+  const [selectedAnswers, setSelectedAnswers] = useState({})
   const [roundAnswersByPlayer, setRoundAnswersByPlayer] = useState({})
   const [roundAnswers, setRoundAnswers] = useState({})
   const [correctOptionByQuestion, setCorrectOptionByQuestion] = useState({})
-  const [resolvingPlayer, setResolvingPlayer] = useState(true)
-  const [loadingGameData, setLoadingGameData] = useState((questions || []).length === 0)
   const [clickedReady, setClickedReady] = useState(false)
-  const [leaderboardOpen, setLeaderboardOpen] = useState(false)
-  const [exitModalOpen, setExitModalOpen] = useState(false)
-  // Slide-based question navigation
+  const [allPlayersCompletedThisRound, setAllPlayersCompletedThisRound] = useState(false)
+  const [playerMarkedNext, setPlayerMarkedNext] = useState(false)
+  const [resultsOpenedBottleIndex, setResultsOpenedBottleIndex] = useState(null)
+  const [showBottleTransition, setShowBottleTransition] = useState(false)
+
+  // ── Combo ──────────────────────────────────────────────────────────────────
+  const [comboCount, setComboCount] = useState(0)
+  const comboRef = useRef(0)
+
+  // ── Slide navigation ───────────────────────────────────────────────────────
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
   const [checkedQuestions, setCheckedQuestions] = useState({})
   const [slideMotion, setSlideMotion] = useState('idle')
-  const [audioEnabled, setAudioEnabled] = useState(true)
   const slideTimerRef = useRef(null)
   const slideTransitionMs = 220
-  const [showBottleTransition, setShowBottleTransition] = useState(false)
-  const [resultsOpenedBottleIndex, setResultsOpenedBottleIndex] = useState(null)
-  const [allPlayersCompletedThisRound, setAllPlayersCompletedThisRound] = useState(false)
-  const [playerMarkedNext, setPlayerMarkedNext] = useState(false)
-  const [comboCount, setComboCount] = useState(0)
-  const comboRef = useRef(0)
-  const soundsRef = useRef({correct: null, wrong: null, bottleCompleted: null})
+
+  // ── UI overlays ────────────────────────────────────────────────────────────
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false)
+  const [exitModalOpen, setExitModalOpen] = useState(false)
+
+  // ── Audio ──────────────────────────────────────────────────────────────────
+  const {audioEnabled, toggleAudio, playSound} = useGameAudio()
   const playedBottleSoundRef = useRef(null)
 
+  // ── Derived ────────────────────────────────────────────────────────────────
   const currentBottle = liveBottles[currentBottleIndex]
   const isLastBottle = currentBottleIndex >= liveBottles.length - 1
-  const playerStorageKey = `live_player_id_${sessionId}`
-  const nicknameStorageKey = `live_player_nickname_${sessionId}`
-  const audioPreferenceKey = 'live_audio_enabled'
 
-  const toggleAudio = useCallback(() => {
-    setAudioEnabled((prev) => {
-      const next = !prev
-      localStorage.setItem(audioPreferenceKey, next ? 'on' : 'off')
-      return next
-    })
-  }, [audioPreferenceKey])
-
-  const playSound = useCallback(
-    (soundKey) => {
-      if (!audioEnabled) return
-      const sound = soundsRef.current[soundKey]
-      if (!sound) return
-      sound.currentTime = 0
-      sound.play().catch(() => {})
-    },
-    [audioEnabled],
-  )
-
+  // ── Cleanup slide timer on unmount ─────────────────────────────────────────
   useEffect(() => {
     return () => {
       if (slideTimerRef.current) clearTimeout(slideTimerRef.current)
     }
   }, [])
 
-  useEffect(() => {
-    const savedPreference = localStorage.getItem(audioPreferenceKey)
-    if (savedPreference === 'off') setAudioEnabled(false)
-
-    soundsRef.current = {
-      correct: new Audio('/indovianando-correct.mp3'),
-      wrong: new Audio('/indovianando-wrong.mp3'),
-      bottleCompleted: new Audio('/indovianando-bottle-completed.mp3'),
-    }
-
-    Object.values(soundsRef.current).forEach((audio) => {
-      if (!audio) return
-      audio.preload = 'auto'
-      audio.volume = 0.9
-    })
-  }, [audioPreferenceKey])
-
+  // ── Bottle-transition sound ────────────────────────────────────────────────
   useEffect(() => {
     if (!showBottleTransition) return
     if (playedBottleSoundRef.current === `transition-${currentBottleIndex}`) return
@@ -119,7 +93,7 @@ export default function PlayerLiveClient({
     playSound('bottleCompleted')
   }, [showBottleTransition, currentBottleIndex, playSound])
 
-  // Always load players on mount (bootstrapGameData skips it when questions are pre-loaded)
+  // ── Load players on mount ──────────────────────────────────────────────────
   useEffect(() => {
     const loadPlayers = async () => {
       const {data} = await supabaseClient
@@ -132,6 +106,7 @@ export default function PlayerLiveClient({
     loadPlayers()
   }, [sessionId])
 
+  // ── Bootstrap game data when not pre-loaded ────────────────────────────────
   useEffect(() => {
     const bootstrapGameData = async () => {
       if (liveQuestions.length > 0) {
@@ -152,39 +127,25 @@ export default function PlayerLiveClient({
 
       setCurrentBottleIndex(session.current_question_index || 0)
       setRoundStatus(session.round_status || 'waiting_answers')
+      if (session.status === 'finished') setSessionFinished(true)
 
-      if (session.status === 'finished') {
-        setSessionFinished(true)
-      }
-
-      const {data: questionsData} = await supabaseClient
-        .from('game_questions')
-        .select(
-          `
-          id,
-          text,
-          display_order,
-          game_question_options (
-            id,
-            text,
-            option_order
-          )
-        `,
-        )
-        .eq('game_id', session.game_id)
-        .order('display_order')
-
-      const {data: bottlesData} = await supabaseClient
-        .from('game_bottles')
-        .select('*')
-        .eq('game_id', session.game_id)
-        .order('bottle_order')
-
-      const {data: playersData} = await supabaseClient
-        .from('live_players')
-        .select('id, nickname, avatar_id, total_score, updated_at, is_host')
-        .eq('session_id', sessionId)
-        .order('joined_at')
+      const [{data: questionsData}, {data: bottlesData}, {data: playersData}] = await Promise.all([
+        supabaseClient
+          .from('game_questions')
+          .select(`id, text, display_order, game_question_options (id, text, option_order)`)
+          .eq('game_id', session.game_id)
+          .order('display_order'),
+        supabaseClient
+          .from('game_bottles')
+          .select('*')
+          .eq('game_id', session.game_id)
+          .order('bottle_order'),
+        supabaseClient
+          .from('live_players')
+          .select('id, nickname, avatar_id, total_score, updated_at, is_host')
+          .eq('session_id', sessionId)
+          .order('joined_at'),
+      ])
 
       setLiveQuestions(questionsData || [])
       setLiveBottles(bottlesData || [])
@@ -195,6 +156,7 @@ export default function PlayerLiveClient({
     bootstrapGameData()
   }, [liveQuestions.length, sessionId])
 
+  // ── Resolve current player from localStorage / DB ──────────────────────────
   const resolvePlayer = useCallback(async () => {
     const storedPlayerId = localStorage.getItem(playerStorageKey)
     const storedNickname = localStorage.getItem(nicknameStorageKey)
@@ -212,7 +174,6 @@ export default function PlayerLiveClient({
           await supabaseClient.from('live_players').update({user_id: userId}).eq('id', byId.id)
           byId.user_id = userId
         }
-
         localStorage.setItem(nicknameStorageKey, byId.nickname)
         setPlayerData(byId)
         setResolvingPlayer(false)
@@ -256,23 +217,15 @@ export default function PlayerLiveClient({
             .eq('id', byNickname.id)
           byNickname.user_id = userId
         }
-
         localStorage.setItem(playerStorageKey, byNickname.id)
         setPlayerData(byNickname)
       }
     }
 
     if (isHostUser) {
-      const fallbackNickname = 'Host'
       const {data: created, error: createErr} = await supabaseClient
         .from('live_players')
-        .insert({
-          session_id: sessionId,
-          nickname: fallbackNickname,
-          avatar_id: 1,
-          user_id: userId,
-          is_host: true,
-        })
+        .insert({session_id: sessionId, nickname: 'Host', avatar_id: 1, user_id: userId, is_host: true})
         .select('id, nickname, avatar_id, user_id, is_host')
         .maybeSingle()
 
@@ -286,331 +239,103 @@ export default function PlayerLiveClient({
     setResolvingPlayer(false)
   }, [isHostUser, nicknameStorageKey, playerStorageKey, sessionId, userId])
 
-  const syncScoresFromAnswers = useCallback(
-    async (answersByPlayer) => {
-      if (!isHostUser) return
-
-      // Fetch fresh player scores from DB to avoid stale state
-      const {data: players} = await supabaseClient
-        .from('live_players')
-        .select('id, total_score')
-        .eq('session_id', sessionId)
-
-      if (!players || players.length === 0) return
-
-      const scoreByPlayer = {}
-      players.forEach((player) => {
-        scoreByPlayer[player.id] = player.total_score || 0
-      })
-
-      Object.entries(answersByPlayer).forEach(([playerId, perQuestion]) => {
-        Object.values(perQuestion || {}).forEach((answer) => {
-          if (scoreByPlayer[playerId] !== undefined) {
-            scoreByPlayer[playerId] += answer.points || 0
-          }
-        })
-      })
-
-      await Promise.all(
-        players.map((player) =>
-          supabaseClient
-            .from('live_players')
-            .update({total_score: scoreByPlayer[player.id] || 0})
-            .eq('id', player.id),
-        ),
-      )
-    },
-    [isHostUser, sessionId],
-  )
-
-  const transitionToNextBottle = useCallback(async () => {
-    setShowBottleTransition(true)
-  }, [])
-
-  const advanceToNextBottleOrFinish = useCallback(async () => {
-    try {
-      if (isLastBottle) {
-        await supabaseClient
-          .from('live_sessions')
-          .update({
-            status: 'finished',
-            finished_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', sessionId)
-        return
-      }
-
-      await supabaseClient.from('live_round_answers').delete().eq('session_id', sessionId)
-
-      const nextIndex = currentBottleIndex + 1
-      await supabaseClient
-        .from('live_sessions')
-        .update({
-          current_question_index: nextIndex,
-          round_status: 'waiting_answers',
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', sessionId)
-
-      setShowBottleTransition(false)
-      setCurrentBottleIndex(nextIndex)
-      setRoundStatus('waiting_answers')
-      setPlayerMarkedNext(false)
-      setSelectedAnswers({})
-      setRoundAnswers({})
-      setRoundAnswersByPlayer({})
-      setClickedReady(false)
-      setCurrentSlideIndex(0)
-      setCheckedQuestions({})
-      setSlideMotion('idle')
-      setComboCount(0)
-      comboRef.current = 0
-    } catch (err) {
-      console.error('Errore in advanceToNextBottleOrFinish:', err)
-      setShowBottleTransition(false)
-    }
-  }, [currentBottleIndex, isLastBottle, sessionId])
-
   useEffect(() => {
-    // Setup Realtime listeners (primary data source)
-    const sessionChannel = supabaseClient
-      .channel(`live_sessions:${sessionId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'live_sessions',
-          filter: `id=eq.${sessionId}`,
-        },
-        (payload) => {
-          const updated = payload.new
-          if (updated?.status === 'finished') {
-            setSessionFinished(true)
-            setTimeout(() => router.push(`/live/session/${sessionId}/leaderboard`), 900)
-          }
-          if (updated?.current_question_index !== currentBottleIndex) {
-            setShowBottleTransition(false)
-            setResultsOpenedBottleIndex(null)
-            setPlayerMarkedNext(false)
-            setSelectedAnswers({})
-            setRoundAnswers({})
-            setRoundAnswersByPlayer({})
-            setCorrectOptionByQuestion({})
-            setClickedReady(false)
-            setCurrentSlideIndex(0)
-            setCheckedQuestions({})
-            setSlideMotion('idle')
-            setComboCount(0)
-            comboRef.current = 0
-            setCurrentBottleIndex(updated?.current_question_index || 0)
-          }
-          if (updated?.round_status) {
-            setRoundStatus(updated.round_status)
-          }
-        },
-      )
-      .subscribe()
+    resolvePlayer()
+  }, [resolvePlayer])
 
-    const playersChannel = supabaseClient
-      .channel(`live_players:${sessionId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'live_players',
-          filter: `session_id=eq.${sessionId}`,
-        },
-        async () => {
-          const {data: players} = await supabaseClient
-            .from('live_players')
-            .select('id, nickname, avatar_id, total_score, updated_at, is_host')
-            .eq('session_id', sessionId)
-            .order('joined_at')
-          setAllPlayers(players || [])
-        },
-      )
-      .subscribe()
-
-    const answersChannel = supabaseClient
-      .channel(`live_round_answers:${sessionId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'live_round_answers',
-          filter: `session_id=eq.${sessionId}`,
-        },
-        (payload) => {
-          const answer = payload.new
-          if (!answer) return
-          setRoundAnswersByPlayer((prev) => {
-            const updated = {...prev}
-            if (!updated[answer.player_id]) {
-              updated[answer.player_id] = {}
-            }
-            updated[answer.player_id][answer.question_id] = {
-              optionId: answer.selected_option_id,
-              isCorrect: answer.is_correct,
-              points: answer.points,
-            }
-            return updated
-          })
-          if (playerData?.id === answer.player_id) {
-            setRoundAnswers((prev) => ({
-              ...prev,
-              [answer.question_id]: {
-                optionId: answer.selected_option_id,
-                isCorrect: answer.is_correct,
-                points: answer.points,
-              },
-            }))
-            setCheckedQuestions((prev) => ({
-              ...prev,
-              [answer.question_id]: true,
-            }))
-          }
-        },
-      )
-      .subscribe()
-
-    // Fallback polling every 10s for sync/robustness
-    const pollSession = setInterval(async () => {
-      if (!playerData) {
-        await resolvePlayer()
-      }
-    }, 10000)
-
-    return () => {
-      clearInterval(pollSession)
-      sessionChannel.unsubscribe()
-      playersChannel.unsubscribe()
-      answersChannel.unsubscribe()
-    }
-  }, [sessionId, resolvePlayer, router, playerData, liveQuestions, isHostUser, currentBottleIndex])
-
+  // ── Load correct answers for current bottle ────────────────────────────────
   useEffect(() => {
     if (!currentBottle?.id) return
-
-    const loadCorrectAnswers = async () => {
+    const load = async () => {
       const {data} = await supabaseClient
         .from('game_bottle_answers')
         .select('question_id, option_id')
         .eq('bottle_id', currentBottle.id)
-
       const nextMap = {}
       ;(data || []).forEach((row) => {
         nextMap[row.question_id] = row.option_id
       })
       setCorrectOptionByQuestion(nextMap)
     }
-
-    loadCorrectAnswers()
+    load()
   }, [currentBottle?.id])
 
-  const handleSelect = useCallback((questionId, optionId) => {
-    setSelectedAnswers((prev) => {
-      if (prev[questionId] === optionId) return prev
-      return {...prev, [questionId]: optionId}
-    })
+  // ── Helper to reset round state between bottles ────────────────────────────
+  const resetRoundState = useCallback((nextIndex, nextRoundStatus) => {
+    setShowBottleTransition(false)
+    setResultsOpenedBottleIndex(null)
+    setPlayerMarkedNext(false)
+    setSelectedAnswers({})
+    setRoundAnswers({})
+    setRoundAnswersByPlayer({})
+    setCorrectOptionByQuestion({})
+    setClickedReady(false)
+    setCurrentSlideIndex(0)
+    setCheckedQuestions({})
+    setSlideMotion('idle')
+    setComboCount(0)
+    comboRef.current = 0
+    if (nextIndex !== undefined) setCurrentBottleIndex(nextIndex)
+    if (nextRoundStatus !== undefined) setRoundStatus(nextRoundStatus)
   }, [])
 
-  const handleCheck = useCallback(
-    async (questionId, optionId) => {
-      if (!playerData || roundStatus !== 'waiting_answers') return
-      if (checkedQuestions[questionId]) return
-      if (!optionId) return
+  // ── Realtime callbacks ─────────────────────────────────────────────────────
+  const handleSessionUpdate = useCallback(
+    (updated) => {
+      if (updated?.status === 'finished') {
+        setSessionFinished(true)
+        setTimeout(() => router.push(`/live/session/${sessionId}/leaderboard`), 900)
+      }
+      if (updated?.current_question_index !== currentBottleIndex) {
+        resetRoundState(updated?.current_question_index || 0, updated?.round_status || 'waiting_answers')
+      }
+      if (updated?.round_status) {
+        setRoundStatus(updated.round_status)
+      }
+    },
+    [currentBottleIndex, resetRoundState, router, sessionId],
+  )
 
-      const isCorrect = correctOptionByQuestion[questionId] === optionId
-      const newCombo = isCorrect ? comboRef.current + 1 : 0
-      const comboBonus = isCorrect && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
-      const points = isCorrect ? 10 + comboBonus : 0
-      comboRef.current = newCombo
-      setComboCount(newCombo)
+  const handlePlayersUpdate = useCallback((players) => setAllPlayers(players), [])
 
-      try {
-        const {error} = await supabaseClient.from('live_round_answers').upsert(
-          {
-            session_id: sessionId,
-            player_id: playerData.id,
-            question_id: questionId,
-            selected_option_id: optionId,
-            is_correct: isCorrect,
-            points,
-          },
-          {onConflict: 'session_id,player_id,question_id'},
-        )
-
-        if (error) throw error
-
+  const handleAnswerInsert = useCallback(
+    (answer) => {
+      setRoundAnswersByPlayer((prev) => {
+        const updated = {...prev}
+        if (!updated[answer.player_id]) updated[answer.player_id] = {}
+        updated[answer.player_id][answer.question_id] = {
+          optionId: answer.selected_option_id,
+          isCorrect: answer.is_correct,
+          points: answer.points,
+        }
+        return updated
+      })
+      if (playerData?.id === answer.player_id) {
         setRoundAnswers((prev) => ({
           ...prev,
-          [questionId]: {optionId, isCorrect, points, comboBonus, newCombo},
+          [answer.question_id]: {
+            optionId: answer.selected_option_id,
+            isCorrect: answer.is_correct,
+            points: answer.points,
+          },
         }))
-        // Also update roundAnswersByPlayer directly (don't rely solely on Realtime echo)
-        setRoundAnswersByPlayer((prev) => {
-          const updated = {...prev}
-          if (!updated[playerData.id]) updated[playerData.id] = {}
-          updated[playerData.id] = {
-            ...updated[playerData.id],
-            [questionId]: {optionId, isCorrect, points},
-          }
-          return updated
-        })
-        setCheckedQuestions((prev) => ({...prev, [questionId]: true}))
-        playSound(isCorrect ? 'correct' : 'wrong')
-      } catch (err) {
-        console.error('Error evaluating answer:', err)
+        setCheckedQuestions((prev) => ({...prev, [answer.question_id]: true}))
       }
     },
-    [playerData, roundStatus, checkedQuestions, correctOptionByQuestion, sessionId, playSound],
+    [playerData?.id],
   )
 
-  const handleContinue = useCallback(
-    async (questionId) => {
-      const isLastSlide = currentSlideIndex >= liveQuestions.length - 1
-      if (!isLastSlide) {
-        if (slideMotion !== 'idle') return
+  useLiveRealtime({
+    sessionId,
+    playerData,
+    currentBottleIndex,
+    resolvePlayer,
+    onSessionUpdate: handleSessionUpdate,
+    onPlayersUpdate: handlePlayersUpdate,
+    onAnswerInsert: handleAnswerInsert,
+  })
 
-        setSlideMotion('exiting')
-        slideTimerRef.current = setTimeout(() => {
-          setCurrentSlideIndex((prev) => prev + 1)
-          setSlideMotion('entering')
-
-          slideTimerRef.current = setTimeout(() => {
-            setSlideMotion('idle')
-          }, slideTransitionMs)
-        }, slideTransitionMs)
-        return
-      }
-      // Last slide: mark ready
-      if (!playerData || clickedReady) return
-      try {
-        await supabaseClient
-          .from('live_players')
-          .update({updated_at: new Date().toISOString()})
-          .eq('id', playerData.id)
-        setClickedReady(true)
-        setResultsOpenedBottleIndex(currentBottleIndex)
-      } catch (err) {
-        console.error('Error setting ready status:', err)
-      }
-    },
-    [
-      currentSlideIndex,
-      liveQuestions.length,
-      playerData,
-      clickedReady,
-      slideMotion,
-      currentBottleIndex,
-    ],
-  )
-
-  // Poll DB every 2s while waiting for all players to complete.
-  // Also detects if the host has already advanced (Realtime fallback).
+  // ── Poll for all-players-done after player marks ready ─────────────────────
   useEffect(() => {
     if (!clickedReady || liveQuestions.length === 0) {
       setAllPlayersCompletedThisRound(false)
@@ -638,30 +363,14 @@ export default function PlayerLiveClient({
           .in('question_id', questionIds),
       ])
 
-      // Session finished — redirect (Realtime fallback)
-      if (session && session.status === 'finished') {
+      if (session?.status === 'finished') {
         setSessionFinished(true)
         router.push(`/live/session/${sessionId}/leaderboard`)
         return
       }
 
-      // Host has already advanced — reset player state (Realtime fallback)
       if (session && session.current_question_index !== currentBottleIndex) {
-        setResultsOpenedBottleIndex(null)
-        setPlayerMarkedNext(false)
-        setAllPlayersCompletedThisRound(false)
-        setSelectedAnswers({})
-        setRoundAnswers({})
-        setRoundAnswersByPlayer({})
-        setCorrectOptionByQuestion({})
-        setClickedReady(false)
-        setCurrentSlideIndex(0)
-        setCheckedQuestions({})
-        setSlideMotion('idle')
-        setComboCount(0)
-        comboRef.current = 0
-        setCurrentBottleIndex(session.current_question_index ?? 0)
-        setRoundStatus(session.round_status || 'waiting_answers')
+        resetRoundState(session.current_question_index ?? 0, session.round_status || 'waiting_answers')
         return
       }
 
@@ -693,29 +402,161 @@ export default function PlayerLiveClient({
     checkAll()
     const interval = setInterval(checkAll, 2000)
     return () => clearInterval(interval)
-  }, [clickedReady, sessionId, liveQuestions, currentBottleIndex])
+  }, [clickedReady, sessionId, liveQuestions, currentBottleIndex, resetRoundState, router])
 
-  const sortedLeaderboard = useMemo(
-    () => [...allPlayers].sort((a, b) => (b.total_score || 0) - (a.total_score || 0)),
-    [allPlayers],
+  // ── Score sync (host only) ─────────────────────────────────────────────────
+  const syncScoresFromAnswers = useCallback(
+    async (answersByPlayer) => {
+      if (!isHostUser) return
+      const {data: players} = await supabaseClient
+        .from('live_players')
+        .select('id, total_score')
+        .eq('session_id', sessionId)
+      if (!players || players.length === 0) return
+
+      const scoreByPlayer = {}
+      players.forEach((p) => {
+        scoreByPlayer[p.id] = p.total_score || 0
+      })
+      Object.entries(answersByPlayer).forEach(([playerId, perQuestion]) => {
+        Object.values(perQuestion || {}).forEach((answer) => {
+          if (scoreByPlayer[playerId] !== undefined) scoreByPlayer[playerId] += answer.points || 0
+        })
+      })
+      await Promise.all(
+        players.map((p) =>
+          supabaseClient
+            .from('live_players')
+            .update({total_score: scoreByPlayer[p.id] || 0})
+            .eq('id', p.id),
+        ),
+      )
+    },
+    [isHostUser, sessionId],
   )
 
-  const getBottleLabel = useCallback((index) => {
-    return BOTTLE_ORDINALS[index] || `${index + 1}a`
+  // ── Advance to next bottle or finish session ───────────────────────────────
+  const advanceToNextBottleOrFinish = useCallback(async () => {
+    try {
+      if (isLastBottle) {
+        await supabaseClient
+          .from('live_sessions')
+          .update({
+            status: 'finished',
+            finished_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', sessionId)
+        return
+      }
+
+      await supabaseClient.from('live_round_answers').delete().eq('session_id', sessionId)
+
+      const nextIndex = currentBottleIndex + 1
+      await supabaseClient
+        .from('live_sessions')
+        .update({
+          current_question_index: nextIndex,
+          round_status: 'waiting_answers',
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', sessionId)
+
+      resetRoundState(nextIndex, 'waiting_answers')
+    } catch (err) {
+      console.error('Errore in advanceToNextBottleOrFinish:', err)
+      setShowBottleTransition(false)
+    }
+  }, [currentBottleIndex, isLastBottle, resetRoundState, sessionId])
+
+  // ── Answer handlers ────────────────────────────────────────────────────────
+  const handleSelect = useCallback((questionId, optionId) => {
+    setSelectedAnswers((prev) => {
+      if (prev[questionId] === optionId) return prev
+      return {...prev, [questionId]: optionId}
+    })
   }, [])
 
-  const handleOpenExitModal = useCallback(() => {
-    setLeaderboardOpen(false)
-    setExitModalOpen(true)
-  }, [])
+  const handleCheck = useCallback(
+    async (questionId, optionId) => {
+      if (!playerData || roundStatus !== 'waiting_answers') return
+      if (checkedQuestions[questionId] || !optionId) return
 
-  const handleExitGame = useCallback(() => {
-    const shouldGoDashboard = isHostUser || Boolean(playerData?.is_host)
-    localStorage.removeItem(playerStorageKey)
-    localStorage.removeItem(nicknameStorageKey)
-    setExitModalOpen(false)
-    router.push(shouldGoDashboard ? '/dashboard' : `/live/session/${sessionId}`)
-  }, [isHostUser, nicknameStorageKey, playerData, playerStorageKey, router, sessionId])
+      const isCorrect = correctOptionByQuestion[questionId] === optionId
+      const newCombo = isCorrect ? comboRef.current + 1 : 0
+      const comboBonus = isCorrect && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
+      const points = isCorrect ? 10 + comboBonus : 0
+      comboRef.current = newCombo
+      setComboCount(newCombo)
+
+      try {
+        const {error} = await supabaseClient.from('live_round_answers').upsert(
+          {
+            session_id: sessionId,
+            player_id: playerData.id,
+            question_id: questionId,
+            selected_option_id: optionId,
+            is_correct: isCorrect,
+            points,
+          },
+          {onConflict: 'session_id,player_id,question_id'},
+        )
+        if (error) throw error
+
+        setRoundAnswers((prev) => ({...prev, [questionId]: {optionId, isCorrect, points, comboBonus, newCombo}}))
+        setRoundAnswersByPlayer((prev) => {
+          const updated = {...prev}
+          if (!updated[playerData.id]) updated[playerData.id] = {}
+          updated[playerData.id] = {...updated[playerData.id], [questionId]: {optionId, isCorrect, points}}
+          return updated
+        })
+        setCheckedQuestions((prev) => ({...prev, [questionId]: true}))
+        playSound(isCorrect ? 'correct' : 'wrong')
+      } catch (err) {
+        console.error('Error evaluating answer:', err)
+      }
+    },
+    [playerData, roundStatus, checkedQuestions, correctOptionByQuestion, sessionId, playSound],
+  )
+
+  const handleContinue = useCallback(
+    async (questionId) => {
+      const isLastSlide = currentSlideIndex >= liveQuestions.length - 1
+      if (!isLastSlide) {
+        if (slideMotion !== 'idle') return
+        setSlideMotion('exiting')
+        slideTimerRef.current = setTimeout(() => {
+          setCurrentSlideIndex((prev) => prev + 1)
+          setSlideMotion('entering')
+          slideTimerRef.current = setTimeout(() => setSlideMotion('idle'), slideTransitionMs)
+        }, slideTransitionMs)
+        return
+      }
+      if (!playerData || clickedReady) return
+      try {
+        await supabaseClient
+          .from('live_players')
+          .update({updated_at: new Date().toISOString()})
+          .eq('id', playerData.id)
+        setClickedReady(true)
+        setResultsOpenedBottleIndex(currentBottleIndex)
+      } catch (err) {
+        console.error('Error setting ready status:', err)
+      }
+    },
+    [currentSlideIndex, liveQuestions.length, playerData, clickedReady, slideMotion, currentBottleIndex],
+  )
+
+  const handleNextBottleClick = async () => {
+    if (!allPlayersCompletedThisRound) return
+    if (isHostUser) {
+      await syncScoresFromAnswers(roundAnswersByPlayer)
+      setResultsOpenedBottleIndex(null)
+      setShowBottleTransition(true)
+    } else {
+      setPlayerMarkedNext(true)
+    }
+  }
 
   const handleOpenLeaderboard = useCallback(async () => {
     setLeaderboardOpen(true)
@@ -727,6 +568,33 @@ export default function PlayerLiveClient({
     if (data) setAllPlayers(data)
   }, [sessionId])
 
+  const handleExitGame = useCallback(() => {
+    localStorage.removeItem(playerStorageKey)
+    localStorage.removeItem(nicknameStorageKey)
+    setExitModalOpen(false)
+    const shouldGoDashboard = isHostUser || Boolean(playerData?.is_host)
+    router.push(shouldGoDashboard ? '/dashboard' : `/live/session/${sessionId}`)
+  }, [isHostUser, nicknameStorageKey, playerData, playerStorageKey, router, sessionId])
+
+  // ── Sorted leaderboard (memoised) ─────────────────────────────────────────
+  const sortedLeaderboard = useMemo(
+    () => [...allPlayers].sort((a, b) => (b.total_score || 0) - (a.total_score || 0)),
+    [allPlayers],
+  )
+
+  // ── Shared UI atoms ────────────────────────────────────────────────────────
+  const overlays = (
+    <GameOverlays
+      leaderboardOpen={leaderboardOpen}
+      exitModalOpen={exitModalOpen}
+      sortedLeaderboard={sortedLeaderboard}
+      playerData={playerData}
+      onCloseLeaderboard={() => setLeaderboardOpen(false)}
+      onCloseExit={() => setExitModalOpen(false)}
+      onExitGame={handleExitGame}
+    />
+  )
+
   const renderTopActions = () => (
     <div className={styles.topActions}>
       <button className={styles.audioButton} onClick={toggleAudio}>
@@ -737,7 +605,10 @@ export default function PlayerLiveClient({
       </button>
       <button
         className={styles.exitButton}
-        onClick={handleOpenExitModal}
+        onClick={() => {
+          setLeaderboardOpen(false)
+          setExitModalOpen(true)
+        }}
         aria-label="Esci dal gioco">
         X
       </button>
@@ -766,71 +637,7 @@ export default function PlayerLiveClient({
     </div>
   )
 
-  const overlaySheets = (
-    <>
-      {leaderboardOpen && (
-        <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
-          <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.sheetHandle} />
-            <h3>🏆 Classifica Live</h3>
-            <div className={styles.sheetList}>
-              {sortedLeaderboard.map((player, idx) => {
-                const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : null
-                const isMe = player.id === playerData?.id
-                return (
-                  <div
-                    key={player.id}
-                    className={`${styles.sheetRow} ${isMe ? styles.sheetRowMe : ''}`}>
-                    <span className={styles.sheetRank}>{medal ?? `#${idx + 1}`}</span>
-                    <span className={styles.sheetAvatar}>
-                      {APPLE_AVATARS[player.avatar_id - 1] || '👤'}
-                    </span>
-                    <span className={styles.sheetName}>
-                      {player.nickname}
-                      {isMe ? ' (tu)' : ''}
-                    </span>
-                    <span className={styles.sheetScore}>{player.total_score || 0} pt</span>
-                  </div>
-                )
-              })}
-              {sortedLeaderboard.length === 0 && (
-                <p className={styles.readyHint}>Nessun giocatore ancora.</p>
-              )}
-            </div>
-            <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
-              Chiudi
-            </button>
-          </div>
-        </div>
-      )}
-
-      {exitModalOpen && (
-        <div className={styles.sheetBackdrop} onClick={() => setExitModalOpen(false)}>
-          <div
-            className={`${styles.sheet} ${styles.exitSheet}`}
-            onClick={(e) => e.stopPropagation()}>
-            <div className={styles.sheetHandle} />
-            <div className={styles.exitLottiePlaceholder} aria-hidden="true">
-              😟
-            </div>
-            <h3>Vuoi uscire dal gioco?</h3>
-            <p className={styles.exitHint}>
-              Potrai rientrare dalla sessione, ma lascerai questa schermata.
-            </p>
-            <div className={styles.exitActions}>
-              <button className={styles.exitSecondary} onClick={() => setExitModalOpen(false)}>
-                Annulla
-              </button>
-              <button className={styles.exitDanger} onClick={handleExitGame}>
-                Esci dal gioco
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  )
-
+  // ── Loading / error guards ─────────────────────────────────────────────────
   if (sessionFinished) {
     return (
       <div className={styles.fullPage}>
@@ -842,15 +649,7 @@ export default function PlayerLiveClient({
     )
   }
 
-  if (resolvingPlayer) {
-    return (
-      <div className={styles.fullPage}>
-        <Loader label="Caricamento partita" />
-      </div>
-    )
-  }
-
-  if (loadingGameData) {
+  if (resolvingPlayer || loadingGameData) {
     return (
       <div className={styles.fullPage}>
         <Loader label="Caricamento partita" />
@@ -879,96 +678,35 @@ export default function PlayerLiveClient({
       <div className={styles.fullPage}>
         <div className={styles.centeredCard}>
           <h2>🕒 Sessione non pronta</h2>
-          <p>Attendi l avvio del gioco.</p>
+          <p>Attendi l&apos;avvio del gioco.</p>
         </div>
       </div>
     )
   }
 
-  const handleNextBottleClick = async () => {
-    if (!allPlayersCompletedThisRound) return
+  // ── Screens ────────────────────────────────────────────────────────────────
 
-    if (isHostUser) {
-      await syncScoresFromAnswers(roundAnswersByPlayer)
-      setResultsOpenedBottleIndex(null)
-      transitionToNextBottle()
-    } else {
-      // Non-host: stay on results screen waiting for host to advance
-      setPlayerMarkedNext(true)
-    }
-  }
-
-  // ── Schermata transizione bottiglia (solo locale host) ──
   if (showBottleTransition) {
-    const nextBottleNum = currentBottleIndex + 2
-    const isLastNextBottle = nextBottleNum > liveBottles.length
-    const nextBottleIndex = currentBottleIndex + 1
+    const isLastNextBottle = currentBottleIndex + 2 > liveBottles.length
     return (
-      <div className={styles.fullPage}>
-        {renderTopBar()}
-
-        <div className={styles.slideContent}>
-          {isLastNextBottle ? (
-            <>
-              <h2 className={styles.waitTitle}>🎉 Ultimi risultati!</h2>
-              <p className={styles.readyHint}>Tra poco vedrai la classifica finale.</p>
-            </>
-          ) : (
-            <div className={styles.transitionHero}>
-              <div className={styles.confettiBurst} aria-hidden="true">
-                {Array.from({length: 18}).map((_, idx) => (
-                  <span
-                    key={idx}
-                    className={styles.confettiPiece}
-                    style={{
-                      '--c-delay': `${idx * 45}ms`,
-                      '--c-x': `${(idx % 6) * 18 - 40}px`,
-                      '--c-rot': `${(idx % 2 === 0 ? 1 : -1) * (18 + idx * 2)}deg`,
-                    }}
-                  />
-                ))}
-              </div>
-              <p className={styles.transitionSubtitle}>
-                Bottiglia {nextBottleNum}/{liveBottles.length}
-              </p>
-              <h2 className={styles.transitionTitle}>
-                {getBottleLabel(nextBottleIndex)} bottiglia!
-              </h2>
-              <p className={styles.readyHint}>Inizia!</p>
-            </div>
-          )}
-        </div>
-
-        <div className={styles.bottomPanel}>
-          {isHostUser ? (
-            <button className={styles.continueButton} onClick={() => advanceToNextBottleOrFinish()}>
-              {isLastNextBottle ? 'Concludi' : 'Iniziamo'}
-            </button>
-          ) : (
-            <>
-              <p className={styles.readyHint}>In attesa dell&apos;host...</p>
-              {isLastNextBottle && (
-                <button
-                  className={styles.secondaryButton}
-                  onClick={() => router.push(`/live/session/${sessionId}/leaderboard`)}>
-                  Vedi classifica
-                </button>
-              )}
-            </>
-          )}
-        </div>
-
-        {overlaySheets}
-      </div>
+      <BottleTransitionScreen
+        currentBottleIndex={currentBottleIndex}
+        totalBottles={liveBottles.length}
+        isHostUser={isHostUser}
+        isLastNextBottle={isLastNextBottle}
+        onAdvance={advanceToNextBottleOrFinish}
+        onViewLeaderboard={() => router.push(`/live/session/${sessionId}/leaderboard`)}
+        topBar={renderTopBar()}
+        overlays={overlays}
+      />
     )
   }
 
-  // ── Step intermedio: conferma apertura risultati ──
+  // Intermediate prompt to open results
   if (roundStatus === 'showing_results' && resultsOpenedBottleIndex !== currentBottleIndex) {
     return (
       <div className={styles.fullPage}>
         {renderTopBar()}
-
         <div className={styles.slideContent}>
           <div className={styles.bottleBadge}>
             Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
@@ -976,7 +714,6 @@ export default function PlayerLiveClient({
           <h2 className={styles.waitTitle}>Tutte le risposte sono arrivate</h2>
           <p className={styles.readyHint}>Quando vuoi, apri il riepilogo della bottiglia.</p>
         </div>
-
         <div className={styles.bottomPanel}>
           <button
             className={styles.continueButton}
@@ -984,320 +721,76 @@ export default function PlayerLiveClient({
             Vedi risultati
           </button>
         </div>
-
-        {overlaySheets}
+        {overlays}
       </div>
     )
   }
 
-  // ── Schermata "mostra risultati / in attesa della prossima bottiglia" ──
-  if (roundStatus === 'showing_results') {
-    return (
-      <div className={styles.fullPage}>
-        {renderTopBar()}
-
-        <div className={styles.slideContent}>
-          <div className={styles.bottleBadge}>
-            Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
-          </div>
-          <h2 className={styles.waitTitle}>Bottiglia completata!</h2>
-          <p className={styles.readyHint}>
-            {isLastBottle
-              ? 'Tra poco vedrai la classifica finale.'
-              : `Passiamo alla bottiglia ${currentBottleIndex + 2}.`}
-          </p>
-          <div className={styles.bottleReveal}>
-            <span className={styles.bottleRevealLabel}>La bottiglia era</span>
-            <span className={styles.bottleRevealName}>{currentBottle.name}</span>
-            {(currentBottle.producer || currentBottle.year) && (
-              <span className={styles.bottleRevealMeta}>
-                {[currentBottle.producer, currentBottle.year].filter(Boolean).join(' · ')}
-              </span>
-            )}
-          </div>
-          {liveQuestions.map((question, index) => {
-            const ans = roundAnswers[question.id]
-            const selectedOptionText = question.game_question_options?.find(
-              (o) => o.id === ans?.optionId,
-            )?.text
-            const correctOptionText = question.game_question_options?.find(
-              (o) => o.id === correctOptionByQuestion[question.id],
-            )?.text
-            return (
-              <div key={question.id} className={styles.summaryRow}>
-                <span className={styles.summaryIndex}>{index + 1}</span>
-                <div className={styles.summaryBody}>
-                  <span className={styles.summaryText}>{question.text}</span>
-                  <div className={styles.summaryAnswer}>
-                    {ans?.isCorrect ? (
-                      <span className={styles.summaryCorrect}>
-                        ✅ {selectedOptionText} · +{ans.points}
-                        {ans.comboBonus > 0 ? ` 🔥 combo` : ''}
-                      </span>
-                    ) : (
-                      <>
-                        <span className={styles.summaryWrong}>
-                          ❌ {selectedOptionText || 'Non risposto'}
-                        </span>
-                        <span className={styles.summaryCorrectHint}>
-                          ✓ {correctOptionText || '-'}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-
-        <div className={styles.bottomPanel}>
-          <>
-            <p className={styles.readyHint}>
-              {allPlayersCompletedThisRound
-                ? isLastBottle
-                  ? 'Tutti hanno finito!'
-                  : 'Tutti hanno finito: puoi passare alla prossima bottiglia.'
-                : 'Attendi che tutti i giocatori finiscano per continuare.'}
-            </p>
-            <button
-              className={styles.continueButton}
-              onClick={handleNextBottleClick}
-              disabled={!allPlayersCompletedThisRound}>
-              {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
-            </button>
-            {isLastBottle && (
-              <button
-                className={styles.secondaryButton}
-                onClick={() => router.push(`/live/session/${sessionId}/leaderboard`)}>
-                Vedi classifica
-              </button>
-            )}
-          </>
-        </div>
-
-        {overlaySheets}
-      </div>
-    )
-  }
-
+  // Full results screen (showing_results or waiting_answers + player ready)
   if (
-    roundStatus === 'waiting_answers' &&
-    clickedReady &&
-    resultsOpenedBottleIndex === currentBottleIndex
+    roundStatus === 'showing_results' ||
+    (roundStatus === 'waiting_answers' && clickedReady && resultsOpenedBottleIndex === currentBottleIndex)
   ) {
+    const title = roundStatus === 'showing_results' ? 'Bottiglia completata!' : 'Risultati bottiglia'
+    const subtitle =
+      roundStatus === 'showing_results'
+        ? isLastBottle
+          ? 'Tra poco vedrai la classifica finale.'
+          : `Passiamo alla bottiglia ${currentBottleIndex + 2}.`
+        : null
+
     return (
-      <div className={styles.fullPage}>
-        {renderTopBar()}
-
-        <div className={styles.slideContent}>
-          <div className={styles.bottleBadge}>
-            Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
-          </div>
-          <h2 className={styles.waitTitle}>Risultati bottiglia</h2>
-          <div className={styles.bottleReveal}>
-            <span className={styles.bottleRevealLabel}>La bottiglia era</span>
-            <span className={styles.bottleRevealName}>{currentBottle.name}</span>
-            {(currentBottle.producer || currentBottle.year) && (
-              <span className={styles.bottleRevealMeta}>
-                {[currentBottle.producer, currentBottle.year].filter(Boolean).join(' · ')}
-              </span>
-            )}
-          </div>
-          {liveQuestions.map((question, index) => {
-            const ans = roundAnswers[question.id]
-            const selectedOptionText = question.game_question_options?.find(
-              (o) => o.id === ans?.optionId,
-            )?.text
-            const correctAnswerText = question.game_question_options?.find(
-              (o) => o.id === correctOptionByQuestion[question.id],
-            )?.text
-            return (
-              <div key={question.id} className={styles.summaryRow}>
-                <span className={styles.summaryIndex}>{index + 1}</span>
-                <div className={styles.summaryBody}>
-                  <span className={styles.summaryText}>{question.text}</span>
-                  <div className={styles.summaryAnswer}>
-                    {ans?.isCorrect ? (
-                      <span className={styles.summaryCorrect}>
-                        ✅ {selectedOptionText} · +{ans.points}
-                        {ans.comboBonus > 0 ? ` 🔥 combo` : ''}
-                      </span>
-                    ) : (
-                      <>
-                        <span className={styles.summaryWrong}>
-                          ❌ {selectedOptionText || 'Non risposto'}
-                        </span>
-                        <span className={styles.summaryCorrectHint}>
-                          ✓ {correctAnswerText || '-'}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-
-        <div className={styles.bottomPanel}>
-          {isHostUser ? (
-            <>
-              <p className={styles.readyHint}>
-                {allPlayersCompletedThisRound
-                  ? 'Tutti hanno finito: puoi passare alla prossima bottiglia.'
-                  : 'Attendi che tutti i giocatori finiscano per continuare.'}
-              </p>
-              <button
-                className={styles.continueButton}
-                onClick={handleNextBottleClick}
-                disabled={!allPlayersCompletedThisRound}>
-                {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
-              </button>
-            </>
-          ) : (
-            <>
-              <p className={styles.readyHint}>
-                {playerMarkedNext
-                  ? 'In attesa che l\u2019host avanzi...'
-                  : allPlayersCompletedThisRound
-                    ? 'Tutti hanno finito!'
-                    : 'Attendi che tutti i giocatori finiscano per continuare.'}
-              </p>
-              <button
-                className={styles.continueButton}
-                onClick={handleNextBottleClick}
-                disabled={!allPlayersCompletedThisRound || playerMarkedNext}>
-                {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
-              </button>
-              {isLastBottle && (
-                <button
-                  className={styles.secondaryButton}
-                  onClick={() => router.push(`/live/session/${sessionId}/leaderboard`)}>
-                  Vedi classifica
-                </button>
-              )}
-            </>
-          )}
-        </div>
-
-        {overlaySheets}
-      </div>
+      <ResultsScreen
+        title={title}
+        subtitle={subtitle}
+        currentBottle={currentBottle}
+        currentBottleIndex={currentBottleIndex}
+        totalBottles={liveBottles.length}
+        questions={liveQuestions}
+        roundAnswers={roundAnswers}
+        correctOptionByQuestion={correctOptionByQuestion}
+        isLastBottle={isLastBottle}
+        allPlayersCompletedThisRound={allPlayersCompletedThisRound}
+        isHostUser={isHostUser}
+        playerMarkedNext={playerMarkedNext}
+        onNextBottle={handleNextBottleClick}
+        onViewLeaderboard={() => router.push(`/live/session/${sessionId}/leaderboard`)}
+        topBar={renderTopBar()}
+        overlays={overlays}
+      />
     )
   }
 
-  // ── Domanda corrente (slide) ──
+  // Main question slide
   const currentQuestion = liveQuestions[currentSlideIndex]
   const isLastSlide = currentSlideIndex >= liveQuestions.length - 1
-  const isSlideTransitioning = slideMotion !== 'idle'
   const slideMotionClass =
     slideMotion === 'exiting'
       ? styles.slideExitLeft
       : slideMotion === 'entering'
         ? styles.slideEnterRight
         : ''
-  const selectedOption = selectedAnswers[currentQuestion?.id]
-  const isChecked = Boolean(checkedQuestions[currentQuestion?.id])
-  const checkResult = roundAnswers[currentQuestion?.id]
-  const correctText = currentQuestion?.game_question_options?.find(
-    (o) => o.id === correctOptionByQuestion[currentQuestion?.id],
-  )?.text
 
   return (
-    <div className={styles.fullPage}>
-      {/* ── Top bar ── */}
-      {renderTopBar({withProgress: true})}
-
-      {/* ── Question content ── */}
-      <div
-        className={`${styles.slideContent} ${slideMotionClass} ${!isChecked ? styles.mobileCheckSpacing : ''}`}>
-        <div className={styles.bottleBadge}>
-          Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
-        </div>
-        <p className={styles.questionCounter}>
-          Domanda {currentSlideIndex + 1} di {liveQuestions.length}
-        </p>
-        <h2 className={styles.questionText}>{currentQuestion?.text}</h2>
-
-        <div className={styles.optionsList}>
-          {currentQuestion?.game_question_options
-            ?.sort((a, b) => a.option_order - b.option_order)
-            .map((option) => {
-              const isSelected = selectedOption === option.id
-              const isCorrectOption = correctOptionByQuestion[currentQuestion?.id] === option.id
-              let optClass = styles.optionButton
-              if (isChecked) {
-                if (isCorrectOption) optClass = `${styles.optionButton} ${styles.optCorrect}`
-                else if (isSelected) optClass = `${styles.optionButton} ${styles.optWrong}`
-                else optClass = `${styles.optionButton} ${styles.optDimmed}`
-              } else if (isSelected) {
-                optClass = `${styles.optionButton} ${styles.optSelected}`
-              }
-              return (
-                <button
-                  key={option.id}
-                  className={optClass}
-                  onClick={() => !isChecked && handleSelect(currentQuestion.id, option.id)}
-                  disabled={isChecked || isSlideTransitioning}>
-                  {option.text}
-                </button>
-              )
-            })}
-        </div>
-      </div>
-
-      {/* ── Fixed bottom panel ── */}
-      <div
-        className={`${styles.bottomPanel} ${!isChecked ? styles.mobileCheckFixed : ''} ${
-          isChecked ? (checkResult?.isCorrect ? styles.bottomCorrect : styles.bottomWrong) : ''
-        }`}>
-        {isChecked && (
-          <div className={styles.resultFeedback}>
-            {checkResult?.isCorrect ? (
-              <>
-                <span className={styles.feedbackIcon}>
-                  {checkResult.comboBonus > 0 ? '🔥' : '🎉'}
-                </span>
-                <span className={styles.feedbackLabel}>
-                  {checkResult.comboBonus > 0
-                    ? `Combo x${checkResult.newCombo}! +${checkResult.points} (+${checkResult.comboBonus} bonus)`
-                    : `Corretto! +${checkResult.points}`}
-                </span>
-              </>
-            ) : (
-              <>
-                <span className={styles.feedbackIcon}>💡</span>
-                <span className={styles.feedbackLabel}>
-                  Risposta corretta: <strong>{correctText}</strong>
-                </span>
-              </>
-            )}
-          </div>
-        )}
-
-        {!isChecked ? (
-          <button
-            className={styles.checkButton}
-            onClick={() => handleCheck(currentQuestion.id, selectedOption)}
-            disabled={!selectedOption || isSlideTransitioning}>
-            Controlla
-          </button>
-        ) : (
-          <button
-            className={styles.continueButton}
-            onClick={() => handleContinue(currentQuestion.id)}
-            disabled={isSlideTransitioning}>
-            {isLastSlide
-              ? clickedReady
-                ? 'In attesa degli altri...'
-                : 'Vedi risultati'
-              : 'Continua'}
-          </button>
-        )}
-      </div>
-
-      {/* ── Leaderboard sheet ── */}
-      {overlaySheets}
-    </div>
+    <QuestionSlideScreen
+      currentQuestion={currentQuestion}
+      currentBottleIndex={currentBottleIndex}
+      totalBottles={liveBottles.length}
+      currentSlideIndex={currentSlideIndex}
+      totalSlides={liveQuestions.length}
+      slideMotionClass={slideMotionClass}
+      isChecked={Boolean(checkedQuestions[currentQuestion?.id])}
+      isSlideTransitioning={slideMotion !== 'idle'}
+      selectedOption={selectedAnswers[currentQuestion?.id]}
+      checkResult={roundAnswers[currentQuestion?.id]}
+      correctOptionByQuestion={correctOptionByQuestion}
+      clickedReady={clickedReady}
+      isLastSlide={isLastSlide}
+      onSelect={handleSelect}
+      onCheck={handleCheck}
+      onContinue={handleContinue}
+      topBar={renderTopBar({withProgress: true})}
+      overlays={overlays}
+    />
   )
 }
