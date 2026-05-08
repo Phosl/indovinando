@@ -1,3 +1,4 @@
+import {memo} from 'react'
 import styles from '../playerLive.module.scss'
 
 const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
@@ -6,7 +7,7 @@ const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓
  * Persistent top bar shown across all game screens.
  * withProgress=true renders the slide-progress pill row.
  */
-export function TopBar({
+export const TopBar = memo(function TopBar({
   playerData,
   liveQuestions,
   currentSlideIndex,
@@ -49,4 +50,4 @@ export function TopBar({
       </div>
     </div>
   )
-}
+})

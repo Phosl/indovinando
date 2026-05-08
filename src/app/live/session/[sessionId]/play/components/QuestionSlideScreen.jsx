@@ -1,4 +1,4 @@
-import {useState, useEffect, useCallback} from 'react'
+import {useState, useEffect, useCallback, memo} from 'react'
 import styles from '../playerLive.module.scss'
 
 const COMBO_MESSAGES = [
@@ -11,7 +11,7 @@ const COMBO_MESSAGES = [
 const getComboMsg = (n) =>
   n >= 5 ? {emoji: '🤯', label: `Combo x${n}!!!!`} : (COMBO_MESSAGES[n] ?? null)
 
-export function QuestionSlideScreen({
+export const QuestionSlideScreen = memo(function QuestionSlideScreen({
   currentQuestion,
   currentBottleIndex,
   totalBottles,
@@ -164,4 +164,4 @@ export function QuestionSlideScreen({
       {overlays}
     </div>
   )
-}
+})

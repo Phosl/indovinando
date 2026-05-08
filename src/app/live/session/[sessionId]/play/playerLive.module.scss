@@ -39,8 +39,8 @@
   max-width: 640px;
   margin: 0 auto;
   position: relative;
-  user-select: none;           // prevent accidental text selection during gameplay
-  overscroll-behavior: none;   // block pull-to-refresh / bounce while playing
+  user-select: none; // prevent accidental text selection during gameplay
+  overscroll-behavior: none; // block pull-to-refresh / bounce while playing
   -webkit-tap-highlight-color: transparent;
 }
 

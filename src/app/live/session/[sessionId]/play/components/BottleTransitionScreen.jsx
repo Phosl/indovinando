@@ -1,3 +1,4 @@
+import {memo, useMemo} from 'react'
 import styles from '../playerLive.module.scss'
 
 const BOTTLE_ORDINALS = [
@@ -21,7 +22,7 @@ function getBottleLabel(index) {
  * Shown to the host (locally) between bottles.
  * Non-host players see this same screen when the host broadcasts the transition.
  */
-export function BottleTransitionScreen({
+export const BottleTransitionScreen = memo(function BottleTransitionScreen({
   currentBottleIndex,
   totalBottles,
   isHostUser,
@@ -33,6 +34,16 @@ export function BottleTransitionScreen({
 }) {
   const nextBottleNum = currentBottleIndex + 2
   const nextBottleIndex = currentBottleIndex + 1
+
+  const confettiPieces = useMemo(
+    () =>
+      Array.from({length: 18}).map((_, idx) => ({
+        delay: `${idx * 45}ms`,
+        x: `${(idx % 6) * 18 - 40}px`,
+        rot: `${(idx % 2 === 0 ? 1 : -1) * (18 + idx * 2)}deg`,
+      })),
+    [],
+  )
 
   return (
     <div className={styles.fullPage}>
@@ -47,15 +58,11 @@ export function BottleTransitionScreen({
         ) : (
           <div className={styles.transitionHero}>
             <div className={styles.confettiBurst} aria-hidden="true">
-              {Array.from({length: 18}).map((_, idx) => (
+              {confettiPieces.map((c, idx) => (
                 <span
                   key={idx}
                   className={styles.confettiPiece}
-                  style={{
-                    '--c-delay': `${idx * 45}ms`,
-                    '--c-x': `${(idx % 6) * 18 - 40}px`,
-                    '--c-rot': `${(idx % 2 === 0 ? 1 : -1) * (18 + idx * 2)}deg`,
-                  }}
+                  style={{'--c-delay': c.delay, '--c-x': c.x, '--c-rot': c.rot}}
                 />
               ))}
             </div>
@@ -88,4 +95,4 @@ export function BottleTransitionScreen({
       {overlays}
     </div>
   )
-}
+})

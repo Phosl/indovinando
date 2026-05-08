@@ -1,9 +1,9 @@
-import {useMemo, useRef} from 'react'
+import {memo, useMemo, useRef} from 'react'
 import styles from '../playerLive.module.scss'
 
 const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
 
-export function ResultsScreen({
+export const ResultsScreen = memo(function ResultsScreen({
   title,
   subtitle,
   currentBottle,
@@ -177,4 +177,4 @@ export function ResultsScreen({
       {overlays}
     </div>
   )
-}
+})

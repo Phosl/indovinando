@@ -1,5 +1,4 @@
 import {useState, useEffect, useCallback, useMemo, useRef} from 'react'
-import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
 
 const SLIDE_TRANSITION_MS = 220
@@ -26,8 +25,6 @@ export function useRoundPlay({
   // audio
   playSound,
 }) {
-  const router = useRouter()
-
   // ── State ──────────────────────────────────────────────────────────────────
   const [selectedAnswers, setSelectedAnswers] = useState({})
   const [roundAnswersByPlayer, setRoundAnswersByPlayer] = useState({})
@@ -88,7 +85,6 @@ export function useRoundPlay({
       setRoundAnswersByPlayer({})
       setCorrectOptionByQuestion({})
       setClickedReady(false)
-      setRoundAnswersByPlayer({})
       setCurrentSlideIndex(0)
       setCheckedQuestions({})
       setSlideMotion('idle')
@@ -100,27 +96,24 @@ export function useRoundPlay({
     [setCurrentBottleIndex, setRoundStatus],
   )
 
-  // (syncExisting removed — see combined effect below handleAnswerInsert)
+  // ── Shared questionIds memo (avoids recomputing in two separate memos) ─────
+  const questionIds = useMemo(() => liveQuestions.map((q) => q.id), [liveQuestions])
 
-  // ── Derive allPlayersCompleted + per-player progress from local state ────────
+  // ── Derive allPlayersCompleted + per-player progress from local state ──────
   const allPlayersCompletedThisRound = useMemo(() => {
-    if (!clickedReady || allPlayers.length === 0 || liveQuestions.length === 0) return false
-    const questionIds = liveQuestions.map((q) => q.id)
+    if (!clickedReady || allPlayers.length === 0 || questionIds.length === 0) return false
     return allPlayers.every((p) =>
       questionIds.every((qId) => Boolean(roundAnswersByPlayer[p.id]?.[qId])),
     )
-  }, [clickedReady, allPlayers, roundAnswersByPlayer, liveQuestions])
+  }, [clickedReady, allPlayers, roundAnswersByPlayer, questionIds])
 
   // How many players have answered every question in the current round
   const playersReadyCount = useMemo(() => {
-    if (liveQuestions.length === 0) return 0
-    const questionIds = liveQuestions.map((q) => q.id)
+    if (questionIds.length === 0) return 0
     return allPlayers.filter((p) =>
       questionIds.every((qId) => Boolean(roundAnswersByPlayer[p.id]?.[qId])),
     ).length
-  }, [allPlayers, roundAnswersByPlayer, liveQuestions])
-
-  // ── Score sync + session advance (host only) ───────────────────────────────
+  }, [allPlayers, roundAnswersByPlayer, questionIds])
   const syncScoresFromAnswers = useCallback(
     async (answersByPlayer) => {
       if (!isHostUser) return

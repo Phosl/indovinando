@@ -1,8 +1,9 @@
+import {memo} from 'react'
 import styles from '../playerLive.module.scss'
 
 const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
 
-export function GameOverlays({
+export const GameOverlays = memo(function GameOverlays({
   leaderboardOpen,
   exitModalOpen,
   sortedLeaderboard,
@@ -85,4 +86,4 @@ export function GameOverlays({
       )}
     </>
   )
-}
+})
