@@ -59,6 +59,8 @@ export default function PlayerLiveClient({
   const [resultsOpenedBottleIndex, setResultsOpenedBottleIndex] = useState(null)
   const [allPlayersCompletedThisRound, setAllPlayersCompletedThisRound] = useState(false)
   const [playerMarkedNext, setPlayerMarkedNext] = useState(false)
+  const [comboCount, setComboCount] = useState(0)
+  const comboRef = useRef(0)
   const soundsRef = useRef({correct: null, wrong: null, bottleCompleted: null})
   const playedBottleSoundRef = useRef(null)
 
@@ -349,6 +351,8 @@ export default function PlayerLiveClient({
       setCurrentSlideIndex(0)
       setCheckedQuestions({})
       setSlideMotion('idle')
+      setComboCount(0)
+      comboRef.current = 0
     } catch (err) {
       console.error('Errore in advanceToNextBottleOrFinish:', err)
       setShowBottleTransition(false)
@@ -385,6 +389,8 @@ export default function PlayerLiveClient({
             setCurrentSlideIndex(0)
             setCheckedQuestions({})
             setSlideMotion('idle')
+            setComboCount(0)
+            comboRef.current = 0
             setCurrentBottleIndex(updated?.current_question_index || 0)
           }
           if (updated?.round_status) {
@@ -506,7 +512,11 @@ export default function PlayerLiveClient({
       if (!optionId) return
 
       const isCorrect = correctOptionByQuestion[questionId] === optionId
-      const points = isCorrect ? 10 : 0
+      const newCombo = isCorrect ? comboRef.current + 1 : 0
+      const comboBonus = isCorrect && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
+      const points = isCorrect ? 10 + comboBonus : 0
+      comboRef.current = newCombo
+      setComboCount(newCombo)
 
       try {
         const {error} = await supabaseClient.from('live_round_answers').upsert(
@@ -525,7 +535,7 @@ export default function PlayerLiveClient({
 
         setRoundAnswers((prev) => ({
           ...prev,
-          [questionId]: {optionId, isCorrect, points},
+          [questionId]: {optionId, isCorrect, points, comboBonus, newCombo},
         }))
         // Also update roundAnswersByPlayer directly (don't rely solely on Realtime echo)
         setRoundAnswersByPlayer((prev) => {
@@ -635,6 +645,8 @@ export default function PlayerLiveClient({
         setCurrentSlideIndex(0)
         setCheckedQuestions({})
         setSlideMotion('idle')
+        setComboCount(0)
+        comboRef.current = 0
         setCurrentBottleIndex(session.current_question_index ?? 0)
         setRoundStatus(session.round_status || 'waiting_answers')
         return
@@ -947,18 +959,42 @@ export default function PlayerLiveClient({
               ? 'Tra poco vedrai la classifica finale.'
               : `Passiamo alla bottiglia ${currentBottleIndex + 2}.`}
           </p>
+          <div className={styles.bottleReveal}>
+            <span className={styles.bottleRevealLabel}>La bottiglia era</span>
+            <span className={styles.bottleRevealName}>{currentBottle.name}</span>
+            {(currentBottle.producer || currentBottle.year) && (
+              <span className={styles.bottleRevealMeta}>
+                {[currentBottle.producer, currentBottle.year].filter(Boolean).join(' · ')}
+              </span>
+            )}
+          </div>
           {liveQuestions.map((question, index) => {
             const ans = roundAnswers[question.id]
-            const correctText = question.game_question_options?.find(
+            const selectedOptionText = question.game_question_options?.find(
+              (o) => o.id === ans?.optionId,
+            )?.text
+            const correctOptionText = question.game_question_options?.find(
               (o) => o.id === correctOptionByQuestion[question.id],
             )?.text
             return (
               <div key={question.id} className={styles.summaryRow}>
                 <span className={styles.summaryIndex}>{index + 1}</span>
-                <span className={styles.summaryText}>{question.text}</span>
-                <span className={ans?.isCorrect ? styles.summaryCorrect : styles.summaryWrong}>
-                  {ans?.isCorrect ? `+${ans.points}` : `Corretta: ${correctText || '-'}`}
-                </span>
+                <div className={styles.summaryBody}>
+                  <span className={styles.summaryText}>{question.text}</span>
+                  <div className={styles.summaryAnswer}>
+                    {ans?.isCorrect ? (
+                      <span className={styles.summaryCorrect}>
+                        ✅ {selectedOptionText} · +{ans.points}
+                        {ans.comboBonus > 0 ? ` 🔥 combo` : ''}
+                      </span>
+                    ) : (
+                      <>
+                        <span className={styles.summaryWrong}>❌ {selectedOptionText || 'Non risposto'}</span>
+                        <span className={styles.summaryCorrectHint}>✓ {correctOptionText || '-'}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
             )
           })}
@@ -999,18 +1035,42 @@ export default function PlayerLiveClient({
             Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
           </div>
           <h2 className={styles.waitTitle}>Risultati bottiglia</h2>
+          <div className={styles.bottleReveal}>
+            <span className={styles.bottleRevealLabel}>La bottiglia era</span>
+            <span className={styles.bottleRevealName}>{currentBottle.name}</span>
+            {(currentBottle.producer || currentBottle.year) && (
+              <span className={styles.bottleRevealMeta}>
+                {[currentBottle.producer, currentBottle.year].filter(Boolean).join(' · ')}
+              </span>
+            )}
+          </div>
           {liveQuestions.map((question, index) => {
             const ans = roundAnswers[question.id]
+            const selectedOptionText = question.game_question_options?.find(
+              (o) => o.id === ans?.optionId,
+            )?.text
             const correctAnswerText = question.game_question_options?.find(
               (o) => o.id === correctOptionByQuestion[question.id],
             )?.text
             return (
               <div key={question.id} className={styles.summaryRow}>
                 <span className={styles.summaryIndex}>{index + 1}</span>
-                <span className={styles.summaryText}>{question.text}</span>
-                <span className={ans?.isCorrect ? styles.summaryCorrect : styles.summaryWrong}>
-                  {ans?.isCorrect ? `+${ans.points}` : `Corretta: ${correctAnswerText || '-'}`}
-                </span>
+                <div className={styles.summaryBody}>
+                  <span className={styles.summaryText}>{question.text}</span>
+                  <div className={styles.summaryAnswer}>
+                    {ans?.isCorrect ? (
+                      <span className={styles.summaryCorrect}>
+                        ✅ {selectedOptionText} · +{ans.points}
+                        {ans.comboBonus > 0 ? ` 🔥 combo` : ''}
+                      </span>
+                    ) : (
+                      <>
+                        <span className={styles.summaryWrong}>❌ {selectedOptionText || 'Non risposto'}</span>
+                        <span className={styles.summaryCorrectHint}>✓ {correctAnswerText || '-'}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
             )
           })}
@@ -1124,8 +1184,12 @@ export default function PlayerLiveClient({
           <div className={styles.resultFeedback}>
             {checkResult?.isCorrect ? (
               <>
-                <span className={styles.feedbackIcon}>🎉</span>
-                <span className={styles.feedbackLabel}>Corretto! +{checkResult.points}</span>
+                <span className={styles.feedbackIcon}>{checkResult.comboBonus > 0 ? '🔥' : '🎉'}</span>
+                <span className={styles.feedbackLabel}>
+                  {checkResult.comboBonus > 0
+                    ? `Combo x${checkResult.newCombo}! +${checkResult.points} (+${checkResult.comboBonus} bonus)`
+                    : `Corretto! +${checkResult.points}`}
+                </span>
               </>
             ) : (
               <>

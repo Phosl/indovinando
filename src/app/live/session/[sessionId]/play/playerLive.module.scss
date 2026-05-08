@@ -358,7 +358,7 @@
 
 .summaryRow {
   display: grid;
-  grid-template-columns: 24px 1fr auto;
+  grid-template-columns: 24px 1fr;
   gap: 8px;
   align-items: start;
   background: var(--foreground);
@@ -392,8 +392,55 @@
   font-weight: 700;
   color: var(--danger-text);
   font-size: 0.82rem;
-  text-align: right;
   line-height: 1.3;
+}
+
+.summaryBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summaryAnswer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.summaryCorrectHint {
+  font-weight: 700;
+  color: var(--accept-dark);
+  font-size: 0.82rem;
+}
+
+.bottleReveal {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: var(--foreground);
+  border: 2px solid var(--accept-dark);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.bottleRevealLabel {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--accept-dark);
+  letter-spacing: 0.05em;
+}
+
+.bottleRevealName {
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+.bottleRevealMeta {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
 .readyHint {
