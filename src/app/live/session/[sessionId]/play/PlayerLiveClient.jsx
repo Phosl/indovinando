@@ -57,7 +57,6 @@ export default function PlayerLiveClient({
   const slideTransitionMs = 220
   const [showBottleTransition, setShowBottleTransition] = useState(false)
   const [resultsOpenedBottleIndex, setResultsOpenedBottleIndex] = useState(null)
-  const [waitingForOthersOnNext, setWaitingForOthersOnNext] = useState(false)
   const soundsRef = useRef({correct: null, wrong: null, bottleCompleted: null})
   const playedBottleSoundRef = useRef(null)
 
@@ -291,9 +290,8 @@ export default function PlayerLiveClient({
   )
 
   const transitionToNextBottle = useCallback(async () => {
-    if (!isHostUser) return
     setShowBottleTransition(true)
-  }, [isHostUser])
+  }, [])
 
   const advanceToNextBottleOrFinish = useCallback(async () => {
     try {
@@ -324,7 +322,6 @@ export default function PlayerLiveClient({
       setShowBottleTransition(false)
       setCurrentBottleIndex(nextIndex)
       setRoundStatus('waiting_answers')
-      setWaitingForOthersOnNext(false)
       setSelectedAnswers({})
       setRoundAnswers({})
       setRoundAnswersByPlayer({})
@@ -359,7 +356,6 @@ export default function PlayerLiveClient({
           if (updated?.current_question_index !== currentBottleIndex) {
             setShowBottleTransition(false)
             setResultsOpenedBottleIndex(null)
-            setWaitingForOthersOnNext(false)
             setSelectedAnswers({})
             setRoundAnswers({})
             setRoundAnswersByPlayer({})
@@ -559,29 +555,6 @@ export default function PlayerLiveClient({
     ],
   )
 
-  // Auto-advance when host is waiting and all players complete
-  useEffect(() => {
-    // Only auto-advance if we're in results screen
-    if (roundStatus !== 'showing_results' || liveQuestions.length === 0) return
-    if (allPlayers.length === 0) return
-
-    // Check if all players completed THIS round's questions
-    const allDone = allPlayers.every((p) =>
-      liveQuestions.every((q) => roundAnswersByPlayer[p.id]?.[q.id]?.optionId),
-    )
-
-    if (!allDone) return
-
-    // All players completed, auto-advance after 2s delay to display results
-    const timer = setTimeout(() => {
-      setShowBottleTransition(true)
-      setResultsOpenedBottleIndex(null)
-      setWaitingForOthersOnNext(false)
-    }, 2000)
-
-    return () => clearTimeout(timer)
-  }, [roundStatus, liveQuestions, allPlayers, roundAnswersByPlayer])
-
   const sortedLeaderboard = useMemo(
     () => [...allPlayers].sort((a, b) => (b.total_score || 0) - (a.total_score || 0)),
     [allPlayers],
@@ -747,6 +720,23 @@ export default function PlayerLiveClient({
     )
   }
 
+  const allPlayersCompletedThisRound =
+    allPlayers.length > 0 &&
+    allPlayers.every((p) =>
+      liveQuestions.every((q) => roundAnswersByPlayer[p.id]?.[q.id]?.optionId),
+    )
+
+  const handleNextBottleClick = async () => {
+    if (!allPlayersCompletedThisRound) return
+
+    if (isHostUser) {
+      await syncScoresFromAnswers(allPlayers, roundAnswersByPlayer)
+    }
+
+    setResultsOpenedBottleIndex(null)
+    transitionToNextBottle()
+  }
+
   // ── Schermata transizione bottiglia (solo locale host) ──
   if (showBottleTransition) {
     const nextBottleNum = currentBottleIndex + 2
@@ -864,37 +854,24 @@ export default function PlayerLiveClient({
         </div>
 
         <div className={styles.bottomPanel}>
-          {isHostUser ? (
-            <>
-              <p className={styles.readyHint}>Clicca per avanzare</p>
-              <button className={styles.continueButton} onClick={() => transitionToNextBottle()}>
-                {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
-              </button>
-            </>
-          ) : (
-            <p className={styles.readyHint}>In attesa dell&apos;host...</p>
-          )}
+          <>
+            <p className={styles.readyHint}>
+              {allPlayersCompletedThisRound
+                ? 'Tutti hanno finito: puoi passare alla prossima bottiglia.'
+                : 'Attendi che tutti i giocatori finiscano per continuare.'}
+            </p>
+            <button
+              className={styles.continueButton}
+              onClick={handleNextBottleClick}
+              disabled={!allPlayersCompletedThisRound}>
+              {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
+            </button>
+          </>
         </div>
 
         {overlaySheets}
       </div>
     )
-  }
-
-  const allPlayersCompletedThisRound =
-    allPlayers.length > 0 &&
-    allPlayers.every((p) =>
-      liveQuestions.every((q) => roundAnswersByPlayer[p.id]?.[q.id]?.optionId),
-    )
-
-  const handleNextBottleClick = async () => {
-    if (!isHostUser) return
-    if (!allPlayersCompletedThisRound) {
-      setWaitingForOthersOnNext(true)
-      return
-    }
-    await syncScoresFromAnswers(allPlayers, roundAnswersByPlayer)
-    transitionToNextBottle()
   }
 
   if (
@@ -929,20 +906,19 @@ export default function PlayerLiveClient({
         </div>
 
         <div className={styles.bottomPanel}>
-          {isHostUser ? (
-            <>
-              <p className={styles.readyHint}>
-                {waitingForOthersOnNext
-                  ? 'In attesa che gli altri giocatori finiscano...'
-                  : 'Quando vuoi, passa alla prossima bottiglia.'}
-              </p>
-              <button className={styles.continueButton} onClick={handleNextBottleClick}>
-                {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
-              </button>
-            </>
-          ) : (
-            <p className={styles.readyHint}>In attesa dell&apos;host...</p>
-          )}
+          <>
+            <p className={styles.readyHint}>
+              {allPlayersCompletedThisRound
+                ? 'Tutti hanno finito: puoi passare alla prossima bottiglia.'
+                : 'Attendi che tutti i giocatori finiscano per continuare.'}
+            </p>
+            <button
+              className={styles.continueButton}
+              onClick={handleNextBottleClick}
+              disabled={!allPlayersCompletedThisRound}>
+              {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
+            </button>
+          </>
         </div>
 
         {overlaySheets}
