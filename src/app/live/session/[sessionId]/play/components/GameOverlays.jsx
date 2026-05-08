@@ -7,6 +7,8 @@ export function GameOverlays({
   exitModalOpen,
   sortedLeaderboard,
   playerData,
+  isHostUser,
+  onKickPlayer,
   onCloseLeaderboard,
   onCloseExit,
   onExitGame,
@@ -35,6 +37,14 @@ export function GameOverlays({
                       {isMe ? ' (tu)' : ''}
                     </span>
                     <span className={styles.sheetScore}>{player.total_score || 0} pt</span>
+                    {isHostUser && !isMe && (
+                      <button
+                        className={styles.kickButton}
+                        onClick={() => onKickPlayer(player.id)}
+                        title={`Rimuovi ${player.nickname}`}>
+                        ✕
+                      </button>
+                    )}
                   </div>
                 )
               })}

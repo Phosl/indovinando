@@ -34,6 +34,15 @@ export function useOverlays({
     if (data) setAllPlayers(data)
   }, [sessionId, setAllPlayers])
 
+  const kickPlayer = useCallback(
+    async (playerId) => {
+      if (!isHostUser) return
+      await supabaseClient.from('live_players').delete().eq('id', playerId)
+      setAllPlayers((prev) => prev.filter((p) => p.id !== playerId))
+    },
+    [isHostUser, setAllPlayers],
+  )
+
   const openExit = useCallback(() => {
     setLeaderboardOpen(false)
     setExitModalOpen(true)
@@ -54,6 +63,7 @@ export function useOverlays({
     setExitModalOpen,
     sortedLeaderboard,
     openLeaderboard,
+    kickPlayer,
     openExit,
     exitGame,
   }

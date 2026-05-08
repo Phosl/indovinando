@@ -570,7 +570,75 @@
   }
 }
 
-// ── Centered fallback cards ────────────────────────────────────
+// ── Live standings in results screen ──────────────────────────
+.standingsSection {
+  margin-top: 24px;
+  border-top: 1.5px solid var(--button-secondary-border);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.standingsTitle {
+  font-size: 0.85rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  margin: 0 0 6px;
+}
+
+.standingRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--background);
+  border: 1.5px solid var(--button-secondary-border);
+}
+
+.standingRowMe {
+  border-color: var(--selected-dark);
+  background: color-mix(in srgb, var(--selected-dark) 6%, var(--background));
+}
+
+.standingRank {
+  font-weight: 900;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  min-width: 24px;
+  text-align: center;
+}
+
+.standingAvatar {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.standingName {
+  flex: 1;
+  font-weight: 700;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.standingScore {
+  font-weight: 900;
+  font-size: 0.9rem;
+  color: var(--selected-dark);
+}
+
+.standingDelta {
+  font-size: 0.75rem;
+  color: #38a169;
+  font-weight: 700;
+}
+
+// ── Centered fallback cards ──────────────────────────────────────────────────
 .centeredCard {
   flex: 1;
   display: flex;
@@ -678,6 +746,25 @@
 .sheetScore {
   font-weight: 900;
   color: var(--selected-dark);
+}
+
+.kickButton {
+  margin-left: auto;
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+  opacity: 0.5;
+  transition: opacity 0.15s, color 0.15s;
+
+  &:hover {
+    opacity: 1;
+    color: #e53e3e;
+  }
 }
 
 .sheetClose {

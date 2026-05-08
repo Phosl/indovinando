@@ -38,6 +38,14 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
       const storedPlayerId = localStorage.getItem(playerStorageKey)
       const storedNickname = localStorage.getItem(nicknameStorageKey)
 
+      // Check session status alongside player lookup so we can redirect immediately
+      const {data: session} = await supabaseClient
+        .from('live_sessions')
+        .select('status')
+        .eq('id', sessionId)
+        .maybeSingle()
+      const alreadyPlaying = session?.status === 'playing'
+
       if (storedPlayerId) {
         const {data: byId} = await supabaseClient
           .from('live_players')
@@ -52,6 +60,10 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
             byId.user_id = userId
           }
 
+          if (alreadyPlaying) {
+            router.replace(`/live/session/${sessionId}/play`)
+            return
+          }
           setJoinedPlayer(byId)
           setNickname(byId.nickname)
           setSelectedAvatar(byId.avatar_id)
@@ -71,6 +83,10 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
         if (byUser) {
           localStorage.setItem(playerStorageKey, byUser.id)
           localStorage.setItem(nicknameStorageKey, byUser.nickname)
+          if (alreadyPlaying) {
+            router.replace(`/live/session/${sessionId}/play`)
+            return
+          }
           setJoinedPlayer(byUser)
           setNickname(byUser.nickname)
           setSelectedAvatar(byUser.avatar_id)

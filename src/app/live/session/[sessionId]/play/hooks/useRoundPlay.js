@@ -102,7 +102,7 @@ export function useRoundPlay({
 
   // (syncExisting removed — see combined effect below handleAnswerInsert)
 
-  // ── Derive allPlayersCompleted from local state (no polling) ───────────────
+  // ── Derive allPlayersCompleted + per-player progress from local state ────────
   const allPlayersCompletedThisRound = useMemo(() => {
     if (!clickedReady || allPlayers.length === 0 || liveQuestions.length === 0) return false
     const questionIds = liveQuestions.map((q) => q.id)
@@ -110,6 +110,15 @@ export function useRoundPlay({
       questionIds.every((qId) => Boolean(roundAnswersByPlayer[p.id]?.[qId])),
     )
   }, [clickedReady, allPlayers, roundAnswersByPlayer, liveQuestions])
+
+  // How many players have answered every question in the current round
+  const playersReadyCount = useMemo(() => {
+    if (liveQuestions.length === 0) return 0
+    const questionIds = liveQuestions.map((q) => q.id)
+    return allPlayers.filter((p) =>
+      questionIds.every((qId) => Boolean(roundAnswersByPlayer[p.id]?.[qId])),
+    ).length
+  }, [allPlayers, roundAnswersByPlayer, liveQuestions])
 
   // ── Score sync + session advance (host only) ───────────────────────────────
   const syncScoresFromAnswers = useCallback(
@@ -150,6 +159,13 @@ export function useRoundPlay({
             updated_at: new Date().toISOString(),
           })
           .eq('id', sessionId)
+        // Opportunistic cleanup: delete sessions finished more than 24h ago
+        supabaseClient
+          .from('live_sessions')
+          .delete()
+          .eq('status', 'finished')
+          .lt('finished_at', new Date(Date.now() - 86_400_000).toISOString())
+          .then(() => {})
         return
       }
       await supabaseClient.from('live_round_answers').delete().eq('session_id', sessionId)
@@ -332,5 +348,7 @@ export function useRoundPlay({
     handleContinue,
     handleNextBottleClick,
     advanceToNextBottleOrFinish,
+    // progress
+    playersReadyCount,
   }
 }

@@ -79,6 +79,7 @@ export default function PlayerLiveClient({
     handleContinue,
     handleNextBottleClick,
     advanceToNextBottleOrFinish,
+    playersReadyCount,
   } = useRoundPlay({
     sessionId,
     playerData,
@@ -102,6 +103,7 @@ export default function PlayerLiveClient({
     setExitModalOpen,
     sortedLeaderboard,
     openLeaderboard,
+    kickPlayer,
     openExit,
     exitGame,
   } = useOverlays({
@@ -154,6 +156,8 @@ export default function PlayerLiveClient({
       exitModalOpen={exitModalOpen}
       sortedLeaderboard={sortedLeaderboard}
       playerData={playerData}
+      isHostUser={isHostUser}
+      onKickPlayer={kickPlayer}
       onCloseLeaderboard={() => setLeaderboardOpen(false)}
       onCloseExit={() => setExitModalOpen(false)}
       onExitGame={exitGame}
@@ -275,6 +279,10 @@ export default function PlayerLiveClient({
         allPlayersCompletedThisRound={allPlayersCompletedThisRound}
         isHostUser={isHostUser}
         playerMarkedNext={playerMarkedNext}
+        allPlayers={allPlayers}
+        roundAnswersByPlayer={roundAnswersByPlayer}
+        playersReadyCount={playersReadyCount}
+        currentPlayerData={playerData}
         onNextBottle={handleNextBottleClick}
         onViewLeaderboard={() => router.push(`/live/session/${sessionId}/leaderboard`)}
         topBar={<TopBar {...topBarProps} />}

@@ -1,28 +1,8 @@
+import {useMemo} from 'react'
 import styles from '../playerLive.module.scss'
 
-/**
- * Shared results screen. Used in two situations:
- *  1. roundStatus === 'showing_results'  (host has pushed results)
- *  2. roundStatus === 'waiting_answers' and player has clicked ready (waiting for others)
- *
- * Props:
- *  - title            string
- *  - subtitle         string | null
- *  - currentBottle    {name, producer, year}
- *  - currentBottleIndex  number
- *  - totalBottles     number
- *  - questions        [{id, text, game_question_options[]}]
- *  - roundAnswers     {[questionId]: {optionId, isCorrect, points, comboBonus}}
- *  - correctOptionByQuestion  {[questionId]: optionId}
- *  - isLastBottle     bool
- *  - allPlayersCompletedThisRound  bool
- *  - isHostUser       bool
- *  - playerMarkedNext bool
- *  - onNextBottle     () => void
- *  - onViewLeaderboard () => void
- *  - topBar           ReactNode
- *  - overlays         ReactNode
- */
+const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
+
 export function ResultsScreen({
   title,
   subtitle,
@@ -36,11 +16,27 @@ export function ResultsScreen({
   allPlayersCompletedThisRound,
   isHostUser,
   playerMarkedNext,
+  allPlayers,
+  roundAnswersByPlayer,
+  playersReadyCount,
+  currentPlayerData,
   onNextBottle,
   onViewLeaderboard,
   topBar,
   overlays,
 }) {
+  // Projected standings: DB total + points earned this round
+  const standings = useMemo(() => {
+    return [...allPlayers]
+      .map((p) => {
+        const roundPts = Object.values(roundAnswersByPlayer[p.id] || {}).reduce(
+          (sum, a) => sum + (a.points || 0),
+          0,
+        )
+        return {...p, roundPts, projected: (p.total_score || 0) + roundPts}
+      })
+      .sort((a, b) => b.projected - a.projected)
+  }, [allPlayers, roundAnswersByPlayer])
   return (
     <div className={styles.fullPage}>
       {topBar}
@@ -96,6 +92,37 @@ export function ResultsScreen({
             </div>
           )
         })}
+
+        {/* ── Live standings ──────────────────────────────────────────────── */}
+        {standings.length > 0 && (
+          <div className={styles.standingsSection}>
+            <h4 className={styles.standingsTitle}>📊 Classifica</h4>
+            {standings.map((player, idx) => {
+              const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : null
+              const isMe = player.id === currentPlayerData?.id
+              return (
+                <div
+                  key={player.id}
+                  className={`${styles.standingRow} ${isMe ? styles.standingRowMe : ''}`}>
+                  <span className={styles.standingRank}>{medal ?? `#${idx + 1}`}</span>
+                  <span className={styles.standingAvatar}>
+                    {APPLE_AVATARS[player.avatar_id - 1] || '👤'}
+                  </span>
+                  <span className={styles.standingName}>
+                    {player.nickname}
+                    {isMe ? ' (tu)' : ''}
+                  </span>
+                  <span className={styles.standingScore}>
+                    {player.projected} pt
+                    {player.roundPts > 0 && (
+                      <span className={styles.standingDelta}> +{player.roundPts}</span>
+                    )}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        )}
       </div>
 
       <div className={styles.bottomPanel}>
@@ -106,7 +133,7 @@ export function ResultsScreen({
                 ? isLastBottle
                   ? 'Tutti hanno finito!'
                   : 'Tutti hanno finito: puoi passare alla prossima bottiglia.'
-                : 'Attendi che tutti i giocatori finiscano per continuare.'}
+                : `${playersReadyCount}/${allPlayers.length} giocatori pronti...`}
             </p>
             <button
               className={styles.continueButton}
@@ -127,7 +154,7 @@ export function ResultsScreen({
                 ? 'In attesa che l\u2019host avanzi...'
                 : allPlayersCompletedThisRound
                   ? 'Tutti hanno finito!'
-                  : 'Attendi che tutti i giocatori finiscano per continuare.'}
+                  : `${playersReadyCount}/${allPlayers.length} giocatori pronti...`}
             </p>
             <button
               className={styles.continueButton}
