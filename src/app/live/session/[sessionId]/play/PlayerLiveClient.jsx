@@ -58,7 +58,6 @@ export default function PlayerLiveClient({
   const [showBottleTransition, setShowBottleTransition] = useState(false)
   const [resultsOpenedBottleIndex, setResultsOpenedBottleIndex] = useState(null)
   const [allPlayersCompletedThisRound, setAllPlayersCompletedThisRound] = useState(false)
-  const [playerMarkedNext, setPlayerMarkedNext] = useState(false)
   const soundsRef = useRef({correct: null, wrong: null, bottleCompleted: null})
   const playedBottleSoundRef = useRef(null)
 
@@ -803,7 +802,7 @@ export default function PlayerLiveClient({
       setResultsOpenedBottleIndex(null)
       transitionToNextBottle()
     } else {
-      // Non-host: stay on results screen, just mark as ready
+      // Non-host: stay on results screen waiting for host to advance
       setPlayerMarkedNext(true)
     }
   }
@@ -925,6 +924,58 @@ export default function PlayerLiveClient({
         </div>
 
         <div className={styles.bottomPanel}>
+          <>
+            <p className={styles.readyHint}>
+              {allPlayersCompletedThisRound
+                ? 'Tutti hanno finito: puoi passare alla prossima bottiglia.'
+                : 'Attendi che tutti i giocatori finiscano per continuare.'}
+            </p>
+            <button
+              className={styles.continueButton}
+              onClick={handleNextBottleClick}
+              disabled={!allPlayersCompletedThisRound}>
+              {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
+            </button>
+          </>
+        </div>
+
+        {overlaySheets}
+      </div>
+    )
+  }
+
+  if (
+    roundStatus === 'waiting_answers' &&
+    clickedReady &&
+    resultsOpenedBottleIndex === currentBottleIndex
+  ) {
+    return (
+      <div className={styles.fullPage}>
+        {renderTopBar()}
+
+        <div className={styles.slideContent}>
+          <div className={styles.bottleBadge}>
+            Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
+          </div>
+          <h2 className={styles.waitTitle}>Risultati bottiglia</h2>
+          {liveQuestions.map((question, index) => {
+            const ans = roundAnswers[question.id]
+            const correctAnswerText = question.game_question_options?.find(
+              (o) => o.id === correctOptionByQuestion[question.id],
+            )?.text
+            return (
+              <div key={question.id} className={styles.summaryRow}>
+                <span className={styles.summaryIndex}>{index + 1}</span>
+                <span className={styles.summaryText}>{question.text}</span>
+                <span className={ans?.isCorrect ? styles.summaryCorrect : styles.summaryWrong}>
+                  {ans?.isCorrect ? `+${ans.points}` : `Corretta: ${correctAnswerText || '-'}`}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className={styles.bottomPanel}>
           {isHostUser ? (
             <>
               <p className={styles.readyHint}>
@@ -943,7 +994,7 @@ export default function PlayerLiveClient({
             <>
               <p className={styles.readyHint}>
                 {playerMarkedNext
-                  ? 'Pronti! In attesa che l\u2019host avanzi.'
+                  ? 'In attesa che l\u2019host avanzi...'
                   : allPlayersCompletedThisRound
                     ? 'Tutti hanno finito!'
                     : 'Attendi che tutti i giocatori finiscano per continuare.'}
