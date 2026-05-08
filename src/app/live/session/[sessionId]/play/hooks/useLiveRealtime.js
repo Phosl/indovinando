@@ -1,35 +1,39 @@
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 import {supabaseClient} from '@/lib/supabaseClient'
 
 /**
  * Subscribes to the 3 Supabase Realtime channels needed during a live session.
- * All callbacks are provided by the parent component so this hook owns no state.
- *
- * @param {object} opts
- * @param {string}   opts.sessionId
- * @param {object|null} opts.playerData          - current player record
- * @param {number}   opts.currentBottleIndex
- * @param {Function} opts.resolvePlayer
- * @param {Function} opts.onSessionUpdate        - (updatedSession) => void
- * @param {Function} opts.onPlayersUpdate        - (players[]) => void
- * @param {Function} opts.onAnswerInsert         - (answer) => void
+ * Channels are created once per sessionId. Callbacks are stored in refs so that
+ * stale-closure re-renders never cause a full unsubscribe/resubscribe cycle.
  */
 export function useLiveRealtime({
   sessionId,
   playerData,
-  currentBottleIndex,
   resolvePlayer,
   onSessionUpdate,
   onPlayersUpdate,
   onAnswerInsert,
 }) {
+  // Keep latest callbacks in refs so the effect closure never goes stale
+  const onSessionUpdateRef = useRef(onSessionUpdate)
+  const onPlayersUpdateRef = useRef(onPlayersUpdate)
+  const onAnswerInsertRef = useRef(onAnswerInsert)
+  const resolvePlayerRef = useRef(resolvePlayer)
+  const playerDataRef = useRef(playerData)
+
+  useEffect(() => { onSessionUpdateRef.current = onSessionUpdate }, [onSessionUpdate])
+  useEffect(() => { onPlayersUpdateRef.current = onPlayersUpdate }, [onPlayersUpdate])
+  useEffect(() => { onAnswerInsertRef.current = onAnswerInsert }, [onAnswerInsert])
+  useEffect(() => { resolvePlayerRef.current = resolvePlayer }, [resolvePlayer])
+  useEffect(() => { playerDataRef.current = playerData }, [playerData])
+
   useEffect(() => {
     const sessionChannel = supabaseClient
       .channel(`live_sessions:${sessionId}`)
       .on(
         'postgres_changes',
         {event: '*', schema: 'public', table: 'live_sessions', filter: `id=eq.${sessionId}`},
-        (payload) => onSessionUpdate(payload.new),
+        (payload) => onSessionUpdateRef.current(payload.new),
       )
       .subscribe()
 
@@ -37,19 +41,14 @@ export function useLiveRealtime({
       .channel(`live_players:${sessionId}`)
       .on(
         'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'live_players',
-          filter: `session_id=eq.${sessionId}`,
-        },
+        {event: '*', schema: 'public', table: 'live_players', filter: `session_id=eq.${sessionId}`},
         async () => {
           const {data: players} = await supabaseClient
             .from('live_players')
             .select('id, nickname, avatar_id, total_score, updated_at, is_host')
             .eq('session_id', sessionId)
             .order('joined_at')
-          onPlayersUpdate(players || [])
+          onPlayersUpdateRef.current(players || [])
         },
       )
       .subscribe()
@@ -58,36 +57,23 @@ export function useLiveRealtime({
       .channel(`live_round_answers:${sessionId}`)
       .on(
         'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'live_round_answers',
-          filter: `session_id=eq.${sessionId}`,
-        },
+        {event: 'INSERT', schema: 'public', table: 'live_round_answers', filter: `session_id=eq.${sessionId}`},
         (payload) => {
-          if (payload.new) onAnswerInsert(payload.new)
+          if (payload.new) onAnswerInsertRef.current(payload.new)
         },
       )
       .subscribe()
 
-    // Fallback polling: re-resolve player if still missing
-    const pollSession = setInterval(async () => {
-      if (!playerData) await resolvePlayer()
+    // Lightweight fallback: re-resolve missing player every 10 s
+    const pollPlayer = setInterval(() => {
+      if (!playerDataRef.current) resolvePlayerRef.current()
     }, 10000)
 
     return () => {
-      clearInterval(pollSession)
+      clearInterval(pollPlayer)
       sessionChannel.unsubscribe()
       playersChannel.unsubscribe()
       answersChannel.unsubscribe()
     }
-  }, [
-    sessionId,
-    playerData,
-    currentBottleIndex,
-    resolvePlayer,
-    onSessionUpdate,
-    onPlayersUpdate,
-    onAnswerInsert,
-  ])
+  }, [sessionId]) // ← only remount when sessionId changes
 }

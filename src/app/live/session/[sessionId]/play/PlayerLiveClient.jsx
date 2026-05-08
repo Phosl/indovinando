@@ -64,7 +64,7 @@ export default function PlayerLiveClient({
     handleAnswerInsert, handleSelect, handleCheck, handleContinue,
     handleNextBottleClick, advanceToNextBottleOrFinish,
   } = useRoundPlay({
-    sessionId, playerData, liveQuestions, currentBottleIndex, roundStatus,
+    sessionId, playerData, liveQuestions, allPlayers, currentBottleIndex, roundStatus,
     isHostUser, isLastBottle, currentBottle,
     setCurrentBottleIndex, setRoundStatus, setAllPlayers, setSessionFinished,
     playSound,
@@ -81,7 +81,7 @@ export default function PlayerLiveClient({
   })
 
   useLiveRealtime({
-    sessionId, playerData, currentBottleIndex, resolvePlayer,
+    sessionId, playerData, resolvePlayer,
     onSessionUpdate: (updated) => {
       if (updated?.status === 'finished') {
         setSessionFinished(true)

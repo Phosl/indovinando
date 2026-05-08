@@ -1,4 +1,4 @@
-import {useState, useEffect, useCallback, useRef} from 'react'
+import {useState, useEffect, useCallback, useMemo, useRef} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
 
@@ -13,6 +13,7 @@ export function useRoundPlay({
   sessionId,
   playerData,
   liveQuestions,
+  allPlayers,
   currentBottleIndex,
   roundStatus,
   isHostUser,
@@ -34,7 +35,6 @@ export function useRoundPlay({
   const [roundAnswers, setRoundAnswers] = useState({})
   const [correctOptionByQuestion, setCorrectOptionByQuestion] = useState({})
   const [clickedReady, setClickedReady] = useState(false)
-  const [allPlayersCompletedThisRound, setAllPlayersCompletedThisRound] = useState(false)
   const [playerMarkedNext, setPlayerMarkedNext] = useState(false)
   const [resultsOpenedBottleIndex, setResultsOpenedBottleIndex] = useState(null)
   const [showBottleTransition, setShowBottleTransition] = useState(false)
@@ -89,6 +89,7 @@ export function useRoundPlay({
       setRoundAnswersByPlayer({})
       setCorrectOptionByQuestion({})
       setClickedReady(false)
+      setRoundAnswersByPlayer({})
       setCurrentSlideIndex(0)
       setCheckedQuestions({})
       setSlideMotion('idle')
@@ -100,85 +101,41 @@ export function useRoundPlay({
     [setCurrentBottleIndex, setRoundStatus],
   )
 
-  // ── Poll until all players have answered (after player marks ready) ────────
+  // ── One-time fetch when player marks ready (sync any existing answers) ─────
   useEffect(() => {
-    if (!clickedReady || liveQuestions.length === 0) {
-      setAllPlayersCompletedThisRound(false)
-      return
-    }
-
+    if (!clickedReady || liveQuestions.length === 0) return
     const questionIds = liveQuestions.map((q) => q.id)
-
-    const checkAll = async () => {
-      const [{data: session}, {data: players}, {data: answers}] = await Promise.all([
-        supabaseClient
-          .from('live_sessions')
-          .select('current_question_index, round_status, status')
-          .eq('id', sessionId)
-          .maybeSingle(),
-        supabaseClient
-          .from('live_players')
-          .select('id, nickname, avatar_id, total_score, updated_at, is_host')
-          .eq('session_id', sessionId)
-          .order('joined_at'),
-        supabaseClient
-          .from('live_round_answers')
-          .select('player_id, question_id, selected_option_id, is_correct, points')
-          .eq('session_id', sessionId)
-          .in('question_id', questionIds),
-      ])
-
-      if (session?.status === 'finished') {
-        setSessionFinished(true)
-        router.push(`/live/session/${sessionId}/leaderboard`)
-        return
-      }
-
-      if (session && session.current_question_index !== currentBottleIndex) {
-        resetRoundState(
-          session.current_question_index ?? 0,
-          session.round_status || 'waiting_answers',
-        )
-        return
-      }
-
-      if (players) setAllPlayers(players)
-
-      if (answers) {
-        setRoundAnswersByPlayer((prev) => {
-          const updated = {...prev}
-          answers.forEach((a) => {
-            if (!updated[a.player_id]) updated[a.player_id] = {}
-            updated[a.player_id][a.question_id] = {
-              optionId: a.selected_option_id,
-              isCorrect: a.is_correct,
-              points: a.points,
-            }
-          })
-          return updated
+    const syncExisting = async () => {
+      const {data: answers} = await supabaseClient
+        .from('live_round_answers')
+        .select('player_id, question_id, selected_option_id, is_correct, points')
+        .eq('session_id', sessionId)
+        .in('question_id', questionIds)
+      if (!answers) return
+      setRoundAnswersByPlayer((prev) => {
+        const updated = {...prev}
+        answers.forEach((a) => {
+          if (!updated[a.player_id]) updated[a.player_id] = {}
+          updated[a.player_id][a.question_id] = {
+            optionId: a.selected_option_id,
+            isCorrect: a.is_correct,
+            points: a.points,
+          }
         })
-      }
-
-      const answerSet = new Set((answers || []).map((a) => `${a.player_id}:${a.question_id}`))
-      const allDone =
-        (players || []).length > 0 &&
-        (players || []).every((p) => questionIds.every((qId) => answerSet.has(`${p.id}:${qId}`)))
-      setAllPlayersCompletedThisRound(allDone)
+        return updated
+      })
     }
+    syncExisting()
+  }, [clickedReady, sessionId, liveQuestions])
 
-    checkAll()
-    const interval = setInterval(checkAll, 2000)
-    return () => clearInterval(interval)
-  }, [
-    clickedReady,
-    sessionId,
-    liveQuestions,
-    currentBottleIndex,
-    resetRoundState,
-    router,
-    setAllPlayers,
-    setSessionFinished,
-  ])
+  // ── Derive allPlayersCompleted from local state (no polling) ───────────────
+  const allPlayersCompletedThisRound = useMemo(() => {
+    if (!clickedReady || allPlayers.length === 0 || liveQuestions.length === 0) return false
+    const questionIds = liveQuestions.map((q) => q.id)
+    return allPlayers.every((p) =>
+      questionIds.every((qId) => Boolean(roundAnswersByPlayer[p.id]?.[qId])),
+    )
+  }, [clickedReady, allPlayers, roundAnswersByPlayer, liveQuestions])
 
   // ── Score sync + session advance (host only) ───────────────────────────────
   const syncScoresFromAnswers = useCallback(
@@ -371,7 +328,7 @@ export function useRoundPlay({
     roundAnswersByPlayer,
     correctOptionByQuestion,
     clickedReady,
-    allPlayersCompletedThisRound,
+    allPlayersCompletedThisRound, // derived via useMemo
     playerMarkedNext,
     resultsOpenedBottleIndex,
     setResultsOpenedBottleIndex,
