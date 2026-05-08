@@ -59,7 +59,7 @@ export default function PlayerLiveClient({
     clickedReady, allPlayersCompletedThisRound, playerMarkedNext,
     resultsOpenedBottleIndex, setResultsOpenedBottleIndex,
     showBottleTransition,
-    currentSlideIndex, checkedQuestions, slideMotion,
+    currentSlideIndex, checkedQuestions, slideMotion, comboCount,
     resetRoundState,
     handleAnswerInsert, handleSelect, handleCheck, handleContinue,
     handleNextBottleClick, advanceToNextBottleOrFinish,
@@ -243,6 +243,7 @@ export default function PlayerLiveClient({
       correctOptionByQuestion={correctOptionByQuestion}
       clickedReady={clickedReady}
       isLastSlide={isLastSlide}
+      comboCount={comboCount}
       onSelect={handleSelect}
       onCheck={handleCheck}
       onContinue={handleContinue}

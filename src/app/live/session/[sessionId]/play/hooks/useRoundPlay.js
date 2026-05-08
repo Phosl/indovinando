@@ -135,7 +135,10 @@ export function useRoundPlay({
       }
 
       if (session && session.current_question_index !== currentBottleIndex) {
-        resetRoundState(session.current_question_index ?? 0, session.round_status || 'waiting_answers')
+        resetRoundState(
+          session.current_question_index ?? 0,
+          session.round_status || 'waiting_answers',
+        )
         return
       }
 
@@ -195,7 +198,10 @@ export function useRoundPlay({
       })
       await Promise.all(
         players.map((p) =>
-          supabaseClient.from('live_players').update({total_score: scoreByPlayer[p.id] || 0}).eq('id', p.id),
+          supabaseClient
+            .from('live_players')
+            .update({total_score: scoreByPlayer[p.id] || 0})
+            .eq('id', p.id),
         ),
       )
     },
@@ -207,7 +213,11 @@ export function useRoundPlay({
       if (isLastBottle) {
         await supabaseClient
           .from('live_sessions')
-          .update({status: 'finished', finished_at: new Date().toISOString(), updated_at: new Date().toISOString()})
+          .update({
+            status: 'finished',
+            finished_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
           .eq('id', sessionId)
         return
       }
@@ -215,7 +225,11 @@ export function useRoundPlay({
       const nextIndex = currentBottleIndex + 1
       await supabaseClient
         .from('live_sessions')
-        .update({current_question_index: nextIndex, round_status: 'waiting_answers', updated_at: new Date().toISOString()})
+        .update({
+          current_question_index: nextIndex,
+          round_status: 'waiting_answers',
+          updated_at: new Date().toISOString(),
+        })
         .eq('id', sessionId)
       resetRoundState(nextIndex, 'waiting_answers')
     } catch (err) {
@@ -285,11 +299,17 @@ export function useRoundPlay({
           {onConflict: 'session_id,player_id,question_id'},
         )
         if (error) throw error
-        setRoundAnswers((prev) => ({...prev, [questionId]: {optionId, isCorrect, points, comboBonus, newCombo}}))
+        setRoundAnswers((prev) => ({
+          ...prev,
+          [questionId]: {optionId, isCorrect, points, comboBonus, newCombo},
+        }))
         setRoundAnswersByPlayer((prev) => {
           const updated = {...prev}
           if (!updated[playerData.id]) updated[playerData.id] = {}
-          updated[playerData.id] = {...updated[playerData.id], [questionId]: {optionId, isCorrect, points}}
+          updated[playerData.id] = {
+            ...updated[playerData.id],
+            [questionId]: {optionId, isCorrect, points},
+          }
           return updated
         })
         setCheckedQuestions((prev) => ({...prev, [questionId]: true}))
@@ -324,7 +344,14 @@ export function useRoundPlay({
     } catch (err) {
       console.error('Error setting ready status:', err)
     }
-  }, [currentSlideIndex, liveQuestions.length, playerData, clickedReady, slideMotion, currentBottleIndex])
+  }, [
+    currentSlideIndex,
+    liveQuestions.length,
+    playerData,
+    clickedReady,
+    slideMotion,
+    currentBottleIndex,
+  ])
 
   const handleNextBottleClick = useCallback(async () => {
     if (!allPlayersCompletedThisRound) return

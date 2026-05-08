@@ -512,6 +512,49 @@
   }
 }
 
+// ── Combo toast ─────────────────────────────────────────────
+.comboToast {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  pointer-events: none;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  animation: comboPop 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.comboEmoji {
+  font-size: 2.8rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+}
+
+.comboLabel {
+  background: #ffb100;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 16px;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 3px 0 #d48e00;
+}
+
+@keyframes comboPop {
+  0%   { opacity: 0;   transform: translateX(-50%) scale(0.5);  }
+  15%  { opacity: 1;   transform: translateX(-50%) scale(1.25); }
+  30%  { opacity: 1;   transform: translateX(-50%) scale(1.0);  }
+  60%  { opacity: 1;   transform: translateX(-50%) scale(1.0);  }
+  100% { opacity: 0;   transform: translateX(-50%) scale(0.85) translateY(-18px); }
+}
+
 // ── Centered fallback cards ────────────────────────────────────
 .centeredCard {
   flex: 1;

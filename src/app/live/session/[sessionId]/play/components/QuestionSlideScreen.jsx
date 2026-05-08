@@ -1,28 +1,15 @@
+import {useState, useEffect} from 'react'
 import styles from '../playerLive.module.scss'
 
-/**
- * The main question/answer slide screen.
- *
- * Props:
- *  - currentQuestion      {id, text, game_question_options[]}
- *  - currentBottleIndex   number
- *  - totalBottles         number
- *  - currentSlideIndex    number
- *  - totalSlides          number
- *  - slideMotionClass     string (CSS class)
- *  - isChecked            bool
- *  - isSlideTransitioning bool
- *  - selectedOption       UUID | undefined
- *  - checkResult          {isCorrect, points, comboBonus, newCombo} | undefined
- *  - correctOptionByQuestion  {[questionId]: optionId}
- *  - clickedReady         bool
- *  - isLastSlide          bool
- *  - onSelect             (questionId, optionId) => void
- *  - onCheck              (questionId, optionId) => void
- *  - onContinue           (questionId) => void
- *  - topBar               ReactNode
- *  - overlays             ReactNode
- */
+const COMBO_MESSAGES = [
+  null,
+  null,
+  {emoji: '🔥', label: 'Combo x2!'},
+  {emoji: '💥', label: 'Combo x3!!'},
+  {emoji: '⚡️', label: 'Combo x4!!!'},
+]
+const getComboMsg = (n) => (n >= 5 ? {emoji: '🤯', label: `Combo x${n}!!!!`} : (COMBO_MESSAGES[n] ?? null))
+
 export function QuestionSlideScreen({
   currentQuestion,
   currentBottleIndex,
@@ -37,12 +24,23 @@ export function QuestionSlideScreen({
   correctOptionByQuestion,
   clickedReady,
   isLastSlide,
+  comboCount,
   onSelect,
   onCheck,
   onContinue,
   topBar,
   overlays,
 }) {
+  const [visibleCombo, setVisibleCombo] = useState(null)
+
+  useEffect(() => {
+    if (!comboCount || comboCount < 2) return
+    const msg = getComboMsg(comboCount)
+    if (!msg) return
+    setVisibleCombo({...msg, key: Date.now()})
+    const t = setTimeout(() => setVisibleCombo(null), 1600)
+    return () => clearTimeout(t)
+  }, [comboCount])
   const correctText = currentQuestion?.game_question_options?.find(
     (o) => o.id === correctOptionByQuestion[currentQuestion?.id],
   )?.text
@@ -50,6 +48,13 @@ export function QuestionSlideScreen({
   return (
     <div className={styles.fullPage}>
       {topBar}
+
+      {visibleCombo && (
+        <div key={visibleCombo.key} className={styles.comboToast}>
+          <span className={styles.comboEmoji}>{visibleCombo.emoji}</span>
+          <span className={styles.comboLabel}>{visibleCombo.label}</span>
+        </div>
+      )}
 
       <div
         className={`${styles.slideContent} ${slideMotionClass} ${!isChecked ? styles.mobileCheckSpacing : ''}`}>
