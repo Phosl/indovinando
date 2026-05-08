@@ -197,14 +197,18 @@ export function useRoundPlay({
     })
   }, [sessionId, liveQuestions])
 
-  // ── Re-sync answers on ready or any player change (fallback when realtime INSERT misses) ──
-  // Fires when: current player marks ready (clickedReady), OR any player updates
-  // live_players (onPlayersUpdate → setAllPlayers). The latter happens when a player
-  // clicks "Continua" on the last slide — by then all their answers are already in DB.
+  // ── Re-sync answers while waiting for all players to complete ─────────────
+  // Polls DB every 2s once the local player has marked ready and the round is
+  // not yet complete. This is the authoritative fallback: it works whether or
+  // not the live_players / live_round_answers Realtime channels are publishing.
+  // The realtime-triggered paths (handleAnswerInsert / onPlayersUpdate) act as
+  // a speed-up but are not required for correctness.
   useEffect(() => {
-    if (!clickedReady) return
-    handleAnswerInsert()
-  }, [allPlayers, clickedReady, handleAnswerInsert])
+    if (!clickedReady || allPlayersCompletedThisRound) return
+    handleAnswerInsert() // immediate fetch on entry
+    const interval = setInterval(handleAnswerInsert, 2000)
+    return () => clearInterval(interval)
+  }, [clickedReady, allPlayersCompletedThisRound, handleAnswerInsert])
 
   // ── Answer interaction handlers ────────────────────────────────────────────
   const handleSelect = useCallback((questionId, optionId) => {
