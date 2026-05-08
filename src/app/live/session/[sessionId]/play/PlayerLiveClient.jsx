@@ -163,8 +163,15 @@ export default function PlayerLiveClient({
         .eq('game_id', session.game_id)
         .order('bottle_order')
 
+      const {data: playersData} = await supabaseClient
+        .from('live_players')
+        .select('id, nickname, avatar_id, total_score, updated_at, is_host')
+        .eq('session_id', sessionId)
+        .order('joined_at')
+
       setLiveQuestions(questionsData || [])
       setLiveBottles(bottlesData || [])
+      setAllPlayers(playersData || [])
       setLoadingGameData(false)
     }
 
@@ -568,17 +575,26 @@ export default function PlayerLiveClient({
   // When a player reaches the results screen, load any already-submitted answers from DB
   // (catches up if Realtime events were missed before subscription)
   useEffect(() => {
-    if (!clickedReady || liveQuestions.length === 0) return
+    if ((!clickedReady && roundStatus !== 'showing_results') || liveQuestions.length === 0) return
 
     const loadExistingAnswers = async () => {
-      const {data} = await supabaseClient
-        .from('live_round_answers')
-        .select('player_id, question_id, selected_option_id, is_correct, points')
-        .eq('session_id', sessionId)
-        .in(
-          'question_id',
-          liveQuestions.map((q) => q.id),
-        )
+      const [{data: answersData}, {data: playersData}] = await Promise.all([
+        supabaseClient
+          .from('live_round_answers')
+          .select('player_id, question_id, selected_option_id, is_correct, points')
+          .eq('session_id', sessionId)
+          .in(
+            'question_id',
+            liveQuestions.map((q) => q.id),
+          ),
+        supabaseClient
+          .from('live_players')
+          .select('id, nickname, avatar_id, total_score, updated_at, is_host')
+          .eq('session_id', sessionId)
+          .order('joined_at'),
+      ])
+      const data = answersData
+      if (playersData && playersData.length > 0) setAllPlayers(playersData)
 
       if (!data || data.length === 0) return
       setRoundAnswersByPlayer((prev) => {
@@ -599,7 +615,7 @@ export default function PlayerLiveClient({
     }
 
     loadExistingAnswers()
-  }, [clickedReady, sessionId, liveQuestions])
+  }, [clickedReady, roundStatus, sessionId, liveQuestions])
 
   const sortedLeaderboard = useMemo(
     () => [...allPlayers].sort((a, b) => (b.total_score || 0) - (a.total_score || 0)),
