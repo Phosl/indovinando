@@ -196,32 +196,31 @@ export function useRoundPlay({
   }, [currentBottleIndex, isLastBottle, resetRoundState, sessionId])
 
   // ── Realtime answer insert handler (consumed by useLiveRealtime) ───────────
-  const handleAnswerInsert = useCallback(
-    (answer) => {
-      setRoundAnswersByPlayer((prev) => {
-        const updated = {...prev}
-        if (!updated[answer.player_id]) updated[answer.player_id] = {}
-        updated[answer.player_id][answer.question_id] = {
-          optionId: answer.selected_option_id,
-          isCorrect: answer.is_correct,
-          points: answer.points,
+  // NOTE: We intentionally ignore payload.new because Supabase RLS may strip it
+  // for other players' rows. Re-fetch all answers from DB instead (same pattern
+  // as the players channel), so roundAnswersByPlayer is always authoritative.
+  const handleAnswerInsert = useCallback(async () => {
+    if (liveQuestions.length === 0) return
+    const questionIds = liveQuestions.map((q) => q.id)
+    const {data: answers} = await supabaseClient
+      .from('live_round_answers')
+      .select('player_id, question_id, selected_option_id, is_correct, points')
+      .eq('session_id', sessionId)
+      .in('question_id', questionIds)
+    if (!answers) return
+    setRoundAnswersByPlayer((prev) => {
+      const updated = {...prev}
+      answers.forEach((a) => {
+        if (!updated[a.player_id]) updated[a.player_id] = {}
+        updated[a.player_id][a.question_id] = {
+          optionId: a.selected_option_id,
+          isCorrect: a.is_correct,
+          points: a.points,
         }
-        return updated
       })
-      if (playerData?.id === answer.player_id) {
-        setRoundAnswers((prev) => ({
-          ...prev,
-          [answer.question_id]: {
-            optionId: answer.selected_option_id,
-            isCorrect: answer.is_correct,
-            points: answer.points,
-          },
-        }))
-        setCheckedQuestions((prev) => ({...prev, [answer.question_id]: true}))
-      }
-    },
-    [playerData?.id],
-  )
+      return updated
+    })
+  }, [sessionId, liveQuestions])
 
   // ── Answer interaction handlers ────────────────────────────────────────────
   const handleSelect = useCallback((questionId, optionId) => {
