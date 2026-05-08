@@ -39,6 +39,9 @@
   max-width: 640px;
   margin: 0 auto;
   position: relative;
+  user-select: none;           // prevent accidental text selection during gameplay
+  overscroll-behavior: none;   // block pull-to-refresh / bounce while playing
+  -webkit-tap-highlight-color: transparent;
 }
 
 // ── Top bar ───────────────────────────────────────────────────
@@ -101,6 +104,7 @@
   flex-shrink: 0;
   padding: 5px 12px;
   font-size: 0.76rem;
+  touch-action: manipulation;
 }
 
 .topActions {
@@ -114,6 +118,7 @@
   @extend %topActionButton;
   padding: 5px 10px;
   font-size: 0.7rem;
+  touch-action: manipulation;
 }
 
 .exitButton {
@@ -126,6 +131,7 @@
   padding: 0;
   font-size: 0.9rem;
   line-height: 1;
+  touch-action: manipulation;
 }
 
 // ── Scrollable question area ──────────────────────────────────
@@ -140,10 +146,12 @@
 
 .slideExitLeft {
   animation: slideOutLeft 0.22s ease forwards;
+  will-change: transform, opacity;
 }
 
 .slideEnterRight {
   animation: slideInRight 0.22s ease forwards;
+  will-change: transform, opacity;
 }
 
 @keyframes slideOutLeft {
@@ -226,6 +234,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  touch-action: manipulation;
 
   &:active:not(:disabled) {
     box-shadow: none;
@@ -311,6 +320,7 @@
   @extend %primaryActionButton;
   background-color: var(--button);
   box-shadow: 0px 3px 0px 0px var(--button-dark);
+  touch-action: manipulation;
 
   &:disabled {
     opacity: 0.35;
@@ -324,6 +334,7 @@
   @extend %primaryActionButton;
   background-color: var(--selected);
   box-shadow: 0px 3px 0px 0px var(--selected-dark);
+  touch-action: manipulation;
 
   &:disabled {
     opacity: 0.5;
@@ -338,6 +349,7 @@
   color: var(--text-primary);
   border: 2px solid var(--button-secondary-border);
   box-shadow: 0px 3px 0px 0px var(--gray-light);
+  touch-action: manipulation;
 }
 
 @keyframes confettiFloat {
@@ -370,7 +382,6 @@
   gap: 6px;
   border-radius: 12px;
   padding: 12px 14px;
-  border-left: 4px solid transparent;
   background: var(--foreground);
   border: 1.5px solid var(--button-secondary-border);
   border-left-width: 4px;
@@ -545,6 +556,7 @@
   align-items: center;
   gap: 2px;
   animation: comboPop 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
 }
 
 .comboEmoji {
@@ -618,7 +630,6 @@
   border-radius: 10px;
   background: var(--background);
   border: 1.5px solid transparent;
-  transition: background 0.15s;
 }
 
 .standingRowMe {
@@ -824,6 +835,7 @@
   padding: 10px;
   cursor: pointer;
   font-size: 0.95rem;
+  touch-action: manipulation;
 }
 
 .exitSheet {
@@ -866,6 +878,7 @@
   font-weight: 800;
   padding: 12px;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 .exitDanger {
@@ -878,24 +891,26 @@
   font-weight: 900;
   padding: 12px;
   cursor: pointer;
+  touch-action: manipulation;
+}
+
+// mobileCheck classes are unconditional — the game is always ≤640px
+.mobileCheckFixed {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  width: min(640px, 100%);
+  transform: translateX(-50%);
+  z-index: 20;
+  box-shadow: 0px -8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.mobileCheckSpacing {
+  padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px));
 }
 
 @media (max-width: 768px) {
   .exitActions {
     flex-direction: column;
-  }
-
-  .mobileCheckFixed {
-    position: fixed;
-    left: 50%;
-    bottom: 0;
-    width: min(640px, 100%);
-    transform: translateX(-50%);
-    z-index: 20;
-    box-shadow: 0px -8px 20px rgba(0, 0, 0, 0.08);
-  }
-
-  .mobileCheckSpacing {
-    padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px));
   }
 }
