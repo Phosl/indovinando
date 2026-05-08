@@ -578,15 +578,27 @@
   background: var(--background);
   padding: 10px;
   display: grid;
-  grid-template-columns: 40px 1fr auto;
-  gap: 10px;
+  grid-template-columns: 36px 36px 1fr auto;
+  gap: 8px;
   align-items: center;
+}
+
+.sheetRowMe {
+  border-color: var(--selected-dark);
+  background: color-mix(in srgb, var(--selected-dark) 8%, var(--background));
+}
+
+.sheetAvatar {
+  font-size: 1.4rem;
+  text-align: center;
+  line-height: 1;
 }
 
 .sheetRank {
   font-weight: 900;
   color: var(--text-secondary);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
+  text-align: center;
 }
 
 .sheetName {

@@ -119,6 +119,19 @@ export default function PlayerLiveClient({
     playSound('bottleCompleted')
   }, [showBottleTransition, currentBottleIndex, playSound])
 
+  // Always load players on mount (bootstrapGameData skips it when questions are pre-loaded)
+  useEffect(() => {
+    const loadPlayers = async () => {
+      const {data} = await supabaseClient
+        .from('live_players')
+        .select('id, nickname, avatar_id, total_score, updated_at, is_host')
+        .eq('session_id', sessionId)
+        .order('joined_at')
+      if (data) setAllPlayers(data)
+    }
+    loadPlayers()
+  }, [sessionId])
+
   useEffect(() => {
     const bootstrapGameData = async () => {
       if (liveQuestions.length > 0) {
@@ -704,12 +717,22 @@ export default function PlayerLiveClient({
     router.push(shouldGoDashboard ? '/dashboard' : `/live/session/${sessionId}`)
   }, [isHostUser, nicknameStorageKey, playerData, playerStorageKey, router, sessionId])
 
+  const handleOpenLeaderboard = useCallback(async () => {
+    setLeaderboardOpen(true)
+    const {data} = await supabaseClient
+      .from('live_players')
+      .select('id, nickname, avatar_id, total_score, updated_at, is_host')
+      .eq('session_id', sessionId)
+      .order('joined_at')
+    if (data) setAllPlayers(data)
+  }, [sessionId])
+
   const renderTopActions = () => (
     <div className={styles.topActions}>
       <button className={styles.audioButton} onClick={toggleAudio}>
         {audioEnabled ? '🔊 ON' : '🔇 OFF'}
       </button>
-      <button className={styles.leaderboardButton} onClick={() => setLeaderboardOpen(true)}>
+      <button className={styles.leaderboardButton} onClick={handleOpenLeaderboard}>
         Classifica
       </button>
       <button
@@ -749,15 +772,31 @@ export default function PlayerLiveClient({
         <div className={styles.sheetBackdrop} onClick={() => setLeaderboardOpen(false)}>
           <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
             <div className={styles.sheetHandle} />
-            <h3>Classifica Live</h3>
+            <h3>🏆 Classifica Live</h3>
             <div className={styles.sheetList}>
-              {sortedLeaderboard.map((player, idx) => (
-                <div key={player.id} className={styles.sheetRow}>
-                  <span className={styles.sheetRank}>#{idx + 1}</span>
-                  <span className={styles.sheetName}>{player.nickname}</span>
-                  <span className={styles.sheetScore}>{player.total_score || 0}</span>
-                </div>
-              ))}
+              {sortedLeaderboard.map((player, idx) => {
+                const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : null
+                const isMe = player.id === playerData?.id
+                return (
+                  <div
+                    key={player.id}
+                    className={`${styles.sheetRow} ${isMe ? styles.sheetRowMe : ''}`}>
+                    <span className={styles.sheetRank}>
+                      {medal ?? `#${idx + 1}`}
+                    </span>
+                    <span className={styles.sheetAvatar}>
+                      {APPLE_AVATARS[player.avatar_id - 1] || '👤'}
+                    </span>
+                    <span className={styles.sheetName}>
+                      {player.nickname}{isMe ? ' (tu)' : ''}
+                    </span>
+                    <span className={styles.sheetScore}>{player.total_score || 0} pt</span>
+                  </div>
+                )
+              })}
+              {sortedLeaderboard.length === 0 && (
+                <p className={styles.readyHint}>Nessun giocatore ancora.</p>
+              )}
             </div>
             <button className={styles.sheetClose} onClick={() => setLeaderboardOpen(false)}>
               Chiudi
