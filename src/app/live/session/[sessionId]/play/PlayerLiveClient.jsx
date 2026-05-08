@@ -781,14 +781,13 @@ export default function PlayerLiveClient({
                   <div
                     key={player.id}
                     className={`${styles.sheetRow} ${isMe ? styles.sheetRowMe : ''}`}>
-                    <span className={styles.sheetRank}>
-                      {medal ?? `#${idx + 1}`}
-                    </span>
+                    <span className={styles.sheetRank}>{medal ?? `#${idx + 1}`}</span>
                     <span className={styles.sheetAvatar}>
                       {APPLE_AVATARS[player.avatar_id - 1] || '👤'}
                     </span>
                     <span className={styles.sheetName}>
-                      {player.nickname}{isMe ? ' (tu)' : ''}
+                      {player.nickname}
+                      {isMe ? ' (tu)' : ''}
                     </span>
                     <span className={styles.sheetScore}>{player.total_score || 0} pt</span>
                   </div>
@@ -946,7 +945,16 @@ export default function PlayerLiveClient({
               {isLastNextBottle ? 'Concludi' : 'Iniziamo'}
             </button>
           ) : (
-            <p className={styles.readyHint}>In attesa dell&apos;host...</p>
+            <>
+              <p className={styles.readyHint}>In attesa dell&apos;host...</p>
+              {isLastNextBottle && (
+                <button
+                  className={styles.secondaryButton}
+                  onClick={() => router.push(`/live/session/${sessionId}/leaderboard`)}>
+                  Vedi classifica
+                </button>
+              )}
+            </>
           )}
         </div>
 
@@ -1028,8 +1036,12 @@ export default function PlayerLiveClient({
                       </span>
                     ) : (
                       <>
-                        <span className={styles.summaryWrong}>❌ {selectedOptionText || 'Non risposto'}</span>
-                        <span className={styles.summaryCorrectHint}>✓ {correctOptionText || '-'}</span>
+                        <span className={styles.summaryWrong}>
+                          ❌ {selectedOptionText || 'Non risposto'}
+                        </span>
+                        <span className={styles.summaryCorrectHint}>
+                          ✓ {correctOptionText || '-'}
+                        </span>
                       </>
                     )}
                   </div>
@@ -1043,7 +1055,9 @@ export default function PlayerLiveClient({
           <>
             <p className={styles.readyHint}>
               {allPlayersCompletedThisRound
-                ? 'Tutti hanno finito: puoi passare alla prossima bottiglia.'
+                ? isLastBottle
+                  ? 'Tutti hanno finito!'
+                  : 'Tutti hanno finito: puoi passare alla prossima bottiglia.'
                 : 'Attendi che tutti i giocatori finiscano per continuare.'}
             </p>
             <button
@@ -1052,6 +1066,13 @@ export default function PlayerLiveClient({
               disabled={!allPlayersCompletedThisRound}>
               {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
             </button>
+            {isLastBottle && (
+              <button
+                className={styles.secondaryButton}
+                onClick={() => router.push(`/live/session/${sessionId}/leaderboard`)}>
+                Vedi classifica
+              </button>
+            )}
           </>
         </div>
 
@@ -1104,8 +1125,12 @@ export default function PlayerLiveClient({
                       </span>
                     ) : (
                       <>
-                        <span className={styles.summaryWrong}>❌ {selectedOptionText || 'Non risposto'}</span>
-                        <span className={styles.summaryCorrectHint}>✓ {correctAnswerText || '-'}</span>
+                        <span className={styles.summaryWrong}>
+                          ❌ {selectedOptionText || 'Non risposto'}
+                        </span>
+                        <span className={styles.summaryCorrectHint}>
+                          ✓ {correctAnswerText || '-'}
+                        </span>
                       </>
                     )}
                   </div>
@@ -1145,6 +1170,13 @@ export default function PlayerLiveClient({
                 disabled={!allPlayersCompletedThisRound || playerMarkedNext}>
                 {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
               </button>
+              {isLastBottle && (
+                <button
+                  className={styles.secondaryButton}
+                  onClick={() => router.push(`/live/session/${sessionId}/leaderboard`)}>
+                  Vedi classifica
+                </button>
+              )}
             </>
           )}
         </div>
@@ -1223,7 +1255,9 @@ export default function PlayerLiveClient({
           <div className={styles.resultFeedback}>
             {checkResult?.isCorrect ? (
               <>
-                <span className={styles.feedbackIcon}>{checkResult.comboBonus > 0 ? '🔥' : '🎉'}</span>
+                <span className={styles.feedbackIcon}>
+                  {checkResult.comboBonus > 0 ? '🔥' : '🎉'}
+                </span>
                 <span className={styles.feedbackLabel}>
                   {checkResult.comboBonus > 0
                     ? `Combo x${checkResult.newCombo}! +${checkResult.points} (+${checkResult.comboBonus} bonus)`

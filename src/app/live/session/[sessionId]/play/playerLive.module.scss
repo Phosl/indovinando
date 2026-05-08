@@ -332,6 +332,14 @@
   }
 }
 
+.secondaryButton {
+  @extend %primaryActionButton;
+  background-color: var(--foreground);
+  color: var(--text-primary);
+  border: 2px solid var(--button-secondary-border);
+  box-shadow: 0px 3px 0px 0px var(--gray-light);
+}
+
 @keyframes confettiFloat {
   0% {
     opacity: 0;
