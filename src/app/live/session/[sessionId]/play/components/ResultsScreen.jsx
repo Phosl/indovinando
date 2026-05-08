@@ -138,14 +138,10 @@ export function ResultsScreen({
             <button
               className={styles.continueButton}
               onClick={onNextBottle}
-              disabled={!isLastBottle && !allPlayersCompletedThisRound}>
-              {isLastBottle
-                ? allPlayersCompletedThisRound
-                  ? 'Concludi'
-                  : 'Concludi comunque'
-                : 'Prossima bottiglia'}
+              disabled={!allPlayersCompletedThisRound}>
+              {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
             </button>
-            {isLastBottle && (
+            {isLastBottle && allPlayersCompletedThisRound && (
               <button className={styles.secondaryButton} onClick={onViewLeaderboard}>
                 Vedi classifica
               </button>
@@ -163,10 +159,10 @@ export function ResultsScreen({
             <button
               className={styles.continueButton}
               onClick={onNextBottle}
-              disabled={(!isLastBottle && !allPlayersCompletedThisRound) || playerMarkedNext}>
+              disabled={!allPlayersCompletedThisRound || playerMarkedNext}>
               {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
             </button>
-            {isLastBottle && (
+            {isLastBottle && allPlayersCompletedThisRound && (
               <button className={styles.secondaryButton} onClick={onViewLeaderboard}>
                 Vedi classifica
               </button>
