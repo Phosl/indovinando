@@ -1,4 +1,4 @@
-import {useState, useCallback, useMemo} from 'react'
+import {useState, useCallback, useMemo, useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
 
@@ -33,6 +33,20 @@ export function useOverlays({
       .order('joined_at')
     if (data) setAllPlayers(data)
   }, [sessionId, setAllPlayers])
+
+  // While the overlay is open, poll every 3s so scores stay in sync
+  useEffect(() => {
+    if (!leaderboardOpen) return
+    const interval = setInterval(async () => {
+      const {data} = await supabaseClient
+        .from('live_players')
+        .select('id, nickname, avatar_id, total_score, updated_at, is_host')
+        .eq('session_id', sessionId)
+        .order('joined_at')
+      if (data) setAllPlayers(data)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [leaderboardOpen, sessionId, setAllPlayers])
 
   const kickPlayer = useCallback(
     async (playerId) => {

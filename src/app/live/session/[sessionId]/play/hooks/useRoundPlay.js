@@ -274,7 +274,11 @@ export function useRoundPlay({
         setCheckedQuestions((prev) => ({...prev, [questionId]: true}))
         playSound(isCorrect ? 'correct' : 'wrong')
       } catch (err) {
-        console.error('Error evaluating answer:', err)
+        console.error(
+          'Error evaluating answer:',
+          err?.message ?? err?.code ?? JSON.stringify(err),
+          err,
+        )
       }
     },
     [playerData, roundStatus, checkedQuestions, correctOptionByQuestion, sessionId, playSound],

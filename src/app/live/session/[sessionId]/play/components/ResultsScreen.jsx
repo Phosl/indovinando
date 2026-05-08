@@ -49,7 +49,7 @@ export function ResultsScreen({
         return {...p, roundPts, projected: (baselineScores[p.id] ?? p.total_score ?? 0) + roundPts}
       })
       .sort((a, b) => b.projected - a.projected)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allPlayers, roundAnswersByPlayer])
   return (
     <div className={styles.fullPage}>
@@ -92,7 +92,8 @@ export function ResultsScreen({
                     <span className={styles.summaryCorrect}>
                       ✅ {selectedOptionText}
                       <span className={styles.summaryPoints}>
-                        +{ans.points}{ans.comboBonus > 0 ? ' 🔥' : ''}
+                        +{ans.points}
+                        {ans.comboBonus > 0 ? ' 🔥' : ''}
                       </span>
                     </span>
                   ) : (

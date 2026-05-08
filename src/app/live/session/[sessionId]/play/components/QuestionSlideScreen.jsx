@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useCallback} from 'react'
 import styles from '../playerLive.module.scss'
 
 const COMBO_MESSAGES = [
@@ -42,6 +42,24 @@ export function QuestionSlideScreen({
     const t = setTimeout(() => setVisibleCombo(null), 1600)
     return () => clearTimeout(t)
   }, [comboCount])
+
+  // Enter key: triggers Controlla then Continua
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key !== 'Enter') return
+      if (!isChecked && selectedOption && !isSlideTransitioning) {
+        onCheck(currentQuestion.id, selectedOption)
+      } else if (isChecked && !isSlideTransitioning) {
+        onContinue(currentQuestion.id)
+      }
+    },
+    [isChecked, selectedOption, isSlideTransitioning, currentQuestion, onCheck, onContinue],
+  )
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [handleKeyDown])
   const correctText = currentQuestion?.game_question_options?.find(
     (o) => o.id === correctOptionByQuestion[currentQuestion?.id],
   )?.text
