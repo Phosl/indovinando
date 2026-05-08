@@ -577,7 +577,7 @@ export default function PlayerLiveClient({
   )
 
   // Poll DB every 2s while waiting for all players to complete.
-  // Direct DB check avoids relying on Realtime events that can be missed.
+  // Also detects if the host has already advanced (Realtime fallback).
   useEffect(() => {
     if (!clickedReady || liveQuestions.length === 0) {
       setAllPlayersCompletedThisRound(false)
@@ -587,7 +587,12 @@ export default function PlayerLiveClient({
     const questionIds = liveQuestions.map((q) => q.id)
 
     const checkAll = async () => {
-      const [{data: players}, {data: answers}] = await Promise.all([
+      const [{data: session}, {data: players}, {data: answers}] = await Promise.all([
+        supabaseClient
+          .from('live_sessions')
+          .select('current_question_index, round_status')
+          .eq('id', sessionId)
+          .maybeSingle(),
         supabaseClient
           .from('live_players')
           .select('id, nickname, avatar_id, total_score, updated_at, is_host')
@@ -599,6 +604,24 @@ export default function PlayerLiveClient({
           .eq('session_id', sessionId)
           .in('question_id', questionIds),
       ])
+
+      // Host has already advanced — reset player state (Realtime fallback)
+      if (session && session.current_question_index !== currentBottleIndex) {
+        setResultsOpenedBottleIndex(null)
+        setPlayerMarkedNext(false)
+        setAllPlayersCompletedThisRound(false)
+        setSelectedAnswers({})
+        setRoundAnswers({})
+        setRoundAnswersByPlayer({})
+        setCorrectOptionByQuestion({})
+        setClickedReady(false)
+        setCurrentSlideIndex(0)
+        setCheckedQuestions({})
+        setSlideMotion('idle')
+        setCurrentBottleIndex(session.current_question_index ?? 0)
+        setRoundStatus(session.round_status || 'waiting_answers')
+        return
+      }
 
       if (players) setAllPlayers(players)
 
@@ -628,7 +651,7 @@ export default function PlayerLiveClient({
     checkAll()
     const interval = setInterval(checkAll, 2000)
     return () => clearInterval(interval)
-  }, [clickedReady, sessionId, liveQuestions])
+  }, [clickedReady, sessionId, liveQuestions, currentBottleIndex])
 
   const sortedLeaderboard = useMemo(
     () => [...allPlayers].sort((a, b) => (b.total_score || 0) - (a.total_score || 0)),
