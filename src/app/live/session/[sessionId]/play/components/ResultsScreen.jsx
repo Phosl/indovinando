@@ -138,8 +138,12 @@ export function ResultsScreen({
             <button
               className={styles.continueButton}
               onClick={onNextBottle}
-              disabled={!allPlayersCompletedThisRound}>
-              {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
+              disabled={!isLastBottle && !allPlayersCompletedThisRound}>
+              {isLastBottle
+                ? allPlayersCompletedThisRound
+                  ? 'Concludi'
+                  : 'Concludi comunque'
+                : 'Prossima bottiglia'}
             </button>
             {isLastBottle && (
               <button className={styles.secondaryButton} onClick={onViewLeaderboard}>
@@ -151,7 +155,7 @@ export function ResultsScreen({
           <>
             <p className={styles.readyHint}>
               {playerMarkedNext
-                ? 'In attesa che l\u2019host avanzi...'
+                ? `In attesa che l'host avanzi...`
                 : allPlayersCompletedThisRound
                   ? 'Tutti hanno finito!'
                   : `${playersReadyCount}/${allPlayers.length} giocatori pronti...`}
@@ -159,7 +163,7 @@ export function ResultsScreen({
             <button
               className={styles.continueButton}
               onClick={onNextBottle}
-              disabled={!allPlayersCompletedThisRound || playerMarkedNext}>
+              disabled={(!isLastBottle && !allPlayersCompletedThisRound) || playerMarkedNext}>
               {isLastBottle ? 'Concludi' : 'Prossima bottiglia'}
             </button>
             {isLastBottle && (
