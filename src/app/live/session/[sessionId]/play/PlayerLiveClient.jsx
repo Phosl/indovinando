@@ -572,13 +572,18 @@ export default function PlayerLiveClient({
     ],
   )
 
-  // When a player reaches the results screen, load any already-submitted answers from DB
+  // When a player reaches the results screen, re-sync both players and answers from DB
   // (catches up if Realtime events were missed before subscription)
   useEffect(() => {
-    if ((!clickedReady && roundStatus !== 'showing_results') || liveQuestions.length === 0) return
+    if (!clickedReady || liveQuestions.length === 0) return
 
-    const loadExistingAnswers = async () => {
-      const [{data: answersData}, {data: playersData}] = await Promise.all([
+    const resync = async () => {
+      const [{data: playersData}, {data: answersData}] = await Promise.all([
+        supabaseClient
+          .from('live_players')
+          .select('id, nickname, avatar_id, total_score, updated_at, is_host')
+          .eq('session_id', sessionId)
+          .order('joined_at'),
         supabaseClient
           .from('live_round_answers')
           .select('player_id, question_id, selected_option_id, is_correct, points')
@@ -587,35 +592,31 @@ export default function PlayerLiveClient({
             'question_id',
             liveQuestions.map((q) => q.id),
           ),
-        supabaseClient
-          .from('live_players')
-          .select('id, nickname, avatar_id, total_score, updated_at, is_host')
-          .eq('session_id', sessionId)
-          .order('joined_at'),
       ])
-      const data = answersData
-      if (playersData && playersData.length > 0) setAllPlayers(playersData)
 
-      if (!data || data.length === 0) return
-      setRoundAnswersByPlayer((prev) => {
-        const updated = {...prev}
-        data.forEach((a) => {
-          if (!updated[a.player_id]) updated[a.player_id] = {}
-          updated[a.player_id] = {
-            ...updated[a.player_id],
-            [a.question_id]: {
-              optionId: a.selected_option_id,
-              isCorrect: a.is_correct,
-              points: a.points,
-            },
-          }
+      if (playersData) setAllPlayers(playersData)
+
+      if (answersData && answersData.length > 0) {
+        setRoundAnswersByPlayer((prev) => {
+          const updated = {...prev}
+          answersData.forEach((a) => {
+            if (!updated[a.player_id]) updated[a.player_id] = {}
+            updated[a.player_id] = {
+              ...updated[a.player_id],
+              [a.question_id]: {
+                optionId: a.selected_option_id,
+                isCorrect: a.is_correct,
+                points: a.points,
+              },
+            }
+          })
+          return updated
         })
-        return updated
-      })
+      }
     }
 
-    loadExistingAnswers()
-  }, [clickedReady, roundStatus, sessionId, liveQuestions])
+    resync()
+  }, [clickedReady, sessionId, liveQuestions])
 
   const sortedLeaderboard = useMemo(
     () => [...allPlayers].sort((a, b) => (b.total_score || 0) - (a.total_score || 0)),
