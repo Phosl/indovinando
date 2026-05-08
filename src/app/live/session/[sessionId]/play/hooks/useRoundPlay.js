@@ -23,7 +23,6 @@ export function useRoundPlay({
   setCurrentBottleIndex,
   setRoundStatus,
   setAllPlayers,
-  setSessionFinished,
   // audio
   playSound,
 }) {
@@ -209,36 +208,6 @@ export function useRoundPlay({
     const interval = setInterval(handleAnswerInsert, 2000)
     return () => clearInterval(interval)
   }, [clickedReady, allPlayersCompletedThisRound, handleAnswerInsert])
-
-  // ── Poll live_sessions while non-host waits for host to advance ────────────
-  // Once playerMarkedNext is true, the only way to exit is receiving an
-  // onSessionUpdate Realtime event. But if live_sessions isn't in the Realtime
-  // publication that event never fires. This effect polls the session directly
-  // every 2s as a guaranteed fallback.
-  useEffect(() => {
-    if (!playerMarkedNext) return
-    const poll = async () => {
-      const {data: session} = await supabaseClient
-        .from('live_sessions')
-        .select('current_question_index, round_status, status')
-        .eq('id', sessionId)
-        .maybeSingle()
-      if (!session) return
-      if (session.status === 'finished') {
-        setSessionFinished(true)
-        return
-      }
-      if (session.current_question_index !== currentBottleIndex) {
-        resetRoundState(
-          session.current_question_index ?? 0,
-          session.round_status || 'waiting_answers',
-        )
-      }
-    }
-    poll()
-    const interval = setInterval(poll, 2000)
-    return () => clearInterval(interval)
-  }, [playerMarkedNext, sessionId, currentBottleIndex, resetRoundState, setSessionFinished])
 
   // ── Answer interaction handlers ────────────────────────────────────────────
   const handleSelect = useCallback((questionId, optionId) => {

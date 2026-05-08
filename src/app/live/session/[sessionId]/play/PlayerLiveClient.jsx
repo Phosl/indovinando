@@ -66,7 +66,7 @@ export default function PlayerLiveClient({
   } = useRoundPlay({
     sessionId, playerData, liveQuestions, allPlayers, currentBottleIndex, roundStatus,
     isHostUser, isLastBottle, currentBottle,
-    setCurrentBottleIndex, setRoundStatus, setAllPlayers, setSessionFinished,
+    setCurrentBottleIndex, setRoundStatus, setAllPlayers,
     playSound,
   })
 
