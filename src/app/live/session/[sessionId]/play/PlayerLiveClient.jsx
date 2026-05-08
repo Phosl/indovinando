@@ -289,8 +289,12 @@ export default function PlayerLiveClient({
           isLastBottle
             ? async () => {
                 if (isHostUser) {
-                  await syncScoresFromAnswers(roundAnswersByPlayer)
-                  await advanceToNextBottleOrFinish()
+                  try {
+                    await syncScoresFromAnswers(roundAnswersByPlayer)
+                    await advanceToNextBottleOrFinish()
+                  } catch (err) {
+                    console.error('Error finishing session:', err?.message ?? err)
+                  }
                 }
                 router.push(`/live/session/${sessionId}/leaderboard`)
               }
