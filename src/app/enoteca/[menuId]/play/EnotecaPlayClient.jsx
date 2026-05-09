@@ -1,13 +1,16 @@
 'use client'
 
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabaseClient } from '@/lib/supabaseClient'
 import styles from './enotecaPlay.module.scss'
 
 const POINTS_CORRECT = 25
 
-export default function EnotecaPlayClient({ menuId, menuName, bottles, questions, options }) {
+// Key per stato: combinazione bottiglia+domanda (stessa domanda su più bottiglie)
+const stateKey = (bottleId, questionId) => `${bottleId}:${questionId}`
+
+export default function EnotecaPlayClient({ menuId, menuName, bottles, questions }) {
   const router = useRouter()
   const sessionKey = `enoteca_session_${menuId}`
 
@@ -15,47 +18,24 @@ export default function EnotecaPlayClient({ menuId, menuName, bottles, questions
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
-  // bottleIndex: which bottle we're on
   const [bottleIndex, setBottleIndex] = useState(0)
-  // questionIndex: which question within the current bottle
   const [questionIndex, setQuestionIndex] = useState(0)
-  // selected option per question: { [questionId]: optionId }
+  // { "bottleId:questionId": optionId }
   const [selected, setSelected] = useState({})
-  // checked questions (after hitting "Controlla"): { [questionId]: { isCorrect, points } }
+  // { "bottleId:questionId": { isCorrect, points } }
   const [checked, setChecked] = useState({})
-  // whether we're showing the bottle reveal screen
   const [showReveal, setShowReveal] = useState(false)
 
-  // Derived data memoized
-  const questionsByBottle = useMemo(() => {
-    const map = {}
-    for (const bottle of bottles) {
-      map[bottle.id] = questions
-        .filter((q) => q.bottle_id === bottle.id)
-        .sort((a, b) => a.question_order - b.question_order)
-    }
-    return map
-  }, [bottles, questions])
-
-  const optionsByQuestion = useMemo(() => {
-    const map = {}
-    for (const opt of options) {
-      if (!map[opt.question_id]) map[opt.question_id] = []
-      map[opt.question_id].push(opt)
-    }
-    return map
-  }, [options])
-
   const currentBottle = bottles[bottleIndex]
-  const currentBottleQuestions = currentBottle ? (questionsByBottle[currentBottle.id] ?? []) : []
-  const currentQuestion = currentBottleQuestions[questionIndex] ?? null
-  const currentOptions = currentQuestion ? (optionsByQuestion[currentQuestion.id] ?? []) : []
-
-  const isLastQuestion = questionIndex >= currentBottleQuestions.length - 1
+  const currentQuestion = questions[questionIndex] ?? null
+  const currentOptions = currentQuestion?.options ?? []
+  const isLastQuestion = questionIndex >= questions.length - 1
   const isLastBottle = bottleIndex >= bottles.length - 1
-  const isCurrentChecked = currentQuestion ? !!checked[currentQuestion.id] : false
 
-  // On mount: load or verify session from localStorage
+  const curKey = currentBottle && currentQuestion ? stateKey(currentBottle.id, currentQuestion.id) : null
+  const isCurrentChecked = curKey ? !!checked[curKey] : false
+
+  // On mount: carica/verifica sessione e risposte esistenti
   useEffect(() => {
     const savedId = localStorage.getItem(sessionKey)
     if (!savedId) {
@@ -80,31 +60,31 @@ export default function EnotecaPlayClient({ menuId, menuName, bottles, questions
         }
 
         setSessionId(data.id)
-        setBottleIndex(data.current_bottle_index ?? 0)
+        const savedBottleIdx = data.current_bottle_index ?? 0
+        setBottleIndex(savedBottleIdx)
 
-        // Load existing answers to restore state
+        // Carica risposte esistenti per riprendere
         supabaseClient
           .from('enoteca_answers')
-          .select('question_id, selected_option_id, is_correct, points')
+          .select('bottle_id, question_id, selected_option_id, is_correct, points')
           .eq('tasting_session_id', savedId)
           .then(({ data: answers }) => {
             if (answers?.length) {
               const sel = {}
               const chk = {}
               for (const a of answers) {
-                sel[a.question_id] = a.selected_option_id
-                chk[a.question_id] = { isCorrect: a.is_correct, points: a.points }
+                const k = stateKey(a.bottle_id, a.question_id)
+                sel[k] = a.selected_option_id
+                chk[k] = { isCorrect: a.is_correct, points: a.points }
               }
               setSelected(sel)
               setChecked(chk)
 
-              // Advance questionIndex to the first unanswered question in the current bottle
-              const currentB = bottles[data.current_bottle_index ?? 0]
-              if (currentB) {
-                const bqs = (questionsByBottle[currentB.id] ?? [])
-                const firstUnanswered = bqs.findIndex((q) => !chk[q.id])
+              // Riprendi dalla prima domanda non risposta in questa bottiglia
+              const curBottle = bottles[savedBottleIdx]
+              if (curBottle) {
+                const firstUnanswered = questions.findIndex((q) => !chk[stateKey(curBottle.id, q.id)])
                 if (firstUnanswered === -1) {
-                  // All answered → show reveal
                   setShowReveal(true)
                 } else {
                   setQuestionIndex(firstUnanswered)
@@ -117,41 +97,45 @@ export default function EnotecaPlayClient({ menuId, menuName, bottles, questions
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSelect = useCallback((optionId) => {
-    if (!currentQuestion || isCurrentChecked) return
-    setSelected((prev) => ({ ...prev, [currentQuestion.id]: optionId }))
-  }, [currentQuestion, isCurrentChecked])
+    if (!currentQuestion || isCurrentChecked || !currentBottle) return
+    const k = stateKey(currentBottle.id, currentQuestion.id)
+    setSelected((prev) => ({ ...prev, [k]: optionId }))
+  }, [currentBottle, currentQuestion, isCurrentChecked])
 
   const handleCheck = useCallback(async () => {
-    if (!currentQuestion || !selected[currentQuestion.id] || isCurrentChecked) return
+    if (!currentQuestion || !currentBottle || isCurrentChecked) return
+    const k = stateKey(currentBottle.id, currentQuestion.id)
+    const selectedOptionId = selected[k]
+    if (!selectedOptionId) return
 
-    const selectedOptionId = selected[currentQuestion.id]
-    const opt = currentOptions.find((o) => o.id === selectedOptionId)
-    const isCorrect = opt?.is_correct ?? false
+    // La risposta corretta è in bottle.correctAnswers (da game_bottle_answers)
+    const correctOptionId = currentBottle.correctAnswers?.[currentQuestion.id]
+    const isCorrect = selectedOptionId === correctOptionId
     const points = isCorrect ? POINTS_CORRECT : 0
 
-    // Optimistic UI
-    setChecked((prev) => ({ ...prev, [currentQuestion.id]: { isCorrect, points } }))
+    // Ottimistica UI
+    setChecked((prev) => ({ ...prev, [k]: { isCorrect, points } }))
 
     setSaving(true)
     await supabaseClient.from('enoteca_answers').upsert(
       {
         tasting_session_id: sessionId,
+        bottle_id: currentBottle.id,
         question_id: currentQuestion.id,
         selected_option_id: selectedOptionId,
         is_correct: isCorrect,
         points,
       },
-      { onConflict: 'tasting_session_id,question_id' }
+      { onConflict: 'tasting_session_id,bottle_id,question_id' }
     )
     setSaving(false)
-  }, [currentQuestion, currentOptions, selected, isCurrentChecked, sessionId])
+  }, [currentBottle, currentQuestion, selected, isCurrentChecked, sessionId])
 
   const handleContinue = useCallback(() => {
     if (!isLastQuestion) {
       setQuestionIndex((i) => i + 1)
       return
     }
-    // All questions for this bottle answered → show reveal
     setShowReveal(true)
   }, [isLastQuestion])
 
@@ -159,7 +143,6 @@ export default function EnotecaPlayClient({ menuId, menuName, bottles, questions
     const nextIndex = bottleIndex + 1
 
     if (isLastBottle) {
-      // Mark session completed
       const totalScore = Object.values(checked).reduce((sum, c) => sum + (c.points ?? 0), 0)
       await supabaseClient
         .from('enoteca_tasting_sessions')
@@ -169,7 +152,6 @@ export default function EnotecaPlayClient({ menuId, menuName, bottles, questions
       return
     }
 
-    // Advance to next bottle
     await supabaseClient
       .from('enoteca_tasting_sessions')
       .update({ current_bottle_index: nextIndex })
@@ -180,7 +162,7 @@ export default function EnotecaPlayClient({ menuId, menuName, bottles, questions
     setShowReveal(false)
   }, [bottleIndex, isLastBottle, checked, sessionId, menuId, router])
 
-  // Keyboard support
+  // Tasto Invio
   useEffect(() => {
     const onKey = (e) => {
       if (e.key !== 'Enter') return
@@ -201,11 +183,13 @@ export default function EnotecaPlayClient({ menuId, menuName, bottles, questions
     )
   }
 
-  // ── REVEAL SCREEN ────────────────────────────────────────────────────────────
-  if (showReveal) {
-    const bottleQs = currentBottleQuestions
-    const bottleScore = bottleQs.reduce((sum, q) => sum + (checked[q.id]?.points ?? 0), 0)
-    const correctCount = bottleQs.filter((q) => checked[q.id]?.isCorrect).length
+  // ── REVEAL SCREEN ─────────────────────────────────────────────────────────
+  if (showReveal && currentBottle) {
+    const bottleScore = questions.reduce((sum, q) => {
+      const k = stateKey(currentBottle.id, q.id)
+      return sum + (checked[k]?.points ?? 0)
+    }, 0)
+    const correctCount = questions.filter((q) => checked[stateKey(currentBottle.id, q.id)]?.isCorrect).length
 
     return (
       <div className={styles.page}>
@@ -219,29 +203,28 @@ export default function EnotecaPlayClient({ menuId, menuName, bottles, questions
             {currentBottle.producer && (
               <p className={styles.revealProducer}>{currentBottle.producer}</p>
             )}
-            <div className={styles.revealMeta}>
-              {currentBottle.year && <span>{currentBottle.year}</span>}
-              {currentBottle.region && <span>{currentBottle.region}</span>}
-              {currentBottle.varietal && <span>{currentBottle.varietal}</span>}
-            </div>
-            {currentBottle.description && (
-              <p className={styles.revealDescription}>{currentBottle.description}</p>
+            {currentBottle.year && (
+              <div className={styles.revealMeta}>
+                <span>{currentBottle.year}</span>
+              </div>
             )}
           </div>
 
           <div className={styles.revealScore}>
             <span className={styles.revealScoreValue}>+{bottleScore}</span>
             <span className={styles.revealScoreLabel}>
-              {correctCount}/{bottleQs.length} corrette
+              {correctCount}/{questions.length} corrette
             </span>
           </div>
 
           <div className={styles.revealAnswers}>
-            {bottleQs.map((q) => {
-              const qOptions = optionsByQuestion[q.id] ?? []
-              const selectedOpt = qOptions.find((o) => o.id === selected[q.id])
-              const correctOpt = qOptions.find((o) => o.is_correct)
-              const isCorrect = checked[q.id]?.isCorrect
+            {questions.map((q) => {
+              const k = stateKey(currentBottle.id, q.id)
+              const selectedOptId = selected[k]
+              const correctOptId = currentBottle.correctAnswers?.[q.id]
+              const isCorrect = checked[k]?.isCorrect
+              const selectedOpt = q.options.find((o) => o.id === selectedOptId)
+              const correctOpt = q.options.find((o) => o.id === correctOptId)
 
               return (
                 <div key={q.id} className={`${styles.revealAnswer} ${isCorrect ? styles.revealCorrect : styles.revealWrong}`}>
@@ -271,8 +254,8 @@ export default function EnotecaPlayClient({ menuId, menuName, bottles, questions
     )
   }
 
-  // ── QUESTION SCREEN ──────────────────────────────────────────────────────────
-  const selectedId = currentQuestion ? selected[currentQuestion.id] : null
+  // ── QUESTION SCREEN ───────────────────────────────────────────────────────
+  const curSelectedId = curKey ? selected[curKey] : null
 
   return (
     <div className={styles.page}>
@@ -286,22 +269,23 @@ export default function EnotecaPlayClient({ menuId, menuName, bottles, questions
         <div className={styles.progressBar}>
           <div
             className={styles.progressFill}
-            style={{ width: `${((bottleIndex) / bottles.length) * 100}%` }}
+            style={{ width: `${(bottleIndex / bottles.length) * 100}%` }}
           />
         </div>
       </div>
 
       <div className={styles.questionArea}>
         <div className={styles.questionCounter}>
-          Domanda {questionIndex + 1} / {currentBottleQuestions.length}
+          Domanda {questionIndex + 1} / {questions.length}
         </div>
         <h2 className={styles.questionText}>{currentQuestion?.text}</h2>
 
         <div className={styles.options}>
           {currentOptions.map((opt) => {
-            const isSelected = selectedId === opt.id
+            const isSelected = curSelectedId === opt.id
             const isChecked = isCurrentChecked
-            const isCorrect = opt.is_correct
+            const correctOptId = currentBottle?.correctAnswers?.[currentQuestion?.id]
+            const isCorrect = opt.id === correctOptId
             let cls = styles.option
             if (isChecked && isCorrect) cls += ` ${styles.optionCorrect}`
             else if (isChecked && isSelected && !isCorrect) cls += ` ${styles.optionWrong}`
@@ -320,7 +304,7 @@ export default function EnotecaPlayClient({ menuId, menuName, bottles, questions
         {!isCurrentChecked ? (
           <button
             className={styles.btnPrimary}
-            disabled={!selectedId || saving}
+            disabled={!curSelectedId || saving}
             onClick={handleCheck}
           >
             {saving ? 'Salvo…' : 'Controlla'}

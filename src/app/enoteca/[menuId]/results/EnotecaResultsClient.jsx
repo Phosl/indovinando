@@ -5,7 +5,9 @@ import { useRouter } from 'next/navigation'
 import { supabaseClient } from '@/lib/supabaseClient'
 import styles from './enotecaResults.module.scss'
 
-export default function EnotecaResultsClient({ menuId, menuName, bottles, questions, options }) {
+const stateKey = (bottleId, questionId) => `${bottleId}:${questionId}`
+
+export default function EnotecaResultsClient({ menuId, menuName, bottles, questions }) {
   const router = useRouter()
   const sessionKey = `enoteca_session_${menuId}`
 
@@ -14,29 +16,10 @@ export default function EnotecaResultsClient({ menuId, menuName, bottles, questi
   const [loading, setLoading] = useState(true)
   const [expandedBottle, setExpandedBottle] = useState(null)
 
-  // Derived lookups
-  const questionsByBottle = useMemo(() => {
+  // { "bottleId:questionId": answer }
+  const answersByKey = useMemo(() => {
     const map = {}
-    for (const bottle of bottles) {
-      map[bottle.id] = questions
-        .filter((q) => q.bottle_id === bottle.id)
-        .sort((a, b) => a.question_order - b.question_order)
-    }
-    return map
-  }, [bottles, questions])
-
-  const optionsByQuestion = useMemo(() => {
-    const map = {}
-    for (const opt of options) {
-      if (!map[opt.question_id]) map[opt.question_id] = []
-      map[opt.question_id].push(opt)
-    }
-    return map
-  }, [options])
-
-  const answersByQuestion = useMemo(() => {
-    const map = {}
-    for (const a of answers) map[a.question_id] = a
+    for (const a of answers) map[stateKey(a.bottle_id, a.question_id)] = a
     return map
   }, [answers])
 
@@ -52,7 +35,7 @@ export default function EnotecaResultsClient({ menuId, menuName, bottles, questi
         .single(),
       supabaseClient
         .from('enoteca_answers')
-        .select('question_id, selected_option_id, is_correct, points')
+        .select('bottle_id, question_id, selected_option_id, is_correct, points')
         .eq('tasting_session_id', savedId),
     ]).then(([{ data: sess }, { data: ans }]) => {
       if (!sess) { router.replace(`/enoteca/${menuId}`); return }
@@ -73,7 +56,7 @@ export default function EnotecaResultsClient({ menuId, menuName, bottles, questi
 
   const totalScore = answers.reduce((sum, a) => sum + (a.points ?? 0), 0)
   const totalCorrect = answers.filter((a) => a.is_correct).length
-  const totalQuestions = questions.length
+  const totalQuestions = bottles.length * questions.length
   const pct = totalQuestions ? Math.round((totalCorrect / totalQuestions) * 100) : 0
 
   const handlePlayAgain = () => {
@@ -83,7 +66,6 @@ export default function EnotecaResultsClient({ menuId, menuName, bottles, questi
 
   return (
     <div className={styles.page}>
-      {/* Header */}
       <div className={styles.hero}>
         <span className={styles.heroIcon}>🏆</span>
         <h1 className={styles.heroTitle}>Degustazione completata!</h1>
@@ -93,7 +75,6 @@ export default function EnotecaResultsClient({ menuId, menuName, bottles, questi
         )}
       </div>
 
-      {/* Score summary */}
       <div className={styles.scoreSummary}>
         <div className={styles.scoreMain}>
           <span className={styles.scoreValue}>{totalScore}</span>
@@ -105,14 +86,12 @@ export default function EnotecaResultsClient({ menuId, menuName, bottles, questi
         </div>
       </div>
 
-      {/* Per-bottle breakdown */}
       <div className={styles.breakdown}>
         <h2 className={styles.breakdownTitle}>Dettaglio per bottiglia</h2>
 
         {bottles.map((bottle, i) => {
-          const bqs = questionsByBottle[bottle.id] ?? []
-          const bCorrect = bqs.filter((q) => answersByQuestion[q.id]?.is_correct).length
-          const bScore = bqs.reduce((sum, q) => sum + (answersByQuestion[q.id]?.points ?? 0), 0)
+          const bCorrect = questions.filter((q) => answersByKey[stateKey(bottle.id, q.id)]?.is_correct).length
+          const bScore = questions.reduce((sum, q) => sum + (answersByKey[stateKey(bottle.id, q.id)]?.points ?? 0), 0)
           const isOpen = expandedBottle === bottle.id
 
           return (
@@ -126,24 +105,24 @@ export default function EnotecaResultsClient({ menuId, menuName, bottles, questi
                   <div>
                     <p className={styles.bottleCardName}>{bottle.name}</p>
                     {bottle.producer && (
-                      <p className={styles.bottleCardProducer}>{bottle.producer}</p>
+                      <p className={styles.bottleCardProducer}>{bottle.producer}{bottle.year ? ` · ${bottle.year}` : ''}</p>
                     )}
                   </div>
                 </div>
                 <div className={styles.bottleCardRight}>
                   <span className={styles.bottleScore}>+{bScore}</span>
-                  <span className={styles.bottleRatio}>{bCorrect}/{bqs.length}</span>
+                  <span className={styles.bottleRatio}>{bCorrect}/{questions.length}</span>
                   <span className={styles.chevron}>{isOpen ? '▲' : '▼'}</span>
                 </div>
               </button>
 
               {isOpen && (
                 <div className={styles.bottleDetails}>
-                  {bqs.map((q) => {
-                    const answer = answersByQuestion[q.id]
-                    const qOptions = optionsByQuestion[q.id] ?? []
-                    const selectedOpt = qOptions.find((o) => o.id === answer?.selected_option_id)
-                    const correctOpt = qOptions.find((o) => o.is_correct)
+                  {questions.map((q) => {
+                    const answer = answersByKey[stateKey(bottle.id, q.id)]
+                    const selectedOpt = q.options.find((o) => o.id === answer?.selected_option_id)
+                    const correctOptId = bottle.correctAnswers?.[q.id]
+                    const correctOpt = q.options.find((o) => o.id === correctOptId)
 
                     return (
                       <div
@@ -171,7 +150,6 @@ export default function EnotecaResultsClient({ menuId, menuName, bottles, questi
         })}
       </div>
 
-      {/* Actions */}
       <div className={styles.actions}>
         <button className={styles.btnSecondary} onClick={handlePlayAgain}>
           🍷 Nuova degustazione

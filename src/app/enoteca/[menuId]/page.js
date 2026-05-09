@@ -6,26 +6,27 @@ export default async function EnotecaMenuPage({ params }) {
   const { menuId } = await params
   const supabase = await createServerSupabase()
 
-  const { data: menu } = await supabase
-    .from('enoteca_menus')
-    .select('id, name, description, location, is_published')
+  // Usa la tabella games esistente (pubblicato = status 'published')
+  const { data: game } = await supabase
+    .from('games')
+    .select('id, name, status')
     .eq('id', menuId)
     .single()
 
-  if (!menu || !menu.is_published) notFound()
+  if (!game || game.status !== 'published') notFound()
 
   const { data: bottles } = await supabase
-    .from('enoteca_bottles')
+    .from('game_bottles')
     .select('id')
-    .eq('menu_id', menuId)
+    .eq('game_id', menuId)
     .order('bottle_order')
 
   return (
     <EnotecaJoinClient
       menuId={menuId}
-      menuName={menu.name}
-      menuDescription={menu.description}
-      menuLocation={menu.location}
+      menuName={game.name}
+      menuDescription={null}
+      menuLocation={null}
       bottleCount={bottles?.length ?? 0}
     />
   )

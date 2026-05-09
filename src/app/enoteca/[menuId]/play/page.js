@@ -3,53 +3,58 @@ import { notFound } from 'next/navigation'
 import EnotecaPlayClient from './EnotecaPlayClient'
 
 export default async function EnotecaPlayPage({ params }) {
-  const { menuId } = await params
+  const { menuId: gameId } = await params
   const supabase = await createServerSupabase()
 
-  // Load menu
-  const { data: menu } = await supabase
-    .from('enoteca_menus')
-    .select('id, name, is_published')
-    .eq('id', menuId)
+  // Usa la tabella games esistente
+  const { data: game } = await supabase
+    .from('games')
+    .select('id, name, status')
+    .eq('id', gameId)
     .single()
 
-  if (!menu || !menu.is_published) notFound()
+  if (!game || game.status !== 'published') notFound()
 
-  // Load bottles ordered
+  // Bottiglie ordinate
   const { data: bottles } = await supabase
-    .from('enoteca_bottles')
-    .select('id, name, producer, year, region, varietal, description, bottle_order')
-    .eq('menu_id', menuId)
+    .from('game_bottles')
+    .select('id, name, producer, year, bottle_order, game_bottle_answers(question_id, option_id)')
+    .eq('game_id', gameId)
     .order('bottle_order')
 
   if (!bottles?.length) notFound()
 
-  // Load questions + options for all bottles
-  const bottleIds = bottles.map((b) => b.id)
+  // Domande + opzioni (per gioco, non per bottiglia)
+  const { data: rawQuestions } = await supabase
+    .from('game_questions')
+    .select('id, text, display_order, game_question_options(id, text, option_order)')
+    .eq('game_id', gameId)
+    .order('display_order')
 
-  const { data: questions } = await supabase
-    .from('enoteca_questions')
-    .select('id, bottle_id, text, question_order')
-    .in('bottle_id', bottleIds)
-    .order('question_order')
+  const questions = (rawQuestions ?? []).map((q) => ({
+    id: q.id,
+    text: q.text,
+    options: [...(q.game_question_options ?? [])].sort((a, b) => a.option_order - b.option_order),
+  }))
 
-  const questionIds = (questions ?? []).map((q) => q.id)
-
-  const { data: options } = questionIds.length
-    ? await supabase
-        .from('enoteca_options')
-        .select('id, question_id, text, is_correct, option_order')
-        .in('question_id', questionIds)
-        .order('option_order')
-    : { data: [] }
+  const bottlesParsed = bottles.map((b) => ({
+    id: b.id,
+    name: b.name,
+    producer: b.producer,
+    year: b.year,
+    bottle_order: b.bottle_order,
+    // mappa question_id → correct option_id
+    correctAnswers: Object.fromEntries(
+      (b.game_bottle_answers ?? []).map((a) => [a.question_id, a.option_id])
+    ),
+  }))
 
   return (
     <EnotecaPlayClient
-      menuId={menuId}
-      menuName={menu.name}
-      bottles={bottles}
-      questions={questions ?? []}
-      options={options ?? []}
+      menuId={gameId}
+      menuName={game.name}
+      bottles={bottlesParsed}
+      questions={questions}
     />
   )
 }
