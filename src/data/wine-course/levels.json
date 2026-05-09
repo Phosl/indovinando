@@ -1,0 +1,18 @@
+[
+  {
+    "id": "level-1",
+    "title": "Fondamenti del Vino",
+    "description": "Le basi per capire cosa è il vino, come nasce e le sue tipologie.",
+    "emoji": "🍇",
+    "order": 1,
+    "lessonIds": ["level-1-lesson-1", "level-1-lesson-2", "level-1-lesson-3"]
+  },
+  {
+    "id": "level-2",
+    "title": "Il Vino Italiano",
+    "description": "Denominazioni, vitigni e l'arte della degustazione.",
+    "emoji": "🇮🇹",
+    "order": 2,
+    "lessonIds": ["level-2-lesson-1", "level-2-lesson-2", "level-2-lesson-3"]
+  }
+]

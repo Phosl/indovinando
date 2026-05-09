@@ -1,0 +1,95 @@
+{
+  "id": "level-2-lesson-2",
+  "levelId": "level-2",
+  "order": 2,
+  "title": "I grandi vitigni italiani",
+  "emoji": "🌿",
+  "intro": {
+    "title": "L'Italia è un patrimonio ampelografico",
+    "paragraphs": [
+      "L'Italia vanta oltre 500 varietà di uva autoctone coltivate commercialmente — più di qualsiasi altro paese al mondo. Dal Nebbiolo delle Langhe al Sangiovese della Toscana, ogni regione ha i suoi vitigni identitari.",
+      "Conoscere i vitigni è la chiave per capire il carattere di un vino: struttura, profumi, acidità e longevità dipendono innanzitutto dall'uva di partenza, prima ancora del territorio e del produttore."
+    ],
+    "keyPoints": ["Nebbiolo → Barolo e Barbaresco (Piemonte)", "Sangiovese → Chianti, Brunello (Toscana)", "Glera → Prosecco (Veneto/Friuli)"]
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "text": "Da quale vitigno si produce il Barolo?",
+      "options": [
+        { "id": "a", "text": "Sangiovese" },
+        { "id": "b", "text": "Montepulciano" },
+        { "id": "c", "text": "Nebbiolo" },
+        { "id": "d", "text": "Barbera" }
+      ],
+      "correctId": "c",
+      "feedback": {
+        "correct": "Esatto! Il Barolo è prodotto al 100% da Nebbiolo, vitigno dalle bucce sottili ma ricco di tannini e dalle grandi capacità di invecchiamento.",
+        "wrong": "Non corretto. Il Barolo è prodotto dal Nebbiolo, un vitigno piemontese nobile e longevo."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "text": "Quale vitigno è la base del Chianti Classico DOCG?",
+      "options": [
+        { "id": "a", "text": "Merlot" },
+        { "id": "b", "text": "Sangiovese" },
+        { "id": "c", "text": "Montepulciano" },
+        { "id": "d", "text": "Primitivo" }
+      ],
+      "correctId": "b",
+      "feedback": {
+        "correct": "Perfetto! Il Sangiovese è il principe dei vitigni toscani e deve costituire almeno l'80% del Chianti Classico.",
+        "wrong": "Non è corretto. Il Chianti Classico è basato sul Sangiovese, il vitigno più coltivato in Italia."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "true_false",
+      "text": "Il Pinot Grigio è un vitigno a bacca rossa (grigia) che produce vino bianco.",
+      "options": [
+        { "id": "true", "text": "Vero" },
+        { "id": "false", "text": "Falso" }
+      ],
+      "correctId": "true",
+      "feedback": {
+        "correct": "Vero! Il Pinot Grigio ha acini dalla buccia grigio-rosata. Il succo, incolore, produce vino bianco grazie alla vinificazione in bianco (senza le bucce).",
+        "wrong": "In realtà è vero: il Pinot Grigio ha bucce grigio-rosate (da cui il nome), ma viene vinificato in bianco producendo un vino bianco o leggermente ramato."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "text": "Da quale uva si produce il Prosecco DOC/DOCG?",
+      "options": [
+        { "id": "a", "text": "Chardonnay" },
+        { "id": "b", "text": "Verdicchio" },
+        { "id": "c", "text": "Glera" },
+        { "id": "d", "text": "Trebbiano" }
+      ],
+      "correctId": "c",
+      "feedback": {
+        "correct": "Esatto! Il Prosecco si produce principalmente con l'uva Glera (chiamata Prosecco fino al 2009).",
+        "wrong": "Non corretto. Il Prosecco è prodotto principalmente dal vitigno Glera, coltivato nelle Venezie."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "text": "Quale vitigno del Sud Italia, tipico della Sicilia, produce vini corposi e ricchi di frutto?",
+      "options": [
+        { "id": "a", "text": "Garganega" },
+        { "id": "b", "text": "Vermentino" },
+        { "id": "c", "text": "Nero d'Avola" },
+        { "id": "d", "text": "Fiano" }
+      ],
+      "correctId": "c",
+      "feedback": {
+        "correct": "Corretto! Il Nero d'Avola è il vitigno rosso più importante della Sicilia: produce vini intensi, caldi e con note di frutta matura.",
+        "wrong": "Non corretto. Il Nero d'Avola è il grande vitigno rosso siciliano, noto per vini corposi e fruttati."
+      }
+    }
+  ]
+}

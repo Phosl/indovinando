@@ -38,6 +38,17 @@ export default async function Dashboard() {
           </div>
         </section>
 
+        {/* Corso di Vino banner */}
+        <a href="/corso-vino" className={styles.corsoCard}>
+          <span className={styles.corsoEmoji}>🍷</span>
+          <div className={styles.corsoInfo}>
+            <span className={styles.corsoLabel}>Novità</span>
+            <strong className={styles.corsoTitle}>Corso di Vino</strong>
+            <span className={styles.corsoDesc}>Impara il vino passo dopo passo · gratis 🎓</span>
+          </div>
+          <span className={styles.corsoArrow}>→</span>
+        </a>
+
         {games && games.length > 0 ? (
           <div className={styles.gamesSection}>
             <h2>I tuoi giochi ({games.length})</h2>

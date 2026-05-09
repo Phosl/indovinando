@@ -1,0 +1,95 @@
+{
+  "id": "level-1-lesson-2",
+  "levelId": "level-1",
+  "order": 2,
+  "title": "Dal vigneto alla bottiglia",
+  "emoji": "🍾",
+  "intro": {
+    "title": "Il viaggio dell'uva",
+    "paragraphs": [
+      "Dalla vigna alla bottiglia, il vino percorre un lungo cammino. Tutto inizia con la vendemmia, la raccolta manuale o meccanica dei grappoli, seguita dalla pigiatura per estrarre il mosto.",
+      "Il mosto fermenta per giorni o settimane, dopodiché il vino viene separato dalle bucce (svinatura) e inizia la fase di affinamento in acciaio, cemento o legno, prima dell'imbottigliamento."
+    ],
+    "keyPoints": ["Vendemmia: raccolta dell'uva (autunno)", "Fermentazione: 7–30 giorni circa", "Affinamento: da pochi mesi a molti anni"]
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "text": "Come si chiama la raccolta dell'uva?",
+      "options": [
+        { "id": "a", "text": "Potatura" },
+        { "id": "b", "text": "Vendemmia" },
+        { "id": "c", "text": "Vinificazione" },
+        { "id": "d", "text": "Pigiatura" }
+      ],
+      "correctId": "b",
+      "feedback": {
+        "correct": "Corretto! La vendemmia è la raccolta delle uve mature dalla vigna.",
+        "wrong": "Non è corretto. La raccolta dell'uva si chiama vendemmia."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "text": "In quale stagione avviene tipicamente la vendemmia in Italia?",
+      "options": [
+        { "id": "a", "text": "Primavera" },
+        { "id": "b", "text": "Estate" },
+        { "id": "c", "text": "Autunno" },
+        { "id": "d", "text": "Inverno" }
+      ],
+      "correctId": "c",
+      "feedback": {
+        "correct": "Esatto! In Italia la vendemmia avviene prevalentemente tra agosto e ottobre.",
+        "wrong": "Non corretto. La vendemmia in Italia avviene in autunno, tra agosto e ottobre."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "true_false",
+      "text": "Il vino bianco fermenta a contatto con le bucce dell'uva, come il vino rosso.",
+      "options": [
+        { "id": "true", "text": "Vero" },
+        { "id": "false", "text": "Falso" }
+      ],
+      "correctId": "false",
+      "feedback": {
+        "correct": "Giusto! Il vino bianco si produce separando subito il succo dalle bucce. Solo il rosso fermenta con le bucce.",
+        "wrong": "Attenzione: il vino bianco viene prodotto senza contatto prolungato con le bucce, a differenza del rosso."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "text": "Come si chiama la fase in cui il vino matura in contenitori (botte, anfora, acciaio)?",
+      "options": [
+        { "id": "a", "text": "Fermentazione" },
+        { "id": "b", "text": "Pigiatura" },
+        { "id": "c", "text": "Affinamento" },
+        { "id": "d", "text": "Chiarificazione spinta" }
+      ],
+      "correctId": "c",
+      "feedback": {
+        "correct": "Bravo! L'affinamento è il periodo di maturazione del vino prima dell'imbottigliamento.",
+        "wrong": "Non è corretto. La fase di maturazione in contenitori si chiama affinamento."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "text": "Quale materiale viene usato tradizionalmente per tappare le bottiglie di vino di qualità?",
+      "options": [
+        { "id": "a", "text": "Plastica" },
+        { "id": "b", "text": "Sughero" },
+        { "id": "c", "text": "Silicone" },
+        { "id": "d", "text": "Vetro" }
+      ],
+      "correctId": "b",
+      "feedback": {
+        "correct": "Esatto! Il sughero è il tappo tradizionale per eccellenza, estratto dalla quercia da sughero.",
+        "wrong": "Non corretto. Il sughero è il materiale tradizionale e più pregiato per tappare le bottiglie di vino."
+      }
+    }
+  ]
+}

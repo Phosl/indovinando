@@ -1,0 +1,95 @@
+{
+  "id": "level-1-lesson-1",
+  "levelId": "level-1",
+  "order": 1,
+  "title": "Cosa è il vino?",
+  "emoji": "🍷",
+  "intro": {
+    "title": "Cominciamo dalle basi",
+    "paragraphs": [
+      "Il vino è una bevanda alcolica ottenuta dalla fermentazione del succo d'uva. I lieviti naturali presenti sulle bucce trasformano gli zuccheri in alcol etilico e anidride carbonica.",
+      "Non tutte le uve sono adatte alla produzione di vino: esistono vitigni specifici, diversi dall'uva da tavola, selezionati in millenni di coltivazione per le loro caratteristiche aromatiche e zuccherine."
+    ],
+    "keyPoints": ["Fermentazione: zuccheri → alcol + CO₂", "Solo vitigni da vino (non da tavola)", "Alcol tipico del vino da tavola: 11–15%"]
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "text": "Quale processo trasforma il succo d'uva in vino?",
+      "options": [
+        { "id": "a", "text": "Distillazione" },
+        { "id": "b", "text": "Fermentazione" },
+        { "id": "c", "text": "Pastorizzazione" },
+        { "id": "d", "text": "Ossidazione" }
+      ],
+      "correctId": "b",
+      "feedback": {
+        "correct": "Esatto! La fermentazione alcolica converte gli zuccheri dell'uva in alcol etilico.",
+        "wrong": "Non è corretto. È la fermentazione alcolica che trasforma il succo d'uva in vino."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "text": "Chi è il protagonista della fermentazione alcolica?",
+      "options": [
+        { "id": "a", "text": "Batteri lattici" },
+        { "id": "b", "text": "Muffe" },
+        { "id": "c", "text": "Lieviti" },
+        { "id": "d", "text": "Enzimi di sintesi" }
+      ],
+      "correctId": "c",
+      "feedback": {
+        "correct": "Corretto! I lieviti sono i microorganismi che eseguono la fermentazione alcolica.",
+        "wrong": "Non proprio. Sono i lieviti (funghi unicellulari) che trasformano gli zuccheri in alcol."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "true_false",
+      "text": "Le uve da tavola comuni (es. uva Italia) sono adatte alla produzione di vino di qualità.",
+      "options": [
+        { "id": "true", "text": "Vero" },
+        { "id": "false", "text": "Falso" }
+      ],
+      "correctId": "false",
+      "feedback": {
+        "correct": "Giusto! Le uve da tavola hanno caratteristiche diverse dai vitigni da vino e non producono vino di qualità.",
+        "wrong": "Attenzione: le uve da tavola non sono adatte. Per il vino si usano vitigni specifici come Sangiovese, Nebbiolo, Chardonnay."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "text": "Quali sono i due principali sottoprodotti della fermentazione alcolica?",
+      "options": [
+        { "id": "a", "text": "Alcol etilico e anidride carbonica" },
+        { "id": "b", "text": "Alcol metilico e ossigeno" },
+        { "id": "c", "text": "Aceto e acqua" },
+        { "id": "d", "text": "Glucosio e fruttosio" }
+      ],
+      "correctId": "a",
+      "feedback": {
+        "correct": "Perfetto! Alcol etilico (etanolo) e CO₂ sono i prodotti principali della fermentazione.",
+        "wrong": "Sbagliato. La fermentazione alcolica produce alcol etilico e anidride carbonica (CO₂)."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "text": "Qual è il range alcolico tipico di un vino da tavola fermo?",
+      "options": [
+        { "id": "a", "text": "3–6%" },
+        { "id": "b", "text": "8–10%" },
+        { "id": "c", "text": "11–15%" },
+        { "id": "d", "text": "18–25%" }
+      ],
+      "correctId": "c",
+      "feedback": {
+        "correct": "Esatto! La maggior parte dei vini da tavola contiene tra l'11 e il 15% di alcol.",
+        "wrong": "Non corretto. I vini da tavola fermi si aggirano tipicamente tra l'11 e il 15% di alcol."
+      }
+    }
+  ]
+}

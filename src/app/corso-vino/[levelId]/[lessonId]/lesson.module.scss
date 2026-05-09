@@ -1,0 +1,106 @@
+// Lesson-specific styles — quiz shell reuses playerLive.module.scss
+
+// ── Intro card ────────────────────────────────────────────────
+.introCard {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 20px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.introEmoji {
+  font-size: 2.8rem;
+  line-height: 1;
+  text-align: center;
+}
+
+.introTitle {
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin: 0;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.introParagraph {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+.keyPoints {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.keyPoint {
+  font-size: 0.83rem;
+  font-weight: 800;
+  color: var(--selected-dark);
+  background: var(--selected-extra-light);
+  border-radius: 8px;
+  padding: 6px 12px;
+
+  &::before {
+    content: '• ';
+  }
+}
+
+// ── Result hero ───────────────────────────────────────────────
+.resultHero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0 16px;
+  text-align: center;
+}
+
+.resultHeadline {
+  font-size: 1.4rem;
+  font-weight: 900;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.resultScore {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.resultScoreNumber {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: var(--selected);
+  line-height: 1;
+}
+
+.resultScoreOf {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--text-secondary);
+}
+
+.resultPct {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+// ── Result breakdown ──────────────────────────────────────────
+.resultBreakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

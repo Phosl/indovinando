@@ -1,0 +1,216 @@
+.page {
+  min-height: 100dvh;
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--background);
+  padding-bottom: 32px;
+}
+
+// ── Header ────────────────────────────────────────────────────
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--foreground);
+  border-bottom: 2px solid var(--button-secondary-border);
+  flex-shrink: 0;
+}
+
+.backButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 2px solid var(--button-secondary-border);
+  background: var(--background);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-primary);
+
+  &:hover {
+    background: var(--button-secondary-hover);
+  }
+}
+
+.headerTitle {
+  font-weight: 900;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+// ── Level hero ────────────────────────────────────────────────
+.levelHero {
+  padding: 28px 20px 20px;
+  text-align: center;
+}
+
+.levelEmoji {
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.levelTitle {
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin: 0 0 6px;
+  color: var(--text-primary);
+}
+
+.levelDesc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.5;
+}
+
+// ── Lesson path ───────────────────────────────────────────────
+.path {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 24px 16px;
+}
+
+.pathItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.connector {
+  width: 3px;
+  height: 24px;
+  background: var(--gray-light);
+  border-radius: 999px;
+  margin: 2px 0;
+  transition: background 0.3s;
+
+  &.connectorDone {
+    background: var(--accept);
+  }
+}
+
+// ── Lesson card ───────────────────────────────────────────────
+.lessonCard {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 2px solid var(--button-secondary-border);
+  background: var(--foreground);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  user-select: none;
+
+  &.lessonCurrent {
+    border-color: var(--selected);
+    box-shadow: 0 2px 12px rgba(131, 59, 172, 0.14);
+
+    &:hover {
+      box-shadow: 0 4px 18px rgba(131, 59, 172, 0.22);
+    }
+  }
+
+  &.lessonCompleted {
+    border-color: var(--accept);
+    background: var(--success-surface);
+
+    &:hover {
+      box-shadow: 0 2px 10px rgba(46, 199, 72, 0.2);
+    }
+  }
+
+  &.lessonLocked {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.lessonIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  border: 2px solid var(--button-secondary-border);
+
+  .lessonCompleted & {
+    background: var(--accept);
+    border-color: var(--accept);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 900;
+  }
+
+  .lessonCurrent & {
+    background: var(--selected-extra-light);
+    border-color: var(--selected);
+  }
+}
+
+.lessonBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lessonMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lessonOrder {
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.lessonScore {
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: var(--accept-dark);
+  background: var(--success-surface);
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+
+.lessonTitle {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lessonArrow {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+
+  .lessonCurrent & {
+    color: var(--selected);
+  }
+
+  .lessonCompleted & {
+    color: var(--accept-dark);
+  }
+}

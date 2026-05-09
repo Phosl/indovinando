@@ -1,0 +1,195 @@
+.page {
+  min-height: 100dvh;
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--background);
+  padding-bottom: 32px;
+}
+
+// ── Header ────────────────────────────────────────────────────
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--foreground);
+  border-bottom: 2px solid var(--button-secondary-border);
+  flex-shrink: 0;
+}
+
+.backButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 2px solid var(--button-secondary-border);
+  background: var(--background);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-primary);
+
+  &:hover {
+    background: var(--button-secondary-hover);
+  }
+}
+
+.headerTitle {
+  font-weight: 900;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+// ── Hero ──────────────────────────────────────────────────────
+.hero {
+  padding: 32px 20px 24px;
+  text-align: center;
+}
+
+.heroEmoji {
+  font-size: 3.5rem;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.heroTitle {
+  font-size: clamp(1.6rem, 5vw, 2rem);
+  font-weight: 900;
+  margin: 0 0 8px;
+  color: var(--text-primary);
+}
+
+.heroSubtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin: 0;
+  max-width: 340px;
+  margin-inline: auto;
+  line-height: 1.5;
+}
+
+// ── LevelCards ───────────────────────────────────────────────
+.levels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 16px;
+}
+
+.levelCard {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  user-select: none;
+
+  &:hover:not(.locked) {
+    border-color: var(--selected);
+    box-shadow: 0 2px 12px rgba(131, 59, 172, 0.12);
+  }
+
+  &.locked {
+    opacity: 0.55;
+    cursor: default;
+  }
+}
+
+.levelEmoji {
+  font-size: 2.2rem;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.levelInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.levelMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.levelOrder {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.levelBadge {
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: var(--accept-dark);
+  background: var(--success-surface);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.levelTitle {
+  font-size: 1rem;
+  font-weight: 900;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.levelDesc {
+  font-size: 0.83rem;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.progressRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.progressBar {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--gray-light);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--selected);
+  transition: width 0.4s ease;
+  min-width: 4px;
+}
+
+.progressText {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.lockHint {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  margin: 4px 0 0;
+  font-weight: 600;
+}
