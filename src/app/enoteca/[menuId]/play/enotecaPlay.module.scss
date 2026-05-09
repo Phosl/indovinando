@@ -1,0 +1,320 @@
+.page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--background);
+  max-width: 560px;
+  margin: 0 auto;
+  user-select: none;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+// ─── Top bar ──────────────────────────────────────────────
+.topBar {
+  background: var(--foreground);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  padding: 12px 16px 0;
+}
+
+.topBarMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.topBarMenu {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 60%;
+}
+
+.topBarProgress {
+  font-size: 12px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.progressBar {
+  height: 4px;
+  background: var(--gray-light);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--selected);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+// ─── Question area ────────────────────────────────────────
+.questionArea {
+  flex: 1;
+  padding: 24px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.questionCounter {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.questionText {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+// ─── Options ─────────────────────────────────────────────
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.option {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: border-color 0.15s, background 0.15s;
+  color: var(--text-primary);
+  line-height: 1.4;
+  will-change: border-color, background;
+
+  &:hover {
+    border-color: var(--selected-light);
+  }
+}
+
+.optionSelected {
+  border-color: var(--selected);
+  background: var(--selected-extra-light);
+  color: var(--selected-dark);
+  font-weight: 600;
+}
+
+.optionCorrect {
+  border-color: var(--accept-dark);
+  background: var(--success-surface);
+  color: var(--accept-dark);
+  font-weight: 600;
+}
+
+.optionWrong {
+  border-color: var(--danger-border);
+  background: var(--danger-surface);
+  color: var(--danger-text);
+}
+
+// ─── Footer ──────────────────────────────────────────────
+.footer {
+  padding: 16px;
+  background: var(--foreground);
+  border-top: 1px solid var(--button-secondary-border);
+}
+
+.btnPrimary {
+  background: var(--selected);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  width: 100%;
+  transition: background 0.15s, opacity 0.15s;
+
+  &:hover:not(:disabled) {
+    background: var(--selected-dark);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+// ─── Reveal screen ────────────────────────────────────────
+.reveal {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0 0 24px;
+  flex: 1;
+}
+
+.revealHeader {
+  background: linear-gradient(135deg, #3d1760 0%, #6b2f8e 100%);
+  color: #fff;
+  padding: 28px 20px 24px;
+  text-align: center;
+}
+
+.revealIcon {
+  font-size: 36px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.revealBadge {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+.revealTitle {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+
+.revealProducer {
+  font-size: 15px;
+  opacity: 0.85;
+  margin: 0 0 8px;
+}
+
+.revealMeta {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 6px 0;
+
+  span {
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 3px 10px;
+    opacity: 0.9;
+  }
+}
+
+.revealDescription {
+  font-size: 13px;
+  opacity: 0.8;
+  line-height: 1.5;
+  margin: 10px 0 0;
+}
+
+.revealScore {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--foreground);
+  border-bottom: 1px solid var(--button-secondary-border);
+}
+
+.revealScoreValue {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accept-dark);
+}
+
+.revealScoreLabel {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.revealAnswers {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.revealAnswer {
+  border-radius: 10px;
+  padding: 12px 14px;
+  border: 1.5px solid;
+}
+
+.revealCorrect {
+  border-color: var(--accept-dark);
+  background: var(--success-surface);
+}
+
+.revealWrong {
+  border-color: var(--danger-border);
+  background: var(--danger-surface);
+}
+
+.revealQuestion {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.revealYourAnswer {
+  font-size: 13px;
+  color: var(--danger-text);
+  margin: 0 0 2px;
+  text-decoration: line-through;
+}
+
+.revealYourLabel {
+  font-weight: 600;
+}
+
+.revealCorrectAnswer {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accept-dark);
+  margin: 0;
+}
+
+.revealCorrectLabel {
+  font-weight: 700;
+}
+
+// ─── Loading ──────────────────────────────────────────────
+.loading {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.loadingSpinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--gray-light);
+  border-top-color: var(--selected);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

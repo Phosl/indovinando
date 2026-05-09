@@ -1,0 +1,156 @@
+.page {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: var(--background);
+}
+
+.card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--foreground);
+  border-radius: 16px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.header {
+  background: linear-gradient(135deg, #3d1760 0%, #6b2f8e 100%);
+  padding: 32px 24px;
+  text-align: center;
+  color: #fff;
+}
+
+.wineBadge {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.menuName {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.location {
+  font-size: 13px;
+  opacity: 0.8;
+  margin: 0 0 8px;
+}
+
+.description {
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.bottleCount {
+  font-size: 13px;
+  opacity: 0.75;
+  margin: 8px 0 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form,
+.resumeSection {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  input {
+    border: 1.5px solid var(--button-secondary-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 15px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.15s;
+
+    &:focus {
+      outline: none;
+      border-color: var(--selected);
+    }
+  }
+}
+
+.error {
+  color: var(--danger-text);
+  background: var(--danger-surface);
+  border: 1px solid var(--danger-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  margin: 0;
+}
+
+.resumeText {
+  font-size: 15px;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.btnPrimary {
+  background: var(--selected);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  width: 100%;
+
+  &:hover:not(:disabled) {
+    background: var(--selected-dark);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btnSecondary {
+  background: none;
+  color: var(--text-secondary);
+  border: 1.5px solid var(--button-secondary-border);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  touch-action: manipulation;
+  width: 100%;
+
+  &:hover {
+    background: var(--button-secondary-hover);
+  }
+}
+
+.loading {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 16px;
+}
