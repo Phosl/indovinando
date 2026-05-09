@@ -2,8 +2,95 @@
   "id": "level-1-lesson-1",
   "levelId": "level-1",
   "order": 1,
-  "title": "Cosa è il vino?",
+  "title": "I tipi di vino",
   "emoji": "🍷",
+  "intro": {
+    "title": "Rosso, bianco o rosé?",
+    "paragraphs": [
+      "Il vino si divide principalmente in tre grandi categorie: rosso, bianco e rosé. Non si tratta solo di colore — ogni tipo ha caratteristiche diverse di profumo, struttura e abbinamento.",
+      "Il colore dipende sia dall’uva usata sia, soprattutto, da come viene lavorata in cantina. Non esiste un tipo migliore degli altri: la scelta giusta è quella che piace a te."
+    ],
+    "keyPoints": [
+      "🔴 Rosso: uva a bacca rossa, fermentato con le bucce",
+      "⚪ Bianco: senza contatto con le bucce (anche da uve rosse)",
+      "🌸 Rosé: breve contatto tra succo e bucce rosse"
+    ]
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "text": "Quali sono i tre tipi principali di vino?",
+      "options": [
+        {"id": "a", "text": "🍷 Rosso, bianco, rosé"},
+        {"id": "b", "text": "Dolce, secco, amaro"},
+        {"id": "c", "text": "Forte, medio, leggero"}
+      ],
+      "correctId": "a",
+      "feedback": {
+        "correct": "Esatto! Rosso, bianco e rosé sono le tre grandi categorie del vino.",
+        "wrong": "Dolce/secco e forte/leggero descrivono il gusto, non la categoria. Le categorie sono rosso, bianco e rosé."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "true_false",
+      "text": "Il colore del vino dipende solo dal tipo di uva.",
+      "options": [
+        {"id": "vero", "text": "Vero"},
+        {"id": "falso", "text": "Falso"}
+      ],
+      "correctId": "falso",
+      "feedback": {
+        "correct": "Giusto! Il colore è determinato sia dall’uva sia — soprattutto — dalla lavorazione in cantina.",
+        "wrong": "Non solo l’uva: è il contatto (o la mancanza) con le bucce durante la vinificazione a definire il colore."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "multiple_choice",
+      "text": "Quale vino è generalmente più leggero e fresco?",
+      "options": [
+        {"id": "a", "text": "Rosso"},
+        {"id": "b", "text": "Bianco ☃️"},
+        {"id": "c", "text": "Rosé"}
+      ],
+      "correctId": "b",
+      "feedback": {
+        "correct": "Sì! I bianchi, senza tannini e spesso più acidi, sono generalmente più leggeri e rinfrescanti.",
+        "wrong": "In genere il vino bianco è il più leggero: senza tannini e con alta acidità, risulta fresco e facile da bere."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "text": "Come si ottiene il rosé?",
+      "options": [
+        {"id": "a", "text": "🌸 Breve contatto tra succo e bucce di uve rosse"},
+        {"id": "b", "text": "Mescolando vino rosso e vino bianco"},
+        {"id": "c", "text": "Usando un’uva di colore rosa"}      ],
+      "correctId": "a",
+      "feedback": {
+        "correct": "Esatto! Poche ore di macerazione con le bucce danno al rosé il suo colore tenue.",
+        "wrong": "Il rosé non è un mix: si ottiene con un brevissimo contatto (ore, non giorni) tra il succo e le bucce di uve rosse."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "true_false",
+      "text": "Esiste un tipo di vino oggettivamente migliore degli altri.",
+      "options": [
+        {"id": "vero", "text": "Vero"},
+        {"id": "falso", "text": "Falso"}
+      ],
+      "correctId": "falso",
+      "feedback": {
+        "correct": "Giusto! Il vino è soggettivo: il migliore è quello che piace a te in quel momento e con quel cibo.",
+        "wrong": "Non esiste un vino migliore in assoluto. Rosso, bianco e rosé hanno ognuno il suo contesto ideale."
+      }
+    }
+  ]
+}
   "intro": {
     "title": "Cominciamo dalle basi",
     "paragraphs": [

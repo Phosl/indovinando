@@ -2,8 +2,96 @@
   "id": "level-1-lesson-2",
   "levelId": "level-1",
   "order": 2,
-  "title": "Dal vigneto alla bottiglia",
-  "emoji": "🍾",
+  "title": "Come si fa il vino",
+  "emoji": "⚗️",
+  "intro": {
+    "title": "Dalla vigna alla bottiglia",
+    "paragraphs": [
+      "Il vino nasce grazie a un processo naturale chiamato fermentazione alcolica: i lieviti presenti sulle bucce dell’uva trasformano gli zuccheri del succo in alcol etilico e anidride carbonica.",
+      "Dopo la fermentazione segue l’affinamento — in acciaio, cemento o legno — che arrotonda i sapori e integra la struttura del vino prima dell’imbottigliamento."
+    ],
+    "keyPoints": [
+      "🍇 Vendemmia → pigiatura → fermentazione",
+      "🧫 Lieviti: trasformano zucchero → alcol + CO₂",
+      "🪵 Affinamento: acciaio, legno o cemento"
+    ]
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "text": "Cos'è la fermentazione alcolica?",
+      "options": [
+        {"id": "a", "text": "Trasformazione degli zuccheri in alcol"},
+        {"id": "b", "text": "Pressatura dell’uva in cantina"},
+        {"id": "c", "text": "Filtrazione del vino prima dell’imbottigliamento"}
+      ],
+      "correctId": "a",
+      "feedback": {
+        "correct": "Esatto! I lieviti convertono gli zuccheri dell’uva in alcol etilico e CO₂.",
+        "wrong": "La fermentazione è il processo in cui i lieviti trasformano gli zuccheri dell’uva in alcol. Non è la pressatura né la filtrazione."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "true_false",
+      "text": "Il vino nasce senza processi naturali: è tutto artificiale.",
+      "options": [
+        {"id": "vero", "text": "Vero"},
+        {"id": "falso", "text": "Falso"}
+      ],
+      "correctId": "falso",
+      "feedback": {
+        "correct": "Giusto! La fermentazione è un processo del tutto naturale, guidato da lieviti che vivono sulle bucce dell’uva.",
+        "wrong": "Al contrario: la fermentazione è uno dei processi naturali più antichi che l’uomo conosca."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "multiple_choice",
+      "text": "Cosa succede agli zuccheri dell’uva durante la fermentazione?",
+      "options": [
+        {"id": "a", "text": "Scompaiono senza lasciare traccia"},
+        {"id": "b", "text": "🧫 Si trasformano in alcol e CO₂"},
+        {"id": "c", "text": "Si trasformano in acqua"}
+      ],
+      "correctId": "b",
+      "feedback": {
+        "correct": "Corretto! I lieviti ‘mangiano’ gli zuccheri e producono alcol etilico e anidride carbonica.",
+        "wrong": "Gli zuccheri vengono convertiti dai lieviti in alcol etilico (che rimane nel vino) e CO₂ (che evapora)."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "text": "Chi è il protagonista della fermentazione?",
+      "options": [
+        {"id": "a", "text": "🧫 Lieviti"},
+        {"id": "b", "text": "La luce solare"},
+        {"id": "c", "text": "La bottiglia di vetro"}
+      ],
+      "correctId": "a",
+      "feedback": {
+        "correct": "Esatto! I lieviti sono funghi microscopici. Senza di loro non esiste il vino.",
+        "wrong": "Sono i lieviti! Questi funghi unicellulari vivono naturalmente sulle bucce dell’uva e avviano la fermentazione."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "true_false",
+      "text": "Il tipo di fermentazione (durata, temperatura) influisce sul vino finale.",
+      "options": [
+        {"id": "vero", "text": "Vero"},
+        {"id": "falso", "text": "Falso"}
+      ],
+      "correctId": "vero",
+      "feedback": {
+        "correct": "Sì! Temperatura, durata e tipo di contenitore durante la fermentazione cambiano profondamente il carattere del vino.",
+        "wrong": "In realtà è fondamentale: fermentare a bassa temperatura, per esempio, preserva aromi delicati e freschi."
+      }
+    }
+  ]
+}
   "intro": {
     "title": "Il viaggio dell'uva",
     "paragraphs": [
