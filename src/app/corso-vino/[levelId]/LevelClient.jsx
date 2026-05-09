@@ -75,11 +75,7 @@ export default function LevelClient({level, levelIndex, levels, lessons}) {
                   </div>
                   <span className={styles.lessonTitle}>{lesson.title}</span>
                 </div>
-                {!isLocked && (
-                  <div className={styles.lessonArrow}>
-                    {isCompleted ? '↺' : '▶'}
-                  </div>
-                )}
+                {!isLocked && <div className={styles.lessonArrow}>{isCompleted ? '↺' : '▶'}</div>}
               </div>
             </div>
           )

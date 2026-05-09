@@ -202,7 +202,9 @@
   text-decoration: none;
   color: inherit;
   box-shadow: 0px 4px 0px 0px rgba(131, 59, 172, 0.25);
-  transition: box-shadow 0.15s, transform 0.1s;
+  transition:
+    box-shadow 0.15s,
+    transform 0.1s;
 
   &:hover {
     box-shadow: 0px 6px 0px 0px rgba(131, 59, 172, 0.3);
@@ -268,7 +270,9 @@
   text-decoration: none;
   color: inherit;
   box-shadow: 0px 4px 0px 0px rgba(131, 59, 172, 0.25);
-  transition: box-shadow 0.15s, transform 0.1s;
+  transition:
+    box-shadow 0.15s,
+    transform 0.1s;
 
   &:hover {
     box-shadow: 0px 6px 0px 0px rgba(131, 59, 172, 0.3);

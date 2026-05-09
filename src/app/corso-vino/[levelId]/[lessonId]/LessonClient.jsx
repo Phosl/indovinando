@@ -6,10 +6,12 @@ import {useRouter} from 'next/navigation'
 import pStyles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
 import xStyles from './lesson.module.scss'
 import {useWineCourseProgress} from '../../hooks/useWineCourseProgress'
+import {useGameAudio} from '../../../live/session/[sessionId]/play/hooks/useGameAudio'
 
 export default function LessonClient({level, lesson}) {
   const router = useRouter()
   const {completeLesson} = useWineCourseProgress()
+  const {audioEnabled, toggleAudio, playSound} = useGameAudio()
 
   // 'intro' | 'question' | 'result'
   const [screen, setScreen] = useState('intro')
@@ -29,11 +31,12 @@ export default function LessonClient({level, lesson}) {
     if (!selectedId || checked) return
     const correct = selectedId === correctId
     setChecked(true)
+    playSound(correct ? 'correct' : 'wrong')
     setAnswers((prev) => [
       ...prev,
       {questionId: currentQuestion.id, selectedId, isCorrect: correct},
     ])
-  }, [selectedId, checked, correctId, currentQuestion])
+  }, [selectedId, checked, correctId, currentQuestion, playSound])
 
   const handleContinue = useCallback(() => {
     if (!isLastQuestion) {
@@ -79,6 +82,9 @@ export default function LessonClient({level, lesson}) {
             <span className={pStyles.nickname}>{level.title}</span>
           </div>
           <div className={pStyles.topActions}>
+            <button className={pStyles.audioButton} onClick={toggleAudio}>
+              {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+            </button>
             <button
               className={pStyles.exitButton}
               onClick={() => router.push(`/corso-vino/${level.id}`)}
@@ -169,7 +175,9 @@ export default function LessonClient({level, lesson}) {
                       ) : (
                         <>
                           <span className={pStyles.summaryWrong}>
-                            ❌ {q.options.find((o) => o.id === ans?.selectedId)?.text ?? 'Non risposto'}
+                            ❌{' '}
+                            {q.options.find((o) => o.id === ans?.selectedId)?.text ??
+                              'Non risposto'}
                           </span>
                           <span className={pStyles.summaryCorrectHint}>
                             Risposta corretta: {q.options.find((o) => o.id === q.correctId)?.text}
@@ -235,6 +243,9 @@ export default function LessonClient({level, lesson}) {
           ))}
         </div>
         <div className={pStyles.topActions}>
+          <button className={pStyles.audioButton} onClick={toggleAudio}>
+            {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+          </button>
           <button
             className={pStyles.exitButton}
             onClick={() => router.push(`/corso-vino/${level.id}`)}
@@ -277,11 +288,7 @@ export default function LessonClient({level, lesson}) {
 
       <div
         className={`${pStyles.bottomPanel} ${!checked ? pStyles.mobileCheckFixed : ''} ${
-          checked
-            ? isCorrect
-              ? pStyles.bottomCorrect
-              : pStyles.bottomWrong
-            : ''
+          checked ? (isCorrect ? pStyles.bottomCorrect : pStyles.bottomWrong) : ''
         }`}>
         {checked && (
           <div className={pStyles.resultFeedback}>
@@ -291,10 +298,7 @@ export default function LessonClient({level, lesson}) {
         )}
 
         {!checked ? (
-          <button
-            className={pStyles.continueButton}
-            disabled={!selectedId}
-            onClick={handleCheck}>
+          <button className={pStyles.continueButton} disabled={!selectedId} onClick={handleCheck}>
             Verifica
           </button>
         ) : (

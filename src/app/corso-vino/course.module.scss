@@ -90,7 +90,9 @@
   display: flex;
   gap: 14px;
   align-items: flex-start;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
   user-select: none;
 
   &:hover:not(.locked) {

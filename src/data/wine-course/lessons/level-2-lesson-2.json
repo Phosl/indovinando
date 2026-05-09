@@ -10,7 +10,11 @@
       "L'Italia vanta oltre 500 varietà di uva autoctone coltivate commercialmente — più di qualsiasi altro paese al mondo. Dal Nebbiolo delle Langhe al Sangiovese della Toscana, ogni regione ha i suoi vitigni identitari.",
       "Conoscere i vitigni è la chiave per capire il carattere di un vino: struttura, profumi, acidità e longevità dipendono innanzitutto dall'uva di partenza, prima ancora del territorio e del produttore."
     ],
-    "keyPoints": ["Nebbiolo → Barolo e Barbaresco (Piemonte)", "Sangiovese → Chianti, Brunello (Toscana)", "Glera → Prosecco (Veneto/Friuli)"]
+    "keyPoints": [
+      "Nebbiolo → Barolo e Barbaresco (Piemonte)",
+      "Sangiovese → Chianti, Brunello (Toscana)",
+      "Glera → Prosecco (Veneto/Friuli)"
+    ]
   },
   "questions": [
     {
@@ -18,10 +22,10 @@
       "type": "multiple_choice",
       "text": "Da quale vitigno si produce il Barolo?",
       "options": [
-        { "id": "a", "text": "Sangiovese" },
-        { "id": "b", "text": "Montepulciano" },
-        { "id": "c", "text": "Nebbiolo" },
-        { "id": "d", "text": "Barbera" }
+        {"id": "a", "text": "Sangiovese"},
+        {"id": "b", "text": "Montepulciano"},
+        {"id": "c", "text": "Nebbiolo"},
+        {"id": "d", "text": "Barbera"}
       ],
       "correctId": "c",
       "feedback": {
@@ -34,10 +38,10 @@
       "type": "multiple_choice",
       "text": "Quale vitigno è la base del Chianti Classico DOCG?",
       "options": [
-        { "id": "a", "text": "Merlot" },
-        { "id": "b", "text": "Sangiovese" },
-        { "id": "c", "text": "Montepulciano" },
-        { "id": "d", "text": "Primitivo" }
+        {"id": "a", "text": "Merlot"},
+        {"id": "b", "text": "Sangiovese"},
+        {"id": "c", "text": "Montepulciano"},
+        {"id": "d", "text": "Primitivo"}
       ],
       "correctId": "b",
       "feedback": {
@@ -50,8 +54,8 @@
       "type": "true_false",
       "text": "Il Pinot Grigio è un vitigno a bacca rossa (grigia) che produce vino bianco.",
       "options": [
-        { "id": "true", "text": "Vero" },
-        { "id": "false", "text": "Falso" }
+        {"id": "true", "text": "Vero"},
+        {"id": "false", "text": "Falso"}
       ],
       "correctId": "true",
       "feedback": {
@@ -64,10 +68,10 @@
       "type": "multiple_choice",
       "text": "Da quale uva si produce il Prosecco DOC/DOCG?",
       "options": [
-        { "id": "a", "text": "Chardonnay" },
-        { "id": "b", "text": "Verdicchio" },
-        { "id": "c", "text": "Glera" },
-        { "id": "d", "text": "Trebbiano" }
+        {"id": "a", "text": "Chardonnay"},
+        {"id": "b", "text": "Verdicchio"},
+        {"id": "c", "text": "Glera"},
+        {"id": "d", "text": "Trebbiano"}
       ],
       "correctId": "c",
       "feedback": {
@@ -80,10 +84,10 @@
       "type": "multiple_choice",
       "text": "Quale vitigno del Sud Italia, tipico della Sicilia, produce vini corposi e ricchi di frutto?",
       "options": [
-        { "id": "a", "text": "Garganega" },
-        { "id": "b", "text": "Vermentino" },
-        { "id": "c", "text": "Nero d'Avola" },
-        { "id": "d", "text": "Fiano" }
+        {"id": "a", "text": "Garganega"},
+        {"id": "b", "text": "Vermentino"},
+        {"id": "c", "text": "Nero d'Avola"},
+        {"id": "d", "text": "Fiano"}
       ],
       "correctId": "c",
       "feedback": {

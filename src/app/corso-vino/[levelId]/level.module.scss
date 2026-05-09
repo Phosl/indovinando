@@ -108,7 +108,9 @@
   border: 2px solid var(--button-secondary-border);
   background: var(--foreground);
   cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
   user-select: none;
 
   &.lessonCurrent {

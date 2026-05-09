@@ -13,7 +13,7 @@ export default function CourseClient({levels}) {
     <div className={styles.page}>
       {/* Header */}
       <div className={styles.header}>
-        <button className={styles.backButton} onClick={() => router.back()} aria-label="Indietro">
+        <button className={styles.backButton} onClick={() => router.push('/dashboard')} aria-label="Torna alla dashboard">
           ←
         </button>
         <span className={styles.headerTitle}>Corso di Vino</span>

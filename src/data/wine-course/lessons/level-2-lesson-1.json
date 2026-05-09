@@ -10,7 +10,11 @@
       "L'Italia ha un sistema di classificazione dei vini che garantisce la loro origine e qualità. Le principali categorie sono IGT (Indicazione Geografica Tipica), DOC (Denominazione di Origine Controllata) e DOCG (Denominazione di Origine Controllata e Garantita).",
       "La DOCG è il livello più selettivo: i vini devono superare una commissione di assaggio e rispettare un disciplinare rigoroso. Oggi l'Italia conta oltre 400 DOC e 77 DOCG, la maggior quantità al mondo."
     ],
-    "keyPoints": ["DOCG > DOC > IGT (in termini di vincoli)", "Disciplinare: regole su uve, resa, affinamento", "77 DOCG italiane (record mondiale)"]
+    "keyPoints": [
+      "DOCG > DOC > IGT (in termini di vincoli)",
+      "Disciplinare: regole su uve, resa, affinamento",
+      "77 DOCG italiane (record mondiale)"
+    ]
   },
   "questions": [
     {
@@ -18,10 +22,10 @@
       "type": "multiple_choice",
       "text": "Cosa significa l'acronimo DOC nel contesto dei vini italiani?",
       "options": [
-        { "id": "a", "text": "Denominazione di Origine Controllata" },
-        { "id": "b", "text": "Denominazione di Origine Certificata" },
-        { "id": "c", "text": "Denominazione di Origine Comune" },
-        { "id": "d", "text": "Divisione di Origine Controllata" }
+        {"id": "a", "text": "Denominazione di Origine Controllata"},
+        {"id": "b", "text": "Denominazione di Origine Certificata"},
+        {"id": "c", "text": "Denominazione di Origine Comune"},
+        {"id": "d", "text": "Divisione di Origine Controllata"}
       ],
       "correctId": "a",
       "feedback": {
@@ -34,10 +38,10 @@
       "type": "multiple_choice",
       "text": "Quale denominazione italiana rappresenta il livello più selettivo e garantito?",
       "options": [
-        { "id": "a", "text": "IGT" },
-        { "id": "b", "text": "DOC" },
-        { "id": "c", "text": "DOCG" },
-        { "id": "d", "text": "VdT (Vino da Tavola)" }
+        {"id": "a", "text": "IGT"},
+        {"id": "b", "text": "DOC"},
+        {"id": "c", "text": "DOCG"},
+        {"id": "d", "text": "VdT (Vino da Tavola)"}
       ],
       "correctId": "c",
       "feedback": {
@@ -50,8 +54,8 @@
       "type": "true_false",
       "text": "I vini IGT hanno regole di produzione più rigide dei vini DOCG.",
       "options": [
-        { "id": "true", "text": "Vero" },
-        { "id": "false", "text": "Falso" }
+        {"id": "true", "text": "Vero"},
+        {"id": "false", "text": "Falso"}
       ],
       "correctId": "false",
       "feedback": {
@@ -64,10 +68,10 @@
       "type": "multiple_choice",
       "text": "In quale regione italiana si produce il Barolo DOCG?",
       "options": [
-        { "id": "a", "text": "Toscana" },
-        { "id": "b", "text": "Veneto" },
-        { "id": "c", "text": "Piemonte" },
-        { "id": "d", "text": "Sicilia" }
+        {"id": "a", "text": "Toscana"},
+        {"id": "b", "text": "Veneto"},
+        {"id": "c", "text": "Piemonte"},
+        {"id": "d", "text": "Sicilia"}
       ],
       "correctId": "c",
       "feedback": {
@@ -80,10 +84,13 @@
       "type": "multiple_choice",
       "text": "Cosa definisce il 'disciplinare' di una denominazione?",
       "options": [
-        { "id": "a", "text": "Il prezzo minimo di vendita del vino" },
-        { "id": "b", "text": "Le regole su uve consentite, resa, affinamento minimo e zona geografica" },
-        { "id": "c", "text": "Il numero massimo di bottiglie producibili" },
-        { "id": "d", "text": "Le norme sull'etichettatura delle bottiglie" }
+        {"id": "a", "text": "Il prezzo minimo di vendita del vino"},
+        {
+          "id": "b",
+          "text": "Le regole su uve consentite, resa, affinamento minimo e zona geografica"
+        },
+        {"id": "c", "text": "Il numero massimo di bottiglie producibili"},
+        {"id": "d", "text": "Le norme sull'etichettatura delle bottiglie"}
       ],
       "correctId": "b",
       "feedback": {
