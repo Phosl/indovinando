@@ -1,5 +1,6 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import AuthEntryClient from '@/components/auth/AuthEntryClient'
 
 export default async function Home() {
   const supabase = await createServerSupabase()
@@ -10,17 +11,5 @@ export default async function Home() {
     redirect('/dashboard')
   }
 
-  return (
-    <main className="flex-container">
-      <div className="flex-column">
-        <h1>Welcome to Indovinando</h1>
-        <p>A simple game to discover wine</p>
-        <div>
-          <a href="/auth" className="primary">
-            Login or Sign Up
-          </a>
-        </div>
-      </div>
-    </main>
-  )
+  return <AuthEntryClient />
 }

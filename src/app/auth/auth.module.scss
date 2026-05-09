@@ -1,0 +1,113 @@
+.page {
+  min-height: 100dvh;
+  background: linear-gradient(180deg, #f4f8ff 0%, #eef9ec 100%);
+  padding: 24px 12px 40px;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  display: grid;
+  gap: 14px;
+}
+
+.heroCard,
+.formCard {
+  background: #fff;
+  border: 1px solid #d8e6d2;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 3px 0 #d3e8c9;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #cfe5bf;
+  background: #f7fff2;
+  color: #2d4a20;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  padding: 6px 10px;
+}
+
+.brand {
+  margin: 10px 0 0;
+  font-size: clamp(1.8rem, 3.8vw, 2.5rem);
+  line-height: 1.05;
+  color: #1f3327;
+}
+
+.tagline {
+  margin: 10px 0 0;
+  color: #62716b;
+  max-width: 65ch;
+}
+
+.quickLinks {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.quickLinks :global(.btn) {
+  width: 100%;
+}
+
+.modeSwitch {
+  background: #f5faf2;
+  border: 1px solid #dbead1;
+  border-radius: 12px;
+  padding: 4px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+.modeButton {
+  border: 0;
+  border-radius: 8px;
+  min-height: 38px;
+  font-weight: 900;
+  color: #5b6b64;
+  background: transparent;
+  cursor: pointer;
+}
+
+.modeButtonActive {
+  background: #fff;
+  color: #21352a;
+  box-shadow: 0 2px 0 #d3e8c9;
+}
+
+.errorMessage {
+  padding: 12px;
+  margin-top: 12px;
+  background-color: #fee;
+  color: #900;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.form {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.input {
+  border: 1px solid #cfddd7;
+  border-radius: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+}
+
+@media (max-width: 640px) {
+  .quickLinks {
+    grid-template-columns: 1fr;
+  }
+}

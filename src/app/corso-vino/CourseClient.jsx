@@ -8,7 +8,7 @@ import {useLanguage} from '@/components/i18n/LanguageProvider'
 
 export default function CourseClient({levels}) {
   const router = useRouter()
-  const {loaded, getLevelCompletedCount} = useWineCourseProgress()
+  const {loaded, userId, getLevelCompletedCount} = useWineCourseProgress()
   const {lang} = useLanguage()
   const isEnglish = lang === 'en'
 
@@ -34,6 +34,22 @@ export default function CourseClient({levels}) {
             : 'Lezioni brevi, quiz interattivi e contenuti accurati. Gratis, senza registrazione.'}
         </p>
       </div>
+
+      {/* {!userId && (
+        <div className={styles.guestWarning}>
+          <div className={styles.guestWarningTitle}>
+            {isEnglish ? 'Guest mode active' : 'Modalita ospite attiva'}
+          </div>
+          <p className={styles.guestWarningText}>
+            {isEnglish
+              ? 'Your course progress is only stored on this device and may be lost.'
+              : 'I progressi del corso sono salvati solo su questo dispositivo e potrebbero andare persi.'}
+          </p>
+          <a href="/?next=/corso-vino" className="btn primary">
+            {isEnglish ? 'Sign up to save progress' : 'Registrati per salvare i progressi'}
+          </a>
+        </div>
+      )} */}
 
       {/* Level list */}
       <div className={styles.levels}>
