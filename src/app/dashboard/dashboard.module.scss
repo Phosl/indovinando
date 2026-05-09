@@ -168,6 +168,28 @@
   transform: translateY(3px);
 }
 
+.enotecaAction {
+  padding: 8px 16px;
+  border-radius: 12px;
+  color: #ffffff;
+  border: 1px solid #6b2f8e;
+  background-color: #6b2f8e;
+  box-shadow: 0px 3px 0px 0px #3d1760;
+  font-weight: 900;
+  font-size: 14px;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  &:active {
+    box-shadow: none;
+    transform: translateY(3px);
+  }
+}
+
 .emptyState {
   text-align: center;
   padding: 40px;

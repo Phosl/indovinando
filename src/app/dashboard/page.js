@@ -62,6 +62,11 @@ export default async function Dashboard() {
                     <a href={`/game/${game.id}/live`} className={styles.liveAction}>
                       Gioca Live
                     </a>
+                    {game.status === 'published' && (
+                      <a href={`/enoteca/${game.id}`} className={styles.enotecaAction}>
+                        🍷 Enoteca
+                      </a>
+                    )}
                     <a href={`/game/${game.id}/print`} className="btn secondary">
                       Stampa Scheda
                     </a>

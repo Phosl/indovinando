@@ -12,7 +12,7 @@ const CHANGELOG = [
     label: 'Performance & UX',
     changes: [
       'React.memo su tutti i componenti presentazionali per ridurre i re-render',
-      'Classifica nell\'overlay aggiornata ogni 3 secondi mentre è aperta',
+      "Classifica nell'overlay aggiornata ogni 3 secondi mentre è aperta",
       'Supporto tasto Invio per Controlla e Continua da tastiera',
       'Ottimizzazioni CSS mobile: touch-action, overscroll-behavior, will-change, -webkit-tap-highlight-color',
       'Pagina classifica finale mobile-first (max 640px, podio a colonna singola su small screen)',
@@ -26,7 +26,7 @@ const CHANGELOG = [
     label: 'Risultati e Classifica Live',
     changes: [
       'Sezione "🏆 Classifica Live" nei risultati bottiglia con proiezione punteggi e badge +N verde',
-      'Fix double-count: snapshot dei punteggi congelato all\'apertura di ogni bottiglia',
+      "Fix double-count: snapshot dei punteggi congelato all'apertura di ogni bottiglia",
       'Badge "tu" inline viola per il giocatore corrente nella classifica',
       'Riga risposta con colore di sfondo e bordo sinistro colorato (verde corretto, rosso errato)',
       'Punti visualizzati come pill verde (+25 🔥 se combo)',
@@ -40,7 +40,7 @@ const CHANGELOG = [
     label: 'Multiplayer — Funzionalità sociali',
     changes: [
       'Indicatore di progresso: "X/N giocatori pronti..." nella schermata risultati',
-      'Kick player: l\'host può rimuovere un giocatore dalla partita dal pannello classifica',
+      "Kick player: l'host può rimuovere un giocatore dalla partita dal pannello classifica",
       'Auto-reconnect: il giocatore che rientra viene reindirizzato direttamente al gioco se già in sessione',
       'Pulizia automatica sessioni terminate da più di 24 ore',
       'Polling fallback live_sessions ogni 3s nel client (copertura se Realtime non è attivo)',
@@ -66,7 +66,7 @@ const CHANGELOG = [
       'Toast animato 🔥💥⚡️🤯 alla conquista di un combo',
       'Reveal bottiglia alla fine del round (nome, produttore, annata)',
       'Riepilogo risposte per domanda con esito corretto/errato',
-      'Schermata di transizione con coriandoli tra una bottiglia e l\'altra',
+      "Schermata di transizione con coriandoli tra una bottiglia e l'altra",
       'Sheet di uscita con modal di conferma',
       'Suoni audio: risposta corretta, errata, bottiglia completata (toggle ON/OFF)',
     ],
@@ -95,7 +95,7 @@ const LABEL_COLORS = {
   'Multiplayer — Funzionalità sociali': '#d97706',
   'Stabilità Realtime': '#dc2626',
   'Gameplay & UX': '#16a34a',
-  'Launch': '#374151',
+  Launch: '#374151',
 }
 
 export default function ChangelogPage() {
