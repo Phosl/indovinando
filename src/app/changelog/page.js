@@ -1,4 +1,4 @@
-import styles from './changelog.module.css'
+import styles from './changelog.module.scss'
 
 export const metadata = {
   title: 'Changelog — Indovinando',
