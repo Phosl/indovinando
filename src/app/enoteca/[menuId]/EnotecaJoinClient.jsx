@@ -53,7 +53,7 @@ export default function EnotecaJoinClient({
     const { data: session, error: err } = await supabaseClient
       .from('enoteca_tasting_sessions')
       .insert({
-        menu_id: menuId,
+        game_id: menuId,
         nickname: trimmed,
         table_name: tableName.trim() || null,
       })
@@ -61,6 +61,7 @@ export default function EnotecaJoinClient({
       .single()
 
     if (err || !session) {
+      console.error('enoteca insert session error:', err)
       setError("Errore durante l'avvio. Riprova.")
       setLoading(false)
       return
