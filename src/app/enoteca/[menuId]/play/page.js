@@ -1,13 +1,13 @@
-import { createServerSupabase } from '@/lib/supabaseServer'
-import { notFound } from 'next/navigation'
+import {createServerSupabase} from '@/lib/supabaseServer'
+import {notFound} from 'next/navigation'
 import EnotecaPlayClient from './EnotecaPlayClient'
 
-export default async function EnotecaPlayPage({ params }) {
-  const { menuId: gameId } = await params
+export default async function EnotecaPlayPage({params}) {
+  const {menuId: gameId} = await params
   const supabase = await createServerSupabase()
 
   // Usa la tabella games esistente
-  const { data: game } = await supabase
+  const {data: game} = await supabase
     .from('games')
     .select('id, name, status')
     .eq('id', gameId)
@@ -16,7 +16,7 @@ export default async function EnotecaPlayPage({ params }) {
   if (!game || game.status !== 'published') notFound()
 
   // Bottiglie ordinate
-  const { data: bottles } = await supabase
+  const {data: bottles} = await supabase
     .from('game_bottles')
     .select('id, name, producer, year, bottle_order, game_bottle_answers(question_id, option_id)')
     .eq('game_id', gameId)
@@ -25,7 +25,7 @@ export default async function EnotecaPlayPage({ params }) {
   if (!bottles?.length) notFound()
 
   // Domande + opzioni (per gioco, non per bottiglia)
-  const { data: rawQuestions } = await supabase
+  const {data: rawQuestions} = await supabase
     .from('game_questions')
     .select('id, text, display_order, game_question_options(id, text, option_order)')
     .eq('game_id', gameId)
@@ -45,7 +45,7 @@ export default async function EnotecaPlayPage({ params }) {
     bottle_order: b.bottle_order,
     // mappa question_id → correct option_id
     correctAnswers: Object.fromEntries(
-      (b.game_bottle_answers ?? []).map((a) => [a.question_id, a.option_id])
+      (b.game_bottle_answers ?? []).map((a) => [a.question_id, a.option_id]),
     ),
   }))
 

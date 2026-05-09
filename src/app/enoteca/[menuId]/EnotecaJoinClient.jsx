@@ -1,9 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabaseClient } from '@/lib/supabaseClient'
-import styles from './enotecaJoin.module.scss'
+import {useState, useEffect} from 'react'
+import {useRouter} from 'next/navigation'
+import {supabaseClient} from '@/lib/supabaseClient'
+// Shared layout from live game – same header/button system as play & results
+import styles from '../../live/session/[sessionId]/play/playerLive.module.scss'
+import xStyles from './enotecaJoin.module.scss'
 
 export default function EnotecaJoinClient({
   menuId,
@@ -22,35 +24,36 @@ export default function EnotecaJoinClient({
 
   const sessionKey = `enoteca_session_${menuId}`
 
-  // On mount: check if player already has a session saved
   useEffect(() => {
     const savedId = localStorage.getItem(sessionKey)
-    if (!savedId) { setCheckingSession(false); return }
-
+    if (!savedId) {
+      setCheckingSession(false)
+      return
+    }
     supabaseClient
       .from('enoteca_tasting_sessions')
       .select('id, nickname, current_bottle_index, status')
       .eq('id', savedId)
       .single()
-      .then(({ data }) => {
+      .then(({data}) => {
         if (data) setExistingSession(data)
         setCheckingSession(false)
       })
   }, [sessionKey])
 
-  const handleResume = () => {
-    router.push(`/enoteca/${menuId}/play`)
-  }
+  const handleResume = () => router.push(`/enoteca/${menuId}/play`)
 
   const handleStart = async (e) => {
     e.preventDefault()
     const trimmed = nickname.trim()
-    if (!trimmed) { setError('Inserisci un nickname'); return }
-
+    if (!trimmed) {
+      setError('Inserisci un nickname')
+      return
+    }
     setError(null)
     setLoading(true)
 
-    const { data: session, error: err } = await supabaseClient
+    const {data: session, error: err} = await supabaseClient
       .from('enoteca_tasting_sessions')
       .insert({
         game_id: menuId,
@@ -72,38 +75,60 @@ export default function EnotecaJoinClient({
   }
 
   if (checkingSession) {
-    return <div className={styles.loading}>Caricamento…</div>
+    return (
+      <div className={styles.fullPage} style={{alignItems: 'center', justifyContent: 'center'}}>
+        <p className={styles.readyHint}>Caricamento…</p>
+      </div>
+    )
   }
 
+  const hasActiveSession = existingSession && existingSession.status !== 'completed'
+
   return (
-    <div className={styles.page}>
-      <div className={styles.card}>
-        <div className={styles.header}>
-          <span className={styles.wineBadge}>🍷</span>
-          <h1 className={styles.menuName}>{menuName}</h1>
-          {menuLocation && <p className={styles.location}>{menuLocation}</p>}
-          {menuDescription && <p className={styles.description}>{menuDescription}</p>}
-          <p className={styles.bottleCount}>{bottleCount} {bottleCount === 1 ? 'bottiglia' : 'bottiglie'}</p>
+    <div className={styles.fullPage}>
+      {/* ── TopBar – consistent across all enoteca pages ── */}
+      <div className={styles.topBar}>
+        <div className={styles.playerInfo}>
+          <span className={styles.avatar}>🍷</span>
+          <span className={styles.nickname}>Enoteca</span>
+        </div>
+        <div className={styles.topActions}>
+          <button
+            className={styles.exitButton}
+            onClick={() => router.push('/')}
+            aria-label="Torna alla home">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.slideContent}>
+        {/* Event info card */}
+        <div className={xStyles.infoCard}>
+          <span className={xStyles.wineBadge}>🍷</span>
+          <h1 className={xStyles.menuName}>{menuName}</h1>
+          {menuLocation && <p className={xStyles.location}>📍 {menuLocation}</p>}
+          {menuDescription && <p className={xStyles.description}>{menuDescription}</p>}
+          <span className={xStyles.bottleCount}>
+            {bottleCount} {bottleCount === 1 ? 'bottiglia' : 'bottiglie'}
+          </span>
         </div>
 
-        {existingSession && existingSession.status !== 'completed' ? (
-          <div className={styles.resumeSection}>
-            <p className={styles.resumeText}>
-              Bentornato/a, <strong>{existingSession.nickname}</strong>! Hai una degustazione in corso.
+        {/* Resume banner */}
+        {hasActiveSession && (
+          <div className={xStyles.resumeCard}>
+            <span className={xStyles.resumeTitle}>Sessione in corso</span>
+            <p className={xStyles.resumeText}>
+              Bentornato/a, <strong>{existingSession.nickname}</strong>! Hai una degustazione in
+              corso.
             </p>
-            <button className={styles.btnPrimary} onClick={handleResume}>
-              Riprendi degustazione
-            </button>
-            <button
-              className={styles.btnSecondary}
-              onClick={() => { localStorage.removeItem(sessionKey); setExistingSession(null) }}
-            >
-              Inizia una nuova sessione
-            </button>
           </div>
-        ) : (
-          <form className={styles.form} onSubmit={handleStart}>
-            <div className={styles.field}>
+        )}
+
+        {/* Form – only if no active session */}
+        {!hasActiveSession && (
+          <form className={xStyles.form} onSubmit={handleStart}>
+            <div className={xStyles.field}>
               <label htmlFor="nickname">Nickname *</label>
               <input
                 id="nickname"
@@ -113,10 +138,11 @@ export default function EnotecaJoinClient({
                 onChange={(e) => setNickname(e.target.value)}
                 maxLength={40}
                 autoComplete="off"
+                autoFocus
                 required
               />
             </div>
-            <div className={styles.field}>
+            <div className={xStyles.field}>
               <label htmlFor="table">Tavolo (opzionale)</label>
               <input
                 id="table"
@@ -128,11 +154,39 @@ export default function EnotecaJoinClient({
                 autoComplete="off"
               />
             </div>
-            {error && <p className={styles.error}>{error}</p>}
-            <button className={styles.btnPrimary} type="submit" disabled={loading}>
-              {loading ? 'Avvio…' : '🍷 Inizia la degustazione'}
-            </button>
+            {error && <p className={xStyles.error}>{error}</p>}
           </form>
+        )}
+      </div>
+
+      {/* ── Bottom panel – consistent across all enoteca pages ── */}
+      <div className={styles.bottomPanel}>
+        {hasActiveSession ? (
+          <>
+            <button className={styles.continueButton} onClick={handleResume}>
+              Riprendi degustazione
+            </button>
+            <button
+              className={styles.secondaryButton}
+              onClick={() => {
+                localStorage.removeItem(sessionKey)
+                setExistingSession(null)
+              }}>
+              Inizia una nuova sessione
+            </button>
+            <button
+              className={styles.secondaryButton}
+              onClick={() => {
+                localStorage.removeItem(sessionKey)
+                router.push('/')
+              }}>
+              Abbandona degustazione
+            </button>
+          </>
+        ) : (
+          <button className={styles.continueButton} disabled={loading} onClick={handleStart}>
+            {loading ? 'Avvio…' : '🍷 Inizia la degustazione'}
+          </button>
         )}
       </div>
     </div>

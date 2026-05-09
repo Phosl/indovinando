@@ -1,22 +1,22 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabaseClient } from '@/lib/supabaseClient'
-import styles from './enotecaResults.module.scss'
+import {useState, useEffect, useMemo} from 'react'
+import {useRouter} from 'next/navigation'
+import {supabaseClient} from '@/lib/supabaseClient'
+import styles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
+import xStyles from './enotecaResults.module.scss'
 
 const stateKey = (bottleId, questionId) => `${bottleId}:${questionId}`
 
-export default function EnotecaResultsClient({ menuId, menuName, bottles, questions }) {
+export default function EnotecaResultsClient({menuId, menuName, bottles, questions}) {
   const router = useRouter()
   const sessionKey = `enoteca_session_${menuId}`
 
   const [session, setSession] = useState(null)
   const [answers, setAnswers] = useState([])
   const [loading, setLoading] = useState(true)
-  const [expandedBottle, setExpandedBottle] = useState(null)
+  const [activeBIdx, setActiveBIdx] = useState(0)
 
-  // { "bottleId:questionId": answer }
   const answersByKey = useMemo(() => {
     const map = {}
     for (const a of answers) map[stateKey(a.bottle_id, a.question_id)] = a
@@ -25,20 +25,25 @@ export default function EnotecaResultsClient({ menuId, menuName, bottles, questi
 
   useEffect(() => {
     const savedId = localStorage.getItem(sessionKey)
-    if (!savedId) { router.replace(`/enoteca/${menuId}`); return }
-
+    if (!savedId) {
+      router.replace(`/enoteca/${menuId}`)
+      return
+    }
     Promise.all([
       supabaseClient
         .from('enoteca_tasting_sessions')
-        .select('id, nickname, table_name, total_score, status, completed_at')
+        .select('id, nickname, table_name, total_score, status')
         .eq('id', savedId)
         .single(),
       supabaseClient
         .from('enoteca_answers')
         .select('bottle_id, question_id, selected_option_id, is_correct, points')
         .eq('tasting_session_id', savedId),
-    ]).then(([{ data: sess }, { data: ans }]) => {
-      if (!sess) { router.replace(`/enoteca/${menuId}`); return }
+    ]).then(([{data: sess}, {data: ans}]) => {
+      if (!sess) {
+        router.replace(`/enoteca/${menuId}`)
+        return
+      }
       setSession(sess)
       setAnswers(ans ?? [])
       setLoading(false)
@@ -47,9 +52,8 @@ export default function EnotecaResultsClient({ menuId, menuName, bottles, questi
 
   if (loading) {
     return (
-      <div className={styles.loading}>
-        <div className={styles.loadingSpinner} />
-        <p>Caricamento risultati…</p>
+      <div className={styles.fullPage} style={{alignItems: 'center', justifyContent: 'center'}}>
+        <p className={styles.readyHint}>Caricamento risultati…</p>
       </div>
     )
   }
@@ -59,102 +63,150 @@ export default function EnotecaResultsClient({ menuId, menuName, bottles, questi
   const totalQuestions = bottles.length * questions.length
   const pct = totalQuestions ? Math.round((totalCorrect / totalQuestions) * 100) : 0
 
-  const handlePlayAgain = () => {
-    localStorage.removeItem(sessionKey)
-    router.push(`/enoteca/${menuId}`)
-  }
+  const activeBottle = bottles[activeBIdx]
+  const bCorrect = questions.filter(
+    (q) => answersByKey[stateKey(activeBottle.id, q.id)]?.is_correct,
+  ).length
+  const bScore = questions.reduce(
+    (sum, q) => sum + (answersByKey[stateKey(activeBottle.id, q.id)]?.points ?? 0),
+    0,
+  )
 
   return (
-    <div className={styles.page}>
-      <div className={styles.hero}>
-        <span className={styles.heroIcon}>🏆</span>
-        <h1 className={styles.heroTitle}>Degustazione completata!</h1>
-        <p className={styles.heroNickname}>{session.nickname}</p>
-        {session.table_name && (
-          <p className={styles.heroTable}>Tavolo: {session.table_name}</p>
-        )}
-      </div>
-
-      <div className={styles.scoreSummary}>
-        <div className={styles.scoreMain}>
-          <span className={styles.scoreValue}>{totalScore}</span>
-          <span className={styles.scoreLabel}>punti</span>
+    <div className={styles.fullPage}>
+      {/* TopBar */}
+      <div className={styles.topBar}>
+        <div className={styles.playerInfo}>
+          <span className={styles.avatar}>🍷</span>
+          <span className={styles.nickname}>{menuName}</span>
         </div>
-        <div className={styles.scoreMeta}>
-          <span className={styles.pct}>{pct}%</span>
-          <span className={styles.pctLabel}>{totalCorrect}/{totalQuestions} corrette</span>
+        <div className={styles.topActions}>
+          <button
+            className={styles.exitButton}
+            onClick={() => router.push('/')}
+            aria-label="Torna alla home">
+            ✕
+          </button>
         </div>
       </div>
 
-      <div className={styles.breakdown}>
-        <h2 className={styles.breakdownTitle}>Dettaglio per bottiglia</h2>
+      <div className={styles.slideContent}>
+        {/* Hero */}
+        <div className={xStyles.heroSection}>
+          <h1 className={xStyles.heroTitle}>🏆 Degustazione completata!</h1>
+          <p className={xStyles.heroNickname}>{session.nickname}</p>
+          {session.table_name && <p className={xStyles.heroTable}>Tavolo: {session.table_name}</p>}
+        </div>
 
-        {bottles.map((bottle, i) => {
-          const bCorrect = questions.filter((q) => answersByKey[stateKey(bottle.id, q.id)]?.is_correct).length
-          const bScore = questions.reduce((sum, q) => sum + (answersByKey[stateKey(bottle.id, q.id)]?.points ?? 0), 0)
-          const isOpen = expandedBottle === bottle.id
+        {/* Score card */}
+        <div className={xStyles.scoreCard}>
+          <div className={xStyles.scoreMain}>
+            <span className={xStyles.scoreValue}>{totalScore}</span>
+            <span className={xStyles.scoreLabel}>punti</span>
+          </div>
+          <div className={xStyles.scoreDivider} />
+          <div className={xStyles.scoreMeta}>
+            <span className={xStyles.scorePct}>{pct}%</span>
+            <span className={xStyles.scorePctLabel}>
+              {totalCorrect}/{totalQuestions} corrette
+            </span>
+          </div>
+        </div>
 
-          return (
-            <div key={bottle.id} className={styles.bottleCard}>
+        {/* Bottle slider */}
+        <div className={xStyles.sliderTrack}>
+          {bottles.map((bottle, i) => {
+            const bc = questions.filter(
+              (q) => answersByKey[stateKey(bottle.id, q.id)]?.is_correct,
+            ).length
+            const bs = questions.reduce(
+              (sum, q) => sum + (answersByKey[stateKey(bottle.id, q.id)]?.points ?? 0),
+              0,
+            )
+            const isActive = i === activeBIdx
+            return (
               <button
-                className={styles.bottleCardHeader}
-                onClick={() => setExpandedBottle(isOpen ? null : bottle.id)}
-              >
-                <div className={styles.bottleCardLeft}>
-                  <span className={styles.bottleNum}>#{i + 1}</span>
-                  <div>
-                    <p className={styles.bottleCardName}>{bottle.name}</p>
-                    {bottle.producer && (
-                      <p className={styles.bottleCardProducer}>{bottle.producer}{bottle.year ? ` · ${bottle.year}` : ''}</p>
+                key={bottle.id}
+                className={`${xStyles.bottleCard} ${isActive ? xStyles.activeBottle : ''}`}
+                onClick={() => setActiveBIdx(i)}>
+                <span className={xStyles.bottleCardIndex}>Bottiglia {i + 1}</span>
+                <strong className={xStyles.bottleCardName}>{bottle.name}</strong>
+                {bottle.producer && (
+                  <span className={xStyles.bottleCardMeta}>
+                    {bottle.producer}
+                    {bottle.year ? ` · ${bottle.year}` : ''}
+                  </span>
+                )}
+                <span
+                  className={`${xStyles.bottleCardScore} ${bc === questions.length ? xStyles.perfect : bc === 0 ? xStyles.zero : ''}`}>
+                  {bc}/{questions.length} · +{bs}pt
+                </span>
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Detail panel for active bottle */}
+        <div className={xStyles.detailPanel}>
+          <div className={styles.bottleReveal}>
+            <span className={styles.bottleRevealLabel}>La bottiglia era</span>
+            <span className={styles.bottleRevealName}>{activeBottle.name}</span>
+            {(activeBottle.producer || activeBottle.year) && (
+              <span className={styles.bottleRevealMeta}>
+                {[activeBottle.producer, activeBottle.year].filter(Boolean).join(' · ')}
+              </span>
+            )}
+            <span className={xStyles.bottleRevealScore}>
+              {bCorrect}/{questions.length} corrette · +{bScore} punti
+            </span>
+          </div>
+
+          {questions.map((q) => {
+            const answer = answersByKey[stateKey(activeBottle.id, q.id)]
+            const selectedOpt = q.options.find((o) => o.id === answer?.selected_option_id)
+            const correctOpt = q.options.find((o) => o.id === activeBottle.correctAnswers?.[q.id])
+            return (
+              <div
+                key={q.id}
+                className={`${styles.summaryRow} ${
+                  answer?.is_correct ? styles.summaryRowCorrect : styles.summaryRowWrong
+                }`}>
+                <div className={styles.summaryBody}>
+                  <span className={styles.summaryText}>{q.text}</span>
+                  <div className={styles.summaryAnswer}>
+                    {answer?.is_correct ? (
+                      <span className={styles.summaryCorrect}>
+                        ✅ {correctOpt?.text}
+                        <span className={styles.summaryPoints}>+{answer.points ?? 0}</span>
+                      </span>
+                    ) : (
+                      <>
+                        <span className={styles.summaryWrong}>
+                          ❌ {selectedOpt?.text ?? 'Non risposto'}
+                        </span>
+                        <span className={styles.summaryCorrectHint}>
+                          Risposta corretta: {correctOpt?.text ?? '—'}
+                        </span>
+                      </>
                     )}
                   </div>
                 </div>
-                <div className={styles.bottleCardRight}>
-                  <span className={styles.bottleScore}>+{bScore}</span>
-                  <span className={styles.bottleRatio}>{bCorrect}/{questions.length}</span>
-                  <span className={styles.chevron}>{isOpen ? '▲' : '▼'}</span>
-                </div>
-              </button>
-
-              {isOpen && (
-                <div className={styles.bottleDetails}>
-                  {questions.map((q) => {
-                    const answer = answersByKey[stateKey(bottle.id, q.id)]
-                    const selectedOpt = q.options.find((o) => o.id === answer?.selected_option_id)
-                    const correctOptId = bottle.correctAnswers?.[q.id]
-                    const correctOpt = q.options.find((o) => o.id === correctOptId)
-
-                    return (
-                      <div
-                        key={q.id}
-                        className={`${styles.answerRow} ${answer?.is_correct ? styles.answerCorrect : styles.answerWrong}`}
-                      >
-                        <p className={styles.answerQuestion}>{q.text}</p>
-                        {!answer?.is_correct && (
-                          <p className={styles.answerYours}>
-                            <span className={styles.answerYoursLabel}>Tu: </span>
-                            {selectedOpt?.text ?? '—'}
-                          </p>
-                        )}
-                        <p className={styles.answerCorrectText}>
-                          {answer?.is_correct ? '✓ ' : 'Risposta: '}
-                          {correctOpt?.text ?? '—'}
-                        </p>
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
-          )
-        })}
+              </div>
+            )
+          })}
+        </div>
       </div>
 
-      <div className={styles.actions}>
-        <button className={styles.btnSecondary} onClick={handlePlayAgain}>
+      <div className={styles.bottomPanel}>
+        <button
+          className={styles.continueButton}
+          onClick={() => {
+            localStorage.removeItem(sessionKey)
+            router.push(`/enoteca/${menuId}`)
+          }}>
           🍷 Nuova degustazione
         </button>
-        <button className={styles.btnText} onClick={() => router.push('/')}>
+        <button className={styles.secondaryButton} onClick={() => router.push('/')}>
           Torna alla home
         </button>
       </div>

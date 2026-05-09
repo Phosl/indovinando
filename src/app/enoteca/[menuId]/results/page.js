@@ -1,12 +1,12 @@
-import { createServerSupabase } from '@/lib/supabaseServer'
-import { notFound } from 'next/navigation'
+import {createServerSupabase} from '@/lib/supabaseServer'
+import {notFound} from 'next/navigation'
 import EnotecaResultsClient from './EnotecaResultsClient'
 
-export default async function EnotecaResultsPage({ params }) {
-  const { menuId: gameId } = await params
+export default async function EnotecaResultsPage({params}) {
+  const {menuId: gameId} = await params
   const supabase = await createServerSupabase()
 
-  const { data: game } = await supabase
+  const {data: game} = await supabase
     .from('games')
     .select('id, name, status')
     .eq('id', gameId)
@@ -14,13 +14,13 @@ export default async function EnotecaResultsPage({ params }) {
 
   if (!game || game.status !== 'published') notFound()
 
-  const { data: bottles } = await supabase
+  const {data: bottles} = await supabase
     .from('game_bottles')
     .select('id, name, producer, year, bottle_order, game_bottle_answers(question_id, option_id)')
     .eq('game_id', gameId)
     .order('bottle_order')
 
-  const { data: rawQuestions } = await supabase
+  const {data: rawQuestions} = await supabase
     .from('game_questions')
     .select('id, text, display_order, game_question_options(id, text, option_order)')
     .eq('game_id', gameId)
@@ -39,7 +39,7 @@ export default async function EnotecaResultsPage({ params }) {
     year: b.year,
     bottle_order: b.bottle_order,
     correctAnswers: Object.fromEntries(
-      (b.game_bottle_answers ?? []).map((a) => [a.question_id, a.option_id])
+      (b.game_bottle_answers ?? []).map((a) => [a.question_id, a.option_id]),
     ),
   }))
 

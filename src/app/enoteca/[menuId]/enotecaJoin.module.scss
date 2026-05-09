@@ -1,67 +1,69 @@
-.page {
-  min-height: 100dvh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 16px;
-  background: var(--background);
-}
+// ─────────────────────────────────────────────────────────────
+// Enoteca Join – ONLY classes not in playerLive.module.scss
+// Shared layout classes (fullPage, topBar, slideContent,
+// bottomPanel, continueButton, secondaryButton) come from
+// playerLive.module.scss imported directly in the component.
+// ─────────────────────────────────────────────────────────────
 
-.card {
-  width: 100%;
-  max-width: 440px;
+// ── Info card (event header) ──────────────────────────────────
+.infoCard {
   background: var(--foreground);
-  border-radius: 16px;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-}
-
-.header {
-  background: linear-gradient(135deg, #3d1760 0%, #6b2f8e 100%);
-  padding: 32px 24px;
-  text-align: center;
-  color: #fff;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .wineBadge {
-  font-size: 40px;
-  display: block;
-  margin-bottom: 12px;
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 4px;
 }
 
 .menuName {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0 0 4px;
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1.3;
 }
 
 .location {
-  font-size: 13px;
-  opacity: 0.8;
-  margin: 0 0 8px;
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
 .description {
-  font-size: 14px;
-  opacity: 0.9;
-  margin: 8px 0;
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
   line-height: 1.5;
 }
 
 .bottleCount {
-  font-size: 13px;
-  opacity: 0.75;
-  margin: 8px 0 0;
+  margin: 4px 0 0;
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 2px solid var(--button-secondary-border);
+  background: var(--background);
+  font-size: 0.75rem;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: var(--text-secondary);
 }
 
-.form,
-.resumeSection {
-  padding: 24px;
+// ── Form ──────────────────────────────────────────────────────
+.form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .field {
@@ -70,87 +72,72 @@
   gap: 6px;
 
   label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-primary);
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 
   input {
-    border: 1.5px solid var(--button-secondary-border);
-    border-radius: 8px;
-    padding: 12px 14px;
-    font-size: 15px;
     width: 100%;
+    padding: 12px 14px;
+    background: var(--foreground);
+    border: 2px solid var(--button-secondary-border);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    outline: none;
     box-sizing: border-box;
     transition: border-color 0.15s;
 
     &:focus {
-      outline: none;
       border-color: var(--selected);
+    }
+
+    &::placeholder {
+      color: var(--text-secondary);
+      font-weight: 500;
     }
   }
 }
 
-.error {
-  color: var(--danger-text);
-  background: var(--danger-surface);
-  border: 1px solid var(--danger-border);
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: 14px;
+// ── Resume banner ─────────────────────────────────────────────
+.resumeCard {
+  background: color-mix(in srgb, var(--selected-dark) 6%, var(--foreground));
+  border: 2px solid var(--selected-dark);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resumeTitle {
   margin: 0;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--selected-dark);
 }
 
 .resumeText {
-  font-size: 15px;
-  color: var(--text-primary);
-  line-height: 1.5;
   margin: 0;
-}
-
-.btnPrimary {
-  background: var(--selected);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 14px;
-  font-size: 16px;
+  font-size: 0.95rem;
   font-weight: 700;
-  cursor: pointer;
-  touch-action: manipulation;
-  width: 100%;
-
-  &:hover:not(:disabled) {
-    background: var(--selected-dark);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+  color: var(--text-primary);
 }
 
-.btnSecondary {
-  background: none;
-  color: var(--text-secondary);
-  border: 1.5px solid var(--button-secondary-border);
-  border-radius: 10px;
-  padding: 12px;
-  font-size: 14px;
-  cursor: pointer;
-  touch-action: manipulation;
-  width: 100%;
-
-  &:hover {
-    background: var(--button-secondary-hover);
-  }
-}
-
-.loading {
-  min-height: 100dvh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-secondary);
-  font-size: 16px;
+// ── Error ─────────────────────────────────────────────────────
+.error {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--danger-text);
+  padding: 8px 12px;
+  background: var(--danger-surface);
+  border: 1px solid var(--danger-border);
+  border-radius: 8px;
 }

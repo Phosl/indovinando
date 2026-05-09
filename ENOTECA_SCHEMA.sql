@@ -1,6 +1,6 @@
 -- ============================================================
 -- ENOTECA MODE — DB Cleanup & Minimal Schema
--- 
+--
 -- Le tabelle enoteca_menus/bottles/questions/options erano
 -- ridondanti con games/game_bottles/game_questions/game_question_options.
 -- Droppa le 4 ridondanti, ricrea solo le 2 necessarie.
