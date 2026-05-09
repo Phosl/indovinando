@@ -1,6 +1,7 @@
 'use client'
 
 import {useRouter} from 'next/navigation'
+import TopBar from '@/components/TopBar'
 import {useWineCourseProgress} from './hooks/useWineCourseProgress'
 import styles from './course.module.scss'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
@@ -13,16 +14,15 @@ export default function CourseClient({levels}) {
 
   return (
     <div className={styles.page}>
-      {/* Header */}
-      <div className={styles.header}>
+      <TopBar title={isEnglish ? 'Wine Course' : 'Corso Vino'}>
         <button
-          className={styles.backButton}
+          type="button"
+          className="btn secondary"
           onClick={() => router.push('/dashboard')}
           aria-label={isEnglish ? 'Back to dashboard' : 'Torna alla dashboard'}>
-          ←
+          ← {isEnglish ? 'Back' : 'Indietro'}
         </button>
-        <span className={styles.headerTitle}>{isEnglish ? 'Wine Course' : 'Corso Vino'}</span>
-      </div>
+      </TopBar>
 
       {/* Hero */}
       <div className={styles.hero}>

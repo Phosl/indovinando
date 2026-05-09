@@ -32,4 +32,3 @@ export default function PrintSheetClient({gameId, hasResults}) {
     </TopBar>
   )
 }
-

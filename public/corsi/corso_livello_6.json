@@ -2,489 +2,523 @@
   "level": 6,
   "slug": "chimica-del-vino",
   "title": "La chimica del vino",
-  "description": "Capire cosa succede davvero nel vino: zuccheri, acidi, alcol e trasformazioni",
+  "description": "Dal mosto al bicchiere: come zuccheri, acidi, alcol e ossigeno determinano stile e qualita",
   "lessons": [
     {
       "id": "l1",
       "title": "Zucchero e alcol",
-      "intro": "Il vino nasce da una trasformazione chimica: lo zucchero dell’uva diventa alcol.",
-      "final": "Ora sai da dove viene l’alcol nel vino.",
+      "intro": "Ogni grado alcolico nasce da una scelta in vigna e in cantina: capire il rapporto zucchero-alcol ti aiuta a leggere lo stile del vino.",
+      "final": "Ora sai collegare maturazione dell'uva e gradazione alcolica nel calice.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Cosa diventa lo zucchero durante la fermentazione?",
-          "answers": ["Alcol", "Acqua", "Acido"],
+          "question": "Durante la fermentazione, i lieviti trasformano soprattutto:",
+          "answers": ["Zuccheri in alcol e CO2", "Acidi in zucchero", "Tannini in colore"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "Più zucchero significa potenzialmente più alcol.",
+          "question": "A parita di tutto il resto, piu zucchero nel mosto puo portare a piu alcol.",
           "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "Chi trasforma lo zucchero?",
-          "answers": ["Lieviti", "Ossigeno", "Luce"],
+          "question": "Un vino da uve raccolte molto mature tende ad avere:",
+          "answers": ["Potenziale alcolico piu alto", "pH sempre piu basso", "Zero acidita"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Zucchero → alcol",
+          "title": "Dal grado Babo al grado alcolico",
           "paragraphs": [
-            "Il mosto d’uva contiene zuccheri naturali.",
-            "Durante la fermentazione, i lieviti li trasformano in alcol e anidride carbonica."
+            "Nel mosto, il contenuto zuccherino indica quanta materia prima hanno i lieviti per produrre alcol.",
+            "Per questo una vendemmia tardiva puo generare vini piu alcolici, mentre uve raccolte prima danno profili piu leggeri e tesi."
           ],
-          "keyPoints": ["Zucchero iniziale", "Trasformazione chimica", "Produzione di alcol"]
+          "keyPoints": ["Zucchero fermentescibile", "Ruolo dei lieviti", "Stile finale del vino"]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Caso pratico: due Pinot Grigio",
           "paragraphs": [
-            "Ora sai da dove viene l’alcol nel vino.",
-            "Passa alle domande per fissare il concetto base della fermentazione."
+            "Pinot Grigio A: vendemmia anticipata, 12% vol, profilo agrumato e snello.",
+            "Pinot Grigio B: vendemmia piu matura, 13.5% vol, sensazione piu morbida e calda in bocca."
           ],
-          "keyPoints": ["Zucchero iniziale", "Trasformazione chimica", "Produzione di alcol"]
+          "keyPoints": ["Maturazione uva", "Alcol percepito", "Differenze in degustazione"]
         }
       ]
     },
-
     {
       "id": "l2",
-      "title": "Acidità del vino",
-      "intro": "L’acidità è uno degli elementi chiave del vino: dà freschezza e equilibrio.",
-      "final": "Ora capisci perché l’acidità è fondamentale.",
+      "title": "Acidita e freschezza",
+      "intro": "L'acidita non e un difetto: e il motore della bevibilita, soprattutto nei bianchi e negli spumanti.",
+      "final": "Ora distingui freschezza reale da semplice leggerezza.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "L’acidità nel vino dà:",
-          "answers": ["Freschezza", "Dolcezza", "Colore"],
+          "question": "In degustazione, una buona acidita aumenta soprattutto:",
+          "answers": ["Slancio e salivazione", "Dolcezza", "Astringenza tannica"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "Un vino senza acidità sarebbe piatto.",
+          "question": "Un vino senza acidita puo risultare piatto e stanco.",
           "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "Quale sensazione è legata all’acidità?",
-          "answers": ["Salivazione", "Amaro", "Calore"],
+          "question": "Quale stile richiede spesso acidita marcata per equilibrio?",
+          "answers": ["Metodo classico", "Passito molto dolce", "Vino ossidativo estremo"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Il ruolo degli acidi",
+          "title": "Perche l'acidita conta",
           "paragraphs": [
-            "Gli acidi naturali dell’uva danno struttura e freschezza.",
-            "Senza acidità il vino risulta pesante e poco vivace."
+            "Acido tartarico, malico e citrico sono componenti naturali dell'uva che sostengono il vino nel tempo.",
+            "In bocca, l'acidita fa venire voglia di un secondo sorso e rende il vino piu adatto all'abbinamento con il cibo."
           ],
-          "keyPoints": ["Freschezza", "Equilibrio", "Struttura"]
+          "keyPoints": ["Acidi naturali", "Salivazione", "Abbinamento gastronomico"]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Abbinamento veloce",
           "paragraphs": [
-            "Ora capisci perché l’acidità è fondamentale.",
-            "Verifica quanto hai capito con le domande."
+            "Un bianco acido (es. Verdicchio giovane) pulisce bene una frittura mista.",
+            "Un bianco poco acido con lo stesso piatto tende invece a sembrare pesante dopo pochi bocconi."
           ],
-          "keyPoints": ["Freschezza", "Equilibrio", "Struttura"]
+          "keyPoints": ["Freschezza al tavolo", "Pulizia del palato", "Equilibrio cibo-vino"]
         }
       ]
     },
-
     {
       "id": "l3",
-      "title": "pH del vino",
-      "intro": "Il pH misura l’acidità chimica del vino ed è fondamentale per stabilità e gusto.",
-      "final": "Ora sai cosa significa pH nel vino.",
+      "title": "pH e stabilita",
+      "intro": "Il pH e un numero piccolo con grandi effetti: influenza stabilita microbiologica, colore e longevita.",
+      "final": "Ora sai leggere il pH come indicatore tecnico, non solo teorico.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Il pH misura:",
-          "answers": ["Acidità", "Dolcezza", "Colore"],
+          "question": "Un pH piu basso indica in genere:",
+          "answers": ["Maggiore acidita", "Maggiore dolcezza", "Meno colore"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "Un pH più basso significa più acidità.",
+          "question": "Il pH puo influenzare la stabilita del colore nei rossi.",
           "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "Il pH influisce su:",
-          "answers": ["Stabilità del vino", "Etichetta", "Forma bottiglia"],
+          "question": "In cantina, un pH troppo alto aumenta il rischio di:",
+          "answers": [
+            "Problemi microbiologici",
+            "Fermentazioni piu rapide e pulite",
+            "Aumento naturale dei tannini"
+          ],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Cos’è il pH",
+          "title": "pH vs acidita totale",
           "paragraphs": [
-            "Il pH è una misura scientifica dell’acidità.",
-            "Nel vino influisce su gusto, conservazione e colore."
+            "Acidita totale e pH descrivono aspetti diversi: la prima quantita di acidi, il secondo la loro forza percepita e chimica.",
+            "Due vini con acidita simile possono dare impressioni molto diverse se il pH non e allineato."
           ],
-          "keyPoints": ["Scala pH", "Acidità reale", "Stabilità"]
+          "keyPoints": ["Misure complementari", "Impatto sensoriale", "Controllo in cantina"]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Esempio operativo",
           "paragraphs": [
-            "Ora sai cosa significa pH nel vino.",
-            "Metti alla prova la tua comprensione."
+            "Rosso giovane con pH 3.35: colore piu vivo, profilo piu teso.",
+            "Rosso simile con pH 3.75: colore meno brillante e maggiore vulnerabilita nel tempo."
           ],
-          "keyPoints": ["Scala pH", "Acidità reale", "Stabilità"]
+          "keyPoints": ["Colore", "Longevita", "Sicurezza microbiologica"]
         }
       ]
     },
-
     {
       "id": "l4",
-      "title": "Tannini",
-      "intro": "I tannini sono molecole che danno struttura e sensazione di secchezza.",
-      "final": "Ora riconosci il ruolo dei tannini.",
+      "title": "Tannini: struttura e tessitura",
+      "intro": "Non basta dire 'tannico': conta la qualita del tannino, da verde e ruvido a fine e setoso.",
+      "final": "Ora sai valutare i tannini anche in termini di tessitura.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "I tannini danno sensazione di:",
-          "answers": ["Secchezza", "Dolcezza", "Freschezza"],
+          "question": "La sensazione tipica dei tannini e:",
+          "answers": ["Astringenza", "Effervescenza", "Dolcezza"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "I tannini si trovano soprattutto nei vini rossi.",
+          "question": "Maturita fenolica adeguata puo rendere i tannini piu morbidi.",
           "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "I tannini provengono da:",
-          "answers": ["Bucce e vinaccioli", "Acqua", "Zucchero"],
+          "question": "Nei rossi, i tannini provengono soprattutto da:",
+          "answers": ["Bucce e vinaccioli", "Solo dal legno", "Acqua di diluizione"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Cosa sono i tannini",
+          "title": "Da dove arrivano i tannini",
           "paragraphs": [
-            "I tannini sono composti naturali dell’uva.",
-            "Danno struttura e capacità di invecchiamento al vino."
+            "Estratti durante macerazione e fermentazione, i tannini costruiscono impalcatura e potenziale evolutivo.",
+            "Una gestione delicata delle temperature e dei rimontaggi evita estrazioni amare e aggressive."
           ],
-          "keyPoints": ["Secchezza", "Struttura", "Origine nelle bucce"]
+          "keyPoints": ["Macerazione", "Qualita tannica", "Potenziale di invecchiamento"]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
-          "paragraphs": ["Ora riconosci il ruolo dei tannini.", "Verifica con le domande."],
-          "keyPoints": ["Secchezza", "Struttura", "Origine nelle bucce"]
+          "title": "Linguaggio di sala",
+          "paragraphs": [
+            "'Tannino levigato' indica una trama fine, meno graffiante sulle gengive.",
+            "'Tannino verde' descrive invece una sensazione asciutta e dura, spesso da maturazione incompleta."
+          ],
+          "keyPoints": ["Descrittori utili", "Trama e grana", "Comunicazione al cliente"]
         }
       ]
     },
-
     {
       "id": "l5",
-      "title": "Alcol e percezione",
-      "intro": "L’alcol non è solo una percentuale: influisce su corpo e sensazioni.",
-      "final": "Ora sai come l’alcol cambia il vino.",
+      "title": "Alcol e sensazione termica",
+      "intro": "L'alcol incide su corpo, dolcezza percepita e calore: l'equilibrio con acidita e tannini e fondamentale.",
+      "final": "Ora sai quando l'alcol sostiene il vino e quando lo sbilancia.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "L’alcol dà sensazione di:",
-          "answers": ["Calore", "Acidità", "Amaro"],
+          "question": "In bocca, l'alcol genera tipicamente:",
+          "answers": ["Calore", "Astringenza", "Salinita"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "Più alcol aumenta il corpo del vino.",
+          "question": "Un titolo alcolometrico elevato richiede spesso maggiore freschezza per restare equilibrato.",
           "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "L’alcol contribuisce a:",
-          "answers": ["Struttura", "Colore", "Etichetta"],
+          "question": "Quale abbinamento aiuta a gestire un rosso alcolico?",
+          "answers": ["Piatto succulento e proteico", "Insalata scondita", "Dessert molto dolce"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Effetto dell’alcol",
+          "title": "Alcol: piu di un numero",
           "paragraphs": [
-            "L’alcol contribuisce al corpo del vino.",
-            "Dà una sensazione di calore in bocca."
+            "Aumentando la gradazione, cresce la percezione di volume e rotondita, ma anche il rischio di sbilanciamento caldo.",
+            "Il servizio alla giusta temperatura puo contenere la sensazione alcolica e valorizzare gli aromi."
           ],
-          "keyPoints": ["Calore", "Struttura", "Equilibrio"]
+          "keyPoints": ["Corpo", "Calore", "Temperatura di servizio"]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
-          "paragraphs": ["Ora sai come l’alcol cambia il vino.", "Testa la tua comprensione."],
-          "keyPoints": ["Calore", "Struttura", "Equilibrio"]
+          "title": "Confronto in degustazione",
+          "paragraphs": [
+            "Vino A 12.5%: snello, verticale, finale asciutto.",
+            "Vino B 15%: pieno e avvolgente, ma da bilanciare con cibo ricco o acidita ben presente."
+          ],
+          "keyPoints": ["Peso del sorso", "Gestione dell'equilibrio", "Scelta dell'abbinamento"]
         }
       ]
     },
-
     {
       "id": "l6",
-      "title": "Anidride carbonica",
-      "intro": "L’anidride carbonica può essere presente anche nei vini fermi.",
-      "final": "Ora sai perché alcuni vini “pizzicano”.",
+      "title": "Anidride carbonica (CO2)",
+      "intro": "La CO2 non appartiene solo agli spumanti: anche nei vini fermi puo cambiare la percezione del sorso.",
+      "final": "Ora riconosci quando la CO2 e un plus e quando diventa un difetto.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "La CO2 dà sensazione di:",
-          "answers": ["Effervescenza", "Dolcezza", "Amaro"],
+          "question": "La CO2 residua in un vino fermo puo dare:",
+          "answers": ["Leggera vivacita", "Aumento dei tannini", "Colore piu scuro"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "Solo gli spumanti contengono CO2.",
+          "question": "Solo i vini spumanti possono contenere anidride carbonica.",
           "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "La CO2 deriva da:",
-          "answers": ["Fermentazione", "Bottiglia", "Luce"],
+          "question": "La CO2 nasce principalmente da:",
+          "answers": ["Fermentazione", "Ossidazione", "Filtrazione sterile"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "CO2 nel vino",
+          "title": "Origine e funzione della CO2",
           "paragraphs": [
-            "La CO2 è un sottoprodotto della fermentazione.",
-            "Può restare nel vino dando sensazione di freschezza."
+            "Durante la fermentazione alcolica si produce CO2: una parte puo essere trattenuta nel vino.",
+            "In certi bianchi giovani, una lieve presenza aumenta freschezza e tensione gustativa."
           ],
-          "keyPoints": ["Fermentazione", "Effervescenza", "Freschezza"]
+          "keyPoints": ["Sottoprodotto fermentativo", "Vivacita", "Uso stilistico"]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Quando e troppo",
           "paragraphs": [
-            "Ora sai perché alcuni vini pizzicano.",
-            "Metti alla prova le tue conoscenze."
+            "Se la CO2 e eccessiva in un vino che dovrebbe essere fermo, puo coprire aromi fini e dare impressione di vino non finito.",
+            "Una corretta gestione di affinamento e imbottigliamento evita questo effetto."
           ],
-          "keyPoints": ["Fermentazione", "Effervescenza", "Freschezza"]
+          "keyPoints": ["Coerenza di stile", "Impatto aromatico", "Controllo in cantina"]
         }
       ]
     },
-
     {
       "id": "l7",
       "title": "Ossigeno e ossidazione",
-      "intro": "L’ossigeno può migliorare o rovinare il vino.",
-      "final": "Ora sai quando l’ossigeno è un problema.",
+      "intro": "L'ossigeno e un alleato in piccole dosi, ma in eccesso puo accelerare il declino del vino.",
+      "final": "Ora sai distinguere micro-ossigenazione utile e ossidazione dannosa.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Troppo ossigeno:",
-          "answers": ["Rovina il vino", "Migliora sempre", "Non cambia nulla"],
+          "question": "Troppo ossigeno porta piu facilmente a:",
+          "answers": [
+            "Perdita di freschezza e frutto",
+            "Maggiore precisione aromatica",
+            "Riduzione totale"
+          ],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "Un po’ di ossigeno può aiutare il vino.",
+          "question": "Una piccola esposizione all'ossigeno puo aiutare ad ammorbidire alcuni rossi.",
           "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "L’ossidazione porta a:",
-          "answers": ["Perdita di freschezza", "Aumento dolcezza", "Colore blu"],
+          "question": "Un segnale tipico di ossidazione avanzata e:",
+          "answers": [
+            "Note di mela cotta e noce",
+            "Aroma intenso di agrumi freschi",
+            "Tannino piu setoso per magia"
+          ],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Ossigeno",
+          "title": "Dose e timing dell'ossigeno",
           "paragraphs": [
-            "L’ossigeno è utile in piccole quantità.",
-            "In eccesso causa ossidazione e deterioramento."
+            "Durante travasi, affinamento o servizio, l'ossigeno modifica il profilo del vino: non e mai neutro.",
+            "Nei rossi strutturati una moderata ossigenazione puo integrare tannini; nei bianchi delicati il margine e molto piu stretto."
           ],
-          "keyPoints": ["Equilibrio", "Ossidazione", "Deterioramento"]
+          "keyPoints": ["Controllo esposizione", "Effetto diverso per stile", "Rischio ossidativo"]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
-          "paragraphs": ["Ora sai quando l’ossigeno è un problema.", "Rispondi alle domande."],
-          "keyPoints": ["Equilibrio", "Ossidazione", "Deterioramento"]
+          "title": "Servizio al ristorante",
+          "paragraphs": [
+            "Decantare un rosso giovane e chiuso puo migliorare apertura aromatica.",
+            "Lasciare un bianco aromatico ore nel secchiello senza protezione puo invece appiattire il profilo."
+          ],
+          "keyPoints": ["Decantazione ragionata", "Protezione del vino", "Scelte di servizio"]
         }
       ]
     },
-
     {
       "id": "l8",
-      "title": "Zuccheri residui",
-      "intro": "Non tutti gli zuccheri vengono trasformati: alcuni restano nel vino.",
-      "final": "Ora capisci cosa rende un vino dolce.",
+      "title": "Zuccheri residui e stile",
+      "intro": "Residuo zuccherino non vuol dire solo dolcezza: influenza corpo, equilibrio e percezione aromatica.",
+      "final": "Ora sai spiegare in modo chiaro la differenza tra secco, abboccato e dolce.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Zucchero residuo significa:",
-          "answers": ["Zucchero non fermentato", "Zucchero aggiunto", "Zucchero cotto"],
+          "question": "Il residuo zuccherino e:",
+          "answers": [
+            "Zucchero rimasto dopo la fermentazione",
+            "Zucchero aggiunto in bottiglia",
+            "Zucchero presente solo nei rossi"
+          ],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "Un vino secco ha poco zucchero residuo.",
+          "question": "Un vino puo sembrare meno dolce se ha acidita alta, anche con un piccolo residuo zuccherino.",
           "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "Più zucchero residuo =",
-          "answers": ["Più dolcezza", "Più acidità", "Più tannini"],
+          "question": "In quale stile il residuo zuccherino e spesso cercato volutamente?",
+          "answers": ["Moscato aromatico", "Metodo classico pas dose", "Rosso barricato austero"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Zucchero residuo",
+          "title": "Secco non significa senza zucchero assoluto",
           "paragraphs": [
-            "Non tutto lo zucchero si trasforma.",
-            "La quantità residua determina la dolcezza."
+            "Anche molti vini secchi possono contenere piccole quantita di zucchero residuo, senza risultare dolci al palato.",
+            "La percezione finale dipende dall'equilibrio con acidita, alcol e temperatura di servizio."
           ],
-          "keyPoints": ["Dolcezza", "Fermentazione incompleta", "Stile vino"]
+          "keyPoints": ["Residuo reale", "Dolcezza percepita", "Bilanciamento gustativo"]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
-          "paragraphs": ["Ora capisci cosa rende un vino dolce.", "Testa le tue conoscenze."],
-          "keyPoints": ["Dolcezza", "Fermentazione incompleta", "Stile vino"]
+          "title": "Spiegazione pronta per il cliente",
+          "paragraphs": [
+            "Se un cliente chiede 'non troppo dolce', puoi proporre un bianco con residuo minimo ma acidita viva.",
+            "Se chiede morbidezza, un leggero residuo puo rendere il sorso piu rotondo senza arrivare al dessert wine."
+          ],
+          "keyPoints": [
+            "Comunicazione semplice",
+            "Gestione aspettative",
+            "Consiglio personalizzato"
+          ]
         }
       ]
     },
-
     {
       "id": "l9",
       "title": "Solforosa (SO2)",
-      "intro": "La solforosa è usata per proteggere il vino.",
-      "final": "Ora sai perché si usa la solforosa.",
+      "intro": "La SO2 e uno strumento di protezione: il tema non e 'si o no', ma dose, momento e obiettivo.",
+      "final": "Ora puoi spiegare la SO2 senza allarmismi e con basi tecniche.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "La solforosa serve a:",
-          "answers": ["Proteggere il vino", "Dolcificare", "Colorare"],
+          "question": "La funzione principale della SO2 nel vino e:",
+          "answers": [
+            "Protezione da ossidazione e microrganismi",
+            "Aumentare il grado alcolico",
+            "Intensificare il colore viola"
+          ],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "La solforosa è sempre dannosa.",
+          "question": "Dire 'senza solfiti' non significa automaticamente vino migliore in ogni situazione.",
           "answers": ["Vero", "Falso"],
-          "correct": 1
+          "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "Serve contro:",
-          "answers": ["Ossidazione e batteri", "Calore", "Acqua"],
+          "question": "Un uso corretto della SO2 punta a:",
+          "answers": ["Stabilita e pulizia aromatica", "Dolcezza extra", "Piu effervescenza"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "SO2",
+          "title": "SO2 libera e totale",
           "paragraphs": [
-            "La solforosa è un conservante.",
-            "Protegge il vino da ossigeno e microrganismi."
+            "La parte attiva e la SO2 libera: e quella che protegge davvero vino e aromi.",
+            "Gestire bene pH e igiene di cantina permette spesso di usare dosi piu contenute mantenendo sicurezza."
           ],
-          "keyPoints": ["Protezione", "Stabilità", "Conservazione"]
+          "keyPoints": ["Protezione mirata", "Relazione con pH", "Approccio tecnico"]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
-          "paragraphs": ["Ora sai perché si usa la solforosa.", "Rispondi alle domande."],
-          "keyPoints": ["Protezione", "Stabilità", "Conservazione"]
+          "title": "Messaggio equilibrato",
+          "paragraphs": [
+            "Con il cliente, evita slogan: spiega che la SO2 e paragonabile a una cintura di sicurezza per il vino.",
+            "Poca o tanta da sola non dice tutto: conta il risultato nel bicchiere e la stabilita nel tempo."
+          ],
+          "keyPoints": ["Niente allarmismo", "Educazione del cliente", "Qualita nel tempo"]
         }
       ]
     },
-
     {
       "id": "l10",
-      "title": "Equilibrio chimico del vino",
-      "intro": "Un grande vino è equilibrio tra tutte le componenti chimiche.",
-      "final": "Ora sai cosa rende un vino davvero armonico.",
+      "title": "Equilibrio chimico finale",
+      "intro": "Un vino convincente non vince su un solo parametro: funziona quando tutte le componenti collaborano.",
+      "final": "Ora sai valutare l'armonia chimico-sensoriale come criterio di qualita.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Un vino equilibrato ha:",
-          "answers": ["Componenti bilanciate", "Solo alcol alto", "Solo acidità"],
+          "question": "Un vino equilibrato mostra:",
+          "answers": ["Componenti integrate", "Solo alta gradazione", "Solo acidita tagliente"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "L’equilibrio è fondamentale per la qualità.",
+          "question": "Troppo di una sola componente puo compromettere bevibilita e armonia.",
           "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "Troppo di un elemento rende il vino:",
-          "answers": ["Sbilanciato", "Perfetto", "Più caro"],
+          "question": "Qual e una buona sintesi professionale di equilibrio?",
+          "answers": [
+            "Nessun elemento domina in modo sgradevole",
+            "Il vino costa di piu",
+            "Il colore e molto intenso"
+          ],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Equilibrio",
+          "title": "La formula dell'armonia",
           "paragraphs": [
-            "Il vino è un sistema chimico complesso.",
-            "La qualità nasce dall’equilibrio tra le componenti."
+            "Acidita, alcol, tannini, residuo zuccherino e componente aromatica devono sostenersi a vicenda.",
+            "Quando una voce supera tutte le altre, il vino perde precisione e facilita di beva."
           ],
-          "keyPoints": ["Equilibrio", "Struttura", "Armonia"]
+          "keyPoints": ["Integrazione", "Bevibilita", "Qualita percepita"]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Checklist da degustatore",
           "paragraphs": [
-            "Ora sai cosa rende un vino armonico.",
-            "Completa il livello con il quiz."
+            "Chiediti: il sorso e coerente dall'attacco al finale? c'e pulizia? c'e ritorno aromatico?",
+            "Se le risposte sono positive, probabilmente hai davanti un vino tecnicamente e sensorialmente equilibrato."
           ],
-          "keyPoints": ["Equilibrio", "Struttura", "Armonia"]
+          "keyPoints": ["Metodo di valutazione", "Coerenza del sorso", "Conclusione professionale"]
         }
       ]
     }

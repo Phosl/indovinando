@@ -14,9 +14,7 @@ export default async function RootLayout({children}) {
   return (
     <html lang={lang}>
       <body className={nunito.className}>
-        <LanguageProvider initialLang={lang}>
-          {children}
-        </LanguageProvider>
+        <LanguageProvider initialLang={lang}>{children}</LanguageProvider>
       </body>
     </html>
   )

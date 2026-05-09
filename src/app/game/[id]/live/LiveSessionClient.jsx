@@ -143,23 +143,38 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
           <div className={styles.linkBox}>
             <input type="text" readOnly value={sessionLink} className={styles.linkInput} />
             <button onClick={handleCopyLink} className={styles.copyButton}>
-              {copyFeedback ? (isEnglish ? '✓ Copied!' : '✓ Copiato!') : (isEnglish ? 'Copy' : 'Copia')}
+              {copyFeedback
+                ? isEnglish
+                  ? '✓ Copied!'
+                  : '✓ Copiato!'
+                : isEnglish
+                  ? 'Copy'
+                  : 'Copia'}
             </button>
           </div>
         </div>
 
         <div className={styles.section}>
-          <h2>{isEnglish ? 'Participants: ' : 'Partecipanti: '}{playersCount}</h2>
+          <h2>
+            {isEnglish ? 'Participants: ' : 'Partecipanti: '}
+            {playersCount}
+          </h2>
           <p className={styles.info}>
-            {isEnglish ? 'Wait for players to join, then click Start Game.' : 'Aspetta che i giocatori si uniscano, poi premi Inizia Gioco.'}
+            {isEnglish
+              ? 'Wait for players to join, then click Start Game.'
+              : 'Aspetta che i giocatori si uniscano, poi premi Inizia Gioco.'}
           </p>
         </div>
 
         <div className={styles.section}>
           <h3>ℹ️ {isEnglish ? 'Game Details' : 'Dettagli Gioco'}</h3>
           <ul>
-            <li>📋 {isEnglish ? 'Questions' : 'Domande'}: {questions.length}</li>
-            <li>🍾 {isEnglish ? 'Bottles' : 'Bottiglie'}: {bottles.length}</li>
+            <li>
+              📋 {isEnglish ? 'Questions' : 'Domande'}: {questions.length}
+            </li>
+            <li>
+              🍾 {isEnglish ? 'Bottles' : 'Bottiglie'}: {bottles.length}
+            </li>
           </ul>
         </div>
 
@@ -168,7 +183,8 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
             onClick={handleStartGame}
             disabled={playersCount < 1}
             className={styles.startButton}>
-            {isEnglish ? 'Start Game' : 'Inizia Gioco'} ({playersCount} {isEnglish ? 'players' : 'giocatori'})
+            {isEnglish ? 'Start Game' : 'Inizia Gioco'} ({playersCount}{' '}
+            {isEnglish ? 'players' : 'giocatori'})
           </button>
           <button onClick={handleCancel} className={styles.cancelButton}>
             {isEnglish ? 'Cancel' : 'Annulla'}

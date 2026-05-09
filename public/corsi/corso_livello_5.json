@@ -14,32 +14,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "Se non conosci il menu, cosa fai?",
-          "answers": [
-            "Chiedi consiglio",
-            "Scegli a caso",
-            "Prendi il più caro"
-          ],
+          "answers": ["Chiedi consiglio", "Scegli a caso", "Prendi il più caro"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "È normale chiedere aiuto per il vino.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "La scelta migliore è spesso:",
-          "answers": [
-            "Vino del territorio",
-            "Vino importato casuale",
-            "Sempre dolce"
-          ],
+          "answers": ["Vino del territorio", "Vino importato casuale", "Sempre dolce"],
           "correct": 0
         }
       ],
@@ -49,7 +38,7 @@
           "title": "Come scegliere un vino al ristorante",
           "paragraphs": [
             "Quando il cameriere ti chiede ‘che vino vuole?’, non serve panico: esiste un metodo semplice.",
-            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+            "Metodo pratico in 3 passaggi: 1) guarda cosa mangerai (pesce, carne, piatto ricco o leggero), 2) dichiara un budget chiaro (es. 25-35 euro), 3) chiedi un vino del territorio in quella fascia. Esempio reale: sei in Toscana, mangi pici al ragù, budget 30 euro. Puoi dire: ‘Ci suggerisce un rosso toscano intorno ai 30 euro che sia morbido?’ Hai dato tutte le informazioni giuste in 10 secondi."
           ],
           "keyPoints": [
             "Se non conosci il menu, cosa fai",
@@ -59,10 +48,10 @@
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Metodo in 20 secondi",
           "paragraphs": [
             "Ora sai scegliere un vino senza stress.",
-            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+            "Ricorda la formula: piatto + budget + stile desiderato. Evita frasi vaghe come ‘un vino buono’: non aiutano il cameriere a consigliarti. Nel quiz alleni proprio questo approccio operativo."
           ],
           "keyPoints": [
             "Se non conosci il menu, cosa fai",
@@ -82,32 +71,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "Con carne rossa spesso si sceglie:",
-          "answers": [
-            "Rosso",
-            "Bianco",
-            "Rosé"
-          ],
+          "answers": ["Rosso", "Bianco", "Rosé"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Con pesce si preferisce:",
-          "answers": [
-            "Bianco",
-            "Rosso",
-            "Passito"
-          ],
+          "answers": ["Bianco", "Rosso", "Passito"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Non esistono regole rigide negli abbinamenti.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         }
       ],
@@ -117,7 +95,7 @@
           "title": "Rosso o bianco?",
           "paragraphs": [
             "La domanda più comune: rosso o bianco? La risposta dipende dal cibo e dal contesto.",
-            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+            "Regola base: più il piatto è delicato, più il vino deve essere leggero; più il piatto è strutturato, più il vino può avere corpo. Branzino al forno: bianco fresco (Vermentino). Tagliata: rosso con tannino moderato (Chianti Classico). Eccezioni possibili: tonno alla griglia può reggere un rosso leggero (Pinot Nero), mentre un bianco corposo barricato può accompagnare carni bianche in salsa."
           ],
           "keyPoints": [
             "Con carne rossa spesso si sceglie",
@@ -127,10 +105,10 @@
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Regola + eccezioni",
           "paragraphs": [
             "Ora sai quando scegliere rosso o bianco.",
-            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+            "Non fissarti su ‘rosso con carne, bianco con pesce’ come dogma assoluto: è un punto di partenza, non un obbligo. Nel quiz vedrai quando seguire la regola e quando adattarla in modo intelligente."
           ],
           "keyPoints": [
             "Con carne rossa spesso si sceglie",
@@ -150,32 +128,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "Un vino costoso è sempre migliore?",
-          "answers": [
-            "No",
-            "Sì",
-            "Sempre"
-          ],
+          "answers": ["No", "Sì", "Sempre"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Una buona fascia media è spesso:",
-          "answers": [
-            "15-40€",
-            "1-5€",
-            "100€+"
-          ],
+          "answers": ["15-40€", "1-5€", "100€+"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Il prezzo riflette sempre la qualità.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         }
       ],
@@ -185,7 +152,7 @@
           "title": "Quanto spendere per una bottiglia",
           "paragraphs": [
             "Il prezzo non è tutto, ma aiuta a orientarsi.",
-            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+            "In ristorante, una fascia 20-40 euro spesso offre il miglior equilibrio qualità/prezzo. Sotto i 15 euro trovi opzioni semplici ma talvolta valide; sopra i 60 euro paghi spesso rarità, annata o prestigio. Strategia concreta: scegli un tetto massimo e chiedi due proposte nella stessa fascia, poi scegli in base al profilo (più fresco, più morbido, più intenso)."
           ],
           "keyPoints": [
             "Un vino costoso è sempre migliore",
@@ -195,10 +162,10 @@
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Budget intelligente",
           "paragraphs": [
             "Ora sai evitare scelte inutilmente costose.",
-            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+            "Prezzo alto non significa automaticamente più piacere nel bicchiere. Il tuo obiettivo non è comprare la bottiglia più famosa, ma quella più adatta al momento e al piatto."
           ],
           "keyPoints": [
             "Un vino costoso è sempre migliore",
@@ -218,32 +185,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "Cosa puoi dire se non sei sicuro?",
-          "answers": [
-            "Mi consigliate voi?",
-            "Prendo il più costoso",
-            "Non voglio vino"
-          ],
+          "answers": ["Mi consigliate voi?", "Prendo il più costoso", "Non voglio vino"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Chiedere consiglio è visto male.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "È utile dire:",
-          "answers": [
-            "Cosa mangerai",
-            "Il colore del tavolo",
-            "Nulla"
-          ],
+          "answers": ["Cosa mangerai", "Il colore del tavolo", "Nulla"],
           "correct": 0
         }
       ],
@@ -253,7 +209,7 @@
           "title": "Cosa dire al cameriere",
           "paragraphs": [
             "Non serve conoscere tutto: basta comunicare bene quello che vuoi.",
-            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+            "Frasi utili e professionali: ‘Cerco un bianco fresco, non troppo aromatico, sui 30 euro’, oppure ‘Condivideremo antipasto di mare e poi carne bianca: meglio una bottiglia versatile o due calici diversi?’. Dare contesto aiuta il servizio a fare una proposta precisa, senza forzarti su etichette costose."
           ],
           "keyPoints": [
             "Puoi dire se non sei sicuro",
@@ -263,10 +219,10 @@
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Parole che aiutano",
           "paragraphs": [
             "Ora sai parlare di vino senza ansia.",
-            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+            "Chiedere consiglio non e segno di inesperienza: e segno di buon senso. Il trucco è fare richieste chiare, brevi e legate al pasto."
           ],
           "keyPoints": [
             "Puoi dire se non sei sicuro",
@@ -286,32 +242,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "Il vino della casa è spesso:",
-          "answers": [
-            "Locale e semplice",
-            "Sempre costoso",
-            "Sempre spumante"
-          ],
+          "answers": ["Locale e semplice", "Sempre costoso", "Sempre spumante"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino della casa è sempre scadente.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "È una buona scelta quando:",
-          "answers": [
-            "Non vuoi complicarti la vita",
-            "Vuoi impressionare",
-            "Vuoi spendere molto"
-          ],
+          "answers": ["Non vuoi complicarti la vita", "Vuoi impressionare", "Vuoi spendere molto"],
           "correct": 0
         }
       ],
@@ -321,7 +266,7 @@
           "title": "Vino della casa: sì o no?",
           "paragraphs": [
             "Il vino della casa può essere una sorpresa positiva o una scelta sicura.",
-            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+            "Il vino della casa non è automaticamente scarso: in molte trattorie è un vino locale onesto, pensato per la cucina del posto. Per scegliere bene basta chiedere: da quale cantina arriva? è disponibile al calice prima della bottiglia? In un pranzo informale, può essere la scelta più intelligente per rapporto qualità/prezzo."
           ],
           "keyPoints": [
             "Il vino della casa è spesso",
@@ -331,10 +276,10 @@
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Quando conviene",
           "paragraphs": [
             "Ora sai quando fidarti del vino della casa.",
-            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+            "Se vuoi semplicità, coerenza col menu e spesa controllata, il vino della casa è spesso corretto. Se invece cerchi un profilo preciso o un abbinamento speciale, meglio carta vini dedicata."
           ],
           "keyPoints": [
             "Il vino della casa è spesso",
@@ -354,32 +299,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "Se non ti piace il vino puoi:",
-          "answers": [
-            "Dirlo educatamente",
-            "Urlare",
-            "Non bere mai più vino"
-          ],
+          "answers": ["Dirlo educatamente", "Urlare", "Non bere mai più vino"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "È obbligatorio finire il vino.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Un approccio corretto è:",
-          "answers": [
-            "Chiedere alternativa",
-            "Fingere entusiasmo",
-            "Andarsene"
-          ],
+          "answers": ["Chiedere alternativa", "Fingere entusiasmo", "Andarsene"],
           "correct": 0
         }
       ],
@@ -389,7 +323,7 @@
           "title": "Quando non ti piace il vino",
           "paragraphs": [
             "Può succedere: il vino non ti piace. Come comportarsi?",
-            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+            "Distingui due casi: 1) gusto personale (non è il tuo stile), 2) difetto tecnico (sa di tappo, aceto, ossidazione evidente). Nel primo caso puoi chiedere un'alternativa con cortesia: ‘Preferirei qualcosa di meno tannico’. Nel secondo è corretto segnalarlo subito: ‘Temo ci sia un difetto nel vino, possiamo verificarlo?’."
           ],
           "keyPoints": [
             "Se non ti piace il vino puoi",
@@ -399,10 +333,10 @@
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Gestire senza conflitto",
           "paragraphs": [
             "Ora sai gestire una situazione imbarazzante.",
-            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+            "Educazione e chiarezza risolvono quasi tutto. Non serve alzare i toni: basta descrivere la sensazione in modo semplice e chiedere supporto."
           ],
           "keyPoints": [
             "Se non ti piace il vino puoi",
@@ -422,32 +356,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "In una cena in due spesso si prende:",
-          "answers": [
-            "1 bottiglia",
-            "3 bottiglie",
-            "Nessuna"
-          ],
+          "answers": ["1 bottiglia", "3 bottiglie", "Nessuna"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "È meglio esagerare con il vino.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Se non sei sicuro:",
-          "answers": [
-            "Inizia con poco",
-            "Ordina tutto",
-            "Non bere"
-          ],
+          "answers": ["Inizia con poco", "Ordina tutto", "Non bere"],
           "correct": 0
         }
       ],
@@ -457,7 +380,7 @@
           "title": "Quanti vini ordinare",
           "paragraphs": [
             "Non sempre serve una bottiglia per persona.",
-            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+            "Regola pratica: una bottiglia da 0,75 L corrisponde a circa 5 calici. In due persone, spesso 1 bottiglia basta per un pasto completo. Se il menu cambia molto (pesce + carne), valuta mezzo percorso a calici e poi una bottiglia. L'obiettivo è accompagnare il cibo, non eccedere."
           ],
           "keyPoints": [
             "In una cena in due spesso si prende",
@@ -467,10 +390,10 @@
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Quantità giusta",
           "paragraphs": [
             "Ora sai evitare sprechi.",
-            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+            "Meglio partire con meno e, se serve, integrare. Ordinare troppo per paura di rimanere senza porta quasi sempre a spreco e scelta peggiore."
           ],
           "keyPoints": [
             "In una cena in due spesso si prende",
@@ -490,32 +413,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "Far respirare il vino significa:",
-          "answers": [
-            "Esporlo all’aria",
-            "Raffreddarlo",
-            "Scaldarlo"
-          ],
+          "answers": ["Esporlo all’aria", "Raffreddarlo", "Scaldarlo"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Tutti i vini devono respirare molto.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Serve soprattutto per:",
-          "answers": [
-            "Vini rossi strutturati",
-            "Bibite",
-            "Acqua"
-          ],
+          "answers": ["Vini rossi strutturati", "Bibite", "Acqua"],
           "correct": 0
         }
       ],
@@ -525,7 +437,7 @@
           "title": "Quando il vino va “respirato”",
           "paragraphs": [
             "Alcuni vini migliorano con l’ossigeno nel bicchiere.",
-            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+            "Far respirare significa aumentare il contatto con l'aria: nei rossi giovani e tannici aiuta ad aprire profumi e ammorbidire la sensazione in bocca. Esempio: un Aglianico o un Cabernet possono migliorare dopo 15-30 minuti. Non tutti i vini lo richiedono: molti bianchi aromatici rischiano di perdere freschezza se lasciati troppo aperti."
           ],
           "keyPoints": [
             "Far respirare il vino significa",
@@ -535,10 +447,10 @@
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Ossigeno utile, non eccesso",
           "paragraphs": [
             "Ora sai cosa significa far respirare un vino.",
-            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+            "Respirare non vuol dire aspettare ore sempre e comunque. Significa capire quando un vino ha bisogno di aprirsi e quando invece va bevuto subito."
           ],
           "keyPoints": [
             "Far respirare il vino significa",
@@ -558,32 +470,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "È meglio:",
-          "answers": [
-            "Chiedere che vino è",
-            "Inventare",
-            "Fare finta di sapere"
-          ],
+          "answers": ["Chiedere che vino è", "Inventare", "Fare finta di sapere"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "È normale non sapere tutto sul vino.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "La cosa peggiore è:",
-          "answers": [
-            "Fingere competenza",
-            "Chiedere aiuto",
-            "Provare vini nuovi"
-          ],
+          "answers": ["Fingere competenza", "Chiedere aiuto", "Provare vini nuovi"],
           "correct": 0
         }
       ],
@@ -593,7 +494,7 @@
           "title": "Come non fare figuracce",
           "paragraphs": [
             "Piccole regole sociali sul vino che evitano situazioni imbarazzanti.",
-            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+            "Le regole d'oro sono semplici: non fingere di sapere, fai domande chiare, annusa prima di giudicare, assaggia prima di commentare. Evita frasi assolute tipo ‘questo vino è sbagliato’ se è solo una preferenza personale. Dire ‘non è il mio stile’ è corretto e maturo."
           ],
           "keyPoints": [
             "È meglio",
@@ -603,10 +504,10 @@
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Eleganza semplice",
           "paragraphs": [
             "Ora sei a prova di figuraccia.",
-            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+            "Nel vino, l'eleganza vera non è ostentare competenza ma saper scegliere bene con naturalezza. Meglio una domanda intelligente che una certezza inventata."
           ],
           "keyPoints": [
             "È meglio",
@@ -626,32 +527,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "Un buon approccio è:",
-          "answers": [
-            "Chiedere consiglio",
-            "Scegliere a caso",
-            "Evitare il vino"
-          ],
+          "answers": ["Chiedere consiglio", "Scegliere a caso", "Evitare il vino"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il contesto conta nella scelta del vino.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "L’obiettivo è:",
-          "answers": [
-            "Godersi il momento",
-            "Impressionare tutti",
-            "Complicarsi la vita"
-          ],
+          "answers": ["Godersi il momento", "Impressionare tutti", "Complicarsi la vita"],
           "correct": 0
         }
       ],
@@ -661,7 +551,7 @@
           "title": "Il tuo primo ordine da intenditore",
           "paragraphs": [
             "Metti insieme tutto: scelta, contesto e sicurezza.",
-            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+            "Checklist finale prima dell'ordine: 1) che piatti arrivano? 2) quanto voglio spendere? 3) preferisco freschezza, morbidezza o intensità? 4) meglio bottiglia unica o calici? Con queste 4 domande ordini in modo lucido, senza farti guidare dal caso o dall'ansia sociale."
           ],
           "keyPoints": [
             "Un buon approccio è",
@@ -671,10 +561,10 @@
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Checklist finale",
           "paragraphs": [
             "Ora puoi ordinare vino come una persona esperta.",
-            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+            "L'obiettivo non è impressionare il tavolo: è bere meglio e vivere meglio il pasto. Il quiz adesso ti aiuta a trasformare questa logica in abitudine."
           ],
           "keyPoints": [
             "Un buon approccio è",

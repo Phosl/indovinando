@@ -1,0 +1,471 @@
+{
+  "level": 7,
+  "slug": "wine-regions",
+  "title": "Wine regions",
+  "description": "Understand the main wine regions and what to expect from each area",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Why regions matter",
+      "intro": "Knowing where a wine comes from already tells you a lot about what to expect.",
+      "final": "Now you understand why origin is essential.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "The production area indicates:",
+          "answers": ["Wine style", "Price", "Bottle shape"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Origin does not influence wine.",
+          "answers": ["True", "False"],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Knowing the region helps you:",
+          "answers": ["Choose better", "Complicate things", "Spend more"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Origin = identity",
+          "paragraphs": [
+            "Each region has different climate, soil, and traditions.",
+            "These elements directly influence the taste of the wine."
+          ],
+          "keyPoints": ["Climate", "Terroir", "Style"]
+        },
+        {
+          "id": "s2",
+          "title": "Practical use",
+          "paragraphs": [
+            "Knowing the region helps you predict the wine.",
+            "It’s a useful shortcut when choosing."
+          ],
+          "keyPoints": ["Predict", "Simplify", "Choose"]
+        }
+      ]
+    },
+
+    {
+      "id": "l2",
+      "title": "Italy: Tuscany",
+      "intro": "Tuscany is one of the most famous regions for red wines.",
+      "final": "Now you know what to expect from a Tuscan wine.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Tuscan wines are often:",
+          "answers": ["Structured reds", "Sweet", "Sparkling"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Tuscany is known for light white wines.",
+          "answers": ["True", "False"],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "A typical wine is:",
+          "answers": ["Chianti", "Champagne", "Rioja"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Tuscan style",
+          "paragraphs": [
+            "Wines are often based on Sangiovese.",
+            "They have structure, acidity, and aging potential."
+          ],
+          "keyPoints": ["Sangiovese", "Structure", "Acidity"]
+        },
+        {
+          "id": "s2",
+          "title": "When to choose it",
+          "paragraphs": [
+            "Perfect with meat and rich dishes.",
+            "Great for those who want balance and complexity."
+          ],
+          "keyPoints": ["Meat", "Balance", "Classic"]
+        }
+      ]
+    },
+
+    {
+      "id": "l3",
+      "title": "Italy: Piedmont",
+      "intro": "Piedmont is known for elegance and important wines.",
+      "final": "Now you recognize the Piedmont style.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Piedmont wines are often:",
+          "answers": ["Tannic and elegant", "Sweet", "Light"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Piedmont produces complex wines.",
+          "answers": ["True", "False"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "A typical wine is:",
+          "answers": ["Barolo", "Prosecco", "Lambrusco"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Nebbiolo",
+          "paragraphs": [
+            "The main grape is Nebbiolo.",
+            "It produces structured, long-lived wines."
+          ],
+          "keyPoints": ["Nebbiolo", "Tannins", "Longevity"]
+        },
+        {
+          "id": "s2",
+          "title": "Character",
+          "paragraphs": ["Complex and refined wines.", "They require attention and time."],
+          "keyPoints": ["Elegance", "Complexity", "Time"]
+        }
+      ]
+    },
+
+    {
+      "id": "l4",
+      "title": "Italy: Veneto",
+      "intro": "Veneto offers a wide variety of styles.",
+      "final": "Now you understand how versatile this region is.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Veneto produces:",
+          "answers": ["Different styles", "Only reds", "Only whites"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Veneto is a diverse region.",
+          "answers": ["True", "False"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "A famous wine is:",
+          "answers": ["Amarone", "Barolo", "Bordeaux"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Diversity",
+          "paragraphs": ["From Prosecco to Amarone.", "An extremely versatile region."],
+          "keyPoints": ["Prosecco", "Amarone", "Variety"]
+        },
+        {
+          "id": "s2",
+          "title": "When to choose it",
+          "paragraphs": [
+            "It depends on the style you pick.",
+            "Suitable for many different situations."
+          ],
+          "keyPoints": ["Versatility", "Choice", "Occasion"]
+        }
+      ]
+    },
+
+    {
+      "id": "l5",
+      "title": "France: Bordeaux",
+      "intro": "Bordeaux represents powerful and structured red wines.",
+      "final": "Now you recognize the Bordeaux style.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Bordeaux is known for:",
+          "answers": ["Red blends", "Sparkling wines", "Sweet wines"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Bordeaux often uses multiple grapes.",
+          "answers": ["True", "False"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "The style is:",
+          "answers": ["Structured", "Light", "Acidic only"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Blends",
+          "paragraphs": [
+            "Cabernet and Merlot are the main grapes.",
+            "Blending creates balance and complexity."
+          ],
+          "keyPoints": ["Blend", "Balance", "Structure"]
+        },
+        {
+          "id": "s2",
+          "title": "Character",
+          "paragraphs": ["Powerful yet elegant wines.", "Great with rich dishes."],
+          "keyPoints": ["Power", "Elegance", "Food"]
+        }
+      ]
+    },
+
+    {
+      "id": "l6",
+      "title": "France: Burgundy",
+      "intro": "Burgundy is known for finesse and precision.",
+      "final": "Now you understand what makes this region unique.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Burgundy is known for:",
+          "answers": ["Elegance", "Power", "Sweetness"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "It produces refined wines.",
+          "answers": ["True", "False"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Main grape:",
+          "answers": ["Pinot Noir", "Cabernet", "Syrah"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Finesse",
+          "paragraphs": ["More subtle and complex wines.", "Strong focus on terroir."],
+          "keyPoints": ["Pinot Noir", "Elegance", "Terroir"]
+        },
+        {
+          "id": "s2",
+          "title": "Experience",
+          "paragraphs": ["They require attention.", "They reward careful tasting."],
+          "keyPoints": ["Detail", "Sensitivity", "Experience"]
+        }
+      ]
+    },
+
+    {
+      "id": "l7",
+      "title": "France: Champagne",
+      "intro": "Champagne stands for high-quality sparkling wine.",
+      "final": "Now you recognize the Champagne style.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Champagne is:",
+          "answers": ["Sparkling", "Red", "Still sweet"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "It is a French region.",
+          "answers": ["True", "False"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Main feature:",
+          "answers": ["Bubbles", "Tannins", "Sweetness"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Method",
+          "paragraphs": ["Fermentation happens in the bottle.", "This creates complex aromas."],
+          "keyPoints": ["Method", "Bubbles", "Quality"]
+        },
+        {
+          "id": "s2",
+          "title": "When to choose it",
+          "paragraphs": ["Perfect for celebrations.", "Also great throughout a meal."],
+          "keyPoints": ["Celebration", "Versatility", "Elegance"]
+        }
+      ]
+    },
+
+    {
+      "id": "l8",
+      "title": "New World",
+      "intro": "New World wines are often more direct and intense.",
+      "final": "Now you recognize the international style.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "New World wines are:",
+          "answers": ["Intense", "Neutral", "Weak"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "They are often more immediate.",
+          "answers": ["True", "False"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Example:",
+          "answers": ["Napa Valley", "Bordeaux", "Chianti"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Style",
+          "paragraphs": ["More fruit-forward and powerful wines.", "Easier to understand."],
+          "keyPoints": ["Fruit", "Power", "Immediate"]
+        },
+        {
+          "id": "s2",
+          "title": "Difference",
+          "paragraphs": ["Less tied to tradition.", "More focused on modern taste."],
+          "keyPoints": ["Modern", "Accessible", "Direct"]
+        }
+      ]
+    },
+
+    {
+      "id": "l9",
+      "title": "Reading the label",
+      "intro": "The label is your guide to understanding a wine.",
+      "final": "Now you can navigate a bottle with confidence.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "A label shows:",
+          "answers": ["Origin", "Only brand", "Table color"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "The region is often written on the label.",
+          "answers": ["True", "False"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "It helps you:",
+          "answers": ["Understand the wine", "Decorate", "Confuse"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Key info",
+          "paragraphs": ["Region, grape, producer.", "Essential elements for choosing."],
+          "keyPoints": ["Region", "Grape", "Producer"]
+        },
+        {
+          "id": "s2",
+          "title": "Interpretation",
+          "paragraphs": ["The more labels you read, the more you learn.", "Make it a habit."],
+          "keyPoints": ["Experience", "Habit", "Choice"]
+        }
+      ]
+    },
+
+    {
+      "id": "l10",
+      "title": "Choosing by region",
+      "intro": "Using regions is the fastest way to choose a wine.",
+      "final": "Now you can choose confidently starting from the region.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Choosing by region is:",
+          "answers": ["Effective", "Useless", "Hard"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Regions help predict taste.",
+          "answers": ["True", "False"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Goal:",
+          "answers": ["Choose better", "Complicate", "Impress"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Mental shortcut",
+          "paragraphs": [
+            "Regions are a fast way to orient yourself.",
+            "They give you clear expectations."
+          ],
+          "keyPoints": ["Speed", "Clarity", "Choice"]
+        },
+        {
+          "id": "s2",
+          "title": "Real use",
+          "paragraphs": ["Use it at restaurants or wine shops.", "It simplifies every decision."],
+          "keyPoints": ["Practical", "Real", "Useful"]
+        }
+      ]
+    }
+  ]
+}

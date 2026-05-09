@@ -20,7 +20,7 @@ export default async function ProfilePage() {
 
   const {data: profile} = await supabase
     .from('profiles')
-    .select('username')
+    .select('username, avatar_emoji')
     .eq('id', user.id)
     .single()
 
@@ -33,8 +33,10 @@ export default async function ProfilePage() {
 
   return (
     <ProfileClient
+      userId={user.id}
       userLabel={profile?.username || user.email}
       email={user.email || ''}
+      initialAvatar={profile?.avatar_emoji || null}
       levels={levels}
       gamesCount={gamesCount || 0}
     />

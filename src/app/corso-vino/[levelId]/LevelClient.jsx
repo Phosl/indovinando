@@ -1,6 +1,7 @@
 'use client'
 
 import {useRouter} from 'next/navigation'
+import TopBar from '@/components/TopBar'
 import {useWineCourseProgress} from '../hooks/useWineCourseProgress'
 import styles from './level.module.scss'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
@@ -13,16 +14,15 @@ export default function LevelClient({level, lessons}) {
 
   return (
     <div className={styles.page}>
-      {/* Header */}
-      <div className={styles.header}>
+      <TopBar title={`Level ${level.order}`}>
         <button
-          className={styles.backButton}
+          type="button"
+          className="btn secondary"
           onClick={() => router.push('/corso-vino')}
           aria-label={isEnglish ? 'Back to course' : 'Torna al corso'}>
-          ←
+          ← {isEnglish ? 'Back' : 'Indietro'}
         </button>
-        <span className={styles.headerTitle}>Level {level.order}</span>
-      </div>
+      </TopBar>
 
       {/* Level hero */}
       <div className={styles.levelHero}>

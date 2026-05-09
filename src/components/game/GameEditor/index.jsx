@@ -51,6 +51,7 @@ export default function GameEditor({
   isQuickCreate = false,
 }) {
   const {lang} = useLanguage()
+  const isEnglish = lang === 'en'
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -621,7 +622,15 @@ export default function GameEditor({
 
   return (
     <div className={styles.editor}>
-      <TopBar title={isEditMode ? editorText.topBarEdit : editorText.topBarCreate} />
+      <TopBar title={isEditMode ? editorText.topBarEdit : editorText.topBarCreate}>
+        <button
+          type="button"
+          className="btn secondary"
+          onClick={() => router.push(isEditMode && gameId ? `/game/${gameId}` : '/dashboard')}
+          style={{order: -1}}>
+          ← {isEnglish ? 'Back' : 'Indietro'}
+        </button>
+      </TopBar>
       <GameStepsBreadcrumbs
         steps={steps}
         currentStep={step}

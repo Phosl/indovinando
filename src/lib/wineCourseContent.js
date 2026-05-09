@@ -8,6 +8,11 @@ const LEVEL_EMOJIS = {
   1: '🍇',
   2: '🍷',
   3: '🏅',
+  4: '📜', // storia e cursiosita
+  5: '🍽️', //Vino a tavola: le domande classiche
+  6: '⚗️', //la chimica del vino
+  7: '🌍', //Le zone
+  8: '🥂', //champagne e spumanti
 }
 
 function toOptionId(index, isTrueFalse, lang) {
@@ -171,13 +176,15 @@ function normalizeDidacticSlides(lesson, lang) {
 function normalizeLesson(rawLevel, lesson, lessonIndex, lang) {
   const levelNumber = Number(rawLevel.level)
   const lessonId = `level-${levelNumber}-lesson-${lessonIndex + 1}`
+  const levelEmoji = rawLevel.emoji ?? LEVEL_EMOJIS[levelNumber] ?? '🍷'
 
   return {
     id: lessonId,
     levelId: `level-${levelNumber}`,
     order: lessonIndex + 1,
     title: lesson.title,
-    emoji: lesson.emoji ?? '🍷',
+    // Lesson can override; otherwise inherit level emoji for consistent UX.
+    emoji: lesson.emoji ?? levelEmoji,
     intro: normalizeIntro(lesson, lang),
     didacticSlides: normalizeDidacticSlides(lesson, lang),
     questions: (lesson.questions ?? []).map((question, i) => normalizeQuestion(question, i, lang)),

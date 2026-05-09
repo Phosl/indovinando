@@ -1,0 +1,561 @@
+{
+  "level": 8,
+  "slug": "fondamenti-champagne",
+  "title": "Fondamenti Champagne",
+  "description": "Impara cos’è lo Champagne, come si produce, come si legge e come si sceglie davvero",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Cos’è lo Champagne",
+      "intro": "Lo Champagne è un vino spumante prodotto esclusivamente nella regione francese della Champagne con un metodo regolamentato.",
+      "final": "Ora sai cosa rende lo Champagne diverso da altri spumanti.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Cos’è lo Champagne?",
+          "answers": [
+            "Un vino spumante della Champagne",
+            "Qualsiasi vino frizzante",
+            "Un vino dolce generico"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Lo Champagne può essere prodotto ovunque.",
+          "answers": ["Vero", "Falso"],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Lo Champagne è principalmente:",
+          "answers": ["Spumante", "Fermo", "Liquore"],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "true_false",
+          "question": "Tutti gli spumanti sono Champagne.",
+          "answers": ["Vero", "Falso"],
+          "correct": 1
+        },
+        {
+          "id": "q5",
+          "type": "mcq",
+          "question": "Cosa definisce lo Champagne?",
+          "answers": ["Zona e metodo di produzione", "Solo il prezzo", "Solo il grado alcolico"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Cos’è lo Champagne",
+          "paragraphs": [
+            "Lo Champagne è un vino spumante prodotto esclusivamente nella regione francese della Champagne con un metodo regolamentato."
+          ],
+          "keyPoints": [
+            "Origine: regione Champagne",
+            "Metodo tradizionale obbligatorio",
+            "Spumante con rifermentazione in bottiglia"
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "l2",
+      "title": "Le uve dello Champagne",
+      "intro": "Lo Champagne nasce principalmente da tre uve: Chardonnay, Pinot Noir e Pinot Meunier.",
+      "final": "Ora riconosci i vitigni principali dello Champagne.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Qual è un vitigno bianco?",
+          "answers": ["Chardonnay", "Pinot Noir", "Merlot"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "Qual è un vitigno rosso?",
+          "answers": ["Pinot Noir", "Chardonnay", "Riesling"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "true_false",
+          "question": "Lo Champagne può essere un blend di più uve.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Quale uva dà freschezza?",
+          "answers": ["Chardonnay", "Carne", "Zucchero"],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "mcq",
+          "question": "Quale uva dà struttura?",
+          "answers": ["Pinot Noir", "Acqua", "Alcol aggiunto"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Le uve dello Champagne",
+          "paragraphs": [
+            "Lo Champagne nasce principalmente da tre uve: Chardonnay, Pinot Noir e Pinot Meunier."
+          ],
+          "keyPoints": [
+            "Chardonnay: freschezza ed eleganza",
+            "Pinot Noir: struttura e corpo",
+            "Pinot Meunier: fruttato e morbido"
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "l3",
+      "title": "Il metodo classico",
+      "intro": "Lo Champagne nasce da una seconda fermentazione in bottiglia chiamata metodo classico.",
+      "final": "Ora sai come si formano le bollicine.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Cosa crea le bollicine?",
+          "answers": ["Seconda fermentazione in bottiglia", "Gas aggiunto", "Agitazione"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Lo Champagne fermenta due volte.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Il metodo classico è chiamato anche:",
+          "answers": ["Méthode Champenoise", "Metodo veloce", "Metodo industriale"],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Dove avviene la seconda fermentazione?",
+          "answers": ["In bottiglia", "In vasca aperta", "All’aria"],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Le bollicine sono aggiunte artificialmente.",
+          "answers": ["Vero", "Falso"],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Il metodo classico",
+          "paragraphs": [
+            "Lo Champagne nasce da una seconda fermentazione in bottiglia chiamata metodo classico."
+          ],
+          "keyPoints": [
+            "Seconda fermentazione in bottiglia",
+            "Produzione naturale di CO2",
+            "Affinamento sui lieviti"
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "l4",
+      "title": "Pressione e bollicine",
+      "intro": "La pressione interna è ciò che rende lo Champagne unico.",
+      "final": "Ora capisci perché le bollicine sono così fini.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "La pressione nello Champagne è:",
+          "answers": ["Alta", "Bassa", "Nulla"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Le bottiglie di Champagne sono sotto pressione.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Le bollicine sono:",
+          "answers": ["Fine e persistenti", "Grandi e pesanti", "Assenti"],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "La pressione deriva da:",
+          "answers": ["Fermentazione", "Raffreddamento", "Filtrazione"],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Lo Champagne ha meno pressione del vino fermo.",
+          "answers": ["Vero", "Falso"],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Pressione e bollicine",
+          "paragraphs": ["La pressione interna è ciò che rende lo Champagne unico."],
+          "keyPoints": [
+            "Alta pressione naturale",
+            "CO2 intrappolata",
+            "Bollicine fini e persistenti"
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "l5",
+      "title": "Dosaggio e dolcezza",
+      "intro": "Il dosaggio determina il livello di dolcezza dello Champagne.",
+      "final": "Ora sai leggere lo stile zuccherino dello Champagne.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Il dosaggio serve a:",
+          "answers": ["Regolare la dolcezza", "Aumentare il colore", "Ridurre l’alcol"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Brut è dolce.",
+          "answers": ["Vero", "Falso"],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Brut Nature significa:",
+          "answers": ["Zero zucchero aggiunto", "Molto dolce", "Frizzante analcolico"],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Demi-Sec è:",
+          "answers": ["Semi-dolce", "Secco", "Amaro"],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Il dosaggio influisce sul gusto finale.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Dosaggio e dolcezza",
+          "paragraphs": ["Il dosaggio determina il livello di dolcezza dello Champagne."],
+          "keyPoints": ["Dosaggio = zucchero finale", "Brut = secco", "Demi-Sec = semi-dolce"]
+        }
+      ]
+    },
+
+    {
+      "id": "l6",
+      "title": "Aging sui lieviti",
+      "intro": "Lo Champagne spesso riposa sui lieviti, sviluppando aromi complessi.",
+      "final": "Ora capisci il ruolo dell’invecchiamento.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Cosa sono i lieviti?",
+          "answers": ["Sedimenti naturali", "Zucchero", "Acqua"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "L’affinamento sui lieviti aumenta la complessità.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "L’invecchiamento migliora:",
+          "answers": ["Profondità aromatica", "Dolcezza artificiale", "Colore solo"],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "I lieviti contribuiscono a:",
+          "answers": ["Aromi complessi", "Gas aggiunto", "Acqua"],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Tutti gli Champagne sono giovani.",
+          "answers": ["Vero", "Falso"],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Aging sui lieviti",
+          "paragraphs": ["Lo Champagne spesso riposa sui lieviti, sviluppando aromi complessi."],
+          "keyPoints": ["Contatto con i lieviti", "Sviluppo aromatico", "Maggiore complessità"]
+        }
+      ]
+    },
+
+    {
+      "id": "l7",
+      "title": "Terroir della Champagne",
+      "intro": "Il clima freddo e il suolo gessoso influenzano profondamente lo stile dello Champagne.",
+      "final": "Ora capisci l’importanza del territorio.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Dove si produce lo Champagne?",
+          "answers": ["Nord della Francia", "Italia", "Spagna"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il terroir non influisce sul vino.",
+          "answers": ["Vero", "Falso"],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Il suolo è principalmente:",
+          "answers": ["Gessoso", "Sabbioso tropicale", "Argilla rossa calda"],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Il clima è:",
+          "answers": ["Freddo", "Tropicale", "Desertico"],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Lo Champagne può essere prodotto ovunque legalmente.",
+          "answers": ["Vero", "Falso"],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Terroir della Champagne",
+          "paragraphs": [
+            "Il clima freddo e il suolo gessoso influenzano profondamente lo stile dello Champagne."
+          ],
+          "keyPoints": ["Clima freddo", "Suolo gessoso", "Freschezza naturale"]
+        }
+      ]
+    },
+
+    {
+      "id": "l8",
+      "title": "Come servirlo",
+      "intro": "Temperatura e bicchiere cambiano completamente l’esperienza.",
+      "final": "Ora sai servire correttamente lo Champagne.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Temperatura ideale:",
+          "answers": ["Freddo ma non ghiacciato", "Caldo", "Ambiente"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Lo Champagne si serve caldo.",
+          "answers": ["Vero", "Falso"],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Il bicchiere migliore è:",
+          "answers": ["Flute", "Bicchiere da birra", "Tazza"],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Servirlo troppo caldo:",
+          "answers": ["Riduce freschezza", "Aumenta bollicine", "Migliora aroma sempre"],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Il bicchiere influenza gli aromi.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Come servirlo",
+          "paragraphs": ["Temperatura e bicchiere cambiano completamente l’esperienza."],
+          "keyPoints": ["Temperatura controllata", "Flute o bicchiere ampio", "Servizio delicato"]
+        }
+      ]
+    },
+
+    {
+      "id": "l9",
+      "title": "Abbinamenti con lo Champagne",
+      "intro": "Lo Champagne è uno dei vini più versatili a tavola.",
+      "final": "Ora sai abbinarlo correttamente.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Lo Champagne si abbina bene con:",
+          "answers": ["Pesce", "Carne molto grassa sempre", "Dolci pesanti sempre"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Lo Champagne è solo da aperitivo.",
+          "answers": ["Vero", "Falso"],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "L’acidità aiuta a:",
+          "answers": ["Pulire il palato", "Aumentare dolcezza", "Ridurre alcool"],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Brut è:",
+          "answers": ["Versatile con il cibo", "Solo dessert", "Solo carne rossa"],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Lo Champagne non si abbina al cibo.",
+          "answers": ["Vero", "Falso"],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Abbinamenti con lo Champagne",
+          "paragraphs": ["Lo Champagne è uno dei vini più versatili a tavola."],
+          "keyPoints": ["Grande versatilità", "Acidità alta", "Ottimo con pesce e antipasti"]
+        }
+      ]
+    },
+
+    {
+      "id": "l10",
+      "title": "Scegliere uno Champagne",
+      "intro": "Scegliere lo Champagne giusto dipende da occasione, stile e gusto personale.",
+      "final": "Ora puoi scegliere uno Champagne con consapevolezza.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Per le celebrazioni si sceglie spesso:",
+          "answers": ["Brut", "Acqua", "Vino rosso caldo"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Tutti gli Champagne hanno lo stesso gusto.",
+          "answers": ["Vero", "Falso"],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Vintage significa:",
+          "answers": ["Annata singola", "Misto casuale", "Senza anno"],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Non-vintage è:",
+          "answers": ["Blend di annate", "Sempre dolce", "Sempre rosso"],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "La scelta dipende dall’occasione.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Scegliere uno Champagne",
+          "paragraphs": [
+            "Scegliere lo Champagne giusto dipende da occasione, stile e gusto personale."
+          ],
+          "keyPoints": [
+            "Occasione d’uso",
+            "Stile (Brut, Extra Brut, Demi-Sec)",
+            "Vintage vs Non-Vintage"
+          ]
+        }
+      ]
+    }
+  ]
+}

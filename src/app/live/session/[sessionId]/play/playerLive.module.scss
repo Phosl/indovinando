@@ -51,8 +51,12 @@
   align-items: center;
   gap: 10px;
   padding: 10px 14px;
-  background: var(--foreground);
-  border-bottom: 2px solid var(--button-secondary-border);
+  background: white;
+  box-shadow: 0px 4px 0px 0px var(--gray-light);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 16px 16px 0;
+  max-width: calc(100% - 32px);
 }
 
 .playerInfo {

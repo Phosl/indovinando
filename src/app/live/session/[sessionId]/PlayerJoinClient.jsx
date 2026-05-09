@@ -225,18 +225,22 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
       // Aspetta polling per rilevare inizio gioco
     } catch (err) {
       console.error('Error joining game:', err)
-      setError(
-        isEnglish
-          ? 'Error while joining the game'
-          : 'Errore durante l\'entrata nel gioco',
-      )
+      setError(isEnglish ? 'Error while joining the game' : "Errore durante l'entrata nel gioco")
       setLoading(false)
     }
   }
 
   return (
     <div className={styles.container}>
-      <TopBar title={`🎮 ${gameName}`} />
+      <TopBar title={`🎮 ${gameName}`}>
+        <button
+          type="button"
+          className="btn secondary"
+          onClick={() => router.push('/')}
+          style={{order: -1}}>
+          ← {isEnglish ? 'Back' : 'Indietro'}
+        </button>
+      </TopBar>
 
       {gameStarted ? (
         <div className={styles.waitingCard}>
@@ -281,7 +285,13 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
               {error && <div className={styles.error}>{error}</div>}
 
               <button type="submit" className={styles.joinButton} disabled={loading}>
-                {loading ? (isEnglish ? 'Joining...' : 'Entrata in corso...') : (isEnglish ? 'Join Game' : 'Entra nel Gioco')}
+                {loading
+                  ? isEnglish
+                    ? 'Joining...'
+                    : 'Entrata in corso...'
+                  : isEnglish
+                    ? 'Join Game'
+                    : 'Entra nel Gioco'}
               </button>
 
               {!userId && (

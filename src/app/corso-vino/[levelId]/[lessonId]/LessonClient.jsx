@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, useCallback, useEffect} from 'react'
+import {useState, useCallback, useEffect, useRef} from 'react'
 import {useRouter} from 'next/navigation'
 // Reuse live-game fullscreen shell styles
 import pStyles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
@@ -23,6 +23,24 @@ export default function LessonClient({level, lesson, nextLessonId}) {
   const [selectedId, setSelectedId] = useState(null)
   const [checked, setChecked] = useState(false)
   const [answers, setAnswers] = useState([]) // [{questionId, selectedId, isCorrect}]
+  const [comboStreak, setComboStreak] = useState(0)
+  const [maxCombo, setMaxCombo] = useState(0)
+  const [comboBonus, setComboBonus] = useState(0)
+  const [visibleCombo, setVisibleCombo] = useState(null)
+  const [slideMotion, setSlideMotion] = useState('idle')
+  const timersRef = useRef([])
+
+  const COMBO_MESSAGES = [
+    null,
+    null,
+    {emoji: '🔥', label: 'Combo x2!'},
+    {emoji: '💥', label: 'Combo x3!!'},
+    {emoji: '⚡️', label: 'Combo x4!!!'},
+  ]
+
+  const getComboMsg = useCallback((n) => {
+    return n >= 5 ? {emoji: '🤯', label: `Combo x${n}!!!!`} : (COMBO_MESSAGES[n] ?? null)
+  }, [])
 
   const didacticSlides = lesson.didacticSlides?.length
     ? lesson.didacticSlides
@@ -44,17 +62,40 @@ export default function LessonClient({level, lesson, nextLessonId}) {
 
   const isCorrect = checked && selectedId === correctId
   const nextLessonPath = nextLessonId ? `/corso-vino/${level.id}/${nextLessonId}` : null
+  const isSlideTransitioning = slideMotion !== 'idle'
+  const slideMotionClass =
+    slideMotion === 'exiting'
+      ? pStyles.slideExitLeft
+      : slideMotion === 'entering'
+        ? pStyles.slideEnterRight
+        : ''
+
+  const getComboBonus = useCallback((nextStreak) => {
+    if (nextStreak >= 4) return 15
+    if (nextStreak === 3) return 10
+    if (nextStreak === 2) return 5
+    return 0
+  }, [])
 
   const handleCheck = useCallback(() => {
-    if (!selectedId || checked) return
+    if (!selectedId || checked || isSlideTransitioning) return
     const correct = selectedId === correctId
+    const nextStreak = correct ? comboStreak + 1 : 0
+    const bonus = correct ? getComboBonus(nextStreak) : 0
+
+    setComboStreak(nextStreak)
+    setMaxCombo((prev) => Math.max(prev, nextStreak))
+    if (bonus > 0) {
+      setComboBonus((prev) => prev + bonus)
+    }
+
     setChecked(true)
     playSound(correct ? 'correct' : 'wrong')
     setAnswers((prev) => [
       ...prev,
-      {questionId: currentQuestion.id, selectedId, isCorrect: correct},
+      {questionId: currentQuestion.id, selectedId, isCorrect: correct, combo: nextStreak, bonus},
     ])
-  }, [selectedId, checked, correctId, currentQuestion, playSound])
+  }, [selectedId, checked, correctId, currentQuestion, playSound, comboStreak, getComboBonus])
 
   const handleDidacticContinue = useCallback(() => {
     if (!didacticIsLast) {
@@ -65,16 +106,58 @@ export default function LessonClient({level, lesson, nextLessonId}) {
   }, [didacticIsLast])
 
   const handleContinue = useCallback(() => {
+    if (isSlideTransitioning) return
+
     if (!isLastQuestion) {
-      setQuestionIndex((i) => i + 1)
-      setSelectedId(null)
-      setChecked(false)
+      setSlideMotion('exiting')
+
+      const exitTimer = window.setTimeout(() => {
+        setQuestionIndex((i) => i + 1)
+        setSelectedId(null)
+        setChecked(false)
+        setSlideMotion('entering')
+
+        const enterTimer = window.setTimeout(() => {
+          setSlideMotion('idle')
+        }, 220)
+
+        timersRef.current.push(enterTimer)
+      }, 220)
+
+      timersRef.current.push(exitTimer)
     } else {
       const score = answers.filter((a) => a.isCorrect).length + (isCorrect ? 1 : 0)
       completeLesson(level.id, lesson.id, score)
       setScreen('result')
     }
-  }, [isLastQuestion, answers, isCorrect, level.id, lesson.id, completeLesson])
+  }, [
+    isLastQuestion,
+    answers,
+    isCorrect,
+    level.id,
+    lesson.id,
+    completeLesson,
+    isSlideTransitioning,
+  ])
+
+  useEffect(() => {
+    if (comboStreak < 2) return
+    const msg = getComboMsg(comboStreak)
+    if (!msg) return
+    setVisibleCombo({...msg, key: Date.now()})
+
+    const timer = window.setTimeout(() => setVisibleCombo(null), 1600)
+    timersRef.current.push(timer)
+
+    return () => window.clearTimeout(timer)
+  }, [comboStreak, getComboMsg])
+
+  useEffect(() => {
+    return () => {
+      timersRef.current.forEach((t) => window.clearTimeout(t))
+      timersRef.current = []
+    }
+  }, [])
 
   // Enter key shortcut
   useEffect(() => {
@@ -88,11 +171,11 @@ export default function LessonClient({level, lesson, nextLessonId}) {
         router.push(nextLessonPath ?? `/corso-vino/${level.id}`)
         return
       }
-      if (!checked && selectedId) {
+      if (!checked && selectedId && !isSlideTransitioning) {
         handleCheck()
         return
       }
-      if (checked) handleContinue()
+      if (checked && !isSlideTransitioning) handleContinue()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -105,6 +188,7 @@ export default function LessonClient({level, lesson, nextLessonId}) {
     handleDidacticContinue,
     nextLessonPath,
     level.id,
+    isSlideTransitioning,
     router,
   ])
 
@@ -234,6 +318,18 @@ export default function LessonClient({level, lesson, nextLessonId}) {
             <p className={xStyles.resultPct}>
               {pct}% {isEnglish ? 'correct' : 'corrette'}
             </p>
+            <div className={xStyles.resultStatsGrid}>
+              <div className={xStyles.resultStatCard}>
+                <span className={xStyles.resultStatLabel}>
+                  {isEnglish ? 'Max combo' : 'Combo max'}
+                </span>
+                <span className={xStyles.resultStatValue}>x{maxCombo}</span>
+              </div>
+              <div className={xStyles.resultStatCard}>
+                <span className={xStyles.resultStatLabel}>{isEnglish ? 'Bonus' : 'Bonus'}</span>
+                <span className={xStyles.resultStatValue}>+{comboBonus}</span>
+              </div>
+            </div>
           </div>
 
           {/* Per-question breakdown */}
@@ -331,7 +427,15 @@ export default function LessonClient({level, lesson, nextLessonId}) {
         </div>
       </div>
 
-      <div className={`${pStyles.slideContent} ${!checked ? pStyles.mobileCheckSpacing : ''}`}>
+      {visibleCombo && (
+        <div key={visibleCombo.key} className={pStyles.comboToast}>
+          <span className={pStyles.comboEmoji}>{visibleCombo.emoji}</span>
+          <span className={pStyles.comboLabel}>{visibleCombo.label}</span>
+        </div>
+      )}
+
+      <div
+        className={`${pStyles.slideContent} ${slideMotionClass} ${!checked ? pStyles.mobileCheckSpacing : ''}`}>
         <p className={pStyles.questionCounter}>
           {isEnglish ? 'Question' : 'Domanda'} {questionIndex + 1} {isEnglish ? 'of' : 'di'}{' '}
           {questions.length}
@@ -354,7 +458,7 @@ export default function LessonClient({level, lesson, nextLessonId}) {
               <button
                 key={opt.id}
                 className={cls}
-                disabled={checked}
+                disabled={checked || isSlideTransitioning}
                 onClick={() => !checked && setSelectedId(opt.id)}>
                 {opt.text}
               </button>
@@ -369,13 +473,33 @@ export default function LessonClient({level, lesson, nextLessonId}) {
         }`}>
         {checked && (
           <div className={pStyles.resultFeedback}>
-            <span className={pStyles.feedbackIcon}>{isCorrect ? '🎉' : '💡'}</span>
-            <span className={pStyles.feedbackLabel}>{feedbackText}</span>
+            {isCorrect ? (
+              <>
+                <span className={pStyles.feedbackIcon}>
+                  {getComboBonus(comboStreak) > 0 ? '🔥' : '🎉'}
+                </span>
+                <span className={pStyles.feedbackLabel}>
+                  {getComboBonus(comboStreak) > 0
+                    ? `Combo x${comboStreak}! +1 (+${getComboBonus(comboStreak)} bonus)`
+                    : isEnglish
+                      ? 'Correct! +1'
+                      : 'Corretto! +1'}
+                </span>
+              </>
+            ) : (
+              <>
+                <span className={pStyles.feedbackIcon}>💡</span>
+                <span className={pStyles.feedbackLabel}>{feedbackText}</span>
+              </>
+            )}
           </div>
         )}
 
         {!checked ? (
-          <button className={pStyles.continueButton} disabled={!selectedId} onClick={handleCheck}>
+          <button
+            className={pStyles.checkButton}
+            disabled={!selectedId || isSlideTransitioning}
+            onClick={handleCheck}>
             {isEnglish ? 'Check' : 'Controlla'}
           </button>
         ) : (

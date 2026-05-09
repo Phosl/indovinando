@@ -15,8 +15,8 @@ export default function GamePlayPageClient({game, questions, bottles, isOwner, o
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleDelete = async () => {
-    const message = isEnglish 
-      ? 'Are you sure you want to delete this game? It cannot be recovered.' 
+    const message = isEnglish
+      ? 'Are you sure you want to delete this game? It cannot be recovered.'
       : 'Sei sicuro di voler eliminare questo gioco? Non sarà recuperabile.'
     if (!window.confirm(message)) {
       return
@@ -32,7 +32,14 @@ export default function GamePlayPageClient({game, questions, bottles, isOwner, o
   return (
     <main className="flex-container">
       <div className="flex-column" style={{width: '100%', maxWidth: 960, margin: '0 auto'}}>
-        <TopBar>
+        <TopBar title={`🎮 ${game.name}`}>
+          <button
+            type="button"
+            className="btn secondary"
+            onClick={() => router.push('/dashboard')}
+            style={{order: -1}}>
+            {isEnglish ? '← Back' : '← Indietro'}
+          </button>
           <a href={`/game/${game.id}/live`} className="btn primary">
             {isEnglish ? 'Play Live' : 'Gioca Live'}
           </a>

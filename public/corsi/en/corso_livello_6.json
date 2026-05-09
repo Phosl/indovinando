@@ -2,111 +2,85 @@
   "level": 6,
   "slug": "chimica-del-vino",
   "title": "The chemistry of wine",
-  "description": "Understand what really happens in wine: sugars, acids, alcohol and transformations",
+  "description": "From must to glass: how sugars, acids, alcohol and oxygen shape style and quality",
   "lessons": [
     {
       "id": "l1",
       "title": "Sugar and alcohol",
-      "intro": "Wine is born from a chemical transformation: grape sugar becomes alcohol.",
-      "final": "Now you know where the alcohol in wine comes from.",
+      "intro": "Every alcohol level comes from vineyard and cellar choices: understanding sugar-to-alcohol conversion helps you read a wine style.",
+      "final": "Now you can connect grape ripeness and alcoholic strength in the glass.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "What becomes of sugar during fermentation?",
-          "answers": [
-            "Alcohol",
-            "Water",
-            "Acid"
-          ],
+          "question": "During fermentation, yeasts mainly convert:",
+          "answers": ["Sugars into alcohol and CO2", "Acids into sugar", "Tannins into color"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "More sugar potentially means more alcohol.",
-          "answers": [
-            "True",
-            "False"
-          ],
+          "question": "All else being equal, more sugar in must can lead to more alcohol.",
+          "answers": ["True", "False"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "Who processes sugar?",
-          "answers": [
-            "Yeasts",
-            "Oxygen",
-            "Light"
-          ],
+          "question": "A wine from very ripe grapes tends to have:",
+          "answers": ["Higher potential alcohol", "Always lower pH", "No acidity"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Sugar → alcohol",
+          "title": "From sugar to ABV",
           "paragraphs": [
-            "Grape must contains natural sugars.",
-            "During fermentation, yeasts transform them into alcohol and carbon dioxide."
+            "In must, sugar concentration tells you how much raw material yeasts can use to produce alcohol.",
+            "That is why later harvests can create richer, higher-alcohol wines, while earlier harvests often produce leaner and sharper profiles."
           ],
-          "keyPoints": [
-            "Starting sugar",
-            "Chemical transformation",
-            "Alcohol production"
-          ]
+          "keyPoints": ["Fermentable sugar", "Role of yeasts", "Final wine style"]
         },
         {
           "id": "s2",
-          "title": "Before the quiz",
+          "title": "Practical case: two Pinot Grigio wines",
           "paragraphs": [
-            "Now you know where the alcohol in wine comes from.",
-            "Move on to the questions to establish the basic concept of fermentation."
+            "Pinot Grigio A: earlier harvest, 12% ABV, citrus-driven and light.",
+            "Pinot Grigio B: riper harvest, 13.5% ABV, softer texture and warmer finish."
           ],
-          "keyPoints": [
-            "Starting sugar",
-            "Chemical transformation",
-            "Alcohol production"
-          ]
+          "keyPoints": ["Grape ripeness", "Perceived alcohol", "Tasting differences"]
         }
       ]
     },
     {
       "id": "l2",
-      "title": "Acidity of the wine",
-      "intro": "Acidity is one of the key elements of wine: it gives freshness and balance.",
-      "final": "Now you understand why acidity is essential.",
+      "title": "Acidity and freshness",
+      "intro": "Acidity is not a flaw: it is the engine of drinkability, especially in whites and sparkling wines.",
+      "final": "Now you can separate true freshness from simple lightness.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "The acidity in wine gives:",
-          "answers": [
-            "Freshness",
-            "Sweetness",
-            "Color"
-          ],
+          "question": "In tasting, good acidity mainly increases:",
+          "answers": ["Lift and salivation", "Sweetness", "Tannic grip"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "A wine without acidity would be flat.",
-          "answers": [
-            "True",
-            "False"
-          ],
+          "question": "A wine with no acidity can feel flat and tired.",
+          "answers": ["True", "False"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "What sensation is linked to acidity?",
+          "question": "Which style often needs marked acidity for balance?",
           "answers": [
-            "Salivation",
-            "Bitter",
-            "Heat"
+            "Traditional method sparkling",
+            "Very sweet passito",
+            "Extreme oxidative wine"
           ],
           "correct": 0
         }
@@ -114,67 +88,52 @@
       "slides": [
         {
           "id": "s1",
-          "title": "The role of acids",
+          "title": "Why acidity matters",
           "paragraphs": [
-            "The natural grape acids give structure and freshness.",
-            "Without acidity the wine is heavy and not very lively."
+            "Tartaric, malic and citric acids are natural grape components that support wine over time.",
+            "On the palate, acidity drives another sip and improves compatibility with food."
           ],
-          "keyPoints": [
-            "Freshness",
-            "Balance",
-            "Structure"
-          ]
+          "keyPoints": ["Natural acids", "Salivation", "Food pairing value"]
         },
         {
           "id": "s2",
-          "title": "Before the quiz",
+          "title": "Quick pairing test",
           "paragraphs": [
-            "Now you understand why acidity is essential.",
-            "Check your understanding with the questions."
+            "A crisp white (for example young Verdicchio) refreshes the palate with fried seafood.",
+            "A low-acid white with the same dish can feel heavy after a few bites."
           ],
-          "keyPoints": [
-            "Freshness",
-            "Balance",
-            "Structure"
-          ]
+          "keyPoints": ["Table freshness", "Palate cleansing", "Food-wine balance"]
         }
       ]
     },
     {
       "id": "l3",
-      "title": "pH of wine",
-      "intro": "pH measures the chemical acidity of wine and is essential for stability and taste.",
-      "final": "Now you know what pH means in wine.",
+      "title": "pH and stability",
+      "intro": "pH is a small number with major impact: microbial stability, color behavior and aging potential all depend on it.",
+      "final": "Now you can read pH as a practical cellar indicator, not just a theory term.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "pH measures:",
-          "answers": [
-            "Acidity",
-            "Sweetness",
-            "Color"
-          ],
+          "question": "A lower pH generally indicates:",
+          "answers": ["Higher acidity", "Higher sweetness", "Less color"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "A lower pH means more acidity.",
-          "answers": [
-            "True",
-            "False"
-          ],
+          "question": "pH can influence color stability in red wines.",
+          "answers": ["True", "False"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "pH affects:",
+          "question": "In the cellar, overly high pH raises the risk of:",
           "answers": [
-            "Stability of wine",
-            "Label",
-            "Bottle shape"
+            "Microbiological issues",
+            "Cleaner and faster fermentation",
+            "Natural tannin increase"
           ],
           "correct": 0
         }
@@ -182,271 +141,203 @@
       "slides": [
         {
           "id": "s1",
-          "title": "What is pH",
+          "title": "pH vs total acidity",
           "paragraphs": [
-            "pH is a scientific measurement of acidity.",
-            "In wine it affects taste, conservation and color."
+            "Total acidity and pH describe different aspects: quantity of acids versus their chemical strength and sensory impact.",
+            "Two wines with similar acidity can taste very different if pH is not aligned."
           ],
-          "keyPoints": [
-            "pH scale",
-            "Real acidity",
-            "Stability"
-          ]
+          "keyPoints": ["Complementary metrics", "Sensory impact", "Cellar control"]
         },
         {
           "id": "s2",
-          "title": "Before the quiz",
+          "title": "Operational example",
           "paragraphs": [
-            "Now you know what pH means in wine.",
-            "Test your understanding."
+            "Young red at pH 3.35: brighter color and tighter profile.",
+            "Similar red at pH 3.75: less vivid color and higher long-term vulnerability."
           ],
-          "keyPoints": [
-            "pH scale",
-            "Real acidity",
-            "Stability"
-          ]
+          "keyPoints": ["Color", "Longevity", "Microbiological safety"]
         }
       ]
     },
     {
       "id": "l4",
-      "title": "Tannins",
-      "intro": "Tannins are molecules that give structure and a sensation of dryness.",
-      "final": "Now you recognize the role of tannins.",
+      "title": "Tannins: structure and texture",
+      "intro": "Saying 'tannic' is not enough: tannin quality ranges from green and harsh to ripe and silky.",
+      "final": "Now you can evaluate tannins by texture, not just intensity.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Tannins give the sensation of:",
-          "answers": [
-            "Dryness",
-            "Sweetness",
-            "Freshness"
-          ],
+          "question": "The classic tannin sensation is:",
+          "answers": ["Astringency", "Effervescence", "Sweetness"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "Tannins are found mainly in red wines.",
-          "answers": [
-            "True",
-            "False"
-          ],
+          "question": "Good phenolic ripeness can make tannins feel smoother.",
+          "answers": ["True", "False"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "Tannins come from:",
-          "answers": [
-            "Skins and seeds",
-            "Water",
-            "Sugar"
-          ],
+          "question": "In red wines, tannins mostly come from:",
+          "answers": ["Skins and seeds", "Only oak", "Added water"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "What are tannins",
+          "title": "Where tannins come from",
           "paragraphs": [
-            "Tannins are natural compounds in grapes.",
-            "They give structure and aging capacity to the wine."
+            "Extracted during maceration and fermentation, tannins build structure and aging potential.",
+            "Careful temperature and pump-over management helps avoid bitter, aggressive extraction."
           ],
-          "keyPoints": [
-            "Dryness",
-            "Structure",
-            "Origin in the skins"
-          ]
+          "keyPoints": ["Maceration", "Tannin quality", "Aging potential"]
         },
         {
           "id": "s2",
-          "title": "Before the quiz",
+          "title": "Service vocabulary",
           "paragraphs": [
-            "Now you recognize the role of tannins.",
-            "Check with questions."
+            "'Polished tannins' means a fine, less abrasive grain on gums and tongue.",
+            "'Green tannins' describes a dry, hard texture, often linked to incomplete grape ripeness."
           ],
-          "keyPoints": [
-            "Dryness",
-            "Structure",
-            "Origin in the skins"
-          ]
+          "keyPoints": ["Useful descriptors", "Grain and texture", "Guest communication"]
         }
       ]
     },
     {
       "id": "l5",
-      "title": "Alcohol and perception",
-      "intro": "Alcohol is not just a percentage: it affects the body and sensations.",
-      "final": "Now you know how alcohol changes wine.",
+      "title": "Alcohol and heat perception",
+      "intro": "Alcohol affects body, perceived sweetness and warmth: balance with acidity and tannin is essential.",
+      "final": "Now you know when alcohol supports a wine and when it dominates it.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Alcohol gives the sensation of:",
-          "answers": [
-            "Heat",
-            "Acidity",
-            "Bitter"
-          ],
+          "question": "On the palate, alcohol typically creates:",
+          "answers": ["Warmth", "Astringency", "Saltiness"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "More alcohol increases the body of the wine.",
-          "answers": [
-            "True",
-            "False"
-          ],
+          "question": "Higher ABV often needs stronger freshness to remain balanced.",
+          "answers": ["True", "False"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "Alcohol contributes to:",
-          "answers": [
-            "Structure",
-            "Color",
-            "Label"
-          ],
+          "question": "Which pairing helps with a high-alcohol red?",
+          "answers": ["Succulent protein-rich dish", "Plain salad", "Very sweet dessert"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Effect of alcohol",
+          "title": "Alcohol is more than a number",
           "paragraphs": [
-            "Alcohol contributes to the body of the wine.",
-            "It gives a warm sensation in the mouth."
+            "As ABV rises, volume and roundness can increase, but so can the risk of a hot and unbalanced finish.",
+            "Serving temperature can moderate alcohol perception and protect aromatic precision."
           ],
-          "keyPoints": [
-            "Heat",
-            "Structure",
-            "Balance"
-          ]
+          "keyPoints": ["Body", "Warmth", "Serving temperature"]
         },
         {
           "id": "s2",
-          "title": "Before the quiz",
+          "title": "Tasting comparison",
           "paragraphs": [
-            "Now you know how alcohol changes wine.",
-            "Test your understanding."
+            "Wine A at 12.5%: leaner, more vertical, drier finish.",
+            "Wine B at 15%: fuller and broader, best balanced by rich food or vivid acidity."
           ],
-          "keyPoints": [
-            "Heat",
-            "Structure",
-            "Balance"
-          ]
+          "keyPoints": ["Palate weight", "Balance management", "Pairing strategy"]
         }
       ]
     },
     {
       "id": "l6",
-      "title": "Carbon dioxide",
-      "intro": "Carbon dioxide can also be present in still wines.",
-      "final": "Now you know why some wines “sting”.",
+      "title": "Carbon dioxide (CO2)",
+      "intro": "CO2 is not only for sparkling wine: even still wines can show it and change mouthfeel.",
+      "final": "Now you can tell when CO2 is a stylistic plus and when it becomes a flaw.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "CO2 feels like:",
-          "answers": [
-            "Effervescence",
-            "Sweetness",
-            "Bitter"
-          ],
+          "question": "Residual CO2 in a still wine can give:",
+          "answers": ["Light liveliness", "More tannin", "Darker color"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "Only sparkling wines contain CO2.",
-          "answers": [
-            "True",
-            "False"
-          ],
+          "question": "Only sparkling wines can contain carbon dioxide.",
+          "answers": ["True", "False"],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "CO2 comes from:",
-          "answers": [
-            "Fermentation",
-            "Bottle",
-            "Light"
-          ],
+          "question": "CO2 mainly originates from:",
+          "answers": ["Fermentation", "Oxidation", "Sterile filtration"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "CO2 in wine",
+          "title": "Origin and function of CO2",
           "paragraphs": [
-            "CO2 is a byproduct of fermentation.",
-            "It can remain in the wine giving a sensation of freshness."
+            "Alcoholic fermentation naturally produces CO2, and a small portion may remain dissolved in wine.",
+            "In some young whites, a slight amount increases freshness and palate tension."
           ],
-          "keyPoints": [
-            "Fermentation",
-            "Effervescence",
-            "Freshness"
-          ]
+          "keyPoints": ["Fermentation byproduct", "Liveliness", "Stylistic use"]
         },
         {
           "id": "s2",
-          "title": "Before the quiz",
+          "title": "When it is too much",
           "paragraphs": [
-            "Now you know why some wines sting.",
-            "Test your knowledge."
+            "If CO2 is excessive in a wine meant to be still, it can mask delicate aromas and feel unfinished.",
+            "Proper maturation and bottling management helps prevent this issue."
           ],
-          "keyPoints": [
-            "Fermentation",
-            "Effervescence",
-            "Freshness"
-          ]
+          "keyPoints": ["Style coherence", "Aromatic impact", "Cellar control"]
         }
       ]
     },
     {
       "id": "l7",
       "title": "Oxygen and oxidation",
-      "intro": "Oxygen can make or break wine.",
-      "final": "Now you know when oxygen is a problem.",
+      "intro": "Oxygen helps in small doses, but excess exposure can quickly push wine toward decline.",
+      "final": "Now you can separate useful micro-oxygenation from harmful oxidation.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Too much oxygen:",
+          "question": "Too much oxygen is most likely to cause:",
           "answers": [
-            "It ruins the wine",
-            "It's always improving",
-            "Nothing changes"
+            "Loss of freshness and fruit",
+            "Higher aromatic precision",
+            "Total reduction"
           ],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "A little oxygen can help the wine.",
-          "answers": [
-            "True",
-            "False"
-          ],
+          "question": "A little oxygen can help soften some red wines.",
+          "answers": ["True", "False"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "Oxidation leads to:",
+          "question": "A classic sign of advanced oxidation is:",
           "answers": [
-            "Loss of freshness",
-            "Increased sweetness",
-            "Blue color"
+            "Cooked apple and walnut notes",
+            "Intense fresh citrus notes",
+            "Magically silkier tannins"
           ],
           "correct": 0
         }
@@ -454,135 +345,113 @@
       "slides": [
         {
           "id": "s1",
-          "title": "Oxygen",
+          "title": "Dose and timing of oxygen",
           "paragraphs": [
-            "Oxygen is useful in small quantities.",
-            "In excess it causes oxidation and deterioration."
+            "During racking, aging or service, oxygen always changes wine profile; it is never neutral.",
+            "Structured reds may benefit from moderate oxygen contact, while delicate whites have a much narrower margin."
           ],
-          "keyPoints": [
-            "Balance",
-            "Oxidation",
-            "Deterioration"
-          ]
+          "keyPoints": ["Exposure control", "Style-dependent effect", "Oxidative risk"]
         },
         {
           "id": "s2",
-          "title": "Before the quiz",
+          "title": "Restaurant service example",
           "paragraphs": [
-            "Now you know when oxygen is a problem.",
-            "Answer the questions."
+            "Decanting a young, closed red can improve aromatic opening.",
+            "Leaving an aromatic white exposed for hours can flatten and dull its profile."
           ],
-          "keyPoints": [
-            "Balance",
-            "Oxidation",
-            "Deterioration"
-          ]
+          "keyPoints": ["Thoughtful decanting", "Wine protection", "Service decisions"]
         }
       ]
     },
     {
       "id": "l8",
-      "title": "Residual sugars",
-      "intro": "Not all sugars are transformed: some remain in the wine.",
-      "final": "Now you understand what makes a wine sweet.",
+      "title": "Residual sugar and style",
+      "intro": "Residual sugar is not only about sweetness: it also affects body, balance and aromatic expression.",
+      "final": "Now you can clearly explain dry, off-dry and sweet styles.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Residual sugar means:",
+          "question": "Residual sugar is:",
           "answers": [
-            "Unfermented sugar",
-            "Added sugar",
-            "Cooked sugar"
+            "Sugar left after fermentation",
+            "Sugar added in bottle",
+            "Sugar found only in red wine"
           ],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "A dry wine has little residual sugar.",
-          "answers": [
-            "True",
-            "False"
-          ],
+          "question": "A wine can feel less sweet if acidity is high, even with small residual sugar.",
+          "answers": ["True", "False"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "More residual sugar =",
-          "answers": [
-            "More sweetness",
-            "More acidity",
-            "More tannins"
-          ],
+          "question": "In which style is residual sugar often intentionally preserved?",
+          "answers": ["Aromatic Moscato", "Brut nature sparkling", "Austere oaked red"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Residual sugar",
+          "title": "Dry does not mean absolute zero sugar",
           "paragraphs": [
-            "Not all sugar is transformed.",
-            "The residual amount determines the sweetness."
+            "Many dry wines still contain small residual sugar amounts without tasting sweet.",
+            "Final perception depends on balance with acidity, alcohol and serving temperature."
           ],
-          "keyPoints": [
-            "Sweetness",
-            "Incomplete fermentation",
-            "Wine style"
-          ]
+          "keyPoints": ["Actual residue", "Perceived sweetness", "Taste balance"]
         },
         {
           "id": "s2",
-          "title": "Before the quiz",
+          "title": "Guest-friendly explanation",
           "paragraphs": [
-            "Now you understand what makes a wine sweet.",
-            "Test your knowledge."
+            "If a guest asks for 'not too sweet', suggest a wine with low residual sugar and vivid acidity.",
+            "If they ask for a softer profile, a slight residue can round the palate without becoming dessert-like."
           ],
           "keyPoints": [
-            "Sweetness",
-            "Incomplete fermentation",
-            "Wine style"
+            "Simple communication",
+            "Expectation management",
+            "Personalized recommendation"
           ]
         }
       ]
     },
     {
       "id": "l9",
-      "title": "Sulfurous (SO2)",
-      "intro": "Sulfur dioxide is used to protect wine.",
-      "final": "Now you know why sulfur dioxide is used.",
+      "title": "Sulfur dioxide (SO2)",
+      "intro": "SO2 is a protective tool: the real question is dose, timing and purpose, not slogans.",
+      "final": "Now you can discuss SO2 with technical clarity and no alarmism.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Sulfur dioxide is used to:",
+          "question": "The main role of SO2 in wine is:",
           "answers": [
-            "Protect the wine",
-            "Sweeten",
-            "Color"
+            "Protection from oxidation and microbes",
+            "Increase alcohol",
+            "Boost purple color"
           ],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "Sulfur dioxide is always harmful.",
-          "answers": [
-            "True",
-            "False"
-          ],
-          "correct": 1
+          "question": "'No sulfites added' does not automatically mean better wine in every case.",
+          "answers": ["True", "False"],
+          "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "Serves against:",
+          "question": "Correct SO2 management aims for:",
           "answers": [
-            "Oxidation and bacteria",
-            "Heat",
-            "Water"
+            "Stability and aromatic cleanliness",
+            "Extra sweetness",
+            "More effervescence"
           ],
           "correct": 0
         }
@@ -590,67 +459,52 @@
       "slides": [
         {
           "id": "s1",
-          "title": "SO2",
+          "title": "Free SO2 and total SO2",
           "paragraphs": [
-            "Sulfur dioxide is a preservative.",
-            "Protects wine from oxygen and microorganisms."
+            "Free SO2 is the active fraction that actually protects wine and aromas.",
+            "Good pH control and cellar hygiene often allow lower doses while keeping safety and stability."
           ],
-          "keyPoints": [
-            "Protection",
-            "Stability",
-            "Conservation"
-          ]
+          "keyPoints": ["Targeted protection", "pH relationship", "Technical approach"]
         },
         {
           "id": "s2",
-          "title": "Before the quiz",
+          "title": "Balanced message",
           "paragraphs": [
-            "Now you know why sulfur dioxide is used.",
-            "Answer the questions."
+            "With guests, avoid extremes: explain SO2 as a seatbelt for wine integrity.",
+            "Low or high alone is not the whole story; what matters is in-glass quality over time."
           ],
-          "keyPoints": [
-            "Protection",
-            "Stability",
-            "Conservation"
-          ]
+          "keyPoints": ["No alarmism", "Guest education", "Long-term quality"]
         }
       ]
     },
     {
       "id": "l10",
-      "title": "Chemical balance of wine",
-      "intro": "A great wine is a balance between all the chemical components.",
-      "final": "Now you know what makes a truly harmonious wine.",
+      "title": "Final chemical balance",
+      "intro": "A compelling wine does not win on one parameter alone: it succeeds when all components work together.",
+      "final": "Now you can evaluate chemical-sensory harmony as a true quality criterion.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "A balanced wine has:",
-          "answers": [
-            "Balanced components",
-            "High alcohol only",
-            "Only acidity"
-          ],
+          "question": "A balanced wine shows:",
+          "answers": ["Integrated components", "Only high alcohol", "Only sharp acidity"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
-          "question": "Balance is fundamental to quality.",
-          "answers": [
-            "True",
-            "False"
-          ],
+          "question": "Too much of one component can reduce drinkability and harmony.",
+          "answers": ["True", "False"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "Too much of one element makes the wine:",
+          "question": "Which professional summary best describes balance?",
           "answers": [
-            "Unbalanced",
-            "Perfect",
-            "More expensive"
+            "No element dominates unpleasantly",
+            "The wine is more expensive",
+            "Color is very intense"
           ],
           "correct": 0
         }
@@ -658,29 +512,21 @@
       "slides": [
         {
           "id": "s1",
-          "title": "Balance",
+          "title": "The harmony formula",
           "paragraphs": [
-            "Wine is a complex chemical system.",
-            "Quality arises from the balance between the components."
+            "Acidity, alcohol, tannins, residual sugar and aroma profile should support each other.",
+            "When one voice overwhelms the others, the wine loses precision and easy drinkability."
           ],
-          "keyPoints": [
-            "Balance",
-            "Structure",
-            "Harmony"
-          ]
+          "keyPoints": ["Integration", "Drinkability", "Perceived quality"]
         },
         {
           "id": "s2",
-          "title": "Before the quiz",
+          "title": "Taster checklist",
           "paragraphs": [
-            "Now you know what makes a harmonious wine.",
-            "Complete the level with the quiz."
+            "Ask yourself: is the sip coherent from attack to finish? is it clean? do aromas return clearly?",
+            "If yes, you are likely tasting a wine with strong technical and sensory balance."
           ],
-          "keyPoints": [
-            "Balance",
-            "Structure",
-            "Harmony"
-          ]
+          "keyPoints": ["Evaluation method", "Sip coherence", "Professional conclusion"]
         }
       ]
     }

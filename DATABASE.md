@@ -1,257 +1,368 @@
-# Database Schema — Indovinando
+# Database Schema - Indovinando
 
-Panoramica completa delle tabelle Supabase (PostgreSQL) usate dall'applicazione.
+Panoramica aggiornata delle tabelle Supabase (PostgreSQL) usate dall'app.
 
----
+## Fonti di verita SQL
+
+- `DATABASE_SETUP_GAMES_ONLY.sql` - schema base giochi + RLS
+- `SUPABASE_RESTORE_FULL.sql` - script unico di restore completo post-reset
+- `SUPABASE_LIVE_SESSIONS.sql` - schema live multiplayer
+- `SUPABASE_LIVE_GUEST_PATCH.sql` - patch guest/live policy
+- `RLS_DELETE_POLICIES_PATCH.sql` - patch delete policy editor giochi
+- `WINE_COURSE_PROGRESS.sql` - progresso corso vino
+- `ENOTECA_SCHEMA.sql` - schema enoteca minimale
 
 ## Diagramma ER (semplificato)
 
-```
+```text
 auth.users
-    │
-    ├─── games ──────────────── game_questions ─── game_question_options
-    │        │                        │                      │
-    │        └─── game_bottles ───────┴── game_bottle_answers
-    │
-    └─── live_sessions ──── live_players ──── live_round_answers
+    |
+    +--- profiles
+    |
+    +--- games ---------------------- game_questions --- game_question_options
+    |      |                                  |                  |
+    |      +--- game_bottles -----------------+--- game_bottle_answers
+    |
+    +--- live_sessions --- live_players --- live_round_answers
+    |          |
+    |          +--- live_round_status
+    |
+    +--- wine_course_progress
+
+games --- enoteca_tasting_sessions --- enoteca_answers
+        \                              /
+         +---- game_bottles / game_questions / game_question_options
 ```
 
----
+## Tabelle Account
 
-## Tabelle di Gioco
+### `profiles`
+
+Profilo utente applicativo (username, onboarding e preferenze UI), legato a `auth.users.id`.
+
+| Colonna              | Tipo          | Note                                   |
+| -------------------- | ------------- | -------------------------------------- |
+| `id`                 | `UUID PK`     | coincide con `auth.users.id`           |
+| `username`           | `TEXT`        | opzionale                              |
+| `preferred_language` | `TEXT`        | default `it`, valori ammessi `it`/`en` |
+| `avatar_emoji`       | `TEXT`        | opzionale                              |
+| `onboarding`         | `BOOLEAN`     | opzionale                              |
+| `created_at`         | `TIMESTAMPTZ` | opzionale                              |
+| `updated_at`         | `TIMESTAMPTZ` | aggiornato su salvataggi preferenze    |
+
+Uso in app:
+
+- onboarding editor gioco
+- username dashboard/profilo
+- upsert in fase signup
+- lingua UI (`preferred_language`)
+- avatar profilo (`avatar_emoji`)
+
+## Tabelle Gioco
 
 ### `games`
 
-Rappresenta un gioco creato da un utente.
+Gioco creato dall'utente.
 
-| Colonna      | Tipo                   | Note                     |
-| ------------ | ---------------------- | ------------------------ |
-| `id`         | `UUID PK`              | Generato automaticamente |
-| `created_by` | `UUID FK → auth.users` | Creatore del gioco       |
-| `name`       | `VARCHAR(255)`         | Nome del gioco           |
-| `status`     | `VARCHAR(20)`          | `draft` \| `published`   |
-| `created_at` | `TIMESTAMPTZ`          |                          |
-| `updated_at` | `TIMESTAMPTZ`          |                          |
+| Colonna      | Tipo                    | Note                        |
+| ------------ | ----------------------- | --------------------------- |
+| `id`         | `UUID PK`               | default `gen_random_uuid()` |
+| `created_by` | `UUID FK -> auth.users` | creatore                    |
+| `name`       | `VARCHAR(255)`          | nome gioco                  |
+| `status`     | `VARCHAR(20)`           | `draft` o `published`       |
+| `created_at` | `TIMESTAMPTZ`           | default `now()`             |
+| `updated_at` | `TIMESTAMPTZ`           | default `now()`             |
 
-**RLS:**
+RLS principali:
 
-- Tutti possono leggere i giochi con `status = 'published'` o propri
-- Solo il creatore può inserire, modificare, eliminare
-
----
+- creator puo insert/update/delete
+- read su giochi published o propri
+- con patch guest: read consentita anche se il gioco e collegato a una live session
 
 ### `game_questions`
 
-Le domande associate a un gioco. La stessa lista di domande si applica a tutte le bottiglie.
+Domande condivise per tutte le bottiglie del gioco.
 
-| Colonna         | Tipo              | Note                      |
-| --------------- | ----------------- | ------------------------- |
-| `id`            | `UUID PK`         |                           |
-| `game_id`       | `UUID FK → games` |                           |
-| `text`          | `TEXT`            | Testo della domanda       |
-| `display_order` | `INTEGER`         | Ordine di visualizzazione |
-| `created_at`    | `TIMESTAMPTZ`     |                           |
+| Colonna         | Tipo               | Note          |
+| --------------- | ------------------ | ------------- |
+| `id`            | `UUID PK`          |               |
+| `game_id`       | `UUID FK -> games` |               |
+| `text`          | `TEXT`             | testo domanda |
+| `display_order` | `INTEGER`          | ordine        |
+| `created_at`    | `TIMESTAMPTZ`      |               |
 
-**Indice:** `idx_game_questions_game_id`
-
----
+Indice: `idx_game_questions_game_id`
 
 ### `game_question_options`
 
-Le opzioni di risposta per ogni domanda (risposta multipla).
+Opzioni di risposta per ogni domanda.
 
-| Colonna        | Tipo                       | Note                      |
-| -------------- | -------------------------- | ------------------------- |
-| `id`           | `UUID PK`                  |                           |
-| `question_id`  | `UUID FK → game_questions` |                           |
-| `text`         | `VARCHAR(255)`             | Testo dell'opzione        |
-| `option_order` | `INTEGER`                  | Ordine di visualizzazione |
-| `created_at`   | `TIMESTAMPTZ`              |                           |
+| Colonna        | Tipo                        | Note    |
+| -------------- | --------------------------- | ------- |
+| `id`           | `UUID PK`                   |         |
+| `question_id`  | `UUID FK -> game_questions` |         |
+| `text`         | `VARCHAR(255)`              | opzione |
+| `option_order` | `INTEGER`                   | ordine  |
+| `created_at`   | `TIMESTAMPTZ`               |         |
 
-**Indice:** `idx_game_question_options_question_id`
-
----
+Indice: `idx_game_question_options_question_id`
 
 ### `game_bottles`
 
-Le bottiglie da indovinare in un gioco.
+Bottiglie da indovinare in un gioco.
 
-| Colonna        | Tipo              | Note                            |
-| -------------- | ----------------- | ------------------------------- |
-| `id`           | `UUID PK`         |                                 |
-| `game_id`      | `UUID FK → games` |                                 |
-| `name`         | `VARCHAR(255)`    | Nome del vino                   |
-| `producer`     | `VARCHAR(255)`    | Produttore (opzionale)          |
-| `year`         | `VARCHAR(4)`      | Annata (opzionale)              |
-| `bottle_order` | `INTEGER`         | Ordine nella sequenza del gioco |
-| `created_at`   | `TIMESTAMPTZ`     |                                 |
+| Colonna        | Tipo               | Note      |
+| -------------- | ------------------ | --------- |
+| `id`           | `UUID PK`          |           |
+| `game_id`      | `UUID FK -> games` |           |
+| `name`         | `VARCHAR(255)`     | nome vino |
+| `producer`     | `VARCHAR(255)`     | opzionale |
+| `year`         | `VARCHAR(4)`       | opzionale |
+| `bottle_order` | `INTEGER`          | ordine    |
+| `created_at`   | `TIMESTAMPTZ`      |           |
 
-**Indice:** `idx_game_bottles_game_id`
-
----
+Indice: `idx_game_bottles_game_id`
 
 ### `game_bottle_answers`
 
-Le **risposte corrette**: per ogni bottiglia e ogni domanda, quale opzione è quella giusta.
+Risposta corretta per coppia `(bottle, question)`.
 
-| Colonna       | Tipo                              | Note             |
-| ------------- | --------------------------------- | ---------------- |
-| `id`          | `UUID PK`                         |                  |
-| `bottle_id`   | `UUID FK → game_bottles`          |                  |
-| `question_id` | `UUID FK → game_questions`        |                  |
-| `option_id`   | `UUID FK → game_question_options` | Opzione corretta |
-| `created_at`  | `TIMESTAMPTZ`                     |                  |
+| Colonna       | Tipo                               | Note             |
+| ------------- | ---------------------------------- | ---------------- |
+| `id`          | `UUID PK`                          |                  |
+| `bottle_id`   | `UUID FK -> game_bottles`          |                  |
+| `question_id` | `UUID FK -> game_questions`        |                  |
+| `option_id`   | `UUID FK -> game_question_options` | opzione corretta |
+| `created_at`  | `TIMESTAMPTZ`                      |                  |
 
-> Una riga per coppia `(bottle_id, question_id)` definisce la risposta corretta.
+Indici:
 
-**Indici:** `idx_game_bottle_answers_bottle_id`, `idx_game_bottle_answers_question_id`
+- `idx_game_bottle_answers_bottle_id`
+- `idx_game_bottle_answers_question_id`
 
----
-
-## Tabelle Live (Multiplayer)
+## Tabelle Live Multiplayer
 
 ### `live_sessions`
 
-Una sessione di gioco in tempo reale avviata dall'host.
+Sessione live avviata da host.
 
-| Colonna                  | Tipo                   | Note                                                        |
-| ------------------------ | ---------------------- | ----------------------------------------------------------- |
-| `id`                     | `UUID PK`              |                                                             |
-| `game_id`                | `UUID FK → games`      | Gioco su cui si basa la sessione                            |
-| `host_user_id`           | `UUID FK → auth.users` | Chi ha avviato la sessione                                  |
-| `status`                 | `TEXT`                 | `lobby` \| `playing` \| `finished`                          |
-| `current_question_index` | `INT`                  | Indice della bottiglia corrente (0-based)                   |
-| `round_status`           | `TEXT`                 | `waiting_players` \| `waiting_answers` \| `showing_results` |
-| `created_at`             | `TIMESTAMPTZ`          |                                                             |
-| `started_at`             | `TIMESTAMPTZ`          | Quando il gioco è iniziato                                  |
-| `finished_at`            | `TIMESTAMPTZ`          | Quando il gioco è terminato                                 |
-| `updated_at`             | `TIMESTAMPTZ`          | Aggiornato ad ogni cambio di stato                          |
+| Colonna                  | Tipo                    | Note                                                    |
+| ------------------------ | ----------------------- | ------------------------------------------------------- |
+| `id`                     | `UUID PK`               | default `uuid_generate_v4()`                            |
+| `game_id`                | `UUID FK -> games`      |                                                         |
+| `host_user_id`           | `UUID FK -> auth.users` |                                                         |
+| `status`                 | `TEXT`                  | `lobby`, `playing`, `finished`                          |
+| `current_question_index` | `INT`                   | default `0`                                             |
+| `round_status`           | `TEXT`                  | `waiting_players`, `waiting_answers`, `showing_results` |
+| `created_at`             | `TIMESTAMPTZ`           |                                                         |
+| `started_at`             | `TIMESTAMPTZ`           |                                                         |
+| `finished_at`            | `TIMESTAMPTZ`           |                                                         |
+| `updated_at`             | `TIMESTAMPTZ`           |                                                         |
 
-**Ciclo di vita della sessione:**
+RLS principali:
 
-```
-lobby → playing (host avvia)
-playing → finished (ultima bottiglia completata)
-```
+- host puo creare/aggiornare sessioni proprie
+- con patch guest: sessioni live leggibili pubblicamente (`lobby`/`playing`/`finished`)
 
-**Ciclo di `round_status` per ogni bottiglia:**
+Indici:
 
-```
-waiting_players → waiting_answers → showing_results → (bottiglia successiva → waiting_answers)
-```
-
-**RLS:**
-
-- L'host può creare/leggere/aggiornare le proprie sessioni
-- I giocatori che hanno fatto join possono leggere la sessione
-
-**Indici:** `idx_live_sessions_host`, `idx_live_sessions_game`, `idx_live_sessions_status`
-
----
+- `idx_live_sessions_host`
+- `idx_live_sessions_game`
+- `idx_live_sessions_status`
 
 ### `live_players`
 
-I partecipanti a una sessione live.
+Partecipanti sessione live (anonimi o autenticati).
 
-| Colonna       | Tipo                      | Note                                    |
-| ------------- | ------------------------- | --------------------------------------- |
-| `id`          | `UUID PK`                 |                                         |
-| `session_id`  | `UUID FK → live_sessions` |                                         |
-| `nickname`    | `TEXT`                    | Nome visualizzato; univoco per sessione |
-| `avatar_id`   | `INT`                     | Da 1 a 10 (emoji avatar stile Apple)    |
-| `user_id`     | `UUID FK → auth.users`    | `NULL` per giocatori anonimi            |
-| `is_host`     | `BOOLEAN`                 | `true` se è l'host della sessione       |
-| `total_score` | `INT`                     | Punteggio accumulato nella sessione     |
-| `joined_at`   | `TIMESTAMPTZ`             |                                         |
-| `created_at`  | `TIMESTAMPTZ`             |                                         |
-| `updated_at`  | `TIMESTAMPTZ`             | Usato come segnale "pronto" dal client  |
+| Colonna       | Tipo                       | Note                         |
+| ------------- | -------------------------- | ---------------------------- |
+| `id`          | `UUID PK`                  | default `uuid_generate_v4()` |
+| `session_id`  | `UUID FK -> live_sessions` |                              |
+| `nickname`    | `TEXT`                     | univoco per sessione         |
+| `avatar_id`   | `INT`                      | 1-10                         |
+| `user_id`     | `UUID FK -> auth.users`    | nullable per guest           |
+| `is_host`     | `BOOLEAN`                  |                              |
+| `total_score` | `INT`                      | default `0`                  |
+| `joined_at`   | `TIMESTAMPTZ`              |                              |
+| `created_at`  | `TIMESTAMPTZ`              |                              |
+| `updated_at`  | `TIMESTAMPTZ`              |                              |
 
-**Vincolo:** `UNIQUE(session_id, nickname)`
+Vincolo: `UNIQUE(session_id, nickname)`
 
-**RLS:**
+RLS principali:
 
-- Tutti possono leggere i giocatori di una sessione (necessario per la lobby)
-- Chiunque può inserirsi (join anonimo o autenticato)
-- Aggiornamento permesso se `user_id` è `NULL` o corrisponde all'utente autenticato
+- read pubblico (lobby)
+- insert join consentito
+- update player proprio
+- con patch guest: host puo aggiornare punteggi
 
-**Indici:** `idx_live_players_session`, `idx_live_players_user`
+Indici:
 
----
+- `idx_live_players_session`
+- `idx_live_players_user`
 
 ### `live_round_answers`
 
-Le risposte inviate dai giocatori durante una sessione live. Al cambio di bottiglia la tabella viene
-svuotata dall'host.
+Risposte inviate durante round live.
 
-| Colonna              | Tipo                              | Note                                       |
-| -------------------- | --------------------------------- | ------------------------------------------ |
-| `id`                 | `UUID PK`                         |                                            |
-| `session_id`         | `UUID FK → live_sessions`         |                                            |
-| `player_id`          | `UUID FK → live_players`          |                                            |
-| `question_id`        | `UUID FK → game_questions`        |                                            |
-| `selected_option_id` | `UUID FK → game_question_options` | Opzione scelta                             |
-| `is_correct`         | `BOOLEAN`                         | Calcolato client-side al momento del check |
-| `points`             | `INT`                             | Punti guadagnati (10 base + combo bonus)   |
-| `answered_at`        | `TIMESTAMPTZ`                     |                                            |
-| `created_at`         | `TIMESTAMPTZ`                     |                                            |
+| Colonna              | Tipo                               | Note                         |
+| -------------------- | ---------------------------------- | ---------------------------- |
+| `id`                 | `UUID PK`                          | default `uuid_generate_v4()` |
+| `session_id`         | `UUID FK -> live_sessions`         |                              |
+| `player_id`          | `UUID FK -> live_players`          |                              |
+| `question_id`        | `UUID FK -> game_questions`        |                              |
+| `selected_option_id` | `UUID FK -> game_question_options` |                              |
+| `is_correct`         | `BOOLEAN`                          | default `false`              |
+| `points`             | `INT`                              | default `0`                  |
+| `answered_at`        | `TIMESTAMPTZ`                      |                              |
+| `created_at`         | `TIMESTAMPTZ`                      |                              |
 
-**Vincolo:** `UNIQUE(session_id, player_id, question_id)` — un giocatore risponde una sola volta per
-domanda
+Vincolo: `UNIQUE(session_id, player_id, question_id)`
 
-**RLS:**
+RLS principali:
 
-- I giocatori possono inserire le proprie risposte
-- I giocatori possono leggere le risposte della loro sessione
+- player inserisce propria risposta
+- con patch guest: lettura risposte per partecipanti sessione
+- con patch guest: host puo update/delete per scoring/reset round
 
-**Indici:** `idx_live_round_answers_session`, `idx_live_round_answers_player`,
-`idx_live_round_answers_question`
+Indici:
 
----
+- `idx_live_round_answers_session`
+- `idx_live_round_answers_player`
+- `idx_live_round_answers_question`
 
-### `live_round_status` _(tabella ausiliaria)_
+### `live_round_status`
 
-Traccia lo stato per coppia `(sessione, domanda)`. Definita nello schema ma il client gestisce lo
-stato principalmente tramite `live_sessions.round_status`.
+Tabella ausiliaria di stato round per sessione+domanda.
 
-| Colonna                     | Tipo                       | Note                                   |
-| --------------------------- | -------------------------- | -------------------------------------- |
-| `id`                        | `UUID PK`                  |                                        |
-| `session_id`                | `UUID FK → live_sessions`  |                                        |
-| `question_id`               | `UUID FK → game_questions` |                                        |
-| `status`                    | `TEXT`                     | `waiting_answers` \| `showing_results` |
-| `created_at` / `updated_at` | `TIMESTAMPTZ`              |                                        |
+| Colonna       | Tipo                        | Note                                 |
+| ------------- | --------------------------- | ------------------------------------ |
+| `id`          | `UUID PK`                   | default `uuid_generate_v4()`         |
+| `session_id`  | `UUID FK -> live_sessions`  |                                      |
+| `question_id` | `UUID FK -> game_questions` |                                      |
+| `status`      | `TEXT`                      | `waiting_answers`, `showing_results` |
+| `created_at`  | `TIMESTAMPTZ`               |                                      |
+| `updated_at`  | `TIMESTAMPTZ`               |                                      |
 
-**Vincolo:** `UNIQUE(session_id, question_id)`
+Vincolo: `UNIQUE(session_id, question_id)`
 
----
+Indice:
 
-## Sistema di punteggio
+- `idx_live_round_status_session`
+- `idx_live_round_status_question`
 
-Il punteggio viene calcolato nel client (`PlayerLiveClient.jsx`) al momento del check:
+## Tabelle Corso Vino
 
-| Condizione                                  | Punti           |
-| ------------------------------------------- | --------------- |
-| Risposta errata                             | 0               |
-| Risposta corretta                           | 10              |
-| Risposta corretta in combo (2 consecutive)  | +5 bonus        |
-| Risposta corretta in combo (3 consecutive)  | +10 bonus       |
-| Risposta corretta in combo (4+ consecutive) | +15 bonus (cap) |
+### `wine_course_progress`
 
-- Il combo si azzera ad ogni risposta sbagliata o al cambio bottiglia.
-- Il punteggio viene accumulato su `live_players.total_score` dall'host dopo ogni bottiglia tramite
-  `syncScoresFromAnswers`.
+Progressi utente per lezione.
 
----
+| Colonna        | Tipo                    | Note                        |
+| -------------- | ----------------------- | --------------------------- |
+| `id`           | `UUID PK`               | default `gen_random_uuid()` |
+| `user_id`      | `UUID FK -> auth.users` |                             |
+| `level_id`     | `TEXT`                  |                             |
+| `lesson_id`    | `TEXT`                  |                             |
+| `completed`    | `BOOLEAN`               | default `false`             |
+| `score`        | `INTEGER`               | default `0`                 |
+| `attempts`     | `INTEGER`               | default `0`                 |
+| `completed_at` | `TIMESTAMPTZ`           | nullable                    |
+| `updated_at`   | `TIMESTAMPTZ`           | default `now()`             |
+
+Vincolo: `UNIQUE(user_id, level_id, lesson_id)`
+
+RLS:
+
+- read/insert/update solo su proprie righe (`auth.uid() = user_id`)
+
+## Tabelle Enoteca
+
+### `enoteca_tasting_sessions`
+
+Sessione degustazione semplificata (anche anonima), basata su `games`.
+
+| Colonna                | Tipo               | Note                        |
+| ---------------------- | ------------------ | --------------------------- |
+| `id`                   | `UUID PK`          | default `gen_random_uuid()` |
+| `game_id`              | `UUID FK -> games` |                             |
+| `nickname`             | `TEXT`             |                             |
+| `table_name`           | `TEXT`             | opzionale                   |
+| `current_bottle_index` | `INTEGER`          | default `0`                 |
+| `status`               | `TEXT`             | default `in_progress`       |
+| `total_score`          | `INTEGER`          | default `0`                 |
+| `started_at`           | `TIMESTAMPTZ`      | default `now()`             |
+| `completed_at`         | `TIMESTAMPTZ`      | opzionale                   |
+| `updated_at`           | `TIMESTAMPTZ`      | default `now()`             |
+
+RLS (aperto per flusso anonimo):
+
+- insert/select/update consentiti a tutti
+
+Indice:
+
+- `idx_enoteca_sessions_game`
+
+### `enoteca_answers`
+
+Risposte in sessione enoteca.
+
+| Colonna              | Tipo                                  | Note                        |
+| -------------------- | ------------------------------------- | --------------------------- |
+| `id`                 | `UUID PK`                             | default `gen_random_uuid()` |
+| `tasting_session_id` | `UUID FK -> enoteca_tasting_sessions` |                             |
+| `bottle_id`          | `UUID FK -> game_bottles`             |                             |
+| `question_id`        | `UUID FK -> game_questions`           |                             |
+| `selected_option_id` | `UUID FK -> game_question_options`    | nullable                    |
+| `is_correct`         | `BOOLEAN`                             | nullable                    |
+| `points`             | `INTEGER`                             | default `0`                 |
+| `answered_at`        | `TIMESTAMPTZ`                         | default `now()`             |
+
+Vincolo: `UNIQUE(tasting_session_id, bottle_id, question_id)`
+
+RLS (aperto per flusso anonimo):
+
+- policy `FOR ALL USING (TRUE)`
+
+Indici:
+
+- `idx_enoteca_answers_session`
+- `idx_enoteca_answers_bottle`
+
+## Punteggio Live (client)
+
+Calcolo usato lato client durante round live:
+
+| Condizione        | Punti           |
+| ----------------- | --------------- |
+| risposta errata   | 0               |
+| risposta corretta | 10              |
+| combo 2 corrette  | +5 bonus        |
+| combo 3 corrette  | +10 bonus       |
+| combo 4+ corrette | +15 bonus (cap) |
 
 ## Realtime
 
-Supabase Realtime è abilitato su tutte le tabelle live. Il client si iscrive ai canali:
+Canali usati in app:
 
-| Canale                           | Tabella              | Evento   | Scopo                                        |
-| -------------------------------- | -------------------- | -------- | -------------------------------------------- |
-| `live_sessions:{id}`             | `live_sessions`      | `*`      | Avanzamento bottiglia, cambio stato sessione |
-| `live_players:{sessionId}`       | `live_players`       | `*`      | Aggiornamento classifica                     |
-| `live_round_answers:{sessionId}` | `live_round_answers` | `INSERT` | Ricezione risposte in tempo reale            |
+| Canale                           | Tabella              | Evento   | Scopo                        |
+| -------------------------------- | -------------------- | -------- | ---------------------------- |
+| `live_sessions:{id}`             | `live_sessions`      | `*`      | stato sessione e avanzamento |
+| `live_players:{sessionId}`       | `live_players`       | `*`      | classifica live              |
+| `live_round_answers:{sessionId}` | `live_round_answers` | `INSERT` | arrivo risposte              |
 
-Il polling ogni 2 secondi (attivo dopo che il giocatore ha premuto "Vedi risultati") funge da
-fallback Realtime per garantire la sincronizzazione.
+E presente fallback polling lato client durante la fase risultati.
+
+## Nota Operativa Post-Reset Schema
+
+Se esegui `drop schema public cascade; create schema public;`, devi ripristinare anche i permessi
+sullo schema `public`, altrimenti puoi ricevere errori tipo `permission denied for schema public`.
+
+SQL consigliato:
+
+```sql
+grant usage on schema public to anon, authenticated, service_role;
+grant create on schema public to postgres, service_role;
+alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
+alter default privileges in schema public grant all on sequences to anon, authenticated, service_role;
+alter default privileges in schema public grant all on functions to anon, authenticated, service_role;
+```

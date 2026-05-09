@@ -14,12 +14,16 @@ export default async function LeaderboardPage({params}) {
   // Load session
   const {data: session, error: sessionError} = await supabase
     .from('live_sessions')
-    .select('id, game_id, games(name)')
+    .select('id, game_id, status, games(name)')
     .eq('id', sessionId)
     .single()
 
   if (sessionError || !session) {
     redirect('/dashboard')
+  }
+
+  if (session.status !== 'finished') {
+    redirect(`/live/session/${sessionId}/play`)
   }
 
   // Load all players sorted by score

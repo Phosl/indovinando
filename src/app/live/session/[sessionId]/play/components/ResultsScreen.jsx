@@ -179,12 +179,24 @@ export const ResultsScreen = memo(function ResultsScreen({
         </p>
 
         {isLastBottle ? (
-          <button
-            className={styles.continueButton}
-            onClick={onViewLeaderboard}
-            disabled={!allPlayersCompletedThisRound}>
-            {isEnglish ? 'View leaderboard' : 'Vedi classifica'}
-          </button>
+          isHostUser ? (
+            <button
+              className={styles.continueButton}
+              onClick={onViewLeaderboard}
+              disabled={!allPlayersCompletedThisRound}>
+              {isEnglish ? 'Show final leaderboard' : 'Mostra classifica finale'}
+            </button>
+          ) : (
+            <p className={styles.readyHint}>
+              {allPlayersCompletedThisRound
+                ? isEnglish
+                  ? 'Waiting for the host to publish final leaderboard...'
+                  : "In attesa che l'host pubblichi la classifica finale..."
+                : isEnglish
+                  ? 'Complete all questions to unlock final leaderboard.'
+                  : 'Completa tutte le domande per sbloccare la classifica finale.'}
+            </p>
+          )
         ) : (
           <button
             className={styles.continueButton}

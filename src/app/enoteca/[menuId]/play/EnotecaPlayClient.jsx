@@ -63,6 +63,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
   const t = pickLangText(lang, ENOTECA_DICTIONARY.play)
 
   const router = useRouter()
+  const isEnglish = lang === 'en'
   const sessionKey = `enoteca_session_${menuId}`
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
 
@@ -313,7 +314,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
           className={styles.exitButton}
           onClick={() => router.push(`/enoteca/${menuId}`)}
           aria-label={t.exitGame}>
-          ✕
+          ← {isEnglish ? 'Back' : 'Indietro'}
         </button>
       </div>
     </div>

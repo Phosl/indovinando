@@ -3,6 +3,7 @@
 import {useState, useEffect, useMemo} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
+import TopBar from '@/components/TopBar'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
 import styles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
@@ -15,6 +16,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
   const t = pickLangText(lang, ENOTECA_DICTIONARY.results)
 
   const router = useRouter()
+  const isEnglish = lang === 'en'
   const sessionKey = `enoteca_session_${menuId}`
 
   const [session, setSession] = useState(null)
@@ -79,21 +81,16 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
 
   return (
     <div className={styles.fullPage}>
-      {/* TopBar */}
-      <div className={styles.topBar}>
-        <div className={styles.playerInfo}>
-          <span className={styles.avatar}>🍷</span>
-          <span className={styles.nickname}>{menuName}</span>
-        </div>
-        <div className={styles.topActions}>
-          <button
-            className={styles.exitButton}
-            onClick={() => router.push('/')}
-            aria-label={t.backToHome}>
-            ✕
-          </button>
-        </div>
-      </div>
+      <TopBar title={`🍷 ${menuName}`}>
+        <button
+          type="button"
+          className="btn secondary"
+          onClick={() => router.push(`/enoteca/${menuId}`)}
+          aria-label={isEnglish ? 'Back to menu' : 'Torna al menu'}
+          title={isEnglish ? 'Back to menu' : 'Torna al menu'}>
+          ← {isEnglish ? 'Back' : 'Indietro'}
+        </button>
+      </TopBar>
 
       <div className={styles.slideContent}>
         {/* Hero */}

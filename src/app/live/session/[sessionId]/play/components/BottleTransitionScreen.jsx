@@ -110,11 +110,6 @@ export const BottleTransitionScreen = memo(function BottleTransitionScreen({
             <p className={styles.readyHint}>
               {isEnglish ? 'Waiting for the host...' : "In attesa dell'host..."}
             </p>
-            {isLastNextBottle && (
-              <button className={styles.secondaryButton} onClick={onViewLeaderboard}>
-                {isEnglish ? 'View leaderboard' : 'Vedi classifica'}
-              </button>
-            )}
           </>
         )}
       </div>

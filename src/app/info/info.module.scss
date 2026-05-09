@@ -1,0 +1,183 @@
+.page {
+  min-height: 100dvh;
+  background: linear-gradient(180deg, #f4f8ff 0%, #eef9ec 100%);
+  padding: 24px 12px 40px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  gap: 14px;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #d8e6d2;
+  border-radius: 18px;
+  box-shadow: 0 3px 0 #d3e8c9;
+  padding: 16px;
+}
+
+.progressRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.progressText {
+  font-weight: 800;
+  color: #2e3f3a;
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border: 0;
+  border-radius: 999px;
+  background: #d8e6d2;
+  cursor: pointer;
+}
+
+.dotActive {
+  width: 22px;
+  background: #58cc02;
+}
+
+.progressBar {
+  height: 8px;
+  border-radius: 999px;
+  background: #e6efe1;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.progressFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #58cc02 0%, #7bd63a 100%);
+  transition: width 220ms ease;
+}
+
+.swipeViewport {
+  overflow: hidden;
+  border-radius: 16px;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.swipeTrack {
+  transition: transform 220ms ease;
+}
+
+.swipeTrackDragging {
+  transition: none;
+}
+
+.hero {
+  background: linear-gradient(160deg, #f7fff2 0%, #f6fbff 100%);
+  border: 1px solid #d8eec9;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 0 #dbead4;
+}
+
+.emoji {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid #deead7;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #23312f;
+}
+
+.description {
+  margin: 8px 0 0;
+  color: #6c7672;
+  line-height: 1.45;
+}
+
+.list {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+}
+
+.listItem {
+  border: 1px solid #deead7;
+  border-radius: 12px;
+  padding: 11px 12px;
+  color: #2f3f3a;
+  background: #fbfff8;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.pointIcon {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #ebf9df;
+  border: 1px solid #cfeab8;
+  color: #2e7d00;
+  font-size: 0.72rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.swipeHint {
+  margin: 10px 2px 0;
+  font-size: 0.85rem;
+  color: #647169;
+}
+
+.actions {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  border-top: 1px solid #e3ecdd;
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: 14px;
+  }
+
+  .actions {
+    justify-content: stretch;
+  }
+
+  .actions :global(.btn) {
+    flex: 1 1 calc(50% - 6px);
+    text-align: center;
+  }
+}

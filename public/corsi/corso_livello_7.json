@@ -1,0 +1,468 @@
+{
+  "level": 7,
+  "slug": "zone-del-vino",
+  "title": "Le zone del vino",
+  "description": "Capire le principali regioni vinicole e cosa aspettarsi da ogni zona",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Perché le zone contano",
+      "intro": "Sapere da dove viene un vino ti dice già molto su cosa aspettarti.",
+      "final": "Ora capisci perché l’origine è fondamentale.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "La zona di produzione indica:",
+          "answers": ["Stile del vino", "Prezzo", "Bottiglia"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "La provenienza non influisce sul vino.",
+          "answers": ["Vero", "Falso"],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Conoscere la zona aiuta a:",
+          "answers": ["Scegliere meglio", "Complicare", "Spendere di più"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Origine = identità",
+          "paragraphs": [
+            "Ogni zona ha clima, suolo e tradizioni diverse.",
+            "Questi elementi influenzano direttamente il gusto del vino."
+          ],
+          "keyPoints": ["Clima", "Territorio", "Stile"]
+        },
+        {
+          "id": "s2",
+          "title": "Uso pratico",
+          "paragraphs": [
+            "Sapere la zona ti permette di prevedere il vino.",
+            "È una scorciatoia utile nella scelta."
+          ],
+          "keyPoints": ["Prevedere", "Semplificare", "Scegliere"]
+        }
+      ]
+    },
+
+    {
+      "id": "l2",
+      "title": "Italia: Toscana",
+      "intro": "La Toscana è una delle regioni più famose per i vini rossi.",
+      "final": "Ora sai cosa aspettarti da un vino toscano.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "I vini toscani sono spesso:",
+          "answers": ["Rossi strutturati", "Dolci", "Frizzanti"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "La Toscana è famosa per vini bianchi leggeri.",
+          "answers": ["Vero", "Falso"],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Un vino tipico è:",
+          "answers": ["Chianti", "Champagne", "Rioja"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Stile toscano",
+          "paragraphs": [
+            "I vini sono spesso a base di Sangiovese.",
+            "Hanno struttura, acidità e buona capacità di invecchiamento."
+          ],
+          "keyPoints": ["Sangiovese", "Struttura", "Acidità"]
+        },
+        {
+          "id": "s2",
+          "title": "Quando sceglierlo",
+          "paragraphs": [
+            "Perfetto con carne e piatti saporiti.",
+            "Ottimo per chi cerca equilibrio e complessità."
+          ],
+          "keyPoints": ["Carne", "Equilibrio", "Classico"]
+        }
+      ]
+    },
+
+    {
+      "id": "l3",
+      "title": "Italia: Piemonte",
+      "intro": "Il Piemonte è sinonimo di eleganza e vini importanti.",
+      "final": "Ora riconosci lo stile piemontese.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "I vini piemontesi sono spesso:",
+          "answers": ["Tannici ed eleganti", "Dolci", "Leggeri"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il Piemonte produce vini complessi.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Un vino tipico è:",
+          "answers": ["Barolo", "Prosecco", "Lambrusco"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Nebbiolo",
+          "paragraphs": [
+            "Il vitigno principale è il Nebbiolo.",
+            "Produce vini strutturati e longevi."
+          ],
+          "keyPoints": ["Nebbiolo", "Tannini", "Longevità"]
+        },
+        {
+          "id": "s2",
+          "title": "Carattere",
+          "paragraphs": ["Vini complessi e raffinati.", "Richiedono attenzione e tempo."],
+          "keyPoints": ["Eleganza", "Complessità", "Tempo"]
+        }
+      ]
+    },
+
+    {
+      "id": "l4",
+      "title": "Italia: Veneto",
+      "intro": "Il Veneto offre una grande varietà di stili.",
+      "final": "Ora sai quanto è versatile questa regione.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Il Veneto produce:",
+          "answers": ["Stili diversi", "Solo rossi", "Solo bianchi"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il Veneto è una regione varia.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Un vino famoso è:",
+          "answers": ["Amarone", "Barolo", "Bordeaux"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Diversità",
+          "paragraphs": ["Dal Prosecco all’Amarone.", "Una regione estremamente versatile."],
+          "keyPoints": ["Prosecco", "Amarone", "Varietà"]
+        },
+        {
+          "id": "s2",
+          "title": "Quando sceglierlo",
+          "paragraphs": ["Dipende dallo stile scelto.", "Adatto a molte situazioni diverse."],
+          "keyPoints": ["Versatilità", "Scelta", "Occasione"]
+        }
+      ]
+    },
+
+    {
+      "id": "l5",
+      "title": "Francia: Bordeaux",
+      "intro": "Bordeaux è il simbolo dei grandi vini rossi strutturati.",
+      "final": "Ora riconosci lo stile Bordeaux.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Bordeaux è noto per:",
+          "answers": ["Blend rossi", "Spumanti", "Dolci"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Bordeaux usa spesso più vitigni.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Lo stile è:",
+          "answers": ["Strutturato", "Leggero", "Acido"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Blend",
+          "paragraphs": [
+            "Cabernet e Merlot sono i principali.",
+            "Il blend crea equilibrio e complessità."
+          ],
+          "keyPoints": ["Blend", "Equilibrio", "Struttura"]
+        },
+        {
+          "id": "s2",
+          "title": "Carattere",
+          "paragraphs": ["Vini potenti ma eleganti.", "Adatti a piatti importanti."],
+          "keyPoints": ["Potenza", "Eleganza", "Cibo"]
+        }
+      ]
+    },
+
+    {
+      "id": "l6",
+      "title": "Francia: Borgogna",
+      "intro": "La Borgogna è famosa per la sua finezza.",
+      "final": "Ora capisci cosa rende unica questa regione.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "La Borgogna è nota per:",
+          "answers": ["Eleganza", "Potenza", "Dolcezza"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Produce vini raffinati.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Vitigno principale:",
+          "answers": ["Pinot Noir", "Cabernet", "Syrah"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Finezza",
+          "paragraphs": ["Vini più sottili e complessi.", "Grande attenzione al territorio."],
+          "keyPoints": ["Pinot Noir", "Eleganza", "Territorio"]
+        },
+        {
+          "id": "s2",
+          "title": "Esperienza",
+          "paragraphs": ["Richiedono attenzione.", "Premiano chi sa ascoltare il vino."],
+          "keyPoints": ["Dettaglio", "Sensibilità", "Esperienza"]
+        }
+      ]
+    },
+
+    {
+      "id": "l7",
+      "title": "Francia: Champagne",
+      "intro": "Champagne è sinonimo di bollicine di qualità.",
+      "final": "Ora sai riconoscere lo stile Champagne.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Champagne è:",
+          "answers": ["Spumante", "Rosso", "Dolce fermo"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "È una zona francese.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Caratteristica principale:",
+          "answers": ["Bollicine", "Tannini", "Dolcezza"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Metodo",
+          "paragraphs": ["Fermentazione in bottiglia.", "Grande complessità aromatica."],
+          "keyPoints": ["Metodo", "Bollicine", "Qualità"]
+        },
+        {
+          "id": "s2",
+          "title": "Quando sceglierlo",
+          "paragraphs": ["Perfetto per celebrazioni.", "Ma anche a tutto pasto."],
+          "keyPoints": ["Feste", "Versatilità", "Eleganza"]
+        }
+      ]
+    },
+
+    {
+      "id": "l8",
+      "title": "Nuovo mondo",
+      "intro": "I vini del nuovo mondo sono spesso più diretti e intensi.",
+      "final": "Ora riconosci lo stile internazionale.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "I vini del nuovo mondo sono:",
+          "answers": ["Intensi", "Neutri", "Deboli"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Sono spesso più immediati.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Esempio:",
+          "answers": ["Napa Valley", "Bordeaux", "Chianti"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Stile",
+          "paragraphs": ["Vini più fruttati e potenti.", "Più facili da capire."],
+          "keyPoints": ["Frutto", "Potenza", "Immediatezza"]
+        },
+        {
+          "id": "s2",
+          "title": "Differenza",
+          "paragraphs": ["Meno legati alla tradizione.", "Più orientati al gusto moderno."],
+          "keyPoints": ["Moderno", "Accessibile", "Diretto"]
+        }
+      ]
+    },
+
+    {
+      "id": "l9",
+      "title": "Leggere l’etichetta",
+      "intro": "L’etichetta è la tua guida per capire il vino.",
+      "final": "Ora sai orientarti leggendo una bottiglia.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "L’etichetta indica:",
+          "answers": ["Origine", "Solo marca", "Colore tavolo"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "La zona è spesso scritta in etichetta.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Serve per:",
+          "answers": ["Capire il vino", "Decorare", "Confondere"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Informazioni chiave",
+          "paragraphs": ["Zona, vitigno, produttore.", "Elementi fondamentali per scegliere."],
+          "keyPoints": ["Zona", "Vitigno", "Produttore"]
+        },
+        {
+          "id": "s2",
+          "title": "Interpretazione",
+          "paragraphs": ["Più leggi etichette, più impari.", "Diventa un’abitudine."],
+          "keyPoints": ["Esperienza", "Abitudine", "Scelta"]
+        }
+      ]
+    },
+
+    {
+      "id": "l10",
+      "title": "Scegliere per zona",
+      "intro": "Usare le zone è il modo più veloce per scegliere un vino.",
+      "final": "Ora puoi scegliere con sicurezza partendo dalla regione.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Scegliere per zona è:",
+          "answers": ["Efficace", "Inutile", "Difficile"],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Le zone aiutano a prevedere il gusto.",
+          "answers": ["Vero", "Falso"],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Obiettivo:",
+          "answers": ["Scegliere meglio", "Complicarsi", "Impressionare"],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Scorciatoia mentale",
+          "paragraphs": [
+            "Le zone sono un modo rapido per orientarsi.",
+            "Ti danno aspettative chiare."
+          ],
+          "keyPoints": ["Velocità", "Chiarezza", "Scelta"]
+        },
+        {
+          "id": "s2",
+          "title": "Applicazione reale",
+          "paragraphs": ["Usalo al ristorante o in enoteca.", "Semplifica ogni decisione."],
+          "keyPoints": ["Pratico", "Reale", "Utile"]
+        }
+      ]
+    }
+  ]
+}

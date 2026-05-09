@@ -114,3 +114,79 @@
   flex-direction: column;
   gap: 8px;
 }
+
+.comboHud {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.comboLabel {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.comboValue {
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: var(--text-secondary);
+  background: var(--foreground);
+}
+
+.comboActive {
+  color: #9a3412;
+  border-color: #fdba74;
+  background: #fff7ed;
+  box-shadow: 0 2px 0 #fdba74;
+}
+
+.comboChip {
+  margin-left: 8px;
+  border: 2px solid #fdba74;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: #9a3412;
+  background: #fff7ed;
+}
+
+.resultStatsGrid {
+  width: 100%;
+  max-width: 320px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.resultStatCard {
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  padding: 8px;
+  background: var(--foreground);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.resultStatLabel {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.resultStatValue {
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--selected-dark);
+}

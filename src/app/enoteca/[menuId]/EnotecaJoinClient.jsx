@@ -3,6 +3,7 @@
 import {useState, useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
+import TopBar from '@/components/TopBar'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
 // Shared layout from live game – same header/button system as play & results
@@ -20,6 +21,7 @@ export default function EnotecaJoinClient({
   const t = pickLangText(lang, ENOTECA_DICTIONARY.join)
 
   const router = useRouter()
+  const isEnglish = lang === 'en'
   const [nickname, setNickname] = useState('')
   const [tableName, setTableName] = useState('')
   const [loading, setLoading] = useState(false)
@@ -91,21 +93,16 @@ export default function EnotecaJoinClient({
 
   return (
     <div className={styles.fullPage}>
-      {/* ── TopBar – consistent across all enoteca pages ── */}
-      <div className={styles.topBar}>
-        <div className={styles.playerInfo}>
-          <span className={styles.avatar}>🍷</span>
-          <span className={styles.nickname}>{t.enotecaLabel}</span>
-        </div>
-        <div className={styles.topActions}>
-          <button
-            className={styles.exitButton}
-            onClick={() => router.push('/')}
-            aria-label={t.backToHome}>
-            ✕
-          </button>
-        </div>
-      </div>
+      <TopBar title={`🍷 ${t.enotecaLabel}`}>
+        <button
+          type="button"
+          className="btn secondary"
+          onClick={() => router.push('/game')}
+          aria-label={isEnglish ? 'Back to games' : 'Torna ai giochi'}
+          title={isEnglish ? 'Back to games' : 'Torna ai giochi'}>
+          ← {isEnglish ? 'Back' : 'Indietro'}
+        </button>
+      </TopBar>
 
       <div className={styles.slideContent}>
         {/* Event info card */}
