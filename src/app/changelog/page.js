@@ -2,18 +2,29 @@ import styles from './changelog.module.scss'
 
 export const metadata = {
   title: 'Changelog — Indovinando',
-  description: 'Cronologia degli aggiornamenti e delle versioni di Indovinando',
+  description: 'Cronologia degli aggiornamenti e delle versioni of Indovinando',
 }
 
 const CHANGELOG = [
+  {
+    version: '1.5.1',
+    date: '9 maggio 2026',
+    label: 'Corso Vino UX',
+    changes: [
+      'Schermata risultato lezione semplificata: mantenuto un solo pulsante principale in basso',
+      'Aggiunto nel top header il pulsante "Tutte le lezioni" / "All lessons"',
+      'Rimosso il pulsante "Ripeti lezione" dalla schermata finale della lezione',
+      'Elenco lezioni livello: aumentata la visibilita delle lezioni completate con badge "Ripeti/Repeat" e contrasto migliorato',
+    ],
+  },
   {
     version: '1.5.0',
     date: '9 maggio 2026',
     label: 'Performance & UX',
     changes: [
       'React.memo su tutti i componenti presentazionali per ridurre i re-render',
-      "Classifica nell'overlay aggiornata ogni 3 secondi mentre è aperta",
-      'Supporto tasto Invio per Controlla e Continua da tastiera',
+      "Leaderboard nell'overlay aggiornata ogni 3 secondi mentre è aperta",
+      'Supporto tasto Invio per Check e Continue da tastiera',
       'Ottimizzazioni CSS mobile: touch-action, overscroll-behavior, will-change, -webkit-tap-highlight-color',
       'Pagina classifica finale mobile-first (max 640px, podio a colonna singola su small screen)',
       'Pulsante "Torna alla Dashboard" sempre full-width su mobile',
@@ -23,15 +34,15 @@ const CHANGELOG = [
   {
     version: '1.4.0',
     date: '8 maggio 2026',
-    label: 'Risultati e Classifica Live',
+    label: 'Risultati e Leaderboard Live',
     changes: [
-      'Sezione "🏆 Classifica Live" nei risultati bottiglia con proiezione punteggi e badge +N verde',
-      "Fix double-count: snapshot dei punteggi congelato all'apertura di ogni bottiglia",
+      'Sezione "🏆 Leaderboard Live" nei risultati bottiglia con proiezione punteggi e badge +N verde',
+      "Fix double-count: snapshot dei punteggi congelato all'apertura of ogni bottiglia",
       'Badge "tu" inline viola per il giocatore corrente nella classifica',
-      'Riga risposta con colore di sfondo e bordo sinistro colorato (verde corretto, rosso errato)',
+      'Riga risposta con colore of sfondo e bordo sinistro colorato (verde corretto, rosso errato)',
       'Punti visualizzati come pill verde (+25 🔥 se combo)',
-      'Unico pulsante "Vedi classifica" sull\'ultima bottiglia (rimosso "Concludi")',
-      'Host sempre reindirizzato alla classifica anche in caso di errore nel sync',
+      'Unico pulsante "Vedi classifica" sull\'ultima bottiglia (rimosso "Finish")',
+      'Host sempre reindirizzato alla classifica anche in caso of errore nel sync',
     ],
   },
   {
@@ -39,10 +50,10 @@ const CHANGELOG = [
     date: '7 maggio 2026',
     label: 'Multiplayer — Funzionalità sociali',
     changes: [
-      'Indicatore di progresso: "X/N giocatori pronti..." nella schermata risultati',
+      'Indicatore of progresso: "X/N giocatori pronti..." nella schermata risultati',
       "Kick player: l'host può rimuovere un giocatore dalla partita dal pannello classifica",
       'Auto-reconnect: il giocatore che rientra viene reindirizzato direttamente al gioco se già in sessione',
-      'Pulizia automatica sessioni terminate da più di 24 ore',
+      'Pulizia automatica sessioni terminate da più of 24 ore',
       'Polling fallback live_sessions ogni 3s nel client (copertura se Realtime non è attivo)',
     ],
   },
@@ -62,12 +73,12 @@ const CHANGELOG = [
     date: '5 maggio 2026',
     label: 'Gameplay & UX',
     changes: [
-      'Sistema combo: risposte consecutive corrette danno +5/+10/+15 punti bonus',
-      'Toast animato 🔥💥⚡️🤯 alla conquista di un combo',
+      'Sistema combo: risposte consecutive correct danno +5/+10/+15 points bonus',
+      'Toast animato 🔥💥⚡️🤯 alla conquista of un combo',
       'Reveal bottiglia alla fine del round (nome, produttore, annata)',
       'Riepilogo risposte per domanda con esito corretto/errato',
-      "Schermata di transizione con coriandoli tra una bottiglia e l'altra",
-      'Sheet di uscita con modal di conferma',
+      "Schermata of transizione con coriandoli tra una bottiglia e l'altra",
+      'Sheet of uscita con modal of conferma',
       'Suoni audio: risposta corretta, errata, bottiglia completata (toggle ON/OFF)',
     ],
   },
@@ -76,12 +87,12 @@ const CHANGELOG = [
     date: '4 maggio 2026',
     label: 'Launch',
     changes: [
-      'Editor giochi: crea partite con bottiglie, domande a scelta multipla e risposte corrette',
+      'Editor giochi: crea partite con bottiglie, domande a scelta multipla e risposte correct',
       'Sessioni live multiplayer con Supabase Realtime',
       'Schermata quiz mobile-first con animazioni slide tra le domande',
-      'Classifica in tempo reale accessibile durante la partita',
-      'Classifica finale con podio 🥇🥈🥉 alla fine della sessione',
-      'Foglio di stampa per condivisione fisica delle domande',
+      'Leaderboard in tempo reale accessibile durante la partita',
+      'Leaderboard finale con podio 🥇🥈🥉 alla fine della sessione',
+      'Foglio of stampa per condivisione fisica delle domande',
       'Dashboard host con lista partite e gestione sessioni',
       'Autenticazione utente (Supabase Auth)',
       'Skeleton loading su tutte le route data-fetching',
@@ -90,8 +101,9 @@ const CHANGELOG = [
 ]
 
 const LABEL_COLORS = {
+  'Corso Vino UX': '#0f766e',
   'Performance & UX': '#6b2f8e',
-  'Risultati e Classifica Live': '#2563eb',
+  'Risultati e Leaderboard Live': '#2563eb',
   'Multiplayer — Funzionalità sociali': '#d97706',
   'Stabilità Realtime': '#dc2626',
   'Gameplay & UX': '#16a34a',
@@ -104,7 +116,7 @@ export default function ChangelogPage() {
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>📋 Changelog</h1>
-          <p className={styles.subtitle}>Cronologia degli aggiornamenti di Indovinando</p>
+          <p className={styles.subtitle}>Cronologia degli aggiornamenti of Indovinando</p>
         </div>
 
         <div className={styles.timeline}>
