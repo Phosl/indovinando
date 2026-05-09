@@ -69,7 +69,7 @@ export default async function GamePrintPage({params}) {
         <header className={styles.header}>
           <h1>{game.name}</h1>
           <div className={styles.playerRow}>
-            <span>Giocatore:</span>
+            <span>Playtore:</span>
             <div className={styles.line} />
           </div>
         </header>

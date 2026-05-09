@@ -3,6 +3,8 @@
 import {useState, useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
 // Shared layout from live game – same header/button system as play & results
 import styles from '../../live/session/[sessionId]/play/playerLive.module.scss'
 import xStyles from './enotecaJoin.module.scss'
@@ -14,6 +16,9 @@ export default function EnotecaJoinClient({
   menuLocation,
   bottleCount,
 }) {
+  const {lang} = useLanguage()
+  const t = pickLangText(lang, ENOTECA_DICTIONARY.join)
+
   const router = useRouter()
   const [nickname, setNickname] = useState('')
   const [tableName, setTableName] = useState('')
@@ -47,7 +52,7 @@ export default function EnotecaJoinClient({
     e.preventDefault()
     const trimmed = nickname.trim()
     if (!trimmed) {
-      setError('Inserisci un nickname')
+      setError(t.nicknameRequired)
       return
     }
     setError(null)
@@ -65,7 +70,7 @@ export default function EnotecaJoinClient({
 
     if (err || !session) {
       console.error('enoteca insert session error:', err)
-      setError("Errore durante l'avvio. Riprova.")
+      setError(t.startError)
       setLoading(false)
       return
     }
@@ -77,7 +82,7 @@ export default function EnotecaJoinClient({
   if (checkingSession) {
     return (
       <div className={styles.fullPage} style={{alignItems: 'center', justifyContent: 'center'}}>
-        <p className={styles.readyHint}>Caricamento…</p>
+        <p className={styles.readyHint}>{t.loading}</p>
       </div>
     )
   }
@@ -90,13 +95,13 @@ export default function EnotecaJoinClient({
       <div className={styles.topBar}>
         <div className={styles.playerInfo}>
           <span className={styles.avatar}>🍷</span>
-          <span className={styles.nickname}>Enoteca</span>
+          <span className={styles.nickname}>{t.enotecaLabel}</span>
         </div>
         <div className={styles.topActions}>
           <button
             className={styles.exitButton}
             onClick={() => router.push('/')}
-            aria-label="Torna alla home">
+            aria-label={t.backToHome}>
             ✕
           </button>
         </div>
@@ -110,17 +115,16 @@ export default function EnotecaJoinClient({
           {menuLocation && <p className={xStyles.location}>📍 {menuLocation}</p>}
           {menuDescription && <p className={xStyles.description}>{menuDescription}</p>}
           <span className={xStyles.bottleCount}>
-            {bottleCount} {bottleCount === 1 ? 'bottiglia' : 'bottiglie'}
+            {bottleCount} {bottleCount === 1 ? t.bottleCountSingular : t.bottleCountPlural}
           </span>
         </div>
 
         {/* Resume banner */}
         {hasActiveSession && (
           <div className={xStyles.resumeCard}>
-            <span className={xStyles.resumeTitle}>Sessione in corso</span>
+            <span className={xStyles.resumeTitle}>{t.sessionInProgress}</span>
             <p className={xStyles.resumeText}>
-              Bentornato/a, <strong>{existingSession.nickname}</strong>! Hai una degustazione in
-              corso.
+              {t.welcomeBack}, <strong>{existingSession.nickname}</strong>! {t.progressHint}
             </p>
           </div>
         )}
@@ -129,11 +133,11 @@ export default function EnotecaJoinClient({
         {!hasActiveSession && (
           <form className={xStyles.form} onSubmit={handleStart}>
             <div className={xStyles.field}>
-              <label htmlFor="nickname">Nickname *</label>
+              <label htmlFor="nickname">{t.nicknameLabel}</label>
               <input
                 id="nickname"
                 type="text"
-                placeholder="Il tuo nome o nickname"
+                placeholder={t.nicknamePlaceholder}
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 maxLength={40}
@@ -143,11 +147,11 @@ export default function EnotecaJoinClient({
               />
             </div>
             <div className={xStyles.field}>
-              <label htmlFor="table">Tavolo (opzionale)</label>
+              <label htmlFor="table">{t.tableLabel}</label>
               <input
                 id="table"
                 type="text"
-                placeholder="es. Tavolo 3, Sala A…"
+                placeholder={t.tablePlaceholder}
                 value={tableName}
                 onChange={(e) => setTableName(e.target.value)}
                 maxLength={40}
@@ -164,7 +168,7 @@ export default function EnotecaJoinClient({
         {hasActiveSession ? (
           <>
             <button className={styles.continueButton} onClick={handleResume}>
-              Riprendi degustazione
+              {t.resume}
             </button>
             <button
               className={styles.secondaryButton}
@@ -172,7 +176,7 @@ export default function EnotecaJoinClient({
                 localStorage.removeItem(sessionKey)
                 setExistingSession(null)
               }}>
-              Inizia una nuova sessione
+              {t.startNew}
             </button>
             <button
               className={styles.secondaryButton}
@@ -180,12 +184,12 @@ export default function EnotecaJoinClient({
                 localStorage.removeItem(sessionKey)
                 router.push('/')
               }}>
-              Abbandona degustazione
+              {t.leave}
             </button>
           </>
         ) : (
           <button className={styles.continueButton} disabled={loading} onClick={handleStart}>
-            {loading ? 'Avvio…' : '🍷 Inizia la degustazione'}
+            {loading ? t.starting : `🍷 ${t.start}`}
           </button>
         )}
       </div>

@@ -1,5 +1,6 @@
 import {memo} from 'react'
 import styles from '../playerLive.module.scss'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
 
 const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
 
@@ -17,6 +18,9 @@ export const TopBar = memo(function TopBar({
   onOpenLeaderboard,
   onOpenExit,
 }) {
+  const {lang} = useLanguage()
+  const isEnglish = lang === 'en'
+
   return (
     <div className={styles.topBar}>
       <div className={styles.playerInfo}>
@@ -42,9 +46,12 @@ export const TopBar = memo(function TopBar({
           {audioEnabled ? '🔊 ON' : '🔇 OFF'}
         </button>
         <button className={styles.leaderboardButton} onClick={onOpenLeaderboard}>
-          Classifica
+          {isEnglish ? 'Leaderboard' : 'Classifica'}
         </button>
-        <button className={styles.exitButton} onClick={onOpenExit} aria-label="Esci dal gioco">
+        <button
+          className={styles.exitButton}
+          onClick={onOpenExit}
+          aria-label={isEnglish ? 'Exit game' : 'Esci dal gioco'}>
           X
         </button>
       </div>

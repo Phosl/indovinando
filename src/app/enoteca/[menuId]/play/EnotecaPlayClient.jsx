@@ -3,6 +3,8 @@
 import {useState, useEffect, useCallback, useMemo} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
 // Reuse live-game stylesheet directly – no duplicate CSS
 import styles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
 import {useGameAudio} from '../../../live/session/[sessionId]/play/hooks/useGameAudio'
@@ -33,7 +35,21 @@ const BOTTLE_ORDINALS = [
   'Nona',
   'Decima',
 ]
-const getBottleLabel = (i) => BOTTLE_ORDINALS[i] || `${i + 1}a`
+
+function englishOrdinal(n) {
+  const mod100 = n % 100
+  if (mod100 >= 11 && mod100 <= 13) return `${n}th`
+  const mod10 = n % 10
+  if (mod10 === 1) return `${n}st`
+  if (mod10 === 2) return `${n}nd`
+  if (mod10 === 3) return `${n}rd`
+  return `${n}th`
+}
+
+const getBottleLabel = (i, lang, fallbackSuffix) => {
+  if (lang === 'en') return englishOrdinal(i + 1)
+  return BOTTLE_ORDINALS[i] || `${i + 1}${fallbackSuffix}`
+}
 
 // Confetti config (static – no need to recompute per render)
 const CONFETTI = Array.from({length: 18}).map((_, idx) => ({
@@ -43,6 +59,9 @@ const CONFETTI = Array.from({length: 18}).map((_, idx) => ({
 }))
 
 export default function EnotecaPlayClient({menuId, menuName, bottles, questions}) {
+  const {lang} = useLanguage()
+  const t = pickLangText(lang, ENOTECA_DICTIONARY.play)
+
   const router = useRouter()
   const sessionKey = `enoteca_session_${menuId}`
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
@@ -260,7 +279,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
   if (loading) {
     return (
       <div className={styles.fullPage} style={{alignItems: 'center', justifyContent: 'center'}}>
-        <p className={styles.readyHint}>Caricamento…</p>
+        <p className={styles.readyHint}>{t.loading}</p>
       </div>
     )
   }
@@ -288,12 +307,12 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
       </div>
       <div className={styles.topActions}>
         <button className={styles.audioButton} onClick={toggleAudio}>
-          {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+          {audioEnabled ? `🔊 ${t.audioOn}` : `🔇 ${t.audioOff}`}
         </button>
         <button
           className={styles.exitButton}
           onClick={() => router.push(`/enoteca/${menuId}`)}
-          aria-label="Esci dal gioco">
+          aria-label={t.exitGame}>
           ✕
         </button>
       </div>
@@ -318,15 +337,17 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
               ))}
             </div>
             <p className={styles.transitionSubtitle}>
-              Bottiglia {nextIdx + 1}/{bottles.length}
+              {t.bottle} {nextIdx + 1}/{bottles.length}
             </p>
-            <h2 className={styles.transitionTitle}>{getBottleLabel(nextIdx)} bottiglia!</h2>
-            <p className={styles.readyHint}>Pronto?</p>
+            <h2 className={styles.transitionTitle}>
+              {getBottleLabel(nextIdx, lang, t.ordinalFallback)} {t.bottle}!
+            </h2>
+            <p className={styles.readyHint}>{t.transitionReady}</p>
           </div>
         </div>
         <div className={styles.bottomPanel}>
           <button className={styles.continueButton} onClick={handleAdvanceFromTransition}>
-            Iniziamo!
+            {t.letsBegin}
           </button>
         </div>
       </div>
@@ -344,22 +365,22 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
     ).length
     const revealTitle =
       correctCount === questions.length
-        ? '🎉 Perfetto!'
+        ? `🎉 ${t.perfect}`
         : correctCount > questions.length / 2
-          ? '👍 Ben fatto!'
-          : '💪 Continua così!'
+          ? `👍 ${t.wellDone}`
+          : `💪 ${t.keepGoing}`
 
     return (
       <div className={styles.fullPage}>
         {topBar}
         <div className={styles.slideContent}>
           <div className={styles.bottleBadge}>
-            Bottiglia {bottleIndex + 1}/{bottles.length}
+            {t.bottle} {bottleIndex + 1}/{bottles.length}
           </div>
           <h2 className={styles.waitTitle}>{revealTitle}</h2>
 
           <div className={styles.bottleReveal}>
-            <span className={styles.bottleRevealLabel}>La bottiglia era</span>
+            <span className={styles.bottleRevealLabel}>{t.bottleWas}</span>
             <span className={styles.bottleRevealName}>{currentBottle.name}</span>
             {(currentBottle.producer || currentBottle.year) && (
               <span className={styles.bottleRevealMeta}>
@@ -388,10 +409,10 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
                     ) : (
                       <>
                         <span className={styles.summaryWrong}>
-                          ❌ {selectedOpt?.text ?? 'Non risposto'}
+                          ❌ {selectedOpt?.text ?? t.notAnswered}
                         </span>
                         <span className={styles.summaryCorrectHint}>
-                          Risposta corretta: {correctOpt?.text ?? '—'}
+                          {t.correctAnswer} {correctOpt?.text ?? '—'}
                         </span>
                       </>
                     )}
@@ -404,10 +425,10 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
 
         <div className={styles.bottomPanel}>
           <p className={styles.readyHint}>
-            {correctCount}/{questions.length} corrette · +{bottleScore} punti
+            {correctCount}/{questions.length} {t.correct} · +{bottleScore} {t.points}
           </p>
           <button className={styles.continueButton} onClick={handleGoNextBottle}>
-            {isLastBottle ? '🏆 Vedi risultati finali' : 'Prossima bottiglia'}
+            {isLastBottle ? `🏆 ${t.finalResults}` : t.nextBottle}
           </button>
         </div>
       </div>
@@ -432,10 +453,10 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
       <div
         className={`${styles.slideContent} ${!isCurrentChecked ? styles.mobileCheckSpacing : ''}`}>
         <div className={styles.bottleBadge}>
-          Bottiglia {bottleIndex + 1}/{bottles.length}
+          {t.bottle} {bottleIndex + 1}/{bottles.length}
         </div>
         <p className={styles.questionCounter}>
-          Domanda {questionIndex + 1} di {questions.length}
+          {t.question} {questionIndex + 1} {t.of} {questions.length}
         </p>
         <h2 className={styles.questionText}>{currentQuestion?.text}</h2>
 
@@ -482,14 +503,14 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
                 <span className={styles.feedbackLabel}>
                   {curCheckedResult.comboCount >= 2
                     ? `Combo x${curCheckedResult.comboCount}! +${curCheckedResult.points}`
-                    : `Corretto! +${curCheckedResult.points}`}
+                    : `${t.comboCorrect} +${curCheckedResult.points}`}
                 </span>
               </>
             ) : (
               <>
                 <span className={styles.feedbackIcon}>💡</span>
                 <span className={styles.feedbackLabel}>
-                  Risposta corretta: <strong>{correctOptText}</strong>
+                  {t.correctAnswer} <strong>{correctOptText}</strong>
                 </span>
               </>
             )}
@@ -501,11 +522,11 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
             className={styles.checkButton}
             disabled={!curSelectedId || saving}
             onClick={handleCheck}>
-            {saving ? 'Salvo…' : 'Controlla'}
+            {saving ? t.saving : t.check}
           </button>
         ) : (
           <button className={styles.continueButton} onClick={handleContinue}>
-            {isLastQuestion ? '🍷 Scopri il vino' : 'Continua'}
+            {isLastQuestion ? `🍷 ${t.revealWine}` : t.continue}
           </button>
         )}
       </div>

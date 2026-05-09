@@ -1,0 +1,688 @@
+{
+  "level": 5,
+  "slug": "vino-a-tavola-domande-classiche",
+  "title": "Wine at the table: the classic questions",
+  "description": "How to choose, order and avoid making mistakes in wine at a restaurant or in real situations",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "How to choose a wine at a restaurant",
+      "intro": "When the waiter asks you 'what wine do you want?', there is no need to panic: there is a simple method.",
+      "final": "Now you know how to choose a wine without stress.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "If you don't know the menu, what do you do?",
+          "answers": [
+            "Ask for advice",
+            "Choose randomly",
+            "Take the most expensive one"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "It's normal to ask for help with wine.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "The best choice is often:",
+          "answers": [
+            "Local wine",
+            "Random imported wine",
+            "Always sweet"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "How to choose a wine at a restaurant",
+          "paragraphs": [
+            "When the waiter asks you 'what wine do you want?', there is no need to panic: there is a simple method.",
+            "In this part you will find the fundamental steps to orient yourself in real situations at a restaurant or during a dinner."
+          ],
+          "keyPoints": [
+            "If you don't know the menu, what do you do",
+            "It's normal to ask for help with wine",
+            "The best choice is often"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know how to choose a wine without stress.",
+            "Now move on to the questions to consolidate the method and apply it confidently when choosing or ordering a wine."
+          ],
+          "keyPoints": [
+            "If you don't know the menu, what do you do",
+            "It's normal to ask for help with wine",
+            "The best choice is often"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l2",
+      "title": "Red or white?",
+      "intro": "The most common question: red or white? The answer depends on the food and the context.",
+      "final": "Now you know when to choose red or white.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "With red meat you often choose:",
+          "answers": [
+            "Red",
+            "White",
+            "Rose"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "With fish we prefer:",
+          "answers": [
+            "White",
+            "Red",
+            "Passito"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "true_false",
+          "question": "There are no strict rules in matching.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Red or white?",
+          "paragraphs": [
+            "The most common question: red or white? The answer depends on the food and the context.",
+            "In this part you will find the fundamental steps to orient yourself in real situations at a restaurant or during a dinner."
+          ],
+          "keyPoints": [
+            "With red meat it is often chosen",
+            "It is preferable with fish",
+            "There are no strict rules in matching"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know when to choose red or white.",
+            "Now move on to the questions to consolidate the method and apply it confidently when choosing or ordering a wine."
+          ],
+          "keyPoints": [
+            "With red meat it is often chosen",
+            "It is preferable with fish",
+            "There are no strict rules in matching"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l3",
+      "title": "How much to spend on a bottle",
+      "intro": "Price isn't everything, but it helps to orient yourself.",
+      "final": "Now you know how to avoid unnecessarily expensive choices.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Is an expensive wine always better?",
+          "answers": [
+            "No",
+            "Yes",
+            "Always"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "A good midrange is often:",
+          "answers": [
+            "15-40€",
+            "1-5€",
+            "100€+"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "true_false",
+          "question": "The price always reflects the quality.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "How much to spend on a bottle",
+          "paragraphs": [
+            "Price isn't everything, but it helps to orient yourself.",
+            "In this part you will find the fundamental steps to orient yourself in real situations at a restaurant or during a dinner."
+          ],
+          "keyPoints": [
+            "An expensive wine is always better",
+            "A good midrange is often",
+            "The price always reflects the quality"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know how to avoid unnecessarily expensive choices.",
+            "Now move on to the questions to consolidate the method and apply it confidently when choosing or ordering a wine."
+          ],
+          "keyPoints": [
+            "An expensive wine is always better",
+            "A good midrange is often",
+            "The price always reflects the quality"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l4",
+      "title": "What to say to the waiter",
+      "intro": "You don't need to know everything: just communicate what you want well.",
+      "final": "Now you know how to talk about wine without anxiety.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What can you say if you're not sure?",
+          "answers": [
+            "Do you recommend me?",
+            "I'll take the most expensive one",
+            "I don't want wine"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Asking for advice is frowned upon.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "It is useful to say:",
+          "answers": [
+            "What will you eat",
+            "The color of the table",
+            "Nothing"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "What to say to the waiter",
+          "paragraphs": [
+            "You don't need to know everything: just communicate what you want well.",
+            "In this part you will find the fundamental steps to orient yourself in real situations at a restaurant or during a dinner."
+          ],
+          "keyPoints": [
+            "You can say if you're not sure",
+            "Asking for advice is frowned upon",
+            "It is useful to say"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know how to talk about wine without anxiety.",
+            "Now move on to the questions to consolidate the method and apply it confidently when choosing or ordering a wine."
+          ],
+          "keyPoints": [
+            "You can say if you're not sure",
+            "Asking for advice is frowned upon",
+            "It is useful to say"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l5",
+      "title": "House wine: yes or no?",
+      "intro": "House wine can be a positive surprise or a safe choice.",
+      "final": "Now you know when to trust the house wine.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "House wine is often:",
+          "answers": [
+            "Local and simple",
+            "Always expensive",
+            "Always sparkling"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "The house wine is always poor.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "It is a good choice when:",
+          "answers": [
+            "You don't want to complicate your life",
+            "You want to impress",
+            "You want to spend a lot"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "House wine: yes or no?",
+          "paragraphs": [
+            "House wine can be a positive surprise or a safe choice.",
+            "In this part you will find the fundamental steps to orient yourself in real situations at a restaurant or during a dinner."
+          ],
+          "keyPoints": [
+            "House wine is often",
+            "The house wine is always poor",
+            "It's a good choice when"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know when to trust the house wine.",
+            "Now move on to the questions to consolidate the method and apply it confidently when choosing or ordering a wine."
+          ],
+          "keyPoints": [
+            "House wine is often",
+            "The house wine is always poor",
+            "It's a good choice when"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l6",
+      "title": "When you don't like wine",
+      "intro": "It can happen: you don't like wine. How to behave?",
+      "final": "Now you know how to handle an embarrassing situation.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "If you don't like wine you can:",
+          "answers": [
+            "Say it politely",
+            "Scream",
+            "Never drink wine again"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "It is mandatory to finish the wine.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "A correct approach is:",
+          "answers": [
+            "Ask for alternative",
+            "Feign enthusiasm",
+            "Leave"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "When you don't like wine",
+          "paragraphs": [
+            "It can happen: you don't like wine. How to behave?",
+            "In this part you will find the fundamental steps to orient yourself in real situations at a restaurant or during a dinner."
+          ],
+          "keyPoints": [
+            "If you don't like wine you can",
+            "It is mandatory to finish the wine",
+            "A correct approach is"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know how to handle an embarrassing situation.",
+            "Now move on to the questions to consolidate the method and apply it confidently when choosing or ordering a wine."
+          ],
+          "keyPoints": [
+            "If you don't like wine you can",
+            "It is mandatory to finish the wine",
+            "A correct approach is"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l7",
+      "title": "How many wines to order",
+      "intro": "You don't always need a bottle per person.",
+      "final": "Now you know how to avoid waste.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "In a dinner for two you often have:",
+          "answers": [
+            "1 bottle",
+            "3 bottles",
+            "None"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "It is better to overdo it with wine.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "If you're not sure:",
+          "answers": [
+            "Start small",
+            "Order everything",
+            "Don't drink"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "How many wines to order",
+          "paragraphs": [
+            "You don't always need a bottle per person.",
+            "In this part you will find the fundamental steps to orient yourself in real situations at a restaurant or during a dinner."
+          ],
+          "keyPoints": [
+            "In a dinner for two you often get something",
+            "It is better to overdo it with wine",
+            "If you're not sure"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know how to avoid waste.",
+            "Now move on to the questions to consolidate the method and apply it confidently when choosing or ordering a wine."
+          ],
+          "keyPoints": [
+            "In a dinner for two you often get something",
+            "It is better to overdo it with wine",
+            "If you're not sure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l8",
+      "title": "When wine must be \"breathed\"",
+      "intro": "Some wines improve with oxygen in the glass.",
+      "final": "Now you know what it means to let a wine breathe.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Letting the wine breathe means:",
+          "answers": [
+            "Expose it to the air",
+            "Cool it",
+            "Heat it up"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "All wines must breathe a lot.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "It is mainly used for:",
+          "answers": [
+            "Structured red wines",
+            "Soft drinks",
+            "Water"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "When wine must be \"breathed\"",
+          "paragraphs": [
+            "Some wines improve with oxygen in the glass.",
+            "In this part you will find the fundamental steps to orient yourself in real situations at a restaurant or during a dinner."
+          ],
+          "keyPoints": [
+            "Letting the wine breathe means",
+            "All wines must breathe a lot",
+            "It is mainly used for"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know what it means to let a wine breathe.",
+            "Now move on to the questions to consolidate the method and apply it confidently when choosing or ordering a wine."
+          ],
+          "keyPoints": [
+            "Letting the wine breathe means",
+            "All wines must breathe a lot",
+            "It is mainly used for"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l9",
+      "title": "How not to make a fool of yourself",
+      "intro": "Small social rules about wine that avoid embarrassing situations.",
+      "final": "Now you're fool-proof.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "It's better:",
+          "answers": [
+            "Ask what wine it is",
+            "Invent",
+            "Pretend you know"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "It's normal not to know everything about wine.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "The worst thing is:",
+          "answers": [
+            "Feign competence",
+            "Ask for help",
+            "Try new wines"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "How not to make a fool of yourself",
+          "paragraphs": [
+            "Small social rules about wine that avoid embarrassing situations.",
+            "In this part you will find the fundamental steps to orient yourself in real situations at a restaurant or during a dinner."
+          ],
+          "keyPoints": [
+            "It's better",
+            "It's normal not to know everything about wine",
+            "Definition: worst thing"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you're fool-proof.",
+            "Now move on to the questions to consolidate the method and apply it confidently when choosing or ordering a wine."
+          ],
+          "keyPoints": [
+            "It's better",
+            "It's normal not to know everything about wine",
+            "Definition: worst thing"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l10",
+      "title": "Your first order as a connoisseur",
+      "intro": "Put it all together: choice, context and security.",
+      "final": "Now you can order wine like an expert.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "A good approach is:",
+          "answers": [
+            "Ask for advice",
+            "Choose randomly",
+            "Avoid wine"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Context matters when choosing wine.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "The objective is:",
+          "answers": [
+            "Enjoy the moment",
+            "Impress everyone",
+            "Complicating your life"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Your first order as a connoisseur",
+          "paragraphs": [
+            "Put it all together: choice, context and security.",
+            "In this part you will find the fundamental steps to orient yourself in real situations at a restaurant or during a dinner."
+          ],
+          "keyPoints": [
+            "A good approach is",
+            "Context matters when choosing wine",
+            "The goal is"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you can order wine like an expert.",
+            "Now move on to the questions to consolidate the method and apply it confidently when choosing or ordering a wine."
+          ],
+          "keyPoints": [
+            "A good approach is",
+            "Context matters when choosing wine",
+            "The goal is"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
 import styles from './hostLive.module.scss'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
 
 export default function HostLiveClient({
   sessionId,
@@ -15,6 +16,8 @@ export default function HostLiveClient({
   initialQuestionIndex,
 }) {
   const router = useRouter()
+  const {lang} = useLanguage()
+  const isEnglish = lang === 'en'
 
   const [roundStatus, setRoundStatus] = useState(initialStatus) // 'waiting_answers' | 'showing_results'
   const [currentBottleIndex, setCurrentBottleIndex] = useState(initialQuestionIndex)
@@ -69,7 +72,7 @@ export default function HostLiveClient({
     try {
       if (!currentBottle) return
 
-      // Risposte corrette per la bottiglia corrente (una per domanda)
+      // Risposte correct per la bottiglia corrente (una per domanda)
       const {data: correctAnswers} = await supabaseClient
         .from('game_bottle_answers')
         .select('question_id, option_id')
@@ -157,7 +160,7 @@ export default function HostLiveClient({
         // Pulisci risposte round precedente per consentire nuove risposte sulla stessa domanda
         await supabaseClient.from('live_round_answers').delete().eq('session_id', sessionId)
 
-        // Prossima bottiglia
+        // Next bottle
         const nextIndex = currentBottleIndex + 1
 
         await supabaseClient
@@ -192,24 +195,28 @@ export default function HostLiveClient({
 
       {sessionFinished ? (
         <div className={styles.finishedCard}>
-          <h2>🎉 Gioco Terminato!</h2>
-          <p>Redirezione alla classifica...</p>
+          <h2>{isEnglish ? '🎉 Game Over!' : '🎉 Gioco Terminato!'}</h2>
+          <p>{isEnglish ? 'Redirecting to leaderboard...' : 'Redirezione alla classifica...'}</p>
         </div>
       ) : (
         <>
           <div className={styles.questionCard}>
             <div className={styles.progress}>
-              Bottiglia {currentBottleIndex + 1} di {bottles.length}
+              Bottle {currentBottleIndex + 1} of {bottles.length}
             </div>
-            <h2>{currentBottle?.name || 'Bottiglia'}</h2>
-            <p>Domande del round: {questions.length}</p>
+            <h2>{currentBottle?.name || (isEnglish ? 'Bottle' : 'Bottiglia')}</h2>
+            <p>
+              {isEnglish ? 'Round questions' : 'Domande del round'}: {questions.length}
+            </p>
           </div>
 
           {roundStatus === 'waiting_answers' ? (
             <div className={styles.waitingCard}>
               <div className={styles.stats}>
                 <div className={styles.stat}>
-                  <span className={styles.label}>Giocatori che hanno completato</span>
+                  <span className={styles.label}>
+                    {isEnglish ? 'Players who completed' : 'Giocatori che hanno completato'}
+                  </span>
                   <span className={styles.value}>
                     {answeredCount}/{players.length}
                   </span>
@@ -220,11 +227,13 @@ export default function HostLiveClient({
                 onClick={handleShowResults}
                 disabled={answeredCount === 0}
                 className={styles.showResultsButton}>
-                Mostra Risultati
+                {isEnglish ? 'Show results' : 'Mostra risultati'}
               </button>
 
               <div className={styles.playersList}>
-                <h3>Giocatori Online ({players.length})</h3>
+                <h3>
+                  {isEnglish ? 'Players online' : 'Giocatori online'} ({players.length})
+                </h3>
                 <div className={styles.playersGrid}>
                   {players.map((player) => {
                     const playerAnswers = answers[player.id] || {}
@@ -246,17 +255,21 @@ export default function HostLiveClient({
             <div className={styles.resultsCard}>
               <div className={styles.results}>
                 <div className={styles.resultStat}>
-                  <span className={styles.label}>Giocatori full-correct</span>
+                  <span className={styles.label}>
+                    {isEnglish ? 'Players all-correct' : 'Giocatori tutte corrette'}
+                  </span>
                   <span className={styles.value}>{correctCount}</span>
                 </div>
                 <div className={styles.resultStat}>
-                  <span className={styles.label}>Giocatori che hanno risposto</span>
+                  <span className={styles.label}>
+                    {isEnglish ? 'Players answered' : 'Giocatori che hanno risposto'}
+                  </span>
                   <span className={styles.value}>{answeredCount}</span>
                 </div>
               </div>
 
               <div className={styles.topPlayers}>
-                <h3>Top Giocatori</h3>
+                <h3>{isEnglish ? 'Top players' : 'Top giocatori'}</h3>
                 {players
                   .sort((a, b) => b.total_score - a.total_score)
                   .slice(0, 3)
@@ -272,7 +285,13 @@ export default function HostLiveClient({
               </div>
 
               <button onClick={handleNextQuestion} className={styles.nextButton}>
-                {isLastBottle ? 'Termina Gioco' : 'Prossima Bottiglia'}
+                {isLastBottle
+                  ? isEnglish
+                    ? 'Finish game'
+                    : 'Termina gioco'
+                  : isEnglish
+                    ? 'Next bottle'
+                    : 'Prossima bottiglia'}
               </button>
             </div>
           )}

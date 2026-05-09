@@ -1,0 +1,890 @@
+{
+  "level": 3,
+  "slug": "inizio-a-capire-il-vino",
+  "title": "Inizio a capire il vino",
+  "description": "Approfondimento su fermentazioni, struttura, aromi evoluti, conservazione e lettura del vino",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Fermentazione alcolica e malolattica",
+      "intro": "La fermentazione non è un processo unico. Esistono trasformazioni diverse che influenzano il carattere del vino.",
+      "final": "Ora sai che il vino evolve attraverso più fermentazioni.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Cos’è la fermentazione malolattica?",
+          "answers": [
+            "Trasformazione dell’acido malico in lattico",
+            "Aggiunta di zucchero",
+            "Filtrazione del vino"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "La fermentazione alcolica produce alcol.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Chi attiva la fermentazione?",
+          "answers": [
+            "Lieviti",
+            "Ossigeno",
+            "Zucchero"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "La malolattica rende il vino:",
+          "answers": [
+            "Più morbido",
+            "Più acido",
+            "Più dolce"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Tutti i vini fanno fermentazione malolattica.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Fermentazione alcolica e malolattica",
+          "paragraphs": [
+            "La fermentazione non è un processo unico. Esistono trasformazioni diverse che influenzano il carattere del vino.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Definizione di la fermentazione malolattica",
+            "La fermentazione alcolica produce alcol",
+            "Chi attiva la fermentazione"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai che il vino evolve attraverso più fermentazioni.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "La malolattica rende il vino",
+            "Tutti i vini fanno fermentazione malolattica"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l2",
+      "title": "Struttura del vino",
+      "intro": "La struttura è data dall’equilibrio tra acidità, tannini, alcol e corpo.",
+      "final": "Ora sai leggere l’equilibrio di un vino.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Cosa compone la struttura del vino?",
+          "answers": [
+            "Acidità, tannini, alcol",
+            "Solo zucchero",
+            "Solo acqua"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Un vino equilibrato ha componenti bilanciate.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Se una componente domina troppo:",
+          "answers": [
+            "Il vino è sbilanciato",
+            "Migliora sempre",
+            "Non cambia nulla"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "L’alcol contribuisce a:",
+          "answers": [
+            "Corpo e struttura",
+            "Solo colore",
+            "Solo aroma"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "L’acidità dà freschezza.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Struttura del vino",
+          "paragraphs": [
+            "La struttura è data dall’equilibrio tra acidità, tannini, alcol e corpo.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Compone la struttura del vino",
+            "Un vino equilibrato ha componenti bilanciate",
+            "Se una componente domina troppo"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai leggere l’equilibrio di un vino.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "L’alcol contribuisce a",
+            "L’acidità dà freschezza"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l3",
+      "title": "Aromi primari, secondari e terziari",
+      "intro": "Gli aromi evolvono nel tempo e si dividono in tre categorie.",
+      "final": "Ora sai come nasce la complessità aromatica.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Gli aromi primari derivano da:",
+          "answers": [
+            "Uva",
+            "Botte",
+            "Bottiglia"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "Gli aromi secondari derivano da:",
+          "answers": [
+            "Fermentazione",
+            "Etichetta",
+            "Prezzo"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Gli aromi terziari si sviluppano con:",
+          "answers": [
+            "Invecchiamento",
+            "Acqua",
+            "Zucchero"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "true_false",
+          "question": "Gli aromi cambiano nel tempo.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "mcq",
+          "question": "Gli aromi terziari sono tipici di:",
+          "answers": [
+            "Vini invecchiati",
+            "Vini giovani",
+            "Succhi"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Aromi primari, secondari e terziari",
+          "paragraphs": [
+            "Gli aromi evolvono nel tempo e si dividono in tre categorie.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Gli aromi primari derivano da",
+            "Gli aromi secondari derivano da",
+            "Gli aromi terziari si sviluppano con"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai come nasce la complessità aromatica.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Gli aromi cambiano nel tempo",
+            "Gli aromi terziari sono tipici di"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l4",
+      "title": "Conservazione del vino",
+      "intro": "La conservazione influenza direttamente la qualità del vino nel tempo.",
+      "final": "Ora sai come proteggere un vino.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Cosa è importante nella conservazione?",
+          "answers": [
+            "Temperatura",
+            "Colore bottiglia",
+            "Etichetta"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il vino va conservato alla luce diretta.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Troppo ossigeno:",
+          "answers": [
+            "Deteriora il vino",
+            "Migliora sempre",
+            "Non influisce"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "La temperatura ideale deve essere:",
+          "answers": [
+            "Stabile",
+            "Alta",
+            "Variabile"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Tutti i vini si conservano allo stesso modo.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Conservazione del vino",
+          "paragraphs": [
+            "La conservazione influenza direttamente la qualità del vino nel tempo.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "È importante nella conservazione",
+            "Il vino va conservato alla luce diretta",
+            "Troppo ossigeno"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai come proteggere un vino.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "La temperatura ideale deve essere",
+            "Tutti i vini si conservano allo stesso modo"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l5",
+      "title": "Degustazione tecnica",
+      "intro": "La degustazione analizza vino in modo professionale e strutturato.",
+      "final": "Ora sai leggere un vino come un professionista.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Cosa si analizza per primo?",
+          "answers": [
+            "Colore",
+            "Gusto",
+            "Prezzo"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "L’olfatto serve per:",
+          "answers": [
+            "Aromi",
+            "Peso",
+            "Colore"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "true_false",
+          "question": "La degustazione è solo bere.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Il gusto valuta:",
+          "answers": [
+            "Equilibrio",
+            "Solo dolcezza",
+            "Solo alcol"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Il colore basta per giudicare un vino.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Degustazione tecnica",
+          "paragraphs": [
+            "La degustazione analizza vino in modo professionale e strutturato.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Si analizza per primo",
+            "L’olfatto serve per",
+            "La degustazione è solo bere"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai leggere un vino come un professionista.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Il gusto valuta",
+            "Il colore basta per giudicare un vino"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l6",
+      "title": "Corpo e struttura avanzata",
+      "intro": "Il corpo del vino è legato a estrazione, alcol e concentrazione.",
+      "final": "Ora senti davvero la struttura del vino.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Il corpo del vino indica:",
+          "answers": [
+            "Peso in bocca",
+            "Colore",
+            "Dolcezza"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "Un vino strutturato è:",
+          "answers": [
+            "Più complesso",
+            "Sempre leggero",
+            "Sempre dolce"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Il corpo dipende da:",
+          "answers": [
+            "Estrazione",
+            "Etichetta",
+            "Prezzo"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "true_false",
+          "question": "Tutti i vini hanno lo stesso corpo.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q5",
+          "type": "mcq",
+          "question": "L’alcol contribuisce a:",
+          "answers": [
+            "Struttura",
+            "Solo colore",
+            "Solo aroma"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Corpo e struttura avanzata",
+          "paragraphs": [
+            "Il corpo del vino è legato a estrazione, alcol e concentrazione.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Il corpo del vino indica",
+            "Un vino strutturato è",
+            "Il corpo dipende da"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora senti davvero la struttura del vino.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Tutti i vini hanno lo stesso corpo",
+            "L’alcol contribuisce a"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l7",
+      "title": "Territorio e terroir",
+      "intro": "Il terroir è l’insieme di clima, suolo e ambiente.",
+      "final": "Ora capisci il legame tra vino e territorio.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Il terroir include:",
+          "answers": [
+            "Clima e suolo",
+            "Solo bottiglia",
+            "Solo prezzo"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "Il clima influisce su:",
+          "answers": [
+            "Gusto",
+            "Solo colore",
+            "Solo etichetta"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "true_false",
+          "question": "Il suolo non è importante.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Il terroir rende il vino:",
+          "answers": [
+            "Unico",
+            "Identico ovunque",
+            "Sempre dolce"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Il vino cambia da regione a regione.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Territorio e terroir",
+          "paragraphs": [
+            "Il terroir è l’insieme di clima, suolo e ambiente.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Il terroir include",
+            "Il clima influisce su",
+            "Il suolo non è importante"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora capisci il legame tra vino e territorio.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Il terroir rende il vino",
+            "Il vino cambia da regione a regione"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l8",
+      "title": "Evoluzione del vino",
+      "intro": "Il vino cambia nel tempo grazie all’invecchiamento.",
+      "final": "Ora sai che il vino è vivo e cambia.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Il vino evolve grazie a:",
+          "answers": [
+            "Invecchiamento",
+            "Etichetta",
+            "Bottiglia"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "Con il tempo gli aromi:",
+          "answers": [
+            "Cambiano",
+            "Spariscono sempre",
+            "Non cambiano"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "true_false",
+          "question": "Tutti i vini migliorano con il tempo.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "I vini giovani sono:",
+          "answers": [
+            "Freschi",
+            "Sempre complessi",
+            "Sempre invecchiati"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Il vino è statico nel tempo.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Evoluzione del vino",
+          "paragraphs": [
+            "Il vino cambia nel tempo grazie all’invecchiamento.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Il vino evolve grazie a",
+            "Con il tempo gli aromi",
+            "Tutti i vini migliorano con il tempo"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai che il vino è vivo e cambia.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "I vini giovani sono",
+            "Il vino è statico nel tempo"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l9",
+      "title": "Analisi sensoriale",
+      "intro": "L’analisi sensoriale combina vista, olfatto e gusto.",
+      "final": "Ora sai analizzare un vino in modo completo.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Cosa include l’analisi sensoriale?",
+          "answers": [
+            "Vista, olfatto, gusto",
+            "Solo gusto",
+            "Solo vista"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "L’olfatto serve per:",
+          "answers": [
+            "Aromi",
+            "Colore",
+            "Prezzo"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "true_false",
+          "question": "La degustazione è solo tecnica.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "La vista analizza:",
+          "answers": [
+            "Colore",
+            "Gusto",
+            "Struttura"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Tutti percepiscono il vino allo stesso modo.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Analisi sensoriale",
+          "paragraphs": [
+            "L’analisi sensoriale combina vista, olfatto e gusto.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Include l’analisi sensoriale",
+            "L’olfatto serve per",
+            "La degustazione è solo tecnica"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai analizzare un vino in modo completo.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "La vista analizza",
+            "Tutti percepiscono il vino allo stesso modo"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l10",
+      "title": "Sintesi del vino",
+      "intro": "Mettiamo insieme tutto ciò che hai imparato finora.",
+      "final": "Ora hai una comprensione avanzata del vino.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Cosa influenza il vino?",
+          "answers": [
+            "Territorio e vitigno",
+            "Solo bottiglia",
+            "Solo prezzo"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il vino è semplice da capire completamente.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "La fermentazione produce:",
+          "answers": [
+            "Alcol",
+            "Zucchero",
+            "Acqua"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Il gusto dipende da:",
+          "answers": [
+            "Struttura",
+            "Solo colore",
+            "Solo etichetta"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Il vino è sempre uguale nel tempo.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Sintesi del vino",
+          "paragraphs": [
+            "Mettiamo insieme tutto ciò che hai imparato finora.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Influenza il vino",
+            "Il vino è semplice da capire completamente",
+            "La fermentazione produce"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora hai una comprensione avanzata del vino.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Il gusto dipende da",
+            "Il vino è sempre uguale nel tempo"
+          ]
+        }
+      ]
+    }
+  ]
+}

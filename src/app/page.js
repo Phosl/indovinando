@@ -17,7 +17,7 @@ export default async function Home() {
         <p>A simple game to discover wine</p>
         <div>
           <a href="/auth" className="primary">
-            Login o Registrati
+            Login or Sign Up
           </a>
         </div>
       </div>

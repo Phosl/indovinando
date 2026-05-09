@@ -25,21 +25,21 @@ export const isBottleComplete = (bottle, questionsLength) => {
   )
 }
 
-export const validateGameName = (name) => {
+export const validateGameName = (name, messages) => {
   if (!name.trim()) {
-    throw new Error('Inserisci il nome del gioco.')
+    throw new Error(messages?.GAME_NAME_REQUIRED || 'Inserisci il nome del gioco.')
   }
 }
 
-export const validateQuestionnaire = (questions) => {
+export const validateQuestionnaire = (questions, messages) => {
   if (questions.length === 0) {
-    throw new Error('Aggiungi almeno una domanda al questionario.')
+    throw new Error(messages?.QUESTIONS_REQUIRED || 'Aggiungi almeno una domanda al questionario.')
   }
 }
 
-export const validateBottles = (bottles, questions) => {
+export const validateBottles = (bottles, questions, messages) => {
   if (bottles.length === 0) {
-    throw new Error('Devi aggiungere almeno una bottiglia.')
+    throw new Error(messages?.BOTTLES_REQUIRED || 'Devi aggiungere almeno una bottiglia.')
   }
 
   const hasIncompleteBottle = bottles.some(
@@ -51,23 +51,41 @@ export const validateBottles = (bottles, questions) => {
 
   if (hasIncompleteBottle) {
     throw new Error(
-      'Ci sono bottiglie con risposte mancanti. Aprile e completa tutte le risposte prima di salvare.',
+      messages?.INCOMPLETE_BOTTLES ||
+        'Ci sono bottiglie con risposte mancanti. Aprile e completa tutte le risposte prima di salvare.',
     )
   }
 }
 
-export const validateBottleForm = (bottleName, producer, year, currentAnswers, questionsLength) => {
+export const validateBottleForm = (
+  bottleName,
+  producer,
+  year,
+  currentAnswers,
+  questionsLength,
+  messages,
+) => {
+  const isBottleMetaMissing = !bottleName?.trim() || !producer?.trim() || !year?.trim()
+
+  if (isBottleMetaMissing) {
+    throw new Error(
+      messages?.BOTTLE_FORM_INCOMPLETE || 'Compila nome bottiglia, produttore e anno.',
+    )
+  }
+
   if (currentAnswers.length !== questionsLength || currentAnswers.some((a) => a === null)) {
-    throw new Error('Seleziona la risposta corretta per ogni domanda.')
+    throw new Error(
+      messages?.BOTTLE_ANSWERS_INCOMPLETE || 'Seleziona la risposta corretta per ogni domanda.',
+    )
   }
 }
 
-export const validateQuestionForm = (questionText, options) => {
+export const validateQuestionForm = (questionText, options, messages) => {
   if (!questionText.trim()) {
-    throw new Error('Inserisci il testo della domanda.')
+    throw new Error(messages?.QUESTION_TEXT_REQUIRED || 'Inserisci il testo della domanda.')
   }
 
   if (options.some((o) => !o.trim())) {
-    throw new Error('Tutte le opzioni devono essere compilate.')
+    throw new Error(messages?.OPTIONS_REQUIRED || 'Tutte le opzioni devono essere compilate.')
   }
 }

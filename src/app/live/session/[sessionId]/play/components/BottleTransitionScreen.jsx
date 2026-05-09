@@ -1,5 +1,6 @@
 import {memo, useMemo} from 'react'
 import styles from '../playerLive.module.scss'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
 
 const BOTTLE_ORDINALS = [
   'Prima',
@@ -14,7 +15,21 @@ const BOTTLE_ORDINALS = [
   'Decima',
 ]
 
-function getBottleLabel(index) {
+const BOTTLE_ORDINALS_EN = [
+  'First',
+  'Second',
+  'Third',
+  'Fourth',
+  'Fifth',
+  'Sixth',
+  'Seventh',
+  'Eighth',
+  'Ninth',
+  'Tenth',
+]
+
+function getBottleLabel(index, isEnglish) {
+  if (isEnglish) return BOTTLE_ORDINALS_EN[index] || `${index + 1}th`
   return BOTTLE_ORDINALS[index] || `${index + 1}a`
 }
 
@@ -32,6 +47,8 @@ export const BottleTransitionScreen = memo(function BottleTransitionScreen({
   topBar,
   overlays,
 }) {
+  const {lang} = useLanguage()
+  const isEnglish = lang === 'en'
   const nextBottleNum = currentBottleIndex + 2
   const nextBottleIndex = currentBottleIndex + 1
 
@@ -52,8 +69,14 @@ export const BottleTransitionScreen = memo(function BottleTransitionScreen({
       <div className={styles.slideContent}>
         {isLastNextBottle ? (
           <>
-            <h2 className={styles.waitTitle}>🎉 Ultimi risultati!</h2>
-            <p className={styles.readyHint}>Tra poco vedrai la classifica finale.</p>
+            <h2 className={styles.waitTitle}>
+              {isEnglish ? '🎉 Final results!' : '🎉 Ultimi risultati!'}
+            </h2>
+            <p className={styles.readyHint}>
+              {isEnglish
+                ? 'You will see the final leaderboard shortly.'
+                : 'Tra poco vedrai la classifica finale.'}
+            </p>
           </>
         ) : (
           <div className={styles.transitionHero}>
@@ -67,10 +90,12 @@ export const BottleTransitionScreen = memo(function BottleTransitionScreen({
               ))}
             </div>
             <p className={styles.transitionSubtitle}>
-              Bottiglia {nextBottleNum}/{totalBottles}
+              Bottle {nextBottleNum}/{totalBottles}
             </p>
-            <h2 className={styles.transitionTitle}>{getBottleLabel(nextBottleIndex)} bottiglia!</h2>
-            <p className={styles.readyHint}>Inizia!</p>
+            <h2 className={styles.transitionTitle}>
+              {getBottleLabel(nextBottleIndex, isEnglish)} {isEnglish ? 'bottle!' : 'bottiglia!'}
+            </h2>
+            <p className={styles.readyHint}>{isEnglish ? 'Start!' : 'Inizia!'}</p>
           </div>
         )}
       </div>
@@ -78,14 +103,16 @@ export const BottleTransitionScreen = memo(function BottleTransitionScreen({
       <div className={styles.bottomPanel}>
         {isHostUser ? (
           <button className={styles.continueButton} onClick={onAdvance}>
-            {isLastNextBottle ? 'Concludi' : 'Iniziamo'}
+            {isLastNextBottle ? 'Finish' : "Let's begin"}
           </button>
         ) : (
           <>
-            <p className={styles.readyHint}>In attesa dell&apos;host...</p>
+            <p className={styles.readyHint}>
+              {isEnglish ? 'Waiting for the host...' : "In attesa dell'host..."}
+            </p>
             {isLastNextBottle && (
               <button className={styles.secondaryButton} onClick={onViewLeaderboard}>
-                Vedi classifica
+                {isEnglish ? 'View leaderboard' : 'Vedi classifica'}
               </button>
             )}
           </>

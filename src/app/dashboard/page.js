@@ -1,9 +1,13 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {getServerLanguage} from '@/lib/i18n/server'
+import {toLocaleTag} from '@/lib/i18n/config'
 import styles from './dashboard.module.scss'
 
 export default async function Dashboard() {
   const supabase = await createServerSupabase()
+  const lang = await getServerLanguage()
+  const isEnglish = lang === 'en'
   const {data} = await supabase.auth.getUser()
 
   if (!data.user) {
@@ -27,51 +31,71 @@ export default async function Dashboard() {
       <div className={styles.container}>
         <section className={styles.arcadeHero}>
           <h1>INDOVINANDO</h1>
-          <p>Benvenuto, {profile?.username || data.user.email}!</p>
+          <p>
+            {isEnglish ? 'Welcome' : 'Benvenuto'}, {profile?.username || data.user.email}!
+          </p>
           <div className={styles.heroActions}>
             <a href="/game/create-quick" className="btn primary">
-              ⚡ Crea Gioco Veloce
+              {isEnglish ? '⚡ Create Quick Game' : '⚡ Crea gioco rapido'}
             </a>
             <a href="/game/create" className="btn accent">
-              + Crea Gioco
+              {isEnglish ? '+ Create Game' : '+ Crea gioco'}
+            </a>
+            <a href="/profilo" className="btn secondary">
+              {isEnglish ? '👤 Profile' : '👤 Profilo'}
             </a>
           </div>
         </section>
 
-        {/* Corso di Vino banner */}
+        {/* Wine Course banner */}
         <a href="/corso-vino" className={styles.corsoCard}>
           <span className={styles.corsoEmoji}>🍷</span>
           <div className={styles.corsoInfo}>
-            <span className={styles.corsoLabel}>Novità</span>
-            <strong className={styles.corsoTitle}>Corso di Vino</strong>
-            <span className={styles.corsoDesc}>Impara il vino passo dopo passo · gratis 🎓</span>
+            <span className={styles.corsoLabel}>{isEnglish ? 'New' : 'Novita'}</span>
+            <strong className={styles.corsoTitle}>
+              {isEnglish ? 'Wine Course' : 'Corso Vino'}
+            </strong>
+            <span className={styles.corsoDesc}>
+              {isEnglish
+                ? 'Learn wine step by step · free 🎓'
+                : 'Impara il vino passo dopo passo · gratis 🎓'}
+            </span>
           </div>
           <span className={styles.corsoArrow}>→</span>
         </a>
 
         {games && games.length > 0 ? (
           <div className={styles.gamesSection}>
-            <h2>I tuoi giochi ({games.length})</h2>
+            <h2>
+              {isEnglish ? 'Your games' : 'I tuoi giochi'} ({games.length})
+            </h2>
             <div className={styles.gamesList}>
               {games.map((game) => (
                 <div key={game.id} className={styles.gameCard}>
                   <h3>{game.name}</h3>
                   <p className={styles.statusRow}>
-                    Stato:{' '}
+                    {isEnglish ? 'Status' : 'Stato'}:{' '}
                     <span
                       className={`${styles.statusBadge} ${game.status === 'published' ? styles.published : styles.draft}`}>
-                      {game.status === 'published' ? 'Pubblicato' : 'Bozza'}
+                      {game.status === 'published'
+                        ? isEnglish
+                          ? 'Published'
+                          : 'Pubblicato'
+                        : isEnglish
+                          ? 'Draft'
+                          : 'Bozza'}
                     </span>
                   </p>
                   <p className={styles.date}>
-                    Creato: {new Date(game.created_at).toLocaleDateString('it-IT')}
+                    {isEnglish ? 'Created' : 'Creato il'}:{' '}
+                    {new Date(game.created_at).toLocaleDateString(toLocaleTag(lang))}
                   </p>
                   <div className={styles.gameActions}>
                     <a href={`/game/${game.id}`} className="btn primary">
-                      Visualizza
+                      {isEnglish ? 'View' : 'Apri'}
                     </a>
                     <a href={`/game/${game.id}/live`} className={styles.liveAction}>
-                      Gioca Live
+                      {isEnglish ? 'Play Live' : 'Gioca Live'}
                     </a>
                     {game.status === 'published' && (
                       <a href={`/enoteca/${game.id}`} className={styles.enotecaAction}>
@@ -79,7 +103,7 @@ export default async function Dashboard() {
                       </a>
                     )}
                     <a href={`/game/${game.id}/print`} className="btn secondary">
-                      Stampa Scheda
+                      {isEnglish ? 'Print Card' : 'Stampa scheda'}
                     </a>
                   </div>
                 </div>
@@ -88,7 +112,11 @@ export default async function Dashboard() {
           </div>
         ) : (
           <div className={styles.emptyState}>
-            <p>Non hai ancora creato giochi. Inizia ora!</p>
+            <p>
+              {isEnglish
+                ? "You haven't created any games yet. Start now!"
+                : 'Non hai ancora creato giochi. Inizia ora!'}
+            </p>
           </div>
         )}
       </div>

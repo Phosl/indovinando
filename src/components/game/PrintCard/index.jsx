@@ -80,7 +80,7 @@ export default function PrintCard({game, questions, bottles}) {
                 <div className={styles.bottleColumn}>
                   <div className={styles.bottleIcon}>🍷</div>
                   <div className={styles.bottleInfo}>
-                    <div className={styles.bottleLabel}>{bottle.name || `Bottiglia ${bottleIndex + 1}`}</div>
+                    <div className={styles.bottleLabel}>{bottle.name || `Bottle ${bottleIndex + 1}`}</div>
                     {bottle.producer && <div className={styles.bottleProducer}>{bottle.producer}</div>}
                     {bottle.year && <div className={styles.bottleYear}>{bottle.year}</div>}
                   </div>

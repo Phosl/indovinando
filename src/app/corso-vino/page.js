@@ -1,11 +1,23 @@
-import levels from '@/data/wine-course/levels.json'
 import CourseClient from './CourseClient'
+import {getWineCourseData} from '@/lib/wineCourseContent'
+import {getServerLanguage} from '@/lib/i18n/server'
 
-export const metadata = {
-  title: 'Corso di Vino | Indovinando',
-  description: 'Impara il vino passo dopo passo con lezioni interattive stile Duolingo.',
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
+export async function generateMetadata() {
+  const lang = await getServerLanguage()
+  return {
+    title: lang === 'en' ? 'Wine Course | Indovinando' : 'Corso Vino | Indovinando',
+    description:
+      lang === 'en'
+        ? 'Learn wine step by step with interactive Duolingo-style lessons.'
+        : 'Impara il vino passo dopo passo con lezioni interattive stile Duolingo.',
+  }
 }
 
-export default function CorsoVino() {
+export default async function CorsoVino() {
+  const lang = await getServerLanguage()
+  const {levels} = await getWineCourseData(lang)
   return <CourseClient levels={levels} />
 }

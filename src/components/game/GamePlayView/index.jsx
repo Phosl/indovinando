@@ -1,9 +1,13 @@
 'use client'
 
 import {useMemo, useState} from 'react'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {getGamePlayViewText} from '../utils/constants'
 import styles from './GamePlayView.module.scss'
 
 export default function GamePlayView({game, questions, bottles}) {
+  const {lang} = useLanguage()
+  const text = getGamePlayViewText(lang)
   const [activeBottleIndex, setActiveBottleIndex] = useState(0)
 
   const activeBottle = bottles[activeBottleIndex]
@@ -17,17 +21,19 @@ export default function GamePlayView({game, questions, bottles}) {
     <div className={styles.container}>
       <h1 className={styles.gameTitle}>{game.name}</h1>
 
-      <section className={styles.sliderSection} aria-label="Bottiglie del gioco">
+      <section className={styles.sliderSection} aria-label={text.sliderAria}>
         <div className={styles.sliderTrack}>
           {bottles.map((bottle, idx) => (
             <button
               key={bottle.id}
               className={`${styles.bottleCard} ${idx === activeBottleIndex ? styles.activeBottle : ''}`}
               onClick={() => setActiveBottleIndex(idx)}>
-              <span className={styles.bottleIndex}>Bottiglia {idx + 1}</span>
-              <h3>{bottle.name || 'Senza nome'}</h3>
-              <p>{bottle.producer || 'Produttore non indicato'}</p>
-              <p>{bottle.year || 'Anno non indicato'}</p>
+              <span className={styles.bottleIndex}>
+                {text.bottle} {idx + 1}
+              </span>
+              <h3>{bottle.name || text.unnamed}</h3>
+              <p>{bottle.producer || text.producerMissing}</p>
+              <p>{bottle.year || text.yearMissing}</p>
             </button>
           ))}
         </div>
@@ -36,12 +42,11 @@ export default function GamePlayView({game, questions, bottles}) {
       <div className={styles.card}>
         <div className={styles.bottleHeader}>
           <span className={styles.questionNumber}>
-            Bottiglia {activeBottleIndex + 1} di {bottles.length}
+            {text.bottle} {activeBottleIndex + 1} {text.bottleCounterOf} {bottles.length}
           </span>
-          <h2>{activeBottle?.name || 'Bottiglia'}</h2>
+          <h2>{activeBottle?.name || text.bottle}</h2>
           <p>
-            {activeBottle?.producer || 'Produttore non indicato'} -{' '}
-            {activeBottle?.year || 'Anno N/A'}
+            {activeBottle?.producer || text.producerMissing} - {activeBottle?.year || text.yearNA}
           </p>
         </div>
 
@@ -51,7 +56,9 @@ export default function GamePlayView({game, questions, bottles}) {
             return (
               <div key={q.id} className={styles.questionBlock}>
                 <div className={styles.questionHeader}>
-                  <span className={styles.questionNumber}>Domanda {idx + 1}</span>
+                  <span className={styles.questionNumber}>
+                    {text.question} {idx + 1}
+                  </span>
                   <p className={styles.questionTitle}>{q.text}</p>
                 </div>
 
@@ -69,7 +76,7 @@ export default function GamePlayView({game, questions, bottles}) {
                   })}
                 </div>
 
-                <p className={styles.correctLabel}>Risposta corretta evidenziata in verde</p>
+                <p className={styles.correctLabel}>{text.correctLabel}</p>
               </div>
             )
           })}

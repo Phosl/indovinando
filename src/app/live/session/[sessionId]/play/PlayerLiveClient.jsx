@@ -15,6 +15,7 @@ import {GameOverlays} from './components/GameOverlays'
 import {BottleTransitionScreen} from './components/BottleTransitionScreen'
 import {ResultsScreen} from './components/ResultsScreen'
 import {QuestionSlideScreen} from './components/QuestionSlideScreen'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
 
 export default function PlayerLiveClient({
   sessionId,
@@ -27,6 +28,8 @@ export default function PlayerLiveClient({
 }) {
   const router = useRouter()
   const isHostUser = Boolean(userId && hostUserId && userId === hostUserId)
+  const {lang} = useLanguage()
+  const isEnglish = lang === 'en'
 
   // ── Hooks ──────────────────────────────────────────────────────────────────
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
@@ -170,8 +173,8 @@ export default function PlayerLiveClient({
     return (
       <div className={styles.fullPage}>
         <div className={styles.centeredCard}>
-          <h2>🎉 Gioco Terminato!</h2>
-          <p>Redirezione alla classifica...</p>
+          <h2>{isEnglish ? '🎉 Game Over!' : '🎉 Gioco Terminato!'}</h2>
+          <p>{isEnglish ? 'Redirecting to leaderboard...' : 'Redirezione alla classifica...'}</p>
         </div>
       </div>
     )
@@ -180,7 +183,7 @@ export default function PlayerLiveClient({
   if (resolvingPlayer || loadingGameData) {
     return (
       <div className={styles.fullPage}>
-        <Loader label="Caricamento partita" />
+        <Loader label="Loading game" />
       </div>
     )
   }
@@ -189,12 +192,16 @@ export default function PlayerLiveClient({
     return (
       <div className={styles.fullPage}>
         <div className={styles.centeredCard}>
-          <h2>👤 Partecipante non trovato</h2>
-          <p>Rientra dalla pagina di accesso alla sessione con il tuo nickname.</p>
+          <h2>{isEnglish ? '👤 Participant not found' : '👤 Partecipante non trovato'}</h2>
+          <p>
+            {isEnglish
+              ? 'Rejoin from the session entry page using your nickname.'
+              : 'Rientra dalla pagina di accesso alla sessione con il tuo nickname.'}
+          </p>
           <button
             className={styles.checkButton}
             onClick={() => router.push(`/live/session/${sessionId}`)}>
-            Torna al Join
+            {isEnglish ? 'Back to join' : 'Torna al join'}
           </button>
         </div>
       </div>
@@ -205,8 +212,8 @@ export default function PlayerLiveClient({
     return (
       <div className={styles.fullPage}>
         <div className={styles.centeredCard}>
-          <h2>🕒 Sessione non pronta</h2>
-          <p>Attendi l&apos;avvio del gioco.</p>
+          <h2>{isEnglish ? '🕒 Session not ready' : '🕒 Sessione non pronta'}</h2>
+          <p>{isEnglish ? 'Wait for the game to start.' : "Attendi l'avvio del gioco."}</p>
         </div>
       </div>
     )
@@ -235,16 +242,22 @@ export default function PlayerLiveClient({
         <TopBar {...topBarProps} />
         <div className={styles.slideContent}>
           <div className={styles.bottleBadge}>
-            Bottiglia {currentBottleIndex + 1}/{liveBottles.length}
+            Bottle {currentBottleIndex + 1}/{liveBottles.length}
           </div>
-          <h2 className={styles.waitTitle}>Tutte le risposte sono arrivate</h2>
-          <p className={styles.readyHint}>Quando vuoi, apri il riepilogo della bottiglia.</p>
+          <h2 className={styles.waitTitle}>
+            {isEnglish ? 'All answers are in' : 'Tutte le risposte sono arrivate'}
+          </h2>
+          <p className={styles.readyHint}>
+            {isEnglish
+              ? 'Open the bottle summary whenever you are ready.'
+              : 'Quando vuoi, apri il riepilogo della bottiglia.'}
+          </p>
         </div>
         <div className={styles.bottomPanel}>
           <button
             className={styles.continueButton}
             onClick={() => setResultsOpenedBottleIndex(currentBottleIndex)}>
-            Vedi risultati
+            See results
           </button>
         </div>
         {overlays}
@@ -259,12 +272,18 @@ export default function PlayerLiveClient({
       resultsOpenedBottleIndex === currentBottleIndex)
   ) {
     const title =
-      roundStatus === 'showing_results' ? 'Bottiglia completata!' : 'Risultati bottiglia'
+      roundStatus === 'showing_results'
+        ? isEnglish
+          ? 'Bottle complete!'
+          : 'Bottiglia completata!'
+        : isEnglish
+          ? 'Bottle results'
+          : 'Risultati bottiglia'
     const subtitle =
       roundStatus === 'showing_results'
         ? isLastBottle
-          ? 'Tra poco vedrai la classifica finale.'
-          : `Passiamo alla bottiglia ${currentBottleIndex + 2}.`
+          ? 'You will see the final leaderboard shortly.'
+          : `Moving to bottle ${currentBottleIndex + 2}.`
         : null
     return (
       <ResultsScreen

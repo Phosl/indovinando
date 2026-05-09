@@ -1,0 +1,688 @@
+{
+  "level": 5,
+  "slug": "vino-a-tavola-domande-classiche",
+  "title": "Vino a tavola: le domande classiche",
+  "description": "Come scegliere, ordinare e non sbagliare vino al ristorante o in situazioni reali",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Come scegliere un vino al ristorante",
+      "intro": "Quando il cameriere ti chiede ‘che vino vuole?’, non serve panico: esiste un metodo semplice.",
+      "final": "Ora sai scegliere un vino senza stress.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Se non conosci il menu, cosa fai?",
+          "answers": [
+            "Chiedi consiglio",
+            "Scegli a caso",
+            "Prendi il più caro"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "È normale chiedere aiuto per il vino.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "La scelta migliore è spesso:",
+          "answers": [
+            "Vino del territorio",
+            "Vino importato casuale",
+            "Sempre dolce"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Come scegliere un vino al ristorante",
+          "paragraphs": [
+            "Quando il cameriere ti chiede ‘che vino vuole?’, non serve panico: esiste un metodo semplice.",
+            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+          ],
+          "keyPoints": [
+            "Se non conosci il menu, cosa fai",
+            "È normale chiedere aiuto per il vino",
+            "La scelta migliore è spesso"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai scegliere un vino senza stress.",
+            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+          ],
+          "keyPoints": [
+            "Se non conosci il menu, cosa fai",
+            "È normale chiedere aiuto per il vino",
+            "La scelta migliore è spesso"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l2",
+      "title": "Rosso o bianco?",
+      "intro": "La domanda più comune: rosso o bianco? La risposta dipende dal cibo e dal contesto.",
+      "final": "Ora sai quando scegliere rosso o bianco.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Con carne rossa spesso si sceglie:",
+          "answers": [
+            "Rosso",
+            "Bianco",
+            "Rosé"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "Con pesce si preferisce:",
+          "answers": [
+            "Bianco",
+            "Rosso",
+            "Passito"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "true_false",
+          "question": "Non esistono regole rigide negli abbinamenti.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Rosso o bianco?",
+          "paragraphs": [
+            "La domanda più comune: rosso o bianco? La risposta dipende dal cibo e dal contesto.",
+            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+          ],
+          "keyPoints": [
+            "Con carne rossa spesso si sceglie",
+            "Con pesce si preferisce",
+            "Non esistono regole rigide negli abbinamenti"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai quando scegliere rosso o bianco.",
+            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+          ],
+          "keyPoints": [
+            "Con carne rossa spesso si sceglie",
+            "Con pesce si preferisce",
+            "Non esistono regole rigide negli abbinamenti"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l3",
+      "title": "Quanto spendere per una bottiglia",
+      "intro": "Il prezzo non è tutto, ma aiuta a orientarsi.",
+      "final": "Ora sai evitare scelte inutilmente costose.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Un vino costoso è sempre migliore?",
+          "answers": [
+            "No",
+            "Sì",
+            "Sempre"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "Una buona fascia media è spesso:",
+          "answers": [
+            "15-40€",
+            "1-5€",
+            "100€+"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "true_false",
+          "question": "Il prezzo riflette sempre la qualità.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Quanto spendere per una bottiglia",
+          "paragraphs": [
+            "Il prezzo non è tutto, ma aiuta a orientarsi.",
+            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+          ],
+          "keyPoints": [
+            "Un vino costoso è sempre migliore",
+            "Una buona fascia media è spesso",
+            "Il prezzo riflette sempre la qualità"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai evitare scelte inutilmente costose.",
+            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+          ],
+          "keyPoints": [
+            "Un vino costoso è sempre migliore",
+            "Una buona fascia media è spesso",
+            "Il prezzo riflette sempre la qualità"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l4",
+      "title": "Cosa dire al cameriere",
+      "intro": "Non serve conoscere tutto: basta comunicare bene quello che vuoi.",
+      "final": "Ora sai parlare di vino senza ansia.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Cosa puoi dire se non sei sicuro?",
+          "answers": [
+            "Mi consigliate voi?",
+            "Prendo il più costoso",
+            "Non voglio vino"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Chiedere consiglio è visto male.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "È utile dire:",
+          "answers": [
+            "Cosa mangerai",
+            "Il colore del tavolo",
+            "Nulla"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Cosa dire al cameriere",
+          "paragraphs": [
+            "Non serve conoscere tutto: basta comunicare bene quello che vuoi.",
+            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+          ],
+          "keyPoints": [
+            "Puoi dire se non sei sicuro",
+            "Chiedere consiglio è visto male",
+            "È utile dire"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai parlare di vino senza ansia.",
+            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+          ],
+          "keyPoints": [
+            "Puoi dire se non sei sicuro",
+            "Chiedere consiglio è visto male",
+            "È utile dire"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l5",
+      "title": "Vino della casa: sì o no?",
+      "intro": "Il vino della casa può essere una sorpresa positiva o una scelta sicura.",
+      "final": "Ora sai quando fidarti del vino della casa.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Il vino della casa è spesso:",
+          "answers": [
+            "Locale e semplice",
+            "Sempre costoso",
+            "Sempre spumante"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il vino della casa è sempre scadente.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "È una buona scelta quando:",
+          "answers": [
+            "Non vuoi complicarti la vita",
+            "Vuoi impressionare",
+            "Vuoi spendere molto"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Vino della casa: sì o no?",
+          "paragraphs": [
+            "Il vino della casa può essere una sorpresa positiva o una scelta sicura.",
+            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+          ],
+          "keyPoints": [
+            "Il vino della casa è spesso",
+            "Il vino della casa è sempre scadente",
+            "È una buona scelta quando"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai quando fidarti del vino della casa.",
+            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+          ],
+          "keyPoints": [
+            "Il vino della casa è spesso",
+            "Il vino della casa è sempre scadente",
+            "È una buona scelta quando"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l6",
+      "title": "Quando non ti piace il vino",
+      "intro": "Può succedere: il vino non ti piace. Come comportarsi?",
+      "final": "Ora sai gestire una situazione imbarazzante.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Se non ti piace il vino puoi:",
+          "answers": [
+            "Dirlo educatamente",
+            "Urlare",
+            "Non bere mai più vino"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "È obbligatorio finire il vino.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Un approccio corretto è:",
+          "answers": [
+            "Chiedere alternativa",
+            "Fingere entusiasmo",
+            "Andarsene"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Quando non ti piace il vino",
+          "paragraphs": [
+            "Può succedere: il vino non ti piace. Come comportarsi?",
+            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+          ],
+          "keyPoints": [
+            "Se non ti piace il vino puoi",
+            "È obbligatorio finire il vino",
+            "Un approccio corretto è"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai gestire una situazione imbarazzante.",
+            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+          ],
+          "keyPoints": [
+            "Se non ti piace il vino puoi",
+            "È obbligatorio finire il vino",
+            "Un approccio corretto è"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l7",
+      "title": "Quanti vini ordinare",
+      "intro": "Non sempre serve una bottiglia per persona.",
+      "final": "Ora sai evitare sprechi.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "In una cena in due spesso si prende:",
+          "answers": [
+            "1 bottiglia",
+            "3 bottiglie",
+            "Nessuna"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "È meglio esagerare con il vino.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Se non sei sicuro:",
+          "answers": [
+            "Inizia con poco",
+            "Ordina tutto",
+            "Non bere"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Quanti vini ordinare",
+          "paragraphs": [
+            "Non sempre serve una bottiglia per persona.",
+            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+          ],
+          "keyPoints": [
+            "In una cena in due spesso si prende",
+            "È meglio esagerare con il vino",
+            "Se non sei sicuro"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai evitare sprechi.",
+            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+          ],
+          "keyPoints": [
+            "In una cena in due spesso si prende",
+            "È meglio esagerare con il vino",
+            "Se non sei sicuro"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l8",
+      "title": "Quando il vino va “respirato”",
+      "intro": "Alcuni vini migliorano con l’ossigeno nel bicchiere.",
+      "final": "Ora sai cosa significa far respirare un vino.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Far respirare il vino significa:",
+          "answers": [
+            "Esporlo all’aria",
+            "Raffreddarlo",
+            "Scaldarlo"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Tutti i vini devono respirare molto.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Serve soprattutto per:",
+          "answers": [
+            "Vini rossi strutturati",
+            "Bibite",
+            "Acqua"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Quando il vino va “respirato”",
+          "paragraphs": [
+            "Alcuni vini migliorano con l’ossigeno nel bicchiere.",
+            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+          ],
+          "keyPoints": [
+            "Far respirare il vino significa",
+            "Tutti i vini devono respirare molto",
+            "Serve soprattutto per"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai cosa significa far respirare un vino.",
+            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+          ],
+          "keyPoints": [
+            "Far respirare il vino significa",
+            "Tutti i vini devono respirare molto",
+            "Serve soprattutto per"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l9",
+      "title": "Come non fare figuracce",
+      "intro": "Piccole regole sociali sul vino che evitano situazioni imbarazzanti.",
+      "final": "Ora sei a prova di figuraccia.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "È meglio:",
+          "answers": [
+            "Chiedere che vino è",
+            "Inventare",
+            "Fare finta di sapere"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "È normale non sapere tutto sul vino.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "La cosa peggiore è:",
+          "answers": [
+            "Fingere competenza",
+            "Chiedere aiuto",
+            "Provare vini nuovi"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Come non fare figuracce",
+          "paragraphs": [
+            "Piccole regole sociali sul vino che evitano situazioni imbarazzanti.",
+            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+          ],
+          "keyPoints": [
+            "È meglio",
+            "È normale non sapere tutto sul vino",
+            "Definizione di cosa peggiore"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sei a prova di figuraccia.",
+            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+          ],
+          "keyPoints": [
+            "È meglio",
+            "È normale non sapere tutto sul vino",
+            "Definizione di cosa peggiore"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l10",
+      "title": "Il tuo primo ordine da intenditore",
+      "intro": "Metti insieme tutto: scelta, contesto e sicurezza.",
+      "final": "Ora puoi ordinare vino come una persona esperta.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Un buon approccio è:",
+          "answers": [
+            "Chiedere consiglio",
+            "Scegliere a caso",
+            "Evitare il vino"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il contesto conta nella scelta del vino.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "L’obiettivo è:",
+          "answers": [
+            "Godersi il momento",
+            "Impressionare tutti",
+            "Complicarsi la vita"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Il tuo primo ordine da intenditore",
+          "paragraphs": [
+            "Metti insieme tutto: scelta, contesto e sicurezza.",
+            "In questa parte trovi i passaggi fondamentali per orientarti nelle situazioni reali al ristorante o durante una cena."
+          ],
+          "keyPoints": [
+            "Un buon approccio è",
+            "Il contesto conta nella scelta del vino",
+            "L’obiettivo è"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora puoi ordinare vino come una persona esperta.",
+            "Ora passa alle domande per consolidare il metodo e applicarlo con sicurezza quando scegli o ordini un vino."
+          ],
+          "keyPoints": [
+            "Un buon approccio è",
+            "Il contesto conta nella scelta del vino",
+            "L’obiettivo è"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,688 @@
+{
+  "level": 4,
+  "slug": "storie-e-curiosita-del-vino",
+  "title": "Wine stories and curiosities",
+  "description": "Surprising anecdotes, legends and curiosities about the world of wine",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "The oldest wine in the world",
+      "intro": "Wine has been around for thousands of years. Some traces date back over 8,000 years in Georgia.",
+      "final": "Now you know where wine probably originated.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Where were the oldest traces of wine found?",
+          "answers": [
+            "Georgia",
+            "Italy",
+            "France"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Wine has more than 8,000 years of history.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Wine was initially born as:",
+          "answers": [
+            "Spontaneous fermentation",
+            "Industrial recipe",
+            "Modern drink"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "The oldest wine in the world",
+          "paragraphs": [
+            "Wine has been around for thousands of years. Some traces date back over 8,000 years in Georgia.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Where the oldest traces of wine were found",
+            "Wine has more than 8,000 years of history",
+            "Wine was initially born as"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know where wine probably originated.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Where the oldest traces of wine were found",
+            "Wine has more than 8,000 years of history",
+            "Wine was initially born as"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l2",
+      "title": "The Romans and wine",
+      "intro": "For the Romans, wine was daily, diluted with water and consumed by everyone.",
+      "final": "Now you know why wine is so rooted in Europe.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "How often did the Romans drink wine?",
+          "answers": [
+            "Diluted with water",
+            "On the rocks",
+            "Heat"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Wine was reserved only for the rich.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Wine for the Romans was:",
+          "answers": [
+            "Daily drink",
+            "Rare luxury",
+            "Secret medicine"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "The Romans and wine",
+          "paragraphs": [
+            "For the Romans, wine was daily, diluted with water and consumed by everyone.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "How the Romans often drank wine",
+            "Wine was reserved only for the rich",
+            "Wine for the Romans was"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know why wine is so rooted in Europe.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "How the Romans often drank wine",
+            "Wine was reserved only for the rich",
+            "Wine for the Romans was"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l3",
+      "title": "Wine and monks",
+      "intro": "In the Middle Ages, monks saved and perfected European viticulture.",
+      "final": "Now you know who kept the wine culture alive.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Who preserved wine in the Middle Ages?",
+          "answers": [
+            "Monks",
+            "King",
+            "Merchants"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "The monasteries produced wine.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Wine was also used as:",
+          "answers": [
+            "Safe water",
+            "Perfume",
+            "Currency"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Wine and monks",
+          "paragraphs": [
+            "In the Middle Ages, monks saved and perfected European viticulture.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Who preserved wine in the Middle Ages",
+            "The monasteries produced wine",
+            "Wine was also used as"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know who kept the wine culture alive.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Who preserved wine in the Middle Ages",
+            "The monasteries produced wine",
+            "Wine was also used as"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l4",
+      "title": "The cork stopper",
+      "intro": "The cork stopper has been used for centuries and allows the wine to breathe slowly.",
+      "final": "Now you know why cork is still used today.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Where does cork come from?",
+          "answers": [
+            "Oak",
+            "Pine",
+            "Screw"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Cork allows micro-oxygenation.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "The most common alternative cap is:",
+          "answers": [
+            "Metal screw",
+            "Wood",
+            "Glass"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "The cork stopper",
+          "paragraphs": [
+            "The cork stopper has been used for centuries and allows the wine to breathe slowly.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Where does cork come from?",
+            "Cork allows micro-oxygenation",
+            "Definition: most common alternative cap"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know why cork is still used today.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Where does cork come from?",
+            "Cork allows micro-oxygenation",
+            "Definition: most common alternative cap"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l5",
+      "title": "Because we toast",
+      "intro": "The toast comes from ancient traditions to chase away the poisons in the glasses.",
+      "final": "Now you know why glasses are raised.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Why was it originally toasted?",
+          "answers": [
+            "For safety",
+            "For fashion",
+            "For sports"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "The toast was a gesture of trust.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Today the toast is for:",
+          "answers": [
+            "Celebrate",
+            "Measuring wine",
+            "Taste"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Because we toast",
+          "paragraphs": [
+            "The toast comes from ancient traditions to chase away the poisons in the glasses.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Because it was originally toasted",
+            "The toast was a gesture of trust",
+            "Today the toast is for"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know why glasses are raised.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Because it was originally toasted",
+            "The toast was a gesture of trust",
+            "Today the toast is for"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l6",
+      "title": "The most expensive wine in the world",
+      "intro": "Some wines reach incredible prices for their rarity and history.",
+      "final": "Now you know that wine can also be an investment.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What increases the price of a wine?",
+          "answers": [
+            "Rarity",
+            "Color",
+            "Bottle shape"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "The most expensive wine is always the best.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Some wines become:",
+          "answers": [
+            "Collectibles",
+            "Flavored water",
+            "Carbonated drinks"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "The most expensive wine in the world",
+          "paragraphs": [
+            "Some wines reach incredible prices for their rarity and history.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Increase the price of a wine",
+            "The most expensive wine is always the best",
+            "Some wines become"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know that wine can also be an investment.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Increase the price of a wine",
+            "The most expensive wine is always the best",
+            "Some wines become"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l7",
+      "title": "Wine and science",
+      "intro": "Wine is living chemistry: yeasts, bacteria and natural reactions.",
+      "final": "Now you know that wine is also science.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Who transforms the wine?",
+          "answers": [
+            "Yeasts",
+            "Plastic",
+            "Metal"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Wine is a complex organic product.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Wine chemistry concerns:",
+          "answers": [
+            "Natural reactions",
+            "Color only",
+            "Bottle only"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Wine and science",
+          "paragraphs": [
+            "Wine is living chemistry: yeasts, bacteria and natural reactions.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Who transforms wine",
+            "Wine is a complex organic product",
+            "Wine chemistry is about"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know that wine is also science.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Who transforms wine",
+            "Wine is a complex organic product",
+            "Wine chemistry is about"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l8",
+      "title": "Wine in space",
+      "intro": "Some wines have even been aged in space.",
+      "final": "Now you know that wine has reached beyond the Earth.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Where has wine been tested in space?",
+          "answers": [
+            "ISS",
+            "Moon",
+            "Mars"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Wine changes in space.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "The aim of the experiment was:",
+          "answers": [
+            "Studying aging",
+            "Selling wine",
+            "Freeze it"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Wine in space",
+          "paragraphs": [
+            "Some wines have even been aged in space.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Where wine was tested in space",
+            "Wine changes in space",
+            "The purpose of the experiment was"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know that wine has reached beyond the Earth.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Where wine was tested in space",
+            "Wine changes in space",
+            "The purpose of the experiment was"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l9",
+      "title": "Wine and cinema",
+      "intro": "Wine is often a symbol of culture, luxury and pleasure in films.",
+      "final": "Now you recognize wine in pop culture too.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "In cinema, wine often represents:",
+          "answers": [
+            "Elegance",
+            "Violence",
+            "Sport"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Wine is a cultural symbol.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Wine in films is often associated with:",
+          "answers": [
+            "Elegant dinner",
+            "War",
+            "Technology"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Wine and cinema",
+          "paragraphs": [
+            "Wine is often a symbol of culture, luxury and pleasure in films.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "In cinema, wine often represents",
+            "Wine is a cultural symbol",
+            "Wine in films is often associated with"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you recognize wine in pop culture too.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "In cinema, wine often represents",
+            "Wine is a cultural symbol",
+            "Wine in films is often associated with"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l10",
+      "title": "Final curiosities from a sommelier",
+      "intro": "Small curiosities that distinguish an enthusiast from a connoisseur.",
+      "final": "Now you have the look of a true wine lover.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "The wine changes with:",
+          "answers": [
+            "Time",
+            "Bottle color",
+            "Label"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Everyone perceives wine the same way.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "The wine is:",
+          "answers": [
+            "Sensory experience",
+            "Drink only",
+            "Only alcohol"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Final curiosities from a sommelier",
+          "paragraphs": [
+            "Small curiosities that distinguish an enthusiast from a connoisseur.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "The wine changes with",
+            "Everyone perceives wine the same way",
+            "Definition: wine"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you have the look of a true wine lover.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "The wine changes with",
+            "Everyone perceives wine the same way",
+            "Definition: wine"
+          ]
+        }
+      ]
+    }
+  ]
+}

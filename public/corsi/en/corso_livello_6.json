@@ -1,0 +1,688 @@
+{
+  "level": 6,
+  "slug": "chimica-del-vino",
+  "title": "The chemistry of wine",
+  "description": "Understand what really happens in wine: sugars, acids, alcohol and transformations",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Sugar and alcohol",
+      "intro": "Wine is born from a chemical transformation: grape sugar becomes alcohol.",
+      "final": "Now you know where the alcohol in wine comes from.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What becomes of sugar during fermentation?",
+          "answers": [
+            "Alcohol",
+            "Water",
+            "Acid"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "More sugar potentially means more alcohol.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Who processes sugar?",
+          "answers": [
+            "Yeasts",
+            "Oxygen",
+            "Light"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Sugar → alcohol",
+          "paragraphs": [
+            "Grape must contains natural sugars.",
+            "During fermentation, yeasts transform them into alcohol and carbon dioxide."
+          ],
+          "keyPoints": [
+            "Starting sugar",
+            "Chemical transformation",
+            "Alcohol production"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know where the alcohol in wine comes from.",
+            "Move on to the questions to establish the basic concept of fermentation."
+          ],
+          "keyPoints": [
+            "Starting sugar",
+            "Chemical transformation",
+            "Alcohol production"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l2",
+      "title": "Acidity of the wine",
+      "intro": "Acidity is one of the key elements of wine: it gives freshness and balance.",
+      "final": "Now you understand why acidity is essential.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "The acidity in wine gives:",
+          "answers": [
+            "Freshness",
+            "Sweetness",
+            "Color"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "A wine without acidity would be flat.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "What sensation is linked to acidity?",
+          "answers": [
+            "Salivation",
+            "Bitter",
+            "Heat"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "The role of acids",
+          "paragraphs": [
+            "The natural grape acids give structure and freshness.",
+            "Without acidity the wine is heavy and not very lively."
+          ],
+          "keyPoints": [
+            "Freshness",
+            "Balance",
+            "Structure"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you understand why acidity is essential.",
+            "Check your understanding with the questions."
+          ],
+          "keyPoints": [
+            "Freshness",
+            "Balance",
+            "Structure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l3",
+      "title": "pH of wine",
+      "intro": "pH measures the chemical acidity of wine and is essential for stability and taste.",
+      "final": "Now you know what pH means in wine.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "pH measures:",
+          "answers": [
+            "Acidity",
+            "Sweetness",
+            "Color"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "A lower pH means more acidity.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "pH affects:",
+          "answers": [
+            "Stability of wine",
+            "Label",
+            "Bottle shape"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "What is pH",
+          "paragraphs": [
+            "pH is a scientific measurement of acidity.",
+            "In wine it affects taste, conservation and color."
+          ],
+          "keyPoints": [
+            "pH scale",
+            "Real acidity",
+            "Stability"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know what pH means in wine.",
+            "Test your understanding."
+          ],
+          "keyPoints": [
+            "pH scale",
+            "Real acidity",
+            "Stability"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l4",
+      "title": "Tannins",
+      "intro": "Tannins are molecules that give structure and a sensation of dryness.",
+      "final": "Now you recognize the role of tannins.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Tannins give the sensation of:",
+          "answers": [
+            "Dryness",
+            "Sweetness",
+            "Freshness"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Tannins are found mainly in red wines.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Tannins come from:",
+          "answers": [
+            "Skins and seeds",
+            "Water",
+            "Sugar"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "What are tannins",
+          "paragraphs": [
+            "Tannins are natural compounds in grapes.",
+            "They give structure and aging capacity to the wine."
+          ],
+          "keyPoints": [
+            "Dryness",
+            "Structure",
+            "Origin in the skins"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you recognize the role of tannins.",
+            "Check with questions."
+          ],
+          "keyPoints": [
+            "Dryness",
+            "Structure",
+            "Origin in the skins"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l5",
+      "title": "Alcohol and perception",
+      "intro": "Alcohol is not just a percentage: it affects the body and sensations.",
+      "final": "Now you know how alcohol changes wine.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Alcohol gives the sensation of:",
+          "answers": [
+            "Heat",
+            "Acidity",
+            "Bitter"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "More alcohol increases the body of the wine.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Alcohol contributes to:",
+          "answers": [
+            "Structure",
+            "Color",
+            "Label"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Effect of alcohol",
+          "paragraphs": [
+            "Alcohol contributes to the body of the wine.",
+            "It gives a warm sensation in the mouth."
+          ],
+          "keyPoints": [
+            "Heat",
+            "Structure",
+            "Balance"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know how alcohol changes wine.",
+            "Test your understanding."
+          ],
+          "keyPoints": [
+            "Heat",
+            "Structure",
+            "Balance"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l6",
+      "title": "Carbon dioxide",
+      "intro": "Carbon dioxide can also be present in still wines.",
+      "final": "Now you know why some wines “sting”.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "CO2 feels like:",
+          "answers": [
+            "Effervescence",
+            "Sweetness",
+            "Bitter"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Only sparkling wines contain CO2.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "CO2 comes from:",
+          "answers": [
+            "Fermentation",
+            "Bottle",
+            "Light"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "CO2 in wine",
+          "paragraphs": [
+            "CO2 is a byproduct of fermentation.",
+            "It can remain in the wine giving a sensation of freshness."
+          ],
+          "keyPoints": [
+            "Fermentation",
+            "Effervescence",
+            "Freshness"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know why some wines sting.",
+            "Test your knowledge."
+          ],
+          "keyPoints": [
+            "Fermentation",
+            "Effervescence",
+            "Freshness"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l7",
+      "title": "Oxygen and oxidation",
+      "intro": "Oxygen can make or break wine.",
+      "final": "Now you know when oxygen is a problem.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Too much oxygen:",
+          "answers": [
+            "It ruins the wine",
+            "It's always improving",
+            "Nothing changes"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "A little oxygen can help the wine.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Oxidation leads to:",
+          "answers": [
+            "Loss of freshness",
+            "Increased sweetness",
+            "Blue color"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Oxygen",
+          "paragraphs": [
+            "Oxygen is useful in small quantities.",
+            "In excess it causes oxidation and deterioration."
+          ],
+          "keyPoints": [
+            "Balance",
+            "Oxidation",
+            "Deterioration"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know when oxygen is a problem.",
+            "Answer the questions."
+          ],
+          "keyPoints": [
+            "Balance",
+            "Oxidation",
+            "Deterioration"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l8",
+      "title": "Residual sugars",
+      "intro": "Not all sugars are transformed: some remain in the wine.",
+      "final": "Now you understand what makes a wine sweet.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Residual sugar means:",
+          "answers": [
+            "Unfermented sugar",
+            "Added sugar",
+            "Cooked sugar"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "A dry wine has little residual sugar.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "More residual sugar =",
+          "answers": [
+            "More sweetness",
+            "More acidity",
+            "More tannins"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Residual sugar",
+          "paragraphs": [
+            "Not all sugar is transformed.",
+            "The residual amount determines the sweetness."
+          ],
+          "keyPoints": [
+            "Sweetness",
+            "Incomplete fermentation",
+            "Wine style"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you understand what makes a wine sweet.",
+            "Test your knowledge."
+          ],
+          "keyPoints": [
+            "Sweetness",
+            "Incomplete fermentation",
+            "Wine style"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l9",
+      "title": "Sulfurous (SO2)",
+      "intro": "Sulfur dioxide is used to protect wine.",
+      "final": "Now you know why sulfur dioxide is used.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Sulfur dioxide is used to:",
+          "answers": [
+            "Protect the wine",
+            "Sweeten",
+            "Color"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Sulfur dioxide is always harmful.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Serves against:",
+          "answers": [
+            "Oxidation and bacteria",
+            "Heat",
+            "Water"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "SO2",
+          "paragraphs": [
+            "Sulfur dioxide is a preservative.",
+            "Protects wine from oxygen and microorganisms."
+          ],
+          "keyPoints": [
+            "Protection",
+            "Stability",
+            "Conservation"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know why sulfur dioxide is used.",
+            "Answer the questions."
+          ],
+          "keyPoints": [
+            "Protection",
+            "Stability",
+            "Conservation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l10",
+      "title": "Chemical balance of wine",
+      "intro": "A great wine is a balance between all the chemical components.",
+      "final": "Now you know what makes a truly harmonious wine.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "A balanced wine has:",
+          "answers": [
+            "Balanced components",
+            "High alcohol only",
+            "Only acidity"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Balance is fundamental to quality.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Too much of one element makes the wine:",
+          "answers": [
+            "Unbalanced",
+            "Perfect",
+            "More expensive"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Balance",
+          "paragraphs": [
+            "Wine is a complex chemical system.",
+            "Quality arises from the balance between the components."
+          ],
+          "keyPoints": [
+            "Balance",
+            "Structure",
+            "Harmony"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know what makes a harmonious wine.",
+            "Complete the level with the quiz."
+          ],
+          "keyPoints": [
+            "Balance",
+            "Structure",
+            "Harmony"
+          ]
+        }
+      ]
+    }
+  ]
+}

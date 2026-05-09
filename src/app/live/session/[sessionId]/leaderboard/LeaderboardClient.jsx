@@ -19,7 +19,7 @@ export default function LeaderboardClient({sessionId, gameName, players}) {
 
   return (
     <div className={styles.container}>
-      <h1>🎉 Classifica Finale</h1>
+      <h1>🎉 Leaderboard Finale</h1>
       <h2 className={styles.gameName}>{gameName}</h2>
 
       {/* Top 3 - Podio */}
@@ -29,7 +29,7 @@ export default function LeaderboardClient({sessionId, gameName, players}) {
             <div className={styles.medal}>{MEDALS[idx]}</div>
             <div className={styles.avatar}>{APPLE_AVATARS[player.avatar_id - 1] || '👤'}</div>
             <h3 className={styles.nickname}>{player.nickname}</h3>
-            <p className={styles.score}>{player.total_score} punti</p>
+            <p className={styles.score}>{player.total_score} points</p>
           </div>
         ))}
       </div>
@@ -37,7 +37,7 @@ export default function LeaderboardClient({sessionId, gameName, players}) {
       {/* Resto della classifica */}
       {rest.length > 0 && (
         <div className={styles.ranking}>
-          <h3>Classifica Completa</h3>
+          <h3>Leaderboard Completa</h3>
           <div className={styles.rankingList}>
             {rest.map((player, idx) => (
               <div key={player.id} className={styles.rankingRow}>

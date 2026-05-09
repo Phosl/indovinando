@@ -5,10 +5,13 @@ import {useRouter} from 'next/navigation'
 import Loader from '@/components/Loader'
 import {supabaseClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
 import styles from './liveSessions.module.scss'
 
 export default function LiveSessionClient({gameId, gameName, questions, bottles, userId}) {
   const router = useRouter()
+  const {lang} = useLanguage()
+  const isEnglish = lang === 'en'
   const [sessionId, setSessionId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [sessionLink, setSessionLink] = useState('')
@@ -104,7 +107,7 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
         })
         .eq('id', sessionId)
 
-      // Host e giocatori condividono la stessa esperienza di gioco.
+      // Host e players share the same game experience
       router.push(`/live/session/${sessionId}/play`)
     } catch (err) {
       console.error('Error starting game:', err)
@@ -125,7 +128,7 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
   if (loading) {
     return (
       <div className={styles.container}>
-        <Loader label="Creazione sessione" />
+        <Loader label={isEnglish ? 'Creating session' : 'Creazione sessione'} />
       </div>
     )
   }
@@ -136,27 +139,27 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
 
       <div className={styles.lobbyCard}>
         <div className={styles.section}>
-          <h2>Link di Invito</h2>
+          <h2>{isEnglish ? 'Invite Link' : 'Link di Invito'}</h2>
           <div className={styles.linkBox}>
             <input type="text" readOnly value={sessionLink} className={styles.linkInput} />
             <button onClick={handleCopyLink} className={styles.copyButton}>
-              {copyFeedback ? '✓ Copiato!' : 'Copia'}
+              {copyFeedback ? (isEnglish ? '✓ Copied!' : '✓ Copiato!') : (isEnglish ? 'Copy' : 'Copia')}
             </button>
           </div>
         </div>
 
         <div className={styles.section}>
-          <h2>Partecipanti: {playersCount}</h2>
+          <h2>{isEnglish ? 'Participants: ' : 'Partecipanti: '}{playersCount}</h2>
           <p className={styles.info}>
-            Aspetta che i giocatori si uniscano, poi premi Inizia Gioco.
+            {isEnglish ? 'Wait for players to join, then click Start Game.' : 'Aspetta che i giocatori si uniscano, poi premi Inizia Gioco.'}
           </p>
         </div>
 
         <div className={styles.section}>
-          <h3>ℹ️ Dettagli Gioco</h3>
+          <h3>ℹ️ {isEnglish ? 'Game Details' : 'Dettagli Gioco'}</h3>
           <ul>
-            <li>📋 Domande: {questions.length}</li>
-            <li>🍾 Bottiglie: {bottles.length}</li>
+            <li>📋 {isEnglish ? 'Questions' : 'Domande'}: {questions.length}</li>
+            <li>🍾 {isEnglish ? 'Bottles' : 'Bottiglie'}: {bottles.length}</li>
           </ul>
         </div>
 
@@ -165,10 +168,10 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
             onClick={handleStartGame}
             disabled={playersCount < 1}
             className={styles.startButton}>
-            Inizia Gioco ({playersCount} giocatori)
+            {isEnglish ? 'Start Game' : 'Inizia Gioco'} ({playersCount} {isEnglish ? 'players' : 'giocatori'})
           </button>
           <button onClick={handleCancel} className={styles.cancelButton}>
-            Annulla
+            {isEnglish ? 'Cancel' : 'Annulla'}
           </button>
         </div>
       </div>

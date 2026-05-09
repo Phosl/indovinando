@@ -5,10 +5,20 @@
   background: var(--foreground);
   border: 2px solid var(--button-secondary-border);
   border-radius: 20px;
-  padding: 24px 20px;
+  padding: 28px 24px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+}
+
+.slideMeta {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-align: center;
 }
 
 .introEmoji {
@@ -18,7 +28,7 @@
 }
 
 .introTitle {
-  font-size: 1.2rem;
+  font-size: clamp(1.35rem, 2.4vw, 1.7rem);
   font-weight: 900;
   margin: 0;
   text-align: center;
@@ -26,10 +36,10 @@
 }
 
 .introParagraph {
-  font-size: 0.9rem;
+  font-size: clamp(1rem, 1.8vw, 1.08rem);
   color: var(--text-secondary);
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.8;
   font-weight: 600;
 }
 
@@ -43,12 +53,12 @@
 }
 
 .keyPoint {
-  font-size: 0.83rem;
+  font-size: 0.9rem;
   font-weight: 800;
   color: var(--selected-dark);
   background: var(--selected-extra-light);
   border-radius: 8px;
-  padding: 6px 12px;
+  padding: 8px 12px;
 
   &::before {
     content: '• ';

@@ -2,7 +2,7 @@ import {createServerSupabase} from '@/lib/supabaseServer'
 import PlayerLiveClient from './PlayerLiveClient'
 
 export const metadata = {
-  title: 'Gioca',
+  title: 'Play',
 }
 
 export default async function PlayerPlayPage({params}) {

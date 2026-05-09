@@ -50,7 +50,9 @@ export function useWineCourseProgress() {
       } catch {}
 
       // 2. Check auth
-      const {data: {user}} = await supabaseClient.auth.getUser()
+      const {
+        data: {user},
+      } = await supabaseClient.auth.getUser()
 
       if (cancelled) return
 
@@ -95,7 +97,9 @@ export function useWineCourseProgress() {
     init()
 
     // Listen for auth changes (login/logout during session)
-    const {data: {subscription}} = supabaseClient.auth.onAuthStateChange(() => {
+    const {
+      data: {subscription},
+    } = supabaseClient.auth.onAuthStateChange(() => {
       init()
     })
 
@@ -170,33 +174,22 @@ export function useWineCourseProgress() {
   )
 
   /**
-   * Returns 'completed' | 'unlocked' | 'locked' for a lesson.
+   * Returns 'completed' | 'unlocked' for a lesson.
    */
   const getLessonStatus = useCallback(
     (level, lessonIndex) => {
       const lessonId = level.lessonIds[lessonIndex]
       const lp = progress[level.id]?.[lessonId]
       if (lp?.completed) return 'completed'
-      if (lessonIndex === 0) return 'unlocked'
-      const prevId = level.lessonIds[lessonIndex - 1]
-      if (progress[level.id]?.[prevId]?.completed) return 'unlocked'
-      return 'locked'
+      return 'unlocked'
     },
     [progress],
   )
 
   /**
-   * Returns 'unlocked' | 'locked' for a level.
+   * Levels are always unlocked.
    */
-  const getLevelStatus = useCallback(
-    (levels, levelIndex) => {
-      if (levelIndex === 0) return 'unlocked'
-      const prev = levels[levelIndex - 1]
-      const allDone = prev.lessonIds.every((id) => progress[prev.id]?.[id]?.completed)
-      return allDone ? 'unlocked' : 'locked'
-    },
-    [progress],
-  )
+  const getLevelStatus = useCallback(() => 'unlocked', [])
 
   /** Returns how many lessons are completed in a given level. */
   const getLevelCompletedCount = useCallback(
@@ -215,4 +208,3 @@ export function useWineCourseProgress() {
     getLevelCompletedCount,
   }
 }
-

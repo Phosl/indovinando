@@ -1,5 +1,6 @@
 import {memo, useMemo, useRef} from 'react'
 import styles from '../playerLive.module.scss'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
 
 const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
 
@@ -25,6 +26,9 @@ export const ResultsScreen = memo(function ResultsScreen({
   topBar,
   overlays,
 }) {
+  const {lang} = useLanguage()
+  const isEnglish = lang === 'en'
+
   // Freeze baseline total_score per player when the results screen first opens for
   // a given bottle. This prevents a brief double-count caused by the host's
   // syncScoresFromAnswers updating allPlayers via Realtime while roundAnswersByPlayer
@@ -57,13 +61,15 @@ export const ResultsScreen = memo(function ResultsScreen({
 
       <div className={styles.slideContent}>
         <div className={styles.bottleBadge}>
-          Bottiglia {currentBottleIndex + 1}/{totalBottles}
+          Bottle {currentBottleIndex + 1}/{totalBottles}
         </div>
         <h2 className={styles.waitTitle}>{title}</h2>
         {subtitle && <p className={styles.readyHint}>{subtitle}</p>}
 
         <div className={styles.bottleReveal}>
-          <span className={styles.bottleRevealLabel}>La bottiglia era</span>
+          <span className={styles.bottleRevealLabel}>
+            {isEnglish ? 'The bottle was' : 'La bottiglia era'}
+          </span>
           <span className={styles.bottleRevealName}>{currentBottle.name}</span>
           {(currentBottle.producer || currentBottle.year) && (
             <span className={styles.bottleRevealMeta}>
@@ -99,10 +105,11 @@ export const ResultsScreen = memo(function ResultsScreen({
                   ) : (
                     <>
                       <span className={styles.summaryWrong}>
-                        ❌ {selectedOptionText || 'Non risposto'}
+                        ❌ {selectedOptionText || 'Not answered'}
                       </span>
                       <span className={styles.summaryCorrectHint}>
-                        Risposta corretta: {correctOptionText || '-'}
+                        {isEnglish ? 'Correct answer:' : 'Risposta corretta:'}{' '}
+                        {correctOptionText || '-'}
                       </span>
                     </>
                   )}
@@ -115,7 +122,9 @@ export const ResultsScreen = memo(function ResultsScreen({
         {/* ── Live standings ──────────────────────────────────────────────── */}
         {standings.length > 0 && (
           <div className={styles.standingsSection}>
-            <h4 className={styles.standingsTitle}>🏆 Classifica Live</h4>
+            <h4 className={styles.standingsTitle}>
+              {isEnglish ? '🏆 Live Leaderboard' : '🏆 Classifica Live'}
+            </h4>
             {standings.map((player, idx) => {
               const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : null
               const isMe = player.id === currentPlayerData?.id
@@ -129,10 +138,14 @@ export const ResultsScreen = memo(function ResultsScreen({
                   </span>
                   <span className={styles.standingName}>
                     {player.nickname}
-                    {isMe ? <span className={styles.standingMe}> tu</span> : ''}
+                    {isMe ? (
+                      <span className={styles.standingMe}> {isEnglish ? 'you' : 'tu'}</span>
+                    ) : (
+                      ''
+                    )}
                   </span>
                   <span className={styles.standingScore}>
-                    {player.projected} pt
+                    {player.projected} {isEnglish ? 'pts' : 'pt'}
                     {player.roundPts > 0 && (
                       <span className={styles.standingDelta}>+{player.roundPts}</span>
                     )}
@@ -148,13 +161,21 @@ export const ResultsScreen = memo(function ResultsScreen({
         <p className={styles.readyHint}>
           {allPlayersCompletedThisRound
             ? isLastBottle
-              ? 'Tutti hanno finito!'
+              ? isEnglish
+                ? 'Everyone has finished!'
+                : 'Tutti hanno finito!'
               : isHostUser
-                ? 'Tutti hanno finito: puoi passare alla prossima bottiglia.'
+                ? isEnglish
+                  ? 'Everyone has finished: you can move to the next bottle.'
+                  : 'Tutti hanno finito: puoi passare alla prossima bottiglia.'
                 : playerMarkedNext
-                  ? `In attesa che l'host avanzi...`
-                  : 'Tutti hanno finito!'
-            : `${playersReadyCount}/${allPlayers.length} giocatori pronti...`}
+                  ? isEnglish
+                    ? 'Waiting for the host to continue...'
+                    : "In attesa che l'host avanzi..."
+                  : isEnglish
+                    ? 'Everyone has finished!'
+                    : 'Tutti hanno finito!'
+            : `${playersReadyCount}/${allPlayers.length} ${isEnglish ? 'players ready...' : 'giocatori pronti...'}`}
         </p>
 
         {isLastBottle ? (
@@ -162,14 +183,14 @@ export const ResultsScreen = memo(function ResultsScreen({
             className={styles.continueButton}
             onClick={onViewLeaderboard}
             disabled={!allPlayersCompletedThisRound}>
-            Vedi classifica
+            {isEnglish ? 'View leaderboard' : 'Vedi classifica'}
           </button>
         ) : (
           <button
             className={styles.continueButton}
             onClick={isHostUser ? onNextBottle : onNextBottle}
             disabled={!allPlayersCompletedThisRound || (!isHostUser && playerMarkedNext)}>
-            Prossima bottiglia
+            Next bottle
           </button>
         )}
       </div>

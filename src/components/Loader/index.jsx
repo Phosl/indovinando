@@ -1,6 +1,6 @@
 import styles from './Loader.module.css'
 
-export default function Loader({label = 'Caricamento...'}) {
+export default function Loader({label = 'Loading...'}) {
   return (
     <div className={styles.wrapper} role="status" aria-live="polite">
       <div className={styles.orbit} aria-hidden="true">

@@ -2,7 +2,8 @@
 
 import {useState, useEffect} from 'react'
 import {validateQuestionForm} from '../utils/validations'
-import {ALERT_MESSAGES} from '../utils/constants'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {getAlertMessages, getQuestionModalText} from '../utils/constants'
 import styles from './QuestionModal.module.scss'
 
 /**
@@ -14,6 +15,10 @@ import styles from './QuestionModal.module.scss'
  * @param {Function} onCancel - Callback when canceling
  */
 export default function QuestionModal({isOpen, questionIndex, question, onSave, onCancel}) {
+  const {lang} = useLanguage()
+  const text = getQuestionModalText(lang)
+  const alertMessages = getAlertMessages(lang)
+
   const [questionText, setQuestionText] = useState('')
   const [options, setOptions] = useState(['', ''])
 
@@ -39,7 +44,7 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
 
   function handleSave() {
     try {
-      validateQuestionForm(questionText, options)
+      validateQuestionForm(questionText, options, alertMessages)
 
       const questionId = question?.id || crypto.randomUUID()
 
@@ -64,7 +69,7 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
     <div className={styles.modalOverlay} onClick={onCancel}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h3>{isNewQuestion ? 'Nuova Domanda' : `Modifica Domanda ${questionIndex + 1}`}</h3>
+          <h3>{isNewQuestion ? text.newTitle : `${text.editTitlePrefix} ${questionIndex + 1}`}</h3>
           <button className={styles.closeBtn} onClick={onCancel}>
             ✕
           </button>
@@ -72,10 +77,10 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
 
         <div className={styles.modalBody}>
           <div className={styles.formGroup}>
-            <label>Testo Domanda</label>
+            <label>{text.questionLabel}</label>
             <textarea
               className={styles.questionInput}
-              placeholder="Scrivi la domanda..."
+              placeholder={text.questionPlaceholder}
               value={questionText}
               onChange={(e) => setQuestionText(e.target.value)}
               rows={3}
@@ -83,30 +88,30 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
           </div>
 
           <div className={styles.formGroup}>
-            <label>Opzioni</label>
+            <label>{text.optionsLabel}</label>
             <div className={styles.optionsList}>
               {options.map((opt, i) => (
                 <input
                   key={i}
                   className={styles.optionInput}
-                  placeholder={`Opzione ${i + 1}`}
+                  placeholder={`${text.optionPlaceholder} ${i + 1}`}
                   value={opt}
                   onChange={(e) => updateOption(i, e.target.value)}
                 />
               ))}
             </div>
             <button className={styles.addOptionBtn} onClick={addOption}>
-              + Aggiungi Opzione
+              {text.addOption}
             </button>
           </div>
         </div>
 
         <div className={styles.modalFooter}>
           <button className="btn secondary" onClick={onCancel}>
-            Annulla
+            {text.cancel}
           </button>
           <button className="btn primary" onClick={handleSave}>
-            {isNewQuestion ? 'Crea Domanda' : 'Salva Domanda'}
+            {isNewQuestion ? text.saveNew : text.saveEdit}
           </button>
         </div>
       </div>

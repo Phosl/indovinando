@@ -3,7 +3,7 @@ import {createServerSupabase} from '@/lib/supabaseServer'
 import LeaderboardClient from './LeaderboardClient'
 
 export const metadata = {
-  title: 'Classifica Finale',
+  title: 'Leaderboard Finale',
 }
 
 export default async function LeaderboardPage({params}) {

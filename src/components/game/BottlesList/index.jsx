@@ -1,4 +1,6 @@
 import {isBottleComplete} from '../utils/validations'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {getBottlesListText} from '../utils/constants'
 import styles from './BottlesList.module.scss'
 
 /**
@@ -16,19 +18,23 @@ export default function BottlesList({
   onNewBottle,
   onDeleteBottle,
 }) {
+  const {lang} = useLanguage()
+  const text = getBottlesListText(lang)
   const questionsLength = questions?.length || 0
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h3>Bottiglie ({bottles.length})</h3>
+        <h3>
+          {text.title} ({bottles.length})
+        </h3>
         <button className="btn primary" onClick={onNewBottle}>
-          + Nuova Bottiglia
+          {text.add}
         </button>
       </div>
 
       {bottles.length === 0 ? (
-        <p className={styles.emptyState}>Nessuna bottiglia ancora. Aggiungi la prima!</p>
+        <p className={styles.emptyState}>{text.empty}</p>
       ) : (
         <div className={styles.grid}>
           {bottles.map((bottle, index) => {
@@ -51,17 +57,17 @@ export default function BottlesList({
                       e.stopPropagation()
                       onEditBottle(index)
                     }}>
-                    Modifica
+                    {text.edit}
                   </button>
                   <button
                     className={styles.deleteBtn}
                     onClick={(e) => {
                       e.stopPropagation()
-                      if (confirm('Elimina questa bottiglia?')) {
+                      if (confirm(text.confirmDelete)) {
                         onDeleteBottle(index)
                       }
                     }}>
-                    Elimina
+                    {text.delete}
                   </button>
                 </div>
               </div>

@@ -1,4 +1,6 @@
 import {isQuestionComplete} from '../utils/validations'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {getQuestionsListText} from '../utils/constants'
 import styles from './QuestionsList.module.scss'
 
 /**
@@ -14,17 +16,22 @@ export default function QuestionsList({
   onNewQuestion,
   onDeleteQuestion,
 }) {
+  const {lang} = useLanguage()
+  const text = getQuestionsListText(lang)
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h3>Domande ({questions.length})</h3>
+        <h3>
+          {text.title} ({questions.length})
+        </h3>
         <button className="btn primary" onClick={onNewQuestion}>
-          + Nuova Domanda
+          {text.add}
         </button>
       </div>
 
       {questions.length === 0 ? (
-        <p className={styles.emptyState}>Nessuna domanda ancora. Aggiungi la prima!</p>
+        <p className={styles.emptyState}>{text.empty}</p>
       ) : (
         <div className={styles.grid}>
           {questions.map((question, index) => {
@@ -35,11 +42,15 @@ export default function QuestionsList({
                 className={`${styles.card} ${isComplete ? styles.complete : styles.incomplete}`}
                 onClick={() => onEditQuestion(index)}>
                 <div className={styles.cardHeader}>
-                  <h4>Domanda {index + 1}</h4>
+                  <h4>
+                    {text.question} {index + 1}
+                  </h4>
                   <span className={styles.status}>{isComplete ? '✓' : '⚠️'}</span>
                 </div>
                 <p className={styles.questionText}>{question.text}</p>
-                <div className={styles.optionsCount}>{question.options?.length || 0} opzioni</div>
+                <div className={styles.optionsCount}>
+                  {question.options?.length || 0} {text.options}
+                </div>
                 <div className={styles.buttonGroup}>
                   <button
                     className={styles.editBtn}
@@ -47,17 +58,17 @@ export default function QuestionsList({
                       e.stopPropagation()
                       onEditQuestion(index)
                     }}>
-                    Modifica
+                    {text.edit}
                   </button>
                   <button
                     className={styles.deleteBtn}
                     onClick={(e) => {
                       e.stopPropagation()
-                      if (confirm('Elimina questa domanda?')) {
+                      if (confirm(text.confirmDelete)) {
                         onDeleteQuestion(index)
                       }
                     }}>
-                    Elimina
+                    {text.delete}
                   </button>
                 </div>
               </div>

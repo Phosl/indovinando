@@ -1,0 +1,915 @@
+{
+  "level": 1,
+  "slug": "non-so-nulla-di-vino",
+  "title": "I know nothing about wine",
+  "description": "The fundamental foundations for understanding wine",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Types of wine",
+      "intro": "Wine is mainly divided into three categories: red, white and rosé. The color depends on the type of grape and the way it is processed. There is no better wine: it depends on taste.",
+      "final": "Now you know how to distinguish the main types of wine.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What are the three main types of wine?",
+          "answers": [
+            "Red, white, rosé",
+            "Sweet, dry, bitter",
+            "Strong, medium, light"
+          ],
+          "correct": 0,
+          "feedback": {
+            "correct": "Exactly! Red, white and rosé are the main categories.",
+            "wrong": "No, those are taste descriptors, not types of wine."
+          }
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "The color of the wine depends only on the grape.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1,
+          "feedback": {
+            "correct": "That's right, workmanship also counts.",
+            "wrong": "No, the workmanship is also fundamental."
+          }
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Which is typically lighter?",
+          "answers": [
+            "Red",
+            "White",
+            "Rose"
+          ],
+          "correct": 1,
+          "feedback": {
+            "correct": "Yes, white wines are lighter.",
+            "wrong": "In general, whites are fresher."
+          }
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Rosé is:",
+          "answers": [
+            "An intermediate wine between red and white",
+            "A mix of wines",
+            "Always sweet"
+          ],
+          "correct": 0,
+          "feedback": {
+            "correct": "That's right, it is obtained from red grapes with short contact with the skins.",
+            "wrong": "It is not a mix of wines."
+          }
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "There is a wine that is better than the others.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1,
+          "feedback": {
+            "correct": "Right, it depends on personal taste.",
+            "wrong": "There is no absolute best wine."
+          }
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Types of wine",
+          "paragraphs": [
+            "Wine is mainly divided into three categories: red, white and rosé. The color depends on the type of grape and the way it is processed. There is no better wine: it depends on taste.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "The three main types of wine",
+            "The color of the wine depends only on the grape",
+            "Typically lighter"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know how to distinguish the main types of wine.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Definition: rosé",
+            "There is a wine that is better than the others"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l2",
+      "title": "How wine is made",
+      "intro": "Wine comes from a process called fermentation. The sugars in the grapes are transformed into alcohol thanks to yeasts.",
+      "final": "Now you know how wine is made.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What is fermentation?",
+          "answers": [
+            "Transformation of sugars into alcohol",
+            "Pressing of grapes",
+            "Wine filtration"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Wine is made without natural processes.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "What happens to the sugars?",
+          "answers": [
+            "They disappear",
+            "They become alcohol",
+            "They become water"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Who makes the fermentation happen?",
+          "answers": [
+            "Yeasts",
+            "Light",
+            "Bottle"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Fermentation affects the final wine.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "How wine is made",
+          "paragraphs": [
+            "Wine comes from a process called fermentation. The sugars in the grapes are transformed into alcohol thanks to yeasts.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Definition: fermentation",
+            "Wine is made without natural processes",
+            "It happens to sugars"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know how wine is made.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Who makes the fermentation happen?",
+            "Fermentation affects the final wine"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l3",
+      "title": "White and red grapes",
+      "intro": "Wine comes from grapes, but there are white and red grapes. The main difference is the peel.",
+      "final": "Now you know that the color of wine depends on the processing.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Main difference between grapes?",
+          "answers": [
+            "Peel color",
+            "Size",
+            "Sweetening"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "The pulp of red grapes is red.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "The color of red wine depends on:",
+          "answers": [
+            "Grape skins",
+            "Sugar",
+            "Water"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "White grapes are:",
+          "answers": [
+            "Grapes without pigment in the skin",
+            "Completely different type",
+            "Always sweet"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Contact with the skins is important.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "White and red grapes",
+          "paragraphs": [
+            "Wine comes from grapes, but there are white and red grapes. The main difference is the peel.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Main difference between grapes",
+            "The pulp of red grapes is red",
+            "The color of red wine depends on"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know that the color of wine depends on the processing.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "White grapes are",
+            "Contact with the skins is important"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l4",
+      "title": "Most common vines",
+      "intro": "Vines are varieties of grapes.",
+      "final": "Now you know the basics of grapes.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What is a grape variety?",
+          "answers": [
+            "Type of grape",
+            "Bottle type",
+            "Fermentation method"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "What is a red grape variety?",
+          "answers": [
+            "Merlot",
+            "Chardonnay",
+            "Sauvignon"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "What is a white grape variety?",
+          "answers": [
+            "Sangiovese",
+            "Chardonnay",
+            "Nebbiolo"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "The vines influence:",
+          "answers": [
+            "The taste of wine",
+            "Just the color",
+            "Just the price"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "All wines have the same grape variety.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Most common vines",
+          "paragraphs": [
+            "Vines are varieties of grapes.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Definition: a grape variety",
+            "What is a red grape variety",
+            "What is a white grape variety"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know the basics of grapes.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "The vines influence",
+            "All wines have the same grape variety"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l5",
+      "title": "Perfumes and aromas",
+      "intro": "Wine has many different aromas.",
+      "final": "Now you know how to recognize aromas.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What are wine aromas?",
+          "answers": [
+            "Smells and perfumes",
+            "Colors",
+            "Temperatures"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "What is a common aroma?",
+          "answers": [
+            "Fruity",
+            "Metallic",
+            "Savory"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "A floral wine reminds:",
+          "answers": [
+            "Flowers",
+            "Meat",
+            "Bread"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "The aromas are perceived with:",
+          "answers": [
+            "View",
+            "Nose",
+            "Touch"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Wine can have multiple aromas.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Perfumes and aromas",
+          "paragraphs": [
+            "Wine has many different aromas.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "They are the aromas of wine",
+            "What is a common aroma",
+            "A floral wine is reminiscent"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know how to recognize aromas.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "The aromas are perceived with",
+            "Wine can have multiple aromas"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l6",
+      "title": "Taste of wine",
+      "intro": "The taste of wine can be sweet, dry, acidic or tannic.",
+      "final": "Now you recognize the basic taste.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What is the taste of wine?",
+          "answers": [
+            "Mouthfeel",
+            "Color",
+            "Perfume"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "A dry wine is:",
+          "answers": [
+            "Not very sweet",
+            "Sparkling",
+            "Always red"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Tannins give the sensation of:",
+          "answers": [
+            "Dryness in the mouth",
+            "Sweetness",
+            "Acidity"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "An acidic wine is:",
+          "answers": [
+            "Fresh and lively",
+            "Always sweet",
+            "Always bitter"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "The taste is the same for all wines.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Taste of wine",
+          "paragraphs": [
+            "The taste of wine can be sweet, dry, acidic or tannic.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Definition: the taste of wine",
+            "A dry wine is",
+            "The tannins give a sensation of"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you recognize the basic taste.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "An acidic wine is",
+            "The taste is the same for all wines"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l7",
+      "title": "Body of the wine",
+      "intro": "The body indicates the heaviness of the wine.",
+      "final": "Now feel the difference in body.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What is the body of wine?",
+          "answers": [
+            "Weight in the mouth",
+            "Color",
+            "Sweetness"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "A light wine is:",
+          "answers": [
+            "Easy to drink",
+            "Very dense",
+            "Always sweet"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "A structured wine is:",
+          "answers": [
+            "More complex",
+            "Always white",
+            "Always sparkling"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "The body depends on:",
+          "answers": [
+            "Wine structure",
+            "Label",
+            "Bottle"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "All wines have the same body.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Body of the wine",
+          "paragraphs": [
+            "The body indicates the heaviness of the wine.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Definition: the body of the wine",
+            "A light wine is",
+            "A structured wine is"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now feel the difference in body.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "The body depends on",
+            "All wines have the same body"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l8",
+      "title": "Where does wine come from?",
+      "intro": "Wine changes based on the territory.",
+      "final": "Now you know that wine is linked to the earth.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What influences wine?",
+          "answers": [
+            "Territory",
+            "Bottle color",
+            "Price"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "Climate affects:",
+          "answers": [
+            "On taste",
+            "Only on color",
+            "Only on the label"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "The soil is:",
+          "answers": [
+            "Important for the vine",
+            "Useless",
+            "Decorative only"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Does wine change from country to country?",
+          "answers": [
+            "Yes",
+            "No",
+            "Just the price"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Territory doesn't matter.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Where does wine come from?",
+          "paragraphs": [
+            "Wine changes based on the territory.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "What influences wine",
+            "The climate has an impact",
+            "Definition: soil"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know that wine is linked to the earth.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Wine changes from country to country",
+            "Territory doesn't matter"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l9",
+      "title": "Basic pairings",
+      "intro": "Wine pairs with food.",
+      "final": "Now you can start matching.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "The wine goes well with:",
+          "answers": [
+            "Food",
+            "Water",
+            "Dessert only"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "White wine often pairs with:",
+          "answers": [
+            "Fish",
+            "Red meat",
+            "Chocolate"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Red wine goes well with:",
+          "answers": [
+            "Red meat",
+            "Fish",
+            "Fruit"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "The combinations are:",
+          "answers": [
+            "Strict rules",
+            "Flexible guidelines",
+            "Casual"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "There are no rules in pairings.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Basic pairings",
+          "paragraphs": [
+            "Wine pairs with food.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "The wine goes well with",
+            "White wine is often paired with",
+            "Red wine goes well with"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you can start matching.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "The pairings are",
+            "There are no rules in pairings"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l10",
+      "title": "How to taste it",
+      "intro": "Tasting means observing, smelling and tasting the wine.",
+      "final": "🎉 End level 1: Now you have the basics of wine.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "The tasting phases are:",
+          "answers": [
+            "Sight, smell, taste",
+            "Just drink",
+            "Just smell"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "First yes:",
+          "answers": [
+            "Look at the wine",
+            "He drinks",
+            "Smell"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Smell is used for:",
+          "answers": [
+            "Feel aromas",
+            "See color",
+            "Feel weight"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "The tasting is:",
+          "answers": [
+            "A complete process",
+            "Just drink",
+            "Just technique"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Tasting is just drinking wine.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "How to taste it",
+          "paragraphs": [
+            "Tasting means observing, smelling and tasting the wine.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "The tasting phases are:",
+            "First yes",
+            "Smell is useful for"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "🎉 End level 1: Now you have the basics of wine.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Definition: tasting",
+            "Tasting is just drinking wine"
+          ]
+        }
+      ]
+    }
+  ]
+}

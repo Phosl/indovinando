@@ -3,6 +3,7 @@
 import {useState, Suspense} from 'react'
 import {createClient} from '@/lib/supabaseClient'
 import {useRouter, useSearchParams} from 'next/navigation'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const MIN_PASSWORD_LENGTH = 6
@@ -12,6 +13,8 @@ const MIN_USERNAME_LENGTH = 3
 function AuthForm() {
   const supabase = createClient()
   const router = useRouter()
+  const {lang} = useLanguage()
+  const isEnglish = lang === 'en'
   const searchParams = useSearchParams()
   const nextPath = searchParams.get('next') || '/dashboard'
   const safeNextPath = nextPath.startsWith('/') ? nextPath : '/dashboard'
@@ -24,26 +27,34 @@ function AuthForm() {
   const [error, setError] = useState('')
 
   const validateEmail = (value) => {
-    if (!value) return 'Email is required'
-    if (!EMAIL_REGEX.test(value)) return 'Please enter a valid email'
+    if (!value) return isEnglish ? 'Email is required' : 'Email obbligatoria'
+    if (!EMAIL_REGEX.test(value)) {
+      return isEnglish ? 'Please enter a valid email' : 'Inserisci un indirizzo email valido'
+    }
     return ''
   }
 
   const validatePassword = (value) => {
-    if (!value) return 'Password is required'
+    if (!value) return isEnglish ? 'Password is required' : 'Password obbligatoria'
     if (value.length < MIN_PASSWORD_LENGTH) {
-      return `Password must be at least ${MIN_PASSWORD_LENGTH} characters`
+      return isEnglish
+        ? `Password must be at least ${MIN_PASSWORD_LENGTH} characters`
+        : `La password deve essere di almeno ${MIN_PASSWORD_LENGTH} caratteri`
     }
     return ''
   }
 
   const validateUsername = (value) => {
-    if (!value) return 'Username is required'
+    if (!value) return isEnglish ? 'Username is required' : 'Username obbligatorio'
     if (value.length < MIN_USERNAME_LENGTH) {
-      return `Username must be at least ${MIN_USERNAME_LENGTH} characters`
+      return isEnglish
+        ? `Username must be at least ${MIN_USERNAME_LENGTH} characters`
+        : `Lo username deve essere di almeno ${MIN_USERNAME_LENGTH} caratteri`
     }
     if (!USERNAME_REGEX.test(value)) {
-      return 'Username can contain only letters, numbers and _'
+      return isEnglish
+        ? 'Username can contain only letters, numbers and _'
+        : 'Lo username puo contenere solo lettere, numeri e _'
     }
     return ''
   }
@@ -125,7 +136,11 @@ function AuthForm() {
         })
 
         if (loginAfterSignupError) {
-          setError('Registrazione completata. Controlla la mail per confermare il tuo account.')
+          setError(
+            isEnglish
+              ? 'Registration completed. Check your email to confirm your account.'
+              : "Registrazione completata. Controlla l'email per confermare l'account.",
+          )
           return
         }
 
@@ -147,14 +162,16 @@ function AuthForm() {
   return (
     <main className="flex-container">
       <div className="flex-column">
-        <h1>{isLogin ? 'Login' : 'Register'}</h1>
+        <h1>
+          {isLogin ? (isEnglish ? 'Login' : 'Accedi') : isEnglish ? 'Register' : 'Registrati'}
+        </h1>
 
         {error && <div className="error-message">{error}</div>}
 
         {!isLogin && (
           <input
             type="text"
-            placeholder="Username"
+            placeholder={isEnglish ? 'Username' : 'Nome utente'}
             value={username}
             onChange={(e) => {
               setUsername(e.target.value)
@@ -177,7 +194,7 @@ function AuthForm() {
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder={isEnglish ? 'Password' : 'Password'}
           value={password}
           onChange={(e) => {
             setPassword(e.target.value)
@@ -190,14 +207,30 @@ function AuthForm() {
           onClick={handleAuth}
           disabled={loading}
           className={'btn' + (loading ? ' btn-primary btn-notallowed' : ' btn-primary')}>
-          {loading ? 'Loading...' : isLogin ? 'Login' : 'Register'}
+          {loading
+            ? isEnglish
+              ? 'Loading...'
+              : 'Caricamento...'
+            : isLogin
+              ? isEnglish
+                ? 'Login'
+                : 'Accedi'
+              : isEnglish
+                ? 'Register'
+                : 'Registrati'}
         </button>
 
         <button
           onClick={handleToggleMode}
           disabled={loading}
           className={'btn type-text' + (loading ? ' btn-primary btn-notallowed' : ' btn-primary')}>
-          {isLogin ? "Don't have an account? Register" : 'Already have an account? Login'}
+          {isLogin
+            ? isEnglish
+              ? "Don't have an account? Register"
+              : 'Non hai un account? Registrati'
+            : isEnglish
+              ? 'Already have an account? Login'
+              : 'Hai gia un account? Accedi'}
         </button>
       </div>
     </main>

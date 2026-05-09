@@ -15,7 +15,15 @@ import {
   validateBottles,
   validateBottleForm,
 } from '../utils/validations'
-import {STEPS, MIN_STEP, MAX_STEP, ALERT_MESSAGES, DEFAULT_GAME_NAME} from '../utils/constants'
+import {
+  MIN_STEP,
+  MAX_STEP,
+  DEFAULT_GAME_NAME,
+  getAlertMessages,
+  getGameEditorText,
+  getSteps,
+} from '../utils/constants'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
 import styles from './GameEditor.module.scss'
 
 /**
@@ -42,6 +50,7 @@ export default function GameEditor({
   initialGameName,
   isQuickCreate = false,
 }) {
+  const {lang} = useLanguage()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -65,6 +74,10 @@ export default function GameEditor({
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false)
   const [editingQuestionIndex, setEditingQuestionIndex] = useState(null)
   const [resolvedUserId, setResolvedUserId] = useState(userId)
+
+  const editorText = getGameEditorText(lang)
+  const alertMessages = getAlertMessages(lang)
+  const steps = getSteps(lang)
 
   // Track if initialization has already run to prevent resetting on deps change
   const initializationDoneRef = useRef(false)
@@ -207,7 +220,7 @@ export default function GameEditor({
 
   function saveQuestionnaire() {
     try {
-      validateQuestionnaire(questionDraft)
+      validateQuestionnaire(questionDraft, alertMessages)
     } catch (error) {
       alert(error.message)
       return
@@ -257,7 +270,7 @@ export default function GameEditor({
     })
 
     if (bottles.length > 0) {
-      alert(ALERT_MESSAGES.QUESTIONNAIRE_UPDATED)
+      alert(alertMessages.QUESTIONNAIRE_UPDATED)
     }
 
     goToStep(3)
@@ -267,11 +280,11 @@ export default function GameEditor({
     if (isSaving) return
 
     try {
-      validateGameName(gameName)
-      validateQuestionnaire(templateQuestions)
+      validateGameName(gameName, alertMessages)
+      validateQuestionnaire(templateQuestions, alertMessages)
 
       if (!resolvedUserId) {
-        throw new Error(ALERT_MESSAGES.USER_NOT_AUTHENTICATED)
+        throw new Error(alertMessages.USER_NOT_AUTHENTICATED)
       }
     } catch (error) {
       alert(error.message)
@@ -295,7 +308,7 @@ export default function GameEditor({
           .single()
 
         if (gameError || !gameInsert?.id)
-          throw new Error(gameError?.message || 'Errore creazione gioco')
+          throw new Error(gameError?.message || alertMessages.CREATE_GAME_ERROR)
 
         currentGameId = gameInsert.id
       }
@@ -312,7 +325,7 @@ export default function GameEditor({
         .select('id, display_order')
 
       if (questionsError || !insertedQuestions?.length) {
-        throw new Error(questionsError?.message || 'Errore salvataggio domande')
+        throw new Error(questionsError?.message || alertMessages.SAVE_QUESTIONS_ERROR)
       }
 
       const questionIdByOrder = new Map(insertedQuestions.map((row) => [row.display_order, row.id]))
@@ -331,12 +344,12 @@ export default function GameEditor({
         .insert(optionsToInsert)
 
       if (optionsError) {
-        throw new Error(optionsError?.message || 'Errore salvataggio opzioni')
+        throw new Error(optionsError?.message || alertMessages.SAVE_OPTIONS_ERROR)
       }
 
       router.push(`/game/${currentGameId}/print`)
     } catch (error) {
-      alert(error.message || ALERT_MESSAGES.GAME_SAVE_ERROR)
+      alert(error.message || alertMessages.GAME_SAVE_ERROR)
     } finally {
       setIsSaving(false)
     }
@@ -380,7 +393,14 @@ export default function GameEditor({
 
   function concludeBottle() {
     try {
-      validateBottleForm(bottleName, producer, year, currentAnswers, templateQuestions.length)
+      validateBottleForm(
+        bottleName,
+        producer,
+        year,
+        currentAnswers,
+        templateQuestions.length,
+        alertMessages,
+      )
     } catch (error) {
       alert(error.message)
       return
@@ -447,12 +467,12 @@ export default function GameEditor({
     if (isSaving) return
 
     try {
-      validateGameName(gameName)
-      validateQuestionnaire(templateQuestions)
-      validateBottles(bottles, templateQuestions)
+      validateGameName(gameName, alertMessages)
+      validateQuestionnaire(templateQuestions, alertMessages)
+      validateBottles(bottles, templateQuestions, alertMessages)
 
       if (!resolvedUserId) {
-        throw new Error(ALERT_MESSAGES.USER_NOT_AUTHENTICATED)
+        throw new Error(alertMessages.USER_NOT_AUTHENTICATED)
       }
     } catch (error) {
       alert(error.message)
@@ -485,7 +505,7 @@ export default function GameEditor({
           .single()
 
         if (gameError || !gameInsert?.id)
-          throw new Error(gameError?.message || 'Errore creazione gioco')
+          throw new Error(gameError?.message || alertMessages.CREATE_GAME_ERROR)
 
         currentGameId = gameInsert.id
       }
@@ -512,7 +532,7 @@ export default function GameEditor({
         .select('id, display_order')
 
       if (questionsError || !insertedQuestions?.length) {
-        throw new Error(questionsError?.message || 'Errore salvataggio domande')
+        throw new Error(questionsError?.message || alertMessages.SAVE_QUESTIONS_ERROR)
       }
 
       const questionIdByOrder = new Map(insertedQuestions.map((row) => [row.display_order, row.id]))
@@ -532,7 +552,7 @@ export default function GameEditor({
         .select('id, question_id, option_order')
 
       if (optionsError || !insertedOptions?.length) {
-        throw new Error(optionsError?.message || 'Errore salvataggio opzioni')
+        throw new Error(optionsError?.message || alertMessages.SAVE_OPTIONS_ERROR)
       }
 
       const optionIdByQuestionAndOrder = new Map(
@@ -553,7 +573,7 @@ export default function GameEditor({
         .select('id, bottle_order')
 
       if (bottlesError || !insertedBottles?.length) {
-        throw new Error(bottlesError?.message || 'Errore salvataggio bottiglie')
+        throw new Error(bottlesError?.message || alertMessages.SAVE_BOTTLES_ERROR)
       }
 
       const bottleIdByOrder = new Map(insertedBottles.map((row) => [row.bottle_order, row.id]))
@@ -578,10 +598,10 @@ export default function GameEditor({
         .insert(answersToInsert)
 
       if (answersError) {
-        throw new Error(answersError?.message || 'Errore salvataggio risposte bottiglie')
+        throw new Error(answersError?.message || alertMessages.SAVE_BOTTLE_ANSWERS_ERROR)
       }
 
-      alert(isEditMode ? 'Gioco aggiornato con successo!' : ALERT_MESSAGES.GAME_SAVED_SUCCESS)
+      alert(isEditMode ? alertMessages.GAME_UPDATED_SUCCESS : alertMessages.GAME_SAVED_SUCCESS)
 
       if (isEditMode) {
         if (onGameSaved) {
@@ -593,7 +613,7 @@ export default function GameEditor({
         router.push('/dashboard')
       }
     } catch (error) {
-      alert(error.message || ALERT_MESSAGES.GAME_SAVE_ERROR)
+      alert(error.message || alertMessages.GAME_SAVE_ERROR)
     } finally {
       setIsSaving(false)
     }
@@ -601,9 +621,9 @@ export default function GameEditor({
 
   return (
     <div className={styles.editor}>
-      <TopBar title={isEditMode ? 'Modifica Gioco' : 'Crea Gioco'} />
+      <TopBar title={isEditMode ? editorText.topBarEdit : editorText.topBarCreate} />
       <GameStepsBreadcrumbs
-        steps={STEPS}
+        steps={steps}
         currentStep={step}
         onStepClick={goToStep}
         isStep2Completed={templateQuestions.length > 0}
@@ -615,14 +635,14 @@ export default function GameEditor({
         <div className={styles.section}>
           <input
             className={styles.inputField}
-            placeholder="Game name"
+            placeholder={editorText.step1Placeholder}
             value={gameName}
             onChange={(e) => setGameName(e.target.value)}
           />
 
           <div className={styles.buttonRow}>
             <button className="btn primary" onClick={() => goToStep(2)}>
-              Prosegui
+              {editorText.continue}
             </button>
           </div>
         </div>
@@ -643,10 +663,10 @@ export default function GameEditor({
               className="btn primary"
               onClick={saveQuestionnaire}
               disabled={questionDraft.length === 0}>
-              Salva questionario
+              {editorText.saveQuestionnaire}
             </button>
             <button className="btn secondary" onClick={() => goToStep(1)}>
-              Indietro
+              {editorText.back}
             </button>
           </div>
         </div>
@@ -655,18 +675,18 @@ export default function GameEditor({
       {/* STEP 3 — Bridge */}
       {step === 3 && (
         <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>Cosa vuoi fare?</h3>
+          <h3 className={styles.sectionTitle}>{editorText.bridgeTitle}</h3>
           <div className={styles.bridgeRow}>
             <button className="btn primary" onClick={() => goToStep(4)}>
-              Inserisci risultati
+              {editorText.bridgeInsertResults}
             </button>
             <button className="btn secondary" onClick={saveGameForPrint} disabled={isSaving}>
-              {isSaving ? 'Salvataggio...' : 'Salva e stampa scheda'}
+              {isSaving ? editorText.saving : editorText.saveAndPrint}
             </button>
           </div>
           <div className={styles.buttonRow}>
             <button className="btn secondary" onClick={() => goToStep(2)}>
-              Indietro
+              {editorText.back}
             </button>
           </div>
         </div>
@@ -685,11 +705,11 @@ export default function GameEditor({
 
           <div className={styles.buttonRow}>
             <button className="btn secondary" onClick={() => goToStep(3)}>
-              Indietro
+              {editorText.back}
             </button>
             {bottles.length > 0 && (
               <button className="btn primary" onClick={publishGame} disabled={isSaving}>
-                {isSaving ? 'Salvataggio...' : 'Pubblica Gioco'}
+                {isSaving ? editorText.saving : editorText.publishGame}
               </button>
             )}
           </div>

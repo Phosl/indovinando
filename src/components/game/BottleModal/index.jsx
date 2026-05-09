@@ -2,6 +2,8 @@
 
 import BottleAnswersSelector from '../BottleAnswersSelector'
 import {validateBottleForm} from '../utils/validations'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {getAlertMessages, getBottleModalText} from '../utils/constants'
 import styles from './BottleModal.module.scss'
 
 /**
@@ -35,15 +37,34 @@ export default function BottleModal({
   onSave,
   onCancel,
 }) {
+  const {lang} = useLanguage()
+  const text = getBottleModalText(lang)
+  const alertMessages = getAlertMessages(lang)
+  const isNewBottle = bottleIndex === null
+
   if (!isOpen) return null
 
-  const isNewBottle = bottleIndex === null
+  function handleSave() {
+    try {
+      validateBottleForm(
+        bottleName,
+        producer,
+        year,
+        currentAnswers,
+        questions.length,
+        alertMessages,
+      )
+      onSave()
+    } catch (error) {
+      alert(error.message)
+    }
+  }
 
   return (
     <div className={styles.modalOverlay} onClick={onCancel}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h3>{isNewBottle ? 'Nuova Bottiglia' : `Modifica Bottiglia ${bottleIndex + 1}`}</h3>
+          <h3>{isNewBottle ? text.newTitle : `${text.editTitlePrefix} ${bottleIndex + 1}`}</h3>
           <button className={styles.closeBtn} onClick={onCancel}>
             ✕
           </button>
@@ -51,22 +72,22 @@ export default function BottleModal({
 
         <div className={styles.modalBody}>
           <div className={styles.bottleInfoSection}>
-            <h4>Dettagli Bottiglia</h4>
+            <h4>{text.details}</h4>
             <input
               className={styles.inputField}
-              placeholder="Nome bottiglia"
+              placeholder={text.bottleNamePlaceholder}
               value={bottleName}
               onChange={(e) => onBottleNameChange(e.target.value)}
             />
             <input
               className={styles.inputField}
-              placeholder="Produttore"
+              placeholder={text.producerPlaceholder}
               value={producer}
               onChange={(e) => onProducerChange(e.target.value)}
             />
             <input
               className={styles.inputField}
-              placeholder="Anno"
+              placeholder={text.yearPlaceholder}
               value={year}
               onChange={(e) => onYearChange(e.target.value)}
             />
@@ -74,7 +95,7 @@ export default function BottleModal({
 
           <div className={styles.answersSection}>
             <BottleAnswersSelector
-              title="Seleziona risposte corrette"
+              title={text.answersTitle}
               questions={questions}
               currentAnswers={currentAnswers}
               onAnswerChange={onAnswerChange}
@@ -85,10 +106,10 @@ export default function BottleModal({
 
         <div className={styles.modalFooter}>
           <button className="btn secondary" onClick={onCancel}>
-            Annulla
+            {text.cancel}
           </button>
-          <button className="btn primary" onClick={onSave}>
-            {isNewBottle ? 'Salva Bottiglia' : 'Aggiorna Bottiglia'}
+          <button className="btn primary" onClick={handleSave}>
+            {isNewBottle ? text.saveNew : text.saveEdit}
           </button>
         </div>
       </div>

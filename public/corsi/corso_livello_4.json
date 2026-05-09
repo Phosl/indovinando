@@ -1,0 +1,688 @@
+{
+  "level": 4,
+  "slug": "storie-e-curiosita-del-vino",
+  "title": "Storie e curiosità del vino",
+  "description": "Aneddoti, leggende e curiosità sorprendenti sul mondo del vino",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Il vino più antico del mondo",
+      "intro": "Il vino esiste da migliaia di anni. Alcune tracce risalgono a oltre 8.000 anni fa in Georgia.",
+      "final": "Ora sai dove è nato probabilmente il vino.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Dove sono state trovate le tracce di vino più antiche?",
+          "answers": [
+            "Georgia",
+            "Italia",
+            "Francia"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il vino ha più di 8.000 anni di storia.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Il vino nasce inizialmente come:",
+          "answers": [
+            "Fermentazione spontanea",
+            "Ricetta industriale",
+            "Bevanda moderna"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Il vino più antico del mondo",
+          "paragraphs": [
+            "Il vino esiste da migliaia di anni. Alcune tracce risalgono a oltre 8.000 anni fa in Georgia.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Dove sono state trovate le tracce di vino più antiche",
+            "Il vino ha più di 8.000 anni di storia",
+            "Il vino nasce inizialmente come"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai dove è nato probabilmente il vino.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Dove sono state trovate le tracce di vino più antiche",
+            "Il vino ha più di 8.000 anni di storia",
+            "Il vino nasce inizialmente come"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l2",
+      "title": "I romani e il vino",
+      "intro": "Per i Romani il vino era quotidiano, diluito con acqua e consumato da tutti.",
+      "final": "Ora sai perché il vino è così radicato in Europa.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Come bevevano spesso il vino i Romani?",
+          "answers": [
+            "Diluito con acqua",
+            "Con ghiaccio",
+            "Caldo"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il vino era riservato solo ai ricchi.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Il vino per i Romani era:",
+          "answers": [
+            "Bevanda quotidiana",
+            "Raro lusso",
+            "Medicinale segreto"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "I romani e il vino",
+          "paragraphs": [
+            "Per i Romani il vino era quotidiano, diluito con acqua e consumato da tutti.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Come bevevano spesso il vino i Romani",
+            "Il vino era riservato solo ai ricchi",
+            "Il vino per i Romani era"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai perché il vino è così radicato in Europa.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Come bevevano spesso il vino i Romani",
+            "Il vino era riservato solo ai ricchi",
+            "Il vino per i Romani era"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l3",
+      "title": "Il vino e i monaci",
+      "intro": "Nel Medioevo i monaci hanno salvato e perfezionato la viticoltura europea.",
+      "final": "Ora sai chi ha mantenuto viva la cultura del vino.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Chi ha preservato il vino nel Medioevo?",
+          "answers": [
+            "Monaci",
+            "Re",
+            "Mercanti"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "I monasteri producevano vino.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Il vino era usato anche come:",
+          "answers": [
+            "Acqua sicura",
+            "Profumo",
+            "Moneta"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Il vino e i monaci",
+          "paragraphs": [
+            "Nel Medioevo i monaci hanno salvato e perfezionato la viticoltura europea.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Chi ha preservato il vino nel Medioevo",
+            "I monasteri producevano vino",
+            "Il vino era usato anche come"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai chi ha mantenuto viva la cultura del vino.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Chi ha preservato il vino nel Medioevo",
+            "I monasteri producevano vino",
+            "Il vino era usato anche come"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l4",
+      "title": "Il tappo di sughero",
+      "intro": "Il tappo di sughero è usato da secoli e permette al vino di respirare lentamente.",
+      "final": "Ora sai perché il sughero è ancora usato oggi.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Da dove viene il sughero?",
+          "answers": [
+            "Quercia",
+            "Pino",
+            "Vite"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il sughero permette micro-ossigenazione.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Il tappo alternativo più comune è:",
+          "answers": [
+            "Vite metallica",
+            "Legno",
+            "Vetro"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Il tappo di sughero",
+          "paragraphs": [
+            "Il tappo di sughero è usato da secoli e permette al vino di respirare lentamente.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Da dove viene il sughero",
+            "Il sughero permette micro-ossigenazione",
+            "Definizione di tappo alternativo più comune"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai perché il sughero è ancora usato oggi.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Da dove viene il sughero",
+            "Il sughero permette micro-ossigenazione",
+            "Definizione di tappo alternativo più comune"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l5",
+      "title": "Perché si brinda",
+      "intro": "Il brindisi nasce da antiche tradizioni per scacciare i veleni nei bicchieri.",
+      "final": "Ora sai perché si alzano i bicchieri.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Perché si brindava in origine?",
+          "answers": [
+            "Per sicurezza",
+            "Per moda",
+            "Per sport"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il brindisi era un gesto di fiducia.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Oggi il brindisi serve per:",
+          "answers": [
+            "Celebrare",
+            "Misurare vino",
+            "Degustare"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Perché si brinda",
+          "paragraphs": [
+            "Il brindisi nasce da antiche tradizioni per scacciare i veleni nei bicchieri.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Perché si brindava in origine",
+            "Il brindisi era un gesto di fiducia",
+            "Oggi il brindisi serve per"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai perché si alzano i bicchieri.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Perché si brindava in origine",
+            "Il brindisi era un gesto di fiducia",
+            "Oggi il brindisi serve per"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l6",
+      "title": "Il vino più costoso del mondo",
+      "intro": "Alcuni vini raggiungono prezzi incredibili per rarità e storia.",
+      "final": "Ora sai che il vino può essere anche investimento.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Cosa aumenta il prezzo di un vino?",
+          "answers": [
+            "Rarità",
+            "Colore",
+            "Forma bottiglia"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il vino più costoso è sempre il migliore.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Alcuni vini diventano:",
+          "answers": [
+            "Oggetti da collezione",
+            "Acqua aromatizzata",
+            "Bibite gassate"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Il vino più costoso del mondo",
+          "paragraphs": [
+            "Alcuni vini raggiungono prezzi incredibili per rarità e storia.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Aumenta il prezzo di un vino",
+            "Il vino più costoso è sempre il migliore",
+            "Alcuni vini diventano"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai che il vino può essere anche investimento.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Aumenta il prezzo di un vino",
+            "Il vino più costoso è sempre il migliore",
+            "Alcuni vini diventano"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l7",
+      "title": "Il vino e la scienza",
+      "intro": "Il vino è chimica viva: lieviti, batteri e reazioni naturali.",
+      "final": "Ora sai che il vino è anche scienza.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Chi trasforma il vino?",
+          "answers": [
+            "Lieviti",
+            "Plastica",
+            "Metallo"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il vino è un prodotto biologico complesso.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "La chimica del vino riguarda:",
+          "answers": [
+            "Reazioni naturali",
+            "Solo colore",
+            "Solo bottiglia"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Il vino e la scienza",
+          "paragraphs": [
+            "Il vino è chimica viva: lieviti, batteri e reazioni naturali.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Chi trasforma il vino",
+            "Il vino è un prodotto biologico complesso",
+            "La chimica del vino riguarda"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai che il vino è anche scienza.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Chi trasforma il vino",
+            "Il vino è un prodotto biologico complesso",
+            "La chimica del vino riguarda"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l8",
+      "title": "Il vino nello spazio",
+      "intro": "Alcuni vini sono stati invecchiati anche nello spazio.",
+      "final": "Ora sai che il vino è arrivato oltre la Terra.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Dove è stato sperimentato il vino nello spazio?",
+          "answers": [
+            "ISS",
+            "Luna",
+            "Marte"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il vino cambia nello spazio.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Lo scopo dell’esperimento era:",
+          "answers": [
+            "Studiare l’invecchiamento",
+            "Vendere vino",
+            "Congelarlo"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Il vino nello spazio",
+          "paragraphs": [
+            "Alcuni vini sono stati invecchiati anche nello spazio.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Dove è stato sperimentato il vino nello spazio",
+            "Il vino cambia nello spazio",
+            "Lo scopo dell’esperimento era"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora sai che il vino è arrivato oltre la Terra.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Dove è stato sperimentato il vino nello spazio",
+            "Il vino cambia nello spazio",
+            "Lo scopo dell’esperimento era"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l9",
+      "title": "Il vino e il cinema",
+      "intro": "Il vino è spesso simbolo di cultura, lusso e piacere nei film.",
+      "final": "Ora riconosci il vino anche nella cultura pop.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Nel cinema il vino rappresenta spesso:",
+          "answers": [
+            "Eleganza",
+            "Violenza",
+            "Sport"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Il vino è simbolo culturale.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Il vino nei film è spesso associato a:",
+          "answers": [
+            "Cena elegante",
+            "Guerra",
+            "Tecnologia"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Il vino e il cinema",
+          "paragraphs": [
+            "Il vino è spesso simbolo di cultura, lusso e piacere nei film.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Nel cinema il vino rappresenta spesso",
+            "Il vino è simbolo culturale",
+            "Il vino nei film è spesso associato a"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora riconosci il vino anche nella cultura pop.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Nel cinema il vino rappresenta spesso",
+            "Il vino è simbolo culturale",
+            "Il vino nei film è spesso associato a"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l10",
+      "title": "Curiosità finali da sommelier",
+      "intro": "Piccole curiosità che distinguono un appassionato da un intenditore.",
+      "final": "Ora hai lo sguardo da vero wine lover.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Il vino cambia con:",
+          "answers": [
+            "Tempo",
+            "Colore bottiglia",
+            "Etichetta"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Tutti percepiscono il vino allo stesso modo.",
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Il vino è:",
+          "answers": [
+            "Esperienza sensoriale",
+            "Solo bevanda",
+            "Solo alcol"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Curiosità finali da sommelier",
+          "paragraphs": [
+            "Piccole curiosità che distinguono un appassionato da un intenditore.",
+            "In questa prima parte ti accompagno con esempi semplici e linguaggio pratico, così costruisci una base chiara prima di passare alle domande."
+          ],
+          "keyPoints": [
+            "Il vino cambia con",
+            "Tutti percepiscono il vino allo stesso modo",
+            "Definizione di vino"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Prima del quiz",
+          "paragraphs": [
+            "Ora hai lo sguardo da vero wine lover.",
+            "Tra poco trovi domande progressive: prima controllo delle basi, poi applicazione pratica. Se sbagli non è un problema, puoi riprovare e migliorare il punteggio."
+          ],
+          "keyPoints": [
+            "Il vino cambia con",
+            "Tutti percepiscono il vino allo stesso modo",
+            "Definizione di vino"
+          ]
+        }
+      ]
+    }
+  ]
+}

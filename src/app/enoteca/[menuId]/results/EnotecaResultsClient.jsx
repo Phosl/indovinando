@@ -3,12 +3,17 @@
 import {useState, useEffect, useMemo} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
 import styles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
 import xStyles from './enotecaResults.module.scss'
 
 const stateKey = (bottleId, questionId) => `${bottleId}:${questionId}`
 
 export default function EnotecaResultsClient({menuId, menuName, bottles, questions}) {
+  const {lang} = useLanguage()
+  const t = pickLangText(lang, ENOTECA_DICTIONARY.results)
+
   const router = useRouter()
   const sessionKey = `enoteca_session_${menuId}`
 
@@ -53,7 +58,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
   if (loading) {
     return (
       <div className={styles.fullPage} style={{alignItems: 'center', justifyContent: 'center'}}>
-        <p className={styles.readyHint}>Caricamento risultati…</p>
+        <p className={styles.readyHint}>{t.loading}</p>
       </div>
     )
   }
@@ -84,7 +89,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
           <button
             className={styles.exitButton}
             onClick={() => router.push('/')}
-            aria-label="Torna alla home">
+            aria-label={t.backToHome}>
             ✕
           </button>
         </div>
@@ -93,22 +98,26 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
       <div className={styles.slideContent}>
         {/* Hero */}
         <div className={xStyles.heroSection}>
-          <h1 className={xStyles.heroTitle}>🏆 Degustazione completata!</h1>
+          <h1 className={xStyles.heroTitle}>🏆 {t.title}</h1>
           <p className={xStyles.heroNickname}>{session.nickname}</p>
-          {session.table_name && <p className={xStyles.heroTable}>Tavolo: {session.table_name}</p>}
+          {session.table_name && (
+            <p className={xStyles.heroTable}>
+              {t.table}: {session.table_name}
+            </p>
+          )}
         </div>
 
         {/* Score card */}
         <div className={xStyles.scoreCard}>
           <div className={xStyles.scoreMain}>
             <span className={xStyles.scoreValue}>{totalScore}</span>
-            <span className={xStyles.scoreLabel}>punti</span>
+            <span className={xStyles.scoreLabel}>{t.points}</span>
           </div>
           <div className={xStyles.scoreDivider} />
           <div className={xStyles.scoreMeta}>
             <span className={xStyles.scorePct}>{pct}%</span>
             <span className={xStyles.scorePctLabel}>
-              {totalCorrect}/{totalQuestions} corrette
+              {totalCorrect}/{totalQuestions} {t.correct}
             </span>
           </div>
         </div>
@@ -129,7 +138,9 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
                 key={bottle.id}
                 className={`${xStyles.bottleCard} ${isActive ? xStyles.activeBottle : ''}`}
                 onClick={() => setActiveBIdx(i)}>
-                <span className={xStyles.bottleCardIndex}>Bottiglia {i + 1}</span>
+                <span className={xStyles.bottleCardIndex}>
+                  {t.bottle} {i + 1}
+                </span>
                 <strong className={xStyles.bottleCardName}>{bottle.name}</strong>
                 {bottle.producer && (
                   <span className={xStyles.bottleCardMeta}>
@@ -139,7 +150,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
                 )}
                 <span
                   className={`${xStyles.bottleCardScore} ${bc === questions.length ? xStyles.perfect : bc === 0 ? xStyles.zero : ''}`}>
-                  {bc}/{questions.length} · +{bs}pt
+                  {bc}/{questions.length} · +{bs} {t.points}
                 </span>
               </button>
             )
@@ -149,7 +160,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
         {/* Detail panel for active bottle */}
         <div className={xStyles.detailPanel}>
           <div className={styles.bottleReveal}>
-            <span className={styles.bottleRevealLabel}>La bottiglia era</span>
+            <span className={styles.bottleRevealLabel}>{t.bottleWas}</span>
             <span className={styles.bottleRevealName}>{activeBottle.name}</span>
             {(activeBottle.producer || activeBottle.year) && (
               <span className={styles.bottleRevealMeta}>
@@ -157,7 +168,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
               </span>
             )}
             <span className={xStyles.bottleRevealScore}>
-              {bCorrect}/{questions.length} corrette · +{bScore} punti
+              {bCorrect}/{questions.length} {t.correct} · +{bScore} {t.points}
             </span>
           </div>
 
@@ -182,10 +193,10 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
                     ) : (
                       <>
                         <span className={styles.summaryWrong}>
-                          ❌ {selectedOpt?.text ?? 'Non risposto'}
+                          ❌ {selectedOpt?.text ?? t.notAnswered}
                         </span>
                         <span className={styles.summaryCorrectHint}>
-                          Risposta corretta: {correctOpt?.text ?? '—'}
+                          {t.correctAnswer} {correctOpt?.text ?? '—'}
                         </span>
                       </>
                     )}
@@ -204,10 +215,10 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
             localStorage.removeItem(sessionKey)
             router.push(`/enoteca/${menuId}`)
           }}>
-          🍷 Nuova degustazione
+          🍷 {t.newTasting}
         </button>
         <button className={styles.secondaryButton} onClick={() => router.push('/')}>
-          Torna alla home
+          {t.home}
         </button>
       </div>
     </div>

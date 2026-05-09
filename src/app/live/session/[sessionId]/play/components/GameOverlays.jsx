@@ -1,5 +1,6 @@
 import {memo} from 'react'
 import styles from '../playerLive.module.scss'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
 
 const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
 
@@ -14,13 +15,16 @@ export const GameOverlays = memo(function GameOverlays({
   onCloseExit,
   onExitGame,
 }) {
+  const {lang} = useLanguage()
+  const isEnglish = lang === 'en'
+
   return (
     <>
       {leaderboardOpen && (
         <div className={styles.sheetBackdrop} onClick={onCloseLeaderboard}>
           <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
             <div className={styles.sheetHandle} />
-            <h3>🏆 Classifica Live</h3>
+            <h3>{isEnglish ? '🏆 Live Leaderboard' : '🏆 Classifica Live'}</h3>
             <div className={styles.sheetList}>
               {sortedLeaderboard.map((player, idx) => {
                 const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : null
@@ -35,14 +39,16 @@ export const GameOverlays = memo(function GameOverlays({
                     </span>
                     <span className={styles.sheetName}>
                       {player.nickname}
-                      {isMe ? ' (tu)' : ''}
+                      {isMe ? (isEnglish ? ' (you)' : ' (tu)') : ''}
                     </span>
-                    <span className={styles.sheetScore}>{player.total_score || 0} pt</span>
+                    <span className={styles.sheetScore}>
+                      {player.total_score || 0} {isEnglish ? 'pts' : 'pt'}
+                    </span>
                     {isHostUser && !isMe && (
                       <button
                         className={styles.kickButton}
                         onClick={() => onKickPlayer(player.id)}
-                        title={`Rimuovi ${player.nickname}`}>
+                        title={`${isEnglish ? 'Remove' : 'Rimuovi'} ${player.nickname}`}>
                         ✕
                       </button>
                     )}
@@ -50,11 +56,13 @@ export const GameOverlays = memo(function GameOverlays({
                 )
               })}
               {sortedLeaderboard.length === 0 && (
-                <p className={styles.readyHint}>Nessun giocatore ancora.</p>
+                <p className={styles.readyHint}>
+                  {isEnglish ? 'No players yet.' : 'Nessun giocatore ancora.'}
+                </p>
               )}
             </div>
             <button className={styles.sheetClose} onClick={onCloseLeaderboard}>
-              Chiudi
+              {isEnglish ? 'Close' : 'Chiudi'}
             </button>
           </div>
         </div>
@@ -69,16 +77,18 @@ export const GameOverlays = memo(function GameOverlays({
             <div className={styles.exitLottiePlaceholder} aria-hidden="true">
               😟
             </div>
-            <h3>Vuoi uscire dal gioco?</h3>
+            <h3>{isEnglish ? 'Do you want to leave the game?' : 'Vuoi uscire dal gioco?'}</h3>
             <p className={styles.exitHint}>
-              Potrai rientrare dalla sessione, ma lascerai questa schermata.
+              {isEnglish
+                ? 'You can rejoin from the session page, but you will leave this screen.'
+                : 'Potrai rientrare dalla sessione, ma lascerai questa schermata.'}
             </p>
             <div className={styles.exitActions}>
               <button className={styles.exitSecondary} onClick={onCloseExit}>
-                Annulla
+                {isEnglish ? 'Cancel' : 'Annulla'}
               </button>
               <button className={styles.exitDanger} onClick={onExitGame}>
-                Esci dal gioco
+                {isEnglish ? 'Exit game' : 'Esci dal gioco'}
               </button>
             </div>
           </div>

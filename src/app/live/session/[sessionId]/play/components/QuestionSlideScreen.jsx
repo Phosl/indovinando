@@ -1,5 +1,6 @@
 import {useState, useEffect, useCallback, memo} from 'react'
 import styles from '../playerLive.module.scss'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
 
 const COMBO_MESSAGES = [
   null,
@@ -8,8 +9,11 @@ const COMBO_MESSAGES = [
   {emoji: '💥', label: 'Combo x3!!'},
   {emoji: '⚡️', label: 'Combo x4!!!'},
 ]
-const getComboMsg = (n) =>
-  n >= 5 ? {emoji: '🤯', label: `Combo x${n}!!!!`} : (COMBO_MESSAGES[n] ?? null)
+const getComboMsg = (n, isEnglish) => {
+  const fallback = n >= 5 ? {emoji: '🤯', label: `Combo x${n}!!!!`} : (COMBO_MESSAGES[n] ?? null)
+  if (isEnglish || !fallback) return fallback
+  return {...fallback, label: fallback.label}
+}
 
 export const QuestionSlideScreen = memo(function QuestionSlideScreen({
   currentQuestion,
@@ -32,18 +36,20 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
   topBar,
   overlays,
 }) {
+  const {lang} = useLanguage()
+  const isEnglish = lang === 'en'
   const [visibleCombo, setVisibleCombo] = useState(null)
 
   useEffect(() => {
     if (!comboCount || comboCount < 2) return
-    const msg = getComboMsg(comboCount)
+    const msg = getComboMsg(comboCount, isEnglish)
     if (!msg) return
     setVisibleCombo({...msg, key: Date.now()})
     const t = setTimeout(() => setVisibleCombo(null), 1600)
     return () => clearTimeout(t)
-  }, [comboCount])
+  }, [comboCount, isEnglish])
 
-  // Enter key: triggers Controlla then Continua
+  // Enter key: triggers Check then Continue
   const handleKeyDown = useCallback(
     (e) => {
       if (e.key !== 'Enter') return
@@ -78,10 +84,10 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
       <div
         className={`${styles.slideContent} ${slideMotionClass} ${!isChecked ? styles.mobileCheckSpacing : ''}`}>
         <div className={styles.bottleBadge}>
-          Bottiglia {currentBottleIndex + 1}/{totalBottles}
+          Bottle {currentBottleIndex + 1}/{totalBottles}
         </div>
         <p className={styles.questionCounter}>
-          Domanda {currentSlideIndex + 1} di {totalSlides}
+          Question {currentSlideIndex + 1} of {totalSlides}
         </p>
         <h2 className={styles.questionText}>{currentQuestion?.text}</h2>
 
@@ -126,14 +132,17 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
                 <span className={styles.feedbackLabel}>
                   {checkResult.comboBonus > 0
                     ? `Combo x${checkResult.newCombo}! +${checkResult.points} (+${checkResult.comboBonus} bonus)`
-                    : `Corretto! +${checkResult.points}`}
+                    : isEnglish
+                      ? `Correct! +${checkResult.points}`
+                      : `Corretto! +${checkResult.points}`}
                 </span>
               </>
             ) : (
               <>
                 <span className={styles.feedbackIcon}>💡</span>
                 <span className={styles.feedbackLabel}>
-                  Risposta corretta: <strong>{correctText}</strong>
+                  {isEnglish ? 'Correct answer:' : 'Risposta corretta:'}{' '}
+                  <strong>{correctText}</strong>
                 </span>
               </>
             )}
@@ -145,7 +154,7 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
             className={styles.checkButton}
             onClick={() => onCheck(currentQuestion.id, selectedOption)}
             disabled={!selectedOption || isSlideTransitioning}>
-            Controlla
+            Check
           </button>
         ) : (
           <button
@@ -154,9 +163,15 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
             disabled={isSlideTransitioning}>
             {isLastSlide
               ? clickedReady
-                ? 'In attesa degli altri...'
-                : 'Vedi risultati'
-              : 'Continua'}
+                ? isEnglish
+                  ? 'Waiting for others...'
+                  : 'In attesa degli altri...'
+                : isEnglish
+                  ? 'See results'
+                  : 'Vedi risultati'
+              : isEnglish
+                ? 'Continue'
+                : 'Continua'}
           </button>
         )}
       </div>

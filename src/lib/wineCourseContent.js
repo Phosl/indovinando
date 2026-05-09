@@ -1,0 +1,256 @@
+import 'server-only'
+
+import {promises as fs} from 'fs'
+import path from 'path'
+import {normalizeLanguage} from './i18n/config'
+
+const LEVEL_EMOJIS = {
+  1: '🍇',
+  2: '🍷',
+  3: '🏅',
+}
+
+function toOptionId(index, isTrueFalse, lang) {
+  if (isTrueFalse) {
+    if (normalizeLanguage(lang) === 'en') return index === 0 ? 'true' : 'false'
+    return index === 0 ? 'vero' : 'falso'
+  }
+  return String.fromCharCode(97 + index)
+}
+
+function normalizeQuestion(question, index, lang) {
+  const isTrueFalse = question.type === 'true_false'
+  const type = isTrueFalse ? 'true_false' : 'multiple_choice'
+  const isEnglish = normalizeLanguage(lang) === 'en'
+
+  const options = Array.isArray(question.options)
+    ? question.options.map((opt, i) => ({
+        id: opt.id ?? toOptionId(i, isTrueFalse, lang),
+        text: opt.text ?? String(opt),
+      }))
+    : (question.answers ?? []).map((answer, i) => ({
+        id: toOptionId(i, isTrueFalse, lang),
+        text: String(answer),
+      }))
+
+  let correctId = question.correctId
+  if (!correctId) {
+    const idx = typeof question.correct === 'number' ? question.correct : 0
+    correctId = options[idx]?.id ?? options[0]?.id
+  }
+
+  return {
+    id: question.id ?? `q${index + 1}`,
+    type,
+    text: question.text ?? question.question ?? `Question ${index + 1}`,
+    options,
+    correctId,
+    feedback: {
+      correct:
+        question.feedback?.correct ??
+        (isEnglish ? 'Correct! Great answer.' : 'Corretto! Ottima risposta.'),
+      wrong:
+        question.feedback?.wrong ??
+        (isEnglish
+          ? 'Not quite right. Try again: you can do it.'
+          : 'Non esatto. Riprova: puoi farcela.'),
+    },
+  }
+}
+
+function normalizeIntro(lesson, lang) {
+  const isEnglish = normalizeLanguage(lang) === 'en'
+
+  if (typeof lesson.intro === 'object' && lesson.intro) {
+    return {
+      title: lesson.intro.title ?? lesson.title,
+      paragraphs: Array.isArray(lesson.intro.paragraphs)
+        ? lesson.intro.paragraphs
+        : [lesson.intro.paragraphs ?? ''],
+      keyPoints: Array.isArray(lesson.intro.keyPoints)
+        ? lesson.intro.keyPoints
+        : [
+            isEnglish
+              ? 'Answer questions to reinforce the key concepts.'
+              : 'Rispondi alle domande per consolidare i concetti.',
+            isEnglish
+              ? 'You can repeat this lesson anytime.'
+              : 'Puoi ripetere la lezione quando vuoi.',
+          ],
+    }
+  }
+
+  return {
+    title: lesson.title,
+    paragraphs: [
+      lesson.intro ?? (isEnglish ? 'Interactive wine lesson.' : 'Lesson interattiva sul vino.'),
+    ],
+    keyPoints: [
+      isEnglish
+        ? 'Answer questions to reinforce the key concepts.'
+        : 'Rispondi alle domande per consolidare i concetti.',
+      isEnglish ? 'You can repeat this lesson anytime.' : 'Puoi ripetere la lezione quando vuoi.',
+    ],
+  }
+}
+
+function normalizeSlide(slide, lesson, index) {
+  if (typeof slide === 'string') {
+    return {
+      id: `s${index + 1}`,
+      title: lesson.title,
+      paragraphs: [slide],
+      keyPoints: [],
+    }
+  }
+
+  return {
+    id: slide.id ?? `s${index + 1}`,
+    title: slide.title ?? lesson.title,
+    paragraphs: Array.isArray(slide.paragraphs) ? slide.paragraphs : [slide.paragraphs ?? ''],
+    keyPoints: Array.isArray(slide.keyPoints) ? slide.keyPoints : [],
+  }
+}
+
+function normalizeDidacticSlides(lesson, lang) {
+  const isEnglish = normalizeLanguage(lang) === 'en'
+
+  if (Array.isArray(lesson.slides) && lesson.slides.length > 0) {
+    return lesson.slides.slice(0, 2).map((slide, index) => normalizeSlide(slide, lesson, index))
+  }
+
+  const introText =
+    typeof lesson.intro === 'string'
+      ? lesson.intro
+      : (lesson.intro?.paragraphs?.[0] ??
+        (isEnglish ? 'Interactive wine lesson.' : 'Lesson interattiva sul vino.'))
+  const closingText =
+    lesson.final ??
+    (isEnglish
+      ? 'Continue with the questions to lock in the concepts and verify what you learned.'
+      : 'Continue con le domande per fissare i concetti e verificare quanto hai appreso.')
+
+  return [
+    {
+      id: 's1',
+      title: lesson.title,
+      paragraphs: [
+        introText,
+        isEnglish
+          ? 'Read this section carefully: it prepares you to answer the quiz questions with confidence.'
+          : 'Leggi con attenzione questa parte: ti prepara a rispondere in modo consapevole alle domande del quiz.',
+      ],
+      keyPoints: [
+        isEnglish
+          ? 'Observe the key concepts of the lesson.'
+          : 'Osserva i concetti chiave della lezione.',
+        isEnglish
+          ? 'Connect theory to real-world situations.'
+          : 'Collega teoria e situazioni reali.',
+      ],
+    },
+    {
+      id: 's2',
+      title: isEnglish ? 'Takeaways' : 'Cosa porti a casa',
+      paragraphs: [
+        closingText,
+        isEnglish
+          ? 'Now move on to the questions: they will help you reinforce the main steps and terminology.'
+          : 'Ora passa alle domande: ti aiuteranno a consolidare i passaggi principali e fissare la terminologia.',
+      ],
+      keyPoints: [
+        isEnglish
+          ? 'Goal: understand, not just memorize.'
+          : 'Obiettivo: capire, non solo ricordare.',
+        isEnglish ? 'You can repeat this lesson anytime.' : 'Puoi ripetere la lezione quando vuoi.',
+      ],
+    },
+  ]
+}
+
+function normalizeLesson(rawLevel, lesson, lessonIndex, lang) {
+  const levelNumber = Number(rawLevel.level)
+  const lessonId = `level-${levelNumber}-lesson-${lessonIndex + 1}`
+
+  return {
+    id: lessonId,
+    levelId: `level-${levelNumber}`,
+    order: lessonIndex + 1,
+    title: lesson.title,
+    emoji: lesson.emoji ?? '🍷',
+    intro: normalizeIntro(lesson, lang),
+    didacticSlides: normalizeDidacticSlides(lesson, lang),
+    questions: (lesson.questions ?? []).map((question, i) => normalizeQuestion(question, i, lang)),
+  }
+}
+
+function normalizeLevel(rawLevel, lang) {
+  const levelNumber = Number(rawLevel.level)
+  const lessons = (rawLevel.lessons ?? []).map((lesson, i) =>
+    normalizeLesson(rawLevel, lesson, i, lang),
+  )
+
+  return {
+    id: `level-${levelNumber}`,
+    title: rawLevel.title,
+    description: rawLevel.description,
+    emoji: rawLevel.emoji ?? LEVEL_EMOJIS[levelNumber] ?? '🍷',
+    order: levelNumber,
+    lessonIds: lessons.map((lesson) => lesson.id),
+    lessons,
+  }
+}
+
+export async function getWineCourseData(lang = 'it') {
+  const normalizedLang = normalizeLanguage(lang)
+  const publicDir = path.join(process.cwd(), 'public')
+  const coursesDir = path.join(publicDir, 'corsi')
+  const localizedDir = path.join(coursesDir, normalizedLang)
+
+  let sourceDir = coursesDir
+  let allFiles = []
+  let languageFiles = []
+
+  try {
+    languageFiles = await fs.readdir(localizedDir)
+    if (languageFiles.length > 0) {
+      sourceDir = localizedDir
+      allFiles = languageFiles
+    }
+  } catch {
+    // Fallback to root courses directory
+  }
+
+  try {
+    if (allFiles.length === 0) allFiles = await fs.readdir(coursesDir)
+  } catch {
+    sourceDir = publicDir
+    allFiles = await fs.readdir(publicDir)
+  }
+
+  const levelFiles = allFiles.filter((name) => /^corso_livello_\d+\.json$/i.test(name)).sort()
+
+  const rawLevels = await Promise.all(
+    levelFiles.map(async (fileName) => {
+      const fullPath = path.join(sourceDir, fileName)
+      const content = await fs.readFile(fullPath, 'utf8')
+      return JSON.parse(content)
+    }),
+  )
+
+  const levels = rawLevels
+    .map((level) => normalizeLevel(level, normalizedLang))
+    .sort((a, b) => a.order - b.order)
+    .map(({lessons, ...level}) => level)
+
+  const lessonsById = rawLevels
+    .map((level) => normalizeLevel(level, normalizedLang))
+    .sort((a, b) => a.order - b.order)
+    .flatMap((level) => level.lessons)
+    .reduce((acc, lesson) => {
+      acc[lesson.id] = lesson
+      return acc
+    }, {})
+
+  return {levels, lessonsById}
+}

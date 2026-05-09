@@ -1,0 +1,890 @@
+{
+  "level": 3,
+  "slug": "inizio-a-capire-il-vino",
+  "title": "I'm starting to understand wine",
+  "description": "In-depth analysis of fermentations, structure, evolved aromas, conservation and interpretation of wine",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Alcoholic and malolactic fermentation",
+      "intro": "Fermentation is not a single process. There are different transformations that influence the character of the wine.",
+      "final": "Now you know that wine evolves through multiple fermentations.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What is malolactic fermentation?",
+          "answers": [
+            "Transformation of malic acid into lactic acid",
+            "Adding sugar",
+            "Wine filtration"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Alcoholic fermentation produces alcohol.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Who activates the fermentation?",
+          "answers": [
+            "Yeasts",
+            "Oxygen",
+            "Sugar"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Malolactic makes the wine:",
+          "answers": [
+            "Softer",
+            "More acidic",
+            "Sweeter"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "All wines undergo malolactic fermentation.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Alcoholic and malolactic fermentation",
+          "paragraphs": [
+            "Fermentation is not a single process. There are different transformations that influence the character of the wine.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Definition: malolactic fermentation",
+            "Alcoholic fermentation produces alcohol",
+            "Who activates the fermentation"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know that wine evolves through multiple fermentations.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Malolactic makes the wine",
+            "All wines undergo malolactic fermentation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l2",
+      "title": "Wine structure",
+      "intro": "The structure is given by the balance between acidity, tannins, alcohol and body.",
+      "final": "Now you know how to read the balance of a wine.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What makes up the structure of wine?",
+          "answers": [
+            "Acidity, tannins, alcohol",
+            "Just sugar",
+            "Just water"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "A balanced wine has balanced components.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "If one component dominates too much:",
+          "answers": [
+            "The wine is unbalanced",
+            "It's always improving",
+            "Nothing changes"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Alcohol contributes to:",
+          "answers": [
+            "Body and structure",
+            "Color only",
+            "Flavor only"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Acidity gives freshness.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Wine structure",
+          "paragraphs": [
+            "The structure is given by the balance between acidity, tannins, alcohol and body.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "It makes up the structure of the wine",
+            "A balanced wine has balanced components",
+            "If one component dominates too much"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know how to read the balance of a wine.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Alcohol contributes to",
+            "Acidity gives freshness"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l3",
+      "title": "Primary, secondary and tertiary aromas",
+      "intro": "Aromas evolve over time and are divided into three categories.",
+      "final": "Now you know how aromatic complexity is born.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "The primary aromas derive from:",
+          "answers": [
+            "Grape",
+            "Barrel",
+            "Bottle"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "Secondary aromas derive from:",
+          "answers": [
+            "Fermentation",
+            "Label",
+            "Price"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Tertiary aromas develop with:",
+          "answers": [
+            "Aging",
+            "Water",
+            "Sugar"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "true_false",
+          "question": "The aromas change over time.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "mcq",
+          "question": "Tertiary aromas are typical of:",
+          "answers": [
+            "Aged wines",
+            "Young wines",
+            "Juices"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Primary, secondary and tertiary aromas",
+          "paragraphs": [
+            "Aromas evolve over time and are divided into three categories.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "The primary aromas derive from",
+            "Secondary aromas derive from",
+            "Tertiary aromas develop with"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know how aromatic complexity is born.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "The aromas change over time",
+            "Tertiary aromas are typical of"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l4",
+      "title": "Wine storage",
+      "intro": "Storage directly influences the quality of wine over time.",
+      "final": "Now you know how to protect a wine.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What is important in conservation?",
+          "answers": [
+            "Temperature",
+            "Bottle color",
+            "Label"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Wine should be stored in direct light.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Too much oxygen:",
+          "answers": [
+            "It spoils the wine",
+            "It's always improving",
+            "It doesn't affect"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "The ideal temperature must be:",
+          "answers": [
+            "Stable",
+            "High",
+            "Variable"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "All wines are stored in the same way.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Wine storage",
+          "paragraphs": [
+            "Storage directly influences the quality of wine over time.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "It is important in conservation",
+            "Wine should be stored in direct light",
+            "Too much oxygen"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know how to protect a wine.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "The ideal temperature must be",
+            "All wines are stored in the same way"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l5",
+      "title": "Technical tasting",
+      "intro": "The tasting analyzes wine in a professional and structured way.",
+      "final": "Now you know how to read a wine like a professional.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What is analyzed first?",
+          "answers": [
+            "Color",
+            "Taste",
+            "Price"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "Smell is used for:",
+          "answers": [
+            "Flavors",
+            "Weight",
+            "Color"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "true_false",
+          "question": "Tasting is just drinking.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "Taste evaluates:",
+          "answers": [
+            "Balance",
+            "Only sweetness",
+            "Only alcohol"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Color is enough to judge a wine.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Technical tasting",
+          "paragraphs": [
+            "The tasting analyzes wine in a professional and structured way.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "It is analyzed first",
+            "Smell is useful for",
+            "Tasting is just drinking"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know how to read a wine like a professional.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Taste evaluates",
+            "Color is enough to judge a wine"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l6",
+      "title": "Advanced body and structure",
+      "intro": "The body of wine is related to extraction, alcohol and concentration.",
+      "final": "Now you really feel the structure of the wine.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "The body of the wine indicates:",
+          "answers": [
+            "Weight in the mouth",
+            "Color",
+            "Sweetness"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "A structured wine is:",
+          "answers": [
+            "More complex",
+            "Always light",
+            "Always sweet"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "The body depends on:",
+          "answers": [
+            "Extraction",
+            "Label",
+            "Price"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "true_false",
+          "question": "All wines have the same body.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q5",
+          "type": "mcq",
+          "question": "Alcohol contributes to:",
+          "answers": [
+            "Structure",
+            "Color only",
+            "Flavor only"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Advanced body and structure",
+          "paragraphs": [
+            "The body of wine is related to extraction, alcohol and concentration.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "The body of the wine indicates",
+            "A structured wine is",
+            "The body depends on"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you really feel the structure of the wine.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "All wines have the same body",
+            "Alcohol contributes to"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l7",
+      "title": "Territory and terroir",
+      "intro": "Terroir is the combination of climate, soil and environment.",
+      "final": "Now you understand the link between wine and territory.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "The terroir includes:",
+          "answers": [
+            "Climate and soil",
+            "Bottle only",
+            "Price only"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "Climate affects:",
+          "answers": [
+            "Taste",
+            "Color only",
+            "Label only"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "true_false",
+          "question": "The soil is not important.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "The terroir makes the wine:",
+          "answers": [
+            "Unique",
+            "Identical everywhere",
+            "Always sweet"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Wine changes from region to region.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Territory and terroir",
+          "paragraphs": [
+            "Terroir is the combination of climate, soil and environment.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "The terroir includes",
+            "Climate affects",
+            "The soil is not important"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you understand the link between wine and territory.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Terroir makes wine",
+            "Wine changes from region to region"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l8",
+      "title": "Evolution of wine",
+      "intro": "Wine changes over time thanks to aging.",
+      "final": "Now you know that wine is alive and changing.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "Wine evolves thanks to:",
+          "answers": [
+            "Aging",
+            "Label",
+            "Bottle"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "Over time the aromas:",
+          "answers": [
+            "They change",
+            "They always disappear",
+            "They don't change"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "true_false",
+          "question": "All wines improve with time.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "The young wines are:",
+          "answers": [
+            "Fresh",
+            "Always complex",
+            "Always aged"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Wine is static over time.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Evolution of wine",
+          "paragraphs": [
+            "Wine changes over time thanks to aging.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Wine evolves thanks to",
+            "Over time the aromas",
+            "All wines improve with time"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know that wine is alive and changing.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "Young wines are",
+            "Wine is static over time"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l9",
+      "title": "Sensory analysis",
+      "intro": "Sensory analysis combines sight, smell and taste.",
+      "final": "Now you know how to analyze a wine completely.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What does sensory analysis include?",
+          "answers": [
+            "Sight, smell, taste",
+            "Just taste",
+            "Just sight"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "mcq",
+          "question": "Smell is used for:",
+          "answers": [
+            "Flavors",
+            "Color",
+            "Price"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q3",
+          "type": "true_false",
+          "question": "Tasting is only technical.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "The view analyzes:",
+          "answers": [
+            "Color",
+            "Taste",
+            "Structure"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Everyone perceives wine the same way.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Sensory analysis",
+          "paragraphs": [
+            "Sensory analysis combines sight, smell and taste.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "Includes sensory analysis",
+            "Smell is useful for",
+            "Tasting is only technical"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "Now you know how to analyze a wine completely.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "The view analyzes",
+            "Everyone perceives wine the same way"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l10",
+      "title": "Wine synthesis",
+      "intro": "Let's put together everything you've learned so far.",
+      "final": "You now have an advanced understanding of wine.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "question": "What influences wine?",
+          "answers": [
+            "Territory and grape variety",
+            "Bottle only",
+            "Price only"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q2",
+          "type": "true_false",
+          "question": "Wine is simple to understand completely.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "question": "Fermentation produces:",
+          "answers": [
+            "Alcohol",
+            "Sugar",
+            "Water"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q4",
+          "type": "mcq",
+          "question": "The taste depends on:",
+          "answers": [
+            "Structure",
+            "Color only",
+            "Label only"
+          ],
+          "correct": 0
+        },
+        {
+          "id": "q5",
+          "type": "true_false",
+          "question": "Wine is always the same over time.",
+          "answers": [
+            "True",
+            "False"
+          ],
+          "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Wine synthesis",
+          "paragraphs": [
+            "Let's put together everything you've learned so far.",
+            "In this first part I will accompany you with simple examples and practical language, so you build a clear foundation before moving on to the questions."
+          ],
+          "keyPoints": [
+            "What influences wine",
+            "Wine is simple to understand completely",
+            "Fermentation produces"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Before the quiz",
+          "paragraphs": [
+            "You now have an advanced understanding of wine.",
+            "Soon you will find progressive questions: first checking the basics, then practical application. If you make a mistake it's not a problem, you can try again and improve your score."
+          ],
+          "keyPoints": [
+            "The taste depends on",
+            "Wine is always the same over time"
+          ]
+        }
+      ]
+    }
+  ]
+}
