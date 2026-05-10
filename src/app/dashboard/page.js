@@ -2,6 +2,7 @@ import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {toLocaleTag} from '@/lib/i18n/config'
+import {getAppVersion} from '@/lib/appVersion'
 import it from '@/lib/i18n/locales/it.json'
 import en from '@/lib/i18n/locales/en.json'
 import styles from './dashboard.module.scss'
@@ -11,7 +12,7 @@ export default async function Dashboard() {
   const lang = await getServerLanguage()
   const locale = lang === 'en' ? en : it
   const dashboardDict = locale.dashboard || it.dashboard || {}
-  const appVersion = process.env.NEXT_PUBLIC_APP_VERSION || '1.9.0'
+  const appVersion = await getAppVersion()
   const {data} = await supabase.auth.getUser()
 
   if (!data.user) {

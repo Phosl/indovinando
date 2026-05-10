@@ -9,6 +9,7 @@
     "done": "Done"
   },
   "home": {
+    "versionLabel": "Beta Version",
     "tagline": "Play, create and learn wine in one place.",
     "loginOrRegister": "Login or Register",
     "wineCourse": "Wine Course",

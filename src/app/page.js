@@ -1,5 +1,6 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {getAppVersion} from '@/lib/appVersion'
 import AuthEntryClient from '@/components/auth/AuthEntryClient'
 
 export default async function Home() {
@@ -11,5 +12,7 @@ export default async function Home() {
     redirect('/dashboard')
   }
 
-  return <AuthEntryClient />
+  const appVersion = await getAppVersion()
+
+  return <AuthEntryClient appVersion={appVersion} />
 }

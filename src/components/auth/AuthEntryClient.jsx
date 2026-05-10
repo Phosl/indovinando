@@ -3,7 +3,7 @@
 import {useT} from '@/lib/i18n/useT'
 import styles from './AuthEntryClient.module.scss'
 
-export default function AuthEntryClient() {
+export default function AuthEntryClient({appVersion}) {
   const t = useT('home')
 
   return (
@@ -11,6 +11,9 @@ export default function AuthEntryClient() {
       <div className={styles.container}>
         <section className={styles.shell}>
           <div className={styles.brandBlock}>
+            <span className={styles.badge}>
+              {t('versionLabel')} {appVersion}
+            </span>
             <h1 className={styles.brand}>INDOVINANDO</h1>
             <p className={styles.tagline}>{t('tagline')}</p>
           </div>
