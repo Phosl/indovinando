@@ -7,6 +7,16 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.9.0',
+    date: '10 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'Live UX fixes, i18n/dashboard updates, and changelog note for host check latency',
+      'course admin editor with Supabase Storage backend',
+    ],
+  },
+
+  {
     version: '1.8.1',
     date: '10 maggio 2026',
     label: 'Live UX',
