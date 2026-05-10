@@ -8,6 +8,15 @@ import TopBar from '@/components/TopBar'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import styles from './liveSessions.module.scss'
 
+const withSaveTimeout = async (promise, contextLabel, timeoutMs = 20000) => {
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => {
+      reject(new Error(`Salvataggio lento. (${contextLabel}). Riprova.`))
+    }, timeoutMs)
+  })
+  return Promise.race([promise, timeoutPromise])
+}
+
 export default function LiveSessionClient({gameId, gameName, questions, bottles, userId}) {
   const router = useRouter()
   const {lang} = useLanguage()
@@ -22,17 +31,20 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
   useEffect(() => {
     const createSession = async () => {
       try {
-        const {data, error} = await supabaseClient
-          .from('live_sessions')
-          .insert({
-            game_id: gameId,
-            host_user_id: userId,
-            status: 'lobby',
-            current_question_index: 0,
-            round_status: 'waiting_players',
-          })
-          .select()
-          .single()
+        const {data, error} = await withSaveTimeout(
+          supabaseClient
+            .from('live_sessions')
+            .insert({
+              game_id: gameId,
+              host_user_id: userId,
+              status: 'lobby',
+              current_question_index: 0,
+              round_status: 'waiting_players',
+            })
+            .select()
+            .single(),
+          'create-live-session',
+        )
 
         if (error) throw error
 
@@ -45,12 +57,17 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
         setLoading(false)
       } catch (err) {
         console.error('Error creating live session:', err)
+        alert(
+          isEnglish
+            ? 'Failed to create session. Please try again.'
+            : 'Errore nella creazione sessione. Riprova.',
+        )
         setLoading(false)
       }
     }
 
     createSession()
-  }, [gameId, userId])
+  }, [gameId, userId, isEnglish])
 
   // Polling - ascolta i giocatori che si uniscono
   useEffect(() => {
@@ -77,51 +94,73 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
   const handleStartGame = async () => {
     try {
       // Ensure host partecipa come giocatore nella stessa sessione.
-      const {data: existingHostPlayer} = await supabaseClient
-        .from('live_players')
-        .select('id')
-        .eq('session_id', sessionId)
-        .eq('user_id', userId)
-        .limit(1)
-        .maybeSingle()
+      const {data: existingHostPlayer} = await withSaveTimeout(
+        supabaseClient
+          .from('live_players')
+          .select('id')
+          .eq('session_id', sessionId)
+          .eq('user_id', userId)
+          .limit(1)
+          .maybeSingle(),
+        'check-host-player',
+      )
 
       if (!existingHostPlayer) {
         const hostNickname = 'Host'
-        await supabaseClient.from('live_players').insert({
-          session_id: sessionId,
-          nickname: hostNickname,
-          avatar_id: 1,
-          user_id: userId,
-          is_host: true,
-        })
+        await withSaveTimeout(
+          supabaseClient.from('live_players').insert({
+            session_id: sessionId,
+            nickname: hostNickname,
+            avatar_id: 1,
+            user_id: userId,
+            is_host: true,
+          }),
+          'insert-host-player',
+        )
       }
 
       // Aggiorna sessione: cambio status a 'playing'
-      await supabaseClient
-        .from('live_sessions')
-        .update({
-          status: 'playing',
-          started_at: new Date().toISOString(),
-          round_status: 'waiting_answers',
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', sessionId)
+      await withSaveTimeout(
+        supabaseClient
+          .from('live_sessions')
+          .update({
+            status: 'playing',
+            started_at: new Date().toISOString(),
+            round_status: 'waiting_answers',
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', sessionId),
+        'start-game-session',
+      )
 
       // Host e players share the same game experience
       router.push(`/live/session/${sessionId}/play`)
     } catch (err) {
       console.error('Error starting game:', err)
+      alert(
+        isEnglish
+          ? 'Failed to start game. Please try again.'
+          : "Errore nell'avvio del gioco. Riprova.",
+      )
     }
   }
 
   const handleCancel = async () => {
     try {
       // Elimina sessione
-      await supabaseClient.from('live_sessions').delete().eq('id', sessionId)
+      await withSaveTimeout(
+        supabaseClient.from('live_sessions').delete().eq('id', sessionId),
+        'cancel-live-session',
+      )
 
       router.push('/dashboard')
     } catch (err) {
       console.error('Error canceling session:', err)
+      alert(
+        isEnglish
+          ? 'Failed to cancel session. Please try again.'
+          : "Errore nell'annullamento. Riprova.",
+      )
     }
   }
 

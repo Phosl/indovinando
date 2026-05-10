@@ -26,6 +26,8 @@ import {
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import styles from './GameEditor.module.scss'
 
+const SAVE_TIMEOUT_MS = 20000
+
 /**
  * Normalize step value to ensure it's within valid range
  */
@@ -78,6 +80,26 @@ export default function GameEditor({
   const editorText = getGameEditorText(lang)
   const alertMessages = getAlertMessages(lang)
   const steps = getSteps(lang)
+  const saveTimeoutMessage =
+    lang === 'en'
+      ? 'Saving is taking too long. Please try again.'
+      : 'Il salvataggio sta impiegando troppo tempo. Riprova.'
+
+  async function withSaveTimeout(promise, contextLabel) {
+    let timer
+    const timeoutPromise = new Promise((_, reject) => {
+      timer = setTimeout(
+        () => reject(new Error(`${saveTimeoutMessage} (${contextLabel})`)),
+        SAVE_TIMEOUT_MS,
+      )
+    })
+
+    try {
+      return await Promise.race([promise, timeoutPromise])
+    } finally {
+      clearTimeout(timer)
+    }
+  }
 
   // Track if initialization has already run to prevent resetting on deps change
   const initializationDoneRef = useRef(false)
@@ -297,15 +319,18 @@ export default function GameEditor({
       let currentGameId = gameId
 
       if (!isEditMode) {
-        const {data: gameInsert, error: gameError} = await supabase
-          .from('games')
-          .insert({
-            name: gameName.trim(),
-            created_by: resolvedUserId,
-            status: 'published',
-          })
-          .select('id')
-          .single()
+        const {data: gameInsert, error: gameError} = await withSaveTimeout(
+          supabase
+            .from('games')
+            .insert({
+              name: gameName.trim(),
+              created_by: resolvedUserId,
+              status: 'published',
+            })
+            .select('id')
+            .single(),
+          'create-game',
+        )
 
         if (gameError || !gameInsert?.id)
           throw new Error(gameError?.message || alertMessages.CREATE_GAME_ERROR)
@@ -319,10 +344,10 @@ export default function GameEditor({
         display_order: index,
       }))
 
-      const {data: insertedQuestions, error: questionsError} = await supabase
-        .from('game_questions')
-        .insert(questionsToInsert)
-        .select('id, display_order')
+      const {data: insertedQuestions, error: questionsError} = await withSaveTimeout(
+        supabase.from('game_questions').insert(questionsToInsert).select('id, display_order'),
+        'save-questions',
+      )
 
       if (questionsError || !insertedQuestions?.length) {
         throw new Error(questionsError?.message || alertMessages.SAVE_QUESTIONS_ERROR)
@@ -339,9 +364,10 @@ export default function GameEditor({
         }))
       })
 
-      const {error: optionsError} = await supabase
-        .from('game_question_options')
-        .insert(optionsToInsert)
+      const {error: optionsError} = await withSaveTimeout(
+        supabase.from('game_question_options').insert(optionsToInsert),
+        'save-options',
+      )
 
       if (optionsError) {
         throw new Error(optionsError?.message || alertMessages.SAVE_OPTIONS_ERROR)
@@ -486,23 +512,26 @@ export default function GameEditor({
 
       if (isEditMode) {
         // Update game name
-        const {error: gameUpdateError} = await supabase
-          .from('games')
-          .update({name: gameName.trim()})
-          .eq('id', currentGameId)
+        const {error: gameUpdateError} = await withSaveTimeout(
+          supabase.from('games').update({name: gameName.trim()}).eq('id', currentGameId),
+          'update-game',
+        )
 
         if (gameUpdateError) throw gameUpdateError
       } else {
         // Create new game
-        const {data: gameInsert, error: gameError} = await supabase
-          .from('games')
-          .insert({
-            name: gameName.trim(),
-            created_by: resolvedUserId,
-            status: 'published',
-          })
-          .select('id')
-          .single()
+        const {data: gameInsert, error: gameError} = await withSaveTimeout(
+          supabase
+            .from('games')
+            .insert({
+              name: gameName.trim(),
+              created_by: resolvedUserId,
+              status: 'published',
+            })
+            .select('id')
+            .single(),
+          'create-game',
+        )
 
         if (gameError || !gameInsert?.id)
           throw new Error(gameError?.message || alertMessages.CREATE_GAME_ERROR)
@@ -512,12 +541,24 @@ export default function GameEditor({
 
       // Delete old data in edit mode
       if (isEditMode) {
-        await supabase.from('game_bottle_answers').delete().eq('game_id', currentGameId)
+        await withSaveTimeout(
+          supabase.from('game_bottle_answers').delete().eq('game_id', currentGameId),
+          'delete-old-bottle-answers',
+        )
         // this will cascade-delete bottles' answers
-        await supabase.from('game_bottles').delete().eq('game_id', currentGameId)
-        await supabase.from('game_question_options').delete().eq('game_id', currentGameId)
+        await withSaveTimeout(
+          supabase.from('game_bottles').delete().eq('game_id', currentGameId),
+          'delete-old-bottles',
+        )
+        await withSaveTimeout(
+          supabase.from('game_question_options').delete().eq('game_id', currentGameId),
+          'delete-old-options',
+        )
         // this will cascade-delete question options
-        await supabase.from('game_questions').delete().eq('game_id', currentGameId)
+        await withSaveTimeout(
+          supabase.from('game_questions').delete().eq('game_id', currentGameId),
+          'delete-old-questions',
+        )
       }
 
       const questionsToInsert = templateQuestions.map((question, index) => ({
@@ -526,10 +567,10 @@ export default function GameEditor({
         display_order: index,
       }))
 
-      const {data: insertedQuestions, error: questionsError} = await supabase
-        .from('game_questions')
-        .insert(questionsToInsert)
-        .select('id, display_order')
+      const {data: insertedQuestions, error: questionsError} = await withSaveTimeout(
+        supabase.from('game_questions').insert(questionsToInsert).select('id, display_order'),
+        'save-questions',
+      )
 
       if (questionsError || !insertedQuestions?.length) {
         throw new Error(questionsError?.message || alertMessages.SAVE_QUESTIONS_ERROR)
@@ -546,10 +587,13 @@ export default function GameEditor({
         }))
       })
 
-      const {data: insertedOptions, error: optionsError} = await supabase
-        .from('game_question_options')
-        .insert(optionsToInsert)
-        .select('id, question_id, option_order')
+      const {data: insertedOptions, error: optionsError} = await withSaveTimeout(
+        supabase
+          .from('game_question_options')
+          .insert(optionsToInsert)
+          .select('id, question_id, option_order'),
+        'save-options',
+      )
 
       if (optionsError || !insertedOptions?.length) {
         throw new Error(optionsError?.message || alertMessages.SAVE_OPTIONS_ERROR)
@@ -567,10 +611,10 @@ export default function GameEditor({
         bottle_order: index,
       }))
 
-      const {data: insertedBottles, error: bottlesError} = await supabase
-        .from('game_bottles')
-        .insert(bottlesToInsert)
-        .select('id, bottle_order')
+      const {data: insertedBottles, error: bottlesError} = await withSaveTimeout(
+        supabase.from('game_bottles').insert(bottlesToInsert).select('id, bottle_order'),
+        'save-bottles',
+      )
 
       if (bottlesError || !insertedBottles?.length) {
         throw new Error(bottlesError?.message || alertMessages.SAVE_BOTTLES_ERROR)
@@ -585,6 +629,10 @@ export default function GameEditor({
           const questionId = questionIdByOrder.get(questionOrder)
           const optionId = optionIdByQuestionAndOrder.get(`${questionId}-${selectedOptionOrder}`)
 
+          if (!bottleId || !questionId || !optionId) {
+            throw new Error(alertMessages.SAVE_BOTTLE_ANSWERS_ERROR)
+          }
+
           return {
             bottle_id: bottleId,
             question_id: questionId,
@@ -593,9 +641,10 @@ export default function GameEditor({
         })
       })
 
-      const {error: answersError} = await supabase
-        .from('game_bottle_answers')
-        .insert(answersToInsert)
+      const {error: answersError} = await withSaveTimeout(
+        supabase.from('game_bottle_answers').insert(answersToInsert),
+        'save-bottle-answers',
+      )
 
       if (answersError) {
         throw new Error(answersError?.message || alertMessages.SAVE_BOTTLE_ANSWERS_ERROR)

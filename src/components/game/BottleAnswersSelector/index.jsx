@@ -13,22 +13,20 @@ export default function BottleAnswersSelector({title, questions, currentAnswers,
             {qIndex + 1}. {question.text}
           </p>
 
-          <div className={styles.answersList}>
+          <div className={styles.answersList} role="radiogroup" aria-label={question.text}>
             {question.options.map((option, oIndex) => (
-              <label
+              <button
                 key={`${qIndex}-${oIndex}`}
+                type="button"
+                role="radio"
+                aria-checked={currentAnswers[qIndex] === oIndex}
+                onClick={() => onAnswerChange(qIndex, oIndex)}
                 className={
                   styles.answerOptionLabel +
                   (currentAnswers[qIndex] === oIndex ? ` ${styles.answerOptionLabelActive}` : '')
                 }>
-                <input
-                  type="radio"
-                  name={`question-${qIndex}`}
-                  checked={currentAnswers[qIndex] === oIndex}
-                  onChange={() => onAnswerChange(qIndex, oIndex)}
-                />
                 <span className={styles.answerOptionText}>{option}</span>
-              </label>
+              </button>
             ))}
           </div>
         </div>
