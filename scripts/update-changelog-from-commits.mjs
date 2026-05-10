@@ -40,10 +40,13 @@ function parseCommitRecord(record) {
 function getOutgoingCommits(remoteRef = 'origin/main') {
   let records = []
   try {
-    const output = run(
-      `git log --no-merges --pretty=format:%s%n%b%x1e ${remoteRef}..HEAD`,
-    )
-    records = output ? output.split('\x1e').map((r) => r.trim()).filter(Boolean) : []
+    const output = run(`git log --no-merges --pretty=format:%s%n%b%x1e ${remoteRef}..HEAD`)
+    records = output
+      ? output
+          .split('\x1e')
+          .map((r) => r.trim())
+          .filter(Boolean)
+      : []
   } catch {
     return []
   }
@@ -54,7 +57,10 @@ function getOutgoingCommits(remoteRef = 'origin/main') {
 }
 
 function cleanSubjectForChangelog(subject) {
-  return subject.replace(/^(feat|fix|chore|refactor|style|docs|test|perf|build|ci)(\([^)]*\))?!?:\s*/i, '')
+  return subject.replace(
+    /^(feat|fix|chore|refactor|style|docs|test|perf|build|ci)(\([^)]*\))?!?:\s*/i,
+    '',
+  )
 }
 
 function getBumpType(commits) {
