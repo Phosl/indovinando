@@ -8,13 +8,67 @@ import xStyles from './lesson.module.scss'
 import {useWineCourseProgress} from '../../hooks/useWineCourseProgress'
 import {useGameAudio} from '../../../live/session/[sessionId]/play/hooks/useGameAudio'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {pickLangText} from '@/lib/i18n/dictionaries'
+
+const LESSON_UI_DICTIONARY = {
+  it: {
+    exitLesson: 'Esci dalla lezione',
+    slide: 'Slide',
+    of: 'di',
+    questionsAfterIntro: 'domande dopo la sezione didattica',
+    goToQuestions: 'Vai alle domande',
+    nextSlide: 'Slide successiva',
+    perfect: '🎉 Perfetto!',
+    wellDone: '👍 Ben fatto!',
+    keepPracticing: '💪 Continua ad allenarti!',
+    allLessons: 'Tutte le lezioni',
+    correct: 'corrette',
+    maxCombo: 'Combo max',
+    bonus: 'Bonus',
+    notAnswered: 'Nessuna risposta',
+    correctAnswer: 'Risposta corretta:',
+    nextLesson: 'Lezione successiva',
+    backToLevel: 'Torna al livello',
+    noQuestions: 'Nessuna domanda disponibile per questa lezione.',
+    question: 'Domanda',
+    correctPlusOne: 'Corretto! +1',
+    check: 'Controlla',
+    seeResults: 'Vedi risultati',
+    continue: 'Continua',
+  },
+  en: {
+    exitLesson: 'Exit lesson',
+    slide: 'Slide',
+    of: 'of',
+    questionsAfterIntro: 'questions after the learning section',
+    goToQuestions: 'Go to questions',
+    nextSlide: 'Next slide',
+    perfect: '🎉 Perfect!',
+    wellDone: '👍 Well done!',
+    keepPracticing: '💪 Keep practicing!',
+    allLessons: 'All lessons',
+    correct: 'correct',
+    maxCombo: 'Max combo',
+    bonus: 'Bonus',
+    notAnswered: 'Not answered',
+    correctAnswer: 'Correct answer:',
+    nextLesson: 'Next lesson',
+    backToLevel: 'Back to level',
+    noQuestions: 'No questions available for this lesson.',
+    question: 'Question',
+    correctPlusOne: 'Correct! +1',
+    check: 'Check',
+    seeResults: 'See results',
+    continue: 'Continue',
+  },
+}
 
 export default function LessonClient({level, lesson, nextLessonId}) {
   const router = useRouter()
   const {completeLesson} = useWineCourseProgress()
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
   const {lang} = useLanguage()
-  const isEnglish = lang === 'en'
+  const t = pickLangText(lang, LESSON_UI_DICTIONARY)
 
   // 'intro' | 'question' | 'result'
   const [screen, setScreen] = useState('intro')
@@ -222,7 +276,7 @@ export default function LessonClient({level, lesson, nextLessonId}) {
             <button
               className={pStyles.exitButton}
               onClick={() => router.push(`/corso-vino/${level.id}`)}
-              aria-label={isEnglish ? 'Exit lesson' : 'Esci dalla lezione'}>
+              aria-label={t.exitLesson}>
               ✕
             </button>
           </div>
@@ -232,8 +286,7 @@ export default function LessonClient({level, lesson, nextLessonId}) {
           <div className={xStyles.introCard}>
             <div className={xStyles.introEmoji}>{lesson.emoji}</div>
             <p className={xStyles.slideMeta}>
-              {isEnglish ? 'Slide' : 'Slide'} {didacticIndex + 1} {isEnglish ? 'of' : 'di'}{' '}
-              {didacticSlides.length}
+              {t.slide} {didacticIndex + 1} {t.of} {didacticSlides.length}
             </p>
             <h1 className={xStyles.introTitle}>{currentDidacticSlide.title}</h1>
             {currentDidacticSlide.paragraphs.map((p, i) => (
@@ -255,19 +308,10 @@ export default function LessonClient({level, lesson, nextLessonId}) {
 
         <div className={pStyles.bottomPanel}>
           <p className={pStyles.readyHint}>
-            {lesson.questions.length}{' '}
-            {isEnglish
-              ? 'questions after the learning section'
-              : 'domande dopo la sezione didattica'}
+            {lesson.questions.length} {t.questionsAfterIntro}
           </p>
           <button className={pStyles.continueButton} onClick={handleDidacticContinue}>
-            {didacticIsLast
-              ? isEnglish
-                ? 'Go to questions'
-                : 'Vai alle domande'
-              : isEnglish
-                ? 'Next slide'
-                : 'Slide successiva'}
+            {didacticIsLast ? t.goToQuestions : t.nextSlide}
           </button>
         </div>
       </div>
@@ -281,16 +325,10 @@ export default function LessonClient({level, lesson, nextLessonId}) {
     const pct = total > 0 ? Math.round((totalCorrect / total) * 100) : 0
     const allCorrect = total > 0 && totalCorrect === total
     const headline = allCorrect
-      ? isEnglish
-        ? '🎉 Perfect!'
-        : '🎉 Perfetto!'
+      ? t.perfect
       : totalCorrect >= Math.ceil(total / 2)
-        ? isEnglish
-          ? '👍 Well done!'
-          : '👍 Ben fatto!'
-        : isEnglish
-          ? '💪 Keep practicing!'
-          : '💪 Continua ad allenarti!'
+        ? t.wellDone
+        : t.keepPracticing
 
     return (
       <div className={pStyles.fullPage}>
@@ -303,7 +341,7 @@ export default function LessonClient({level, lesson, nextLessonId}) {
             <button
               className={pStyles.leaderboardButton}
               onClick={() => router.push(`/corso-vino/${level.id}`)}>
-              {isEnglish ? 'All lessons' : 'Tutte le lezioni'}
+              {t.allLessons}
             </button>
           </div>
         </div>
@@ -316,17 +354,15 @@ export default function LessonClient({level, lesson, nextLessonId}) {
               <span className={xStyles.resultScoreOf}>/{total}</span>
             </div>
             <p className={xStyles.resultPct}>
-              {pct}% {isEnglish ? 'correct' : 'corrette'}
+              {pct}% {t.correct}
             </p>
             <div className={xStyles.resultStatsGrid}>
               <div className={xStyles.resultStatCard}>
-                <span className={xStyles.resultStatLabel}>
-                  {isEnglish ? 'Max combo' : 'Combo max'}
-                </span>
+                <span className={xStyles.resultStatLabel}>{t.maxCombo}</span>
                 <span className={xStyles.resultStatValue}>x{maxCombo}</span>
               </div>
               <div className={xStyles.resultStatCard}>
-                <span className={xStyles.resultStatLabel}>{isEnglish ? 'Bonus' : 'Bonus'}</span>
+                <span className={xStyles.resultStatLabel}>{t.bonus}</span>
                 <span className={xStyles.resultStatValue}>+{comboBonus}</span>
               </div>
             </div>
@@ -352,12 +388,10 @@ export default function LessonClient({level, lesson, nextLessonId}) {
                         <>
                           <span className={pStyles.summaryWrong}>
                             ❌{' '}
-                            {q.options.find((o) => o.id === ans?.selectedId)?.text ??
-                              (isEnglish ? 'Not answered' : 'Nessuna risposta')}
+                            {q.options.find((o) => o.id === ans?.selectedId)?.text ?? t.notAnswered}
                           </span>
                           <span className={pStyles.summaryCorrectHint}>
-                            {isEnglish ? 'Correct answer:' : 'Risposta corretta:'}{' '}
-                            {q.options.find((o) => o.id === q.correctId)?.text}
+                            {t.correctAnswer} {q.options.find((o) => o.id === q.correctId)?.text}
                           </span>
                         </>
                       )}
@@ -373,13 +407,7 @@ export default function LessonClient({level, lesson, nextLessonId}) {
           <button
             className={pStyles.continueButton}
             onClick={() => router.push(nextLessonPath ?? `/corso-vino/${level.id}`)}>
-            {nextLessonPath
-              ? isEnglish
-                ? 'Next lesson'
-                : 'Lezione successiva'
-              : isEnglish
-                ? 'Back to level'
-                : 'Torna al livello'}
+            {nextLessonPath ? t.nextLesson : t.backToLevel}
           </button>
         </div>
       </div>
@@ -398,18 +426,14 @@ export default function LessonClient({level, lesson, nextLessonId}) {
         </div>
         <div className={pStyles.slideContent}>
           <div className={xStyles.resultHero}>
-            <p className={xStyles.resultHeadline}>
-              {isEnglish
-                ? 'No questions available for this lesson.'
-                : 'Nessuna domanda disponibile per questa lezione.'}
-            </p>
+            <p className={xStyles.resultHeadline}>{t.noQuestions}</p>
           </div>
         </div>
         <div className={pStyles.bottomPanel}>
           <button
             className={pStyles.continueButton}
             onClick={() => router.push(`/corso-vino/${level.id}`)}>
-            {isEnglish ? 'Back to level' : 'Torna al livello'}
+            {t.backToLevel}
           </button>
         </div>
       </div>
@@ -450,7 +474,7 @@ export default function LessonClient({level, lesson, nextLessonId}) {
           <button
             className={pStyles.exitButton}
             onClick={() => router.push(`/corso-vino/${level.id}`)}
-            aria-label={isEnglish ? 'Exit lesson' : 'Esci dalla lezione'}>
+            aria-label={t.exitLesson}>
             ✕
           </button>
         </div>
@@ -466,8 +490,7 @@ export default function LessonClient({level, lesson, nextLessonId}) {
       <div
         className={`${pStyles.slideContent} ${slideMotionClass} ${!checked ? pStyles.mobileCheckSpacing : ''}`}>
         <p className={pStyles.questionCounter}>
-          {isEnglish ? 'Question' : 'Domanda'} {questionIndex + 1} {isEnglish ? 'of' : 'di'}{' '}
-          {questions.length}
+          {t.question} {questionIndex + 1} {t.of} {questions.length}
         </p>
         <h2 className={pStyles.questionText}>{currentQuestion.text}</h2>
 
@@ -510,9 +533,7 @@ export default function LessonClient({level, lesson, nextLessonId}) {
                 <span className={pStyles.feedbackLabel}>
                   {getComboBonus(comboStreak) > 0
                     ? `Combo x${comboStreak}! +1 (+${getComboBonus(comboStreak)} bonus)`
-                    : isEnglish
-                      ? 'Correct! +1'
-                      : 'Corretto! +1'}
+                    : t.correctPlusOne}
                 </span>
               </>
             ) : (
@@ -529,17 +550,11 @@ export default function LessonClient({level, lesson, nextLessonId}) {
             className={pStyles.checkButton}
             disabled={!selectedId || isSlideTransitioning}
             onClick={handleCheck}>
-            {isEnglish ? 'Check' : 'Controlla'}
+            {t.check}
           </button>
         ) : (
           <button className={pStyles.continueButton} onClick={handleContinue}>
-            {isLastQuestion
-              ? isEnglish
-                ? 'See results'
-                : 'Vedi risultati'
-              : isEnglish
-                ? 'Continue'
-                : 'Continua'}
+            {isLastQuestion ? t.seeResults : t.continue}
           </button>
         )}
       </div>

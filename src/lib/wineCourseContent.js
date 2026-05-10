@@ -3,6 +3,8 @@ import 'server-only'
 import {promises as fs} from 'fs'
 import path from 'path'
 import {normalizeLanguage} from './i18n/config'
+import it from './i18n/locales/it.json'
+import en from './i18n/locales/en.json'
 
 const LEVEL_EMOJIS = {
   1: '😭​',
@@ -17,6 +19,16 @@ const LEVEL_EMOJIS = {
   10: '✨​', //il livello più avanzato, per chi vuole diventare un vero esperto
 }
 
+function interpolate(template, vars = {}) {
+  if (typeof template !== 'string') return template
+  return template.replace(/\{(\w+)\}/g, (_, key) => vars[key] ?? `{${key}}`)
+}
+
+function getWineCourseTexts(lang) {
+  const locale = normalizeLanguage(lang) === 'en' ? en : it
+  return locale.wineCourseContent || it.wineCourseContent || {}
+}
+
 function toOptionId(index, isTrueFalse, lang) {
   if (isTrueFalse) {
     if (normalizeLanguage(lang) === 'en') return index === 0 ? 'true' : 'false'
@@ -28,7 +40,7 @@ function toOptionId(index, isTrueFalse, lang) {
 function normalizeQuestion(question, index, lang) {
   const isTrueFalse = question.type === 'true_false'
   const type = isTrueFalse ? 'true_false' : 'multiple_choice'
-  const isEnglish = normalizeLanguage(lang) === 'en'
+  const txt = getWineCourseTexts(lang)
 
   const options = Array.isArray(question.options)
     ? question.options.map((opt, i) => ({
@@ -49,24 +61,22 @@ function normalizeQuestion(question, index, lang) {
   return {
     id: question.id ?? `q${index + 1}`,
     type,
-    text: question.text ?? question.question ?? `Question ${index + 1}`,
+    text:
+      question.text ??
+      question.question ??
+      interpolate(txt.questionDefault || 'Question {index}', {index: index + 1}),
     options,
     correctId,
     feedback: {
-      correct:
-        question.feedback?.correct ??
-        (isEnglish ? 'Correct! Great answer.' : 'Corretto! Ottima risposta.'),
+      correct: question.feedback?.correct ?? (txt.feedbackCorrect || 'Corretto! Ottima risposta.'),
       wrong:
-        question.feedback?.wrong ??
-        (isEnglish
-          ? 'Not quite right. Try again: you can do it.'
-          : 'Non esatto. Riprova: puoi farcela.'),
+        question.feedback?.wrong ?? (txt.feedbackWrong || 'Non esatto. Riprova: puoi farcela.'),
     },
   }
 }
 
 function normalizeIntro(lesson, lang) {
-  const isEnglish = normalizeLanguage(lang) === 'en'
+  const txt = getWineCourseTexts(lang)
 
   if (typeof lesson.intro === 'object' && lesson.intro) {
     return {
@@ -77,26 +87,18 @@ function normalizeIntro(lesson, lang) {
       keyPoints: Array.isArray(lesson.intro.keyPoints)
         ? lesson.intro.keyPoints
         : [
-            isEnglish
-              ? 'Answer questions to reinforce the key concepts.'
-              : 'Rispondi alle domande per consolidare i concetti.',
-            isEnglish
-              ? 'You can repeat this lesson anytime.'
-              : 'Puoi ripetere la lezione quando vuoi.',
+            txt.keyPointReinforce || 'Rispondi alle domande per consolidare i concetti.',
+            txt.keyPointRepeat || 'Puoi ripetere la lezione quando vuoi.',
           ],
     }
   }
 
   return {
     title: lesson.title,
-    paragraphs: [
-      lesson.intro ?? (isEnglish ? 'Interactive wine lesson.' : 'Lesson interattiva sul vino.'),
-    ],
+    paragraphs: [lesson.intro ?? (txt.interactiveLesson || 'Lesson interattiva sul vino.')],
     keyPoints: [
-      isEnglish
-        ? 'Answer questions to reinforce the key concepts.'
-        : 'Rispondi alle domande per consolidare i concetti.',
-      isEnglish ? 'You can repeat this lesson anytime.' : 'Puoi ripetere la lezione quando vuoi.',
+      txt.keyPointReinforce || 'Rispondi alle domande per consolidare i concetti.',
+      txt.keyPointRepeat || 'Puoi ripetere la lezione quando vuoi.',
     ],
   }
 }
@@ -120,7 +122,7 @@ function normalizeSlide(slide, lesson, index) {
 }
 
 function normalizeDidacticSlides(lesson, lang) {
-  const isEnglish = normalizeLanguage(lang) === 'en'
+  const txt = getWineCourseTexts(lang)
 
   if (Array.isArray(lesson.slides) && lesson.slides.length > 0) {
     return lesson.slides.slice(0, 2).map((slide, index) => normalizeSlide(slide, lesson, index))
@@ -129,13 +131,11 @@ function normalizeDidacticSlides(lesson, lang) {
   const introText =
     typeof lesson.intro === 'string'
       ? lesson.intro
-      : (lesson.intro?.paragraphs?.[0] ??
-        (isEnglish ? 'Interactive wine lesson.' : 'Lesson interattiva sul vino.'))
+      : (lesson.intro?.paragraphs?.[0] ?? (txt.interactiveLesson || 'Lesson interattiva sul vino.'))
   const closingText =
     lesson.final ??
-    (isEnglish
-      ? 'Continue with the questions to lock in the concepts and verify what you learned.'
-      : 'Continue con le domande per fissare i concetti e verificare quanto hai appreso.')
+    (txt.continueWithQuestions ||
+      'Continue con le domande per fissare i concetti e verificare quanto hai appreso.')
 
   return [
     {
@@ -143,33 +143,25 @@ function normalizeDidacticSlides(lesson, lang) {
       title: lesson.title,
       paragraphs: [
         introText,
-        isEnglish
-          ? 'Read this section carefully: it prepares you to answer the quiz questions with confidence.'
-          : 'Leggi con attenzione questa parte: ti prepara a rispondere in modo consapevole alle domande del quiz.',
+        txt.readCarefully ||
+          'Leggi con attenzione questa parte: ti prepara a rispondere in modo consapevole alle domande del quiz.',
       ],
       keyPoints: [
-        isEnglish
-          ? 'Observe the key concepts of the lesson.'
-          : 'Osserva i concetti chiave della lezione.',
-        isEnglish
-          ? 'Connect theory to real-world situations.'
-          : 'Collega teoria e situazioni reali.',
+        txt.observeConcepts || 'Osserva i concetti chiave della lezione.',
+        txt.connectTheory || 'Collega teoria e situazioni reali.',
       ],
     },
     {
       id: 's2',
-      title: isEnglish ? 'Takeaways' : 'Cosa porti a casa',
+      title: txt.takeawaysTitle || 'Cosa porti a casa',
       paragraphs: [
         closingText,
-        isEnglish
-          ? 'Now move on to the questions: they will help you reinforce the main steps and terminology.'
-          : 'Ora passa alle domande: ti aiuteranno a consolidare i passaggi principali e fissare la terminologia.',
+        txt.nowMoveToQuestions ||
+          'Ora passa alle domande: ti aiuteranno a consolidare i passaggi principali e fissare la terminologia.',
       ],
       keyPoints: [
-        isEnglish
-          ? 'Goal: understand, not just memorize.'
-          : 'Obiettivo: capire, non solo ricordare.',
-        isEnglish ? 'You can repeat this lesson anytime.' : 'Puoi ripetere la lezione quando vuoi.',
+        txt.goalUnderstand || 'Obiettivo: capire, non solo ricordare.',
+        txt.keyPointRepeat || 'Puoi ripetere la lezione quando vuoi.',
       ],
     },
   ]

@@ -16,7 +16,6 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
   const t = pickLangText(lang, ENOTECA_DICTIONARY.results)
 
   const router = useRouter()
-  const isEnglish = lang === 'en'
   const sessionKey = `enoteca_session_${menuId}`
 
   const [session, setSession] = useState(null)

@@ -120,18 +120,61 @@ export default function ProfileClient({
     if (isLoggingOut) return
     setIsLoggingOut(true)
 
+    const clearClientMemory = async () => {
+      try {
+        localStorage.clear()
+      } catch {}
+
+      try {
+        sessionStorage.clear()
+      } catch {}
+
+      try {
+        // Expire all cookies for current path and root path.
+        const cookies = document.cookie ? document.cookie.split(';') : []
+        cookies.forEach((cookie) => {
+          const eqPos = cookie.indexOf('=')
+          const name = (eqPos > -1 ? cookie.slice(0, eqPos) : cookie).trim()
+          if (!name) return
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=${window.location.pathname}`
+        })
+      } catch {}
+
+      try {
+        if (typeof caches !== 'undefined' && caches.keys) {
+          const cacheKeys = await caches.keys()
+          await Promise.all(cacheKeys.map((key) => caches.delete(key)))
+        }
+      } catch {}
+
+      try {
+        if (typeof indexedDB !== 'undefined' && indexedDB.databases) {
+          const dbs = await indexedDB.databases()
+          await Promise.all(
+            (dbs || [])
+              .map((db) => db?.name)
+              .filter(Boolean)
+              .map((name) => {
+                return new Promise((resolve) => {
+                  const req = indexedDB.deleteDatabase(name)
+                  req.onsuccess = () => resolve()
+                  req.onerror = () => resolve()
+                  req.onblocked = () => resolve()
+                })
+              }),
+          )
+        }
+      } catch {}
+    }
+
     try {
       await supabaseClient.auth.signOut()
     } catch (error) {
       console.error('[profile] sign out error:', error)
     } finally {
-      try {
-        localStorage.clear()
-      } catch {}
-      try {
-        sessionStorage.clear()
-      } catch {}
-      router.replace('/auth')
+      await clearClientMemory()
+      router.replace('/')
       router.refresh()
       setIsLoggingOut(false)
     }

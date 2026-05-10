@@ -1,6 +1,6 @@
 import {memo} from 'react'
 import styles from '../playerLive.module.scss'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {useT} from '@/lib/i18n/useT'
 
 const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
 
@@ -15,8 +15,7 @@ export const GameOverlays = memo(function GameOverlays({
   onCloseExit,
   onExitGame,
 }) {
-  const {lang} = useLanguage()
-  const isEnglish = lang === 'en'
+  const t = useT('live.overlays')
 
   return (
     <>
@@ -24,7 +23,7 @@ export const GameOverlays = memo(function GameOverlays({
         <div className={styles.sheetBackdrop} onClick={onCloseLeaderboard}>
           <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
             <div className={styles.sheetHandle} />
-            <h3>{isEnglish ? '🏆 Live Leaderboard' : '🏆 Classifica Live'}</h3>
+            <h3>{t('liveLeaderboard')}</h3>
             <div className={styles.sheetList}>
               {sortedLeaderboard.map((player, idx) => {
                 const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : null
@@ -39,10 +38,10 @@ export const GameOverlays = memo(function GameOverlays({
                     </span>
                     <span className={styles.sheetName}>
                       {player.nickname}
-                      {isMe ? (isEnglish ? ' (you)' : ' (tu)') : ''}
+                      {isMe ? t('youSuffix') : ''}
                     </span>
                     <span className={styles.sheetScore}>
-                      {player.liveTotalScore ?? player.total_score ?? 0} {isEnglish ? 'pts' : 'pt'}
+                      {player.liveTotalScore ?? player.total_score ?? 0} {t('pointsUnit')}
                       {(player.roundPoints || 0) > 0 && (
                         <span className={styles.standingDelta}>+{player.roundPoints}</span>
                       )}
@@ -51,7 +50,7 @@ export const GameOverlays = memo(function GameOverlays({
                       <button
                         className={styles.kickButton}
                         onClick={() => onKickPlayer(player.id)}
-                        title={`${isEnglish ? 'Remove' : 'Rimuovi'} ${player.nickname}`}>
+                        title={`${t('remove')} ${player.nickname}`}>
                         ✕
                       </button>
                     )}
@@ -59,13 +58,11 @@ export const GameOverlays = memo(function GameOverlays({
                 )
               })}
               {sortedLeaderboard.length === 0 && (
-                <p className={styles.readyHint}>
-                  {isEnglish ? 'No players yet.' : 'Nessun giocatore ancora.'}
-                </p>
+                <p className={styles.readyHint}>{t('noPlayersYet')}</p>
               )}
             </div>
             <button className={styles.sheetClose} onClick={onCloseLeaderboard}>
-              {isEnglish ? 'Close' : 'Chiudi'}
+              {t('close')}
             </button>
           </div>
         </div>
@@ -80,18 +77,14 @@ export const GameOverlays = memo(function GameOverlays({
             <div className={styles.exitLottiePlaceholder} aria-hidden="true">
               😟
             </div>
-            <h3>{isEnglish ? 'Do you want to leave the game?' : 'Vuoi uscire dal gioco?'}</h3>
-            <p className={styles.exitHint}>
-              {isEnglish
-                ? 'You can rejoin from the session page, but you will leave this screen.'
-                : 'Potrai rientrare dalla sessione, ma lascerai questa schermata.'}
-            </p>
+            <h3>{t('leaveGameTitle')}</h3>
+            <p className={styles.exitHint}>{t('leaveGameDesc')}</p>
             <div className={styles.exitActions}>
               <button className={styles.exitSecondary} onClick={onCloseExit}>
-                {isEnglish ? 'Cancel' : 'Annulla'}
+                {t('cancel')}
               </button>
               <button className={styles.exitDanger} onClick={onExitGame}>
-                {isEnglish ? 'Exit game' : 'Esci dal gioco'}
+                {t('exitGame')}
               </button>
             </div>
           </div>

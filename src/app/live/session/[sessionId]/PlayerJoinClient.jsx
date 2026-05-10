@@ -5,7 +5,7 @@ import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
 import styles from './playerJoin.module.scss'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {useT} from '@/lib/i18n/useT'
 
 const APPLE_AVATARS = [
   {id: 1, emoji: '👨‍💼'},
@@ -22,8 +22,7 @@ const APPLE_AVATARS = [
 
 export default function PlayerJoinClient({sessionId, gameName, existingPlayers, userId}) {
   const router = useRouter()
-  const {lang} = useLanguage()
-  const isEnglish = lang === 'en'
+  const t = useT('live.playerJoin')
   const [nickname, setNickname] = useState('')
   const [selectedAvatar, setSelectedAvatar] = useState(1)
   const [error, setError] = useState('')
@@ -167,16 +166,12 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
     setError('')
 
     if (!nickname.trim()) {
-      setError(isEnglish ? 'Enter a nickname' : 'Inserisci un nickname')
+      setError(t('enterNickname'))
       return
     }
 
     if (nickname.trim().length < 2) {
-      setError(
-        isEnglish
-          ? 'Nickname must be at least 2 characters'
-          : 'Il nickname deve essere almeno 2 caratteri',
-      )
+      setError(t('nicknameMin'))
       return
     }
 
@@ -192,11 +187,7 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
         .single()
 
       if (existing) {
-        setError(
-          isEnglish
-            ? 'This nickname is already used in this game!'
-            : 'Questo nickname e gia usato nel gioco!',
-        )
+        setError(t('nicknameTaken'))
         setLoading(false)
         return
       }
@@ -225,7 +216,7 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
       // Aspetta polling per rilevare inizio gioco
     } catch (err) {
       console.error('Error joining game:', err)
-      setError(isEnglish ? 'Error while joining the game' : "Errore durante l'entrata nel gioco")
+      setError(t('joinError'))
       setLoading(false)
     }
   }
@@ -236,15 +227,15 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
 
       {gameStarted ? (
         <div className={styles.waitingCard}>
-          <h2>{isEnglish ? '🎉 The game is starting...' : '🎉 Il gioco inizia...'}</h2>
-          <p>{isEnglish ? 'You are about to enter the game!' : 'Stai per entrare nel gioco!'}</p>
+          <h2>{t('gameStartingTitle')}</h2>
+          <p>{t('gameStartingDesc')}</p>
         </div>
       ) : (
         <div className={styles.joinCard}>
           {!joinedPlayer ? (
             <form onSubmit={handleJoin} className={styles.joinForm}>
               <div className={styles.formGroup}>
-                <label>{isEnglish ? 'Choose your avatar' : 'Scegli il tuo avatar'}</label>
+                <label>{t('chooseAvatar')}</label>
                 <div className={styles.avatarGrid}>
                   {APPLE_AVATARS.map((avatar) => (
                     <button
@@ -268,7 +259,7 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
                   type="text"
                   value={nickname}
                   onChange={(e) => setNickname(e.target.value)}
-                  placeholder={isEnglish ? 'Ex: Alex, Emma...' : 'Es: Marco, Anna...'}
+                  placeholder={t('nicknamePlaceholder')}
                   className={styles.input}
                   disabled={loading}
                 />
@@ -277,13 +268,7 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
               {error && <div className={styles.error}>{error}</div>}
 
               <button type="submit" className={styles.joinButton} disabled={loading}>
-                {loading
-                  ? isEnglish
-                    ? 'Joining...'
-                    : 'Entrata in corso...'
-                  : isEnglish
-                    ? 'Join Game'
-                    : 'Entra nel Gioco'}
+                {loading ? t('joining') : t('joinGame')}
               </button>
 
               {!userId && (
@@ -292,28 +277,20 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
                   className={styles.authButton}
                   onClick={() => router.push(authReturnUrl)}
                   disabled={loading}>
-                  {isEnglish ? 'Register / Login (optional)' : 'Registrati / Accedi (opzionale)'}
+                  {t('loginOptional')}
                 </button>
               )}
             </form>
           ) : (
             <div className={styles.waitingJoinStart}>
-              <h2>
-                {isEnglish
-                  ? `✅ You joined as ${joinedPlayer.nickname}`
-                  : `✅ Sei dentro come ${joinedPlayer.nickname}`}
-              </h2>
-              <p>
-                {isEnglish
-                  ? 'Wait for the host to start the game.'
-                  : "Attendi che l'host faccia partire il gioco."}
-              </p>
+              <h2>{t('joinedAs', {nickname: joinedPlayer.nickname})}</h2>
+              <p>{t('waitHostStart')}</p>
             </div>
           )}
 
           <div className={styles.playersList}>
             <h3>
-              {isEnglish ? 'Connected players' : 'Giocatori connessi'} ({players.length})
+              {t('connectedPlayers')} ({players.length})
             </h3>
             <div className={styles.playersGrid}>
               {players.map((player, idx) => (

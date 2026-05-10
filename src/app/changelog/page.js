@@ -7,6 +7,18 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.9.1',
+    date: '10 maggio 2026',
+    label: 'i18n & Session',
+    changes: [
+      'Rimossi i flag isEn/isEnglish dal runtime app in favore di dizionari centralizzati',
+      'Migrazione testi live/corso/dashboard verso useT o pickLangText con nuove chiavi locale',
+      'Logout rinforzato: pulizia storage/cookie/cache/IndexedDB e redirect alla home',
+      'Refactor wineCourseContent con fallback localizzati da dizionario (it/en)',
+    ],
+  },
+
+  {
     version: '1.9.0',
     date: '10 maggio 2026',
     label: 'Auto',
@@ -31,27 +43,21 @@ const CHANGELOG = [
     version: '1.8.0',
     date: '10 maggio 2026',
     label: 'Auto',
-    changes: [
-      'fix live session creation and game save timeout blocking',
-    ],
+    changes: ['fix live session creation and game save timeout blocking'],
   },
 
   {
     version: '1.7.1',
     date: '10 maggio 2026',
     label: 'Auto',
-    changes: [
-      'format changelog automation script',
-    ],
+    changes: ['format changelog automation script'],
   },
 
   {
     version: '1.7.0',
     date: '10 maggio 2026',
     label: 'Auto',
-    changes: [
-      'improve all wine course lessons and answer balance',
-    ],
+    changes: ['improve all wine course lessons and answer balance'],
   },
 
   {
@@ -170,6 +176,7 @@ const CHANGELOG = [
 ]
 
 const LABEL_COLORS = {
+  'i18n & Session': '#0ea5e9',
   'Corso Vino UX': '#0f766e',
   'Performance & UX': '#6b2f8e',
   'Risultati e Leaderboard Live': '#2563eb',

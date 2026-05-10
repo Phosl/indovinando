@@ -10,7 +10,6 @@ const STORAGE_KEY = 'app_lang'
 const LanguageContext = createContext({
   lang: DEFAULT_LANGUAGE,
   setLang: () => {},
-  isEnglish: false,
 })
 
 function setLanguageCookie(lang) {
@@ -162,7 +161,6 @@ export default function LanguageProvider({initialLang = DEFAULT_LANGUAGE, childr
     () => ({
       lang,
       setLang,
-      isEnglish: lang === 'en',
     }),
     [lang],
   )

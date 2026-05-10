@@ -5,7 +5,7 @@ import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
 import styles from './hostLive.module.scss'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {useT} from '@/lib/i18n/useT'
 
 export default function HostLiveClient({
   sessionId,
@@ -16,8 +16,7 @@ export default function HostLiveClient({
   initialQuestionIndex,
 }) {
   const router = useRouter()
-  const {lang} = useLanguage()
-  const isEnglish = lang === 'en'
+  const t = useT('live.host')
 
   const [roundStatus, setRoundStatus] = useState(initialStatus) // 'waiting_answers' | 'showing_results'
   const [currentBottleIndex, setCurrentBottleIndex] = useState(initialQuestionIndex)
@@ -195,8 +194,8 @@ export default function HostLiveClient({
 
       {sessionFinished ? (
         <div className={styles.finishedCard}>
-          <h2>{isEnglish ? '🎉 Game Over!' : '🎉 Gioco Terminato!'}</h2>
-          <p>{isEnglish ? 'Redirecting to leaderboard...' : 'Redirezione alla classifica...'}</p>
+          <h2>{t('gameOverTitle')}</h2>
+          <p>{t('redirecting')}</p>
         </div>
       ) : (
         <>
@@ -204,9 +203,9 @@ export default function HostLiveClient({
             <div className={styles.progress}>
               Bottle {currentBottleIndex + 1} of {bottles.length}
             </div>
-            <h2>{currentBottle?.name || (isEnglish ? 'Bottle' : 'Bottiglia')}</h2>
+            <h2>{currentBottle?.name || t('bottleFallback')}</h2>
             <p>
-              {isEnglish ? 'Round questions' : 'Domande del round'}: {questions.length}
+              {t('roundQuestions')}: {questions.length}
             </p>
           </div>
 
@@ -214,9 +213,7 @@ export default function HostLiveClient({
             <div className={styles.waitingCard}>
               <div className={styles.stats}>
                 <div className={styles.stat}>
-                  <span className={styles.label}>
-                    {isEnglish ? 'Players who completed' : 'Giocatori che hanno completato'}
-                  </span>
+                  <span className={styles.label}>{t('playersCompleted')}</span>
                   <span className={styles.value}>
                     {answeredCount}/{players.length}
                   </span>
@@ -227,12 +224,12 @@ export default function HostLiveClient({
                 onClick={handleShowResults}
                 disabled={answeredCount === 0}
                 className={styles.showResultsButton}>
-                {isEnglish ? 'Show results' : 'Mostra risultati'}
+                {t('showResults')}
               </button>
 
               <div className={styles.playersList}>
                 <h3>
-                  {isEnglish ? 'Players online' : 'Giocatori online'} ({players.length})
+                  {t('playersOnline')} ({players.length})
                 </h3>
                 <div className={styles.playersGrid}>
                   {players.map((player) => {
@@ -255,21 +252,17 @@ export default function HostLiveClient({
             <div className={styles.resultsCard}>
               <div className={styles.results}>
                 <div className={styles.resultStat}>
-                  <span className={styles.label}>
-                    {isEnglish ? 'Players all-correct' : 'Giocatori tutte corrette'}
-                  </span>
+                  <span className={styles.label}>{t('playersAllCorrect')}</span>
                   <span className={styles.value}>{correctCount}</span>
                 </div>
                 <div className={styles.resultStat}>
-                  <span className={styles.label}>
-                    {isEnglish ? 'Players answered' : 'Giocatori che hanno risposto'}
-                  </span>
+                  <span className={styles.label}>{t('playersAnswered')}</span>
                   <span className={styles.value}>{answeredCount}</span>
                 </div>
               </div>
 
               <div className={styles.topPlayers}>
-                <h3>{isEnglish ? 'Top players' : 'Top giocatori'}</h3>
+                <h3>{t('topPlayers')}</h3>
                 {players
                   .sort((a, b) => b.total_score - a.total_score)
                   .slice(0, 3)
@@ -285,13 +278,7 @@ export default function HostLiveClient({
               </div>
 
               <button onClick={handleNextQuestion} className={styles.nextButton}>
-                {isLastBottle
-                  ? isEnglish
-                    ? 'Finish game'
-                    : 'Termina gioco'
-                  : isEnglish
-                    ? 'Next bottle'
-                    : 'Prossima bottiglia'}
+                {isLastBottle ? t('finishGame') : t('nextBottle')}
               </button>
             </div>
           )}

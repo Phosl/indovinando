@@ -15,7 +15,7 @@ import {GameOverlays} from './components/GameOverlays'
 import {BottleTransitionScreen} from './components/BottleTransitionScreen'
 import {ResultsScreen} from './components/ResultsScreen'
 import {QuestionSlideScreen} from './components/QuestionSlideScreen'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {useT} from '@/lib/i18n/useT'
 
 export default function PlayerLiveClient({
   sessionId,
@@ -30,8 +30,7 @@ export default function PlayerLiveClient({
 }) {
   const router = useRouter()
   const isHostUser = Boolean(userId && hostUserId && userId === hostUserId)
-  const {lang} = useLanguage()
-  const isEnglish = lang === 'en'
+  const t = useT('live.playerLive')
 
   // ── Hooks ──────────────────────────────────────────────────────────────────
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
@@ -199,8 +198,8 @@ export default function PlayerLiveClient({
     return (
       <div className={styles.fullPage}>
         <div className={styles.centeredCard}>
-          <h2>{isEnglish ? '🎉 Game Over!' : '🎉 Gioco Terminato!'}</h2>
-          <p>{isEnglish ? 'Redirecting to leaderboard...' : 'Redirezione alla classifica...'}</p>
+          <h2>{t('gameOverTitle')}</h2>
+          <p>{t('redirecting')}</p>
         </div>
       </div>
     )
@@ -218,16 +217,12 @@ export default function PlayerLiveClient({
     return (
       <div className={styles.fullPage}>
         <div className={styles.centeredCard}>
-          <h2>{isEnglish ? '👤 Participant not found' : '👤 Partecipante non trovato'}</h2>
-          <p>
-            {isEnglish
-              ? 'Rejoin from the session entry page using your nickname.'
-              : 'Rientra dalla pagina di accesso alla sessione con il tuo nickname.'}
-          </p>
+          <h2>{t('participantNotFound')}</h2>
+          <p>{t('participantNotFoundDesc')}</p>
           <button
             className={styles.checkButton}
             onClick={() => router.push(`/live/session/${sessionId}`)}>
-            {isEnglish ? 'Back to join' : 'Torna al join'}
+            {t('backToJoin')}
           </button>
         </div>
       </div>
@@ -238,29 +233,20 @@ export default function PlayerLiveClient({
     return (
       <div className={styles.fullPage}>
         <div className={styles.centeredCard}>
-          <h2>{isEnglish ? '🕒 Session not ready' : '🕒 Sessione non pronta'}</h2>
-          <p>{isEnglish ? 'Wait for the game to start.' : "Attendi l'avvio del gioco."}</p>
+          <h2>{t('sessionNotReadyTitle')}</h2>
+          <p>{t('sessionNotReadyDesc')}</p>
         </div>
       </div>
     )
   }
 
   // ── Shared results title/subtitle ──────────────────────────────────────────
-  const resultsTitle =
-    roundStatus === 'showing_results'
-      ? isEnglish
-        ? 'Bottle complete!'
-        : 'Bottiglia completata!'
-      : isEnglish
-        ? 'Bottle results'
-        : 'Risultati bottiglia'
+  const resultsTitle = roundStatus === 'showing_results' ? t('bottleComplete') : t('bottleResults')
   const resultsSubtitle =
     roundStatus === 'showing_results'
       ? isLastBottle
-        ? isEnglish
-          ? 'You will see the final leaderboard shortly.'
-          : 'Vedrai subito la classifica finale.'
-        : `Moving to bottle ${currentBottleIndex + 2}.`
+        ? t('finalLeaderboardSoon')
+        : t('movingToBottle', {index: currentBottleIndex + 2})
       : null
 
   const navigateToLeaderboard = async () => {

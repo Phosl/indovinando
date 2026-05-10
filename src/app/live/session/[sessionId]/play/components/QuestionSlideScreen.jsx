@@ -1,6 +1,6 @@
 import {useState, useEffect, useCallback, memo} from 'react'
 import styles from '../playerLive.module.scss'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {useT} from '@/lib/i18n/useT'
 
 const COMBO_MESSAGES = [
   null,
@@ -9,10 +9,9 @@ const COMBO_MESSAGES = [
   {emoji: '💥', label: 'Combo x3!!'},
   {emoji: '⚡️', label: 'Combo x4!!!'},
 ]
-const getComboMsg = (n, isEnglish) => {
+const getComboMsg = (n) => {
   const fallback = n >= 5 ? {emoji: '🤯', label: `Combo x${n}!!!!`} : (COMBO_MESSAGES[n] ?? null)
-  if (isEnglish || !fallback) return fallback
-  return {...fallback, label: fallback.label}
+  return fallback
 }
 
 export const QuestionSlideScreen = memo(function QuestionSlideScreen({
@@ -37,18 +36,17 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
   topBar,
   overlays,
 }) {
-  const {lang} = useLanguage()
-  const isEnglish = lang === 'en'
+  const t = useT('live.questionSlide')
   const [visibleCombo, setVisibleCombo] = useState(null)
 
   useEffect(() => {
     if (!comboCount || comboCount < 2) return
-    const msg = getComboMsg(comboCount, isEnglish)
+    const msg = getComboMsg(comboCount)
     if (!msg) return
     setVisibleCombo({...msg, key: Date.now()})
     const t = setTimeout(() => setVisibleCombo(null), 1600)
     return () => clearTimeout(t)
-  }, [comboCount, isEnglish])
+  }, [comboCount])
 
   // Enter key: triggers Check then Continue
   const handleKeyDown = useCallback(
@@ -133,17 +131,14 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
                 <span className={styles.feedbackLabel}>
                   {checkResult.comboBonus > 0
                     ? `Combo x${checkResult.newCombo}! +${checkResult.points} (+${checkResult.comboBonus} bonus)`
-                    : isEnglish
-                      ? `Correct! +${checkResult.points}`
-                      : `Corretto! +${checkResult.points}`}
+                    : t('correct', {points: checkResult.points})}
                 </span>
               </>
             ) : (
               <>
                 <span className={styles.feedbackIcon}>💡</span>
                 <span className={styles.feedbackLabel}>
-                  {isEnglish ? 'Correct answer:' : 'Risposta corretta:'}{' '}
-                  <strong>{correctText}</strong>
+                  {t('correctAnswer')} <strong>{correctText}</strong>
                 </span>
               </>
             )}
@@ -155,24 +150,14 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
             className={styles.checkButton}
             onClick={() => onCheck(currentQuestion.id, selectedOption)}
             disabled={!selectedOption || isSlideTransitioning || isCheckingAnswer}>
-            {isCheckingAnswer ? (isEnglish ? 'Checking...' : 'Controllo...') : 'Check'}
+            {isCheckingAnswer ? t('checking') : t('check')}
           </button>
         ) : (
           <button
             className={styles.continueButton}
             onClick={() => onContinue(currentQuestion.id)}
             disabled={isSlideTransitioning}>
-            {isLastSlide
-              ? clickedReady
-                ? isEnglish
-                  ? 'Waiting for others...'
-                  : 'In attesa degli altri...'
-                : isEnglish
-                  ? 'See results'
-                  : 'Vedi risultati'
-              : isEnglish
-                ? 'Continue'
-                : 'Continua'}
+            {isLastSlide ? (clickedReady ? t('waitingOthers') : t('seeResults')) : t('continue')}
           </button>
         )}
       </div>

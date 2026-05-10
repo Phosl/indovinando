@@ -5,8 +5,48 @@ import {useRouter} from 'next/navigation'
 import Loader from '@/components/Loader'
 import TopBar from '@/components/TopBar'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {pickLangText} from '@/lib/i18n/dictionaries'
 import {supabaseClient} from '@/lib/supabaseClient'
 import styles from './liveSessions.module.scss'
+
+const LIVE_SESSION_DICTIONARY = {
+  it: {
+    createFailed: 'Errore nella creazione sessione. Riprova.',
+    startFailed: "Errore nell'avvio del gioco. Riprova.",
+    cancelFailed: "Errore nell'annullamento. Riprova.",
+    creatingSession: 'Creazione sessione',
+    inviteLink: 'Link di Invito',
+    copied: '✓ Copiato!',
+    copy: 'Copia',
+    participants: 'Partecipanti: ',
+    waitPlayers: 'Aspetta che i giocatori si uniscano, poi premi Inizia Gioco.',
+    gameDetails: 'Dettagli Gioco',
+    questions: 'Domande',
+    bottles: 'Bottiglie',
+    starting: 'Avvio...',
+    startGame: 'Inizia Gioco',
+    players: 'giocatori',
+    cancel: 'Annulla',
+  },
+  en: {
+    createFailed: 'Failed to create session. Please try again.',
+    startFailed: 'Failed to start game. Please try again.',
+    cancelFailed: 'Failed to cancel session. Please try again.',
+    creatingSession: 'Creating session',
+    inviteLink: 'Invite Link',
+    copied: '✓ Copied!',
+    copy: 'Copy',
+    participants: 'Participants: ',
+    waitPlayers: 'Wait for players to join, then click Start Game.',
+    gameDetails: 'Game Details',
+    questions: 'Questions',
+    bottles: 'Bottles',
+    starting: 'Starting...',
+    startGame: 'Start Game',
+    players: 'players',
+    cancel: 'Cancel',
+  },
+}
 
 const withSaveTimeout = async (taskOrPromise, contextLabel, timeoutMs = 20000) => {
   const timeoutPromise = new Promise((_, reject) => {
@@ -23,7 +63,7 @@ const withSaveTimeout = async (taskOrPromise, contextLabel, timeoutMs = 20000) =
 export default function LiveSessionClient({gameId, gameName, questions, bottles, userId}) {
   const router = useRouter()
   const {lang} = useLanguage()
-  const isEnglish = lang === 'en'
+  const t = pickLangText(lang, LIVE_SESSION_DICTIONARY)
   const [sessionId, setSessionId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [sessionLink, setSessionLink] = useState('')
@@ -61,17 +101,13 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
         setLoading(false)
       } catch (err) {
         console.error('Error creating live session:', err)
-        alert(
-          isEnglish
-            ? 'Failed to create session. Please try again.'
-            : 'Errore nella creazione sessione. Riprova.',
-        )
+        alert(t.createFailed)
         setLoading(false)
       }
     }
 
     createSession()
-  }, [gameId, userId, isEnglish])
+  }, [gameId, userId, t.createFailed])
 
   // Polling - ascolta i giocatori che si uniscono
   useEffect(() => {
@@ -126,11 +162,7 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
       router.push(`/live/session/${sessionId}/play`)
     } catch (err) {
       console.error('Error starting game:', err)
-      alert(
-        isEnglish
-          ? 'Failed to start game. Please try again.'
-          : "Errore nell'avvio del gioco. Riprova.",
-      )
+      alert(t.startFailed)
     } finally {
       setIsStartingGame(false)
     }
@@ -154,18 +186,14 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
       router.push('/dashboard')
     } catch (err) {
       console.error('Error canceling session:', err)
-      alert(
-        isEnglish
-          ? 'Failed to cancel session. Please try again.'
-          : "Errore nell'annullamento. Riprova.",
-      )
+      alert(t.cancelFailed)
     }
   }
 
   if (loading) {
     return (
       <div className={styles.container}>
-        <Loader label={isEnglish ? 'Creating session' : 'Creazione sessione'} />
+        <Loader label={t.creatingSession} />
       </div>
     )
   }
@@ -176,41 +204,31 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
 
       <div className={styles.lobbyCard}>
         <div className={styles.section}>
-          <h2>{isEnglish ? 'Invite Link' : 'Link di Invito'}</h2>
+          <h2>{t.inviteLink}</h2>
           <div className={styles.linkBox}>
             <input type="text" readOnly value={sessionLink} className={styles.linkInput} />
             <button onClick={handleCopyLink} className={styles.copyButton}>
-              {copyFeedback
-                ? isEnglish
-                  ? '✓ Copied!'
-                  : '✓ Copiato!'
-                : isEnglish
-                  ? 'Copy'
-                  : 'Copia'}
+              {copyFeedback ? t.copied : t.copy}
             </button>
           </div>
         </div>
 
         <div className={styles.section}>
           <h2>
-            {isEnglish ? 'Participants: ' : 'Partecipanti: '}
+            {t.participants}
             {playersCount}
           </h2>
-          <p className={styles.info}>
-            {isEnglish
-              ? 'Wait for players to join, then click Start Game.'
-              : 'Aspetta che i giocatori si uniscano, poi premi Inizia Gioco.'}
-          </p>
+          <p className={styles.info}>{t.waitPlayers}</p>
         </div>
 
         <div className={styles.section}>
-          <h3>ℹ️ {isEnglish ? 'Game Details' : 'Dettagli Gioco'}</h3>
+          <h3>ℹ️ {t.gameDetails}</h3>
           <ul>
             <li>
-              📋 {isEnglish ? 'Questions' : 'Domande'}: {questions.length}
+              📋 {t.questions}: {questions.length}
             </li>
             <li>
-              🍾 {isEnglish ? 'Bottles' : 'Bottiglie'}: {bottles.length}
+              🍾 {t.bottles}: {bottles.length}
             </li>
           </ul>
         </div>
@@ -220,17 +238,10 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
             onClick={handleStartGame}
             disabled={playersCount < 1 || isStartingGame}
             className={styles.startButton}>
-            {isStartingGame
-              ? isEnglish
-                ? 'Starting...'
-                : 'Avvio...'
-              : isEnglish
-                ? 'Start Game'
-                : 'Inizia Gioco'}{' '}
-            ({playersCount} {isEnglish ? 'players' : 'giocatori'})
+            {isStartingGame ? t.starting : t.startGame} ({playersCount} {t.players})
           </button>
           <button onClick={handleCancel} className={styles.cancelButton}>
-            {isEnglish ? 'Cancel' : 'Annulla'}
+            {t.cancel}
           </button>
         </div>
       </div>

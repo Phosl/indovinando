@@ -21,7 +21,6 @@ export default function EnotecaJoinClient({
   const t = pickLangText(lang, ENOTECA_DICTIONARY.join)
 
   const router = useRouter()
-  const isEnglish = lang === 'en'
   const [nickname, setNickname] = useState('')
   const [tableName, setTableName] = useState('')
   const [loading, setLoading] = useState(false)
