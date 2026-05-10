@@ -78,7 +78,8 @@ export function useRoundPlay({
         setIsCorrectOptionsLoaded(true)
       } catch (err) {
         console.error('Failed to load correct options:', err)
-        setIsCorrectOptionsLoaded(false)
+        // Avoid keeping the Check button blocked forever if preload fails.
+        setIsCorrectOptionsLoaded(true)
       }
     }
     load()
@@ -280,8 +281,63 @@ export function useRoundPlay({
       try {
         setIsCheckingAnswer(true)
 
-        const resolvedCorrectOptionId = correctOptionByQuestion[questionId]
+        let resolvedCorrectOptionId = correctOptionByQuestion[questionId]
+        if (!resolvedCorrectOptionId && currentBottle?.id) {
+          const {data: answerRow, error: answerError} = await supabaseClient
+            .from('game_bottle_answers')
+            .select('option_id')
+            .eq('bottle_id', currentBottle.id)
+            .eq('question_id', questionId)
+            .maybeSingle()
+
+          if (answerError) {
+            console.error('Error loading correct option on demand:', answerError)
+          }
+
+          resolvedCorrectOptionId = answerRow?.option_id || null
+          if (resolvedCorrectOptionId) {
+            setCorrectOptionByQuestion((prev) => ({
+              ...prev,
+              [questionId]: resolvedCorrectOptionId,
+            }))
+          }
+        }
+
         if (!resolvedCorrectOptionId) {
+          if (isHostUser) {
+            const response = await fetch('/api/live/round-answer/host-submit', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                sessionId,
+                playerId: playerData.id,
+                questionId,
+                selectedOptionId: optionId,
+                comboCount: comboRef.current,
+              }),
+            })
+
+            const payload = await response.json().catch(() => ({}))
+            if (!response.ok) {
+              throw new Error(payload?.error || 'Failed to submit host answer')
+            }
+
+            const isCorrect = Boolean(payload?.isCorrect)
+            const points = Number(payload?.points || 0)
+            const comboBonus = Number(payload?.comboBonus || 0)
+            const newCombo = Number(payload?.newCombo || 0)
+
+            if (payload?.correctOptionId) {
+              setCorrectOptionByQuestion((prev) => ({
+                ...prev,
+                [questionId]: payload.correctOptionId,
+              }))
+            }
+
+            applyLocalAnswerResult({isCorrect, points, comboBonus, newCombo})
+            return
+          }
+
           throw new Error('Correct option not available for this question')
         }
 
@@ -320,8 +376,10 @@ export function useRoundPlay({
       isCheckingAnswer,
       isCorrectOptionsLoaded,
       correctOptionByQuestion,
+      currentBottle?.id,
       sessionId,
       playSound,
+      isHostUser,
     ],
   )
 
