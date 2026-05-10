@@ -255,7 +255,6 @@ export function useRoundPlay({
       if (!playerData || roundStatus !== 'waiting_answers') return
       if (checkedQuestions[questionId] || !optionId) return
       if (isCheckingAnswer) return
-      if (!isCorrectOptionsLoaded) return
 
       const applyLocalAnswerResult = ({isCorrect, points, comboBonus, newCombo}) => {
         comboRef.current = newCombo
@@ -374,7 +373,6 @@ export function useRoundPlay({
       roundStatus,
       checkedQuestions,
       isCheckingAnswer,
-      isCorrectOptionsLoaded,
       correctOptionByQuestion,
       currentBottle?.id,
       sessionId,

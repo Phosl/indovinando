@@ -100,7 +100,6 @@ export default function PlayerLiveClient({
     handleAnswerInsert,
     playersReadyCount,
     participantsCount,
-    isCorrectOptionsLoaded,
   } = useRoundPlay({
     sessionId,
     playerData,
@@ -370,7 +369,6 @@ export default function PlayerLiveClient({
       isSlideTransitioning={slideMotion !== 'idle'}
       selectedOption={selectedAnswers[currentQuestion?.id]}
       checkResult={roundAnswers[currentQuestion?.id]}
-        isCorrectOptionsLoaded={isCorrectOptionsLoaded}
       correctOptionByQuestion={correctOptionByQuestion}
       clickedReady={clickedReady}
       isLastSlide={isLastSlide}
