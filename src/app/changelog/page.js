@@ -7,6 +7,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.10.3',
+    date: '10 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'simplify host check path, eliminate fallback API and timeout wrappers',
+    ],
+  },
+
+  {
     version: '1.10.2',
     date: '10 maggio 2026',
     label: 'Auto',
