@@ -7,6 +7,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.9.2',
+    date: '10 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'complete i18n dictionary migration and logout cleanup',
+    ],
+  },
+
+  {
     version: '1.9.1',
     date: '10 maggio 2026',
     label: 'i18n & Session',
