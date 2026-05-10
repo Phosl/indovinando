@@ -79,6 +79,31 @@ export function useRoundPlay({
     if (!currentBottle?.id) return
     const load = async () => {
       try {
+        if (isHostUser && sessionId && playerData?.id) {
+          const controller = new AbortController()
+          const abortId = setTimeout(() => controller.abort(), 3500)
+          try {
+            const response = await fetch('/api/live/round-answer/host-correct-options', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                sessionId,
+                playerId: playerData.id,
+                bottleId: currentBottle.id,
+              }),
+              signal: controller.signal,
+            })
+            const payload = await response.json().catch(() => ({}))
+            if (response.ok && payload?.map && typeof payload.map === 'object') {
+              setCorrectOptionByQuestion(payload.map)
+              setIsCorrectOptionsLoaded(true)
+              return
+            }
+          } finally {
+            clearTimeout(abortId)
+          }
+        }
+
         const {data, error} = await supabaseClient
           .from('game_bottle_answers')
           .select('question_id, option_id')
@@ -97,7 +122,7 @@ export function useRoundPlay({
       }
     }
     load()
-  }, [currentBottle?.id])
+  }, [currentBottle?.id, isHostUser, sessionId, playerData?.id])
 
   // ── Reset all round state (called on bottle advance or realtime sync) ──────
   const resetRoundState = useCallback(
@@ -295,7 +320,7 @@ export function useRoundPlay({
         setIsCheckingAnswer(true)
 
         let resolvedCorrectOptionId = correctOptionByQuestion[questionId]
-        if (!resolvedCorrectOptionId && currentBottle?.id) {
+        if (!resolvedCorrectOptionId && currentBottle?.id && !isHostUser) {
           try {
             const {data: answerRow, error: answerError} = await withTimeout(
               supabaseClient
@@ -319,8 +344,7 @@ export function useRoundPlay({
               }))
             }
           } catch (lookupErr) {
-            // Host has a server-side fallback route; do not fail fast on lookup timeout.
-            if (!isHostUser) throw lookupErr
+            throw lookupErr
           }
         }
 
