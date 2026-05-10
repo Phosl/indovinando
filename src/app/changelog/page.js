@@ -7,6 +7,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.10.7',
+    date: '10 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'remove host check latency experiments',
+    ],
+  },
+
+  {
     version: '1.10.6',
     date: '10 maggio 2026',
     label: 'Auto',
