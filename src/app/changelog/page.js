@@ -7,12 +7,19 @@ export const metadata = {
 
 const CHANGELOG = [
   {
-    version: '1.6.2',
+    version: '1.7.0',
     date: '10 maggio 2026',
     label: 'Auto',
     changes: [
-      'automate changelog update on pre-push',
+      'improve all wine course lessons and answer balance',
     ],
+  },
+
+  {
+    version: '1.6.2',
+    date: '10 maggio 2026',
+    label: 'Auto',
+    changes: ['automate changelog update on pre-push'],
   },
 
   {
