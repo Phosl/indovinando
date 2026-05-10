@@ -278,8 +278,8 @@ export default function LessonClient({level, lesson, nextLessonId}) {
   if (screen === 'result') {
     const totalCorrect = answers.filter((a) => a.isCorrect).length
     const total = questions.length
-    const pct = Math.round((totalCorrect / total) * 100)
-    const allCorrect = totalCorrect === total
+    const pct = total > 0 ? Math.round((totalCorrect / total) * 100) : 0
+    const allCorrect = total > 0 && totalCorrect === total
     const headline = allCorrect
       ? isEnglish
         ? '🎉 Perfect!'
@@ -387,6 +387,35 @@ export default function LessonClient({level, lesson, nextLessonId}) {
   }
 
   // ── QUESTION SCREEN ───────────────────────────────────────────
+  if (!currentQuestion) {
+    return (
+      <div className={pStyles.fullPage}>
+        <div className={pStyles.topBar}>
+          <div className={pStyles.playerInfo}>
+            <span className={pStyles.avatar}>{lesson.emoji}</span>
+            <span className={pStyles.nickname}>{lesson.title}</span>
+          </div>
+        </div>
+        <div className={pStyles.slideContent}>
+          <div className={xStyles.resultHero}>
+            <p className={xStyles.resultHeadline}>
+              {isEnglish
+                ? 'No questions available for this lesson.'
+                : 'Nessuna domanda disponibile per questa lezione.'}
+            </p>
+          </div>
+        </div>
+        <div className={pStyles.bottomPanel}>
+          <button
+            className={pStyles.continueButton}
+            onClick={() => router.push(`/corso-vino/${level.id}`)}>
+            {isEnglish ? 'Back to level' : 'Torna al livello'}
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   const feedbackText = checked
     ? selectedId === correctId
       ? currentQuestion.feedback.correct

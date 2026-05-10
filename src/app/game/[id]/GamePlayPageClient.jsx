@@ -32,14 +32,7 @@ export default function GamePlayPageClient({game, questions, bottles, isOwner, o
   return (
     <main className="flex-container">
       <div className="flex-column" style={{width: '100%', maxWidth: 960, margin: '0 auto'}}>
-        <TopBar title={`🎮 ${game.name}`}>
-          <button
-            type="button"
-            className="btn secondary"
-            onClick={() => router.push('/dashboard')}
-            style={{order: -1}}>
-            {isEnglish ? '← Back' : '← Indietro'}
-          </button>
+        <TopBar title={`🎮 ${game.name}`} onBack={() => router.push('/dashboard')}>
           <a href={`/game/${game.id}/live`} className="btn primary">
             {isEnglish ? 'Play Live' : 'Gioca Live'}
           </a>

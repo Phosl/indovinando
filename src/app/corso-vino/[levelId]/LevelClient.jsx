@@ -3,26 +3,17 @@
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import {useWineCourseProgress} from '../hooks/useWineCourseProgress'
+import {useT} from '@/lib/i18n/useT'
 import styles from './level.module.scss'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
 
 export default function LevelClient({level, lessons}) {
   const router = useRouter()
   const {loaded, getLessonStatus, getLessonProgress} = useWineCourseProgress()
-  const {lang} = useLanguage()
-  const isEnglish = lang === 'en'
+  const t = useT('level')
 
   return (
     <div className={styles.page}>
-      <TopBar title={`Level ${level.order}`}>
-        <button
-          type="button"
-          className="btn secondary"
-          onClick={() => router.push('/corso-vino')}
-          aria-label={isEnglish ? 'Back to course' : 'Torna al corso'}>
-          ← {isEnglish ? 'Back' : 'Indietro'}
-        </button>
-      </TopBar>
+      <TopBar title={`Level ${level.order}`} onBack={() => router.push('/corso-vino')}></TopBar>
 
       {/* Level hero */}
       <div className={styles.levelHero}>
@@ -59,16 +50,14 @@ export default function LevelClient({level, lessons}) {
                 <div className={styles.lessonBody}>
                   <div className={styles.lessonMeta}>
                     <span className={styles.lessonOrder}>
-                      {isEnglish ? 'Lesson' : 'Lezione'} {i + 1}
+                      {t('lesson')} {i + 1}
                     </span>
                     {isCompleted && lp && (
                       <span className={styles.lessonScore}>
                         {lp.score}/{lesson.questions.length}
                       </span>
                     )}
-                    {isCompleted && (
-                      <span className={styles.lessonRepeat}>{isEnglish ? 'Repeat' : 'Ripeti'}</span>
-                    )}
+                    {isCompleted && <span className={styles.lessonRepeat}>{t('repeat')}</span>}
                   </div>
                   <span className={styles.lessonTitle}>{lesson.title}</span>
                 </div>

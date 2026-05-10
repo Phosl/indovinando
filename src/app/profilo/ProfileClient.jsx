@@ -4,9 +4,9 @@ import {useEffect, useMemo, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useWineCourseProgress} from '@/app/corso-vino/hooks/useWineCourseProgress'
 import {supabaseClient} from '@/lib/supabaseClient'
+import {useT} from '@/lib/i18n/useT'
 import styles from './profilo.module.scss'
 
 const AVATARS = [
@@ -77,10 +77,11 @@ export default function ProfileClient({
   gamesCount,
 }) {
   const router = useRouter()
-  const {lang} = useLanguage()
+  const t = useT('profile')
+  const tc = useT('common')
   const {progress, loaded} = useWineCourseProgress()
-  const isEnglish = lang === 'en'
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
   const [avatar, setAvatar] = useState(
     initialAvatar && AVATARS.includes(initialAvatar) ? initialAvatar : '😀',
@@ -141,29 +142,7 @@ export default function ProfileClient({
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <TopBar title={isEnglish ? 'Profile' : 'Profilo'}>
-          <button
-            type="button"
-            className="btn secondary"
-            onClick={() => router.push('/dashboard')}
-            aria-label={isEnglish ? 'Back to dashboard' : 'Torna alla dashboard'}>
-            ← {isEnglish ? 'Back' : 'Indietro'}
-          </button>
-          <button
-            type="button"
-            className="btn secondary"
-            onClick={handleLogout}
-            disabled={isLoggingOut}
-            aria-label={isEnglish ? 'Log out' : 'Esci'}>
-            {isLoggingOut
-              ? isEnglish
-                ? 'Logging out...'
-                : 'Disconnessione...'
-              : isEnglish
-                ? 'Logout'
-                : 'Logout'}
-          </button>
-        </TopBar>
+        <TopBar title={t('title')} onBack={() => router.push('/dashboard')}></TopBar>
 
         <section className={styles.headerCard}>
           <div className={styles.userRow}>
@@ -175,25 +154,21 @@ export default function ProfileClient({
           </div>
 
           <div className={styles.languageRow}>
-            <span className={styles.label}>{isEnglish ? 'Language' : 'Lingua'}</span>
+            <span className={styles.label}>{t('language')}</span>
             <LanguageSwitcher inline />
           </div>
         </section>
 
         <section className={styles.card}>
-          <h2>{isEnglish ? 'How the app works' : "Come funziona l'app"}</h2>
-          <p className={styles.quickInfoText}>
-            {isEnglish
-              ? 'Open the onboarding guide with slides for Create Game, Quick Game, Enoteca, Live and Wine Course.'
-              : 'Apri la guida onboarding con slide su Crea Gioco, Gioco Veloce, Enoteca, Live e Corso Vino.'}
-          </p>
+          <h2>{t('howTheAppWorks')}</h2>
+          <p className={styles.quickInfoText}>{t('howTheAppWorksDesc')}</p>
           <a href="/info" className="btn accent">
-            {isEnglish ? 'Open app guide' : 'Apri guida app'}
+            {t('openAppGuide')}
           </a>
         </section>
 
         <section className={styles.card}>
-          <h2>{isEnglish ? 'Choose your avatar' : 'Scegli il tuo avatar'}</h2>
+          <h2>{t('chooseAvatar')}</h2>
           <div className={styles.avatarGrid}>
             {AVATARS.map((emoji) => (
               <button
@@ -209,38 +184,74 @@ export default function ProfileClient({
         </section>
 
         <section className={styles.card}>
-          <h2>{isEnglish ? 'Your stats' : 'Le tue statistiche'}</h2>
+          <h2>{t('yourStats')}</h2>
           <div className={styles.statsGrid}>
             <div className={styles.statItem}>
               <span className={styles.statValue}>{gamesCount}</span>
-              <span className={styles.statLabel}>
-                {isEnglish ? 'Games created' : 'Giochi creati'}
-              </span>
+              <span className={styles.statLabel}>{t('gamesCreated')}</span>
             </div>
             <div className={styles.statItem}>
               <span className={styles.statValue}>
                 {loaded ? `${stats.completedLessons}/${stats.totalLessons}` : '...'}
               </span>
-              <span className={styles.statLabel}>
-                {isEnglish ? 'Lessons completed' : 'Lezioni completate'}
-              </span>
+              <span className={styles.statLabel}>{t('lessonsCompleted')}</span>
             </div>
             <div className={styles.statItem}>
               <span className={styles.statValue}>
                 {loaded ? `${stats.completedLevels}/${stats.totalLevels}` : '...'}
               </span>
-              <span className={styles.statLabel}>
-                {isEnglish ? 'Levels completed' : 'Livelli completati'}
-              </span>
+              <span className={styles.statLabel}>{t('levelsCompleted')}</span>
             </div>
             <div className={styles.statItem}>
               <span className={styles.statValue}>{loaded ? stats.currentLevelOrder : '...'}</span>
-              <span className={styles.statLabel}>
-                {isEnglish ? 'Current level' : 'Livello attuale'}
-              </span>
+              <span className={styles.statLabel}>{t('currentLevel')}</span>
             </div>
           </div>
         </section>
+
+        <section className={styles.card}>
+          <h2>{t('changelog')}</h2>
+          <p className={styles.quickInfoText}>{t('changelogDesc')}</p>
+          <a href="/changelog" className="btn secondary">
+            {t('viewChangelog')}
+          </a>
+        </section>
+
+        <section className={styles.card}>
+          <button
+            type="button"
+            className={`btn secondary ${styles.logoutBtn}`}
+            onClick={() => setShowLogoutConfirm(true)}
+            disabled={isLoggingOut}>
+            {t('logoutBtn')}
+          </button>
+        </section>
+
+        {showLogoutConfirm && (
+          <div className={styles.modalOverlay} onClick={() => setShowLogoutConfirm(false)}>
+            <div className={styles.modalBox} onClick={(e) => e.stopPropagation()}>
+              <p className={styles.modalText}>{t('logoutConfirm')}</p>
+              <div className={styles.modalActions}>
+                <button
+                  type="button"
+                  className="btn secondary"
+                  onClick={() => setShowLogoutConfirm(false)}>
+                  {tc('cancel')}
+                </button>
+                <button
+                  type="button"
+                  className="btn danger"
+                  onClick={() => {
+                    setShowLogoutConfirm(false)
+                    handleLogout()
+                  }}
+                  disabled={isLoggingOut}>
+                  {isLoggingOut ? t('loggingOut') : t('logoutAction')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </main>
   )

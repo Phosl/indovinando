@@ -85,6 +85,17 @@
   }
 }
 
+.btn.danger {
+  background-color: var(--danger-surface);
+  color: var(--danger-text);
+  border-color: var(--danger-border);
+  box-shadow: 0px 3px 0px 0px #f9a8a8;
+
+  &:hover {
+    background: #ffe4e6;
+  }
+}
+
 @media (max-width: 768px) {
   .btn {
     width: 100%;

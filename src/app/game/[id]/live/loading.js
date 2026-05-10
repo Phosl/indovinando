@@ -4,7 +4,15 @@ function Bone({w, h, style}) {
   return (
     <div
       className="skeleton"
-      style={{width: w, height: h, borderRadius: 8, flexShrink: 0, ...style}}
+      style={{
+        width: w,
+        height: h,
+        borderRadius: 8,
+        flexShrink: 0,
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+        ...style,
+      }}
     />
   )
 }

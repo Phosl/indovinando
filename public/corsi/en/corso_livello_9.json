@@ -1,0 +1,206 @@
+{
+  "level": 9,
+  "slug": "most-famous-grape-varieties",
+  "title": "International Grapes: Recognition and Style",
+  "description": "A practical path to identify key international grapes and connect aroma, structure, and origin.",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Cabernet Sauvignon",
+      "intro": "Cabernet Sauvignon is the benchmark for structured reds: tannin, longevity, and precision.",
+      "final": "You can now connect Cabernet Sauvignon to structure, climate, and aging potential.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Varietal identity",
+          "paragraphs": [
+            "Cabernet Sauvignon comes from Cabernet Franc crossed with Sauvignon Blanc.",
+            "Its thick skins and high tannin make it naturally suitable for long aging."
+          ],
+          "keyPoints": ["Thick skins", "High tannin", "Aging potential"]
+        },
+        {
+          "id": "s2",
+          "title": "From climate to glass",
+          "paragraphs": [
+            "Cooler sites often show herbaceous tones and tighter fruit.",
+            "Warmer sites usually show riper black fruit and higher alcohol."
+          ],
+          "keyPoints": ["Cool climate: green notes", "Warm climate: ripeness", "Deductive tasting"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Cabernet Sauvignon is a cross of:", "answers": ["Merlot + Pinot Noir", "Syrah + Grenache", "Cabernet Franc + Sauvignon Blanc"], "correct": 2},
+        {"id": "q2", "type": "mcq", "question": "Which structural trait is typical?", "answers": ["Very low tannin", "High tannin", "No acidity"], "correct": 1},
+        {"id": "q3", "type": "mcq", "question": "In cool climate it often shows:", "answers": ["Herbaceous notes", "Jammy fruit", "High residual sugar"], "correct": 0},
+        {"id": "q4", "type": "true_false", "question": "Cabernet Sauvignon can age very well.", "answers": ["True", "False"], "correct": 0},
+        {"id": "q5", "type": "mcq", "question": "In warm climate you are more likely to find:", "answers": ["Ripe black fruit and higher alcohol", "Very high acidity and low alcohol", "Neutral profile without tannin"], "correct": 0}
+      ]
+    },
+    {
+      "id": "l2",
+      "title": "Merlot",
+      "intro": "Merlot teaches roundness: softer tannin, rich fruit, and major blending value.",
+      "final": "You now understand why Merlot is key for balance and drinkability.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Taste profile",
+          "paragraphs": [
+            "Merlot often brings plum-like fruit and smooth texture.",
+            "Compared with Cabernet Sauvignon, it is usually less austere on the palate."
+          ],
+          "keyPoints": ["Soft texture", "Dark fruit", "Early approachability"]
+        },
+        {
+          "id": "s2",
+          "title": "Role in blends",
+          "paragraphs": [
+            "In many blends, Merlot helps round out stricter varieties.",
+            "Didactically, it is useful to understand how one grape changes total perception."
+          ],
+          "keyPoints": ["Balancing role", "Blending", "Texture management"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Compared to Cabernet Sauvignon, Merlot is often:", "answers": ["Softer on the palate", "More aggressive in tannin", "Less fruity"], "correct": 0},
+        {"id": "q2", "type": "mcq", "question": "A common Merlot aroma is:", "answers": ["Green pepper", "Plum", "Kerosene"], "correct": 1},
+        {"id": "q3", "type": "true_false", "question": "Merlot is often used in blends to increase roundness.", "answers": ["True", "False"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "In blending lessons, Merlot often helps:", "answers": ["Increase hardness", "Remove fruit expression", "Improve balance and accessibility"], "correct": 2},
+        {"id": "q5", "type": "mcq", "question": "Classic Merlot style is often:", "answers": ["Sharp and lean", "Soft and fruity", "Always sweet"], "correct": 1}
+      ]
+    },
+    {
+      "id": "l3",
+      "title": "Pinot Noir",
+      "intro": "Pinot Noir teaches finesse: gentle extraction and high sensitivity to place and climate.",
+      "final": "You can now recognize signals of elegance, delicacy, and terroir transparency.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Sensitive grape",
+          "paragraphs": [
+            "Pinot Noir has thin skins and needs precision in both vineyard and cellar.",
+            "It usually gives lighter color and finer tannin than many international reds."
+          ],
+          "keyPoints": ["Thin skins", "Fine tannin", "Elegance"]
+        },
+        {
+          "id": "s2",
+          "title": "Sensory reading",
+          "paragraphs": [
+            "Red fruit, floral tones, and subtle spice are common references.",
+            "It is excellent for training attention to detail in tasting."
+          ],
+          "keyPoints": ["Red fruit", "Delicacy", "Detail"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Pinot Noir is known for:", "answers": ["Medium-light body and finesse", "Always harsh tannin", "High residual sugar"], "correct": 0},
+        {"id": "q2", "type": "true_false", "question": "Pinot Noir is generally easy to grow.", "answers": ["True", "False"], "correct": 1},
+        {"id": "q3", "type": "mcq", "question": "Which description fits better?", "answers": ["Jammy black fruit with mandatory heavy oak", "Red fruit and elegant structure", "Completely neutral aromas"], "correct": 1},
+        {"id": "q4", "type": "mcq", "question": "A key didactic value of Pinot Noir is:", "answers": ["Training finesse recognition", "Evaluating only color", "Measuring only alcohol"], "correct": 0},
+        {"id": "q5", "type": "mcq", "question": "Pinot Noir skin is typically:", "answers": ["Very thick", "Medium", "Thin"], "correct": 2}
+      ]
+    },
+    {
+      "id": "l4",
+      "title": "Chardonnay",
+      "intro": "Chardonnay is perfect for understanding how climate and winemaking shape style.",
+      "final": "You can now distinguish fresher Chardonnay from richer, oak-influenced expressions.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Versatility",
+          "paragraphs": [
+            "It can produce lean and crisp wines, or broad and creamy ones.",
+            "Harvest timing, fermentation, and aging strongly influence final profile."
+          ],
+          "keyPoints": ["Stylistic range", "Cellar choices", "Terroir impact"]
+        },
+        {
+          "id": "s2",
+          "title": "Style deduction",
+          "paragraphs": [
+            "Steel tends to preserve freshness and pure fruit.",
+            "Oak and lees work can increase volume and spicy/buttery complexity."
+          ],
+          "keyPoints": ["Steel vs oak", "Texture", "Balance"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Chardonnay is didactically useful because:", "answers": ["It has one fixed style", "It is unaffected by technique", "It clearly shows the impact of winemaking"], "correct": 2},
+        {"id": "q2", "type": "mcq", "question": "A steel-fermented Chardonnay tends to be:", "answers": ["Fresher and cleaner", "Always oxidized", "Only sweet"], "correct": 0},
+        {"id": "q3", "type": "true_false", "question": "Chardonnay can be used for high-quality sparkling bases.", "answers": ["True", "False"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "A possible oak-aging marker is:", "answers": ["Vanilla or sweet spice", "Total aromatic absence", "Only green herb notes"], "correct": 0},
+        {"id": "q5", "type": "mcq", "question": "Main takeaway:", "answers": ["Chardonnay is always the same", "Style = variety + environment + cellar choices", "Only alcohol matters"], "correct": 1}
+      ]
+    },
+    {
+      "id": "l5",
+      "title": "Sauvignon Blanc",
+      "intro": "Sauvignon Blanc trains the nose: herbaceous, citrus, or tropical tones depending on climate.",
+      "final": "You have reinforced the link between aromatic profile and production area.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Aromatic signature",
+          "paragraphs": [
+            "In cooler regions it often shows grass, tomato leaf, and citrus.",
+            "In warmer regions it can move toward tropical fruit and softer tension."
+          ],
+          "keyPoints": ["High aromatic intensity", "Climate expression", "Freshness"]
+        },
+        {
+          "id": "s2",
+          "title": "Didactic use",
+          "paragraphs": [
+            "It is one of the best grapes for aroma-recognition exercises.",
+            "Comparing it with Chardonnay is a classic training drill."
+          ],
+          "keyPoints": ["Varietal comparison", "Nose training", "Acid profile"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "In cooler style, Sauvignon Blanc often shows:", "answers": ["Herbaceous and citrus notes", "Chocolate and coffee", "Strong tannin"], "correct": 0},
+        {"id": "q2", "type": "mcq", "question": "In warmer climate it may show more:", "answers": ["Tropical fruit", "Sharp pyrazine", "Astringency"], "correct": 0},
+        {"id": "q3", "type": "true_false", "question": "Sauvignon Blanc is useful for aroma-recognition training.", "answers": ["True", "False"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "Classic didactic comparison:", "answers": ["Sauvignon Blanc vs Chardonnay", "Sauvignon Blanc vs Nebbiolo", "Sauvignon Blanc vs Port"], "correct": 0},
+        {"id": "q5", "type": "mcq", "question": "Which statement is most accurate?", "answers": ["It is always neutral", "It is generally aromatic", "It is always sweet"], "correct": 1}
+      ]
+    },
+    {
+      "id": "l6",
+      "title": "Riesling",
+      "intro": "Riesling means precision: high acidity, aromatic clarity, and strong aging potential.",
+      "final": "You can now read freshness, residual sugar balance, and evolution potential in Riesling.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Acidity and balance",
+          "paragraphs": [
+            "Riesling often keeps high acidity even at full ripeness.",
+            "This allows dry, off-dry, or sweet styles without losing energy."
+          ],
+          "keyPoints": ["High acidity", "Sugar-acid balance", "Style range"]
+        },
+        {
+          "id": "s2",
+          "title": "Evolution",
+          "paragraphs": [
+            "With time, Riesling can gain complexity while keeping drive.",
+            "Didactically, it is perfect for understanding acidity and longevity."
+          ],
+          "keyPoints": ["Longevity", "Complexity", "Tension"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "A typical Riesling trait is:", "answers": ["High acidity", "Strong tannin", "Very deep color"], "correct": 0},
+        {"id": "q2", "type": "mcq", "question": "Didactically, Riesling helps explain:", "answers": ["Only color", "Acidity and evolution potential", "Only alcohol level"], "correct": 1},
+        {"id": "q3", "type": "true_false", "question": "Riesling can produce dry and sweet styles while staying balanced.", "answers": ["True", "False"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "Which combination best fits Riesling?", "answers": ["Low acidity and high astringency", "High acidity and refined aromatic profile", "Strong tannin and massive body"], "correct": 1},
+        {"id": "q5", "type": "mcq", "question": "Over time Riesling tends to:", "answers": ["Always lose freshness quickly", "Keep energy when well made", "Necessarily become oxidized"], "correct": 1}
+      ]
+    }
+  ]
+}

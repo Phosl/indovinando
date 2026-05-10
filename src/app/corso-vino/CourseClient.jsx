@@ -1,55 +1,40 @@
 'use client'
 
+import {useState, useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
+import GuestWarningModal from '@/components/course/GuestWarningModal'
 import {useWineCourseProgress} from './hooks/useWineCourseProgress'
 import styles from './course.module.scss'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {useT} from '@/lib/i18n/useT'
 
 export default function CourseClient({levels}) {
   const router = useRouter()
   const {loaded, userId, getLevelCompletedCount} = useWineCourseProgress()
-  const {lang} = useLanguage()
-  const isEnglish = lang === 'en'
+  const t = useT('course')
+  const [showGuestWarning, setShowGuestWarning] = useState(false)
+
+  useEffect(() => {
+    if (loaded && !userId) {
+      setShowGuestWarning(true)
+    }
+  }, [loaded, userId])
 
   return (
     <div className={styles.page}>
-      <TopBar title={isEnglish ? 'Wine Course' : 'Corso Vino'}>
-        <button
-          type="button"
-          className="btn secondary"
-          onClick={() => router.push('/dashboard')}
-          aria-label={isEnglish ? 'Back to dashboard' : 'Torna alla dashboard'}>
-          ← {isEnglish ? 'Back' : 'Indietro'}
-        </button>
-      </TopBar>
+      <TopBar title={t('title')} onBack={() => router.push('/dashboard')}></TopBar>
 
       {/* Hero */}
       <div className={styles.hero}>
         <div className={styles.heroEmoji}>🍷</div>
-        <h1 className={styles.heroTitle}>{isEnglish ? 'Learn wine' : 'Impara il vino'}</h1>
-        <p className={styles.heroSubtitle}>
-          {isEnglish
-            ? 'Short lessons, interactive quizzes and accurate content. Free, no signup required.'
-            : 'Lezioni brevi, quiz interattivi e contenuti accurati. Gratis, senza registrazione.'}
-        </p>
+        <h1 className={styles.heroTitle}>{t('heroTitle')}</h1>
+        <p className={styles.heroSubtitle}>{t('heroSubtitle')}</p>
       </div>
 
-      {/* {!userId && (
-        <div className={styles.guestWarning}>
-          <div className={styles.guestWarningTitle}>
-            {isEnglish ? 'Guest mode active' : 'Modalita ospite attiva'}
-          </div>
-          <p className={styles.guestWarningText}>
-            {isEnglish
-              ? 'Your course progress is only stored on this device and may be lost.'
-              : 'I progressi del corso sono salvati solo su questo dispositivo e potrebbero andare persi.'}
-          </p>
-          <a href="/?next=/corso-vino" className="btn primary">
-            {isEnglish ? 'Sign up to save progress' : 'Registrati per salvare i progressi'}
-          </a>
-        </div>
-      )} */}
+      <GuestWarningModal
+        isOpen={showGuestWarning && !userId}
+        onClose={() => setShowGuestWarning(false)}
+      />
 
       {/* Level list */}
       <div className={styles.levels}>
@@ -68,9 +53,7 @@ export default function CourseClient({levels}) {
                 <div className={styles.levelMeta}>
                   <span className={styles.levelOrder}>Level {level.order}</span>
                   {completed === total && total > 0 && (
-                    <span className={styles.levelBadge}>
-                      {isEnglish ? '✓ Completed' : '✓ Completato'}
-                    </span>
+                    <span className={styles.levelBadge}>{t('completed')}</span>
                   )}
                 </div>
                 <h2 className={styles.levelTitle}>{level.title}</h2>
@@ -80,7 +63,7 @@ export default function CourseClient({levels}) {
                     <div className={styles.progressFill} style={{width: `${pct}%`}} />
                   </div>
                   <span className={styles.progressText}>
-                    {completed}/{total} {isEnglish ? 'lessons' : 'lezioni'}
+                    {completed}/{total} {t('lessons')}
                   </span>
                 </div>
               </div>

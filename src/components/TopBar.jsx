@@ -2,13 +2,10 @@
 
 import styles from './TopBar.module.scss'
 
-/**
- * Centralized TopBar component with 3D/cartoon styling
- * Used across game views, live sessions, and course pages
- */
 export default function TopBar({
   title,
   children,
+  onBack,
   className = '',
   titleClassName = '',
   actionsClassName = '',
@@ -21,6 +18,11 @@ export default function TopBar({
 
   return (
     <div className={`${containerClassName} ${className}`} style={containerStyle}>
+      {onBack && (
+        <button type="button" className={styles.backBtn} onClick={onBack} aria-label="Back">
+          ←
+        </button>
+      )}
       {title && <h1 className={`${styles.title} ${titleClassName}`}>{title}</h1>}
       <div className={`${styles.actions} ${actionsClassName}`}>{children}</div>
     </div>

@@ -7,15 +7,15 @@
     {
       "id": "l1",
       "title": "Fermentazione alcolica e malolattica",
-      "intro": "La fermentazione non è un processo unico. Esistono trasformazioni diverse che influenzano il carattere del vino.",
-      "final": "Ora sai che il vino evolve attraverso più fermentazioni.",
+      "intro": "Il vino subisce non una ma due fermentazioni: la seconda, spesso invisibile, cambia radicalmente la texture e la morbidezza del risultato finale.",
+      "final": "Ora sai che la malolattica non è un errore di produzione ma una scelta precisa che il produttore fa — o evita — per modellare lo stile del vino.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Cos’è la fermentazione malolattica?",
+          "question": "Cos'è la fermentazione malolattica?",
           "answers": [
-            "Trasformazione dell’acido malico in lattico",
+            "Trasformazione dell'acido malico in lattico",
             "Aggiunta di zucchero",
             "Filtrazione del vino"
           ],
@@ -25,69 +25,56 @@
           "id": "q2",
           "type": "true_false",
           "question": "La fermentazione alcolica produce alcol.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Chi attiva la fermentazione?",
-          "answers": [
-            "Lieviti",
-            "Ossigeno",
-            "Zucchero"
-          ],
+          "answers": ["Lieviti", "Ossigeno", "Zucchero"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "La malolattica rende il vino:",
-          "answers": [
-            "Più morbido",
-            "Più acido",
-            "Più dolce"
-          ],
+          "answers": ["Più morbido", "Più acido", "Più dolce"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Tutti i vini fanno fermentazione malolattica.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Fermentazione alcolica e malolattica",
+          "title": "La prima fermentazione: alcolica",
           "paragraphs": [
-            "La fermentazione non è un processo unico. Esistono trasformazioni diverse che influenzano il carattere del vino.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "La fermentazione alcolica è quella che trasforma il mosto in vino: i lieviti consumano gli zuccheri e producono etanolo e CO2. Dura 1-3 settimane a seconda della temperatura e del tipo di vino. Al termine, il vino è tecnicamente 'fatto' — ma spesso duro, aggressivo, ancora grezzo. Manca qualcosa.",
+            "Quello che manca è la seconda fermentazione: la malolattica. Non produce alcol — trasforma l'acido malico (presente naturalmente nell'uva, quello che senti nelle mele verdi, tagliente e duro) in acido lattico (più morbido, come quello dello yogurt) grazie ai batteri lattici. Il risultato è un vino con meno acidità percepita, più cremoso, con note di burro e panna che compaiono in molti Chardonnay."
           ],
           "keyPoints": [
-            "Definizione di la fermentazione malolattica",
-            "La fermentazione alcolica produce alcol",
-            "Chi attiva la fermentazione"
+            "Alcolica: zuccheri → alcol + CO2",
+            "Malolattica: malico → lattico (più morbido)",
+            "Batteri lattici, non lieviti"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Quando si fa e quando si evita",
           "paragraphs": [
-            "Ora sai che il vino evolve attraverso più fermentazioni.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Nei vini rossi la malolattica è quasi sempre svolta completamente: ammorbidisce i tannini già presenti e integra meglio la struttura. Nei vini bianchi la scelta è stilistica. Uno Chablis (Borgogna) non fa malolattica per preservare la freschezza acida e la mineralità. Uno Chardonnay californiano spesso la fa completamente — ecco il profilo burroso e morbido tipico di quella zona.",
+            "Come riconoscerla nel bicchiere: se un bianco ha note di burro, panna o crema e acidità morbida, ha fatto malolattica. Se è invece tagliente, agrumato, snello, probabilmente è stato bloccato. Questo è uno dei segreti per distinguere i grandi stili mondiali di Chardonnay — stessa uva, scelta diversa su una fermentazione batterica."
           ],
           "keyPoints": [
-            "La malolattica rende il vino",
-            "Tutti i vini fanno fermentazione malolattica"
+            "Rossi: quasi sempre malolattica completa",
+            "Bianchi: scelta stilistica del produttore",
+            "Burro e panna al naso = malolattica"
           ]
         }
       ]
@@ -95,87 +82,70 @@
     {
       "id": "l2",
       "title": "Struttura del vino",
-      "intro": "La struttura è data dall’equilibrio tra acidità, tannini, alcol e corpo.",
-      "final": "Ora sai leggere l’equilibrio di un vino.",
+      "intro": "La struttura non è una singola cosa — è il sistema di tensioni tra acidità, tannini, alcol e corpo che tiene insieme un vino.",
+      "final": "Ora sai leggere l'equilibrio di un vino come uno scultore legge un'architettura: capendo quali forze si reggono a vicenda.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Cosa compone la struttura del vino?",
-          "answers": [
-            "Acidità, tannini, alcol",
-            "Solo zucchero",
-            "Solo acqua"
-          ],
+          "answers": ["Acidità, tannini, alcol", "Solo zucchero", "Solo acqua"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Un vino equilibrato ha componenti bilanciate.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Se una componente domina troppo:",
-          "answers": [
-            "Il vino è sbilanciato",
-            "Migliora sempre",
-            "Non cambia nulla"
-          ],
+          "answers": ["Il vino è sbilanciato", "Migliora sempre", "Non cambia nulla"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "mcq",
-          "question": "L’alcol contribuisce a:",
-          "answers": [
-            "Corpo e struttura",
-            "Solo colore",
-            "Solo aroma"
-          ],
+          "question": "L'alcol contribuisce a:",
+          "answers": ["Corpo e struttura", "Solo colore", "Solo aroma"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "true_false",
-          "question": "L’acidità dà freschezza.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "question": "L'acidità dà freschezza.",
+          "answers": ["Vero", "Falso"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Struttura del vino",
+          "title": "Le componenti della struttura",
           "paragraphs": [
-            "La struttura è data dall’equilibrio tra acidità, tannini, alcol e corpo.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Pensa alla struttura di un vino come all'architettura di un edificio: l'acidità è le fondamenta (sostiene e dà longevità), i tannini sono le colonne (portano peso e forma, solo nei rossi), l'alcol è il cemento (lega tutto e dà volume), il corpo è lo spazio totale. Se una colonna è troppo grossa rispetto alle altre, l'edificio è sbilanciato.",
+            "Un Barolo giovane mostra una struttura estrema: acidità alta (sostegno per decenni), tannini potenti (ruvidezza che con gli anni si leviga), alcol importante (14-14,5%) e corpo pieno. Tutto esagerato — di proposito. Queste componenti si integreranno in 10-15 anni. Un Pinot Grigio ha struttura leggera ma equilibrata: acidità moderata, zero tannini, alcol contenuto, corpo leggero. Perfetto così, per bere subito."
           ],
           "keyPoints": [
-            "Compone la struttura del vino",
-            "Un vino equilibrato ha componenti bilanciate",
-            "Se una componente domina troppo"
+            "Acidità = fondamenta e longevità",
+            "Tannini = colonne (solo nei rossi)",
+            "Alcol = cemento, corpo = volume totale"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Equilibrio: come riconoscerlo",
           "paragraphs": [
-            "Ora sai leggere l’equilibrio di un vino.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Un vino equilibrato non è quello con le componenti più alte: è quello in cui nessuna sovrasta le altre in modo sgradevole. Puoi avere un vino con acidità vibrante (come un Riesling Mosel tedesco) che è perfettamente equilibrato perché lo zucchero residuo la bilancia. Puoi avere un vino tannico (come un Cabernet giovane) che risulta comunque equilibrato se l'alcol e la frutta sono proporzionati.",
+            "Il segnale di sbilanciamento più comune: alcol caldo e bruciante che domina il finale (troppo alcol senza abbastanza frutto o acidità a bilanciarlo), oppure acidità aggressiva che pizzica e stanca (tipico di vini prodotti da uve non abbastanza mature). Quando tutto funziona, non pensi alle singole parti — senti semplicemente un vino che 'scorre' e invita il sorso successivo."
           ],
           "keyPoints": [
-            "L’alcol contribuisce a",
-            "L’acidità dà freschezza"
+            "Equilibrio ≠ massimo di tutto",
+            "Sbilanciamento: alcol bruciante o acidità aggressiva",
+            "Equilibrio: non noti le parti, senti il tutto"
           ]
         }
       ]
@@ -183,88 +153,70 @@
     {
       "id": "l3",
       "title": "Aromi primari, secondari e terziari",
-      "intro": "Gli aromi evolvono nel tempo e si dividono in tre categorie.",
-      "final": "Ora sai come nasce la complessità aromatica.",
+      "intro": "Un vino giovane e uno invecchiato dello stesso produttore possono avere aromi completamente diversi — non perché sia cambiato qualcosa di sbagliato, ma perché il vino ha evoluto il suo vocabolario aromatico.",
+      "final": "Ora sai come nasce la complessità aromatica e puoi capire perché un grande vino cambia ogni volta che lo apri durante una serata.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Gli aromi primari derivano da:",
-          "answers": [
-            "Uva",
-            "Botte",
-            "Bottiglia"
-          ],
+          "answers": ["Uva", "Botte", "Bottiglia"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Gli aromi secondari derivano da:",
-          "answers": [
-            "Fermentazione",
-            "Etichetta",
-            "Prezzo"
-          ],
+          "answers": ["Fermentazione", "Etichetta", "Prezzo"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Gli aromi terziari si sviluppano con:",
-          "answers": [
-            "Invecchiamento",
-            "Acqua",
-            "Zucchero"
-          ],
+          "answers": ["Invecchiamento", "Acqua", "Zucchero"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "true_false",
           "question": "Gli aromi cambiano nel tempo.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "mcq",
           "question": "Gli aromi terziari sono tipici di:",
-          "answers": [
-            "Vini invecchiati",
-            "Vini giovani",
-            "Succhi"
-          ],
+          "answers": ["Vini invecchiati", "Vini giovani", "Succhi"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Aromi primari, secondari e terziari",
+          "title": "I tre livelli aromatici",
           "paragraphs": [
-            "Gli aromi evolvono nel tempo e si dividono in tre categorie.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Gli aromi primari vengono direttamente dall'uva: sono i profumi 'varietali' che riconosci senza sapere niente del vino. Il Gewürztraminer ha rosa e litchi perché quelle molecole sono nell'uva. Il Sauvignon Blanc ha erba e pompelmo — molecole che si formano nell'uva stessa. I primari sono la voce del vitigno. Un vino giovane bevuto subito parla quasi solo attraverso di loro.",
+            "Gli aromi secondari nascono durante la fermentazione: i lieviti producono composti volatili come gli esteri (banana, caramella, ananas nei vini giovani da fermentazione fredda) e i composti solforici che contribuiscono alle note minerali. Poi ci sono gli aromi terziari: il bouquet che emerge solo con l'invecchiamento. Vaniglia e tabacco da rovere americano, spezie, cuoio, liquirizia, frutta secca, funghi. Un Barolo con 15 anni di bottiglia profuma di tabacco, rose appassite, spezie — un mondo aromatico impossibile da trovare in un vino giovane."
           ],
           "keyPoints": [
-            "Gli aromi primari derivano da",
-            "Gli aromi secondari derivano da",
-            "Gli aromi terziari si sviluppano con"
+            "Primari = dall'uva (varietali)",
+            "Secondari = dalla fermentazione (lieviti)",
+            "Terziari = dall'invecchiamento (bouquet)"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Come si trasformano nel tempo",
           "paragraphs": [
-            "Ora sai come nasce la complessità aromatica.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "La trasformazione aromatica nel tempo non è lineare. Un grande rosso appena fatto può sembrare 'chiuso' — i tannini coprono gli aromi. Dopo 3-4 anni si apre con frutti freschi e fiori. Dopo 10 anni emergono spezie, tabacco e terra. Dopo 20 anni, nei migliori esempi, appare il profilo 'terziario completo': selvaggina, muschio, frutta sotto spirito. Lo stesso vino, quattro vini diversi nel tempo.",
+            "Questo spiega perché i professionisti 'aprono una bottiglia la sera prima' per i rossi importanti: l'ossigeno accelera l'apertura aromatica. E perché il decanter non è un accessorio snob ma uno strumento tecnico: aumenta la superficie di contatto con l'aria e sblocca gli aromi in minuti anziché ore. La prossima volta che hai un Barolo giovane, decantalo 30 minuti — sentirai la differenza."
           ],
           "keyPoints": [
-            "Gli aromi cambiano nel tempo",
-            "Gli aromi terziari sono tipici di"
+            "Rosso chiuso = tannini coprono aromi",
+            "Decanter accelera apertura aromatica",
+            "Un grande vino cambia in bottiglia per decenni"
           ]
         }
       ]
@@ -272,87 +224,70 @@
     {
       "id": "l4",
       "title": "Conservazione del vino",
-      "intro": "La conservazione influenza direttamente la qualità del vino nel tempo.",
-      "final": "Ora sai come proteggere un vino.",
+      "intro": "Il vino è vivo: temperatura sbagliata, luce diretta, vibrazione — ognuno di questi nemici può rovinare anni di lavoro in vigna e cantina.",
+      "final": "Ora sai proteggere un vino e capisci perché un Barolo comprato in enoteca e uno trovato in un box esposto al sole sono due esperienze completamente diverse.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Cosa è importante nella conservazione?",
-          "answers": [
-            "Temperatura",
-            "Colore bottiglia",
-            "Etichetta"
-          ],
+          "answers": ["Temperatura", "Colore bottiglia", "Etichetta"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino va conservato alla luce diretta.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Troppo ossigeno:",
-          "answers": [
-            "Deteriora il vino",
-            "Migliora sempre",
-            "Non influisce"
-          ],
+          "answers": ["Deteriora il vino", "Migliora sempre", "Non influisce"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "La temperatura ideale deve essere:",
-          "answers": [
-            "Stabile",
-            "Alta",
-            "Variabile"
-          ],
+          "answers": ["Stabile", "Alta", "Variabile"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Tutti i vini si conservano allo stesso modo.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Conservazione del vino",
+          "title": "I nemici del vino",
           "paragraphs": [
-            "La conservazione influenza direttamente la qualità del vino nel tempo.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Il vino si conserva bene in condizioni precise. Temperatura: ideale 12-14°C costante per i vini da invecchiare, ma la stabilità è più importante del valore esatto — un vino a 16°C costante invecchia meglio di uno che oscilla tra 10°C e 22°C ogni giorno. Le escursioni termiche dilatano e contraggono il tappo, creando micro-infiltrazioni di ossigeno.",
+            "Luce: la luce UV degrada i composti aromatici e ossida il vino — le bottiglie scure (vetro verde o marrone) esistono per questo. Non lasciare mai bottiglie importanti sul bancone illuminato o vicino a una finestra. Umidità: 65-75% ideale per tenere il tappo umido ed elastico — sotto al 50% il sughero si secca e l'ossigeno entra. Vibrazioni: accelerano le reazioni chimiche e disturbano il deposito nei vini vecchi — lontano da lavatrici e traffico."
           ],
           "keyPoints": [
-            "È importante nella conservazione",
-            "Il vino va conservato alla luce diretta",
-            "Troppo ossigeno"
+            "Temperatura stabile 12-14°C (stabilità > valore esatto)",
+            "Luce UV deteriora gli aromi",
+            "Umidità 65-75%: tiene il tappo elastico"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Non tutti i vini si conservano uguale",
           "paragraphs": [
-            "Ora sai come proteggere un vino.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Un errore comune è trattare tutti i vini come se potessero invecchiare. La maggioranza dei vini bianchi e rosati va bevuta entro 1-3 anni dall'annata. I grandi rossi strutturati (Barolo, Brunello, Amarone, Bordeaux di rango) hanno potenziale di 10-30 anni nelle condizioni giuste. Ma anche loro, conservati male, decadono in fretta.",
+            "Una volta aperta la bottiglia: i vini bianchi leggeri vanno consumati entro 1-2 giorni (in frigo, tappati). I rossi strutturati reggono 3-5 giorni se richiusi e conservati in cantina fresca. I vini dolci e i vini ossidativi (Sherry, Marsala) durano anche settimane aperti — l'ossigeno è parte del loro stile. Investire in un tappo sottovuoto economico allunga la vita di qualsiasi bottiglia aperta."
           ],
           "keyPoints": [
-            "La temperatura ideale deve essere",
-            "Tutti i vini si conservano allo stesso modo"
+            "La maggioranza dei vini: bevi entro 3 anni",
+            "Grandi rossi: 10-30 anni in condizioni giuste",
+            "Bottiglia aperta: bianco 2 giorni, rosso 5 giorni in frigo"
           ]
         }
       ]
@@ -360,87 +295,70 @@
     {
       "id": "l5",
       "title": "Degustazione tecnica",
-      "intro": "La degustazione analizza vino in modo professionale e strutturato.",
-      "final": "Ora sai leggere un vino come un professionista.",
+      "intro": "La degustazione professionale non è elitaria — è un protocollo preciso che chiunque può imparare e che trasforma ogni sorso in informazione.",
+      "final": "Ora sai leggere un vino come un professionista: con un metodo sistematico che va dalla vista al finale, senza lasciare niente al caso.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Cosa si analizza per primo?",
-          "answers": [
-            "Colore",
-            "Gusto",
-            "Prezzo"
-          ],
+          "answers": ["Colore", "Gusto", "Prezzo"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "mcq",
-          "question": "L’olfatto serve per:",
-          "answers": [
-            "Aromi",
-            "Peso",
-            "Colore"
-          ],
+          "question": "L'olfatto serve per:",
+          "answers": ["Aromi", "Peso", "Colore"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "La degustazione è solo bere.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Il gusto valuta:",
-          "answers": [
-            "Equilibrio",
-            "Solo dolcezza",
-            "Solo alcol"
-          ],
+          "answers": ["Equilibrio", "Solo dolcezza", "Solo alcol"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Il colore basta per giudicare un vino.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Degustazione tecnica",
+          "title": "Il protocollo in dettaglio",
           "paragraphs": [
-            "La degustazione analizza vino in modo professionale e strutturato.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Esame visivo: inclina il bicchiere su carta bianca. Valuta la tonalità del colore (rubino, granato, aranciato nei rossi; giallo paglierino, dorato, ambrato nei bianchi), l'intensità (brillante o cupo), la limpidezza (trasparente o velato — il velato può essere difetto o scelta naturale). Le lacrime sul vetro dopo la rotazione indicano il tenore alcolico: più sono dense e lente, più il vino è strutturato.",
+            "Esame olfattivo: primo naso senza rotazione (intensità e prima impressione), poi rotazione per ossigenare, poi secondo naso (complessità e dettaglio). Descrivi: famiglia aromatica principale (fruttata? floreale? speziata? terziaria?), intensità, netezza (pulito o con note strane?). Esame gustativo: acidità in attacco, corpo in bocca, tannini (astringenza sulle gengive), finale (secondi dopo la deglutizione). Un finale lungo — 10+ secondi — è segnale di vino di qualità."
           ],
           "keyPoints": [
-            "Si analizza per primo",
-            "L’olfatto serve per",
-            "La degustazione è solo bere"
+            "Visivo: tonalità, intensità, lacrime",
+            "Olfattivo: primo naso, rotazione, secondo naso",
+            "Gustativo: attacco, corpo, tannini, finale"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Degustare alla cieca: il test vero",
           "paragraphs": [
-            "Ora sai leggere un vino come un professionista.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "La degustazione alla cieca — senza sapere cosa c'è nel bicchiere — è l'unico modo per testare davvero la propria comprensione del vino, libero dai pregiudizi del brand e del prezzo. I professionisti la usano per valutare senza preconcetti. I concorsi enologici la richiedono come standard. Anche tu puoi provarla: chiedi a qualcuno di versarti un vino senza dirtelo e cerca di identificare almeno colore, vitigno e stile.",
+            "Non è una competizione: è un esercizio di attenzione. Scoprirai che molti vini 'costosi' sono indistinguibili alla cieca da vini di fascia media. E che alcuni vini apparentemente semplici hanno caratteristiche sorprendenti. La degustazione alla cieca democratizza il vino: il prezzo non conta, contano solo le molecole nel bicchiere."
           ],
           "keyPoints": [
-            "Il gusto valuta",
-            "Il colore basta per giudicare un vino"
+            "Degustazione cieca = nessun pregiudizio di prezzo",
+            "Identifica: colore, vitigno, stile",
+            "Il prezzo non conta: contano le molecole"
           ]
         }
       ]
@@ -448,88 +366,70 @@
     {
       "id": "l6",
       "title": "Corpo e struttura avanzata",
-      "intro": "Il corpo del vino è legato a estrazione, alcol e concentrazione.",
-      "final": "Ora senti davvero la struttura del vino.",
+      "intro": "Il corpo non è solo 'quanto è pesante' — è la somma di estrazione, alcol, glicerina e concentrazione, e capirlo cambia come scegli un vino al ristorante.",
+      "final": "Ora senti davvero la struttura del vino e sai usarla come criterio di scelta pratico, non come termine astratto.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Il corpo del vino indica:",
-          "answers": [
-            "Peso in bocca",
-            "Colore",
-            "Dolcezza"
-          ],
+          "answers": ["Peso in bocca", "Colore", "Dolcezza"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Un vino strutturato è:",
-          "answers": [
-            "Più complesso",
-            "Sempre leggero",
-            "Sempre dolce"
-          ],
+          "answers": ["Più complesso", "Sempre leggero", "Sempre dolce"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il corpo dipende da:",
-          "answers": [
-            "Estrazione",
-            "Etichetta",
-            "Prezzo"
-          ],
+          "answers": ["Estrazione", "Etichetta", "Prezzo"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "true_false",
           "question": "Tutti i vini hanno lo stesso corpo.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q5",
           "type": "mcq",
-          "question": "L’alcol contribuisce a:",
-          "answers": [
-            "Struttura",
-            "Solo colore",
-            "Solo aroma"
-          ],
+          "question": "L'alcol contribuisce a:",
+          "answers": ["Struttura", "Solo colore", "Solo aroma"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Corpo e struttura avanzata",
+          "title": "Da cosa nasce il corpo",
           "paragraphs": [
-            "Il corpo del vino è legato a estrazione, alcol e concentrazione.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Il corpo nasce principalmente da tre elementi: alcol (ogni grado in più aggiunge peso e calore percepito), glicerina (prodotta durante la fermentazione, dà morbidezza e rotondità — i vini botritizzati dolci ne sono ricchissimi), estratto secco (tutto ciò che rimane dopo aver evaporato l'acqua e l'alcol: tannini, minerali, zuccheri, glicerina, acidi). Più estratto secco = più corpo e complessità.",
+            "L'estrazione è la tecnica con cui il produttore 'tira fuori' sostanze dalle bucce durante la macerazione. Macerazione lunga a temperatura alta = più colore, più tannini, più corpo. Macerazione breve o assente = meno estratto, vino più leggero. Un Amarone della Valpolicella ha corpo pieno perché le uve vengono appassite (appassimento) — perdono acqua e concentrano tutto: zuccheri, tannini, aromi, alcol. Il risultato è quasi denso come un liquore."
           ],
           "keyPoints": [
-            "Il corpo del vino indica",
-            "Un vino strutturato è",
-            "Il corpo dipende da"
+            "Alcol + glicerina + estratto = corpo",
+            "Estrazione: più lunga = più corpo",
+            "Appassimento (Amarone): concentra tutto"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Usare il corpo come strumento di scelta",
           "paragraphs": [
-            "Ora senti davvero la struttura del vino.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Il corpo è uno dei criteri più pratici per scegliere un vino al ristorante. Regola operativa: il corpo del vino deve bilanciare l'intensità del piatto. Antipasto di verdure grigliate → corpo leggero (Vermentino). Pasta al ragù di cinghiale → corpo medio-pieno (Chianti Classico o Montepulciano d'Abruzzo). Filetto di manzo al tartufo → corpo pieno (Barolo o Brunello).",
+            "Una nota tecnica avanzata: il corpo non è fisso per sempre. La temperatura di servizio lo modifica percettivamente. Un Chardonnay a 8°C sembra snello e fresco. Lo stesso vino a 15°C sembra più corposo, morbido, quasi grasso. Servire un bianco strutturato troppo freddo nasconde la sua ricchezza. Servire un rosso leggero troppo caldo lo fa sembrare pesante e alcolico. La temperatura è un controllo del corpo."
           ],
           "keyPoints": [
-            "Tutti i vini hanno lo stesso corpo",
-            "L’alcol contribuisce a"
+            "Corpo del vino = intensità del piatto",
+            "Temperatura: controlla la percezione del corpo",
+            "Vino troppo freddo = corpo nascosto"
           ]
         }
       ]
@@ -537,87 +437,70 @@
     {
       "id": "l7",
       "title": "Territorio e terroir",
-      "intro": "Il terroir è l’insieme di clima, suolo e ambiente.",
-      "final": "Ora capisci il legame tra vino e territorio.",
+      "intro": "Il terroir è la firma geografica di un vino — il motivo per cui Barolo è Barolo e non può essere fatto altrove, neanche con le stesse uve e le stesse tecniche.",
+      "final": "Ora capisci il legame viscerale tra vino e territorio, e sai perché le denominazioni d'origine non sono burocrazie ma protezioni di qualcosa di irriproducibile.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Il terroir include:",
-          "answers": [
-            "Clima e suolo",
-            "Solo bottiglia",
-            "Solo prezzo"
-          ],
+          "answers": ["Clima e suolo", "Solo bottiglia", "Solo prezzo"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Il clima influisce su:",
-          "answers": [
-            "Gusto",
-            "Solo colore",
-            "Solo etichetta"
-          ],
+          "answers": ["Gusto", "Solo colore", "Solo etichetta"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Il suolo non è importante.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Il terroir rende il vino:",
-          "answers": [
-            "Unico",
-            "Identico ovunque",
-            "Sempre dolce"
-          ],
+          "answers": ["Unico", "Identico ovunque", "Sempre dolce"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Il vino cambia da regione a regione.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Territorio e terroir",
+          "title": "Gli elementi del terroir",
           "paragraphs": [
-            "Il terroir è l’insieme di clima, suolo e ambiente.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Il terroir è composto da elementi misurabili. Il suolo: argilloso (trattiene l'acqua, nutre bene la vite, vini morbidi e corposi), calcareo/gessoso (drena bene, mineralità pronunciata, vini eleganti — Champagne, Borgogna), vulcanico (mineralità sulfurea, acidità vibrante — Etna, Santorini), sabbioso (viti longeve, tannini morbidi — alcune zone della Sardegna). Lo stesso vitigno su suoli diversi = vini completamente diversi.",
+            "Il clima: climi freddi (Borgogna, Alto Adige, Alsazia) danno acidità alta, alcol moderato, aromi eleganti e floreali. Climi caldi (Sicilia, California, Australia) danno frutto maturo, alcol elevato, tannini maturi, corpo pieno. L'escursione termica giorno-notte è cruciale: notti fredde preservano acidità e aromi anche in zone calde (Mendoza in Argentina, Etna in Sicilia)."
           ],
           "keyPoints": [
-            "Il terroir include",
-            "Il clima influisce su",
-            "Il suolo non è importante"
+            "Suolo argilloso = morbidezza",
+            "Suolo calcareo = mineralità ed eleganza",
+            "Clima freddo = acidità e finezza; caldo = frutto e corpo"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Perché il terroir è irriproducibile",
           "paragraphs": [
-            "Ora capisci il legame tra vino e territorio.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Puoi copiare la tecnica enologica di un grande produttore borgognone. Puoi comprare le stesse botti, piantare lo stesso clone di Pinot Noir, assumere lo stesso enologo. Ma non puoi copiare il suolo calcareo-argilloso di Gevrey-Chambertin che si è formato in milioni di anni. Né l'escursione termica specifica di quella vallata. Né i lieviti indigeni che vivono in quella cantina da secoli. Il terroir è la somma di fattori irriproducibili.",
+            "Le denominazioni d'origine (DOC, DOCG, AOC) codificano legalmente questa irriproducibilità. Non dicono solo 'questo vino viene da qui': dicono 'questa zona ha caratteristiche fisiche che producono questo stile irriproducibile, e lo proteggiamo'. Quando paghi di più per un Brunello di Montalcino rispetto a un Sangiovese generico, stai pagando l'accesso a un terroir specifico — non solo un brand."
           ],
           "keyPoints": [
-            "Il terroir rende il vino",
-            "Il vino cambia da regione a regione"
+            "Tecnica si copia, suolo no",
+            "Lieviti indigeni: parte del terroir",
+            "DOC/DOCG codificano l'irriproducibilità"
           ]
         }
       ]
@@ -625,87 +508,70 @@
     {
       "id": "l8",
       "title": "Evoluzione del vino",
-      "intro": "Il vino cambia nel tempo grazie all’invecchiamento.",
-      "final": "Ora sai che il vino è vivo e cambia.",
+      "intro": "Il vino non è statico — è vivo e cambia nel tempo. Capire questo trasforma il modo in cui conservi, scegli e apri ogni bottiglia.",
+      "final": "Ora sai che il vino è vivo e cambia, e hai gli strumenti per capire quando aprire una bottiglia nel momento perfetto invece di sprecarla troppo presto o troppo tardi.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Il vino evolve grazie a:",
-          "answers": [
-            "Invecchiamento",
-            "Etichetta",
-            "Bottiglia"
-          ],
+          "answers": ["Invecchiamento", "Etichetta", "Bottiglia"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Con il tempo gli aromi:",
-          "answers": [
-            "Cambiano",
-            "Spariscono sempre",
-            "Non cambiano"
-          ],
+          "answers": ["Cambiano", "Spariscono sempre", "Non cambiano"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Tutti i vini migliorano con il tempo.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "I vini giovani sono:",
-          "answers": [
-            "Freschi",
-            "Sempre complessi",
-            "Sempre invecchiati"
-          ],
+          "answers": ["Freschi", "Sempre complessi", "Sempre invecchiati"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Il vino è statico nel tempo.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Evoluzione del vino",
+          "title": "La curva di evoluzione",
           "paragraphs": [
-            "Il vino cambia nel tempo grazie all’invecchiamento.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Ogni vino ha una curva di vita: nasce, cresce, raggiunge il picco, poi declina. La maggioranza dei vini — circa il 90% della produzione mondiale — è pensata per essere bevuta entro 1-5 anni e non migliora con l'attesa. Un Pinot Grigio dell'Alto Adige è al suo meglio a 1-2 anni: fresco, fruttato, aromatico. A 5 anni è piatto e ossidato.",
+            "I vini strutturati per invecchiare hanno una curva molto diversa. Un Barolo giovane può essere quasi imbevibile: tannini aggressivi, aromi chiusi. Dopo 5 anni inizia ad aprirsi. A 10 anni comincia il picco. A 15-20 anni mostra la piena complessità: rose appassite, tabacco, cuoio, spezie orientali. Poi declina lentamente. Aprirlo a 3 anni significa bruciare il potenziale pagato; aprirlo a 25 anni potrebbe essere troppo tardi."
           ],
           "keyPoints": [
-            "Il vino evolve grazie a",
-            "Con il tempo gli aromi",
-            "Tutti i vini migliorano con il tempo"
+            "90% dei vini: bevi entro 5 anni",
+            "Grandi rossi: picco tra 10-20 anni",
+            "Aprire troppo presto = sprecare potenziale"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Cosa cambia con il tempo",
           "paragraphs": [
-            "Ora sai che il vino è vivo e cambia.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Dentro la bottiglia avvengono reazioni chimiche lente ma continue. I tannini si polimerizzano (si uniscono in catene più lunghe) diventando più morbidi e setosi — per questo un grande rosso vecchio ha tannini 'di velluto'. I pigmenti si depositano sul fondo (il sedimento non è un difetto: è precipitazione naturale). Gli acidi si integrano. Gli aromi primari cedono il posto ai terziari complessi.",
+            "Come capire quando aprire: leggi le note del produttore, consulta guide come Wine Spectator o Gambero Rosso per le finestre di consumo, o impara a leggere la struttura del vino al momento dell'acquisto. Un vino con alta acidità e tannini robusti ha più capacità evolutiva. Uno con acidità bassa e tannini morbidi va bevuto giovane. Questo è il ragionamento che fanno i collezionisti."
           ],
           "keyPoints": [
-            "I vini giovani sono",
-            "Il vino è statico nel tempo"
+            "Tannini nel tempo: da ruvidi a setosi",
+            "Sedimento = precipitazione naturale (non difetto)",
+            "Alta acidità + tannini = maggiore potenziale evolutivo"
           ]
         }
       ]
@@ -713,87 +579,70 @@
     {
       "id": "l9",
       "title": "Analisi sensoriale",
-      "intro": "L’analisi sensoriale combina vista, olfatto e gusto.",
-      "final": "Ora sai analizzare un vino in modo completo.",
+      "intro": "L'analisi sensoriale è la traduzione scientifica di quello che già fai istintivamente ogni volta che bevi — darle un metodo la rende infinitamente più potente.",
+      "final": "Ora sai analizzare un vino in modo completo e sistematico, e hai un vocabolario preciso per descrivere quello che senti invece di fermarti a 'buono' o 'mi piace'.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Cosa include l’analisi sensoriale?",
-          "answers": [
-            "Vista, olfatto, gusto",
-            "Solo gusto",
-            "Solo vista"
-          ],
+          "question": "Cosa include l'analisi sensoriale?",
+          "answers": ["Vista, olfatto, gusto", "Solo gusto", "Solo vista"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "mcq",
-          "question": "L’olfatto serve per:",
-          "answers": [
-            "Aromi",
-            "Colore",
-            "Prezzo"
-          ],
+          "question": "L'olfatto serve per:",
+          "answers": ["Aromi", "Colore", "Prezzo"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "La degustazione è solo tecnica.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "La vista analizza:",
-          "answers": [
-            "Colore",
-            "Gusto",
-            "Struttura"
-          ],
+          "answers": ["Colore", "Gusto", "Struttura"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Tutti percepiscono il vino allo stesso modo.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Analisi sensoriale",
+          "title": "Il metodo scientifico applicato al piacere",
           "paragraphs": [
-            "L’analisi sensoriale combina vista, olfatto e gusto.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "L'analisi sensoriale è nata come strumento industriale per il controllo qualità — le grandi aziende la usano per garantire che ogni lotto di vino sia coerente. Ma i sommelier l'hanno adottata come protocollo di degustazione professionale. I principi sono gli stessi: osserva, annusa, assaggia, valuta in modo sistematico e riproducibile.",
+            "Lo strumento più usato è la scheda di degustazione: un form strutturato che guida l'analisi visiva (colore, intensità, limpidezza), olfattiva (intensità, famiglie aromatiche, evoluzione), gustativa (dolcezza, acidità, tannini, corpo, finale) e la valutazione finale (equilibrio, complessità, persistenza aromatica intensa — PAI). Non è burocrazia: è un metodo per non dimenticare niente e per comunicare con precisione."
           ],
           "keyPoints": [
-            "Include l’analisi sensoriale",
-            "L’olfatto serve per",
-            "La degustazione è solo tecnica"
+            "Scheda di degustazione: metodo sistematico",
+            "PAI (persistenza aromatica): misura del finale",
+            "Sistematico → riproducibile → comunicabile"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Soglie sensoriali e differenze individuali",
           "paragraphs": [
-            "Ora sai analizzare un vino in modo completo.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Non tutti percepiscono il vino allo stesso modo: alcune persone sono 'supertasters', con una densità di papille gustative 3-4 volte superiore alla media — percepiscono i tannini come molto più aggressivi e l'acidità come più tagliente. Altri sono meno sensibili ai tannini e preferiscono vini più morbidi e fruttati. Né è meglio dell'altro: sono diversi strumenti.",
+            "Ci sono anche soglie olfattive individuali: molte persone non percepiscono il TCA (il composto del 'tappo difettoso') sotto una certa concentrazione, mentre altri lo sentono in minima dose. La genetica influenza la percezione del vino quanto l'educazione sensoriale. Sapere questo ti aiuta a capire perché il tuo abbinamento preferito non piace al tuo ospite — e perché entrambi avete ragione."
           ],
           "keyPoints": [
-            "La vista analizza",
-            "Tutti percepiscono il vino allo stesso modo"
+            "Supertasters: papille più dense, più sensibilità ai tannini",
+            "Soglie olfattive: individuali e genetiche",
+            "Nessuna percezione è 'giusta' o 'sbagliata'"
           ]
         }
       ]
@@ -801,87 +650,70 @@
     {
       "id": "l10",
       "title": "Sintesi del vino",
-      "intro": "Mettiamo insieme tutto ciò che hai imparato finora.",
-      "final": "Ora hai una comprensione avanzata del vino.",
+      "intro": "Tutto quello che hai imparato converge qui: vitigno, territorio, processo, struttura, aromi, evoluzione. Il vino è un sistema — e ora puoi leggerlo.",
+      "final": "Ora hai una comprensione avanzata del vino come sistema integrato. Ogni bottiglia che apri è un testo che puoi leggere — non perfettamente, ma sempre più a fondo.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Cosa influenza il vino?",
-          "answers": [
-            "Territorio e vitigno",
-            "Solo bottiglia",
-            "Solo prezzo"
-          ],
+          "answers": ["Territorio e vitigno", "Solo bottiglia", "Solo prezzo"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino è semplice da capire completamente.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "La fermentazione produce:",
-          "answers": [
-            "Alcol",
-            "Zucchero",
-            "Acqua"
-          ],
+          "answers": ["Alcol", "Zucchero", "Acqua"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Il gusto dipende da:",
-          "answers": [
-            "Struttura",
-            "Solo colore",
-            "Solo etichetta"
-          ],
+          "answers": ["Struttura", "Solo colore", "Solo etichetta"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Il vino è sempre uguale nel tempo.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Sintesi del vino",
+          "title": "La mappa completa",
           "paragraphs": [
-            "Mettiamo insieme tutto ciò che hai imparato finora.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Tutto quello che hai studiato in questo livello forma un sistema: vitigno → determina il carattere di base. Territorio → modifica e specifica quel carattere. Processo di produzione → aggiunge le scelte del vignaiolo (fermentazione alcolica e malolattica, legno, tempo). Struttura in bocca → è la somma di acidità, tannini, alcol e corpo. Aromi → primari, secondari, terziari raccontano l'uva, il processo e il tempo. Evoluzione → il vino cambia in bottiglia e va aperto nel momento giusto.",
+            "Il livello 3 ti ha dato strumenti tecnici reali: sai cosa è la malolattica, come si forma l'estratto secco, perché il terroir è irriproducibile, come si evolve la struttura tannica nel tempo, come analizzare sistematicamente un vino. Non è teoria accademica: è il bagaglio concettuale che usa un sommelier ogni giorno dietro al bancone o al tavolo."
           ],
           "keyPoints": [
-            "Influenza il vino",
-            "Il vino è semplice da capire completamente",
-            "La fermentazione produce"
+            "Vitigno → territorio → processo → struttura → aromi → evoluzione",
+            "Sistema integrato: nessun elemento è isolato",
+            "Strumenti tecnici reali per ogni situazione pratica"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Da conoscenza a pratica",
           "paragraphs": [
-            "Ora hai una comprensione avanzata del vino.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "La conoscenza diventa vera solo quando la porti nel bicchiere. Apri una bottiglia stasera con un obiettivo preciso: identificare gli aromi primari, valutare la struttura, capire se il vino è giovane o ha qualche anno. Non serve avere ragione — serve osservare con attenzione. Ogni assaggio consapevole è più formativo di dieci assaggi distratti.",
+            "Il prossimo livello ti porta nelle storie e nelle curiosità del vino: dalla Georgia di 8.000 anni fa ai monaci medievali, dai vini nello spazio alla psicologia del brindisi. Prima di arrivarci, torna mentalmente al sistema che hai costruito qui: il vino non è cultura isolata dalla tecnica, né tecnica senza cultura. Sono la stessa cosa, vista da angoli diversi."
           ],
           "keyPoints": [
-            "Il gusto dipende da",
-            "Il vino è sempre uguale nel tempo"
+            "Ogni assaggio consapevole vale 10 distratti",
+            "Osserva con intenzione, non solo con il palato",
+            "Tecnica e cultura del vino: la stessa cosa da angoli diversi"
           ]
         }
       ]

@@ -1,0 +1,209 @@
+{
+  "level": 10,
+  "slug": "sommelier-reasoning",
+  "title": "Sommelier Reasoning: advanced deductive method",
+  "description": "An advanced level to connect climate, soil, winemaking, and sensory evidence with professional logic.",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Climate and ripening",
+      "intro": "Climate is the key structural variable: it affects sugar, acidity, and phenolic maturity.",
+      "final": "You can now use acidity, alcohol, and fruit profile as climate clues.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Three ripeness dimensions",
+          "paragraphs": [
+            "Technological ripeness: sugar accumulation and potential alcohol.",
+            "Phenolic ripeness: tannin and color compound evolution.",
+            "Aromatic ripeness: development of varietal and fermentative aromas."
+          ],
+          "keyPoints": ["Technological", "Phenolic", "Aromatic"]
+        },
+        {
+          "id": "s2",
+          "title": "Deductive logic",
+          "paragraphs": [
+            "High acidity with moderate alcohol often suggests cooler conditions.",
+            "Riper fruit with higher alcohol often suggests warmer conditions or later picking."
+          ],
+          "keyPoints": ["Evidence in glass", "Climate inference", "Hypothesis testing"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Which trio best describes complete ripeness assessment?", "answers": ["Only sugar and pH", "Technological, phenolic, aromatic", "Only color and alcohol"], "correct": 1},
+        {"id": "q2", "type": "mcq", "question": "High acidity and moderate alcohol often suggest:", "answers": ["Cooler climate", "Mandatory stuck fermentation", "Sweet aromatic style"], "correct": 0},
+        {"id": "q3", "type": "true_false", "question": "Phenolic ripeness includes tannin evolution.", "answers": ["True", "False"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "Very ripe fruit and higher alcohol are often linked to:", "answers": ["Cool climate", "Warm climate or later harvest", "Persistently low sunlight"], "correct": 1},
+        {"id": "q5", "type": "mcq", "question": "In deductive tasting, one clue should:", "answers": ["Prove the case alone", "Replace tasting", "Build a hypothesis to verify with other clues"], "correct": 2}
+      ]
+    },
+    {
+      "id": "l2",
+      "title": "Soil, water, and vigor",
+      "intro": "Soil does not directly give flavors: it controls water balance, vigor, and ripening rhythm.",
+      "final": "You can evaluate how water availability and vigor shape concentration and style.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Real soil function",
+          "paragraphs": [
+            "Soil influences drainage, water reserve, and root development.",
+            "The vine responds by changing vegetative vigor and crop balance."
+          ],
+          "keyPoints": ["Drainage", "Water reserve", "Vigor"]
+        },
+        {
+          "id": "s2",
+          "title": "Wine impact",
+          "paragraphs": [
+            "Excess water can dilute aroma and phenolic compounds.",
+            "Moderate, controlled stress can improve concentration and precision."
+          ],
+          "keyPoints": ["Dilution", "Concentration", "Vineyard management"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "What is the main enological role of soil?", "answers": ["Transfer direct mineral flavors", "Modulate water and vine vigor", "Automatically increase alcohol"], "correct": 1},
+        {"id": "q2", "type": "mcq", "question": "Excess water availability tends to:", "answers": ["Increase concentration", "Reduce dilution", "Promote more diluted wines"], "correct": 2},
+        {"id": "q3", "type": "true_false", "question": "Moderate water stress can improve concentration if managed well.", "answers": ["True", "False"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "In deductive logic, very high vigor may indicate:", "answers": ["Always ideal balance", "Possible lower concentration", "Always perfect phenolic ripeness"], "correct": 1},
+        {"id": "q5", "type": "mcq", "question": "Which statement is most accurate?", "answers": ["Soil matters only for color", "Water management directly influences style", "The vine does not react to stress"], "correct": 1}
+      ]
+    },
+    {
+      "id": "l3",
+      "title": "Extraction: maceration and tannin",
+      "intro": "Maceration length and technique define how much structure is extracted from skins and seeds.",
+      "final": "You can connect extraction choices to color, tannin profile, and drinkability.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "What is extracted",
+          "paragraphs": [
+            "Skins contribute color compounds and part of the tannin load.",
+            "Seeds may add greener tannins if maturity is not complete."
+          ],
+          "keyPoints": ["Color compounds", "Tannins", "Seed maturity"]
+        },
+        {
+          "id": "s2",
+          "title": "Operational choices",
+          "paragraphs": [
+            "Short maceration tends toward lighter, fruit-forward styles.",
+            "Longer and more intense extraction increases structure and potential astringency."
+          ],
+          "keyPoints": ["Duration", "Extraction intensity", "Final style"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Short maceration usually leads to:", "answers": ["Lighter, fruit-forward wine", "Maximum tannic load", "Always opaque color"], "correct": 0},
+        {"id": "q2", "type": "mcq", "question": "Which component is directly tied to red wine color?", "answers": ["Anthocyanins", "Tartaric acid", "Carbon dioxide"], "correct": 0},
+        {"id": "q3", "type": "true_false", "question": "Under-ripe seeds can contribute greener tannins.", "answers": ["True", "False"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "More intense extraction may increase:", "answers": ["Perceived astringency", "Residual sweetness", "Effervescence"], "correct": 0},
+        {"id": "q5", "type": "mcq", "question": "In sommelier reasoning, tannin texture helps infer:", "answers": ["Only grape variety", "Extraction choices and phenolic maturity", "Only sugar level"], "correct": 1}
+      ]
+    },
+    {
+      "id": "l4",
+      "title": "Fermentation and temperature",
+      "intro": "Fermentation temperature shapes aromatic profile, kinetics, and stability.",
+      "final": "You can explain how fermentation decisions influence style and aromatic clarity.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Temperature-aroma link",
+          "paragraphs": [
+            "Cooler fermentation often preserves more primary aromas in white wines.",
+            "Warmer red fermentations can improve extraction and complexity if controlled."
+          ],
+          "keyPoints": ["Aroma preservation", "Technical control", "Balance"]
+        },
+        {
+          "id": "s2",
+          "title": "Risks and goals",
+          "paragraphs": [
+            "Poor thermal control can create off-aromas or fermentation issues.",
+            "Professional target: align desired style with a coherent cellar protocol."
+          ],
+          "keyPoints": ["Stability", "Fault prevention", "Stylistic coherence"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "For aromatic whites, cooler fermentation often helps:", "answers": ["Preserve primary aromas", "Increase tannin", "Force oxidation"], "correct": 0},
+        {"id": "q2", "type": "mcq", "question": "In reds, warmer fermentation can support:", "answers": ["Greater extraction", "Total color loss", "Automatic alcohol reduction"], "correct": 0},
+        {"id": "q3", "type": "true_false", "question": "Temperature control matters to avoid fermentation deviations.", "answers": ["True", "False"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "The correct professional principle is:", "answers": ["Use the same temperature for all wines", "Match temperature to desired style", "Ignore fermentation kinetics"], "correct": 1},
+        {"id": "q5", "type": "mcq", "question": "Which is NOT an objective of thermal control?", "answers": ["Stability and cleanliness", "Aromatic coherence", "Increase process randomness"], "correct": 2}
+      ]
+    },
+    {
+      "id": "l5",
+      "title": "Aging vessels: steel, oak, concrete",
+      "intro": "Vessel choice is not neutral: it affects oxygen exchange, texture, and final aromatic profile.",
+      "final": "You can identify the main effects of different aging vessels.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Three approaches",
+          "paragraphs": [
+            "Steel: aromatic neutrality and freshness protection.",
+            "Oak: gradual oxygen exchange plus possible aromatic contribution.",
+            "Concrete: thermal inertia and moderate exchange without obvious oak notes."
+          ],
+          "keyPoints": ["Neutrality", "Oxygen", "Texture"]
+        },
+        {
+          "id": "s2",
+          "title": "Deductive application",
+          "paragraphs": [
+            "Vanilla, sweet spice, and broader texture may suggest oak influence.",
+            "Tighter, linear profiles often suggest steel or reductive handling."
+          ],
+          "keyPoints": ["Sensory clues", "Vessel impact", "Perceived style"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Which vessel is usually the most aromatically neutral?", "answers": ["Steel", "New oak", "Heavily toasted barrique"], "correct": 0},
+        {"id": "q2", "type": "mcq", "question": "Oak can contribute:", "answers": ["Vanilla and sweet spice", "Mandatory citrus aromas", "Total oxygen isolation"], "correct": 0},
+        {"id": "q3", "type": "true_false", "question": "Concrete can offer thermal inertia and moderate exchange.", "answers": ["True", "False"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "A very linear and tight profile more often suggests:", "answers": ["Aggressive new oak", "Steel or reductive approach", "Very long skin contact"], "correct": 1},
+        {"id": "q5", "type": "mcq", "question": "In deductive tasting, vessel influence is inferred from:", "answers": ["Color alone", "Alcohol alone", "Texture, aromas, and overall balance"], "correct": 2}
+      ]
+    },
+    {
+      "id": "l6",
+      "title": "Full deductive method",
+      "intro": "Thinking like a sommelier means building progressive hypotheses and validating them coherently.",
+      "final": "Advanced level complete: you now reason through clues, connections, and verification.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Operational sequence",
+          "paragraphs": [
+            "Observe: intensity, hue, and consistency.",
+            "Smell: aroma families, intensity, and cleanliness.",
+            "Taste: sweetness, acidity, tannin, alcohol, body, and finish."
+          ],
+          "keyPoints": ["Sight", "Nose", "Palate"]
+        },
+        {
+          "id": "s2",
+          "title": "From clue to conclusion",
+          "paragraphs": [
+            "No single clue is enough; convergence is what matters.",
+            "Professional practice avoids shortcuts: hypothesize, verify, and manage uncertainty."
+          ],
+          "keyPoints": ["Convergence", "Verification", "Critical thinking"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "In advanced deductive tasting, the first rule is:", "answers": ["Conclude from the first aroma", "Seek convergence of multiple clues", "Ignore climate context"], "correct": 1},
+        {"id": "q2", "type": "mcq", "question": "Which sequence is correct?", "answers": ["Sight-nose-palate", "Palate-sight-nose", "Palate only"], "correct": 0},
+        {"id": "q3", "type": "true_false", "question": "A single aroma is enough for certain identification of terroir and technique.", "answers": ["True", "False"], "correct": 1},
+        {"id": "q4", "type": "mcq", "question": "A professional approach requires:", "answers": ["Hypothesis + verification", "Rigid memorization only", "Pure intuition only"], "correct": 0},
+        {"id": "q5", "type": "mcq", "question": "The final output of the method should be:", "answers": ["Absolute certainty without margin", "A reasoned conclusion coherent with the evidence", "A purely emotional description"], "correct": 1}
+      ]
+    }
+  ]
+}

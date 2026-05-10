@@ -81,16 +81,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
 
   return (
     <div className={styles.fullPage}>
-      <TopBar title={`🍷 ${menuName}`}>
-        <button
-          type="button"
-          className="btn secondary"
-          onClick={() => router.push(`/enoteca/${menuId}`)}
-          aria-label={isEnglish ? 'Back to menu' : 'Torna al menu'}
-          title={isEnglish ? 'Back to menu' : 'Torna al menu'}>
-          ← {isEnglish ? 'Back' : 'Indietro'}
-        </button>
-      </TopBar>
+      <TopBar title={`🍷 ${menuName}`} onBack={() => router.push(`/enoteca/${menuId}`)}></TopBar>
 
       <div className={styles.slideContent}>
         {/* Hero */}

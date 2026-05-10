@@ -5,7 +5,7 @@ import path from 'path'
 import {normalizeLanguage} from './i18n/config'
 
 const LEVEL_EMOJIS = {
-  1: '🍇',
+  1: '😭​',
   2: '🍷',
   3: '🏅',
   4: '📜', // storia e cursiosita
@@ -13,6 +13,8 @@ const LEVEL_EMOJIS = {
   6: '⚗️', //la chimica del vino
   7: '🌍', //Le zone
   8: '🥂', //champagne e spumanti
+  9: '🍇', //le uve
+  10: '✨​', //il livello più avanzato, per chi vuole diventare un vero esperto
 }
 
 function toOptionId(index, isTrueFalse, lang) {

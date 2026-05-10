@@ -93,16 +93,7 @@ export default function EnotecaJoinClient({
 
   return (
     <div className={styles.fullPage}>
-      <TopBar title={`🍷 ${t.enotecaLabel}`}>
-        <button
-          type="button"
-          className="btn secondary"
-          onClick={() => router.push('/game')}
-          aria-label={isEnglish ? 'Back to games' : 'Torna ai giochi'}
-          title={isEnglish ? 'Back to games' : 'Torna ai giochi'}>
-          ← {isEnglish ? 'Back' : 'Indietro'}
-        </button>
-      </TopBar>
+      <TopBar title={`🍷 ${t.enotecaLabel}`} onBack={() => router.push('/game')}></TopBar>
 
       <div className={styles.slideContent}>
         {/* Event info card */}

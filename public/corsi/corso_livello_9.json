@@ -1,0 +1,206 @@
+{
+  "level": 9,
+  "slug": "vitigni-piu-famosi",
+  "title": "Vitigni internazionali: riconoscimento e stile",
+  "description": "Un percorso pratico per riconoscere i principali vitigni internazionali e collegare aromi, struttura e territorio.",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Cabernet Sauvignon",
+      "intro": "Cabernet Sauvignon e il riferimento per i rossi strutturati: tannino, longevita e profilo preciso.",
+      "final": "Ora sai collegare Cabernet Sauvignon a struttura, clima e potenziale di invecchiamento.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Identita del vitigno",
+          "paragraphs": [
+            "Cabernet Sauvignon nasce dall'incrocio tra Cabernet Franc e Sauvignon Blanc.",
+            "Ha buccia spessa, tannino elevato e acidita solitamente sostenuta: caratteristiche che favoriscono l'evoluzione nel tempo."
+          ],
+          "keyPoints": ["Buccia spessa", "Tannino alto", "Lunga vita in bottiglia"]
+        },
+        {
+          "id": "s2",
+          "title": "Dal clima al bicchiere",
+          "paragraphs": [
+            "In zone fresche mostra note erbacee e frutto piu teso.",
+            "In zone calde esprime frutto nero maturo, maggiore alcol e tannino piu dolce."
+          ],
+          "keyPoints": ["Clima fresco: pirazina", "Clima caldo: maturita", "Lettura deduttiva"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Cabernet Sauvignon deriva da:", "answers": ["Merlot + Pinot Noir", "Syrah + Grenache", "Cabernet Franc + Sauvignon Blanc"], "correct": 2},
+        {"id": "q2", "type": "mcq", "question": "Quale tratto strutturale e tipico?", "answers": ["Tannino molto basso", "Tannino elevato", "Assenza di acidita"], "correct": 1},
+        {"id": "q3", "type": "mcq", "question": "In clima fresco tende ad avere:", "answers": ["Note erbacee", "Marmellata intensa", "Residuo zuccherino alto"], "correct": 0},
+        {"id": "q4", "type": "true_false", "question": "Cabernet Sauvignon puo avere ottimo potenziale di invecchiamento.", "answers": ["Vero", "Falso"], "correct": 0},
+        {"id": "q5", "type": "mcq", "question": "In clima caldo e piu probabile trovare:", "answers": ["Frutto nero maturo e piu alcol", "Acidita altissima e alcol basso", "Profilo neutro senza tannino"], "correct": 0}
+      ]
+    },
+    {
+      "id": "l2",
+      "title": "Merlot",
+      "intro": "Merlot e il vitigno della rotondita: morbidezza tannica, frutto pieno e grande utilita nei blend.",
+      "final": "Hai capito perche Merlot e fondamentale per equilibrio e bevibilita.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Profilo gustativo",
+          "paragraphs": [
+            "Merlot offre spesso frutto di prugna, mora dolce e tessitura morbida.",
+            "Rispetto al Cabernet Sauvignon, in media mostra tannino piu vellutato."
+          ],
+          "keyPoints": ["Morbidezza", "Frutto scuro", "Approccio immediato"]
+        },
+        {
+          "id": "s2",
+          "title": "Ruolo nei blend",
+          "paragraphs": [
+            "Nei tagli bordolesi, Merlot puo arrotondare vitigni piu austeri.",
+            "Il suo compito didattico: capire come una varieta modifichi la percezione globale del vino."
+          ],
+          "keyPoints": ["Funzione di equilibrio", "Taglio", "Morbidezza tattile"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Rispetto a Cabernet Sauvignon, Merlot e spesso:", "answers": ["Piu morbido al palato", "Piu tannico e spigoloso", "Piu scarico di frutto"], "correct": 0},
+        {"id": "q2", "type": "mcq", "question": "Quale aroma e comune in Merlot?", "answers": ["Peperone verde dominante", "Prugna", "Idrocarburo"], "correct": 1},
+        {"id": "q3", "type": "true_false", "question": "Merlot e spesso usato nei blend per aumentare rotondita.", "answers": ["Vero", "Falso"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "Nel contesto didattico dei blend, Merlot aiuta a:", "answers": ["Aumentare durezza tannica", "Ridurre ogni nota fruttata", "Migliorare equilibrio e accessibilita"], "correct": 2},
+        {"id": "q5", "type": "mcq", "question": "Lo stile classico del Merlot e spesso:", "answers": ["Spigoloso e magro", "Morbido e fruttato", "Solo dolce"], "correct": 1}
+      ]
+    },
+    {
+      "id": "l3",
+      "title": "Pinot Noir",
+      "intro": "Pinot Noir insegna finezza: poca estrazione, grande sensibilita a clima e territorio.",
+      "final": "Ora sai riconoscere i segnali di eleganza, delicatezza e trasparenza territoriale.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Vitigno sensibile",
+          "paragraphs": [
+            "Pinot Noir ha buccia sottile e richiede precisione in vigna e in cantina.",
+            "Tende a dare colore meno intenso e tannino piu fine rispetto a molti rossi internazionali."
+          ],
+          "keyPoints": ["Buccia sottile", "Tannino fine", "Eleganza"]
+        },
+        {
+          "id": "s2",
+          "title": "Lettura sensoriale",
+          "paragraphs": [
+            "Frutto rosso, floreale e spezie leggere sono riferimenti frequenti.",
+            "Didatticamente e ottimo per allenare la sensibilita ai dettagli."
+          ],
+          "keyPoints": ["Frutto rosso", "Delicatezza", "Dettaglio aromatico"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Pinot Noir e noto per:", "answers": ["Corpo medio-leggero e finezza", "Tannino sempre aggressivo", "Alto residuo zuccherino"], "correct": 0},
+        {"id": "q2", "type": "true_false", "question": "Pinot Noir e considerato generalmente facile da coltivare.", "answers": ["Vero", "Falso"], "correct": 1},
+        {"id": "q3", "type": "mcq", "question": "Quale descrizione e piu coerente?", "answers": ["Frutto nero cotto e tostatura intensa obbligatoria", "Frutto rosso e struttura elegante", "Profilo aromatico neutro"], "correct": 1},
+        {"id": "q4", "type": "mcq", "question": "Un elemento didattico chiave del Pinot Noir e:", "answers": ["Allenare percezione di finezza", "Valutare solo il colore", "Misurare solo alcol"], "correct": 0},
+        {"id": "q5", "type": "mcq", "question": "La buccia del Pinot Noir e tipicamente:", "answers": ["Molto spessa", "Intermedia", "Sottile"], "correct": 2}
+      ]
+    },
+    {
+      "id": "l4",
+      "title": "Chardonnay",
+      "intro": "Chardonnay e il laboratorio perfetto per capire come clima e vinificazione cambino lo stile.",
+      "final": "Sai distinguere uno Chardonnay fresco da uno piu ricco e affinato.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Versatilita",
+          "paragraphs": [
+            "Puo produrre vini lineari e tesi, oppure ampi e cremosi.",
+            "La varieta e molto influenzata da vendemmia, fermentazione e affinamento."
+          ],
+          "keyPoints": ["Vitigno camaleontico", "Tecnica di cantina", "Territorio"]
+        },
+        {
+          "id": "s2",
+          "title": "Deduci lo stile",
+          "paragraphs": [
+            "Acciaio: piu freschezza e purezza fruttata.",
+            "Legno e batonage: maggiore volume, note burrose o speziate."
+          ],
+          "keyPoints": ["Acciaio vs legno", "Texture", "Equilibrio"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Chardonnay e didatticamente utile perche:", "answers": ["Ha uno stile unico e fisso", "E poco sensibile alla tecnica", "Mostra bene l'effetto della vinificazione"], "correct": 2},
+        {"id": "q2", "type": "mcq", "question": "Uno Chardonnay vinificato in acciaio tende a essere:", "answers": ["Piu fresco e diretto", "Sempre ossidato", "Solo dolce"], "correct": 0},
+        {"id": "q3", "type": "true_false", "question": "Chardonnay puo essere usato anche per basi spumante di alta qualita.", "answers": ["Vero", "Falso"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "Un segnale di affinamento in legno puo essere:", "answers": ["Vaniglia o spezia dolce", "Assenza totale di aromi", "Solo note erbacee pungenti"], "correct": 0},
+        {"id": "q5", "type": "mcq", "question": "Il concetto chiave da ricordare e:", "answers": ["Chardonnay e sempre uguale", "Stile = varieta + ambiente + scelte enologiche", "Conta solo il grado alcolico"], "correct": 1}
+      ]
+    },
+    {
+      "id": "l5",
+      "title": "Sauvignon Blanc",
+      "intro": "Sauvignon Blanc allena l'olfatto: riconoscimento di aromi vegetali, agrumati e tropicali a seconda del clima.",
+      "final": "Hai consolidato il legame tra profilo aromatico e area di produzione.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Firma aromatica",
+          "paragraphs": [
+            "In aree fresche emergono spesso erba, foglia di pomodoro e agrume.",
+            "In aree piu calde puo esprimere frutto tropicale con minore tensione acida."
+          ],
+          "keyPoints": ["Aromaticita alta", "Clima e profilo", "Freschezza"]
+        },
+        {
+          "id": "s2",
+          "title": "Uso didattico",
+          "paragraphs": [
+            "E uno dei vitigni piu utili per esercitare il riconoscimento olfattivo.",
+            "Confrontarlo con Chardonnay e un ottimo esercizio di degustazione comparata."
+          ],
+          "keyPoints": ["Confronto varietale", "Naso", "Acidita percepita"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "In stile fresco, Sauvignon Blanc mostra spesso:", "answers": ["Note erbacee e agrumate", "Cioccolato e caffe", "Tannino marcato"], "correct": 0},
+        {"id": "q2", "type": "mcq", "question": "In clima piu caldo puo aumentare:", "answers": ["Carattere tropicale", "Pirazina pungente", "Astringenza"], "correct": 0},
+        {"id": "q3", "type": "true_false", "question": "Sauvignon Blanc e utile per esercizi di riconoscimento olfattivo.", "answers": ["Vero", "Falso"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "Confronto didattico classico:", "answers": ["Sauvignon Blanc vs Chardonnay", "Sauvignon Blanc vs Nebbiolo", "Sauvignon Blanc vs Porto"], "correct": 0},
+        {"id": "q5", "type": "mcq", "question": "Quale affermazione e piu corretta?", "answers": ["E sempre neutro", "E generalmente aromatico", "E sempre dolce"], "correct": 1}
+      ]
+    },
+    {
+      "id": "l6",
+      "title": "Riesling",
+      "intro": "Riesling e precisione: acidita alta, profilo floreale-agrumato e grande capacita evolutiva.",
+      "final": "Ora sai leggere freschezza, residuo zuccherino e potenziale di evoluzione nel Riesling.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Acidita e equilibrio",
+          "paragraphs": [
+            "Riesling mantiene acidita anche a maturazioni avanzate.",
+            "Per questo puo funzionare in stili secchi, abboccati o dolci senza perdere tensione."
+          ],
+          "keyPoints": ["Acidita alta", "Equilibrio con zucchero", "Versatilita stilistica"]
+        },
+        {
+          "id": "s2",
+          "title": "Evoluzione",
+          "paragraphs": [
+            "Con il tempo puo sviluppare note complesse mantenendo energia gustativa.",
+            "Didatticamente aiuta a capire il rapporto tra acidita e longevita."
+          ],
+          "keyPoints": ["Longevita", "Complessita", "Tensione"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Un tratto tipico del Riesling e:", "answers": ["Acidita elevata", "Tannino intenso", "Colore molto carico"], "correct": 0},
+        {"id": "q2", "type": "mcq", "question": "Didatticamente il Riesling aiuta a capire:", "answers": ["Solo il colore", "Acidita e potenziale evolutivo", "Solo il grado alcolico"], "correct": 1},
+        {"id": "q3", "type": "true_false", "question": "Riesling puo dare vini secchi e anche dolci mantenendo equilibrio.", "answers": ["Vero", "Falso"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "Quale combinazione e piu coerente con Riesling?", "answers": ["Bassa acidita e alta astringenza", "Acidita alta e profilo aromatico fine", "Tannino elevato e struttura massiva"], "correct": 1},
+        {"id": "q5", "type": "mcq", "question": "Nel tempo Riesling tende a:", "answers": ["Perdere sempre freschezza subito", "Mantenere energia se ben fatto", "Diventare necessariamente ossidato"], "correct": 1}
+      ]
+    }
+  ]
+}

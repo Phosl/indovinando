@@ -18,5 +18,12 @@ export default async function Page() {
     .eq('id', user.id)
     .single()
 
-  return <GameCreateClient userId={user.id} />
+  const {count: createdGamesCount} = await supabase
+    .from('games')
+    .select('id', {count: 'exact', head: true})
+    .eq('created_by', user.id)
+
+  const shouldShowOnboarding = profile?.onboarding !== false && (createdGamesCount || 0) < 1
+
+  return <GameCreateClient initialShowOnboarding={shouldShowOnboarding} userId={user.id} />
 }

@@ -1,0 +1,149 @@
+{
+  "common": {
+    "back": "Indietro",
+    "cancel": "Annulla",
+    "loading": "Caricamento...",
+    "saving": "Salvataggio...",
+    "logout": "Logout",
+    "next": "Avanti",
+    "done": "Fine"
+  },
+  "home": {
+    "tagline": "Gioca, crea e impara il vino in un unico posto.",
+    "loginOrRegister": "Accedi o registrati",
+    "wineCourse": "Corso Vino",
+    "howItWorks": "Come funziona"
+  },
+  "auth": {
+    "tagline": "Gioca, crea e impara il vino in un unico posto.",
+    "login": "Accedi",
+    "register": "Registrati",
+    "usernamePlaceholder": "Nome utente",
+    "loading": "Caricamento...",
+    "switchToRegister": "Non hai un account? Registrati",
+    "switchToLogin": "Hai già un account? Accedi",
+    "emailRequired": "Email obbligatoria",
+    "emailInvalid": "Inserisci un indirizzo email valido",
+    "passwordRequired": "Password obbligatoria",
+    "passwordTooShort": "La password deve essere di almeno {min} caratteri",
+    "usernameRequired": "Username obbligatorio",
+    "usernameTooShort": "Lo username deve essere di almeno {min} caratteri",
+    "usernameInvalid": "Lo username può contenere solo lettere, numeri e _",
+    "registrationComplete": "Registrazione completata. Controlla l'email per confermare l'account."
+  },
+  "profile": {
+    "title": "Profilo",
+    "language": "Lingua",
+    "howTheAppWorks": "Come funziona l'app",
+    "howTheAppWorksDesc": "Apri la guida onboarding con slide su Crea Gioco, Gioco Veloce, Enoteca, Live e Corso Vino.",
+    "openAppGuide": "Apri guida app",
+    "chooseAvatar": "Scegli il tuo avatar",
+    "yourStats": "Le tue statistiche",
+    "gamesCreated": "Giochi creati",
+    "lessonsCompleted": "Lezioni completate",
+    "levelsCompleted": "Livelli completati",
+    "currentLevel": "Livello attuale",
+    "changelog": "Changelog",
+    "changelogDesc": "Vedi la cronologia completa degli aggiornamenti e delle nuove funzionalità.",
+    "viewChangelog": "📋 Vedi changelog",
+    "logoutBtn": "🚪 Esci",
+    "logoutConfirm": "Sei sicuro di voler uscire?",
+    "loggingOut": "Disconnessione...",
+    "logoutAction": "Esci"
+  },
+  "course": {
+    "title": "Corso Vino",
+    "heroTitle": "Impara il vino",
+    "heroSubtitle": "Lezioni brevi, quiz interattivi e contenuti accurati. Gratis, senza registrazione.",
+    "completed": "✓ Completato",
+    "lessons": "lezioni",
+    "guest": {
+      "title": "Modalità ospite attiva",
+      "desc": "I progressi del corso sono salvati solo su questo dispositivo e potrebbero andare persi.",
+      "continueAsGuest": "Continua come ospite",
+      "signUp": "Registrati per salvare i progressi"
+    }
+  },
+  "level": {
+    "lesson": "Lezione",
+    "repeat": "Ripeti"
+  },
+  "info": {
+    "title": "Info App",
+    "slide": "Slide",
+    "goToSlide": "Vai alla slide",
+    "swipeHint": "Scorri a destra o sinistra per cambiare slide.",
+    "slides": [
+      {
+        "emoji": "🧭",
+        "title": "Benvenuto su Indovinando",
+        "description": "Una guida pratica per scoprire tutte le funzioni e iniziare velocemente.",
+        "points": [
+          "Crea format di gioco in pochi minuti.",
+          "Gioca con amici live o in presenza con modalita enoteca.",
+          "Tieni traccia della formazione vino nell area corso."
+        ]
+      },
+      {
+        "emoji": "🍷",
+        "title": "Crea Gioco",
+        "description": "Costruisci un gioco completo personalizzato con domande, opzioni e bottiglie.",
+        "points": [
+          "Definisci le domande che vuoi usare.",
+          "Aggiungi bottiglie con produttore e annata.",
+          "Imposta le risposte corrette per ogni coppia bottiglia-domanda."
+        ],
+        "ctaHref": "/game/create",
+        "ctaLabel": "Apri Crea Gioco"
+      },
+      {
+        "emoji": "⚡",
+        "title": "Crea Gioco Veloce",
+        "description": "Parti da un template pronto e pubblica subito quando vuoi massima velocita.",
+        "points": [
+          "Struttura domande gia impostata.",
+          "Setup rapido per eventi e degustazioni.",
+          "Perfetto per sessioni veloci con poca preparazione."
+        ],
+        "ctaHref": "/game/create-quick",
+        "ctaLabel": "Apri Crea Veloce"
+      },
+      {
+        "emoji": "🥂",
+        "title": "Modalita Enoteca",
+        "description": "Flusso da tavolo per degustazioni in presenza con sessioni a nickname.",
+        "points": [
+          "Si gioca insieme nello stesso tavolo.",
+          "Punteggio bottiglia per bottiglia guidato.",
+          "Ideale per wine bar, corsi e degustazioni private."
+        ],
+        "ctaHref": "/dashboard",
+        "ctaLabel": "Vai ai tuoi giochi"
+      },
+      {
+        "emoji": "🛰️",
+        "title": "Live Multiplayer",
+        "description": "Crea una sessione realtime con host e giocatori, risultati round per round.",
+        "points": [
+          "Join dei partecipanti con nickname e avatar.",
+          "Stato round e punteggi in tempo reale.",
+          "Classifica finale al termine della partita."
+        ],
+        "ctaHref": "/dashboard",
+        "ctaLabel": "Parti dalla Dashboard"
+      },
+      {
+        "emoji": "🎓",
+        "title": "Corso Vino",
+        "description": "Impara il vino passo passo con slide didattiche, quiz e tracciamento progressi.",
+        "points": [
+          "Livelli e lezioni organizzati per argomento.",
+          "Miglior punteggio e tentativi salvati per lezione.",
+          "Perfetto per allenamento continuo nel tempo."
+        ],
+        "ctaHref": "/corso-vino",
+        "ctaLabel": "Apri Corso Vino"
+      }
+    ]
+  }
+}

@@ -1,12 +1,14 @@
 import {redirect} from 'next/navigation'
+import {createServerSupabase} from '@/lib/supabaseServer'
+import AuthFormClient from '@/components/auth/AuthFormClient'
 
-export default async function AuthPage({searchParams}) {
-  const resolved = await Promise.resolve(searchParams)
-  const next = resolved?.next
+export default async function AuthPage() {
+  const supabase = await createServerSupabase()
+  const {data} = await supabase.auth.getUser()
 
-  if (typeof next === 'string' && next.startsWith('/')) {
-    redirect(`/?next=${encodeURIComponent(next)}`)
+  if (data.user) {
+    redirect('/dashboard')
   }
 
-  redirect('/')
+  return <AuthFormClient />
 }

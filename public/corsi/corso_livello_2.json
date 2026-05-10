@@ -7,87 +7,70 @@
     {
       "id": "l1",
       "title": "Come nasce il vino",
-      "intro": "Il vino nasce dalla trasformazione dell’uva attraverso diversi passaggi controllati.",
-      "final": "Ora sai le basi della produzione del vino.",
+      "intro": "Dal grappolo al bicchiere ci sono scelte precise che cambiano tutto: capire i passaggi ti rende padrone della scelta.",
+      "final": "Ora sai che ogni bottiglia racconta una catena di decisioni — vendemmia, fermentazione, affinamento — e puoi iniziare a leggerle.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Qual è la prima fase della produzione del vino?",
-          "answers": [
-            "Vendemmia",
-            "Imbottigliamento",
-            "Vendita"
-          ],
+          "answers": ["Vendemmia", "Imbottigliamento", "Vendita"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "La fermentazione avviene dopo la raccolta.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Cosa si trasforma in alcol?",
-          "answers": [
-            "Zuccheri",
-            "Acqua",
-            "Bucce"
-          ],
+          "answers": ["Zuccheri", "Acqua", "Bucce"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Chi avvia la fermentazione?",
-          "answers": [
-            "Lieviti",
-            "Aria",
-            "Legno"
-          ],
+          "answers": ["Lieviti", "Aria", "Legno"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Il vino nasce immediatamente pronto.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Come nasce il vino",
+          "title": "I passaggi fondamentali",
           "paragraphs": [
-            "Il vino nasce dalla trasformazione dell’uva attraverso diversi passaggi controllati.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "La produzione del vino segue una sequenza logica: vendemmia (raccolta delle uve al momento giusto di maturazione), pigiatura (rottura delle bucce per liberare il succo), fermentazione (i lieviti trasformano gli zuccheri in alcol e CO2), e infine affinamento e imbottigliamento. Ogni fase può durare giorni, settimane o anni.",
+            "La vendemmia è il momento più critico: raccogliere troppo presto dà acidità eccessive e poco frutto; troppo tardi porta alcol elevato e perdita di freschezza. I produttori monitorano la maturazione per settimane con analisi chimiche e assaggi sul campo. Un anno di lavoro in vigna si gioca in pochi giorni di raccolta."
           ],
           "keyPoints": [
-            "Qual è la prima fase della produzione del vino",
-            "La fermentazione avviene dopo la raccolta",
-            "Si trasforma in alcol"
+            "Vendemmia: timing decisivo",
+            "Fermentazione: zuccheri → alcol",
+            "Affinamento: il vino si completa"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Dalla teoria alla bottiglia",
           "paragraphs": [
-            "Ora sai le basi della produzione del vino.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Un vino non nasce pronto: anche il più semplice Pinot Grigio da supermercato passa almeno 3-6 mesi tra fermentazione, stabilizzazione e imbottigliamento. Un Barolo DOCG deve affinare almeno 3 anni per legge, di cui 18 mesi in legno. Questo spiega perché certi vini costano quello che costano: non è marketing, è tempo fisico.",
+            "Capire la catena produttiva ti aiuta a leggere l'etichetta diversamente. 'Riserva' spesso significa affinamento più lungo. 'Giovane' o 'Novello' significa bevuto nell'anno della raccolta. Questi non sono termini di marketing: sono indicatori precisi di processo."
           ],
           "keyPoints": [
-            "Chi avvia la fermentazione",
-            "Il vino nasce immediatamente pronto"
+            "Tempi di produzione variabili",
+            "Riserva = affinamento lungo",
+            "Etichetta come mappa del processo"
           ]
         }
       ]
@@ -95,13 +78,13 @@
     {
       "id": "l2",
       "title": "Fermentazione",
-      "intro": "La fermentazione è il processo chiave che trasforma il mosto in vino.",
-      "final": "Ora capisci come si forma l’alcol nel vino.",
+      "intro": "Senza fermentazione non c'è vino — è il cuore biologico di tutto. Capirla ti spiega perché lo stesso vitigno diventa vini completamente diversi.",
+      "final": "Ora capisci che l'alcol non è un ingrediente aggiunto ma il risultato di un processo naturale che il produttore controlla con precisione.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Cos’è la fermentazione?",
+          "question": "Cos'è la fermentazione?",
           "answers": [
             "Trasformazione zuccheri in alcol",
             "Filtrazione del vino",
@@ -113,69 +96,56 @@
           "id": "q2",
           "type": "true_false",
           "question": "La fermentazione è un processo naturale.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Cosa producono i lieviti?",
-          "answers": [
-            "Alcol",
-            "Acqua",
-            "Zucchero"
-          ],
+          "answers": ["Alcol", "Acqua", "Zucchero"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Il mosto è:",
-          "answers": [
-            "Succo d’uva",
-            "Vino finito",
-            "Acqua zuccherata"
-          ],
+          "answers": ["Succo d'uva", "Vino finito", "Acqua zuccherata"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "La fermentazione può essere controllata.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Fermentazione",
+          "title": "Cosa succede davvero nel tino",
           "paragraphs": [
-            "La fermentazione è il processo chiave che trasforma il mosto in vino.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "La fermentazione alcolica è una reazione biologica: i lieviti (Saccharomyces cerevisiae) consumano gli zuccheri del mosto e producono etanolo, CO2 e calore. La reazione dura in genere 1-3 settimane. Quando gli zuccheri si esauriscono, i lieviti muoiono e la fermentazione si arresta naturalmente. Quello che rimane nel tino è vino grezzo.",
+            "La temperatura di fermentazione cambia il risultato in modo radicale. A 12-15°C (fredda) si preservano aromi fruttati e floreali delicati — ottima per bianchi aromatici come Sauvignon Blanc. A 25-30°C (calda) si estraggono più colore, corpo e complessità tannica — ideale per rossi strutturati come Barolo. Il vignaiolo regola la temperatura come un cuoco regola il fuoco."
           ],
           "keyPoints": [
-            "Definizione di la fermentazione",
-            "La fermentazione è un processo naturale",
-            "Producono i lieviti"
+            "Lieviti: motori della fermentazione",
+            "Temperatura: scelta stilistica",
+            "Fine: quando gli zuccheri finiscono"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Fermentazione controllata vs spontanea",
           "paragraphs": [
-            "Ora capisci come si forma l’alcol nel vino.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Esistono due approcci: fermentazione con lieviti selezionati (aggiunti dal produttore, risultato più prevedibile e pulito) o fermentazione spontanea con i lieviti indigeni presenti naturalmente sull'uva e in cantina (più rischiosa ma spesso più complessa e territoriale). I vini naturali e artigianali preferiscono il secondo metodo.",
+            "Il mosto — succo d'uva non ancora fermentato — è dolcissimo e vivo: contiene milioni di lieviti pronti ad agire. Basta aprire un grappolo maturo e lasciarlo a temperatura ambiente qualche giorno per vedere iniziare la fermentazione spontanea. Il vino, in fondo, vuole nascere da solo."
           ],
           "keyPoints": [
-            "Definizione di mosto",
-            "La fermentazione può essere controllata"
+            "Lieviti selezionati vs indigeni",
+            "Mosto: il punto di partenza",
+            "Spontanea = più carattere, più rischio"
           ]
         }
       ]
@@ -183,88 +153,70 @@
     {
       "id": "l3",
       "title": "Uva e vitigni",
-      "intro": "Il vitigno determina il carattere del vino.",
-      "final": "Ora sai che il vitigno cambia tutto.",
+      "intro": "Il vitigno è il primo indizio su cosa troverai nel bicchiere — impararne una dozzina ti apre un mondo.",
+      "final": "Ora sai che il vitigno è come la firma dell'uva: Chardonnay in Borgogna e Chardonnay in California sono lo stesso vitigno ma vini completamente diversi.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Cos’è un vitigno?",
-          "answers": [
-            "Varietà di uva",
-            "Tipo di bottiglia",
-            "Metodo di vendita"
-          ],
+          "question": "Cos'è un vitigno?",
+          "answers": ["Varietà di uva", "Tipo di bottiglia", "Metodo di vendita"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Qual è un vitigno rosso?",
-          "answers": [
-            "Merlot",
-            "Chardonnay",
-            "Riesling"
-          ],
+          "answers": ["Merlot", "Chardonnay", "Riesling"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Qual è un vitigno bianco?",
-          "answers": [
-            "Chardonnay",
-            "Sangiovese",
-            "Nebbiolo"
-          ],
+          "answers": ["Chardonnay", "Sangiovese", "Nebbiolo"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "true_false",
           "question": "Tutti i vini hanno lo stesso vitigno.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q5",
           "type": "mcq",
           "question": "Il vitigno influenza:",
-          "answers": [
-            "Gusto e aroma",
-            "Solo colore",
-            "Solo prezzo"
-          ],
+          "answers": ["Gusto e aroma", "Solo colore", "Solo prezzo"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Uva e vitigni",
+          "title": "I vitigni come personaggi",
           "paragraphs": [
-            "Il vitigno determina il carattere del vino.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Ogni vitigno ha un carattere preciso: il Cabernet Sauvignon è potente, con tannini robusti e aromi di ribes nero e cedro — nasce per invecchiare. Il Merlot è morbido e vellutato, con prugna e cioccolato, pronto prima. Il Pinot Noir è elegante e sottile, con ciliegia e terra, capriccioso da coltivare ma magnifico nel bicchiere.",
+            "Tra i bianchi: lo Chardonnay è il camaleonte (neutro da giovane, diventa burroso e minerale con la barrique), il Sauvignon Blanc è riconoscibile ovunque per l'erba tagliata e il pompelmo, il Riesling è il grande incompreso — florido, lungo, acido, capace di invecchiare decenni. Conoscere questi profili di base ti permette di prevedere un vino da sola etichetta."
           ],
           "keyPoints": [
-            "Definizione di un vitigno",
-            "Qual è un vitigno rosso",
-            "Qual è un vitigno bianco"
+            "Cabernet: potente e longevo",
+            "Chardonnay: versatile e neutro",
+            "Pinot Noir: elegante e difficile"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Vitigni autoctoni italiani",
           "paragraphs": [
-            "Ora sai che il vitigno cambia tutto.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "L'Italia è il paese con più vitigni autoctoni al mondo: oltre 500 varietà registrate, di cui circa 350 usate commercialmente. I più importanti: Sangiovese (Toscana, base del Chianti e del Brunello), Nebbiolo (Piemonte, base di Barolo e Barbaresco), Barbera (acidità alta, popolare in Piemonte), Vermentino (bianchi freschi e marini in Sardegna e Liguria).",
+            "Conoscere i vitigni autoctoni è un vantaggio competitivo: mentre il Cabernet lo trovi in tutto il mondo, un Nerello Mascalese dell'Etna lo trovi solo lì. Ogni vitigno autoctono porta con sé storia, microclima, cultura. Quando vedi un nome strano sull'etichetta italiana, non scappare: spesso è lì che si nasconde la cosa più interessante."
           ],
           "keyPoints": [
-            "Tutti i vini hanno lo stesso vitigno",
-            "Il vitigno influenza"
+            "Italia: 500+ vitigni autoctoni",
+            "Sangiovese e Nebbiolo: i più importanti",
+            "Autoctoni = unicità irriproducibile"
           ]
         }
       ]
@@ -272,88 +224,70 @@
     {
       "id": "l4",
       "title": "Aromi del vino",
-      "intro": "Gli aromi sono una parte fondamentale dell’esperienza del vino.",
-      "final": "Ora sai riconoscere i profumi del vino.",
+      "intro": "Il naso racconta il vino prima ancora che tu beva — allenarlo è la skill più sottovalutata dal bevitore occasionale.",
+      "final": "Ora sai che gli aromi non sono impressioni vaghe ma molecole precise, e riconoscerle è una competenza che si allena come un muscolo.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Cosa sono gli aromi?",
-          "answers": [
-            "Profumi",
-            "Colori",
-            "Temperature"
-          ],
+          "answers": ["Profumi", "Colori", "Temperature"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Un aroma fruttato ricorda:",
-          "answers": [
-            "Frutta",
-            "Carne",
-            "Pane"
-          ],
+          "answers": ["Frutta", "Carne", "Pane"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Gli aromi si percepiscono con:",
-          "answers": [
-            "Naso",
-            "Vista",
-            "Tatto"
-          ],
+          "answers": ["Naso", "Vista", "Tatto"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "true_false",
           "question": "Il vino ha sempre un solo aroma.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q5",
           "type": "mcq",
           "question": "Un vino floreale ricorda:",
-          "answers": [
-            "Fiori",
-            "Legno",
-            "Metallo"
-          ],
+          "answers": ["Fiori", "Legno", "Metallo"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Aromi del vino",
+          "title": "La mappa degli aromi",
           "paragraphs": [
-            "Gli aromi sono una parte fondamentale dell’esperienza del vino.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Gli aromi si dividono in tre grandi famiglie. Aromi primari: vengono dall'uva stessa — frutti rossi (ciliegia, fragola, lampone) nei rossi giovani, frutti bianchi (mela, pera, pesca) nei bianchi, fiori (rosa nel Riesling, violetta nel Nebbiolo), note erbacee (erba nel Sauvignon, peperone nel Cabernet giovane). Sono la 'voce dell'uva'.",
+            "Aromi secondari: nascono durante la fermentazione — note di lievito, pane, burro, banana (in alcune fermentazioni). Aromi terziari: arrivano con l'invecchiamento in legno o bottiglia — vaniglia e cocco dalla barrique di rovere, tabacco e cuoio da un Barolo invecchiato, frutta secca e miele in un vino dolce passito. Un grande vino ne ha di tutti e tre i livelli insieme."
           ],
           "keyPoints": [
-            "Sono gli aromi",
-            "Un aroma fruttato ricorda",
-            "Gli aromi si percepiscono con"
+            "Primari: dall'uva",
+            "Secondari: dalla fermentazione",
+            "Terziari: dall'invecchiamento"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Come allenare il naso",
           "paragraphs": [
-            "Ora sai riconoscere i profumi del vino.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Il 70-80% di quello che chiamiamo 'gusto' è in realtà olfatto retronasale — le molecole aromatiche che salgono dal palato al naso mentre bevi. Ecco perché un vino sembrava 'senza sapore' quando avevi il naso chiuso per un raffreddore. Annusare il vino prima di berlo non è snobismo: è sfruttare lo strumento principale della degustazione.",
+            "Per allenare il naso: annusa frutta fresca, spezie, caffè, erbe aromatiche e poi torna al vino. Noterai le stesse molecole. Un Barbera giovane ha davvero ciliegia e more — non è metafora. Un Gewürztraminer ha rosa e litchi perché contiene la stessa molecola (linalolo) presente in quella frutta. Il cervello ri-conosce ciò che ha già incontrato."
           ],
           "keyPoints": [
-            "Il vino ha sempre un solo aroma",
-            "Un vino floreale ricorda"
+            "Olfatto retronasale: il vero gusto",
+            "Allena il naso con frutta e spezie",
+            "Gli aromi sono molecole reali, non metafore"
           ]
         }
       ]
@@ -361,88 +295,70 @@
     {
       "id": "l5",
       "title": "Gusto e sensazioni",
-      "intro": "Il gusto del vino è fatto di dolcezza, acidità e tannini.",
-      "final": "Ora riconosci le sensazioni base.",
+      "intro": "Il vino in bocca è un sistema di tensioni: dolcezza contro acidità, corpo contro freschezza — capire queste forze cambia tutto.",
+      "final": "Ora riconosci le sensazioni base e sai spiegarle con parole precise invece di fermarti a 'buono' o 'cattivo'.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Cos’è il gusto?",
-          "answers": [
-            "Sensazione in bocca",
-            "Colore",
-            "Profumo"
-          ],
+          "question": "Cos'è il gusto?",
+          "answers": ["Sensazione in bocca", "Colore", "Profumo"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Un vino secco è:",
-          "answers": [
-            "Poco dolce",
-            "Frizzante",
-            "Sempre rosso"
-          ],
+          "answers": ["Poco dolce", "Frizzante", "Sempre rosso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "I tannini danno:",
-          "answers": [
-            "Secchezza",
-            "Dolcezza",
-            "Frutta"
-          ],
+          "answers": ["Secchezza", "Dolcezza", "Frutta"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "true_false",
-          "question": "L’acidità dà freschezza.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "question": "L'acidità dà freschezza.",
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "mcq",
           "question": "Un vino acido è:",
-          "answers": [
-            "Fresco",
-            "Dolce",
-            "Amaro"
-          ],
+          "answers": ["Fresco", "Dolce", "Amaro"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Gusto e sensazioni",
+          "title": "Le quattro sensazioni fondamentali",
           "paragraphs": [
-            "Il gusto del vino è fatto di dolcezza, acidità e tannini.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "In bocca il vino comunica attraverso quattro canali principali. La dolcezza: senti zucchero residuo sulla punta della lingua — presente nei vini come Moscato d'Asti, quasi assente in un Barolo secco. L'acidità: la senti come una puntura fresca ai lati della lingua, simile al limone — ti fa salivare e vuoi un altro sorso. Più acidità = più bevibilità e longevità.",
+            "I tannini: sensazione di astringenza, come mordere una buccia di noce o bere tè forte — presenti solo nei rossi, danno struttura e capacità di invecchiamento. L'alcol: calore in gola, peso in bocca — contribuisce al 'corpo'. Un vino perfettamente equilibrato gioca su tutte e quattro queste dimensioni contemporaneamente senza che una prevalga in modo sgradevole."
           ],
           "keyPoints": [
-            "Definizione di il gusto",
-            "Un vino secco è",
-            "I tannini danno"
+            "Dolcezza: punta della lingua",
+            "Acidità: lati della lingua, salivazione",
+            "Tannini: astringenza, solo nei rossi"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Secco vs dolce: la grande confusione",
           "paragraphs": [
-            "Ora riconosci le sensazioni base.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Molti confondono 'secco' con 'amaro' o 'aspro'. Secco significa semplicemente che i lieviti hanno consumato quasi tutto lo zucchero durante la fermentazione — meno di 4 g/L. Non ha niente a che fare con acidità o tannini. Un Barbera d'Asti è secco E acido. Un Primitivo di Manduria è secco E morbido (tannini rotondi, alcol alto che simula dolcezza).",
+            "La dolcezza percepita è spesso diversa dal residuo zuccherino reale. Un vino con alto alcol (14-15%) sembra più morbido e quasi dolce anche se è secco. Un vino con alta acidità sembra 'più secco' anche se ha un po' di zucchero residuo. Il palato integra tutto insieme — per questo l'equilibrio è tutto."
           ],
           "keyPoints": [
-            "L’acidità dà freschezza",
-            "Un vino acido è"
+            "Secco ≠ amaro: meno di 4 g/L zucchero",
+            "L'alcol simula dolcezza",
+            "L'acidità accentua la percezione di secchezza"
           ]
         }
       ]
@@ -450,88 +366,70 @@
     {
       "id": "l6",
       "title": "Corpo del vino",
-      "intro": "Il corpo indica la sensazione di peso del vino in bocca.",
-      "final": "Ora sai distinguere vini leggeri e strutturati.",
+      "intro": "Il corpo è la fisicità del vino in bocca — capirlo ti aiuta ad abbinarlo e a sceglierlo per la situazione giusta.",
+      "final": "Ora sai distinguere vini leggeri e strutturati e capisci perché non si tratta di qualità ma di adeguatezza al momento.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
-          "question": "Cos’è il corpo del vino?",
-          "answers": [
-            "Peso in bocca",
-            "Colore",
-            "Dolcezza"
-          ],
+          "question": "Cos'è il corpo del vino?",
+          "answers": ["Peso in bocca", "Colore", "Dolcezza"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Un vino leggero è:",
-          "answers": [
-            "Facile da bere",
-            "Molto denso",
-            "Sempre dolce"
-          ],
+          "answers": ["Facile da bere", "Molto denso", "Sempre dolce"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Un vino strutturato è:",
-          "answers": [
-            "Più complesso",
-            "Sempre bianco",
-            "Sempre frizzante"
-          ],
+          "answers": ["Più complesso", "Sempre bianco", "Sempre frizzante"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "true_false",
           "question": "Tutti i vini hanno lo stesso corpo.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q5",
           "type": "mcq",
           "question": "Il corpo dipende da:",
-          "answers": [
-            "Struttura",
-            "Etichetta",
-            "Prezzo"
-          ],
+          "answers": ["Struttura", "Etichetta", "Prezzo"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Corpo del vino",
+          "title": "Leggero, medio, pieno: cosa cambia davvero",
           "paragraphs": [
-            "Il corpo indica la sensazione di peso del vino in bocca.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Il corpo del vino è la sensazione tattile di peso e consistenza in bocca — pensa alla differenza tra acqua naturale, latte parzialmente scremato e panna: stessa funzione (liquido da bere), peso fisico completamente diverso. Un Pinot Grigio dell'Alto Adige è corpo leggero. Un Chardonnay barricato della Borgogna è corpo medio-pieno. Un Amarone della Valpolicella è corpo pieno.",
+            "Il corpo nasce principalmente da tre elementi: alcol (più è alto, più peso senti), glicerina (prodotta durante la fermentazione, dà rotondità), e estratto secco (tutto ciò che rimane dopo aver evaporato il vino — tannini, minerali, zuccheri). I vini leggeri non sono peggiori: sono semplicemente più adatti a situazioni diverse — aperitivo, giornate estive, piatti delicati."
           ],
           "keyPoints": [
-            "Definizione di il corpo del vino",
-            "Un vino leggero è",
-            "Un vino strutturato è"
+            "Corpo = peso in bocca",
+            "Alcol + glicerina + estratto",
+            "Leggero non è peggio: è diverso"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Come riconoscerlo e usarlo",
           "paragraphs": [
-            "Ora sai distinguere vini leggeri e strutturati.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Per valutare il corpo, prova questo: tieni il vino in bocca qualche secondo, poi ingoialo. La sensazione che rimane — pesante e avvolgente o fresca e rapida — è il corpo. Le 'lacrime' (i filetti che scendono sul bicchiere dopo averlo inclinato) indicano alcol e glicerina: più sono lente e dense, più il vino è strutturato.",
+            "Nella pratica: un vino a corpo leggero con una bistecca scompare. Un vino a corpo pieno con una trota al vapore uccide il piatto. L'abbinamento per peso è uno dei principi più semplici e più efficaci che esistano. Corpo simile tra cibo e vino = armonia quasi garantita."
           ],
           "keyPoints": [
-            "Tutti i vini hanno lo stesso corpo",
-            "Il corpo dipende da"
+            "Lacrime lente = più struttura",
+            "Abbina per peso cibo-vino",
+            "Corpo pieno con piatti importanti"
           ]
         }
       ]
@@ -539,87 +437,70 @@
     {
       "id": "l7",
       "title": "Territorio e vino",
-      "intro": "Il vino cambia in base al luogo in cui nasce.",
-      "final": "Ora capisci il concetto di terroir.",
+      "intro": "Il vino è l'unica bevanda al mondo che cambia radicalmente a seconda del luogo esatto in cui nasce — questo è il terroir.",
+      "final": "Ora capisci perché lo stesso vitigno dà vini completamente diversi a pochi chilometri di distanza, e perché questo conta per te al momento della scelta.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Cosa influenza il vino?",
-          "answers": [
-            "Territorio",
-            "Etichetta",
-            "Bottiglia"
-          ],
+          "answers": ["Territorio", "Etichetta", "Bottiglia"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Il clima influisce su:",
-          "answers": [
-            "Gusto",
-            "Solo colore",
-            "Solo prezzo"
-          ],
+          "answers": ["Gusto", "Solo colore", "Solo prezzo"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Il suolo non ha importanza.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Il terroir include:",
-          "answers": [
-            "Clima e suolo",
-            "Solo marca",
-            "Solo bottiglia"
-          ],
+          "answers": ["Clima e suolo", "Solo marca", "Solo bottiglia"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Il vino cambia da regione a regione.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Territorio e vino",
+          "title": "Cosa si intende davvero per terroir",
           "paragraphs": [
-            "Il vino cambia in base al luogo in cui nasce.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Terroir (parola francese, si pronuncia 'terroàr') è l'insieme di tutto ciò che il territorio offre alla vite: il tipo di suolo (argilloso, calcareo, vulcanico, sabbioso), il microclima locale (piogge, temperature, escursione termica giorno-notte), l'altitudine, l'esposizione al sole, il vento. Ogni elemento lascia una traccia chimica nel vino finale.",
+            "Esempio concreto: il Nebbiolo coltivato a Barolo (suolo di Tortona, argilloso-calcareo) dà vini più eleganti e floreali. Lo stesso Nebbiolo coltivato a Barbaresco (suolo di Helvetico, più compatto) dà vini leggermente più morbidi. Stessa uva, stesso vitigno, stessa regione — ma 20 km di distanza producono vini che un sommelier distingue alla cieca. Questo è il potere del terroir."
           ],
           "keyPoints": [
-            "Influenza il vino",
-            "Il clima influisce su",
-            "Il suolo non ha importanza"
+            "Terroir = suolo + clima + altitudine + esposizione",
+            "Stesso vitigno, terroir diverso = vino diverso",
+            "Impronta chimica misurabile"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Perché il territorio giustifica il prezzo",
           "paragraphs": [
-            "Ora capisci il concetto di terroir.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Il terroir spiega perché i grandi vini non si possono copiare. Puoi prendere un Nebbiolo californiano, farlo con la stessa tecnica di un Barolo, invecchiarlo nelle stesse botti — ma non sarà mai un Barolo. Il suolo delle Langhe contiene minerali specifici assorbiti dalla vite per millenni. Questo è irriproducibile geograficamente.",
+            "Le denominazioni d'origine (DOC, DOCG in Italia; AOC in Francia) non sono burocrazie inutili: sono la protezione legale di un terroir specifico. Quando vedi 'Chianti Classico DOCG' sai che quel vino viene da un territorio preciso con regole precise. È una garanzia di origine, non solo di qualità. Il territorio, in fondo, è la firma impossibile da falsificare."
           ],
           "keyPoints": [
-            "Il terroir include",
-            "Il vino cambia da regione a regione"
+            "Il terroir non si può copiare",
+            "DOC/DOCG proteggono il territorio",
+            "Origine = firma geografica unica"
           ]
         }
       ]
@@ -627,88 +508,70 @@
     {
       "id": "l8",
       "title": "Abbinamenti base",
-      "intro": "Il vino si abbina al cibo in modo logico.",
-      "final": "Ora sai fare abbinamenti semplici.",
+      "intro": "L'abbinamento non è magia né dogma: è logica applicata — cibo e vino che parlano la stessa lingua di intensità.",
+      "final": "Ora sai fare abbinamenti semplici partendo da un principio chiaro: il peso del cibo deve incontrare il peso del vino.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Il vino si abbina con:",
-          "answers": [
-            "Cibo",
-            "Solo acqua",
-            "Solo dolci"
-          ],
+          "answers": ["Cibo", "Solo acqua", "Solo dolci"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Il vino bianco con:",
-          "answers": [
-            "Pesce",
-            "Carne rossa",
-            "Cioccolato"
-          ],
+          "answers": ["Pesce", "Carne rossa", "Cioccolato"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il vino rosso con:",
-          "answers": [
-            "Carne rossa",
-            "Pesce",
-            "Frutta"
-          ],
+          "answers": ["Carne rossa", "Pesce", "Frutta"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "true_false",
           "question": "Gli abbinamenti sono rigidi.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q5",
           "type": "mcq",
           "question": "Gli abbinamenti sono:",
-          "answers": [
-            "Linee guida",
-            "Regole assolute",
-            "Casuali"
-          ],
+          "answers": ["Linee guida", "Regole assolute", "Casuali"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Abbinamenti base",
+          "title": "Il principio del peso",
           "paragraphs": [
-            "Il vino si abbina al cibo in modo logico.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "La regola madre dell'abbinamento è una sola: il vino non deve sopraffare il cibo, né il cibo deve soffocare il vino. Un branzino al vapore con un Barolo sarebbe un disastro — il vino domina e il pesce scompare. Una bistecca alla fiorentina con un Pinot Grigio leggero? Il cibo distrugge il vino. Cerca il peso simile.",
+            "Esempi pratici che funzionano quasi sempre: Vermentino di Sardegna + pesce al forno (entrambi freschi e marini), Chianti Classico + pasta al ragù (acidità del vino taglia il grasso della carne), Barolo + brasato di manzo (struttura contro struttura), Moscato d'Asti + torta di frutta (dolcezza che accompagna dolcezza). Non è magia: è equilibrio fisico."
           ],
           "keyPoints": [
-            "Il vino si abbina con",
-            "Il vino bianco con",
-            "Il vino rosso con"
+            "Peso cibo = peso vino",
+            "Acidità taglia il grasso",
+            "Dolce con dolce, strutturato con strutturato"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Le eccezioni che confermano la regola",
           "paragraphs": [
-            "Ora sai fare abbinamenti semplici.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Le regole 'bianco con pesce, rosso con carne' sono linee guida, non leggi. Il tonno alla griglia regge benissimo un Pinot Nero leggero — la carne del tonno è rossa e saporita come una bistecca. Un Chardonnay barricato corposo accompagna magnificamente pollo in salsa cremosa. Un Lambrusco secco frizzante funziona meglio di molti rossi con salumi e tigelle emiliane.",
+            "Il miglior modo per imparare? Sbagliare consapevolmente. Prendi un vino che conosci e abbinalo con cose diverse: noterai quando il vino 'cresce' con un piatto e quando 'sparisce'. Ogni errore è dati. Ogni abbinamento riuscito è un pattern mentale che si fissa."
           ],
           "keyPoints": [
-            "Gli abbinamenti sono rigidi",
-            "Gli abbinamenti sono"
+            "Bianco con pesce: regola, non obbligo",
+            "Tonno → Pinot Nero leggero funziona",
+            "Impara per esperienza diretta"
           ]
         }
       ]
@@ -716,87 +579,70 @@
     {
       "id": "l9",
       "title": "Degustazione",
-      "intro": "Degustare significa osservare, annusare e assaggiare.",
-      "final": "Ora sai come si degusta un vino.",
+      "intro": "Degustare non è bere lentamente: è un protocollo in tre fasi che trasforma il vino da bevanda in conversazione.",
+      "final": "Ora sai come si degusta un vino e puoi iniziare a farlo consapevolmente già stasera con qualsiasi bottiglia.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Le fasi sono:",
-          "answers": [
-            "Vista, olfatto, gusto",
-            "Solo gusto",
-            "Solo vista"
-          ],
+          "answers": ["Vista, olfatto, gusto", "Solo gusto", "Solo vista"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Si parte sempre dalla vista.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "L’olfatto serve per:",
-          "answers": [
-            "Aromi",
-            "Colore",
-            "Prezzo"
-          ],
+          "question": "L'olfatto serve per:",
+          "answers": ["Aromi", "Colore", "Prezzo"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Il gusto valuta:",
-          "answers": [
-            "Equilibrio",
-            "Solo dolcezza",
-            "Solo alcol"
-          ],
+          "answers": ["Equilibrio", "Solo dolcezza", "Solo alcol"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "La degustazione è un processo completo.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Degustazione",
+          "title": "Le tre fasi in pratica",
           "paragraphs": [
-            "Degustare significa osservare, annusare e assaggiare.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Fase 1 — VISTA: inclina il bicchiere su uno sfondo bianco. Osserva il colore (rosso rubino? granato? aranciato — segno di invecchiamento?), la trasparenza (limpido o velato?), la consistenza (le lacrime che scendono indicano alcol e glicerina). Un vino giallo dorato intenso è probabile che sia passato in legno o sia vecchio. Un rosso con bordo aranciato ha almeno 8-10 anni. La vista racconta l'età e il processo.",
+            "Fase 2 — OLFATTO: prima annusa da fermo (aromi di primo naso). Poi fai girare il vino nel bicchiere (la rotazione libera i composti volatili) e riannusa. Il secondo naso è più ricco. Poi bevi un piccolo sorso: gli aromi retronasali completano il quadro. Fase 3 — GUSTO: tieni il vino in bocca 5-10 secondi, valuta dolcezza/acidità/tannini/corpo. Il finale — quanto durano le sensazioni dopo aver ingoiato — è uno dei migliori indicatori di qualità."
           ],
           "keyPoints": [
-            "Le fasi sono",
-            "Si parte sempre dalla vista",
-            "L’olfatto serve per"
+            "Vista: colore, trasparenza, lacrime",
+            "Olfatto: fermo + rotazione + retronasale",
+            "Finale lungo = indicatore di qualità"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Degustare per migliorare, non per giudicare",
           "paragraphs": [
-            "Ora sai come si degusta un vino.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "L'obiettivo della degustazione non è decidere se un vino è 'buono' o 'cattivo' in assoluto: è capire cosa ha quel vino in quel momento. Un Barolo chiuso e tannico a 3 anni dall'annata non è difettoso — non è ancora pronto. Un Soave leggero e immediato non è banale — è fatto per bere adesso, fresco, senza pensarci troppo.",
+            "Inizia a prendere appunti anche mentali: 'questo rosso mi ha ricordato ciliegia e pepe', 'questo bianco era fresco come lime ma corto'. Costruirai un archivio personale che renderà ogni assaggio successivo più ricco. La degustazione è come imparare una lingua: le prime parole sembrano difficili, poi diventano ovvie."
           ],
           "keyPoints": [
-            "Il gusto valuta",
-            "La degustazione è un processo completo"
+            "Degustare = capire, non giudicare",
+            "Il finale misura la qualità",
+            "Prendi appunti mentali: costruisci il tuo archivio"
           ]
         }
       ]
@@ -804,87 +650,70 @@
     {
       "id": "l10",
       "title": "Ripasso generale",
-      "intro": "È il momento di consolidare tutto quello che hai imparato.",
-      "final": "Ora hai una comprensione solida del vino.",
+      "intro": "Tutto quello che hai imparato forma un sistema: vitigno + territorio + processo + degustazione. Ora lo mettiamo insieme.",
+      "final": "Ora hai una comprensione solida del vino come sistema — non una lista di nozioni ma una struttura logica che puoi applicare ogni volta che hai un bicchiere in mano.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Cosa influenza il vino?",
-          "answers": [
-            "Vitigno e territorio",
-            "Solo bottiglia",
-            "Solo prezzo"
-          ],
+          "answers": ["Vitigno e territorio", "Solo bottiglia", "Solo prezzo"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il gusto è uguale per tutti i vini.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il vino nasce da:",
-          "answers": [
-            "Uva",
-            "Acqua",
-            "Frutta qualsiasi"
-          ],
+          "answers": ["Uva", "Acqua", "Frutta qualsiasi"],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "La fermentazione produce:",
-          "answers": [
-            "Alcol",
-            "Zucchero",
-            "Acqua"
-          ],
+          "answers": ["Alcol", "Zucchero", "Acqua"],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Il vino è sempre semplice da capire.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Ripasso generale",
+          "title": "Il sistema vino in cinque punti",
           "paragraphs": [
-            "È il momento di consolidare tutto quello che hai imparato.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Tutto quello che hai studiato si può riassumere in una mappa mentale: 1) Il vitigno determina il carattere di base (Nebbiolo = tannini e acidità, Chardonnay = versatile e neutro). 2) Il territorio modifica quel carattere (stesso Nebbiolo, terroir diverso = vino diverso). 3) Il processo di produzione aggiunge le scelte del vignaiolo (fermentazione, legno, tempo). 4) La struttura in bocca è la somma di dolcezza, acidità, tannini, corpo. 5) La degustazione è il protocollo per leggere tutto questo in modo sistematico.",
+            "Questi cinque elementi non sono separati: si intersecano. Un Barolo dal terroir eccellente ma vinificato male delude. Un vitigno mediocre in un territorio perfetto può sorprendere. Un grande vino mal degustato (bicchiere sbagliato, temperatura sbagliata) perde metà del suo carattere. Il vino è un sistema che richiede di guardare tutto insieme."
           ],
           "keyPoints": [
-            "Influenza il vino",
-            "Il gusto è uguale per tutti i vini",
-            "Il vino nasce da"
+            "Vitigno → territorio → processo → struttura → degustazione",
+            "Tutto si interseca: nessun elemento è isolato",
+            "Un elemento sbagliato influenza tutti gli altri"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Da qui in avanti",
           "paragraphs": [
-            "Ora hai una comprensione solida del vino.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Hai ora gli strumenti concettuali per affrontare qualsiasi bottiglia. La prossima volta che sei al ristorante e guardi la carta dei vini, chiediti: da quale regione viene? Che vitigno? Quanto è invecchiato? Queste tre domande da sole ti danno il 70% delle informazioni necessarie per fare una scelta consapevole senza sapere nient'altro.",
+            "Il vino non è semplice — ma non è nemmeno complicato quanto sembra. È un linguaggio. E come ogni linguaggio, si impara lentamente, per esposizione, con curiosità. Ogni bottiglia aperta è una lezione. Ogni annusata è un vocabolo nuovo. Continua: il livello successivo ti porta ancora più in profondità."
           ],
           "keyPoints": [
-            "La fermentazione produce",
-            "Il vino è sempre semplice da capire"
+            "Tre domande chiave: regione, vitigno, invecchiamento",
+            "Il vino è un linguaggio: si impara per esposizione",
+            "Ogni bottiglia aperta è una lezione"
           ]
         }
       ]

@@ -1,0 +1,209 @@
+{
+  "level": 10,
+  "slug": "ragionamento-sommelier",
+  "title": "Ragionamento da Sommelier: metodo deduttivo avanzato",
+  "description": "Un livello avanzato per collegare clima, suolo, tecnica di cantina e percezione sensoriale in modo professionale.",
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Clima e maturazione",
+      "intro": "Il clima e la variabile strutturale principale: impatta zucchero, acidita e maturita fenolica.",
+      "final": "Sai usare acidita, alcol e frutto come indizi climatici.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Tre maturazioni da leggere insieme",
+          "paragraphs": [
+            "Maturazione tecnologica: aumento zuccheri e potenziale alcolico.",
+            "Maturazione fenolica: evoluzione di tannini e antociani.",
+            "Maturazione aromatica: sviluppo del profilo olfattivo varietale e fermentativo."
+          ],
+          "keyPoints": ["Tecnologica", "Fenolica", "Aromatica"]
+        },
+        {
+          "id": "s2",
+          "title": "Logica deduttiva",
+          "paragraphs": [
+            "Acidita alta + alcol moderato suggeriscono spesso clima piu fresco.",
+            "Frutto maturo + alcol elevato suggeriscono contesto piu caldo o vendemmia tardiva."
+          ],
+          "keyPoints": ["Indizi nel bicchiere", "Clima", "Ipotesi verificabile"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Quale triade descrive meglio la lettura completa della maturazione?", "answers": ["Solo zuccheri e pH", "Tecnologica, fenolica, aromatica", "Solo colore e alcol"], "correct": 1},
+        {"id": "q2", "type": "mcq", "question": "Acidita alta e alcol moderato suggeriscono spesso:", "answers": ["Clima piu fresco", "Fermentazione bloccata obbligatoria", "Vitigno aromatico dolce"], "correct": 0},
+        {"id": "q3", "type": "true_false", "question": "Maturazione fenolica riguarda anche evoluzione del tannino.", "answers": ["Vero", "Falso"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "Frutto molto maturo e alcol alto sono spesso associati a:", "answers": ["Clima freddo", "Clima caldo o raccolta tardiva", "Bassa insolazione cronica"], "correct": 1},
+        {"id": "q5", "type": "mcq", "question": "Nel metodo deduttivo, un indizio serve a:", "answers": ["Confermare da solo una tesi", "Sostituire la degustazione", "Costruire un'ipotesi da verificare con altri segnali"], "correct": 2}
+      ]
+    },
+    {
+      "id": "l2",
+      "title": "Suolo, acqua e vigoria",
+      "intro": "Il suolo non trasferisce sapori diretti: modula acqua, vigoria e ritmo di maturazione.",
+      "final": "Sai valutare come disponibilita idrica e vigoria influenzino concentrazione e stile.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Funzione reale del suolo",
+          "paragraphs": [
+            "Il suolo controlla drenaggio, riserva idrica e sviluppo radicale.",
+            "La vite risponde cambiando vigoria vegetativa e rapporto foglia/frutto."
+          ],
+          "keyPoints": ["Drenaggio", "Riserva idrica", "Vigoria"]
+        },
+        {
+          "id": "s2",
+          "title": "Effetto sul vino",
+          "paragraphs": [
+            "Eccesso idrico puo diluire composti aromatici e fenolici.",
+            "Stress idrico moderato, se ben gestito, favorisce concentrazione e precisione."
+          ],
+          "keyPoints": ["Diluzione", "Concentrazione", "Gestione agronomica"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Qual e il ruolo principale del suolo nella lettura enologica?", "answers": ["Trasferire aromi minerali diretti", "Modulare acqua e vigoria della vite", "Aumentare automaticamente il grado alcolico"], "correct": 1},
+        {"id": "q2", "type": "mcq", "question": "Un eccesso di disponibilita idrica tende a:", "answers": ["Aumentare concentrazione aromatica", "Ridurre la diluizione", "Favorire vini piu diluiti"], "correct": 2},
+        {"id": "q3", "type": "true_false", "question": "Stress idrico moderato puo migliorare concentrazione se ben gestito.", "answers": ["Vero", "Falso"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "Nel metodo deduttivo, vigoria molto alta puo indicare:", "answers": ["Bilancio produttivo sempre ideale", "Possibile minore concentrazione", "Maturazione fenolica sempre perfetta"], "correct": 1},
+        {"id": "q5", "type": "mcq", "question": "Quale affermazione e piu corretta?", "answers": ["Il suolo conta solo per il colore", "La gestione idrica influenza direttamente lo stile", "La vite non risponde allo stress"], "correct": 1}
+      ]
+    },
+    {
+      "id": "l3",
+      "title": "Estrazione: macerazione e tannino",
+      "intro": "Tempi e modalita di macerazione decidono quanta struttura estrarre da bucce e vinaccioli.",
+      "final": "Sai collegare tecnica estrattiva a colore, tannino e bevibilita.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Cosa si estrae",
+          "paragraphs": [
+            "Dalle bucce derivano antociani e parte dei tannini.",
+            "Dai vinaccioli possono arrivare tannini piu verdi se la maturita non e completa."
+          ],
+          "keyPoints": ["Antociani", "Tannini", "Maturita dei vinaccioli"]
+        },
+        {
+          "id": "s2",
+          "title": "Scelte operative",
+          "paragraphs": [
+            "Macerazione breve: stile piu leggero e fruttato.",
+            "Macerazione lunga e gestione energica: maggiore struttura e astringenza potenziale."
+          ],
+          "keyPoints": ["Durata", "Intensita estrattiva", "Stile finale"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Macerazione breve in genere porta a:", "answers": ["Vino piu leggero e fruttato", "Tannino massimo", "Colore sempre impenetrabile"], "correct": 0},
+        {"id": "q2", "type": "mcq", "question": "Quale componente e legata al colore dei rossi?", "answers": ["Antociani", "Acido tartarico", "Anidride carbonica"], "correct": 0},
+        {"id": "q3", "type": "true_false", "question": "Vinaccioli poco maturi possono contribuire a tannini piu verdi.", "answers": ["Vero", "Falso"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "Una gestione estrattiva intensa puo aumentare:", "answers": ["Astringenza percepita", "Dolcezza residua", "Effervescenza"], "correct": 0},
+        {"id": "q5", "type": "mcq", "question": "Nel ragionamento da sommelier, la trama tannica aiuta a dedurre:", "answers": ["Solo il vitigno", "Tecnica estrattiva e maturita fenolica", "Solo il contenuto zuccherino"], "correct": 1}
+      ]
+    },
+    {
+      "id": "l4",
+      "title": "Fermentazione e temperature",
+      "intro": "La temperatura di fermentazione orienta profilo aromatico, cinetica fermentativa e stabilita.",
+      "final": "Puoi spiegare come scelte di fermentazione influenzano stile e nitidezza aromatica.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Relazione temperatura-aroma",
+          "paragraphs": [
+            "Temperature piu basse preservano meglio molti aromi primari nei bianchi.",
+            "Temperature piu alte nei rossi possono favorire estrazione e complessita, se controllate."
+          ],
+          "keyPoints": ["Preservazione aromatica", "Controllo tecnico", "Equilibrio"]
+        },
+        {
+          "id": "s2",
+          "title": "Rischi e obiettivi",
+          "paragraphs": [
+            "Gestione termica inadeguata puo creare deviazioni aromatiche o fermentazioni difficili.",
+            "Obiettivo professionale: coerenza tra stile desiderato e protocollo di cantina."
+          ],
+          "keyPoints": ["Stabilita", "Prevenzione difetti", "Coerenza stilistica"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Nei bianchi aromatici, una fermentazione piu fresca spesso aiuta a:", "answers": ["Preservare profumi primari", "Aumentare tannino", "Creare ossidazione forzata"], "correct": 0},
+        {"id": "q2", "type": "mcq", "question": "Nei rossi, temperature piu alte possono favorire:", "answers": ["Maggior estrazione", "Perdita totale di colore", "Riduzione automatica dell'alcol"], "correct": 0},
+        {"id": "q3", "type": "true_false", "question": "Il controllo termico e rilevante per evitare deviazioni fermentative.", "answers": ["Vero", "Falso"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "Il criterio professionale corretto e:", "answers": ["Usare sempre la stessa temperatura", "Allineare temperatura e stile voluto", "Ignorare la cinetica fermentativa"], "correct": 1},
+        {"id": "q5", "type": "mcq", "question": "Quale non e un obiettivo del controllo termico?", "answers": ["Stabilita e pulizia", "Coerenza aromatica", "Aumentare la casualita del processo"], "correct": 2}
+      ]
+    },
+    {
+      "id": "l5",
+      "title": "Affinamento: acciaio, legno, cemento",
+      "intro": "Il contenitore non e neutro: determina micro-ossigenazione, texture e profilo aromatico finale.",
+      "final": "Sai distinguere gli effetti principali dei diversi contenitori di affinamento.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Tre filosofie",
+          "paragraphs": [
+            "Acciaio: neutralita aromatica e protezione della freschezza.",
+            "Legno: scambio ossidativo graduale e possibile apporto aromatico.",
+            "Cemento: inerzia termica e micro-scambio moderato senza note boise evidenti."
+          ],
+          "keyPoints": ["Neutralita", "Ossigeno", "Texture"]
+        },
+        {
+          "id": "s2",
+          "title": "Applicazione deduttiva",
+          "paragraphs": [
+            "Vaniglia, spezie dolci e maggiore rotondita possono suggerire legno.",
+            "Profili piu tesi e lineari suggeriscono spesso acciaio o gestione riduttiva."
+          ],
+          "keyPoints": ["Segnali sensoriali", "Contenitore", "Stile percepito"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Quale contenitore e generalmente piu neutro aromaticamente?", "answers": ["Acciaio", "Legno nuovo", "Barrique molto tostata"], "correct": 0},
+        {"id": "q2", "type": "mcq", "question": "Il legno puo contribuire a:", "answers": ["Vaniglia e spezie dolci", "Aromi agrumati primari obbligatori", "Assenza totale di ossigeno"], "correct": 0},
+        {"id": "q3", "type": "true_false", "question": "Il cemento puo offrire buona inerzia termica e micro-scambio moderato.", "answers": ["Vero", "Falso"], "correct": 0},
+        {"id": "q4", "type": "mcq", "question": "Un profilo molto teso e lineare suggerisce piu facilmente:", "answers": ["Legno nuovo invasivo", "Acciaio o gestione riduttiva", "Macerazione lunghissima"], "correct": 1},
+        {"id": "q5", "type": "mcq", "question": "Nel metodo deduttivo, il contenitore si valuta tramite:", "answers": ["Solo colore", "Solo alcol", "Insieme di texture, aromi e equilibrio"], "correct": 2}
+      ]
+    },
+    {
+      "id": "l6",
+      "title": "Metodo deduttivo completo",
+      "intro": "Pensare da sommelier significa costruire ipotesi progressive e verificarle con coerenza.",
+      "final": "Hai completato il livello avanzato: ora ragioni per indizi, connessioni e verifica.",
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Sequenza operativa",
+          "paragraphs": [
+            "Osserva: intensita, tonalita, consistenza.",
+            "Annusa: famiglie aromatiche, intensita, pulizia.",
+            "Assaggia: dolcezza, acidita, tannino, alcol, corpo, persistenza."
+          ],
+          "keyPoints": ["Vista", "Olfatto", "Gusto"]
+        },
+        {
+          "id": "s2",
+          "title": "Dall'indizio alla conclusione",
+          "paragraphs": [
+            "Ogni dato da solo e insufficiente: conta la convergenza degli indizi.",
+            "Il professionista evita scorciatoie: formula ipotesi, cerca conferme e gestisce dubbi."
+          ],
+          "keyPoints": ["Convergenza", "Verifica", "Pensiero critico"]
+        }
+      ],
+      "questions": [
+        {"id": "q1", "type": "mcq", "question": "Nel metodo deduttivo avanzato, il primo principio e:", "answers": ["Concludere subito dal primo aroma", "Cercare convergenza di piu indizi", "Ignorare il contesto climatico"], "correct": 1},
+        {"id": "q2", "type": "mcq", "question": "Quale triade rappresenta il flusso corretto?", "answers": ["Vista-olfatto-gusto", "Gusto-vista-olfatto", "Solo gusto"], "correct": 0},
+        {"id": "q3", "type": "true_false", "question": "Una singola nota aromatica e sufficiente per identificare con certezza terroir e tecnica.", "answers": ["Vero", "Falso"], "correct": 1},
+        {"id": "q4", "type": "mcq", "question": "Un approccio professionale richiede:", "answers": ["Ipotesi + verifica", "Memorizzazione rigida senza analisi", "Solo esperienza intuitiva"], "correct": 0},
+        {"id": "q5", "type": "mcq", "question": "Il risultato finale del metodo e:", "answers": ["Una certezza assoluta senza margine", "Una conclusione motivata e coerente con i dati", "Una descrizione solo emotiva"], "correct": 1}
+      ]
+    }
+  ]
+}

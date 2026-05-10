@@ -7,6 +7,20 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.6.0',
+    date: '10 maggio 2026',
+    label: 'UX & Mobile',
+    changes: [
+      'Homepage semplificata: 3 pulsanti (Accedi/Registrati, Corso Vino, Come funziona) in colonna',
+      'Pagina /auth dedicata per il form di login e registrazione (rimossa dalla homepage)',
+      'Modale ospite nel Corso Vino al posto del banner inline',
+      'Fix skeleton loading su mobile: nessun elemento esce fuori dai box (maxWidth: 100%)',
+      'Fix key prop mancante nei card skeleton della dashboard',
+      'Pulsante Changelog aggiunto nel profilo utente',
+      'Fix header profilo su mobile: pulsanti Indietro e Logout affiancati orizzontalmente',
+    ],
+  },
+  {
     version: '1.5.1',
     date: '9 maggio 2026',
     label: 'Corso Vino UX',

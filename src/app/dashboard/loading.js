@@ -4,7 +4,15 @@ function Bone({w, h, style}) {
   return (
     <div
       className="skeleton"
-      style={{width: w, height: h, borderRadius: 8, flexShrink: 0, ...style}}
+      style={{
+        width: w,
+        height: h,
+        borderRadius: 8,
+        flexShrink: 0,
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+        ...style,
+      }}
     />
   )
 }
@@ -27,11 +35,14 @@ export default function DashboardLoading() {
           <Bone w="180px" h="20px" style={{marginBottom: 16}} />
           <div className={styles.gamesList}>
             {[1, 2, 3].map((i) => (
-              <div key={i} className={styles.gameCard} style={{minHeight: 56, gap: 12}}>
+              <div
+                key={i}
+                className={styles.gameCard}
+                style={{minHeight: 56, gap: 12, flexWrap: 'wrap'}}>
                 <Bone w="32%" h="18px" />
                 <Bone w="90px" h="20px" style={{borderRadius: 999}} />
                 <Bone w="70px" h="14px" />
-                <div style={{display: 'flex', gap: 6, marginLeft: 'auto'}}>
+                <div style={{display: 'flex', gap: 6, marginLeft: 'auto', flexWrap: 'wrap'}}>
                   <Bone w="90px" h="36px" style={{borderRadius: 12}} />
                   <Bone w="90px" h="36px" style={{borderRadius: 12}} />
                   <Bone w="110px" h="36px" style={{borderRadius: 12}} />

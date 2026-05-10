@@ -7,67 +7,56 @@
     {
       "id": "l1",
       "title": "Il vino più antico del mondo",
-      "intro": "Il vino esiste da migliaia di anni. Alcune tracce risalgono a oltre 8.000 anni fa in Georgia.",
-      "final": "Ora sai dove è nato probabilmente il vino.",
+      "intro": "Il vino non è un'invenzione moderna — ha 8.000 anni di storia e probabilmente è nato per caso, come tutte le grandi scoperte.",
+      "final": "Ora sai dove è nato probabilmente il vino e capisci che questa bevanda antica è parte del DNA culturale dell'umanità.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Dove sono state trovate le tracce di vino più antiche?",
-          "answers": [
-            "Georgia",
-            "Italia",
-            "Francia"
-          ],
+          "answers": ["Georgia", "Italia", "Francia"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino ha più di 8.000 anni di storia.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il vino nasce inizialmente come:",
-          "answers": [
-            "Fermentazione spontanea",
-            "Ricetta industriale",
-            "Bevanda moderna"
-          ],
+          "answers": ["Fermentazione spontanea", "Ricetta industriale", "Bevanda moderna"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Il vino più antico del mondo",
+          "title": "Georgia, 6.000 a.C.",
           "paragraphs": [
-            "Il vino esiste da migliaia di anni. Alcune tracce risalgono a oltre 8.000 anni fa in Georgia.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Nel 2017 un team di archeologi internazionali ha trovato in Georgia (Caucaso) resti di vino risalenti a circa 6.000 a.C. — oltre 8.000 anni fa. Si trattava di anfore di terracotta con residui di acido tartarico, malico e citrico: le impronte chimiche inconfondibili dell'uva fermentata. Prima di questa scoperta si pensava che il vino avesse origini persiane o mesopotamiche. La Georgia ha spostato indietro il confine della storia.",
+            "Come è nato il vino? Probabilmente per caso. Un grappolo d'uva matura, lasciato troppo a lungo in un contenitore di terracotta, comincia a fermentare spontaneamente grazie ai lieviti presenti sulle bucce. Qualcuno — molto tempo fa — ha assaggiato quel liquido e ha capito che c'era qualcosa di speciale. Da quel momento, l'umanità non ha più smesso di produrlo. La Georgia oggi ha oltre 500 vitigni autoctoni e usa ancora l'antico metodo delle anfore di terracotta (kvevri) per fare vini orange di grande carattere."
           ],
           "keyPoints": [
-            "Dove sono state trovate le tracce di vino più antiche",
-            "Il vino ha più di 8.000 anni di storia",
-            "Il vino nasce inizialmente come"
+            "Georgia, 6.000 a.C.: le tracce più antiche",
+            "Acido tartarico: impronta chimica del vino",
+            "Nascita spontanea: fermentazione accidentale"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Dall'anfora al mondo",
           "paragraphs": [
-            "Ora sai dove è nato probabilmente il vino.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Dopo la Georgia, la diffusione del vino ha seguito le rotte commerciali dell'antichità. I Fenici lo hanno portato nel Mediterraneo. I Greci lo hanno impiantato in Sicilia e nel Sud Italia (la 'Magna Grecia' era anche grande per i vigneti, non solo per le colonie). I Romani lo hanno industrializzato e diffuso ovunque arrivassero le legioni — incluse le attuali Francia, Germania, Inghilterra.",
+            "Il vino più antico in bottiglia conservato (non solo tracce chimiche) è il cosiddetto 'Vino di Speyer': scoperto in una tomba romana in Germania nel 1867, risale al IV secolo d.C. È ancora nella bottiglia originale, sigillata con cera d'api e olio d'oliva. Nessuno l'ha mai aperta per rispetto storico — ma i chimici l'hanno analizzata da fuori: contiene ancora etanolo. 1.700 anni dopo."
           ],
           "keyPoints": [
-            "Dove sono state trovate le tracce di vino più antiche",
-            "Il vino ha più di 8.000 anni di storia",
-            "Il vino nasce inizialmente come"
+            "Fenici e Greci: diffusione nel Mediterraneo",
+            "Romani: industrializzazione e diffusione in Europa",
+            "Vino di Speyer: la bottiglia più antica ancora intatta (IV sec. d.C.)"
           ]
         }
       ]
@@ -75,67 +64,56 @@
     {
       "id": "l2",
       "title": "I romani e il vino",
-      "intro": "Per i Romani il vino era quotidiano, diluito con acqua e consumato da tutti.",
-      "final": "Ora sai perché il vino è così radicato in Europa.",
+      "intro": "Per i Romani il vino non era un lusso — era la bevanda di tutti, dal senatore allo schiavo, consumata ogni giorno e diluita con acqua come noi facciamo col caffè.",
+      "final": "Ora sai perché il vino è così radicato nella cultura europea e mediteranea: è una tradizione di duemila anni che i Romani hanno reso universale.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Come bevevano spesso il vino i Romani?",
-          "answers": [
-            "Diluito con acqua",
-            "Con ghiaccio",
-            "Caldo"
-          ],
+          "answers": ["Diluito con acqua", "Con ghiaccio", "Caldo"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino era riservato solo ai ricchi.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il vino per i Romani era:",
-          "answers": [
-            "Bevanda quotidiana",
-            "Raro lusso",
-            "Medicinale segreto"
-          ],
+          "answers": ["Bevanda quotidiana", "Raro lusso", "Medicinale segreto"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "I romani e il vino",
+          "title": "Il vino democratico di Roma",
           "paragraphs": [
-            "Per i Romani il vino era quotidiano, diluito con acqua e consumato da tutti.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Nell'antica Roma il vino era distribuito gratuitamente alla plebe durante i giochi pubblici. I soldati delle legioni ricevevano una razione giornaliera di posca — acqua acidulata con aceto di vino — come bevanda igienica (l'acqua era spesso contaminata; il vino aceto no). I lavoratori nei campi bevevano il lora, il vino più economico ricavato dalle vinacce esaurite reidratate con acqua. Era la coca-cola dell'antichità: economica, presente, sociale.",
+            "Il vino romano non era come lo intendiamo oggi: era quasi sempre diluito con acqua (1 parte vino, 2-3 di acqua — un antico Spritz). Berlo puro era considerato barbarico e intemperante. Veniva spesso aromatizzato con miele (mulsum), pepe, resine, sale marino. Il Falerno, proveniente dalla Campania, era il vino più pregiato e costava una fortuna. Plinio il Vecchio lo descriveva nei dettagli nella sua Naturalis Historia — il primo trattato enologico della storia."
           ],
           "keyPoints": [
-            "Come bevevano spesso il vino i Romani",
-            "Il vino era riservato solo ai ricchi",
-            "Il vino per i Romani era"
+            "Posca ai soldati: igiene con aceto di vino",
+            "Sempre diluito: bere puro era 'barbarico'",
+            "Falerno campano: il vino più pregiato dell'impero"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "L'eredità vinicola romana",
           "paragraphs": [
-            "Ora sai perché il vino è così radicato in Europa.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "I Romani hanno impiantato viti in ogni angolo dell'impero: Borgogna, Reno, Mosella, Catalogna, Portogallo. Molti dei più grandi terroir vitivinicoli europei sono stati 'scoperti' dai Romani. Le prime viti della Borgogna — oggi la zona dove il vino è più studiato e costoso al mondo — furono piantate da soldati romani nel I-II secolo d.C. Duemila anni dopo, gli stessi vigneti producono ancora.",
+            "Il sistema legale romano ha anche creato i primi prototipi di 'denominazione d'origine': il Falerno aveva zone di produzione codificate e prezzi regolamentati. Suonavano come antenati della nostra DOCG. La legge romana non proteggeva solo la qualità — proteggeva l'identità geografica del prodotto. Un'idea che si è persa nel Medioevo e riemersa solo nell'800 con il sistema francese delle appellations."
           ],
           "keyPoints": [
-            "Come bevevano spesso il vino i Romani",
-            "Il vino era riservato solo ai ricchi",
-            "Il vino per i Romani era"
+            "Romani: prime viti in Borgogna, Reno, Mosella",
+            "Prime codifiche di zona di produzione",
+            "Eredità vitivinicola: 2.000 anni di continuità"
           ]
         }
       ]
@@ -143,67 +121,56 @@
     {
       "id": "l3",
       "title": "Il vino e i monaci",
-      "intro": "Nel Medioevo i monaci hanno salvato e perfezionato la viticoltura europea.",
-      "final": "Ora sai chi ha mantenuto viva la cultura del vino.",
+      "intro": "Dopo la caduta di Roma, è stato il clero a salvare la viticoltura europea dal collasso — e a migliorarla come nessun altro aveva fatto prima.",
+      "final": "Ora sai chi ha mantenuto viva la cultura del vino nei secoli bui e perché alcune delle zone vinicole più famose al mondo si chiamano ancora con nomi di abbazie.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Chi ha preservato il vino nel Medioevo?",
-          "answers": [
-            "Monaci",
-            "Re",
-            "Mercanti"
-          ],
+          "answers": ["Monaci", "Re", "Mercanti"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "I monasteri producevano vino.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il vino era usato anche come:",
-          "answers": [
-            "Acqua sicura",
-            "Profumo",
-            "Moneta"
-          ],
+          "answers": ["Acqua sicura", "Profumo", "Moneta"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Il vino e i monaci",
+          "title": "I monaci, custodi del vino",
           "paragraphs": [
-            "Nel Medioevo i monaci hanno salvato e perfezionato la viticoltura europea.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Quando l'Impero Romano crollò nel V secolo d.C., le invasioni barbariche distrussero gran parte dell'infrastruttura viticola europea. I monasteri erano le uniche istituzioni stabili e sicure. I monaci avevano bisogno di vino per la messa (il vino della comunione è un obbligo liturgico) e per l'uso medico. Così continuarono a coltivare viti, selezionare i vitigni migliori, affinare le tecniche di vinificazione — per secoli, mentre il mondo esterno era in caos.",
+            "I Benedettini (e poi i Cistercensi) divennero i più importanti viticoltori d'Europa. Clos de Vougeot, oggi uno dei cru più celebri della Borgogna, fu fondato dai monaci Cistercensi nel XII secolo. Il muro che circonda ancora oggi quel vigneto fu costruito da loro. Dom Pérignon — il monaco cui si attribuisce (non del tutto correttamente) l'invenzione dello Champagne — era cellerario dell'Abbazia di Hautvillers nel XVII secolo."
           ],
           "keyPoints": [
-            "Chi ha preservato il vino nel Medioevo",
-            "I monasteri producevano vino",
-            "Il vino era usato anche come"
+            "Monasteri: unica stabilità dopo il crollo di Roma",
+            "Vino per la messa: necessità liturgica",
+            "Cistercensi: fondatori di Clos de Vougeot in Borgogna"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "La selezione secolare",
           "paragraphs": [
-            "Ora sai chi ha mantenuto viva la cultura del vino.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "I monaci non si limitarono a conservare: migliorarono. Avevano tempo, risorse, motivazione religiosa e archivi scritti che permettevano di tramandare la conoscenza. In Borgogna, i Cistercensi svilupparono il concetto di 'climat' — l'idea che ogni piccola parcella di terra avesse caratteristiche uniche. Lo fecero assaggiando letteralmente il suolo, secondo la leggenda. Era proto-scienza del terroir.",
+            "Il vino era anche valuta nel Medioevo: i monasteri lo usavano per pagare debiti, ospitare pellegrini, costruire relazioni politiche con i nobili locali. Un barile di Borgogna pregiata era un regalo diplomatico. Non molto diverso da oggi. Molti dei 'grand cru' borgognoni — i vigneti più famosi e costosi al mondo — portano ancora nel nome la traccia monastica: Clos, Abbaye, Prieuré."
           ],
           "keyPoints": [
-            "Chi ha preservato il vino nel Medioevo",
-            "I monasteri producevano vino",
-            "Il vino era usato anche come"
+            "Monaci: selezione e miglioramento su secoli",
+            "Cistercensi e il concetto di 'climat'",
+            "Vino come valuta diplomatica medievale"
           ]
         }
       ]
@@ -211,67 +178,56 @@
     {
       "id": "l4",
       "title": "Il tappo di sughero",
-      "intro": "Il tappo di sughero è usato da secoli e permette al vino di respirare lentamente.",
-      "final": "Ora sai perché il sughero è ancora usato oggi.",
+      "intro": "Il tappo di sughero sembra banale — ma è una tecnologia sofisticata vecchia di secoli che ancora oggi nessun materiale ha completamente sostituito.",
+      "final": "Ora sai perché il sughero è ancora usato oggi e puoi capire il dibattito tra tappi naturali, sintetici e capsule a vite senza prendere posizioni ingenue.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Da dove viene il sughero?",
-          "answers": [
-            "Quercia",
-            "Pino",
-            "Vite"
-          ],
+          "answers": ["Quercia", "Pino", "Vite"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il sughero permette micro-ossigenazione.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il tappo alternativo più comune è:",
-          "answers": [
-            "Vite metallica",
-            "Legno",
-            "Vetro"
-          ],
+          "answers": ["Vite metallica", "Legno", "Vetro"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Il tappo di sughero",
+          "title": "Il sughero: una tecnologia dimenticata",
           "paragraphs": [
-            "Il tappo di sughero è usato da secoli e permette al vino di respirare lentamente.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Il sughero viene dalla corteccia della Quercus suber, la quercia da sughero. Cresce principalmente in Portogallo (che produce il 50% del sughero mondiale), Spagna, Sardegna e Corsica. La corteccia viene raccolta a mano ogni 9 anni senza danneggiare l'albero — è una delle poche risorse naturali totalmente rinnovabili. Una quercia da sughero produce corteccia per 200 anni.",
+            "Il tappo di sughero è usato sistematicamente nella bottiglia vino dal XVII-XVIII secolo. Prima si usava olio d'oliva versato nel collo, stracci, o tappi di legno grezzo. Il sughero ha proprietà straordinarie: è impermeabile, elastico, leggero, inerte chimicamente, e permette una micro-ossigenazione controllata — una quantità minuscola di aria passa attraverso le cellule del sughero nel tempo, favorendo la lenta evoluzione degli aromi terziari nei grandi vini."
           ],
           "keyPoints": [
-            "Da dove viene il sughero",
-            "Il sughero permette micro-ossigenazione",
-            "Definizione di tappo alternativo più comune"
+            "Quercus suber: raccolta ogni 9 anni senza danno",
+            "Portogallo: 50% della produzione mondiale",
+            "Micro-ossigenazione: chiave per l'invecchiamento"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Il dibattito tappo: chi ha ragione?",
           "paragraphs": [
-            "Ora sai perché il sughero è ancora usato oggi.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Il tappo di sughero ha un nemico: il TCA (2,4,6-tricloroanisolo), il composto chimico responsabile del 'tappo difettoso' — quell'odore di muffa, cantina bagnata, cartone umido che uccide un vino. Si stima che il 2-5% dei vini con tappo naturale sia difettoso per TCA. È un problema reale che l'industria sughericola sta combattendo con trattamenti e selezioni più rigorosi.",
+            "Le alternative: capsule a vite (Stelvin) — ermetiche, nessun rischio TCA, ideali per vini da bere giovani; tappi sintetici — aspetto simile al naturale, nessun TCA ma permeabilità meno controllata; vetro (Vino-Lok) — elegante ma costoso. I produttori di vini da invecchiare preferiscono ancora il sughero naturale per la micro-ossigenazione. Quelli di vini bianchi freschi e immediati scelgono sempre più spesso la capsula a vite. Non c'è un vincitore universale: dipende dallo stile del vino."
           ],
           "keyPoints": [
-            "Da dove viene il sughero",
-            "Il sughero permette micro-ossigenazione",
-            "Definizione di tappo alternativo più comune"
+            "TCA: 'difetto di tappo', 2-5% dei vini naturali",
+            "Capsula a vite: ideale per vini giovani e freschi",
+            "Sughero naturale: ancora preferito per i grandi vini da invecchiare"
           ]
         }
       ]
@@ -279,67 +235,56 @@
     {
       "id": "l5",
       "title": "Perché si brinda",
-      "intro": "Il brindisi nasce da antiche tradizioni per scacciare i veleni nei bicchieri.",
-      "final": "Ora sai perché si alzano i bicchieri.",
+      "intro": "Il brindisi è uno dei gesti sociali più universali al mondo — ma le sue origini sono tutt'altro che romantiche: c'entrano il veleno, la sfiducia e la sopravvivenza.",
+      "final": "Ora sai perché si alzano i bicchieri e puoi raccontare questa storia al prossimo brindisi, che è esattamente il momento giusto.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Perché si brindava in origine?",
-          "answers": [
-            "Per sicurezza",
-            "Per moda",
-            "Per sport"
-          ],
+          "answers": ["Per sicurezza", "Per moda", "Per sport"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il brindisi era un gesto di fiducia.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Oggi il brindisi serve per:",
-          "answers": [
-            "Celebrare",
-            "Misurare vino",
-            "Degustare"
-          ],
+          "answers": ["Celebrare", "Misurare vino", "Degustare"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Perché si brinda",
+          "title": "Origini: veleno e fiducia",
           "paragraphs": [
-            "Il brindisi nasce da antiche tradizioni per scacciare i veleni nei bicchieri.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "L'ipotesi più accreditata sulle origini del brindisi porta al Medioevo (e forse ancora prima, all'antica Grecia). L'avvelenamento tramite bevanda era un metodo di assassinio comune e difficile da provare. La soluzione: sbattere i bicchieri con forza sufficiente da far traboccare il vino dell'uno nel bicchiere dell'altro. Se uno dei due aveva avvelenato il suo calice, avrebbe avvelenato anche se stesso. Era un gesto di reciproca garanzia.",
+            "Un'altra teoria riguarda il suono: nell'esperienza sensoriale del vino mancava il suono. Vista (colore), olfatto (aromi), gusto (sapori), tatto (corpo) — ma nessun elemento uditivo. Il tintinnio dei bicchieri completava l'esperienza sensoriale totale. Nella cultura greca e romana, il simposio (la riunione conviviale attorno al vino) era un rito multisensoriale. Il suono era parte del rito."
           ],
           "keyPoints": [
-            "Perché si brindava in origine",
-            "Il brindisi era un gesto di fiducia",
-            "Oggi il brindisi serve per"
+            "Origini medievali: anti-avvelenamento",
+            "Versamento incrociato: garanzia reciproca di sicurezza",
+            "Tintinnio: completava l'esperienza sensoriale"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Il brindisi in cultura: regole non scritte",
           "paragraphs": [
-            "Ora sai perché si alzano i bicchieri.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Ogni cultura ha le proprie regole del brindisi. In Italia si dice 'Salute!' o 'Cin cin' (dal cinese 'qing qing', onomatopea del tintinnio — portato dai marinai nei porti italiani). In Francia 'Santé'. In Germania 'Prost'. In Giappone 'Kanpai'. Ovunque, il contatto visivo durante il brindisi è considerato importante — in Germania e Austria, evitare lo sguardo porta sette anni di sfortuna secondo la superstizione.",
+            "Etichetta moderna del brindisi: il bicchiere va tenuto per lo stelo (non per la coppa, per non scaldare il vino e per non lasciare impronte), si aspetta che tutti abbiano il bicchiere prima di bere, il primo a brindare normalmente è il padrone di casa o il più anziano del tavolo. E poi, ovviamente, ci si guarda negli occhi — sia per tradizione, sia perché è semplicemente un atto di connessione umana."
           ],
           "keyPoints": [
-            "Perché si brindava in origine",
-            "Il brindisi era un gesto di fiducia",
-            "Oggi il brindisi serve per"
+            "'Cin cin': origine cinese portata dai marinai",
+            "Contatto visivo: regola sociale universale",
+            "Stelo del bicchiere: non la coppa, per non scaldare il vino"
           ]
         }
       ]
@@ -347,67 +292,56 @@
     {
       "id": "l6",
       "title": "Il vino più costoso del mondo",
-      "intro": "Alcuni vini raggiungono prezzi incredibili per rarità e storia.",
-      "final": "Ora sai che il vino può essere anche investimento.",
+      "intro": "Alcune bottiglie di vino raggiungono prezzi da capogiro — non per il vino in sé ma per storia, rarità e il mercato del collezionismo che le circonda.",
+      "final": "Ora sai che il vino può essere anche un investimento, e capisci perché il vino più costoso non è necessariamente il migliore nel bicchiere.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Cosa aumenta il prezzo di un vino?",
-          "answers": [
-            "Rarità",
-            "Colore",
-            "Forma bottiglia"
-          ],
+          "answers": ["Rarità", "Colore", "Forma bottiglia"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino più costoso è sempre il migliore.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Alcuni vini diventano:",
-          "answers": [
-            "Oggetti da collezione",
-            "Acqua aromatizzata",
-            "Bibite gassate"
-          ],
+          "answers": ["Oggetti da collezione", "Acqua aromatizzata", "Bibite gassate"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Il vino più costoso del mondo",
+          "title": "Record e rarità",
           "paragraphs": [
-            "Alcuni vini raggiungono prezzi incredibili per rarità e storia.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "La bottiglia di vino più costosa mai venduta all'asta è una Jeroboam (3 litri) di Romanée-Conti 1945 venduta da Sotheby's nel 2018 per 558.000 dollari. Romanée-Conti è un vigneto di 1,8 ettari in Borgogna (il più piccolo grand cru della zona) che produce circa 5.000-6.000 bottiglie all'anno. Il 1945 fu un anno straordinario e quasi nessuna bottiglia integra esiste ancora. Prezzo finale: circa 186.000 dollari al litro.",
+            "Perché così tanto? Non è solo qualità del vino — è rarità assoluta, storia leggendaria, perfette condizioni di conservazione documentate, e la domanda da parte di collezionisti ultra-ricchi che vogliono possedere un pezzo di storia enologica. È esattamente come i francobolli rari o i quadri dei Maestri: il valore è in parte intrinseco e in parte costruito dal mercato."
           ],
           "keyPoints": [
-            "Aumenta il prezzo di un vino",
-            "Il vino più costoso è sempre il migliore",
-            "Alcuni vini diventano"
+            "Romanée-Conti 1945: 558.000$ per 3 litri",
+            "1,8 ettari: il grand cru più piccolo di Borgogna",
+            "Valore = rarità + storia + condizioni + domanda di mercato"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Il vino come investimento",
           "paragraphs": [
-            "Ora sai che il vino può essere anche investimento.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Il mercato del vino fine (fine wine) è un mercato finanziario vero: ci sono indici di prezzo (Liv-ex Fine Wine 100), fondi di investimento dedicati, aste internazionali. I Bordeaux de classification (Pétrus, Château Lafite, Mouton Rothschild), i Burgundy grand cru e alcuni Super Tuscan italiani (Sassicaia, Ornellaia) tendono a rivalutarsi nel tempo se conservati correttamente.",
+            "Attenzione però: il mercato del vino è illiquido (non vendi in 5 minuti), dipende dalla moda (le annate 'di culto' cambiano), richiede stoccaggio professionale costoso, e il rischio di autenticità è reale (le bottiglie false esistono). Il 99,9% delle persone non ha nessun bisogno di investire in vino. Ma sapere che esiste questo mercato aiuta a capire perché certe bottiglie costano quello che costano — e perché il prezzo alto non significa necessariamente miglior sapore nel bicchiere."
           ],
           "keyPoints": [
-            "Aumenta il prezzo di un vino",
-            "Il vino più costoso è sempre il migliore",
-            "Alcuni vini diventano"
+            "Liv-ex: indice finanziario del mercato vino",
+            "Bordeaux, Borgogna, Super Tuscan: asset rivalutabili",
+            "Prezzo alto ≠ miglior sapore: conta il contesto"
           ]
         }
       ]
@@ -415,67 +349,56 @@
     {
       "id": "l7",
       "title": "Il vino e la scienza",
-      "intro": "Il vino è chimica viva: lieviti, batteri e reazioni naturali.",
-      "final": "Ora sai che il vino è anche scienza.",
+      "intro": "Il vino è il prodotto alimentare più studiato dalla scienza moderna — migliaia di ricerche ogni anno cercano di capire le sue oltre 800 molecole aromatiche.",
+      "final": "Ora sai che il vino è anche scienza, e puoi guardare con occhio più critico le notizie 'il vino fa bene alla salute' o 'il vino fa male' che escono ciclicamente sui giornali.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Chi trasforma il vino?",
-          "answers": [
-            "Lieviti",
-            "Plastica",
-            "Metallo"
-          ],
+          "answers": ["Lieviti", "Plastica", "Metallo"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino è un prodotto biologico complesso.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "La chimica del vino riguarda:",
-          "answers": [
-            "Reazioni naturali",
-            "Solo colore",
-            "Solo bottiglia"
-          ],
+          "answers": ["Reazioni naturali", "Solo colore", "Solo bottiglia"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Il vino e la scienza",
+          "title": "Le 800 molecole del vino",
           "paragraphs": [
-            "Il vino è chimica viva: lieviti, batteri e reazioni naturali.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Il vino contiene oltre 800 composti volatili identificati (e probabilmente molti altri ancora sconosciuti). Tra questi: eteri (responsabili degli aromi fruttati), terpeni (fiori e spezie), pirazine (peperone nel Cabernet Sauvignon), tioli (pompelmo e frutto della passione nel Sauvignon Blanc), lattoni (cocco nelle botti di rovere americano). Ogni vitigno ha la sua 'firma chimica' — una costellazione di molecole che lo rendono riconoscibile.",
+            "I lieviti producono durante la fermentazione centinaia di composti che non erano nell'uva: alcol isoamilico (banana nei vini giovani fermentati freddo), acetaldeide (mela verde, nota tipica di certi bianchi giovani), glicerina (rotondità), acido succinico (sapore di umami). La cantina è un laboratorio chimico naturale dove reazioni controllate creano complessità."
           ],
           "keyPoints": [
-            "Chi trasforma il vino",
-            "Il vino è un prodotto biologico complesso",
-            "La chimica del vino riguarda"
+            "800+ composti volatili identificati",
+            "Terpeni = fiori; pirazine = peperone; tioli = agrumi",
+            "La fermentazione crea centinaia di nuovi composti"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "La scienza del resveratrolo e le sue ombre",
           "paragraphs": [
-            "Ora sai che il vino è anche scienza.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Il resveratrolo è un polifenolo presente nelle bucce dell'uva rossa che ha mostrato proprietà antiossidanti e cardioprotettive in studi in vitro e su animali. Negli anni '90-2000 ha generato il 'paradosso francese' — come mai i francesi mangiano molto grasso eppure hanno meno malattie cardiache? Il vino rosso era la risposta preferita dai media. La realtà scientifica è più complessa.",
+            "Per assumere una dose terapeuticamente rilevante di resveratrolo dal vino rosso, dovresti berne centinaia di litri al giorno. L'effetto sull'uomo, a dosi normali di consumo, non è mai stato dimostrato in modo conclusivo. Il vino fa bene? In quantità moderate, l'alcol ha effetti cardioprotettivi documentati (aumenta il colesterolo HDL). Ma l'Organizzazione Mondiale della Sanità è chiara: nessuna quantità di alcol è completamente priva di rischi. Goditi il vino per quello che è — un piacere culturale e sensoriale, non una medicina."
           ],
           "keyPoints": [
-            "Chi trasforma il vino",
-            "Il vino è un prodotto biologico complesso",
-            "La chimica del vino riguarda"
+            "Resveratrolo: interessante in laboratorio, limitato nell'uomo",
+            "'Paradosso francese': semplificazione mediatica",
+            "Vino: piacere culturale, non farmaco"
           ]
         }
       ]
@@ -483,67 +406,56 @@
     {
       "id": "l8",
       "title": "Il vino nello spazio",
-      "intro": "Alcuni vini sono stati invecchiati anche nello spazio.",
-      "final": "Ora sai che il vino è arrivato oltre la Terra.",
+      "intro": "Nel novembre 2019, 12 bottiglie di Bordeaux sono partite per la Stazione Spaziale Internazionale. Cosa ci faceva il vino nello spazio?",
+      "final": "Ora sai che il vino è arrivato oltre la Terra e che l'esperimento ha aperto domande scientifiche affascinanti sull'invecchiamento in microgravità.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Dove è stato sperimentato il vino nello spazio?",
-          "answers": [
-            "ISS",
-            "Luna",
-            "Marte"
-          ],
+          "answers": ["ISS", "Luna", "Marte"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino cambia nello spazio.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
-          "question": "Lo scopo dell’esperimento era:",
-          "answers": [
-            "Studiare l’invecchiamento",
-            "Vendere vino",
-            "Congelarlo"
-          ],
+          "question": "Lo scopo dell'esperimento era:",
+          "answers": ["Studiare l'invecchiamento", "Vendere vino", "Congelarlo"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Il vino nello spazio",
+          "title": "L'esperimento Space Cargo Unlimited",
           "paragraphs": [
-            "Alcuni vini sono stati invecchiati anche nello spazio.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Nel novembre 2019, la startup Space Cargo Unlimited ha inviato alla ISS (International Space Station) 12 bottiglie di Château Pétrus 2000 — uno dei Bordeaux più pregiati, un vino che in condizioni normali costa oltre 2.000 euro a bottiglia. Le bottiglie sono rimaste 14 mesi in orbita, tornando sulla Terra nel gennaio 2021. Stesso vino, stesso produttore, stesso anno: 12 in orbita, 12 rimaste sulla Terra come controllo.",
+            "Risultato? I sommelier e i ricercatori che hanno confrontato alla cieca le due versioni hanno trovato differenze: il vino spaziale aveva invecchiato diversamente. Profilo aromatico più complesso, tannini percepiti come più morbidi, colore leggermente diverso. L'ipotesi è che la microgravità e le radiazioni cosmiche abbiano accelerato o modificato le reazioni di polimerizzazione dei tannini e le reazioni ossidative. La ricerca è ancora in corso."
           ],
           "keyPoints": [
-            "Dove è stato sperimentato il vino nello spazio",
-            "Il vino cambia nello spazio",
-            "Lo scopo dell’esperimento era"
+            "Château Pétrus 2000: 12 bottiglie a bordo ISS per 14 mesi",
+            "Risultato: invecchiamento diverso, tannini più morbidi",
+            "Microgravità e radiazioni: variabili sull'evoluzione del vino"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Cosa ci insegna sull'invecchiamento",
           "paragraphs": [
-            "Ora sai che il vino è arrivato oltre la Terra.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "L'esperimento spaziale non era marketing: aveva un obiettivo scientifico serio. Capire come la microgravità e le radiazioni cosmiche influenzano le reazioni chimiche dell'invecchiamento del vino potrebbe insegnare qualcosa di utile sull'invecchiamento in generale — incluso quello biologico degli organismi viventi. Il vino è un modello chimico complesso e accessibile per studiare reazioni di lungo periodo.",
+            "C'è anche un aspetto pratico futuristico: le future missioni di lunga durata (verso Marte, che durerebbe 6-9 mesi di viaggio) richiederanno di pensare alla qualità del cibo e delle bevande in microgravità. Come si conserva il vino senza gravitazione? Come si serve? Come cambia la percezione del gusto in assenza di gravità (i seni nasali si comportano diversamente in microgravità, alterando l'olfatto)? Il vino nello spazio non è stravaganza — è ricerca seria."
           ],
           "keyPoints": [
-            "Dove è stato sperimentato il vino nello spazio",
-            "Il vino cambia nello spazio",
-            "Lo scopo dell’esperimento era"
+            "Scopo scientifico: capire invecchiamento in microgravità",
+            "Modello chimico per studi su reazioni di lungo periodo",
+            "Olfatto in microgravità: i seni si comportano diversamente"
           ]
         }
       ]
@@ -551,67 +463,56 @@
     {
       "id": "l9",
       "title": "Il vino e il cinema",
-      "intro": "Il vino è spesso simbolo di cultura, lusso e piacere nei film.",
-      "final": "Ora riconosci il vino anche nella cultura pop.",
+      "intro": "Il vino al cinema non è solo un accessorio di scena — è uno strumento narrativo che comunica classe, tensione, complicità o decadenza con un solo gesto.",
+      "final": "Ora riconosci il vino anche nella cultura pop e capisci come i film hanno modellato la percezione pubblica di certi vini, a volte più di qualsiasi campagna marketing.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Nel cinema il vino rappresenta spesso:",
-          "answers": [
-            "Eleganza",
-            "Violenza",
-            "Sport"
-          ],
+          "answers": ["Eleganza", "Violenza", "Sport"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino è simbolo culturale.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il vino nei film è spesso associato a:",
-          "answers": [
-            "Cena elegante",
-            "Guerra",
-            "Tecnologia"
-          ],
+          "answers": ["Cena elegante", "Guerra", "Tecnologia"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Il vino e il cinema",
+          "title": "Il potere narrativo del bicchiere",
           "paragraphs": [
-            "Il vino è spesso simbolo di cultura, lusso e piacere nei film.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Nel cinema, il vino è linguaggio visivo. James Bond ordina sempre vino preciso (Champagne Dom Pérignon, poi Bollinger) per comunicare raffinatezza e controllo. Hannibal Lecter in 'Il silenzio degli innocenti' parla di Chianti con i fave beans — la scelta enologica precisa amplifica l'orrore del personaggio. In '2001 Odissea nello Spazio' il vino in astronave segnala che anche nel futuro l'umanità porta i suoi rituali.",
+            "Il film che ha avuto il maggiore impatto concreto sulle vendite di vino è stato 'Sideways' (2004): una commedia ambientata nella regione del vino californiano. Il protagonista odia il Merlot ('I am NOT drinking any Merlot!'). Risultato: le vendite di Merlot negli USA calarono del 2% nel primo anno dopo l'uscita. Le vendite di Pinot Noir (il vino preferito dal protagonista) aumentarono del 16%. Un film ha mosso il mercato più di qualsiasi campagna pubblicitaria."
           ],
           "keyPoints": [
-            "Nel cinema il vino rappresenta spesso",
-            "Il vino è simbolo culturale",
-            "Il vino nei film è spesso associato a"
+            "Bond e Dom Pérignon: vino come caratterizzazione personaggio",
+            "Hannibal e Chianti: scelta enologica che amplifica il personaggio",
+            "'Sideways' 2004: Merlot -2%, Pinot Noir +16%"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Vino, status e stereotipi",
           "paragraphs": [
-            "Ora riconosci il vino anche nella cultura pop.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Il cinema ha usato il vino per raccontare classe sociale in modo shorthand: chi beve Champagne è ricco. Chi beve vino rosso di qualità è intellettuale o europeo. Chi non sa distinguere un vino è ingenuo o fuori dal giro. Questi stereotipi culturali hanno radici reali (il vino di qualità è storicamente costoso) ma creano anche barriere — molte persone si sentono 'non abbastanza colte' per avvicinarsi al vino fine.",
+            "La contro-narrativa più interessante degli ultimi anni è l'ascesa del 'natural wine' e della cultura vinosa informale: film come 'Uncorked' (2020) su Netflix hanno raccontato la sommellerie come percorso personale, non come club esclusivo. Il vino al cinema sta diventando meno icona di status e più strumento di esplorazione culturale e personale. Forse è il segnale che il vino sta diventando davvero popolare — non elitario."
           ],
           "keyPoints": [
-            "Nel cinema il vino rappresenta spesso",
-            "Il vino è simbolo culturale",
-            "Il vino nei film è spesso associato a"
+            "Champagne = ricchezza: stereotipo cinematografico",
+            "Natural wine: contro-narrativa informale e accessibile",
+            "Vino: da icona di status a strumento di esplorazione"
           ]
         }
       ]
@@ -619,67 +520,56 @@
     {
       "id": "l10",
       "title": "Curiosità finali da sommelier",
-      "intro": "Piccole curiosità che distinguono un appassionato da un intenditore.",
-      "final": "Ora hai lo sguardo da vero wine lover.",
+      "intro": "Queste sono le curiosità che separano chi 'sa di vino' da chi lo beve davvero con attenzione — piccoli dettagli che cambiano la prospettiva su ogni bottiglia.",
+      "final": "Ora hai lo sguardo da vero wine lover: non quello che impressiona con nozioni, ma quello che trova qualcosa di interessante in ogni bicchiere.",
       "questions": [
         {
           "id": "q1",
           "type": "mcq",
           "question": "Il vino cambia con:",
-          "answers": [
-            "Tempo",
-            "Colore bottiglia",
-            "Etichetta"
-          ],
+          "answers": ["Tempo", "Colore bottiglia", "Etichetta"],
           "correct": 0
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Tutti percepiscono il vino allo stesso modo.",
-          "answers": [
-            "Vero",
-            "Falso"
-          ],
+          "answers": ["Vero", "Falso"],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il vino è:",
-          "answers": [
-            "Esperienza sensoriale",
-            "Solo bevanda",
-            "Solo alcol"
-          ],
+          "answers": ["Esperienza sensoriale", "Solo bevanda", "Solo alcol"],
           "correct": 0
         }
       ],
       "slides": [
         {
           "id": "s1",
-          "title": "Curiosità finali da sommelier",
+          "title": "Le curiosità che cambiano la prospettiva",
           "paragraphs": [
-            "Piccole curiosità che distinguono un appassionato da un intenditore.",
-            "Qui trovi esempi pratici legati a situazioni reali di degustazione, cosi trasformi la teoria in scelte concrete nel bicchiere."
+            "Curiosità 1: il bicchiere cambia davvero il vino. Non è snobismo: la forma del bicchiere modifica il flusso del liquido sulla lingua, la concentrazione degli aromi nel naso, la temperatura. Un Barolo in un bicchiere Borgogna ampio e aperto esprime molto più di uno in un bicchiere da tavola stretto. Riedel, la vetreria austriaca, ha costruito un business enorme su questo principio — con studi scientifici a supporto.",
+            "Curiosità 2: il prezzo influenza la percezione del gusto. In un esperimento famoso condotto dal California Institute of Technology nel 2008, i soggetti dichiaravano di preferire il vino più caro — anche quando era lo stesso vino versato in due bicchieri con prezzi diversi. L'area del cervello associata al piacere (corteccia orbitofrontale mediale) era letteralmente più attiva quando il soggetto credeva di bere il vino da 90 dollari rispetto a quello da 10. Il prezzo modifica l'esperienza neurologica del piacere."
           ],
           "keyPoints": [
-            "Il vino cambia con",
-            "Tutti percepiscono il vino allo stesso modo",
-            "Definizione di vino"
+            "Forma del bicchiere: cambia fisicamente la percezione",
+            "Prezzo influenza il piacere neurologico (studio Caltech)",
+            "Stesso vino, bicchiere diverso = esperienza diversa"
           ]
         },
         {
           "id": "s2",
-          "title": "Prima del quiz",
+          "title": "Il vino come pratica",
           "paragraphs": [
-            "Ora hai lo sguardo da vero wine lover.",
-            "Nel quiz vedrai domande che testano questo concetto. Prenditi il tempo per capirlo bene."
+            "Curiosità 3: i sommelieri professionisti hanno un vocabolario di circa 200-300 descrittori aromatici codificati. Ma in una degustazione alla cieca, anche loro sbagliano spesso vitigno e provenienza. Il vino è abbastanza complesso da sorprendere sempre anche chi lo studia da decenni. Non è un limite — è la ragione per cui il vino non diventa mai noioso.",
+            "Curiosità 4: la musica cambia la percezione del vino. Studi dell'Università di Heriot-Watt (Edimburgo) hanno dimostrato che la musica potente e drammatica (come Carmina Burana) fa percepire il vino come più robusto e corposo. Musica delicata e floreale lo fa sembrare più leggero e elegante. Stessa bottiglia, musica diversa = vino percepito diversamente. La prossima volta che scegli cosa mettere su mentre apri una bottiglia, stai letteralmente scegliendo come vuoi che sappia."
           ],
           "keyPoints": [
-            "Il vino cambia con",
-            "Tutti percepiscono il vino allo stesso modo",
-            "Definizione di vino"
+            "Sommelier professionisti: sbagliano spesso alla cieca",
+            "Musica influenza la percezione del vino (studio Heriot-Watt)",
+            "Il vino è sempre più complesso di quanto pensiamo: non annoia mai"
           ]
         }
       ]
