@@ -10,27 +10,21 @@ const CHANGELOG = [
     version: '1.10.1',
     date: '10 maggio 2026',
     label: 'Auto',
-    changes: [
-      'stabilize enoteca start and loading flow',
-    ],
+    changes: ['stabilize enoteca start and loading flow'],
   },
 
   {
     version: '1.10.0',
     date: '10 maggio 2026',
     label: 'Auto',
-    changes: [
-      'unify app version across home and changelog',
-    ],
+    changes: ['unify app version across home and changelog'],
   },
 
   {
     version: '1.9.2',
     date: '10 maggio 2026',
     label: 'Auto',
-    changes: [
-      'complete i18n dictionary migration and logout cleanup',
-    ],
+    changes: ['complete i18n dictionary migration and logout cleanup'],
   },
 
   {
