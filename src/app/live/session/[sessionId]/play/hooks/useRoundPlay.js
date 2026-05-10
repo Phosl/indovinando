@@ -2,16 +2,6 @@ import {useState, useEffect, useCallback, useMemo, useRef} from 'react'
 import {supabaseClient} from '@/lib/supabaseClient'
 
 const SLIDE_TRANSITION_MS = 220
-const ANSWER_STEP_TIMEOUT_MS = 8000
-
-const withAnswerTimeout = async (task, label, timeoutMs = ANSWER_STEP_TIMEOUT_MS) => {
-  const timeoutPromise = new Promise((_, reject) => {
-    setTimeout(() => reject(new Error(`Answer step timed out: ${label}`)), timeoutMs)
-  })
-
-  return Promise.race([task, timeoutPromise])
-}
-
 /**
  * Owns all per-round state (answers, slides, combo, results visibility)
  * plus every action handler that mutates it.
@@ -40,6 +30,7 @@ export function useRoundPlay({
   const [roundAnswersByPlayer, setRoundAnswersByPlayer] = useState({})
   const [roundAnswers, setRoundAnswers] = useState({})
   const [correctOptionByQuestion, setCorrectOptionByQuestion] = useState({})
+  const [isCorrectOptionsLoaded, setIsCorrectOptionsLoaded] = useState(false)
   const [clickedReady, setClickedReady] = useState(false)
   const [playerMarkedNext, setPlayerMarkedNext] = useState(false)
   const [resultsOpenedBottleIndex, setResultsOpenedBottleIndex] = useState(null)
@@ -70,17 +61,25 @@ export function useRoundPlay({
 
   // ── Load correct answers for current bottle ────────────────────────────────
   useEffect(() => {
+    setIsCorrectOptionsLoaded(false)
     if (!currentBottle?.id) return
     const load = async () => {
-      const {data} = await supabaseClient
-        .from('game_bottle_answers')
-        .select('question_id, option_id')
-        .eq('bottle_id', currentBottle.id)
-      const map = {}
-      ;(data || []).forEach((row) => {
-        map[row.question_id] = row.option_id
-      })
-      setCorrectOptionByQuestion(map)
+      try {
+        const {data, error} = await supabaseClient
+          .from('game_bottle_answers')
+          .select('question_id, option_id')
+          .eq('bottle_id', currentBottle.id)
+        if (error) throw error
+        const map = {}
+        ;(data || []).forEach((row) => {
+          map[row.question_id] = row.option_id
+        })
+        setCorrectOptionByQuestion(map)
+        setIsCorrectOptionsLoaded(true)
+      } catch (err) {
+        console.error('Failed to load correct options:', err)
+        setIsCorrectOptionsLoaded(false)
+      }
     }
     load()
   }, [currentBottle?.id])
@@ -95,6 +94,7 @@ export function useRoundPlay({
       setRoundAnswers({})
       setRoundAnswersByPlayer({})
       setCorrectOptionByQuestion({})
+      setIsCorrectOptionsLoaded(false)
       setClickedReady(false)
       setCurrentSlideIndex(0)
       setCheckedQuestions({})
@@ -254,6 +254,7 @@ export function useRoundPlay({
       if (!playerData || roundStatus !== 'waiting_answers') return
       if (checkedQuestions[questionId] || !optionId) return
       if (isCheckingAnswer) return
+      if (!isCorrectOptionsLoaded) return
 
       const applyLocalAnswerResult = ({isCorrect, points, comboBonus, newCombo}) => {
         comboRef.current = newCombo
@@ -279,97 +280,24 @@ export function useRoundPlay({
       try {
         setIsCheckingAnswer(true)
 
-        let isCorrect = false
-        let points = 0
-        let comboBonus = 0
-        let newCombo = 0
-        let lookupError = null
-
-        let resolvedCorrectOptionId = correctOptionByQuestion[questionId]
-        if (!resolvedCorrectOptionId && currentBottle?.id) {
-          try {
-            const {data: answerRow, error: answerError} = await withAnswerTimeout(
-              supabaseClient
-                .from('game_bottle_answers')
-                .select('option_id')
-                .eq('bottle_id', currentBottle.id)
-                .eq('question_id', questionId)
-                .maybeSingle(),
-              'load-correct-option',
-              1200,
-            )
-
-            if (answerError) throw answerError
-
-            resolvedCorrectOptionId = answerRow?.option_id || null
-            if (resolvedCorrectOptionId) {
-              setCorrectOptionByQuestion((prev) => ({
-                ...prev,
-                [questionId]: resolvedCorrectOptionId,
-              }))
-            }
-          } catch (err) {
-            lookupError = err
-          }
-        }
-
+        const resolvedCorrectOptionId = correctOptionByQuestion[questionId]
         if (!resolvedCorrectOptionId) {
-          if (isHostUser) {
-            const response = await withAnswerTimeout(
-              fetch('/api/live/round-answer/host-submit', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                  sessionId,
-                  playerId: playerData.id,
-                  questionId,
-                  selectedOptionId: optionId,
-                  comboCount: comboRef.current,
-                }),
-              }),
-              'host-submit-fallback',
-            )
-            const payload = await response.json().catch(() => ({}))
-            if (!response.ok) {
-              throw new Error(payload?.error || 'Failed to submit host answer')
-            }
-
-            isCorrect = Boolean(payload?.isCorrect)
-            points = Number(payload?.points || 0)
-            comboBonus = Number(payload?.comboBonus || 0)
-            newCombo = Number(payload?.newCombo || 0)
-
-            if (payload?.correctOptionId) {
-              setCorrectOptionByQuestion((prev) => ({
-                ...prev,
-                [questionId]: payload.correctOptionId,
-              }))
-            }
-
-            applyLocalAnswerResult({isCorrect, points, comboBonus, newCombo})
-            return
-          }
-
-          if (lookupError) throw lookupError
-          throw new Error('Correct option not loaded for this question')
+          throw new Error('Correct option not available for this question')
         }
 
-        isCorrect = resolvedCorrectOptionId === optionId
-        newCombo = isCorrect ? comboRef.current + 1 : 0
-        comboBonus = isCorrect && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
-        points = isCorrect ? 10 + comboBonus : 0
+        const isCorrect = resolvedCorrectOptionId === optionId
+        const newCombo = isCorrect ? comboRef.current + 1 : 0
+        const comboBonus = isCorrect && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
+        const points = isCorrect ? 10 + comboBonus : 0
 
-        const {error} = await withAnswerTimeout(
-          supabaseClient.from('live_round_answers').insert({
-            session_id: sessionId,
-            player_id: playerData.id,
-            question_id: questionId,
-            selected_option_id: optionId,
-            is_correct: isCorrect,
-            points,
-          }),
-          'submit-answer',
-        )
+        const {error} = await supabaseClient.from('live_round_answers').insert({
+          session_id: sessionId,
+          player_id: playerData.id,
+          question_id: questionId,
+          selected_option_id: optionId,
+          is_correct: isCorrect,
+          points,
+        })
 
         // If the answer already exists, treat it as already submitted for this round.
         if (error && error.code !== '23505') throw error
@@ -390,12 +318,10 @@ export function useRoundPlay({
       roundStatus,
       checkedQuestions,
       isCheckingAnswer,
+      isCorrectOptionsLoaded,
       correctOptionByQuestion,
-      currentBottle?.id,
-      roundAnchorAt,
       sessionId,
       playSound,
-      isHostUser,
     ],
   )
 
@@ -450,6 +376,7 @@ export function useRoundPlay({
     roundAnswers,
     roundAnswersByPlayer,
     correctOptionByQuestion,
+    isCorrectOptionsLoaded,
     clickedReady,
     allPlayersCompletedThisRound, // derived via useMemo
     playerMarkedNext,
