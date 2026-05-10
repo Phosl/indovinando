@@ -7,6 +7,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.6.2',
+    date: '10 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'automate changelog update on pre-push',
+    ],
+  },
+
+  {
     version: '1.6.1',
     date: '10 maggio 2026',
     label: 'Auto',
