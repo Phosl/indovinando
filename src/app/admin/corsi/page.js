@@ -3,8 +3,16 @@ import TopBar from '@/components/TopBar'
 import styles from './admin.module.scss'
 
 const LEVEL_EMOJIS = {
-  1: '😭', 2: '🍷', 3: '🏅', 4: '📜', 5: '🍽️',
-  6: '⚗️', 7: '🌍', 8: '🥂', 9: '🍇', 10: '✨',
+  1: '😭',
+  2: '🍷',
+  3: '🏅',
+  4: '📜',
+  5: '🍽️',
+  6: '⚗️',
+  7: '🌍',
+  8: '🥂',
+  9: '🍇',
+  10: '✨',
 }
 
 export default async function AdminCorsiPage() {
@@ -12,11 +20,7 @@ export default async function AdminCorsiPage() {
 
   return (
     <main className={styles.page}>
-      <TopBar
-        title="⚙️ Admin — Corsi"
-        back="/dashboard"
-        backLabel="← Dashboard"
-      />
+      <TopBar title="⚙️ Admin — Corsi" back="/dashboard" backLabel="← Dashboard" />
 
       <div className={styles.container}>
         <div className={styles.header}>
@@ -28,14 +32,8 @@ export default async function AdminCorsiPage() {
           {levels.map((level) => {
             const levelNum = level.order
             return (
-              <a
-                key={level.id}
-                href={`/admin/corsi/${levelNum}`}
-                className={styles.levelCard}
-              >
-                <span className={styles.levelEmoji}>
-                  {LEVEL_EMOJIS[levelNum] ?? '🍷'}
-                </span>
+              <a key={level.id} href={`/admin/corsi/${levelNum}`} className={styles.levelCard}>
+                <span className={styles.levelEmoji}>{LEVEL_EMOJIS[levelNum] ?? '🍷'}</span>
                 <div className={styles.levelInfo}>
                   <span className={styles.levelNum}>Livello {levelNum}</span>
                   <strong className={styles.levelTitle}>{level.title}</strong>

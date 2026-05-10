@@ -30,9 +30,7 @@ export async function POST(request) {
   rawData.lessons[lessonIndex] = lesson
 
   const filePath =
-    lang === 'it'
-      ? `corso_livello_${levelNum}.json`
-      : `${lang}/corso_livello_${levelNum}.json`
+    lang === 'it' ? `corso_livello_${levelNum}.json` : `${lang}/corso_livello_${levelNum}.json`
 
   const content = JSON.stringify(rawData, null, 2)
 

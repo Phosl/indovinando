@@ -34,7 +34,9 @@ export default async function AdminLevelPage({params}) {
         {/* Lang tabs — static links */}
         <div className={styles.langTabs}>
           <span className={`${styles.langTab} ${styles.active}`}>🇮🇹 Italiano</span>
-          <a href={`/admin/corsi/${levelNum}?lang=en`} className={styles.langTab}>🇬🇧 English</a>
+          <a href={`/admin/corsi/${levelNum}?lang=en`} className={styles.langTab}>
+            🇬🇧 English
+          </a>
         </div>
 
         <div className={styles.lessonList}>
@@ -42,8 +44,7 @@ export default async function AdminLevelPage({params}) {
             <a
               key={lesson.id ?? i}
               href={`/admin/corsi/${levelNum}/${i + 1}`}
-              className={styles.lessonCard}
-            >
+              className={styles.lessonCard}>
               <span className={styles.lessonNum}>#{i + 1}</span>
               <span className={styles.lessonTitle}>{lesson.title}</span>
               <span className={styles.lessonMeta}>

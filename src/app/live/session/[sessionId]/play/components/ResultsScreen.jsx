@@ -20,6 +20,7 @@ export const ResultsScreen = memo(function ResultsScreen({
   allPlayers,
   roundAnswersByPlayer,
   playersReadyCount,
+  participantsCount,
   currentPlayerData,
   onNextBottle,
   onViewLeaderboard,
@@ -28,6 +29,7 @@ export const ResultsScreen = memo(function ResultsScreen({
 }) {
   const {lang} = useLanguage()
   const isEnglish = lang === 'en'
+  const readyParticipantsCount = participantsCount || allPlayers.length
 
   // Freeze baseline total_score per player when the results screen first opens for
   // a given bottle. This prevents a brief double-count caused by the host's
@@ -55,6 +57,26 @@ export const ResultsScreen = memo(function ResultsScreen({
       .sort((a, b) => b.projected - a.projected)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allPlayers, roundAnswersByPlayer])
+
+  const incompletePlayerNames = useMemo(() => {
+    return allPlayers
+      .filter((player) => !questions.every((q) => roundAnswersByPlayer[player.id]?.[q.id]))
+      .map((player) => player.nickname)
+      .filter(Boolean)
+  }, [allPlayers, questions, roundAnswersByPlayer])
+
+  const missingPlayersCount = Math.max(0, readyParticipantsCount - playersReadyCount)
+
+  const waitingText = useMemo(() => {
+    if (missingPlayersCount <= 0) return null
+    if (incompletePlayerNames.length > 0) {
+      return `${isEnglish ? 'Waiting for: ' : 'In attesa di: '}${incompletePlayerNames.join(', ')}`
+    }
+    return isEnglish
+      ? `Waiting for ${missingPlayersCount} player${missingPlayersCount === 1 ? '' : 's'}`
+      : `In attesa di ${missingPlayersCount} giocatore${missingPlayersCount === 1 ? '' : 'i'}`
+  }, [incompletePlayerNames, isEnglish, missingPlayersCount])
+
   return (
     <div className={styles.fullPage}>
       {topBar}
@@ -158,45 +180,41 @@ export const ResultsScreen = memo(function ResultsScreen({
       </div>
 
       <div className={styles.bottomPanel}>
-        <p className={styles.readyHint}>
-          {allPlayersCompletedThisRound
-            ? isLastBottle
+        {!allPlayersCompletedThisRound ? (
+          <p className={styles.readyHint}>
+            {`${playersReadyCount}/${readyParticipantsCount} ${isEnglish ? 'players ready' : 'giocatori pronti'}`}
+            {waitingText && (
+              <span style={{display: 'block', marginTop: 4, fontSize: '0.85em', opacity: 0.8}}>
+                {waitingText}
+              </span>
+            )}
+          </p>
+        ) : (
+          <p className={styles.readyHint}>
+            {isLastBottle
               ? isEnglish
                 ? 'Everyone has finished!'
                 : 'Tutti hanno finito!'
-              : isHostUser
+              : playerMarkedNext
                 ? isEnglish
-                  ? 'Everyone has finished: you can move to the next bottle.'
-                  : 'Tutti hanno finito: puoi passare alla prossima bottiglia.'
-                : playerMarkedNext
-                  ? isEnglish
-                    ? 'Waiting for the host to continue...'
-                    : "In attesa che l'host avanzi..."
-                  : isEnglish
-                    ? 'Everyone has finished!'
-                    : 'Tutti hanno finito!'
-            : `${playersReadyCount}/${allPlayers.length} ${isEnglish ? 'players ready...' : 'giocatori pronti...'}`}
-        </p>
+                  ? 'Waiting for the host to continue...'
+                  : "In attesa che l'host avanzi..."
+                : isEnglish
+                  ? 'Everyone has finished: proceed to the next bottle.'
+                  : 'Tutti hanno finito: avanza alla prossima bottiglia.'}
+          </p>
+        )}
 
         {isLastBottle ? (
-          isHostUser ? (
-            <button
-              className={styles.continueButton}
-              onClick={onViewLeaderboard}
-              disabled={!allPlayersCompletedThisRound}>
-              {isEnglish ? 'Show final leaderboard' : 'Mostra classifica finale'}
-            </button>
-          ) : (
-            <p className={styles.readyHint}>
-              {allPlayersCompletedThisRound
-                ? isEnglish
-                  ? 'Waiting for the host to publish final leaderboard...'
-                  : "In attesa che l'host pubblichi la classifica finale..."
-                : isEnglish
-                  ? 'Complete all questions to unlock final leaderboard.'
-                  : 'Completa tutte le domande per sbloccare la classifica finale.'}
-            </p>
-          )
+          <button
+            className={styles.continueButton}
+            onClick={() => {
+              if (!allPlayersCompletedThisRound) return
+              onViewLeaderboard()
+            }}
+            disabled={!allPlayersCompletedThisRound}>
+            {isEnglish ? 'Show final leaderboard' : 'Mostra classifica finale'}
+          </button>
         ) : (
           <button
             className={styles.continueButton}

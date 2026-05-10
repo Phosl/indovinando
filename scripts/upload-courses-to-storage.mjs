@@ -49,12 +49,10 @@ for (const file of files) {
 
   const content = await readFile(localPath)
 
-  const {error} = await supabase.storage
-    .from(BUCKET)
-    .upload(file, content, {
-      contentType: 'application/json',
-      upsert: true,
-    })
+  const {error} = await supabase.storage.from(BUCKET).upload(file, content, {
+    contentType: 'application/json',
+    upsert: true,
+  })
 
   if (error) {
     console.error(`❌ FAILED: ${file} — ${error.message}`)

@@ -33,14 +33,12 @@ export default async function AdminLessonEditorPage({params, searchParams}) {
         <div className={styles.langTabs}>
           <a
             href={`/admin/corsi/${levelNum}/${lessonId}`}
-            className={`${styles.langTab} ${lang === 'it' ? styles.active : ''}`}
-          >
+            className={`${styles.langTab} ${lang === 'it' ? styles.active : ''}`}>
             🇮🇹 Italiano
           </a>
           <a
             href={`/admin/corsi/${levelNum}/${lessonId}?lang=en`}
-            className={`${styles.langTab} ${lang === 'en' ? styles.active : ''}`}
-          >
+            className={`${styles.langTab} ${lang === 'en' ? styles.active : ''}`}>
             🇬🇧 English
           </a>
         </div>

@@ -2,6 +2,15 @@ import {useState, useEffect, useCallback, useMemo, useRef} from 'react'
 import {supabaseClient} from '@/lib/supabaseClient'
 
 const SLIDE_TRANSITION_MS = 220
+const ANSWER_STEP_TIMEOUT_MS = 8000
+
+const withAnswerTimeout = async (task, label, timeoutMs = ANSWER_STEP_TIMEOUT_MS) => {
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => reject(new Error(`Answer step timed out: ${label}`)), timeoutMs)
+  })
+
+  return Promise.race([task, timeoutPromise])
+}
 
 /**
  * Owns all per-round state (answers, slides, combo, results visibility)
@@ -18,6 +27,7 @@ export function useRoundPlay({
   isHostUser,
   isLastBottle,
   currentBottle,
+  roundAnchorAt,
   // setters from useGameDataLoader
   setCurrentBottleIndex,
   setRoundStatus,
@@ -39,6 +49,7 @@ export function useRoundPlay({
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
   const [checkedQuestions, setCheckedQuestions] = useState({})
   const [slideMotion, setSlideMotion] = useState('idle')
+  const [isCheckingAnswer, setIsCheckingAnswer] = useState(false)
   const slideTimerRef = useRef(null)
   const playedBottleSoundRef = useRef(null)
 
@@ -99,21 +110,28 @@ export function useRoundPlay({
   // ── Shared questionIds memo (avoids recomputing in two separate memos) ─────
   const questionIds = useMemo(() => liveQuestions.map((q) => q.id), [liveQuestions])
 
+  const participantIds = useMemo(() => {
+    if (allPlayers.length > 0) {
+      return allPlayers.map((player) => player.id)
+    }
+    return playerData?.id ? [playerData.id] : []
+  }, [allPlayers, playerData?.id])
+
   // ── Derive allPlayersCompleted + per-player progress from local state ──────
   const allPlayersCompletedThisRound = useMemo(() => {
-    if (!clickedReady || allPlayers.length === 0 || questionIds.length === 0) return false
-    return allPlayers.every((p) =>
-      questionIds.every((qId) => Boolean(roundAnswersByPlayer[p.id]?.[qId])),
+    if (!clickedReady || participantIds.length === 0 || questionIds.length === 0) return false
+    return participantIds.every((playerId) =>
+      questionIds.every((qId) => Boolean(roundAnswersByPlayer[playerId]?.[qId])),
     )
-  }, [clickedReady, allPlayers, roundAnswersByPlayer, questionIds])
+  }, [clickedReady, participantIds, roundAnswersByPlayer, questionIds])
 
   // How many players have answered every question in the current round
   const playersReadyCount = useMemo(() => {
     if (questionIds.length === 0) return 0
-    return allPlayers.filter((p) =>
-      questionIds.every((qId) => Boolean(roundAnswersByPlayer[p.id]?.[qId])),
+    return participantIds.filter((playerId) =>
+      questionIds.every((qId) => Boolean(roundAnswersByPlayer[playerId]?.[qId])),
     ).length
-  }, [allPlayers, roundAnswersByPlayer, questionIds])
+  }, [participantIds, roundAnswersByPlayer, questionIds])
   const syncScoresFromAnswers = useCallback(
     async (answersByPlayer) => {
       if (!isHostUser) return
@@ -185,25 +203,30 @@ export function useRoundPlay({
   const handleAnswerInsert = useCallback(async () => {
     if (liveQuestions.length === 0) return
     const questionIds = liveQuestions.map((q) => q.id)
-    const {data: answers} = await supabaseClient
+    let answersQuery = supabaseClient
       .from('live_round_answers')
       .select('player_id, question_id, selected_option_id, is_correct, points')
       .eq('session_id', sessionId)
       .in('question_id', questionIds)
+
+    if (roundAnchorAt) {
+      answersQuery = answersQuery.gte('answered_at', roundAnchorAt)
+    }
+
+    const {data: answers} = await answersQuery
+
     if (!answers) return
-    setRoundAnswersByPlayer((prev) => {
-      const updated = {...prev}
-      answers.forEach((a) => {
-        if (!updated[a.player_id]) updated[a.player_id] = {}
-        updated[a.player_id][a.question_id] = {
-          optionId: a.selected_option_id,
-          isCorrect: a.is_correct,
-          points: a.points,
-        }
-      })
-      return updated
+    const rebuilt = {}
+    answers.forEach((a) => {
+      if (!rebuilt[a.player_id]) rebuilt[a.player_id] = {}
+      rebuilt[a.player_id][a.question_id] = {
+        optionId: a.selected_option_id,
+        isCorrect: a.is_correct,
+        points: a.points,
+      }
     })
-  }, [sessionId, liveQuestions])
+    setRoundAnswersByPlayer(rebuilt)
+  }, [sessionId, liveQuestions, roundAnchorAt])
 
   // ── Re-sync answers while waiting for all players to complete ─────────────
   // Polls DB every 2s once the local player has marked ready and the round is
@@ -230,27 +253,12 @@ export function useRoundPlay({
     async (questionId, optionId) => {
       if (!playerData || roundStatus !== 'waiting_answers') return
       if (checkedQuestions[questionId] || !optionId) return
+      if (isCheckingAnswer) return
 
-      const isCorrect = correctOptionByQuestion[questionId] === optionId
-      const newCombo = isCorrect ? comboRef.current + 1 : 0
-      const comboBonus = isCorrect && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
-      const points = isCorrect ? 10 + comboBonus : 0
-      comboRef.current = newCombo
-      setComboCount(newCombo)
+      const applyLocalAnswerResult = ({isCorrect, points, comboBonus, newCombo}) => {
+        comboRef.current = newCombo
+        setComboCount(newCombo)
 
-      try {
-        const {error} = await supabaseClient.from('live_round_answers').upsert(
-          {
-            session_id: sessionId,
-            player_id: playerData.id,
-            question_id: questionId,
-            selected_option_id: optionId,
-            is_correct: isCorrect,
-            points,
-          },
-          {onConflict: 'session_id,player_id,question_id'},
-        )
-        if (error) throw error
         setRoundAnswers((prev) => ({
           ...prev,
           [questionId]: {optionId, isCorrect, points, comboBonus, newCombo},
@@ -266,15 +274,129 @@ export function useRoundPlay({
         })
         setCheckedQuestions((prev) => ({...prev, [questionId]: true}))
         playSound(isCorrect ? 'correct' : 'wrong')
+      }
+
+      try {
+        setIsCheckingAnswer(true)
+
+        let isCorrect = false
+        let points = 0
+        let comboBonus = 0
+        let newCombo = 0
+        let lookupError = null
+
+        let resolvedCorrectOptionId = correctOptionByQuestion[questionId]
+        if (!resolvedCorrectOptionId && currentBottle?.id) {
+          try {
+            const {data: answerRow, error: answerError} = await withAnswerTimeout(
+              supabaseClient
+                .from('game_bottle_answers')
+                .select('option_id')
+                .eq('bottle_id', currentBottle.id)
+                .eq('question_id', questionId)
+                .maybeSingle(),
+              'load-correct-option',
+              1200,
+            )
+
+            if (answerError) throw answerError
+
+            resolvedCorrectOptionId = answerRow?.option_id || null
+            if (resolvedCorrectOptionId) {
+              setCorrectOptionByQuestion((prev) => ({
+                ...prev,
+                [questionId]: resolvedCorrectOptionId,
+              }))
+            }
+          } catch (err) {
+            lookupError = err
+          }
+        }
+
+        if (!resolvedCorrectOptionId) {
+          if (isHostUser) {
+            const response = await withAnswerTimeout(
+              fetch('/api/live/round-answer/host-submit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                  sessionId,
+                  playerId: playerData.id,
+                  questionId,
+                  selectedOptionId: optionId,
+                  comboCount: comboRef.current,
+                }),
+              }),
+              'host-submit-fallback',
+            )
+            const payload = await response.json().catch(() => ({}))
+            if (!response.ok) {
+              throw new Error(payload?.error || 'Failed to submit host answer')
+            }
+
+            isCorrect = Boolean(payload?.isCorrect)
+            points = Number(payload?.points || 0)
+            comboBonus = Number(payload?.comboBonus || 0)
+            newCombo = Number(payload?.newCombo || 0)
+
+            if (payload?.correctOptionId) {
+              setCorrectOptionByQuestion((prev) => ({
+                ...prev,
+                [questionId]: payload.correctOptionId,
+              }))
+            }
+
+            applyLocalAnswerResult({isCorrect, points, comboBonus, newCombo})
+            return
+          }
+
+          if (lookupError) throw lookupError
+          throw new Error('Correct option not loaded for this question')
+        }
+
+        isCorrect = resolvedCorrectOptionId === optionId
+        newCombo = isCorrect ? comboRef.current + 1 : 0
+        comboBonus = isCorrect && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
+        points = isCorrect ? 10 + comboBonus : 0
+
+        const {error} = await withAnswerTimeout(
+          supabaseClient.from('live_round_answers').insert({
+            session_id: sessionId,
+            player_id: playerData.id,
+            question_id: questionId,
+            selected_option_id: optionId,
+            is_correct: isCorrect,
+            points,
+          }),
+          'submit-answer',
+        )
+
+        // If the answer already exists, treat it as already submitted for this round.
+        if (error && error.code !== '23505') throw error
+
+        applyLocalAnswerResult({isCorrect, points, comboBonus, newCombo})
       } catch (err) {
         console.error(
           'Error evaluating answer:',
           err?.message ?? err?.code ?? JSON.stringify(err),
           err,
         )
+      } finally {
+        setIsCheckingAnswer(false)
       }
     },
-    [playerData, roundStatus, checkedQuestions, correctOptionByQuestion, sessionId, playSound],
+    [
+      playerData,
+      roundStatus,
+      checkedQuestions,
+      isCheckingAnswer,
+      correctOptionByQuestion,
+      currentBottle?.id,
+      roundAnchorAt,
+      sessionId,
+      playSound,
+      isHostUser,
+    ],
   )
 
   const handleContinue = useCallback(async () => {
@@ -290,16 +412,18 @@ export function useRoundPlay({
       return
     }
     if (!playerData || clickedReady) return
-    try {
-      await supabaseClient
-        .from('live_players')
-        .update({updated_at: new Date().toISOString()})
-        .eq('id', playerData.id)
-      setClickedReady(true)
-      setResultsOpenedBottleIndex(currentBottleIndex)
-    } catch (err) {
-      console.error('Error setting ready status:', err)
-    }
+    setClickedReady(true)
+    setResultsOpenedBottleIndex(currentBottleIndex)
+
+    supabaseClient
+      .from('live_players')
+      .update({updated_at: new Date().toISOString()})
+      .eq('id', playerData.id)
+      .then(({error}) => {
+        if (error) {
+          console.error('Error setting ready status:', error)
+        }
+      })
   }, [
     currentSlideIndex,
     liveQuestions.length,
@@ -334,6 +458,7 @@ export function useRoundPlay({
     showBottleTransition,
     setShowBottleTransition,
     comboCount,
+    isCheckingAnswer,
     currentSlideIndex,
     checkedQuestions,
     slideMotion,
@@ -348,5 +473,6 @@ export function useRoundPlay({
     advanceToNextBottleOrFinish,
     // progress
     playersReadyCount,
+    participantsCount: participantIds.length,
   }
 }

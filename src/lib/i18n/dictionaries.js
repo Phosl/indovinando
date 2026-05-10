@@ -32,6 +32,7 @@ export const GAME_EDITOR_DICTIONARY = {
       INCOMPLETE_BOTTLES:
         'Ci sono bottiglie con risposte mancanti. Aprile e completa tutte le risposte prima di salvare.',
       BOTTLE_FORM_INCOMPLETE: 'Compila nome bottiglia, produttore e anno.',
+      BOTTLE_YEAR_TOO_LONG: "L'anno della bottiglia deve avere massimo 4 caratteri.",
       BOTTLE_ANSWERS_INCOMPLETE: 'Seleziona la risposta corretta per ogni domanda.',
       QUESTION_TEXT_REQUIRED: 'Inserisci il testo della domanda.',
       OPTIONS_REQUIRED: 'Tutte le opzioni devono essere compilate.',
@@ -54,6 +55,7 @@ export const GAME_EDITOR_DICTIONARY = {
       INCOMPLETE_BOTTLES:
         'Some bottles have missing answers. Open them and complete all answers before saving.',
       BOTTLE_FORM_INCOMPLETE: 'Fill in bottle name, producer, and year.',
+      BOTTLE_YEAR_TOO_LONG: 'Bottle year must be at most 4 characters.',
       BOTTLE_ANSWERS_INCOMPLETE: 'Select the correct answer for each question.',
       QUESTION_TEXT_REQUIRED: 'Enter the question text.',
       OPTIONS_REQUIRED: 'All options must be filled in.',
@@ -83,6 +85,7 @@ export const GAME_EDITOR_DICTIONARY = {
       saving: 'Salvataggio...',
       saveAndPrint: 'Salva e stampa scheda',
       publishGame: 'Pubblica gioco',
+      updateGame: 'Aggiorna gioco',
     },
     en: {
       topBarCreate: 'Create game',
@@ -96,6 +99,7 @@ export const GAME_EDITOR_DICTIONARY = {
       saving: 'Saving...',
       saveAndPrint: 'Save and print card',
       publishGame: 'Publish game',
+      updateGame: 'Update game',
     },
   },
   questionsList: {

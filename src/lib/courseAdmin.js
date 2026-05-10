@@ -7,14 +7,12 @@ import {createServerSupabase} from '@/lib/supabaseServer'
  */
 export async function isSuperAdmin() {
   const supabase = await createServerSupabase()
-  const {data: {user}} = await supabase.auth.getUser()
+  const {
+    data: {user},
+  } = await supabase.auth.getUser()
   if (!user) return false
 
-  const {data} = await supabase
-    .from('profiles')
-    .select('super_admin')
-    .eq('id', user.id)
-    .single()
+  const {data} = await supabase.from('profiles').select('super_admin').eq('id', user.id).single()
 
   return data?.super_admin === true
 }
@@ -26,7 +24,9 @@ export async function isSuperAdmin() {
 export async function saveCourseJson(lang, levelNum, jsonData) {
   const supabase = await createServerSupabase()
 
-  const {data: {user}} = await supabase.auth.getUser()
+  const {
+    data: {user},
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Not authenticated')
 
   const {data: profile} = await supabase
@@ -38,9 +38,7 @@ export async function saveCourseJson(lang, levelNum, jsonData) {
   if (!profile?.super_admin) throw new Error('Not authorized')
 
   const filePath =
-    lang === 'it'
-      ? `corso_livello_${levelNum}.json`
-      : `${lang}/corso_livello_${levelNum}.json`
+    lang === 'it' ? `corso_livello_${levelNum}.json` : `${lang}/corso_livello_${levelNum}.json`
 
   const content = JSON.stringify(jsonData, null, 2)
 
@@ -62,9 +60,7 @@ export async function saveCourseJson(lang, levelNum, jsonData) {
 export async function getRawCourseJson(lang, levelNum) {
   const storageUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const filePath =
-    lang === 'it'
-      ? `corso_livello_${levelNum}.json`
-      : `${lang}/corso_livello_${levelNum}.json`
+    lang === 'it' ? `corso_livello_${levelNum}.json` : `${lang}/corso_livello_${levelNum}.json`
 
   // Try Storage first
   if (storageUrl) {

@@ -3,18 +3,21 @@
 import {useEffect, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import Loader from '@/components/Loader'
-import {supabaseClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {supabaseClient} from '@/lib/supabaseClient'
 import styles from './liveSessions.module.scss'
 
-const withSaveTimeout = async (promise, contextLabel, timeoutMs = 20000) => {
+const withSaveTimeout = async (taskOrPromise, contextLabel, timeoutMs = 20000) => {
   const timeoutPromise = new Promise((_, reject) => {
     setTimeout(() => {
       reject(new Error(`Salvataggio lento. (${contextLabel}). Riprova.`))
     }, timeoutMs)
   })
-  return Promise.race([promise, timeoutPromise])
+
+  const operationPromise = typeof taskOrPromise === 'function' ? taskOrPromise() : taskOrPromise
+
+  return Promise.race([operationPromise, timeoutPromise])
 }
 
 export default function LiveSessionClient({gameId, gameName, questions, bottles, userId}) {
@@ -26,33 +29,34 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
   const [sessionLink, setSessionLink] = useState('')
   const [playersCount, setPlayersCount] = useState(0)
   const [copyFeedback, setCopyFeedback] = useState(false)
+  const [isStartingGame, setIsStartingGame] = useState(false)
 
   // Crea sessione live al caricamento
   useEffect(() => {
     const createSession = async () => {
       try {
-        const {data, error} = await withSaveTimeout(
-          supabaseClient
-            .from('live_sessions')
-            .insert({
-              game_id: gameId,
-              host_user_id: userId,
-              status: 'lobby',
-              current_question_index: 0,
-              round_status: 'waiting_players',
-            })
-            .select()
-            .single(),
-          'create-live-session',
-        )
+        setLoading(true)
 
-        if (error) throw error
+        const {id} = await withSaveTimeout(async () => {
+          const response = await fetch('/api/live/session/create', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({gameId}),
+          })
 
-        setSessionId(data.id)
+          const payload = await response.json().catch(() => ({}))
+          if (!response.ok) {
+            throw new Error(payload?.error || 'Failed to create live session')
+          }
+
+          return payload
+        }, 'create-live-session')
+
+        setSessionId(id)
 
         // Genera link
         const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
-        setSessionLink(`${baseUrl}/live/session/${data.id}`)
+        setSessionLink(`${baseUrl}/live/session/${id}`)
 
         setLoading(false)
       } catch (err) {
@@ -74,12 +78,21 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
     if (!sessionId) return
 
     const pollPlayers = setInterval(async () => {
-      const {count} = await supabaseClient
-        .from('live_players')
-        .select('*', {count: 'exact', head: true})
-        .eq('session_id', sessionId)
+      try {
+        const response = await fetch('/api/live/session/players-count', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({sessionId}),
+          cache: 'no-store',
+        })
 
-      setPlayersCount(count || 0)
+        const payload = await response.json().catch(() => ({}))
+        if (!response.ok) return
+
+        setPlayersCount(payload?.count || 0)
+      } catch {
+        // Ignore transient polling errors and try again on next tick.
+      }
     }, 1000) // Poll ogni 1 secondo
 
     return () => clearInterval(pollPlayers)
@@ -92,48 +105,24 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
   }
 
   const handleStartGame = async () => {
+    if (isStartingGame) return
+
     try {
-      // Ensure host partecipa come giocatore nella stessa sessione.
-      const {data: existingHostPlayer} = await withSaveTimeout(
-        supabaseClient
-          .from('live_players')
-          .select('id')
-          .eq('session_id', sessionId)
-          .eq('user_id', userId)
-          .limit(1)
-          .maybeSingle(),
-        'check-host-player',
-      )
+      setIsStartingGame(true)
 
-      if (!existingHostPlayer) {
-        const hostNickname = 'Host'
-        await withSaveTimeout(
-          supabaseClient.from('live_players').insert({
-            session_id: sessionId,
-            nickname: hostNickname,
-            avatar_id: 1,
-            user_id: userId,
-            is_host: true,
-          }),
-          'insert-host-player',
-        )
-      }
+      await withSaveTimeout(async () => {
+        const response = await fetch('/api/live/session/start', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({sessionId}),
+        })
 
-      // Aggiorna sessione: cambio status a 'playing'
-      await withSaveTimeout(
-        supabaseClient
-          .from('live_sessions')
-          .update({
-            status: 'playing',
-            started_at: new Date().toISOString(),
-            round_status: 'waiting_answers',
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', sessionId),
-        'start-game-session',
-      )
+        const payload = await response.json().catch(() => ({}))
+        if (!response.ok) {
+          throw new Error(payload?.error || 'Failed to start live session')
+        }
+      }, 'start-game-session')
 
-      // Host e players share the same game experience
       router.push(`/live/session/${sessionId}/play`)
     } catch (err) {
       console.error('Error starting game:', err)
@@ -142,16 +131,25 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
           ? 'Failed to start game. Please try again.'
           : "Errore nell'avvio del gioco. Riprova.",
       )
+    } finally {
+      setIsStartingGame(false)
     }
   }
 
   const handleCancel = async () => {
     try {
-      // Elimina sessione
-      await withSaveTimeout(
-        supabaseClient.from('live_sessions').delete().eq('id', sessionId),
-        'cancel-live-session',
-      )
+      await withSaveTimeout(async () => {
+        const response = await fetch('/api/live/session/cancel', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({sessionId}),
+        })
+
+        const payload = await response.json().catch(() => ({}))
+        if (!response.ok) {
+          throw new Error(payload?.error || 'Failed to cancel live session')
+        }
+      }, 'cancel-live-session')
 
       router.push('/dashboard')
     } catch (err) {
@@ -220,10 +218,16 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
         <div className={styles.actions}>
           <button
             onClick={handleStartGame}
-            disabled={playersCount < 1}
+            disabled={playersCount < 1 || isStartingGame}
             className={styles.startButton}>
-            {isEnglish ? 'Start Game' : 'Inizia Gioco'} ({playersCount}{' '}
-            {isEnglish ? 'players' : 'giocatori'})
+            {isStartingGame
+              ? isEnglish
+                ? 'Starting...'
+                : 'Avvio...'
+              : isEnglish
+                ? 'Start Game'
+                : 'Inizia Gioco'}{' '}
+            ({playersCount} {isEnglish ? 'players' : 'giocatori'})
           </button>
           <button onClick={handleCancel} className={styles.cancelButton}>
             {isEnglish ? 'Cancel' : 'Annulla'}

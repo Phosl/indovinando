@@ -42,7 +42,10 @@ export const GameOverlays = memo(function GameOverlays({
                       {isMe ? (isEnglish ? ' (you)' : ' (tu)') : ''}
                     </span>
                     <span className={styles.sheetScore}>
-                      {player.total_score || 0} {isEnglish ? 'pts' : 'pt'}
+                      {player.liveTotalScore ?? player.total_score ?? 0} {isEnglish ? 'pts' : 'pt'}
+                      {(player.roundPoints || 0) > 0 && (
+                        <span className={styles.standingDelta}>+{player.roundPoints}</span>
+                      )}
                     </span>
                     {isHostUser && !isMe && (
                       <button

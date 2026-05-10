@@ -40,16 +40,16 @@ games --- enoteca_tasting_sessions --- enoteca_answers
 
 Profilo utente applicativo (username, onboarding e preferenze UI), legato a `auth.users.id`.
 
-| Colonna              | Tipo          | Note                                   |
-| -------------------- | ------------- | -------------------------------------- |
-| `id`                 | `UUID PK`     | coincide con `auth.users.id`           |
-| `username`           | `TEXT`        | opzionale                              |
-| `preferred_language` | `TEXT`        | default `it`, valori ammessi `it`/`en` |
-| `avatar_emoji`       | `TEXT`        | opzionale                              |
-| `onboarding`         | `BOOLEAN`     | opzionale                              |
+| Colonna              | Tipo          | Note                                                                |
+| -------------------- | ------------- | ------------------------------------------------------------------- |
+| `id`                 | `UUID PK`     | coincide con `auth.users.id`                                        |
+| `username`           | `TEXT`        | opzionale                                                           |
+| `preferred_language` | `TEXT`        | default `it`, valori ammessi `it`/`en`                              |
+| `avatar_emoji`       | `TEXT`        | opzionale                                                           |
+| `onboarding`         | `BOOLEAN`     | opzionale                                                           |
 | `super_admin`        | `BOOLEAN`     | default `false` — gestito solo via Supabase dashboard dal developer |
-| `created_at`         | `TIMESTAMPTZ` | opzionale                              |
-| `updated_at`         | `TIMESTAMPTZ` | aggiornato su salvataggi preferenze    |
+| `created_at`         | `TIMESTAMPTZ` | opzionale                                                           |
+| `updated_at`         | `TIMESTAMPTZ` | aggiornato su salvataggi preferenze                                 |
 
 Uso in app:
 
@@ -66,12 +66,13 @@ Uso in app:
 
 Bucket **pubblico** che contiene i file JSON dei corsi di vino.
 
-| Path                               | Descrizione                  |
-| ---------------------------------- | ---------------------------- |
-| `corso_livello_{1..10}.json`       | Corsi in italiano            |
-| `en/corso_livello_{1..10}.json`    | Corsi in inglese             |
+| Path                            | Descrizione       |
+| ------------------------------- | ----------------- |
+| `corso_livello_{1..10}.json`    | Corsi in italiano |
+| `en/corso_livello_{1..10}.json` | Corsi in inglese  |
 
 Policy:
+
 - **Read:** pubblico (anonimo)
 - **Write/Update/Delete:** solo utenti con `profiles.super_admin = true`
 

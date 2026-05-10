@@ -1,5 +1,6 @@
 import {notFound, redirect} from 'next/navigation'
 import {revalidatePath} from 'next/cache'
+import {Suspense} from 'react'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import GameEditClient from './GameEditClient'
 
@@ -55,13 +56,15 @@ export default async function GameEditPage({params}) {
     .order('bottle_order')
 
   return (
-    <GameEditClient
-      gameId={gameId}
-      initialGame={game}
-      initialQuestions={questions || []}
-      initialBottles={bottles || []}
-      userId={user.id}
-      onGameSaved={revalidateGamePage}
-    />
+    <Suspense fallback={null}>
+      <GameEditClient
+        gameId={gameId}
+        initialGame={game}
+        initialQuestions={questions || []}
+        initialBottles={bottles || []}
+        userId={user.id}
+        onGameSaved={revalidateGamePage}
+      />
+    </Suspense>
   )
 }

@@ -27,6 +27,7 @@ import {useLanguage} from '@/components/i18n/LanguageProvider'
 import styles from './GameEditor.module.scss'
 
 const SAVE_TIMEOUT_MS = 20000
+const HARD_WATCHDOG_MS = 240000
 
 /**
  * Normalize step value to ensure it's within valid range
@@ -39,6 +40,12 @@ function normalizeStep(value) {
   if (parsed > MAX_STEP) return MAX_STEP
 
   return parsed
+}
+
+function normalizeBottleYear(value) {
+  return String(value ?? '')
+    .trim()
+    .slice(0, 4)
 }
 
 export default function GameEditor({
@@ -76,6 +83,7 @@ export default function GameEditor({
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false)
   const [editingQuestionIndex, setEditingQuestionIndex] = useState(null)
   const [resolvedUserId, setResolvedUserId] = useState(userId)
+  const savePhaseRef = useRef('idle')
 
   const editorText = getGameEditorText(lang)
   const alertMessages = getAlertMessages(lang)
@@ -85,20 +93,40 @@ export default function GameEditor({
       ? 'Saving is taking too long. Please try again.'
       : 'Il salvataggio sta impiegando troppo tempo. Riprova.'
 
-  async function withSaveTimeout(promise, contextLabel) {
-    let timer
-    const timeoutPromise = new Promise((_, reject) => {
-      timer = setTimeout(
-        () => reject(new Error(`${saveTimeoutMessage} (${contextLabel})`)),
-        SAVE_TIMEOUT_MS,
-      )
-    })
+  async function withSaveTimeout(run, contextLabel, retries = 0, timeoutMs = SAVE_TIMEOUT_MS) {
+    let attempt = 0
 
-    try {
-      return await Promise.race([promise, timeoutPromise])
-    } finally {
-      clearTimeout(timer)
+    while (attempt <= retries) {
+      let timer
+      const timeoutPromise = new Promise((_, reject) => {
+        timer = setTimeout(
+          () => reject(new Error(`${saveTimeoutMessage} (${contextLabel})`)),
+          timeoutMs,
+        )
+      })
+
+      try {
+        const requestPromise = Promise.resolve().then(() =>
+          typeof run === 'function' ? run() : run,
+        )
+        return await Promise.race([requestPromise, timeoutPromise])
+      } catch (error) {
+        attempt += 1
+        const isTimeoutError =
+          typeof error?.message === 'string' && error.message.startsWith(saveTimeoutMessage)
+
+        if (!isTimeoutError || attempt > retries) {
+          throw error
+        }
+      } finally {
+        clearTimeout(timer)
+      }
     }
+  }
+
+  function setSavePhase(phase) {
+    savePhaseRef.current = phase
+    console.debug('[GameEditor save phase]', phase)
   }
 
   // Track if initialization has already run to prevent resetting on deps change
@@ -316,64 +344,36 @@ export default function GameEditor({
     setIsSaving(true)
 
     try {
-      let currentGameId = gameId
+      setSavePhase('save-game-request')
+      const routeMode = isEditMode ? 'edit' : 'create'
+      const generatedGameId = gameId || crypto.randomUUID()
 
-      if (!isEditMode) {
-        const {data: gameInsert, error: gameError} = await withSaveTimeout(
-          supabase
-            .from('games')
-            .insert({
+      const {id: savedGameId} = await withSaveTimeout(
+        async () => {
+          const response = await fetch('/api/game/save', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              mode: routeMode,
+              gameId: generatedGameId,
               name: gameName.trim(),
-              created_by: resolvedUserId,
-              status: 'published',
-            })
-            .select('id')
-            .single(),
-          'create-game',
-        )
+              questions: templateQuestions,
+              bottles: [],
+            }),
+          })
 
-        if (gameError || !gameInsert?.id)
-          throw new Error(gameError?.message || alertMessages.CREATE_GAME_ERROR)
+          const payload = await response.json().catch(() => ({}))
+          if (!response.ok) {
+            throw new Error(payload?.error || alertMessages.GAME_SAVE_ERROR)
+          }
 
-        currentGameId = gameInsert.id
-      }
-
-      const questionsToInsert = templateQuestions.map((question, index) => ({
-        game_id: currentGameId,
-        text: question.text,
-        display_order: index,
-      }))
-
-      const {data: insertedQuestions, error: questionsError} = await withSaveTimeout(
-        supabase.from('game_questions').insert(questionsToInsert).select('id, display_order'),
-        'save-questions',
+          return payload
+        },
+        'save-game',
+        1,
       )
 
-      if (questionsError || !insertedQuestions?.length) {
-        throw new Error(questionsError?.message || alertMessages.SAVE_QUESTIONS_ERROR)
-      }
-
-      const questionIdByOrder = new Map(insertedQuestions.map((row) => [row.display_order, row.id]))
-
-      const optionsToInsert = templateQuestions.flatMap((question, qIndex) => {
-        const questionId = questionIdByOrder.get(qIndex)
-        return question.options.map((optionText, oIndex) => ({
-          question_id: questionId,
-          text: optionText,
-          option_order: oIndex,
-        }))
-      })
-
-      const {error: optionsError} = await withSaveTimeout(
-        supabase.from('game_question_options').insert(optionsToInsert),
-        'save-options',
-      )
-
-      if (optionsError) {
-        throw new Error(optionsError?.message || alertMessages.SAVE_OPTIONS_ERROR)
-      }
-
-      router.push(`/game/${currentGameId}/print`)
+      router.push(`/game/${savedGameId || generatedGameId}/print`)
     } catch (error) {
       alert(error.message || alertMessages.GAME_SAVE_ERROR)
     } finally {
@@ -506,164 +506,63 @@ export default function GameEditor({
     }
 
     setIsSaving(true)
+    setSavePhase('start-publish-game')
+
+    const hardWatchdog = setTimeout(() => {
+      setIsSaving(false)
+      alert(`${saveTimeoutMessage} (${savePhaseRef.current || 'unknown-step'})`)
+    }, HARD_WATCHDOG_MS)
 
     try {
-      let currentGameId = gameId
+      const desiredGameName = gameName.trim()
+      setSavePhase('prepare-payloads')
+      const routeMode = isEditMode ? 'edit' : 'create'
+      const generatedGameId = gameId || crypto.randomUUID()
 
-      if (isEditMode) {
-        // Update game name
-        const {error: gameUpdateError} = await withSaveTimeout(
-          supabase.from('games').update({name: gameName.trim()}).eq('id', currentGameId),
-          'update-game',
-        )
+      setSavePhase('save-game-request')
+      const {id: savedGameId} = await withSaveTimeout(
+        async () => {
+          const response = await fetch('/api/game/save', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              mode: routeMode,
+              gameId: generatedGameId,
+              name: desiredGameName,
+              questions: templateQuestions,
+              bottles,
+            }),
+          })
 
-        if (gameUpdateError) throw gameUpdateError
-      } else {
-        // Create new game
-        const {data: gameInsert, error: gameError} = await withSaveTimeout(
-          supabase
-            .from('games')
-            .insert({
-              name: gameName.trim(),
-              created_by: resolvedUserId,
-              status: 'published',
-            })
-            .select('id')
-            .single(),
-          'create-game',
-        )
-
-        if (gameError || !gameInsert?.id)
-          throw new Error(gameError?.message || alertMessages.CREATE_GAME_ERROR)
-
-        currentGameId = gameInsert.id
-      }
-
-      // Delete old data in edit mode
-      if (isEditMode) {
-        await withSaveTimeout(
-          supabase.from('game_bottle_answers').delete().eq('game_id', currentGameId),
-          'delete-old-bottle-answers',
-        )
-        // this will cascade-delete bottles' answers
-        await withSaveTimeout(
-          supabase.from('game_bottles').delete().eq('game_id', currentGameId),
-          'delete-old-bottles',
-        )
-        await withSaveTimeout(
-          supabase.from('game_question_options').delete().eq('game_id', currentGameId),
-          'delete-old-options',
-        )
-        // this will cascade-delete question options
-        await withSaveTimeout(
-          supabase.from('game_questions').delete().eq('game_id', currentGameId),
-          'delete-old-questions',
-        )
-      }
-
-      const questionsToInsert = templateQuestions.map((question, index) => ({
-        game_id: currentGameId,
-        text: question.text,
-        display_order: index,
-      }))
-
-      const {data: insertedQuestions, error: questionsError} = await withSaveTimeout(
-        supabase.from('game_questions').insert(questionsToInsert).select('id, display_order'),
-        'save-questions',
-      )
-
-      if (questionsError || !insertedQuestions?.length) {
-        throw new Error(questionsError?.message || alertMessages.SAVE_QUESTIONS_ERROR)
-      }
-
-      const questionIdByOrder = new Map(insertedQuestions.map((row) => [row.display_order, row.id]))
-
-      const optionsToInsert = templateQuestions.flatMap((question, qIndex) => {
-        const questionId = questionIdByOrder.get(qIndex)
-        return question.options.map((optionText, oIndex) => ({
-          question_id: questionId,
-          text: optionText,
-          option_order: oIndex,
-        }))
-      })
-
-      const {data: insertedOptions, error: optionsError} = await withSaveTimeout(
-        supabase
-          .from('game_question_options')
-          .insert(optionsToInsert)
-          .select('id, question_id, option_order'),
-        'save-options',
-      )
-
-      if (optionsError || !insertedOptions?.length) {
-        throw new Error(optionsError?.message || alertMessages.SAVE_OPTIONS_ERROR)
-      }
-
-      const optionIdByQuestionAndOrder = new Map(
-        insertedOptions.map((row) => [`${row.question_id}-${row.option_order}`, row.id]),
-      )
-
-      const bottlesToInsert = bottles.map((bottle, index) => ({
-        game_id: currentGameId,
-        name: bottle.name,
-        producer: bottle.producer,
-        year: bottle.year,
-        bottle_order: index,
-      }))
-
-      const {data: insertedBottles, error: bottlesError} = await withSaveTimeout(
-        supabase.from('game_bottles').insert(bottlesToInsert).select('id, bottle_order'),
-        'save-bottles',
-      )
-
-      if (bottlesError || !insertedBottles?.length) {
-        throw new Error(bottlesError?.message || alertMessages.SAVE_BOTTLES_ERROR)
-      }
-
-      const bottleIdByOrder = new Map(insertedBottles.map((row) => [row.bottle_order, row.id]))
-
-      const answersToInsert = bottles.flatMap((bottle, bottleIndex) => {
-        const bottleId = bottleIdByOrder.get(bottleIndex)
-
-        return bottle.answers.map((selectedOptionOrder, questionOrder) => {
-          const questionId = questionIdByOrder.get(questionOrder)
-          const optionId = optionIdByQuestionAndOrder.get(`${questionId}-${selectedOptionOrder}`)
-
-          if (!bottleId || !questionId || !optionId) {
-            throw new Error(alertMessages.SAVE_BOTTLE_ANSWERS_ERROR)
+          const payload = await response.json().catch(() => ({}))
+          if (!response.ok) {
+            throw new Error(payload?.error || alertMessages.GAME_SAVE_ERROR)
           }
 
-          return {
-            bottle_id: bottleId,
-            question_id: questionId,
-            option_id: optionId,
-          }
-        })
-      })
-
-      const {error: answersError} = await withSaveTimeout(
-        supabase.from('game_bottle_answers').insert(answersToInsert),
-        'save-bottle-answers',
+          return payload
+        },
+        'save-game',
+        1,
       )
-
-      if (answersError) {
-        throw new Error(answersError?.message || alertMessages.SAVE_BOTTLE_ANSWERS_ERROR)
-      }
 
       alert(isEditMode ? alertMessages.GAME_UPDATED_SUCCESS : alertMessages.GAME_SAVED_SUCCESS)
 
       if (isEditMode) {
+        setSavePhase('redirect-edit')
         if (onGameSaved) {
-          await onGameSaved(gameId)
+          Promise.resolve(onGameSaved(gameId)).catch(() => {})
         }
-        // Force a hard reload to get fresh data from server
-        window.location.href = `/game/${gameId}`
+        window.location.href = `/game/${savedGameId || generatedGameId}`
       } else {
+        setSavePhase('redirect-create')
         router.push('/dashboard')
       }
     } catch (error) {
-      alert(error.message || alertMessages.GAME_SAVE_ERROR)
+      const baseError = error.message || alertMessages.GAME_SAVE_ERROR
+      alert(`${baseError} (${savePhaseRef.current || 'unknown-step'})`)
     } finally {
+      clearTimeout(hardWatchdog)
+      setSavePhase('idle')
       setIsSaving(false)
     }
   }
@@ -762,7 +661,11 @@ export default function GameEditor({
             </button>
             {bottles.length > 0 && (
               <button className="btn primary" onClick={publishGame} disabled={isSaving}>
-                {isSaving ? editorText.saving : editorText.publishGame}
+                {isSaving
+                  ? editorText.saving
+                  : isEditMode
+                    ? editorText.updateGame
+                    : editorText.publishGame}
               </button>
             )}
           </div>

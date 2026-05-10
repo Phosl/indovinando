@@ -34,8 +34,7 @@ function SlideEditor({slide, index, onChange, onRemove}) {
     onChange({...slide, paragraphs: p})
   }
 
-  const addParagraph = () =>
-    onChange({...slide, paragraphs: [...(slide.paragraphs ?? []), '']})
+  const addParagraph = () => onChange({...slide, paragraphs: [...(slide.paragraphs ?? []), '']})
 
   const removeParagraph = (i) => {
     const p = (slide.paragraphs ?? []).filter((_, idx) => idx !== i)
@@ -48,8 +47,7 @@ function SlideEditor({slide, index, onChange, onRemove}) {
     onChange({...slide, keyPoints: kp})
   }
 
-  const addKeyPoint = () =>
-    onChange({...slide, keyPoints: [...(slide.keyPoints ?? []), '']})
+  const addKeyPoint = () => onChange({...slide, keyPoints: [...(slide.keyPoints ?? []), '']})
 
   const removeKeyPoint = (i) => {
     const kp = (slide.keyPoints ?? []).filter((_, idx) => idx !== i)
@@ -127,14 +125,12 @@ function QuestionEditor({question, index, onChange, onRemove}) {
     onChange({...question, answers})
   }
 
-  const addAnswer = () =>
-    onChange({...question, answers: [...(question.answers ?? []), '']})
+  const addAnswer = () => onChange({...question, answers: [...(question.answers ?? []), '']})
 
   const removeAnswer = (i) => {
     const answers = (question.answers ?? []).filter((_, idx) => idx !== i)
-    const correct = question.correct >= i && question.correct > 0
-      ? question.correct - 1
-      : question.correct
+    const correct =
+      question.correct >= i && question.correct > 0 ? question.correct - 1 : question.correct
     onChange({...question, answers, correct})
   }
 
@@ -149,12 +145,13 @@ function QuestionEditor({question, index, onChange, onRemove}) {
             className={styles.input}
             style={{width: 'auto', padding: '4px 8px'}}
             value={question.type ?? 'mcq'}
-            onChange={(e) => update('type', e.target.value)}
-          >
+            onChange={(e) => update('type', e.target.value)}>
             <option value="mcq">Scelta multipla</option>
             <option value="true_false">Vero / Falso</option>
           </select>
-          <button type="button" className={styles.removeBtn} onClick={onRemove}>🗑</button>
+          <button type="button" className={styles.removeBtn} onClick={onRemove}>
+            🗑
+          </button>
         </div>
       </div>
 
@@ -171,7 +168,10 @@ function QuestionEditor({question, index, onChange, onRemove}) {
       {!isTrueFalse && (
         <div className={styles.fieldGroup}>
           <label className={styles.fieldLabel}>
-            Opzioni <span style={{fontWeight: 500, textTransform: 'none'}}>— seleziona la risposta corretta</span>
+            Opzioni{' '}
+            <span style={{fontWeight: 500, textTransform: 'none'}}>
+              — seleziona la risposta corretta
+            </span>
           </label>
           {(question.answers ?? []).map((answer, i) => (
             <div key={i} className={styles.optionRow}>
@@ -193,8 +193,7 @@ function QuestionEditor({question, index, onChange, onRemove}) {
                 type="button"
                 className={styles.removeBtn}
                 onClick={() => removeAnswer(i)}
-                disabled={(question.answers ?? []).length <= 2}
-              >
+                disabled={(question.answers ?? []).length <= 2}>
                 ✕
               </button>
             </div>
@@ -301,7 +300,6 @@ export default function LessonEditorClient({lang, levelNum, lessonIndex, initial
 
   return (
     <div className={styles.editorForm}>
-
       {/* ── Dati base lezione ── */}
       <div className={styles.section}>
         <span className={styles.sectionLabel}>Informazioni lezione</span>
@@ -319,7 +317,11 @@ export default function LessonEditorClient({lang, levelNum, lessonIndex, initial
           <label className={styles.fieldLabel}>Intro (testo breve)</label>
           <textarea
             className={`${styles.input} ${styles.textarea}`}
-            value={typeof lesson.intro === 'string' ? lesson.intro : (lesson.intro?.paragraphs?.[0] ?? '')}
+            value={
+              typeof lesson.intro === 'string'
+                ? lesson.intro
+                : (lesson.intro?.paragraphs?.[0] ?? '')
+            }
             onChange={(e) => updateField('intro', e.target.value)}
             placeholder="Introduzione della lezione..."
           />
@@ -339,7 +341,9 @@ export default function LessonEditorClient({lang, levelNum, lessonIndex, initial
       {/* ── Slides ── */}
       <div className={styles.section}>
         <div className={styles.sectionHeader}>
-          <span className={styles.sectionLabel}>Slide didattiche ({(lesson.slides ?? []).length})</span>
+          <span className={styles.sectionLabel}>
+            Slide didattiche ({(lesson.slides ?? []).length})
+          </span>
         </div>
 
         {(lesson.slides ?? []).map((slide, i) => (
@@ -388,8 +392,7 @@ export default function LessonEditorClient({lang, levelNum, lessonIndex, initial
           className="btn primary"
           onClick={handleSave}
           disabled={saving}
-          style={{marginLeft: 'auto'}}
-        >
+          style={{marginLeft: 'auto'}}>
           {saving ? 'Salvataggio...' : '💾 Salva lezione'}
         </button>
       </div>

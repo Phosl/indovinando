@@ -20,6 +20,7 @@ export default async function PlayerPlayPage({params}) {
       host_user_id,
       current_question_index,
       round_status,
+      updated_at,
       games(name)
     `,
     )
@@ -61,6 +62,19 @@ export default async function PlayerPlayPage({params}) {
     data: {user},
   } = await supabase.auth.getUser()
 
+  let initialPlayerData = null
+
+  if (user?.id) {
+    const {data: player} = await supabase
+      .from('live_players')
+      .select('id, nickname, avatar_id, user_id, is_host')
+      .eq('session_id', sessionId)
+      .eq('user_id', user.id)
+      .maybeSingle()
+
+    initialPlayerData = player || null
+  }
+
   return (
     <PlayerLiveClient
       sessionId={sessionId}
@@ -68,8 +82,10 @@ export default async function PlayerPlayPage({params}) {
       bottles={bottles}
       initialStatus={session?.round_status || 'waiting_answers'}
       initialQuestionIndex={session?.current_question_index || 0}
+      initialUpdatedAt={session?.updated_at || null}
       hostUserId={session?.host_user_id || null}
       userId={user?.id || null}
+      initialPlayerData={initialPlayerData}
     />
   )
 }
