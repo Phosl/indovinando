@@ -42,6 +42,13 @@ export const validateBottles = (bottles, questions, messages) => {
     throw new Error(messages?.BOTTLES_REQUIRED || 'Devi aggiungere almeno una bottiglia.')
   }
 
+  const hasTooLongYear = bottles.some((bottle) => (bottle?.year || '').trim().length > 4)
+  if (hasTooLongYear) {
+    throw new Error(
+      messages?.BOTTLE_YEAR_TOO_LONG || "L'anno della bottiglia deve avere massimo 4 caratteri.",
+    )
+  }
+
   const hasIncompleteBottle = bottles.some(
     (bottle) =>
       !Array.isArray(bottle.answers) ||
@@ -70,6 +77,12 @@ export const validateBottleForm = (
   if (isBottleMetaMissing) {
     throw new Error(
       messages?.BOTTLE_FORM_INCOMPLETE || 'Compila nome bottiglia, produttore e anno.',
+    )
+  }
+
+  if ((year || '').trim().length > 4) {
+    throw new Error(
+      messages?.BOTTLE_YEAR_TOO_LONG || "L'anno della bottiglia deve avere massimo 4 caratteri.",
     )
   }
 

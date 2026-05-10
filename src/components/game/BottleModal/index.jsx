@@ -89,6 +89,7 @@ export default function BottleModal({
               className={styles.inputField}
               placeholder={text.yearPlaceholder}
               value={year}
+              maxLength={4}
               onChange={(e) => onYearChange(e.target.value)}
             />
           </div>

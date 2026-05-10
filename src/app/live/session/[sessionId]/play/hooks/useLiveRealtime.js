@@ -85,7 +85,7 @@ export function useLiveRealtime({
     const pollSession = setInterval(async () => {
       const {data: session} = await supabaseClient
         .from('live_sessions')
-        .select('current_question_index, round_status, status')
+        .select('current_question_index, round_status, status, updated_at')
         .eq('id', sessionId)
         .maybeSingle()
       if (session) onSessionUpdateRef.current(session)

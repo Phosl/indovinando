@@ -23,8 +23,10 @@ export default function PlayerLiveClient({
   bottles,
   initialStatus,
   initialQuestionIndex,
+  initialUpdatedAt,
   hostUserId,
   userId,
+  initialPlayerData,
 }) {
   const router = useRouter()
   const isHostUser = Boolean(userId && hostUserId && userId === hostUserId)
@@ -33,6 +35,20 @@ export default function PlayerLiveClient({
 
   // ── Hooks ──────────────────────────────────────────────────────────────────
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
+
+  const {
+    playerData,
+    setPlayerData,
+    resolvingPlayer,
+    resolvePlayer,
+    playerStorageKey,
+    nicknameStorageKey,
+  } = usePlayerResolver({
+    sessionId,
+    userId,
+    isHostUser,
+    initialPlayerData,
+  })
 
   const {
     liveQuestions,
@@ -46,44 +62,45 @@ export default function PlayerLiveClient({
     setAllPlayers,
     sessionFinished,
     setSessionFinished,
+    roundAnchorAt,
+    setRoundAnchorAt,
   } = useGameDataLoader({
     sessionId,
     initialQuestions: questions,
     initialBottles: bottles,
     initialStatus,
     initialQuestionIndex,
+    initialUpdatedAt,
   })
 
-  const {playerData, resolvingPlayer, resolvePlayer, playerStorageKey, nicknameStorageKey} =
-    usePlayerResolver({sessionId, userId, isHostUser})
-
-  const currentBottle = liveBottles[currentBottleIndex]
-  const isLastBottle = currentBottleIndex >= liveBottles.length - 1
+  const currentBottle = liveBottles?.[currentBottleIndex] || null
+  const isLastBottle = currentBottleIndex === (liveBottles?.length || 0) - 1
 
   const {
-    selectedAnswers,
+    currentSlideIndex,
+    checkedQuestions,
+    isCheckingAnswer,
+    correctOptionByQuestion,
     roundAnswers,
     roundAnswersByPlayer,
-    correctOptionByQuestion,
+    selectedAnswers,
+    comboCount,
     clickedReady,
     allPlayersCompletedThisRound,
     playerMarkedNext,
     resultsOpenedBottleIndex,
     setResultsOpenedBottleIndex,
     showBottleTransition,
-    currentSlideIndex,
-    checkedQuestions,
+    setShowBottleTransition,
     slideMotion,
-    comboCount,
     resetRoundState,
-    handleAnswerInsert,
     handleSelect,
     handleCheck,
     handleContinue,
     handleNextBottleClick,
-    syncScoresFromAnswers,
-    advanceToNextBottleOrFinish,
+    handleAnswerInsert,
     playersReadyCount,
+    participantsCount,
   } = useRoundPlay({
     sessionId,
     playerData,
@@ -94,6 +111,7 @@ export default function PlayerLiveClient({
     isHostUser,
     isLastBottle,
     currentBottle,
+    roundAnchorAt,
     setCurrentBottleIndex,
     setRoundStatus,
     setAllPlayers,
@@ -114,6 +132,8 @@ export default function PlayerLiveClient({
     sessionId,
     playerData,
     allPlayers,
+    roundAnswersByPlayer,
+    roundStatus,
     setAllPlayers,
     isHostUser,
     playerStorageKey,
@@ -130,6 +150,7 @@ export default function PlayerLiveClient({
         setTimeout(() => router.push(`/live/session/${sessionId}/leaderboard`), 900)
       }
       if (updated?.current_question_index !== currentBottleIndex) {
+        setRoundAnchorAt(updated?.updated_at || new Date().toISOString())
         resetRoundState(
           updated?.current_question_index || 0,
           updated?.round_status || 'waiting_answers',
@@ -137,7 +158,12 @@ export default function PlayerLiveClient({
       }
       if (updated?.round_status) setRoundStatus(updated.round_status)
     },
-    onPlayersUpdate: setAllPlayers,
+    onPlayersUpdate: (incomingPlayers) => {
+      setAllPlayers((prevPlayers) => {
+        if (incomingPlayers?.length) return incomingPlayers
+        return prevPlayers
+      })
+    },
     onAnswerInsert: handleAnswerInsert,
   })
 
@@ -219,6 +245,44 @@ export default function PlayerLiveClient({
     )
   }
 
+  // ── Shared results title/subtitle ──────────────────────────────────────────
+  const resultsTitle =
+    roundStatus === 'showing_results'
+      ? isEnglish
+        ? 'Bottle complete!'
+        : 'Bottiglia completata!'
+      : isEnglish
+        ? 'Bottle results'
+        : 'Risultati bottiglia'
+  const resultsSubtitle =
+    roundStatus === 'showing_results'
+      ? isLastBottle
+        ? isEnglish
+          ? 'You will see the final leaderboard shortly.'
+          : 'Vedrai subito la classifica finale.'
+        : `Moving to bottle ${currentBottleIndex + 2}.`
+      : null
+
+  const navigateToLeaderboard = async () => {
+    // Server-side guard: leaderboard is available only after all players complete the round.
+    setSessionFinished(true)
+    try {
+      const response = await fetch('/api/live/session/finish', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({sessionId}),
+      })
+      if (!response.ok) {
+        setSessionFinished(false)
+        return
+      }
+    } catch (_) {
+      setSessionFinished(false)
+      return
+    }
+    router.push(`/live/session/${sessionId}/leaderboard`)
+  }
+
   // ── Screens ────────────────────────────────────────────────────────────────
 
   if (showBottleTransition) {
@@ -238,57 +302,9 @@ export default function PlayerLiveClient({
 
   if (roundStatus === 'showing_results' && resultsOpenedBottleIndex !== currentBottleIndex) {
     return (
-      <div className={styles.fullPage}>
-        <TopBar {...topBarProps} />
-        <div className={styles.slideContent}>
-          <div className={styles.bottleBadge}>
-            Bottle {currentBottleIndex + 1}/{liveBottles.length}
-          </div>
-          <h2 className={styles.waitTitle}>
-            {isEnglish ? 'All answers are in' : 'Tutte le risposte sono arrivate'}
-          </h2>
-          <p className={styles.readyHint}>
-            {isEnglish
-              ? 'Open the bottle summary whenever you are ready.'
-              : 'Quando vuoi, apri il riepilogo della bottiglia.'}
-          </p>
-        </div>
-        <div className={styles.bottomPanel}>
-          <button
-            className={styles.continueButton}
-            onClick={() => setResultsOpenedBottleIndex(currentBottleIndex)}>
-            See results
-          </button>
-        </div>
-        {overlays}
-      </div>
-    )
-  }
-
-  if (
-    roundStatus === 'showing_results' ||
-    (roundStatus === 'waiting_answers' &&
-      clickedReady &&
-      resultsOpenedBottleIndex === currentBottleIndex)
-  ) {
-    const title =
-      roundStatus === 'showing_results'
-        ? isEnglish
-          ? 'Bottle complete!'
-          : 'Bottiglia completata!'
-        : isEnglish
-          ? 'Bottle results'
-          : 'Risultati bottiglia'
-    const subtitle =
-      roundStatus === 'showing_results'
-        ? isLastBottle
-          ? 'You will see the final leaderboard shortly.'
-          : `Moving to bottle ${currentBottleIndex + 2}.`
-        : null
-    return (
       <ResultsScreen
-        title={title}
-        subtitle={subtitle}
+        title={resultsTitle}
+        subtitle={resultsSubtitle}
         currentBottle={currentBottle}
         currentBottleIndex={currentBottleIndex}
         totalBottles={liveBottles.length}
@@ -302,23 +318,43 @@ export default function PlayerLiveClient({
         allPlayers={allPlayers}
         roundAnswersByPlayer={roundAnswersByPlayer}
         playersReadyCount={playersReadyCount}
+        participantsCount={participantsCount}
         currentPlayerData={playerData}
         onNextBottle={handleNextBottleClick}
-        onViewLeaderboard={
-          isLastBottle
-            ? async () => {
-                if (isHostUser) {
-                  try {
-                    await syncScoresFromAnswers(roundAnswersByPlayer)
-                    await advanceToNextBottleOrFinish()
-                  } catch (err) {
-                    console.error('Error finishing session:', err?.message ?? err)
-                  }
-                }
-                router.push(`/live/session/${sessionId}/leaderboard`)
-              }
-            : () => router.push(`/live/session/${sessionId}/leaderboard`)
-        }
+        onViewLeaderboard={navigateToLeaderboard}
+        topBar={<TopBar {...topBarProps} />}
+        overlays={overlays}
+      />
+    )
+  }
+
+  if (
+    roundStatus === 'showing_results' ||
+    (roundStatus === 'waiting_answers' &&
+      clickedReady &&
+      resultsOpenedBottleIndex === currentBottleIndex)
+  ) {
+    return (
+      <ResultsScreen
+        title={resultsTitle}
+        subtitle={resultsSubtitle}
+        currentBottle={currentBottle}
+        currentBottleIndex={currentBottleIndex}
+        totalBottles={liveBottles.length}
+        questions={liveQuestions}
+        roundAnswers={roundAnswers}
+        correctOptionByQuestion={correctOptionByQuestion}
+        isLastBottle={isLastBottle}
+        allPlayersCompletedThisRound={allPlayersCompletedThisRound}
+        isHostUser={isHostUser}
+        playerMarkedNext={playerMarkedNext}
+        allPlayers={allPlayers}
+        roundAnswersByPlayer={roundAnswersByPlayer}
+        playersReadyCount={playersReadyCount}
+        participantsCount={participantsCount}
+        currentPlayerData={playerData}
+        onNextBottle={handleNextBottleClick}
+        onViewLeaderboard={navigateToLeaderboard}
         topBar={<TopBar {...topBarProps} />}
         overlays={overlays}
       />
@@ -351,6 +387,7 @@ export default function PlayerLiveClient({
       clickedReady={clickedReady}
       isLastSlide={isLastSlide}
       comboCount={comboCount}
+      isCheckingAnswer={isCheckingAnswer}
       onSelect={handleSelect}
       onCheck={handleCheck}
       onContinue={handleContinue}

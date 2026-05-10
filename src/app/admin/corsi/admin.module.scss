@@ -1,0 +1,382 @@
+.page {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--background);
+  padding: 24px;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Level list */
+.levelGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.levelCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  padding: 14px 18px;
+  box-shadow: 0px 4px 0px 0px var(--gray-light);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    box-shadow 0.15s,
+    transform 0.1s;
+
+  &:hover {
+    box-shadow: 0px 6px 0px 0px var(--gray-light);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    box-shadow: none;
+    transform: translateY(3px);
+  }
+}
+
+.levelEmoji {
+  font-size: 2rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.levelInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.levelNum {
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--selected-dark);
+}
+
+.levelTitle {
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+.levelDesc {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.arrow {
+  font-size: 1.5rem;
+  color: var(--selected);
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+/* Lesson list (used in [levelId] page) */
+.lessonList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lessonCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0px 3px 0px 0px var(--gray-light);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    box-shadow 0.15s,
+    transform 0.1s;
+
+  &:hover {
+    box-shadow: 0px 5px 0px 0px var(--gray-light);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    box-shadow: none;
+    transform: translateY(3px);
+  }
+}
+
+.lessonNum {
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  min-width: 32px;
+}
+
+.lessonTitle {
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.lessonMeta {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Lang tab */
+.langTabs {
+  display: flex;
+  gap: 8px;
+}
+
+.langTab {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 2px solid var(--button-secondary-border);
+  background: var(--foreground);
+  font-weight: 900;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--text-primary);
+  text-decoration: none;
+
+  &.active {
+    background: var(--selected);
+    color: #fff;
+    border-color: var(--selected);
+  }
+}
+
+/* Editor form */
+.editorForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.section {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0px 3px 0px 0px var(--gray-light);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sectionLabel {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--selected-dark);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldLabel {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 10px;
+  background: var(--background);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-sizing: border-box;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    border-color: var(--selected);
+  }
+}
+
+.textarea {
+  min-height: 80px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.questionCard {
+  background: var(--background);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.questionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.questionNum {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.optionRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.correctRadio {
+  accent-color: var(--selected);
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.correctLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.saveBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.statusMsg {
+  font-size: 0.85rem;
+  font-weight: 700;
+  flex: 1;
+
+  &.success {
+    color: #166534;
+  }
+  &.error {
+    color: #b91c1c;
+  }
+}
+
+.addBtn {
+  background: none;
+  border: 2px dashed var(--button-secondary-border);
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+
+  &:hover {
+    border-color: var(--selected);
+    color: var(--selected);
+  }
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 2px 6px;
+  border-radius: 6px;
+
+  &:hover {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+}
+
+.slideCard {
+  background: var(--background);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 16px;
+  }
+
+  .levelCard {
+    padding: 12px 14px;
+  }
+}

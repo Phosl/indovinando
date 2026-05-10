@@ -2,12 +2,16 @@ import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {toLocaleTag} from '@/lib/i18n/config'
+import it from '@/lib/i18n/locales/it.json'
+import en from '@/lib/i18n/locales/en.json'
 import styles from './dashboard.module.scss'
 
 export default async function Dashboard() {
   const supabase = await createServerSupabase()
   const lang = await getServerLanguage()
   const isEnglish = lang === 'en'
+  const locale = isEnglish ? en : it
+  const dashboardDict = locale.dashboard || it.dashboard || {}
   const {data} = await supabase.auth.getUser()
 
   if (!data.user) {
@@ -16,7 +20,7 @@ export default async function Dashboard() {
 
   const {data: profile} = await supabase
     .from('profiles')
-    .select('username')
+    .select('username, super_admin')
     .eq('id', data.user.id)
     .single()
 
@@ -31,8 +35,9 @@ export default async function Dashboard() {
       <div className={styles.container}>
         <section className={styles.arcadeHero}>
           <h1>INDOVINANDO</h1>
+          <h4>Versione Beta</h4>
           <p>
-            {isEnglish ? 'Welcome' : 'Benvenuto'}, {profile?.username || data.user.email}!
+            {dashboardDict.welcome || 'Benvenuto'}, {profile?.username || data.user.email}!
           </p>
           <div className={styles.heroActions}>
             <a href="/game/create-quick" className="btn primary">
@@ -44,6 +49,11 @@ export default async function Dashboard() {
             <a href="/profilo" className="btn secondary">
               {isEnglish ? '👤 Profile' : '👤 Profilo'}
             </a>
+            {profile?.super_admin && (
+              <a href="/admin/corsi" className="btn secondary">
+                ⚙️ Admin
+              </a>
+            )}
           </div>
         </section>
 

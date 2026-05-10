@@ -1,4 +1,5 @@
 import {redirect} from 'next/navigation'
+import {Suspense} from 'react'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import GameCreateClient from './GameCreateClient'
 
@@ -25,5 +26,9 @@ export default async function Page() {
 
   const shouldShowOnboarding = profile?.onboarding !== false && (createdGamesCount || 0) < 1
 
-  return <GameCreateClient initialShowOnboarding={shouldShowOnboarding} userId={user.id} />
+  return (
+    <Suspense fallback={null}>
+      <GameCreateClient initialShowOnboarding={shouldShowOnboarding} userId={user.id} />
+    </Suspense>
+  )
 }

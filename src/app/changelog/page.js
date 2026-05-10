@@ -7,6 +7,17 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.8.1',
+    date: '10 maggio 2026',
+    label: 'Live UX',
+    changes: [
+      'Fix gating classifica finale: il pulsante resta disabilitato finché non hanno completato tutti i partecipanti del round corrente',
+      'Migliorata UX transizione verso classifica finale',
+      "Nota aperta: la velocità di feedback del pulsante 'Check' per host non è ancora pienamente risolta",
+    ],
+  },
+
+  {
     version: '1.8.0',
     date: '10 maggio 2026',
     label: 'Auto',

@@ -1,5 +1,6 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import HostLiveClient from './HostLiveClient'
 
 export const metadata = {
   title: 'Host - Sessione Live',
@@ -10,7 +11,6 @@ export default async function HostLivePage({params}) {
   const resolvedParams = await Promise.resolve(params)
   const sessionId = resolvedParams.sessionId
 
-  // Check auth
   const {
     data: {user},
   } = await supabase.auth.getUser()
@@ -19,7 +19,6 @@ export default async function HostLivePage({params}) {
     redirect('/auth')
   }
 
-  // Load session - must own it
   const {data: session, error: sessionError} = await supabase
     .from('live_sessions')
     .select(
@@ -41,5 +40,37 @@ export default async function HostLivePage({params}) {
     redirect('/dashboard')
   }
 
-  redirect(`/live/session/${sessionId}/play`)
+  const {data: questions} = await supabase
+    .from('game_questions')
+    .select(
+      `
+      id,
+      text,
+      display_order,
+      game_question_options (
+        id,
+        text,
+        option_order
+      )
+    `,
+    )
+    .eq('game_id', session.game_id)
+    .order('display_order')
+
+  const {data: bottles} = await supabase
+    .from('game_bottles')
+    .select('*')
+    .eq('game_id', session.game_id)
+    .order('bottle_order')
+
+  return (
+    <HostLiveClient
+      sessionId={sessionId}
+      gameName={session.games?.name || 'Gioco'}
+      questions={questions || []}
+      bottles={bottles || []}
+      initialStatus={session.round_status || 'waiting_answers'}
+      initialQuestionIndex={session.current_question_index || 0}
+    />
+  )
 }

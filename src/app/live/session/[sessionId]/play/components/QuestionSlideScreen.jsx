@@ -30,6 +30,7 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
   clickedReady,
   isLastSlide,
   comboCount,
+  isCheckingAnswer,
   onSelect,
   onCheck,
   onContinue,
@@ -153,8 +154,8 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
           <button
             className={styles.checkButton}
             onClick={() => onCheck(currentQuestion.id, selectedOption)}
-            disabled={!selectedOption || isSlideTransitioning}>
-            Check
+            disabled={!selectedOption || isSlideTransitioning || isCheckingAnswer}>
+            {isCheckingAnswer ? (isEnglish ? 'Checking...' : 'Controllo...') : 'Check'}
           </button>
         ) : (
           <button

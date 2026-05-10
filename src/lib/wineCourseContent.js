@@ -212,6 +212,45 @@ function normalizeLevel(rawLevel, lang) {
 
 export async function getWineCourseData(lang = 'it') {
   const normalizedLang = normalizeLanguage(lang)
+
+  // Try Supabase Storage first (production source of truth)
+  const storageUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  if (storageUrl) {
+    try {
+      const rawLevels = await Promise.all(
+        Array.from({length: 10}, async (_, i) => {
+          const levelNum = i + 1
+          const filePath =
+            normalizedLang === 'it'
+              ? `corso_livello_${levelNum}.json`
+              : `${normalizedLang}/corso_livello_${levelNum}.json`
+          const url = `${storageUrl}/storage/v1/object/public/corsi/${filePath}`
+          const res = await fetch(url, {next: {revalidate: 60}})
+          if (!res.ok) throw new Error(`Storage fetch failed: ${res.status} ${url}`)
+          return res.json()
+        }),
+      )
+      const levels = rawLevels
+        .map((level) => normalizeLevel(level, normalizedLang))
+        .sort((a, b) => a.order - b.order)
+        .map(({lessons, ...level}) => level)
+
+      const lessonsById = rawLevels
+        .map((level) => normalizeLevel(level, normalizedLang))
+        .sort((a, b) => a.order - b.order)
+        .flatMap((level) => level.lessons)
+        .reduce((acc, lesson) => {
+          acc[lesson.id] = lesson
+          return acc
+        }, {})
+
+      return {levels, lessonsById}
+    } catch {
+      // Storage not yet populated or unreachable — fall through to filesystem
+    }
+  }
+
+  // Fallback: read from /public/corsi (local dev or before Storage migration)
   const publicDir = path.join(process.cwd(), 'public')
   const coursesDir = path.join(publicDir, 'corsi')
   const localizedDir = path.join(coursesDir, normalizedLang)

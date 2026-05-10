@@ -38,7 +38,8 @@ function extractLessonIntro(lesson, isEnglish) {
   if (lesson?.intro && typeof lesson.intro === 'object') {
     const fromParagraphs = asParagraphs(lesson.intro.paragraphs)
     if (fromParagraphs[0]) return fromParagraphs[0]
-    if (typeof lesson.intro.title === 'string' && lesson.intro.title.trim()) return lesson.intro.title.trim()
+    if (typeof lesson.intro.title === 'string' && lesson.intro.title.trim())
+      return lesson.intro.title.trim()
   }
   return isEnglish
     ? 'In this lesson, you will connect theory and tasting evidence step by step.'
@@ -64,7 +65,11 @@ function deriveQuestionKeyPoints(lesson, isEnglish) {
 
   return isEnglish
     ? ['Identify the core concept', 'Compare plausible options', 'Choose based on evidence']
-    : ['Individua il concetto centrale', 'Confronta le opzioni plausibili', 'Scegli in base agli indizi']
+    : [
+        'Individua il concetto centrale',
+        'Confronta le opzioni plausibili',
+        'Scegli in base agli indizi',
+      ]
 }
 
 function buildSupplementalSlide(lesson, isEnglish) {
@@ -171,7 +176,9 @@ function processFile(filePath, isEnglish) {
 function main() {
   for (const root of ROOTS) {
     const absRoot = path.resolve(process.cwd(), root)
-    const files = readdirSync(absRoot).filter((f) => /^corso_livello_\d+\.json$/i.test(f)).sort()
+    const files = readdirSync(absRoot)
+      .filter((f) => /^corso_livello_\d+\.json$/i.test(f))
+      .sort()
     const isEnglish = root.endsWith('/en')
 
     for (const file of files) {

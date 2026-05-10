@@ -10,6 +10,8 @@ export function useOverlays({
   sessionId,
   playerData,
   allPlayers,
+  roundAnswersByPlayer,
+  roundStatus,
   setAllPlayers,
   isHostUser,
   playerStorageKey,
@@ -19,10 +21,26 @@ export function useOverlays({
   const [leaderboardOpen, setLeaderboardOpen] = useState(false)
   const [exitModalOpen, setExitModalOpen] = useState(false)
 
-  const sortedLeaderboard = useMemo(
-    () => [...allPlayers].sort((a, b) => (b.total_score || 0) - (a.total_score || 0)),
-    [allPlayers],
-  )
+  const sortedLeaderboard = useMemo(() => {
+    const showProjectedLive = roundStatus === 'waiting_answers' || roundStatus === 'showing_results'
+    return [...allPlayers]
+      .map((player) => {
+        const roundPoints = showProjectedLive
+          ? Object.values(roundAnswersByPlayer?.[player.id] || {}).reduce(
+              (sum, answer) => sum + (answer?.points || 0),
+              0,
+            )
+          : 0
+
+        const liveTotalScore = (player.total_score || 0) + roundPoints
+        return {
+          ...player,
+          roundPoints,
+          liveTotalScore,
+        }
+      })
+      .sort((a, b) => b.liveTotalScore - a.liveTotalScore)
+  }, [allPlayers, roundAnswersByPlayer, roundStatus])
 
   const openLeaderboard = useCallback(async () => {
     setLeaderboardOpen(true)
