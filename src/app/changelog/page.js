@@ -7,6 +7,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.8.0',
+    date: '10 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'fix live session creation and game save timeout blocking',
+    ],
+  },
+
+  {
     version: '1.7.1',
     date: '10 maggio 2026',
     label: 'Auto',
