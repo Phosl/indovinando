@@ -296,26 +296,31 @@ export function useRoundPlay({
 
         let resolvedCorrectOptionId = correctOptionByQuestion[questionId]
         if (!resolvedCorrectOptionId && currentBottle?.id) {
-          const {data: answerRow, error: answerError} = await withTimeout(
-            supabaseClient
-              .from('game_bottle_answers')
-              .select('option_id')
-              .eq('bottle_id', currentBottle.id)
-              .eq('question_id', questionId)
-              .maybeSingle(),
-            'load-correct-option',
-          )
+          try {
+            const {data: answerRow, error: answerError} = await withTimeout(
+              supabaseClient
+                .from('game_bottle_answers')
+                .select('option_id')
+                .eq('bottle_id', currentBottle.id)
+                .eq('question_id', questionId)
+                .maybeSingle(),
+              'load-correct-option',
+            )
 
-          if (answerError) {
-            console.error('Error loading correct option on demand:', answerError)
-          }
+            if (answerError) {
+              throw answerError
+            }
 
-          resolvedCorrectOptionId = answerRow?.option_id || null
-          if (resolvedCorrectOptionId) {
-            setCorrectOptionByQuestion((prev) => ({
-              ...prev,
-              [questionId]: resolvedCorrectOptionId,
-            }))
+            resolvedCorrectOptionId = answerRow?.option_id || null
+            if (resolvedCorrectOptionId) {
+              setCorrectOptionByQuestion((prev) => ({
+                ...prev,
+                [questionId]: resolvedCorrectOptionId,
+              }))
+            }
+          } catch (lookupErr) {
+            // Host has a server-side fallback route; do not fail fast on lookup timeout.
+            if (!isHostUser) throw lookupErr
           }
         }
 
@@ -337,6 +342,11 @@ export function useRoundPlay({
                 }),
                 signal: controller.signal,
               })
+            } catch (fetchErr) {
+              if (fetchErr?.name === 'AbortError') {
+                throw new Error('Host submit timeout')
+              }
+              throw fetchErr
             } finally {
               clearTimeout(abortId)
             }
