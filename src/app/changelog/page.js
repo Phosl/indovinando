@@ -7,6 +7,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.10.5',
+    date: '10 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'prevent host check from hanging on checking state',
+    ],
+  },
+
+  {
     version: '1.10.4',
     date: '10 maggio 2026',
     label: 'Auto',
