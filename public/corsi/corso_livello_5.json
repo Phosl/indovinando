@@ -14,22 +14,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Se non conosci il menu, cosa fai?",
-          "answers": ["Chiedi consiglio", "Scegli a caso", "Prendi il più caro"],
-          "correct": 0
+          "answers": [
+            "Scegli a caso",
+            "Prendi il più caro",
+            "Chiedi consiglio"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "È normale chiedere aiuto per il vino.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "La scelta migliore è spesso:",
-          "answers": ["Vino del territorio", "Vino importato casuale", "Sempre dolce"],
-          "correct": 0
+          "answers": [
+            "Vino importato casuale",
+            "Sempre dolce",
+            "Vino del territorio"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -71,21 +82,32 @@
           "id": "q1",
           "type": "mcq",
           "question": "Con carne rossa spesso si sceglie:",
-          "answers": ["Rosso", "Bianco", "Rosé"],
-          "correct": 0
+          "answers": [
+            "Rosé",
+            "Rosso",
+            "Bianco"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Con pesce si preferisce:",
-          "answers": ["Bianco", "Rosso", "Passito"],
-          "correct": 0
+          "answers": [
+            "Rosso",
+            "Passito",
+            "Bianco"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Non esistono regole rigide negli abbinamenti.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         }
       ],
@@ -128,21 +150,32 @@
           "id": "q1",
           "type": "mcq",
           "question": "Un vino costoso è sempre migliore?",
-          "answers": ["No", "Sì", "Sempre"],
-          "correct": 0
+          "answers": [
+            "Sì",
+            "Sempre",
+            "No"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Una buona fascia media è spesso:",
-          "answers": ["15-40€", "1-5€", "100€+"],
-          "correct": 0
+          "answers": [
+            "1-5€",
+            "100€+",
+            "15-40€"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Il prezzo riflette sempre la qualità.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         }
       ],
@@ -185,22 +218,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Cosa puoi dire se non sei sicuro?",
-          "answers": ["Mi consigliate voi?", "Prendo il più costoso", "Non voglio vino"],
-          "correct": 0
+          "answers": [
+            "Prendo il più costoso",
+            "Non voglio vino",
+            "Mi consigliate voi?"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Chiedere consiglio è visto male.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "È utile dire:",
-          "answers": ["Cosa mangerai", "Il colore del tavolo", "Nulla"],
-          "correct": 0
+          "answers": [
+            "Il colore del tavolo",
+            "Nulla",
+            "Cosa mangerai"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -242,22 +286,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Il vino della casa è spesso:",
-          "answers": ["Locale e semplice", "Sempre costoso", "Sempre spumante"],
-          "correct": 0
+          "answers": [
+            "Sempre spumante",
+            "Locale e semplice",
+            "Sempre costoso"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino della casa è sempre scadente.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "È una buona scelta quando:",
-          "answers": ["Non vuoi complicarti la vita", "Vuoi impressionare", "Vuoi spendere molto"],
-          "correct": 0
+          "answers": [
+            "Vuoi impressionare",
+            "Vuoi spendere molto",
+            "Non vuoi complicarti la vita"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -299,22 +354,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Se non ti piace il vino puoi:",
-          "answers": ["Dirlo educatamente", "Urlare", "Non bere mai più vino"],
-          "correct": 0
+          "answers": [
+            "Urlare",
+            "Non bere mai più vino",
+            "Dirlo educatamente"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "È obbligatorio finire il vino.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Un approccio corretto è:",
-          "answers": ["Chiedere alternativa", "Fingere entusiasmo", "Andarsene"],
-          "correct": 0
+          "answers": [
+            "Andarsene",
+            "Chiedere alternativa",
+            "Fingere entusiasmo"
+          ],
+          "correct": 1
         }
       ],
       "slides": [
@@ -356,22 +422,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "In una cena in due spesso si prende:",
-          "answers": ["1 bottiglia", "3 bottiglie", "Nessuna"],
-          "correct": 0
+          "answers": [
+            "3 bottiglie",
+            "Nessuna",
+            "1 bottiglia"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "È meglio esagerare con il vino.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Se non sei sicuro:",
-          "answers": ["Inizia con poco", "Ordina tutto", "Non bere"],
-          "correct": 0
+          "answers": [
+            "Ordina tutto",
+            "Non bere",
+            "Inizia con poco"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -413,22 +490,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Far respirare il vino significa:",
-          "answers": ["Esporlo all’aria", "Raffreddarlo", "Scaldarlo"],
-          "correct": 0
+          "answers": [
+            "Scaldarlo",
+            "Esporlo all’aria",
+            "Raffreddarlo"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Tutti i vini devono respirare molto.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Serve soprattutto per:",
-          "answers": ["Vini rossi strutturati", "Bibite", "Acqua"],
-          "correct": 0
+          "answers": [
+            "Bibite",
+            "Acqua",
+            "Vini rossi strutturati"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -470,22 +558,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "È meglio:",
-          "answers": ["Chiedere che vino è", "Inventare", "Fare finta di sapere"],
-          "correct": 0
+          "answers": [
+            "Inventare",
+            "Fare finta di sapere",
+            "Chiedere che vino è"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "È normale non sapere tutto sul vino.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "La cosa peggiore è:",
-          "answers": ["Fingere competenza", "Chiedere aiuto", "Provare vini nuovi"],
-          "correct": 0
+          "answers": [
+            "Provare vini nuovi",
+            "Fingere competenza",
+            "Chiedere aiuto"
+          ],
+          "correct": 1
         }
       ],
       "slides": [
@@ -527,22 +626,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Un buon approccio è:",
-          "answers": ["Chiedere consiglio", "Scegliere a caso", "Evitare il vino"],
-          "correct": 0
+          "answers": [
+            "Scegliere a caso",
+            "Evitare il vino",
+            "Chiedere consiglio"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il contesto conta nella scelta del vino.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "L’obiettivo è:",
-          "answers": ["Godersi il momento", "Impressionare tutti", "Complicarsi la vita"],
-          "correct": 0
+          "answers": [
+            "Impressionare tutti",
+            "Complicarsi la vita",
+            "Godersi il momento"
+          ],
+          "correct": 2
         }
       ],
       "slides": [

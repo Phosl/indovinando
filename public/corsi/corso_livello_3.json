@@ -15,38 +15,52 @@
           "type": "mcq",
           "question": "Cos'è la fermentazione malolattica?",
           "answers": [
-            "Trasformazione dell'acido malico in lattico",
             "Aggiunta di zucchero",
-            "Filtrazione del vino"
+            "Filtrazione del vino",
+            "Trasformazione dell'acido malico in lattico"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "La fermentazione alcolica produce alcol.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Chi attiva la fermentazione?",
-          "answers": ["Lieviti", "Ossigeno", "Zucchero"],
-          "correct": 0
+          "answers": [
+            "Ossigeno",
+            "Zucchero",
+            "Lieviti"
+          ],
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "La malolattica rende il vino:",
-          "answers": ["Più morbido", "Più acido", "Più dolce"],
-          "correct": 0
+          "answers": [
+            "Più acido",
+            "Più dolce",
+            "Più morbido"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Tutti i vini fanno fermentazione malolattica.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         }
       ],
@@ -89,35 +103,53 @@
           "id": "q1",
           "type": "mcq",
           "question": "Cosa compone la struttura del vino?",
-          "answers": ["Acidità, tannini, alcol", "Solo zucchero", "Solo acqua"],
-          "correct": 0
+          "answers": [
+            "Solo acqua",
+            "Acidità, tannini, alcol",
+            "Solo zucchero"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Un vino equilibrato ha componenti bilanciate.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Se una componente domina troppo:",
-          "answers": ["Il vino è sbilanciato", "Migliora sempre", "Non cambia nulla"],
-          "correct": 0
+          "answers": [
+            "Migliora sempre",
+            "Non cambia nulla",
+            "Il vino è sbilanciato"
+          ],
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "L'alcol contribuisce a:",
-          "answers": ["Corpo e struttura", "Solo colore", "Solo aroma"],
-          "correct": 0
+          "answers": [
+            "Solo aroma",
+            "Corpo e struttura",
+            "Solo colore"
+          ],
+          "correct": 1
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "L'acidità dà freschezza.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         }
       ],
@@ -160,36 +192,55 @@
           "id": "q1",
           "type": "mcq",
           "question": "Gli aromi primari derivano da:",
-          "answers": ["Uva", "Botte", "Bottiglia"],
-          "correct": 0
+          "answers": [
+            "Botte",
+            "Bottiglia",
+            "Uva"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Gli aromi secondari derivano da:",
-          "answers": ["Fermentazione", "Etichetta", "Prezzo"],
-          "correct": 0
+          "answers": [
+            "Etichetta",
+            "Prezzo",
+            "Fermentazione"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Gli aromi terziari si sviluppano con:",
-          "answers": ["Invecchiamento", "Acqua", "Zucchero"],
-          "correct": 0
+          "answers": [
+            "Zucchero",
+            "Invecchiamento",
+            "Acqua"
+          ],
+          "correct": 1
         },
         {
           "id": "q4",
           "type": "true_false",
           "question": "Gli aromi cambiano nel tempo.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "mcq",
           "question": "Gli aromi terziari sono tipici di:",
-          "answers": ["Vini invecchiati", "Vini giovani", "Succhi"],
-          "correct": 0
+          "answers": [
+            "Vini giovani",
+            "Succhi",
+            "Vini invecchiati"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -231,35 +282,53 @@
           "id": "q1",
           "type": "mcq",
           "question": "Cosa è importante nella conservazione?",
-          "answers": ["Temperatura", "Colore bottiglia", "Etichetta"],
-          "correct": 0
+          "answers": [
+            "Colore bottiglia",
+            "Etichetta",
+            "Temperatura"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino va conservato alla luce diretta.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Troppo ossigeno:",
-          "answers": ["Deteriora il vino", "Migliora sempre", "Non influisce"],
-          "correct": 0
+          "answers": [
+            "Migliora sempre",
+            "Non influisce",
+            "Deteriora il vino"
+          ],
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "La temperatura ideale deve essere:",
-          "answers": ["Stabile", "Alta", "Variabile"],
-          "correct": 0
+          "answers": [
+            "Alta",
+            "Variabile",
+            "Stabile"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Tutti i vini si conservano allo stesso modo.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         }
       ],
@@ -302,35 +371,53 @@
           "id": "q1",
           "type": "mcq",
           "question": "Cosa si analizza per primo?",
-          "answers": ["Colore", "Gusto", "Prezzo"],
-          "correct": 0
+          "answers": [
+            "Prezzo",
+            "Colore",
+            "Gusto"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "L'olfatto serve per:",
-          "answers": ["Aromi", "Peso", "Colore"],
-          "correct": 0
+          "answers": [
+            "Peso",
+            "Colore",
+            "Aromi"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "La degustazione è solo bere.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Il gusto valuta:",
-          "answers": ["Equilibrio", "Solo dolcezza", "Solo alcol"],
-          "correct": 0
+          "answers": [
+            "Solo alcol",
+            "Equilibrio",
+            "Solo dolcezza"
+          ],
+          "correct": 1
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Il colore basta per giudicare un vino.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         }
       ],
@@ -373,36 +460,55 @@
           "id": "q1",
           "type": "mcq",
           "question": "Il corpo del vino indica:",
-          "answers": ["Peso in bocca", "Colore", "Dolcezza"],
-          "correct": 0
+          "answers": [
+            "Colore",
+            "Dolcezza",
+            "Peso in bocca"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Un vino strutturato è:",
-          "answers": ["Più complesso", "Sempre leggero", "Sempre dolce"],
-          "correct": 0
+          "answers": [
+            "Sempre leggero",
+            "Sempre dolce",
+            "Più complesso"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il corpo dipende da:",
-          "answers": ["Estrazione", "Etichetta", "Prezzo"],
-          "correct": 0
+          "answers": [
+            "Prezzo",
+            "Estrazione",
+            "Etichetta"
+          ],
+          "correct": 1
         },
         {
           "id": "q4",
           "type": "true_false",
           "question": "Tutti i vini hanno lo stesso corpo.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q5",
           "type": "mcq",
           "question": "L'alcol contribuisce a:",
-          "answers": ["Struttura", "Solo colore", "Solo aroma"],
-          "correct": 0
+          "answers": [
+            "Solo colore",
+            "Solo aroma",
+            "Struttura"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -444,35 +550,53 @@
           "id": "q1",
           "type": "mcq",
           "question": "Il terroir include:",
-          "answers": ["Clima e suolo", "Solo bottiglia", "Solo prezzo"],
-          "correct": 0
+          "answers": [
+            "Solo bottiglia",
+            "Solo prezzo",
+            "Clima e suolo"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Il clima influisce su:",
-          "answers": ["Gusto", "Solo colore", "Solo etichetta"],
-          "correct": 0
+          "answers": [
+            "Solo etichetta",
+            "Gusto",
+            "Solo colore"
+          ],
+          "correct": 1
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Il suolo non è importante.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Il terroir rende il vino:",
-          "answers": ["Unico", "Identico ovunque", "Sempre dolce"],
-          "correct": 0
+          "answers": [
+            "Identico ovunque",
+            "Sempre dolce",
+            "Unico"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Il vino cambia da regione a regione.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         }
       ],
@@ -515,35 +639,53 @@
           "id": "q1",
           "type": "mcq",
           "question": "Il vino evolve grazie a:",
-          "answers": ["Invecchiamento", "Etichetta", "Bottiglia"],
-          "correct": 0
+          "answers": [
+            "Bottiglia",
+            "Invecchiamento",
+            "Etichetta"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Con il tempo gli aromi:",
-          "answers": ["Cambiano", "Spariscono sempre", "Non cambiano"],
-          "correct": 0
+          "answers": [
+            "Spariscono sempre",
+            "Non cambiano",
+            "Cambiano"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Tutti i vini migliorano con il tempo.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "I vini giovani sono:",
-          "answers": ["Freschi", "Sempre complessi", "Sempre invecchiati"],
-          "correct": 0
+          "answers": [
+            "Sempre invecchiati",
+            "Freschi",
+            "Sempre complessi"
+          ],
+          "correct": 1
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Il vino è statico nel tempo.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         }
       ],
@@ -586,35 +728,53 @@
           "id": "q1",
           "type": "mcq",
           "question": "Cosa include l'analisi sensoriale?",
-          "answers": ["Vista, olfatto, gusto", "Solo gusto", "Solo vista"],
-          "correct": 0
+          "answers": [
+            "Solo gusto",
+            "Solo vista",
+            "Vista, olfatto, gusto"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "L'olfatto serve per:",
-          "answers": ["Aromi", "Colore", "Prezzo"],
-          "correct": 0
+          "answers": [
+            "Colore",
+            "Prezzo",
+            "Aromi"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "La degustazione è solo tecnica.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "La vista analizza:",
-          "answers": ["Colore", "Gusto", "Struttura"],
-          "correct": 0
+          "answers": [
+            "Gusto",
+            "Struttura",
+            "Colore"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Tutti percepiscono il vino allo stesso modo.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         }
       ],
@@ -657,35 +817,53 @@
           "id": "q1",
           "type": "mcq",
           "question": "Cosa influenza il vino?",
-          "answers": ["Territorio e vitigno", "Solo bottiglia", "Solo prezzo"],
-          "correct": 0
+          "answers": [
+            "Solo bottiglia",
+            "Solo prezzo",
+            "Territorio e vitigno"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino è semplice da capire completamente.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "La fermentazione produce:",
-          "answers": ["Alcol", "Zucchero", "Acqua"],
-          "correct": 0
+          "answers": [
+            "Zucchero",
+            "Acqua",
+            "Alcol"
+          ],
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Il gusto dipende da:",
-          "answers": ["Struttura", "Solo colore", "Solo etichetta"],
-          "correct": 0
+          "answers": [
+            "Solo colore",
+            "Solo etichetta",
+            "Struttura"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Il vino è sempre uguale nel tempo.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         }
       ],

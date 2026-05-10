@@ -14,22 +14,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Durante la fermentazione, i lieviti trasformano soprattutto:",
-          "answers": ["Zuccheri in alcol e CO2", "Acidi in zucchero", "Tannini in colore"],
-          "correct": 0
+          "answers": [
+            "Acidi in zucchero",
+            "Tannini in colore",
+            "Zuccheri in alcol e CO2"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "A parita di tutto il resto, piu zucchero nel mosto puo portare a piu alcol.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Un vino da uve raccolte molto mature tende ad avere:",
-          "answers": ["Potenziale alcolico piu alto", "pH sempre piu basso", "Zero acidita"],
-          "correct": 0
+          "answers": [
+            "pH sempre piu basso",
+            "Zero acidita",
+            "Potenziale alcolico piu alto"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -40,7 +51,11 @@
             "Nel mosto, il contenuto zuccherino indica quanta materia prima hanno i lieviti per produrre alcol.",
             "Per questo una vendemmia tardiva puo generare vini piu alcolici, mentre uve raccolte prima danno profili piu leggeri e tesi."
           ],
-          "keyPoints": ["Zucchero fermentescibile", "Ruolo dei lieviti", "Stile finale del vino"]
+          "keyPoints": [
+            "Zucchero fermentescibile",
+            "Ruolo dei lieviti",
+            "Stile finale del vino"
+          ]
         },
         {
           "id": "s2",
@@ -49,7 +64,11 @@
             "Pinot Grigio A: vendemmia anticipata, 12% vol, profilo agrumato e snello.",
             "Pinot Grigio B: vendemmia piu matura, 13.5% vol, sensazione piu morbida e calda in bocca."
           ],
-          "keyPoints": ["Maturazione uva", "Alcol percepito", "Differenze in degustazione"]
+          "keyPoints": [
+            "Maturazione uva",
+            "Alcol percepito",
+            "Differenze in degustazione"
+          ]
         }
       ]
     },
@@ -63,22 +82,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "In degustazione, una buona acidita aumenta soprattutto:",
-          "answers": ["Slancio e salivazione", "Dolcezza", "Astringenza tannica"],
-          "correct": 0
+          "answers": [
+            "Astringenza tannica",
+            "Slancio e salivazione",
+            "Dolcezza"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Un vino senza acidita puo risultare piatto e stanco.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Quale stile richiede spesso acidita marcata per equilibrio?",
-          "answers": ["Metodo classico", "Passito molto dolce", "Vino ossidativo estremo"],
-          "correct": 0
+          "answers": [
+            "Passito molto dolce",
+            "Vino ossidativo estremo",
+            "Metodo classico"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -89,7 +119,11 @@
             "Acido tartarico, malico e citrico sono componenti naturali dell'uva che sostengono il vino nel tempo.",
             "In bocca, l'acidita fa venire voglia di un secondo sorso e rende il vino piu adatto all'abbinamento con il cibo."
           ],
-          "keyPoints": ["Acidi naturali", "Salivazione", "Abbinamento gastronomico"]
+          "keyPoints": [
+            "Acidi naturali",
+            "Salivazione",
+            "Abbinamento gastronomico"
+          ]
         },
         {
           "id": "s2",
@@ -98,7 +132,11 @@
             "Un bianco acido (es. Verdicchio giovane) pulisce bene una frittura mista.",
             "Un bianco poco acido con lo stesso piatto tende invece a sembrare pesante dopo pochi bocconi."
           ],
-          "keyPoints": ["Freschezza al tavolo", "Pulizia del palato", "Equilibrio cibo-vino"]
+          "keyPoints": [
+            "Freschezza al tavolo",
+            "Pulizia del palato",
+            "Equilibrio cibo-vino"
+          ]
         }
       ]
     },
@@ -112,14 +150,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "Un pH piu basso indica in genere:",
-          "answers": ["Maggiore acidita", "Maggiore dolcezza", "Meno colore"],
-          "correct": 0
+          "answers": [
+            "Maggiore dolcezza",
+            "Meno colore",
+            "Maggiore acidita"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il pH puo influenzare la stabilita del colore nei rossi.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
@@ -127,11 +172,11 @@
           "type": "mcq",
           "question": "In cantina, un pH troppo alto aumenta il rischio di:",
           "answers": [
+            "Aumento naturale dei tannini",
             "Problemi microbiologici",
-            "Fermentazioni piu rapide e pulite",
-            "Aumento naturale dei tannini"
+            "Fermentazioni piu rapide e pulite"
           ],
-          "correct": 0
+          "correct": 1
         }
       ],
       "slides": [
@@ -142,7 +187,11 @@
             "Acidita totale e pH descrivono aspetti diversi: la prima quantita di acidi, il secondo la loro forza percepita e chimica.",
             "Due vini con acidita simile possono dare impressioni molto diverse se il pH non e allineato."
           ],
-          "keyPoints": ["Misure complementari", "Impatto sensoriale", "Controllo in cantina"]
+          "keyPoints": [
+            "Misure complementari",
+            "Impatto sensoriale",
+            "Controllo in cantina"
+          ]
         },
         {
           "id": "s2",
@@ -151,7 +200,11 @@
             "Rosso giovane con pH 3.35: colore piu vivo, profilo piu teso.",
             "Rosso simile con pH 3.75: colore meno brillante e maggiore vulnerabilita nel tempo."
           ],
-          "keyPoints": ["Colore", "Longevita", "Sicurezza microbiologica"]
+          "keyPoints": [
+            "Colore",
+            "Longevita",
+            "Sicurezza microbiologica"
+          ]
         }
       ]
     },
@@ -165,22 +218,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "La sensazione tipica dei tannini e:",
-          "answers": ["Astringenza", "Effervescenza", "Dolcezza"],
-          "correct": 0
+          "answers": [
+            "Effervescenza",
+            "Dolcezza",
+            "Astringenza"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Maturita fenolica adeguata puo rendere i tannini piu morbidi.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Nei rossi, i tannini provengono soprattutto da:",
-          "answers": ["Bucce e vinaccioli", "Solo dal legno", "Acqua di diluizione"],
-          "correct": 0
+          "answers": [
+            "Solo dal legno",
+            "Acqua di diluizione",
+            "Bucce e vinaccioli"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -191,7 +255,11 @@
             "Estratti durante macerazione e fermentazione, i tannini costruiscono impalcatura e potenziale evolutivo.",
             "Una gestione delicata delle temperature e dei rimontaggi evita estrazioni amare e aggressive."
           ],
-          "keyPoints": ["Macerazione", "Qualita tannica", "Potenziale di invecchiamento"]
+          "keyPoints": [
+            "Macerazione",
+            "Qualita tannica",
+            "Potenziale di invecchiamento"
+          ]
         },
         {
           "id": "s2",
@@ -200,7 +268,11 @@
             "'Tannino levigato' indica una trama fine, meno graffiante sulle gengive.",
             "'Tannino verde' descrive invece una sensazione asciutta e dura, spesso da maturazione incompleta."
           ],
-          "keyPoints": ["Descrittori utili", "Trama e grana", "Comunicazione al cliente"]
+          "keyPoints": [
+            "Descrittori utili",
+            "Trama e grana",
+            "Comunicazione al cliente"
+          ]
         }
       ]
     },
@@ -214,22 +286,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "In bocca, l'alcol genera tipicamente:",
-          "answers": ["Calore", "Astringenza", "Salinita"],
-          "correct": 0
+          "answers": [
+            "Salinita",
+            "Calore",
+            "Astringenza"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Un titolo alcolometrico elevato richiede spesso maggiore freschezza per restare equilibrato.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Quale abbinamento aiuta a gestire un rosso alcolico?",
-          "answers": ["Piatto succulento e proteico", "Insalata scondita", "Dessert molto dolce"],
-          "correct": 0
+          "answers": [
+            "Insalata scondita",
+            "Dessert molto dolce",
+            "Piatto succulento e proteico"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -240,7 +323,11 @@
             "Aumentando la gradazione, cresce la percezione di volume e rotondita, ma anche il rischio di sbilanciamento caldo.",
             "Il servizio alla giusta temperatura puo contenere la sensazione alcolica e valorizzare gli aromi."
           ],
-          "keyPoints": ["Corpo", "Calore", "Temperatura di servizio"]
+          "keyPoints": [
+            "Corpo",
+            "Calore",
+            "Temperatura di servizio"
+          ]
         },
         {
           "id": "s2",
@@ -249,7 +336,11 @@
             "Vino A 12.5%: snello, verticale, finale asciutto.",
             "Vino B 15%: pieno e avvolgente, ma da bilanciare con cibo ricco o acidita ben presente."
           ],
-          "keyPoints": ["Peso del sorso", "Gestione dell'equilibrio", "Scelta dell'abbinamento"]
+          "keyPoints": [
+            "Peso del sorso",
+            "Gestione dell'equilibrio",
+            "Scelta dell'abbinamento"
+          ]
         }
       ]
     },
@@ -263,22 +354,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "La CO2 residua in un vino fermo puo dare:",
-          "answers": ["Leggera vivacita", "Aumento dei tannini", "Colore piu scuro"],
-          "correct": 0
+          "answers": [
+            "Aumento dei tannini",
+            "Colore piu scuro",
+            "Leggera vivacita"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Solo i vini spumanti possono contenere anidride carbonica.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "La CO2 nasce principalmente da:",
-          "answers": ["Fermentazione", "Ossidazione", "Filtrazione sterile"],
-          "correct": 0
+          "answers": [
+            "Filtrazione sterile",
+            "Fermentazione",
+            "Ossidazione"
+          ],
+          "correct": 1
         }
       ],
       "slides": [
@@ -289,7 +391,11 @@
             "Durante la fermentazione alcolica si produce CO2: una parte puo essere trattenuta nel vino.",
             "In certi bianchi giovani, una lieve presenza aumenta freschezza e tensione gustativa."
           ],
-          "keyPoints": ["Sottoprodotto fermentativo", "Vivacita", "Uso stilistico"]
+          "keyPoints": [
+            "Sottoprodotto fermentativo",
+            "Vivacita",
+            "Uso stilistico"
+          ]
         },
         {
           "id": "s2",
@@ -298,7 +404,11 @@
             "Se la CO2 e eccessiva in un vino che dovrebbe essere fermo, puo coprire aromi fini e dare impressione di vino non finito.",
             "Una corretta gestione di affinamento e imbottigliamento evita questo effetto."
           ],
-          "keyPoints": ["Coerenza di stile", "Impatto aromatico", "Controllo in cantina"]
+          "keyPoints": [
+            "Coerenza di stile",
+            "Impatto aromatico",
+            "Controllo in cantina"
+          ]
         }
       ]
     },
@@ -313,17 +423,20 @@
           "type": "mcq",
           "question": "Troppo ossigeno porta piu facilmente a:",
           "answers": [
-            "Perdita di freschezza e frutto",
             "Maggiore precisione aromatica",
-            "Riduzione totale"
+            "Riduzione totale",
+            "Perdita di freschezza e frutto"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Una piccola esposizione all'ossigeno puo aiutare ad ammorbidire alcuni rossi.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
@@ -331,11 +444,11 @@
           "type": "mcq",
           "question": "Un segnale tipico di ossidazione avanzata e:",
           "answers": [
-            "Note di mela cotta e noce",
             "Aroma intenso di agrumi freschi",
-            "Tannino piu setoso per magia"
+            "Tannino piu setoso per magia",
+            "Note di mela cotta e noce"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -346,7 +459,11 @@
             "Durante travasi, affinamento o servizio, l'ossigeno modifica il profilo del vino: non e mai neutro.",
             "Nei rossi strutturati una moderata ossigenazione puo integrare tannini; nei bianchi delicati il margine e molto piu stretto."
           ],
-          "keyPoints": ["Controllo esposizione", "Effetto diverso per stile", "Rischio ossidativo"]
+          "keyPoints": [
+            "Controllo esposizione",
+            "Effetto diverso per stile",
+            "Rischio ossidativo"
+          ]
         },
         {
           "id": "s2",
@@ -355,7 +472,11 @@
             "Decantare un rosso giovane e chiuso puo migliorare apertura aromatica.",
             "Lasciare un bianco aromatico ore nel secchiello senza protezione puo invece appiattire il profilo."
           ],
-          "keyPoints": ["Decantazione ragionata", "Protezione del vino", "Scelte di servizio"]
+          "keyPoints": [
+            "Decantazione ragionata",
+            "Protezione del vino",
+            "Scelte di servizio"
+          ]
         }
       ]
     },
@@ -370,25 +491,32 @@
           "type": "mcq",
           "question": "Il residuo zuccherino e:",
           "answers": [
+            "Zucchero presente solo nei rossi",
             "Zucchero rimasto dopo la fermentazione",
-            "Zucchero aggiunto in bottiglia",
-            "Zucchero presente solo nei rossi"
+            "Zucchero aggiunto in bottiglia"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Un vino puo sembrare meno dolce se ha acidita alta, anche con un piccolo residuo zuccherino.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "In quale stile il residuo zuccherino e spesso cercato volutamente?",
-          "answers": ["Moscato aromatico", "Metodo classico pas dose", "Rosso barricato austero"],
-          "correct": 0
+          "answers": [
+            "Metodo classico pas dose",
+            "Rosso barricato austero",
+            "Moscato aromatico"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -399,7 +527,11 @@
             "Anche molti vini secchi possono contenere piccole quantita di zucchero residuo, senza risultare dolci al palato.",
             "La percezione finale dipende dall'equilibrio con acidita, alcol e temperatura di servizio."
           ],
-          "keyPoints": ["Residuo reale", "Dolcezza percepita", "Bilanciamento gustativo"]
+          "keyPoints": [
+            "Residuo reale",
+            "Dolcezza percepita",
+            "Bilanciamento gustativo"
+          ]
         },
         {
           "id": "s2",
@@ -427,25 +559,32 @@
           "type": "mcq",
           "question": "La funzione principale della SO2 nel vino e:",
           "answers": [
-            "Protezione da ossidazione e microrganismi",
             "Aumentare il grado alcolico",
-            "Intensificare il colore viola"
+            "Intensificare il colore viola",
+            "Protezione da ossidazione e microrganismi"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Dire 'senza solfiti' non significa automaticamente vino migliore in ogni situazione.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Un uso corretto della SO2 punta a:",
-          "answers": ["Stabilita e pulizia aromatica", "Dolcezza extra", "Piu effervescenza"],
-          "correct": 0
+          "answers": [
+            "Piu effervescenza",
+            "Stabilita e pulizia aromatica",
+            "Dolcezza extra"
+          ],
+          "correct": 1
         }
       ],
       "slides": [
@@ -456,7 +595,11 @@
             "La parte attiva e la SO2 libera: e quella che protegge davvero vino e aromi.",
             "Gestire bene pH e igiene di cantina permette spesso di usare dosi piu contenute mantenendo sicurezza."
           ],
-          "keyPoints": ["Protezione mirata", "Relazione con pH", "Approccio tecnico"]
+          "keyPoints": [
+            "Protezione mirata",
+            "Relazione con pH",
+            "Approccio tecnico"
+          ]
         },
         {
           "id": "s2",
@@ -465,7 +608,11 @@
             "Con il cliente, evita slogan: spiega che la SO2 e paragonabile a una cintura di sicurezza per il vino.",
             "Poca o tanta da sola non dice tutto: conta il risultato nel bicchiere e la stabilita nel tempo."
           ],
-          "keyPoints": ["Niente allarmismo", "Educazione del cliente", "Qualita nel tempo"]
+          "keyPoints": [
+            "Niente allarmismo",
+            "Educazione del cliente",
+            "Qualita nel tempo"
+          ]
         }
       ]
     },
@@ -479,14 +626,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "Un vino equilibrato mostra:",
-          "answers": ["Componenti integrate", "Solo alta gradazione", "Solo acidita tagliente"],
-          "correct": 0
+          "answers": [
+            "Solo alta gradazione",
+            "Solo acidita tagliente",
+            "Componenti integrate"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Troppo di una sola componente puo compromettere bevibilita e armonia.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
@@ -494,11 +648,11 @@
           "type": "mcq",
           "question": "Qual e una buona sintesi professionale di equilibrio?",
           "answers": [
-            "Nessun elemento domina in modo sgradevole",
             "Il vino costa di piu",
-            "Il colore e molto intenso"
+            "Il colore e molto intenso",
+            "Nessun elemento domina in modo sgradevole"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -509,7 +663,11 @@
             "Acidita, alcol, tannini, residuo zuccherino e componente aromatica devono sostenersi a vicenda.",
             "Quando una voce supera tutte le altre, il vino perde precisione e facilita di beva."
           ],
-          "keyPoints": ["Integrazione", "Bevibilita", "Qualita percepita"]
+          "keyPoints": [
+            "Integrazione",
+            "Bevibilita",
+            "Qualita percepita"
+          ]
         },
         {
           "id": "s2",
@@ -518,7 +676,11 @@
             "Chiediti: il sorso e coerente dall'attacco al finale? c'e pulizia? c'e ritorno aromatico?",
             "Se le risposte sono positive, probabilmente hai davanti un vino tecnicamente e sensorialmente equilibrato."
           ],
-          "keyPoints": ["Metodo di valutazione", "Coerenza del sorso", "Conclusione professionale"]
+          "keyPoints": [
+            "Metodo di valutazione",
+            "Coerenza del sorso",
+            "Conclusione professionale"
+          ]
         }
       ]
     }

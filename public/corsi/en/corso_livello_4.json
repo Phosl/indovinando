@@ -15,11 +15,11 @@
           "type": "mcq",
           "question": "Where were the oldest traces of wine found?",
           "answers": [
-            "Georgia",
             "Italy",
-            "France"
+            "France",
+            "Georgia"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
@@ -36,11 +36,11 @@
           "type": "mcq",
           "question": "Wine was initially born as:",
           "answers": [
-            "Spontaneous fermentation",
             "Industrial recipe",
-            "Modern drink"
+            "Modern drink",
+            "Spontaneous fermentation"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -83,11 +83,11 @@
           "type": "mcq",
           "question": "How often did the Romans drink wine?",
           "answers": [
+            "Heat",
             "Diluted with water",
-            "On the rocks",
-            "Heat"
+            "On the rocks"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q2",
@@ -104,11 +104,11 @@
           "type": "mcq",
           "question": "Wine for the Romans was:",
           "answers": [
-            "Daily drink",
             "Rare luxury",
-            "Secret medicine"
+            "Secret medicine",
+            "Daily drink"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -151,11 +151,11 @@
           "type": "mcq",
           "question": "Who preserved wine in the Middle Ages?",
           "answers": [
-            "Monks",
             "King",
-            "Merchants"
+            "Merchants",
+            "Monks"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
@@ -172,11 +172,11 @@
           "type": "mcq",
           "question": "Wine was also used as:",
           "answers": [
+            "Currency",
             "Safe water",
-            "Perfume",
-            "Currency"
+            "Perfume"
           ],
-          "correct": 0
+          "correct": 1
         }
       ],
       "slides": [
@@ -219,11 +219,11 @@
           "type": "mcq",
           "question": "Where does cork come from?",
           "answers": [
-            "Oak",
             "Pine",
-            "Screw"
+            "Screw",
+            "Oak"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
@@ -240,11 +240,11 @@
           "type": "mcq",
           "question": "The most common alternative cap is:",
           "answers": [
-            "Metal screw",
             "Wood",
-            "Glass"
+            "Glass",
+            "Metal screw"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -287,11 +287,11 @@
           "type": "mcq",
           "question": "Why was it originally toasted?",
           "answers": [
+            "For sports",
             "For safety",
-            "For fashion",
-            "For sports"
+            "For fashion"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q2",
@@ -308,11 +308,11 @@
           "type": "mcq",
           "question": "Today the toast is for:",
           "answers": [
-            "Celebrate",
             "Measuring wine",
-            "Taste"
+            "Taste",
+            "Celebrate"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -355,11 +355,11 @@
           "type": "mcq",
           "question": "What increases the price of a wine?",
           "answers": [
-            "Rarity",
             "Color",
-            "Bottle shape"
+            "Bottle shape",
+            "Rarity"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
@@ -376,11 +376,11 @@
           "type": "mcq",
           "question": "Some wines become:",
           "answers": [
+            "Carbonated drinks",
             "Collectibles",
-            "Flavored water",
-            "Carbonated drinks"
+            "Flavored water"
           ],
-          "correct": 0
+          "correct": 1
         }
       ],
       "slides": [
@@ -423,11 +423,11 @@
           "type": "mcq",
           "question": "Who transforms the wine?",
           "answers": [
-            "Yeasts",
             "Plastic",
-            "Metal"
+            "Metal",
+            "Yeasts"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
@@ -444,11 +444,11 @@
           "type": "mcq",
           "question": "Wine chemistry concerns:",
           "answers": [
-            "Natural reactions",
             "Color only",
-            "Bottle only"
+            "Bottle only",
+            "Natural reactions"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -491,11 +491,11 @@
           "type": "mcq",
           "question": "Where has wine been tested in space?",
           "answers": [
+            "Mars",
             "ISS",
-            "Moon",
-            "Mars"
+            "Moon"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q2",
@@ -512,11 +512,11 @@
           "type": "mcq",
           "question": "The aim of the experiment was:",
           "answers": [
-            "Studying aging",
             "Selling wine",
-            "Freeze it"
+            "Freeze it",
+            "Studying aging"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -559,11 +559,11 @@
           "type": "mcq",
           "question": "In cinema, wine often represents:",
           "answers": [
-            "Elegance",
             "Violence",
-            "Sport"
+            "Sport",
+            "Elegance"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
@@ -580,11 +580,11 @@
           "type": "mcq",
           "question": "Wine in films is often associated with:",
           "answers": [
+            "Technology",
             "Elegant dinner",
-            "War",
-            "Technology"
+            "War"
           ],
-          "correct": 0
+          "correct": 1
         }
       ],
       "slides": [
@@ -627,11 +627,11 @@
           "type": "mcq",
           "question": "The wine changes with:",
           "answers": [
-            "Time",
             "Bottle color",
-            "Label"
+            "Label",
+            "Time"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
@@ -648,11 +648,11 @@
           "type": "mcq",
           "question": "The wine is:",
           "answers": [
-            "Sensory experience",
             "Drink only",
-            "Only alcohol"
+            "Only alcohol",
+            "Sensory experience"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [

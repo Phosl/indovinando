@@ -14,22 +14,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Dove sono state trovate le tracce di vino più antiche?",
-          "answers": ["Georgia", "Italia", "Francia"],
-          "correct": 0
+          "answers": [
+            "Italia",
+            "Francia",
+            "Georgia"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino ha più di 8.000 anni di storia.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il vino nasce inizialmente come:",
-          "answers": ["Fermentazione spontanea", "Ricetta industriale", "Bevanda moderna"],
-          "correct": 0
+          "answers": [
+            "Ricetta industriale",
+            "Bevanda moderna",
+            "Fermentazione spontanea"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -71,22 +82,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Come bevevano spesso il vino i Romani?",
-          "answers": ["Diluito con acqua", "Con ghiaccio", "Caldo"],
-          "correct": 0
+          "answers": [
+            "Caldo",
+            "Diluito con acqua",
+            "Con ghiaccio"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino era riservato solo ai ricchi.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il vino per i Romani era:",
-          "answers": ["Bevanda quotidiana", "Raro lusso", "Medicinale segreto"],
-          "correct": 0
+          "answers": [
+            "Raro lusso",
+            "Medicinale segreto",
+            "Bevanda quotidiana"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -128,22 +150,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Chi ha preservato il vino nel Medioevo?",
-          "answers": ["Monaci", "Re", "Mercanti"],
-          "correct": 0
+          "answers": [
+            "Re",
+            "Mercanti",
+            "Monaci"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "I monasteri producevano vino.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il vino era usato anche come:",
-          "answers": ["Acqua sicura", "Profumo", "Moneta"],
-          "correct": 0
+          "answers": [
+            "Moneta",
+            "Acqua sicura",
+            "Profumo"
+          ],
+          "correct": 1
         }
       ],
       "slides": [
@@ -185,22 +218,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Da dove viene il sughero?",
-          "answers": ["Quercia", "Pino", "Vite"],
-          "correct": 0
+          "answers": [
+            "Pino",
+            "Vite",
+            "Quercia"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il sughero permette micro-ossigenazione.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il tappo alternativo più comune è:",
-          "answers": ["Vite metallica", "Legno", "Vetro"],
-          "correct": 0
+          "answers": [
+            "Legno",
+            "Vetro",
+            "Vite metallica"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -242,22 +286,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Perché si brindava in origine?",
-          "answers": ["Per sicurezza", "Per moda", "Per sport"],
-          "correct": 0
+          "answers": [
+            "Per sport",
+            "Per sicurezza",
+            "Per moda"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il brindisi era un gesto di fiducia.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Oggi il brindisi serve per:",
-          "answers": ["Celebrare", "Misurare vino", "Degustare"],
-          "correct": 0
+          "answers": [
+            "Misurare vino",
+            "Degustare",
+            "Celebrare"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -299,22 +354,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Cosa aumenta il prezzo di un vino?",
-          "answers": ["Rarità", "Colore", "Forma bottiglia"],
-          "correct": 0
+          "answers": [
+            "Colore",
+            "Forma bottiglia",
+            "Rarità"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino più costoso è sempre il migliore.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Alcuni vini diventano:",
-          "answers": ["Oggetti da collezione", "Acqua aromatizzata", "Bibite gassate"],
-          "correct": 0
+          "answers": [
+            "Bibite gassate",
+            "Oggetti da collezione",
+            "Acqua aromatizzata"
+          ],
+          "correct": 1
         }
       ],
       "slides": [
@@ -356,22 +422,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Chi trasforma il vino?",
-          "answers": ["Lieviti", "Plastica", "Metallo"],
-          "correct": 0
+          "answers": [
+            "Plastica",
+            "Metallo",
+            "Lieviti"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino è un prodotto biologico complesso.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "La chimica del vino riguarda:",
-          "answers": ["Reazioni naturali", "Solo colore", "Solo bottiglia"],
-          "correct": 0
+          "answers": [
+            "Solo colore",
+            "Solo bottiglia",
+            "Reazioni naturali"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -413,22 +490,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Dove è stato sperimentato il vino nello spazio?",
-          "answers": ["ISS", "Luna", "Marte"],
-          "correct": 0
+          "answers": [
+            "Marte",
+            "ISS",
+            "Luna"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino cambia nello spazio.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Lo scopo dell'esperimento era:",
-          "answers": ["Studiare l'invecchiamento", "Vendere vino", "Congelarlo"],
-          "correct": 0
+          "answers": [
+            "Vendere vino",
+            "Congelarlo",
+            "Studiare l'invecchiamento"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -470,22 +558,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Nel cinema il vino rappresenta spesso:",
-          "answers": ["Eleganza", "Violenza", "Sport"],
-          "correct": 0
+          "answers": [
+            "Violenza",
+            "Sport",
+            "Eleganza"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il vino è simbolo culturale.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il vino nei film è spesso associato a:",
-          "answers": ["Cena elegante", "Guerra", "Tecnologia"],
-          "correct": 0
+          "answers": [
+            "Tecnologia",
+            "Cena elegante",
+            "Guerra"
+          ],
+          "correct": 1
         }
       ],
       "slides": [
@@ -527,22 +626,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Il vino cambia con:",
-          "answers": ["Tempo", "Colore bottiglia", "Etichetta"],
-          "correct": 0
+          "answers": [
+            "Colore bottiglia",
+            "Etichetta",
+            "Tempo"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Tutti percepiscono il vino allo stesso modo.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il vino è:",
-          "answers": ["Esperienza sensoriale", "Solo bevanda", "Solo alcol"],
-          "correct": 0
+          "answers": [
+            "Solo bevanda",
+            "Solo alcol",
+            "Esperienza sensoriale"
+          ],
+          "correct": 2
         }
       ],
       "slides": [

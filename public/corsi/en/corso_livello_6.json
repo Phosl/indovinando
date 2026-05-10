@@ -14,22 +14,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "During fermentation, yeasts mainly convert:",
-          "answers": ["Sugars into alcohol and CO2", "Acids into sugar", "Tannins into color"],
-          "correct": 0
+          "answers": [
+            "Acids into sugar",
+            "Tannins into color",
+            "Sugars into alcohol and CO2"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "All else being equal, more sugar in must can lead to more alcohol.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "A wine from very ripe grapes tends to have:",
-          "answers": ["Higher potential alcohol", "Always lower pH", "No acidity"],
-          "correct": 0
+          "answers": [
+            "Always lower pH",
+            "No acidity",
+            "Higher potential alcohol"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -40,7 +51,11 @@
             "In must, sugar concentration tells you how much raw material yeasts can use to produce alcohol.",
             "That is why later harvests can create richer, higher-alcohol wines, while earlier harvests often produce leaner and sharper profiles."
           ],
-          "keyPoints": ["Fermentable sugar", "Role of yeasts", "Final wine style"]
+          "keyPoints": [
+            "Fermentable sugar",
+            "Role of yeasts",
+            "Final wine style"
+          ]
         },
         {
           "id": "s2",
@@ -49,7 +64,11 @@
             "Pinot Grigio A: earlier harvest, 12% ABV, citrus-driven and light.",
             "Pinot Grigio B: riper harvest, 13.5% ABV, softer texture and warmer finish."
           ],
-          "keyPoints": ["Grape ripeness", "Perceived alcohol", "Tasting differences"]
+          "keyPoints": [
+            "Grape ripeness",
+            "Perceived alcohol",
+            "Tasting differences"
+          ]
         }
       ]
     },
@@ -63,14 +82,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "In tasting, good acidity mainly increases:",
-          "answers": ["Lift and salivation", "Sweetness", "Tannic grip"],
-          "correct": 0
+          "answers": [
+            "Tannic grip",
+            "Lift and salivation",
+            "Sweetness"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "A wine with no acidity can feel flat and tired.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
         },
         {
@@ -78,11 +104,11 @@
           "type": "mcq",
           "question": "Which style often needs marked acidity for balance?",
           "answers": [
-            "Traditional method sparkling",
             "Very sweet passito",
-            "Extreme oxidative wine"
+            "Extreme oxidative wine",
+            "Traditional method sparkling"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -93,7 +119,11 @@
             "Tartaric, malic and citric acids are natural grape components that support wine over time.",
             "On the palate, acidity drives another sip and improves compatibility with food."
           ],
-          "keyPoints": ["Natural acids", "Salivation", "Food pairing value"]
+          "keyPoints": [
+            "Natural acids",
+            "Salivation",
+            "Food pairing value"
+          ]
         },
         {
           "id": "s2",
@@ -102,7 +132,11 @@
             "A crisp white (for example young Verdicchio) refreshes the palate with fried seafood.",
             "A low-acid white with the same dish can feel heavy after a few bites."
           ],
-          "keyPoints": ["Table freshness", "Palate cleansing", "Food-wine balance"]
+          "keyPoints": [
+            "Table freshness",
+            "Palate cleansing",
+            "Food-wine balance"
+          ]
         }
       ]
     },
@@ -116,14 +150,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "A lower pH generally indicates:",
-          "answers": ["Higher acidity", "Higher sweetness", "Less color"],
-          "correct": 0
+          "answers": [
+            "Higher sweetness",
+            "Less color",
+            "Higher acidity"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "pH can influence color stability in red wines.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
         },
         {
@@ -131,11 +172,11 @@
           "type": "mcq",
           "question": "In the cellar, overly high pH raises the risk of:",
           "answers": [
+            "Natural tannin increase",
             "Microbiological issues",
-            "Cleaner and faster fermentation",
-            "Natural tannin increase"
+            "Cleaner and faster fermentation"
           ],
-          "correct": 0
+          "correct": 1
         }
       ],
       "slides": [
@@ -146,7 +187,11 @@
             "Total acidity and pH describe different aspects: quantity of acids versus their chemical strength and sensory impact.",
             "Two wines with similar acidity can taste very different if pH is not aligned."
           ],
-          "keyPoints": ["Complementary metrics", "Sensory impact", "Cellar control"]
+          "keyPoints": [
+            "Complementary metrics",
+            "Sensory impact",
+            "Cellar control"
+          ]
         },
         {
           "id": "s2",
@@ -155,7 +200,11 @@
             "Young red at pH 3.35: brighter color and tighter profile.",
             "Similar red at pH 3.75: less vivid color and higher long-term vulnerability."
           ],
-          "keyPoints": ["Color", "Longevity", "Microbiological safety"]
+          "keyPoints": [
+            "Color",
+            "Longevity",
+            "Microbiological safety"
+          ]
         }
       ]
     },
@@ -169,22 +218,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "The classic tannin sensation is:",
-          "answers": ["Astringency", "Effervescence", "Sweetness"],
-          "correct": 0
+          "answers": [
+            "Effervescence",
+            "Sweetness",
+            "Astringency"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Good phenolic ripeness can make tannins feel smoother.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "In red wines, tannins mostly come from:",
-          "answers": ["Skins and seeds", "Only oak", "Added water"],
-          "correct": 0
+          "answers": [
+            "Only oak",
+            "Added water",
+            "Skins and seeds"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -195,7 +255,11 @@
             "Extracted during maceration and fermentation, tannins build structure and aging potential.",
             "Careful temperature and pump-over management helps avoid bitter, aggressive extraction."
           ],
-          "keyPoints": ["Maceration", "Tannin quality", "Aging potential"]
+          "keyPoints": [
+            "Maceration",
+            "Tannin quality",
+            "Aging potential"
+          ]
         },
         {
           "id": "s2",
@@ -204,7 +268,11 @@
             "'Polished tannins' means a fine, less abrasive grain on gums and tongue.",
             "'Green tannins' describes a dry, hard texture, often linked to incomplete grape ripeness."
           ],
-          "keyPoints": ["Useful descriptors", "Grain and texture", "Guest communication"]
+          "keyPoints": [
+            "Useful descriptors",
+            "Grain and texture",
+            "Guest communication"
+          ]
         }
       ]
     },
@@ -218,22 +286,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "On the palate, alcohol typically creates:",
-          "answers": ["Warmth", "Astringency", "Saltiness"],
-          "correct": 0
+          "answers": [
+            "Saltiness",
+            "Warmth",
+            "Astringency"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Higher ABV often needs stronger freshness to remain balanced.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Which pairing helps with a high-alcohol red?",
-          "answers": ["Succulent protein-rich dish", "Plain salad", "Very sweet dessert"],
-          "correct": 0
+          "answers": [
+            "Plain salad",
+            "Very sweet dessert",
+            "Succulent protein-rich dish"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -244,7 +323,11 @@
             "As ABV rises, volume and roundness can increase, but so can the risk of a hot and unbalanced finish.",
             "Serving temperature can moderate alcohol perception and protect aromatic precision."
           ],
-          "keyPoints": ["Body", "Warmth", "Serving temperature"]
+          "keyPoints": [
+            "Body",
+            "Warmth",
+            "Serving temperature"
+          ]
         },
         {
           "id": "s2",
@@ -253,7 +336,11 @@
             "Wine A at 12.5%: leaner, more vertical, drier finish.",
             "Wine B at 15%: fuller and broader, best balanced by rich food or vivid acidity."
           ],
-          "keyPoints": ["Palate weight", "Balance management", "Pairing strategy"]
+          "keyPoints": [
+            "Palate weight",
+            "Balance management",
+            "Pairing strategy"
+          ]
         }
       ]
     },
@@ -267,22 +354,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Residual CO2 in a still wine can give:",
-          "answers": ["Light liveliness", "More tannin", "Darker color"],
-          "correct": 0
+          "answers": [
+            "More tannin",
+            "Darker color",
+            "Light liveliness"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Only sparkling wines can contain carbon dioxide.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "CO2 mainly originates from:",
-          "answers": ["Fermentation", "Oxidation", "Sterile filtration"],
-          "correct": 0
+          "answers": [
+            "Sterile filtration",
+            "Fermentation",
+            "Oxidation"
+          ],
+          "correct": 1
         }
       ],
       "slides": [
@@ -293,7 +391,11 @@
             "Alcoholic fermentation naturally produces CO2, and a small portion may remain dissolved in wine.",
             "In some young whites, a slight amount increases freshness and palate tension."
           ],
-          "keyPoints": ["Fermentation byproduct", "Liveliness", "Stylistic use"]
+          "keyPoints": [
+            "Fermentation byproduct",
+            "Liveliness",
+            "Stylistic use"
+          ]
         },
         {
           "id": "s2",
@@ -302,7 +404,11 @@
             "If CO2 is excessive in a wine meant to be still, it can mask delicate aromas and feel unfinished.",
             "Proper maturation and bottling management helps prevent this issue."
           ],
-          "keyPoints": ["Style coherence", "Aromatic impact", "Cellar control"]
+          "keyPoints": [
+            "Style coherence",
+            "Aromatic impact",
+            "Cellar control"
+          ]
         }
       ]
     },
@@ -317,17 +423,20 @@
           "type": "mcq",
           "question": "Too much oxygen is most likely to cause:",
           "answers": [
-            "Loss of freshness and fruit",
             "Higher aromatic precision",
-            "Total reduction"
+            "Total reduction",
+            "Loss of freshness and fruit"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "A little oxygen can help soften some red wines.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
         },
         {
@@ -335,11 +444,11 @@
           "type": "mcq",
           "question": "A classic sign of advanced oxidation is:",
           "answers": [
-            "Cooked apple and walnut notes",
             "Intense fresh citrus notes",
-            "Magically silkier tannins"
+            "Magically silkier tannins",
+            "Cooked apple and walnut notes"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -350,7 +459,11 @@
             "During racking, aging or service, oxygen always changes wine profile; it is never neutral.",
             "Structured reds may benefit from moderate oxygen contact, while delicate whites have a much narrower margin."
           ],
-          "keyPoints": ["Exposure control", "Style-dependent effect", "Oxidative risk"]
+          "keyPoints": [
+            "Exposure control",
+            "Style-dependent effect",
+            "Oxidative risk"
+          ]
         },
         {
           "id": "s2",
@@ -359,7 +472,11 @@
             "Decanting a young, closed red can improve aromatic opening.",
             "Leaving an aromatic white exposed for hours can flatten and dull its profile."
           ],
-          "keyPoints": ["Thoughtful decanting", "Wine protection", "Service decisions"]
+          "keyPoints": [
+            "Thoughtful decanting",
+            "Wine protection",
+            "Service decisions"
+          ]
         }
       ]
     },
@@ -374,25 +491,32 @@
           "type": "mcq",
           "question": "Residual sugar is:",
           "answers": [
+            "Sugar found only in red wine",
             "Sugar left after fermentation",
-            "Sugar added in bottle",
-            "Sugar found only in red wine"
+            "Sugar added in bottle"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "A wine can feel less sweet if acidity is high, even with small residual sugar.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "In which style is residual sugar often intentionally preserved?",
-          "answers": ["Aromatic Moscato", "Brut nature sparkling", "Austere oaked red"],
-          "correct": 0
+          "answers": [
+            "Brut nature sparkling",
+            "Austere oaked red",
+            "Aromatic Moscato"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -403,7 +527,11 @@
             "Many dry wines still contain small residual sugar amounts without tasting sweet.",
             "Final perception depends on balance with acidity, alcohol and serving temperature."
           ],
-          "keyPoints": ["Actual residue", "Perceived sweetness", "Taste balance"]
+          "keyPoints": [
+            "Actual residue",
+            "Perceived sweetness",
+            "Taste balance"
+          ]
         },
         {
           "id": "s2",
@@ -431,17 +559,20 @@
           "type": "mcq",
           "question": "The main role of SO2 in wine is:",
           "answers": [
-            "Protection from oxidation and microbes",
             "Increase alcohol",
-            "Boost purple color"
+            "Boost purple color",
+            "Protection from oxidation and microbes"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "'No sulfites added' does not automatically mean better wine in every case.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
         },
         {
@@ -449,11 +580,11 @@
           "type": "mcq",
           "question": "Correct SO2 management aims for:",
           "answers": [
+            "More effervescence",
             "Stability and aromatic cleanliness",
-            "Extra sweetness",
-            "More effervescence"
+            "Extra sweetness"
           ],
-          "correct": 0
+          "correct": 1
         }
       ],
       "slides": [
@@ -464,7 +595,11 @@
             "Free SO2 is the active fraction that actually protects wine and aromas.",
             "Good pH control and cellar hygiene often allow lower doses while keeping safety and stability."
           ],
-          "keyPoints": ["Targeted protection", "pH relationship", "Technical approach"]
+          "keyPoints": [
+            "Targeted protection",
+            "pH relationship",
+            "Technical approach"
+          ]
         },
         {
           "id": "s2",
@@ -473,7 +608,11 @@
             "With guests, avoid extremes: explain SO2 as a seatbelt for wine integrity.",
             "Low or high alone is not the whole story; what matters is in-glass quality over time."
           ],
-          "keyPoints": ["No alarmism", "Guest education", "Long-term quality"]
+          "keyPoints": [
+            "No alarmism",
+            "Guest education",
+            "Long-term quality"
+          ]
         }
       ]
     },
@@ -487,14 +626,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "A balanced wine shows:",
-          "answers": ["Integrated components", "Only high alcohol", "Only sharp acidity"],
-          "correct": 0
+          "answers": [
+            "Only high alcohol",
+            "Only sharp acidity",
+            "Integrated components"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Too much of one component can reduce drinkability and harmony.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
         },
         {
@@ -502,11 +648,11 @@
           "type": "mcq",
           "question": "Which professional summary best describes balance?",
           "answers": [
-            "No element dominates unpleasantly",
             "The wine is more expensive",
-            "Color is very intense"
+            "Color is very intense",
+            "No element dominates unpleasantly"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -517,7 +663,11 @@
             "Acidity, alcohol, tannins, residual sugar and aroma profile should support each other.",
             "When one voice overwhelms the others, the wine loses precision and easy drinkability."
           ],
-          "keyPoints": ["Integration", "Drinkability", "Perceived quality"]
+          "keyPoints": [
+            "Integration",
+            "Drinkability",
+            "Perceived quality"
+          ]
         },
         {
           "id": "s2",
@@ -526,7 +676,11 @@
             "Ask yourself: is the sip coherent from attack to finish? is it clean? do aromas return clearly?",
             "If yes, you are likely tasting a wine with strong technical and sensory balance."
           ],
-          "keyPoints": ["Evaluation method", "Sip coherence", "Professional conclusion"]
+          "keyPoints": [
+            "Evaluation method",
+            "Sip coherence",
+            "Professional conclusion"
+          ]
         }
       ]
     }

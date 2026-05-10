@@ -14,22 +14,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "If you don't know the menu, what do you do?",
-          "answers": ["Ask for advice", "Choose randomly", "Take the most expensive one"],
-          "correct": 0
+          "answers": [
+            "Choose randomly",
+            "Take the most expensive one",
+            "Ask for advice"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "It's normal to ask for help with wine.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "The best choice is often:",
-          "answers": ["Local wine", "Random imported wine", "Always sweet"],
-          "correct": 0
+          "answers": [
+            "Random imported wine",
+            "Always sweet",
+            "Local wine"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -71,21 +82,32 @@
           "id": "q1",
           "type": "mcq",
           "question": "With red meat you often choose:",
-          "answers": ["Red", "White", "Rose"],
-          "correct": 0
+          "answers": [
+            "Rose",
+            "Red",
+            "White"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "With fish we prefer:",
-          "answers": ["White", "Red", "Passito"],
-          "correct": 0
+          "answers": [
+            "Red",
+            "Passito",
+            "White"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "There are no strict rules in matching.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
         }
       ],
@@ -128,21 +150,32 @@
           "id": "q1",
           "type": "mcq",
           "question": "Is an expensive wine always better?",
-          "answers": ["No", "Yes", "Always"],
-          "correct": 0
+          "answers": [
+            "Yes",
+            "Always",
+            "No"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "A good midrange is often:",
-          "answers": ["15-40€", "1-5€", "100€+"],
-          "correct": 0
+          "answers": [
+            "1-5€",
+            "100€+",
+            "15-40€"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "The price always reflects the quality.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         }
       ],
@@ -186,25 +219,32 @@
           "type": "mcq",
           "question": "What can you say if you're not sure?",
           "answers": [
-            "Do you recommend me?",
             "I'll take the most expensive one",
-            "I don't want wine"
+            "I don't want wine",
+            "Do you recommend me?"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Asking for advice is frowned upon.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "It is useful to say:",
-          "answers": ["What will you eat", "The color of the table", "Nothing"],
-          "correct": 0
+          "answers": [
+            "The color of the table",
+            "Nothing",
+            "What will you eat"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -246,14 +286,21 @@
           "id": "q1",
           "type": "mcq",
           "question": "House wine is often:",
-          "answers": ["Local and simple", "Always expensive", "Always sparkling"],
-          "correct": 0
+          "answers": [
+            "Always sparkling",
+            "Local and simple",
+            "Always expensive"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "The house wine is always poor.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
@@ -261,11 +308,11 @@
           "type": "mcq",
           "question": "It is a good choice when:",
           "answers": [
-            "You don't want to complicate your life",
             "You want to impress",
-            "You want to spend a lot"
+            "You want to spend a lot",
+            "You don't want to complicate your life"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -307,22 +354,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "If you don't like wine you can:",
-          "answers": ["Say it politely", "Scream", "Never drink wine again"],
-          "correct": 0
+          "answers": [
+            "Scream",
+            "Never drink wine again",
+            "Say it politely"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "It is mandatory to finish the wine.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "A correct approach is:",
-          "answers": ["Ask for alternative", "Feign enthusiasm", "Leave"],
-          "correct": 0
+          "answers": [
+            "Leave",
+            "Ask for alternative",
+            "Feign enthusiasm"
+          ],
+          "correct": 1
         }
       ],
       "slides": [
@@ -364,22 +422,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "In a dinner for two you often have:",
-          "answers": ["1 bottle", "3 bottles", "None"],
-          "correct": 0
+          "answers": [
+            "3 bottles",
+            "None",
+            "1 bottle"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "It is better to overdo it with wine.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "If you're not sure:",
-          "answers": ["Start small", "Order everything", "Don't drink"],
-          "correct": 0
+          "answers": [
+            "Order everything",
+            "Don't drink",
+            "Start small"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -421,22 +490,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Letting the wine breathe means:",
-          "answers": ["Expose it to the air", "Cool it", "Heat it up"],
-          "correct": 0
+          "answers": [
+            "Heat it up",
+            "Expose it to the air",
+            "Cool it"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "All wines must breathe a lot.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "It is mainly used for:",
-          "answers": ["Structured red wines", "Soft drinks", "Water"],
-          "correct": 0
+          "answers": [
+            "Soft drinks",
+            "Water",
+            "Structured red wines"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -478,22 +558,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "It's better:",
-          "answers": ["Ask what wine it is", "Invent", "Pretend you know"],
-          "correct": 0
+          "answers": [
+            "Invent",
+            "Pretend you know",
+            "Ask what wine it is"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "It's normal not to know everything about wine.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "The worst thing is:",
-          "answers": ["Feign competence", "Ask for help", "Try new wines"],
-          "correct": 0
+          "answers": [
+            "Try new wines",
+            "Feign competence",
+            "Ask for help"
+          ],
+          "correct": 1
         }
       ],
       "slides": [
@@ -535,22 +626,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "A good approach is:",
-          "answers": ["Ask for advice", "Choose randomly", "Avoid wine"],
-          "correct": 0
+          "answers": [
+            "Choose randomly",
+            "Avoid wine",
+            "Ask for advice"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Context matters when choosing wine.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "The objective is:",
-          "answers": ["Enjoy the moment", "Impress everyone", "Complicating your life"],
-          "correct": 0
+          "answers": [
+            "Impress everyone",
+            "Complicating your life",
+            "Enjoy the moment"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -561,7 +663,11 @@
             "Put it all together: choice, context and security.",
             "Final checklist before ordering: 1) what dishes are coming, 2) what is my budget, 3) do I want freshness, softness, or intensity, 4) one bottle or by-the-glass progression? With these four questions you order clearly, without randomness or social anxiety."
           ],
-          "keyPoints": ["A good approach is", "Context matters when choosing wine", "The goal is"]
+          "keyPoints": [
+            "A good approach is",
+            "Context matters when choosing wine",
+            "The goal is"
+          ]
         },
         {
           "id": "s2",
@@ -570,7 +676,11 @@
             "Now you can order wine like an expert.",
             "The objective is not to impress the table: it is to drink better and enjoy the meal more. The quiz now helps turn this logic into a repeatable habit."
           ],
-          "keyPoints": ["A good approach is", "Context matters when choosing wine", "The goal is"]
+          "keyPoints": [
+            "A good approach is",
+            "Context matters when choosing wine",
+            "The goal is"
+          ]
         }
       ]
     }

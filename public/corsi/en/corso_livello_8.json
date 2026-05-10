@@ -14,36 +14,82 @@
           "id": "q1",
           "type": "mcq",
           "question": "Where can Champagne legally be produced?",
-          "answers": ["Champagne region in France", "Any country", "Only Italy"],
-          "correct": 0
+          "answers": [
+            "Any country",
+            "Only Italy",
+            "Champagne region in France"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "All sparkling wines are Champagne.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Champagne is mainly known for:",
-          "answers": ["Its bubbles", "Its color", "Its sweetness only"],
-          "correct": 0
+          "answers": [
+            "Its color",
+            "Its sweetness only",
+            "Its bubbles"
+          ],
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Champagne is:",
-          "answers": ["A protected wine designation", "A grape variety", "A cocktail"],
-          "correct": 0
+          "answers": [
+            "A grape variety",
+            "A cocktail",
+            "A protected wine designation"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "The name Champagne is legally protected.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "What Champagne really is",
+          "paragraphs": [
+            "Champagne is a sparkling wine made only in the Champagne region of France using specific rules."
+          ],
+          "keyPoints": [
+            "Where can Champagne legally be produced",
+            "All sparkling wines are Champagne.",
+            "Champagne is mainly known for:"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Practical application",
+          "paragraphs": [
+            "Use the following questions to connect definitions, context, and sensory clues.",
+            "Now you understand what makes Champagne unique."
+          ],
+          "keyPoints": [
+            "Where can Champagne legally be produced",
+            "All sparkling wines are Champagne.",
+            "Champagne is mainly known for:"
+          ],
+          "_introRef": "Champagne is a sparkling wine made only in the Champagne region of France using specific rules."
         }
       ]
     },
@@ -57,36 +103,82 @@
           "id": "q1",
           "type": "mcq",
           "question": "What creates Champagne bubbles?",
-          "answers": ["Second fermentation in bottle", "Added gas", "Shaking the bottle"],
-          "correct": 0
+          "answers": [
+            "Shaking the bottle",
+            "Second fermentation in bottle",
+            "Added gas"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "The traditional method is called:",
-          "answers": ["Méthode Champenoise", "Carbonation method", "Quick ferment"],
-          "correct": 0
+          "answers": [
+            "Carbonation method",
+            "Quick ferment",
+            "Méthode Champenoise"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Champagne is fermented only once.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "The second fermentation happens in:",
-          "answers": ["Bottle", "Tank only", "Glass"],
-          "correct": 0
+          "answers": [
+            "Glass",
+            "Bottle",
+            "Tank only"
+          ],
+          "correct": 1
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Yeast is involved in Champagne production.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "How Champagne is made",
+          "paragraphs": [
+            "Champagne is made using a second fermentation in the bottle, which creates its bubbles."
+          ],
+          "keyPoints": [
+            "What creates Champagne bubbles",
+            "The traditional method is called:",
+            "Champagne is fermented only once."
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Practical application",
+          "paragraphs": [
+            "Use the following questions to connect definitions, context, and sensory clues.",
+            "Now you know how the bubbles are formed."
+          ],
+          "keyPoints": [
+            "What creates Champagne bubbles",
+            "The traditional method is called:",
+            "Champagne is fermented only once."
+          ],
+          "_introRef": "Champagne is made using a second fermentation in the bottle, which creates its bubbles."
         }
       ]
     },
@@ -100,36 +192,83 @@
           "id": "q1",
           "type": "mcq",
           "question": "Which grape is white?",
-          "answers": ["Chardonnay", "Pinot Noir", "Cabernet"],
-          "correct": 0
+          "answers": [
+            "Pinot Noir",
+            "Cabernet",
+            "Chardonnay"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Which grape is red?",
-          "answers": ["Pinot Noir", "Chardonnay", "Riesling"],
-          "correct": 0
+          "answers": [
+            "Chardonnay",
+            "Riesling",
+            "Pinot Noir"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Pinot Meunier is mainly:",
-          "answers": ["Red grape", "White grape", "Dessert grape"],
-          "correct": 0
+          "answers": [
+            "Dessert grape",
+            "Red grape",
+            "White grape"
+          ],
+          "correct": 1
         },
         {
           "id": "q4",
           "type": "true_false",
           "question": "Champagne uses only white grapes.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
           "id": "q5",
           "type": "mcq",
           "question": "Chardonnay gives Champagne:",
-          "answers": ["Freshness and elegance", "Color only", "Sweetness only"],
-          "correct": 0
+          "answers": [
+            "Color only",
+            "Sweetness only",
+            "Freshness and elegance"
+          ],
+          "correct": 2
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "The main grapes of Champagne",
+          "paragraphs": [
+            "Champagne is mainly made from three grapes: Chardonnay, Pinot Noir, and Pinot Meunier."
+          ],
+          "keyPoints": [
+            "Which grape is white",
+            "Which grape is red",
+            "Pinot Meunier is mainly:"
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Practical application",
+          "paragraphs": [
+            "Use the following questions to connect definitions, context, and sensory clues.",
+            "Now you can recognize Champagne grape varieties."
+          ],
+          "keyPoints": [
+            "Which grape is white",
+            "Which grape is red",
+            "Pinot Meunier is mainly:"
+          ],
+          "_introRef": "Champagne is mainly made from three grapes: Chardonnay, Pinot Noir, and Pinot Meunier."
         }
       ]
     },
@@ -143,36 +282,82 @@
           "id": "q1",
           "type": "mcq",
           "question": "Blanc de Blancs is made from:",
-          "answers": ["White grapes only", "Red grapes only", "Mixed grapes"],
-          "correct": 0
+          "answers": [
+            "Red grapes only",
+            "Mixed grapes",
+            "White grapes only"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Blanc de Noirs means:",
-          "answers": ["White wine from red grapes", "Sweet Champagne", "Rosé only"],
-          "correct": 0
+          "answers": [
+            "Rosé only",
+            "White wine from red grapes",
+            "Sweet Champagne"
+          ],
+          "correct": 1
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Blanc de Blancs is always red.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Blanc de Blancs is usually:",
-          "answers": ["Lighter and fresher", "Heavier and dark", "Very sweet"],
-          "correct": 0
+          "answers": [
+            "Heavier and dark",
+            "Very sweet",
+            "Lighter and fresher"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Blanc de Noirs can be white in color.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Blanc de Blancs vs Blanc de Noirs",
+          "paragraphs": [
+            "Champagne styles depend on the grapes used."
+          ],
+          "keyPoints": [
+            "Blanc de Blancs is made from:",
+            "Blanc de Noirs means:",
+            "Blanc de Blancs is always red."
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Practical application",
+          "paragraphs": [
+            "Use the following questions to connect definitions, context, and sensory clues.",
+            "Now you understand Champagne styles."
+          ],
+          "keyPoints": [
+            "Blanc de Blancs is made from:",
+            "Blanc de Noirs means:",
+            "Blanc de Blancs is always red."
+          ],
+          "_introRef": "Champagne styles depend on the grapes used."
         }
       ]
     },
@@ -186,36 +371,82 @@
           "id": "q1",
           "type": "mcq",
           "question": "What is dosage?",
-          "answers": ["Sugar added before final corking", "Grape pressing", "Bottle size"],
-          "correct": 0
+          "answers": [
+            "Bottle size",
+            "Sugar added before final corking",
+            "Grape pressing"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Brut Champagne is:",
-          "answers": ["Dry", "Very sweet", "Non-alcoholic"],
-          "correct": 0
+          "answers": [
+            "Very sweet",
+            "Non-alcoholic",
+            "Dry"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "All Champagne is sweet.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Extra Brut means:",
-          "answers": ["Very low sugar", "Very sweet", "No bubbles"],
-          "correct": 0
+          "answers": [
+            "No bubbles",
+            "Very low sugar",
+            "Very sweet"
+          ],
+          "correct": 1
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Dosage affects taste balance.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Dosage and sweetness levels",
+          "paragraphs": [
+            "Champagne sweetness depends on dosage, the sugar added before bottling."
+          ],
+          "keyPoints": [
+            "What is dosage",
+            "Brut Champagne is:",
+            "All Champagne is sweet."
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Practical application",
+          "paragraphs": [
+            "Use the following questions to connect definitions, context, and sensory clues.",
+            "Now you can read Champagne sweetness levels."
+          ],
+          "keyPoints": [
+            "What is dosage",
+            "Brut Champagne is:",
+            "All Champagne is sweet."
+          ],
+          "_introRef": "Champagne sweetness depends on dosage, the sugar added before bottling."
         }
       ]
     },
@@ -229,36 +460,82 @@
           "id": "q1",
           "type": "mcq",
           "question": "What are lees?",
-          "answers": ["Dead yeast cells", "Sugar crystals", "Grapes"],
-          "correct": 0
+          "answers": [
+            "Sugar crystals",
+            "Grapes",
+            "Dead yeast cells"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Aging on lees adds:",
-          "answers": ["Complexity", "Water", "Color only"],
-          "correct": 0
+          "answers": [
+            "Water",
+            "Color only",
+            "Complexity"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Lees aging improves texture.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Champagne aged longer tends to be:",
-          "answers": ["More complex", "Less alcoholic", "Flat"],
-          "correct": 0
+          "answers": [
+            "Less alcoholic",
+            "Flat",
+            "More complex"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "All Champagne is aged the same time.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Aging on lees",
+          "paragraphs": [
+            "Champagne gains complexity by resting on yeast lees."
+          ],
+          "keyPoints": [
+            "What are lees",
+            "Aging on lees adds:",
+            "Lees aging improves texture."
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Practical application",
+          "paragraphs": [
+            "Use the following questions to connect definitions, context, and sensory clues.",
+            "Now you understand Champagne aging."
+          ],
+          "keyPoints": [
+            "What are lees",
+            "Aging on lees adds:",
+            "Lees aging improves texture."
+          ],
+          "_introRef": "Champagne gains complexity by resting on yeast lees."
         }
       ]
     },
@@ -272,36 +549,82 @@
           "id": "q1",
           "type": "mcq",
           "question": "Rosé Champagne color comes from:",
-          "answers": ["Red grape skins", "Artificial coloring", "White grapes only"],
-          "correct": 0
+          "answers": [
+            "Artificial coloring",
+            "White grapes only",
+            "Red grape skins"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "One production method is:",
-          "answers": ["Blending red and white wine", "Freezing grapes", "Carbonation"],
-          "correct": 0
+          "answers": [
+            "Carbonation",
+            "Blending red and white wine",
+            "Freezing grapes"
+          ],
+          "correct": 1
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Rosé Champagne is always sweet.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Rosé Champagne is often:",
-          "answers": ["Fruity", "Salty", "Bitter only"],
-          "correct": 0
+          "answers": [
+            "Salty",
+            "Bitter only",
+            "Fruity"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Skin contact can create rosé color.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Rosé Champagne",
+          "paragraphs": [
+            "Rosé Champagne can be made by blending or skin contact."
+          ],
+          "keyPoints": [
+            "Rosé Champagne color comes from:",
+            "One production method is:",
+            "Rosé Champagne is always sweet."
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Practical application",
+          "paragraphs": [
+            "Use the following questions to connect definitions, context, and sensory clues.",
+            "Now you understand Rosé Champagne."
+          ],
+          "keyPoints": [
+            "Rosé Champagne color comes from:",
+            "One production method is:",
+            "Rosé Champagne is always sweet."
+          ],
+          "_introRef": "Rosé Champagne can be made by blending or skin contact."
         }
       ]
     },
@@ -315,36 +638,82 @@
           "id": "q1",
           "type": "mcq",
           "question": "Ideal serving temperature is:",
-          "answers": ["Chilled", "Hot", "Room temperature"],
-          "correct": 0
+          "answers": [
+            "Room temperature",
+            "Chilled",
+            "Hot"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Best glass type is:",
-          "answers": ["Flute or tulip", "Mug", "Plate"],
-          "correct": 0
+          "answers": [
+            "Mug",
+            "Plate",
+            "Flute or tulip"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Champagne should be shaken before serving.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Pouring slowly helps preserve:",
-          "answers": ["Bubbles", "Color", "Sugar"],
-          "correct": 0
+          "answers": [
+            "Sugar",
+            "Bubbles",
+            "Color"
+          ],
+          "correct": 1
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Temperature affects aroma perception.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Serving Champagne",
+          "paragraphs": [
+            "Temperature, glass, and pouring style matter for Champagne."
+          ],
+          "keyPoints": [
+            "Ideal serving temperature is:",
+            "Best glass type is:",
+            "Champagne should be shaken before serving."
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Practical application",
+          "paragraphs": [
+            "Use the following questions to connect definitions, context, and sensory clues.",
+            "Now you can serve Champagne correctly."
+          ],
+          "keyPoints": [
+            "Ideal serving temperature is:",
+            "Best glass type is:",
+            "Champagne should be shaken before serving."
+          ],
+          "_introRef": "Temperature, glass, and pouring style matter for Champagne."
         }
       ]
     },
@@ -358,36 +727,82 @@
           "id": "q1",
           "type": "mcq",
           "question": "Champagne pairs well with:",
-          "answers": ["Seafood", "Only desserts", "Spicy soda"],
-          "correct": 0
+          "answers": [
+            "Only desserts",
+            "Spicy soda",
+            "Seafood"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Brut Champagne is ideal with:",
-          "answers": ["Salty food", "Very sweet food only", "Nothing"],
-          "correct": 0
+          "answers": [
+            "Very sweet food only",
+            "Nothing",
+            "Salty food"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Champagne cannot be paired with cheese.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Rosé Champagne pairs well with:",
-          "answers": ["Fruits and desserts", "Meat only", "Soup only"],
-          "correct": 0
+          "answers": [
+            "Meat only",
+            "Soup only",
+            "Fruits and desserts"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Champagne is very flexible in pairing.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Food pairing with Champagne",
+          "paragraphs": [
+            "Champagne is one of the most versatile wines at the table."
+          ],
+          "keyPoints": [
+            "Champagne pairs well with:",
+            "Brut Champagne is ideal with:",
+            "Champagne cannot be paired with cheese."
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Practical application",
+          "paragraphs": [
+            "Use the following questions to connect definitions, context, and sensory clues.",
+            "Now you know how to pair Champagne with food."
+          ],
+          "keyPoints": [
+            "Champagne pairs well with:",
+            "Brut Champagne is ideal with:",
+            "Champagne cannot be paired with cheese."
+          ],
+          "_introRef": "Champagne is one of the most versatile wines at the table."
         }
       ]
     },
@@ -401,36 +816,82 @@
           "id": "q1",
           "type": "mcq",
           "question": "When choosing Champagne, you should consider:",
-          "answers": ["Style and sweetness", "Bottle shape only", "Color label only"],
-          "correct": 0
+          "answers": [
+            "Bottle shape only",
+            "Color label only",
+            "Style and sweetness"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "A good starting choice is often:",
-          "answers": ["Brut Champagne", "Sweet soda", "Cooking wine"],
-          "correct": 0
+          "answers": [
+            "Cooking wine",
+            "Brut Champagne",
+            "Sweet soda"
+          ],
+          "correct": 1
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Price is the only indicator of quality.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "A key skill is:",
-          "answers": ["Reading the label", "Ignoring origin", "Guessing randomly"],
-          "correct": 0
+          "answers": [
+            "Ignoring origin",
+            "Guessing randomly",
+            "Reading the label"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Understanding style helps better selection.",
-          "answers": ["True", "False"],
+          "answers": [
+            "True",
+            "False"
+          ],
           "correct": 0
+        }
+      ],
+      "slides": [
+        {
+          "id": "s1",
+          "title": "Choosing Champagne like an expert",
+          "paragraphs": [
+            "Now you can navigate labels, styles, and situations with confidence."
+          ],
+          "keyPoints": [
+            "When choosing Champagne, you should consider:",
+            "A good starting choice is often:",
+            "Price is the only indicator of quality."
+          ]
+        },
+        {
+          "id": "s2",
+          "title": "Practical application",
+          "paragraphs": [
+            "Use the following questions to connect definitions, context, and sensory clues.",
+            "Now you can choose Champagne like an expert."
+          ],
+          "keyPoints": [
+            "When choosing Champagne, you should consider:",
+            "A good starting choice is often:",
+            "Price is the only indicator of quality."
+          ],
+          "_introRef": "Now you can navigate labels, styles, and situations with confidence."
         }
       ]
     }

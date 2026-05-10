@@ -14,35 +14,53 @@
           "id": "q1",
           "type": "mcq",
           "question": "Qual è la prima fase della produzione del vino?",
-          "answers": ["Vendemmia", "Imbottigliamento", "Vendita"],
-          "correct": 0
+          "answers": [
+            "Imbottigliamento",
+            "Vendita",
+            "Vendemmia"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "La fermentazione avviene dopo la raccolta.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Cosa si trasforma in alcol?",
-          "answers": ["Zuccheri", "Acqua", "Bucce"],
-          "correct": 0
+          "answers": [
+            "Acqua",
+            "Bucce",
+            "Zuccheri"
+          ],
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Chi avvia la fermentazione?",
-          "answers": ["Lieviti", "Aria", "Legno"],
-          "correct": 0
+          "answers": [
+            "Aria",
+            "Legno",
+            "Lieviti"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Il vino nasce immediatamente pronto.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         }
       ],
@@ -86,38 +104,52 @@
           "type": "mcq",
           "question": "Cos'è la fermentazione?",
           "answers": [
+            "Raffreddamento del vino",
             "Trasformazione zuccheri in alcol",
-            "Filtrazione del vino",
-            "Raffreddamento del vino"
+            "Filtrazione del vino"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "La fermentazione è un processo naturale.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Cosa producono i lieviti?",
-          "answers": ["Alcol", "Acqua", "Zucchero"],
-          "correct": 0
+          "answers": [
+            "Acqua",
+            "Zucchero",
+            "Alcol"
+          ],
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Il mosto è:",
-          "answers": ["Succo d'uva", "Vino finito", "Acqua zuccherata"],
-          "correct": 0
+          "answers": [
+            "Acqua zuccherata",
+            "Succo d'uva",
+            "Vino finito"
+          ],
+          "correct": 1
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "La fermentazione può essere controllata.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         }
       ],
@@ -160,36 +192,55 @@
           "id": "q1",
           "type": "mcq",
           "question": "Cos'è un vitigno?",
-          "answers": ["Varietà di uva", "Tipo di bottiglia", "Metodo di vendita"],
-          "correct": 0
+          "answers": [
+            "Tipo di bottiglia",
+            "Metodo di vendita",
+            "Varietà di uva"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Qual è un vitigno rosso?",
-          "answers": ["Merlot", "Chardonnay", "Riesling"],
-          "correct": 0
+          "answers": [
+            "Chardonnay",
+            "Riesling",
+            "Merlot"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Qual è un vitigno bianco?",
-          "answers": ["Chardonnay", "Sangiovese", "Nebbiolo"],
-          "correct": 0
+          "answers": [
+            "Nebbiolo",
+            "Chardonnay",
+            "Sangiovese"
+          ],
+          "correct": 1
         },
         {
           "id": "q4",
           "type": "true_false",
           "question": "Tutti i vini hanno lo stesso vitigno.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q5",
           "type": "mcq",
           "question": "Il vitigno influenza:",
-          "answers": ["Gusto e aroma", "Solo colore", "Solo prezzo"],
-          "correct": 0
+          "answers": [
+            "Solo colore",
+            "Solo prezzo",
+            "Gusto e aroma"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -231,36 +282,55 @@
           "id": "q1",
           "type": "mcq",
           "question": "Cosa sono gli aromi?",
-          "answers": ["Profumi", "Colori", "Temperature"],
-          "correct": 0
+          "answers": [
+            "Colori",
+            "Temperature",
+            "Profumi"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Un aroma fruttato ricorda:",
-          "answers": ["Frutta", "Carne", "Pane"],
-          "correct": 0
+          "answers": [
+            "Pane",
+            "Frutta",
+            "Carne"
+          ],
+          "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Gli aromi si percepiscono con:",
-          "answers": ["Naso", "Vista", "Tatto"],
-          "correct": 0
+          "answers": [
+            "Vista",
+            "Tatto",
+            "Naso"
+          ],
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "true_false",
           "question": "Il vino ha sempre un solo aroma.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q5",
           "type": "mcq",
           "question": "Un vino floreale ricorda:",
-          "answers": ["Fiori", "Legno", "Metallo"],
-          "correct": 0
+          "answers": [
+            "Metallo",
+            "Fiori",
+            "Legno"
+          ],
+          "correct": 1
         }
       ],
       "slides": [
@@ -302,36 +372,55 @@
           "id": "q1",
           "type": "mcq",
           "question": "Cos'è il gusto?",
-          "answers": ["Sensazione in bocca", "Colore", "Profumo"],
-          "correct": 0
+          "answers": [
+            "Profumo",
+            "Sensazione in bocca",
+            "Colore"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Un vino secco è:",
-          "answers": ["Poco dolce", "Frizzante", "Sempre rosso"],
-          "correct": 0
+          "answers": [
+            "Frizzante",
+            "Sempre rosso",
+            "Poco dolce"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "I tannini danno:",
-          "answers": ["Secchezza", "Dolcezza", "Frutta"],
-          "correct": 0
+          "answers": [
+            "Dolcezza",
+            "Frutta",
+            "Secchezza"
+          ],
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "true_false",
           "question": "L'acidità dà freschezza.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q5",
           "type": "mcq",
           "question": "Un vino acido è:",
-          "answers": ["Fresco", "Dolce", "Amaro"],
-          "correct": 0
+          "answers": [
+            "Dolce",
+            "Amaro",
+            "Fresco"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -373,36 +462,55 @@
           "id": "q1",
           "type": "mcq",
           "question": "Cos'è il corpo del vino?",
-          "answers": ["Peso in bocca", "Colore", "Dolcezza"],
-          "correct": 0
+          "answers": [
+            "Colore",
+            "Dolcezza",
+            "Peso in bocca"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Un vino leggero è:",
-          "answers": ["Facile da bere", "Molto denso", "Sempre dolce"],
-          "correct": 0
+          "answers": [
+            "Molto denso",
+            "Sempre dolce",
+            "Facile da bere"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Un vino strutturato è:",
-          "answers": ["Più complesso", "Sempre bianco", "Sempre frizzante"],
-          "correct": 0
+          "answers": [
+            "Sempre frizzante",
+            "Più complesso",
+            "Sempre bianco"
+          ],
+          "correct": 1
         },
         {
           "id": "q4",
           "type": "true_false",
           "question": "Tutti i vini hanno lo stesso corpo.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q5",
           "type": "mcq",
           "question": "Il corpo dipende da:",
-          "answers": ["Struttura", "Etichetta", "Prezzo"],
-          "correct": 0
+          "answers": [
+            "Etichetta",
+            "Prezzo",
+            "Struttura"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -444,35 +552,53 @@
           "id": "q1",
           "type": "mcq",
           "question": "Cosa influenza il vino?",
-          "answers": ["Territorio", "Etichetta", "Bottiglia"],
-          "correct": 0
+          "answers": [
+            "Etichetta",
+            "Bottiglia",
+            "Territorio"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Il clima influisce su:",
-          "answers": ["Gusto", "Solo colore", "Solo prezzo"],
-          "correct": 0
+          "answers": [
+            "Solo prezzo",
+            "Gusto",
+            "Solo colore"
+          ],
+          "correct": 1
         },
         {
           "id": "q3",
           "type": "true_false",
           "question": "Il suolo non ha importanza.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Il terroir include:",
-          "answers": ["Clima e suolo", "Solo marca", "Solo bottiglia"],
-          "correct": 0
+          "answers": [
+            "Solo marca",
+            "Solo bottiglia",
+            "Clima e suolo"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Il vino cambia da regione a regione.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         }
       ],
@@ -515,36 +641,55 @@
           "id": "q1",
           "type": "mcq",
           "question": "Il vino si abbina con:",
-          "answers": ["Cibo", "Solo acqua", "Solo dolci"],
-          "correct": 0
+          "answers": [
+            "Solo dolci",
+            "Cibo",
+            "Solo acqua"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Il vino bianco con:",
-          "answers": ["Pesce", "Carne rossa", "Cioccolato"],
-          "correct": 0
+          "answers": [
+            "Carne rossa",
+            "Cioccolato",
+            "Pesce"
+          ],
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il vino rosso con:",
-          "answers": ["Carne rossa", "Pesce", "Frutta"],
-          "correct": 0
+          "answers": [
+            "Pesce",
+            "Frutta",
+            "Carne rossa"
+          ],
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "true_false",
           "question": "Gli abbinamenti sono rigidi.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q5",
           "type": "mcq",
           "question": "Gli abbinamenti sono:",
-          "answers": ["Linee guida", "Regole assolute", "Casuali"],
-          "correct": 0
+          "answers": [
+            "Regole assolute",
+            "Casuali",
+            "Linee guida"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -586,35 +731,53 @@
           "id": "q1",
           "type": "mcq",
           "question": "Le fasi sono:",
-          "answers": ["Vista, olfatto, gusto", "Solo gusto", "Solo vista"],
-          "correct": 0
+          "answers": [
+            "Solo gusto",
+            "Solo vista",
+            "Vista, olfatto, gusto"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Si parte sempre dalla vista.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "L'olfatto serve per:",
-          "answers": ["Aromi", "Colore", "Prezzo"],
-          "correct": 0
+          "answers": [
+            "Prezzo",
+            "Aromi",
+            "Colore"
+          ],
+          "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Il gusto valuta:",
-          "answers": ["Equilibrio", "Solo dolcezza", "Solo alcol"],
-          "correct": 0
+          "answers": [
+            "Solo dolcezza",
+            "Solo alcol",
+            "Equilibrio"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "La degustazione è un processo completo.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         }
       ],
@@ -657,35 +820,53 @@
           "id": "q1",
           "type": "mcq",
           "question": "Cosa influenza il vino?",
-          "answers": ["Vitigno e territorio", "Solo bottiglia", "Solo prezzo"],
-          "correct": 0
+          "answers": [
+            "Solo bottiglia",
+            "Solo prezzo",
+            "Vitigno e territorio"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il gusto è uguale per tutti i vini.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Il vino nasce da:",
-          "answers": ["Uva", "Acqua", "Frutta qualsiasi"],
-          "correct": 0
+          "answers": [
+            "Acqua",
+            "Frutta qualsiasi",
+            "Uva"
+          ],
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "La fermentazione produce:",
-          "answers": ["Alcol", "Zucchero", "Acqua"],
-          "correct": 0
+          "answers": [
+            "Zucchero",
+            "Acqua",
+            "Alcol"
+          ],
+          "correct": 2
         },
         {
           "id": "q5",
           "type": "true_false",
           "question": "Il vino è sempre semplice da capire.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         }
       ],

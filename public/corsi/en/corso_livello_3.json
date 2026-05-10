@@ -15,11 +15,11 @@
           "type": "mcq",
           "question": "What is malolactic fermentation?",
           "answers": [
-            "Transformation of malic acid into lactic acid",
             "Adding sugar",
-            "Wine filtration"
+            "Wine filtration",
+            "Transformation of malic acid into lactic acid"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
@@ -36,22 +36,22 @@
           "type": "mcq",
           "question": "Who activates the fermentation?",
           "answers": [
-            "Yeasts",
             "Oxygen",
-            "Sugar"
+            "Sugar",
+            "Yeasts"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Malolactic makes the wine:",
           "answers": [
-            "Softer",
             "More acidic",
-            "Sweeter"
+            "Sweeter",
+            "Softer"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q5",
@@ -103,11 +103,11 @@
           "type": "mcq",
           "question": "What makes up the structure of wine?",
           "answers": [
+            "Just water",
             "Acidity, tannins, alcohol",
-            "Just sugar",
-            "Just water"
+            "Just sugar"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q2",
@@ -124,22 +124,22 @@
           "type": "mcq",
           "question": "If one component dominates too much:",
           "answers": [
-            "The wine is unbalanced",
             "It's always improving",
-            "Nothing changes"
+            "Nothing changes",
+            "The wine is unbalanced"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Alcohol contributes to:",
           "answers": [
+            "Flavor only",
             "Body and structure",
-            "Color only",
-            "Flavor only"
+            "Color only"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q5",
@@ -191,33 +191,33 @@
           "type": "mcq",
           "question": "The primary aromas derive from:",
           "answers": [
-            "Grape",
             "Barrel",
-            "Bottle"
+            "Bottle",
+            "Grape"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Secondary aromas derive from:",
           "answers": [
-            "Fermentation",
             "Label",
-            "Price"
+            "Price",
+            "Fermentation"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Tertiary aromas develop with:",
           "answers": [
+            "Sugar",
             "Aging",
-            "Water",
-            "Sugar"
+            "Water"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q4",
@@ -234,11 +234,11 @@
           "type": "mcq",
           "question": "Tertiary aromas are typical of:",
           "answers": [
-            "Aged wines",
             "Young wines",
-            "Juices"
+            "Juices",
+            "Aged wines"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -280,11 +280,11 @@
           "type": "mcq",
           "question": "What is important in conservation?",
           "answers": [
-            "Temperature",
             "Bottle color",
-            "Label"
+            "Label",
+            "Temperature"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
@@ -301,22 +301,22 @@
           "type": "mcq",
           "question": "Too much oxygen:",
           "answers": [
-            "It spoils the wine",
             "It's always improving",
-            "It doesn't affect"
+            "It doesn't affect",
+            "It spoils the wine"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "The ideal temperature must be:",
           "answers": [
-            "Stable",
             "High",
-            "Variable"
+            "Variable",
+            "Stable"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q5",
@@ -368,22 +368,22 @@
           "type": "mcq",
           "question": "What is analyzed first?",
           "answers": [
+            "Price",
             "Color",
-            "Taste",
-            "Price"
+            "Taste"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Smell is used for:",
           "answers": [
-            "Flavors",
             "Weight",
-            "Color"
+            "Color",
+            "Flavors"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q3",
@@ -400,11 +400,11 @@
           "type": "mcq",
           "question": "Taste evaluates:",
           "answers": [
+            "Only alcohol",
             "Balance",
-            "Only sweetness",
-            "Only alcohol"
+            "Only sweetness"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q5",
@@ -456,33 +456,33 @@
           "type": "mcq",
           "question": "The body of the wine indicates:",
           "answers": [
-            "Weight in the mouth",
             "Color",
-            "Sweetness"
+            "Sweetness",
+            "Weight in the mouth"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "A structured wine is:",
           "answers": [
-            "More complex",
             "Always light",
-            "Always sweet"
+            "Always sweet",
+            "More complex"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "The body depends on:",
           "answers": [
+            "Price",
             "Extraction",
-            "Label",
-            "Price"
+            "Label"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q4",
@@ -499,11 +499,11 @@
           "type": "mcq",
           "question": "Alcohol contributes to:",
           "answers": [
-            "Structure",
             "Color only",
-            "Flavor only"
+            "Flavor only",
+            "Structure"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -545,22 +545,22 @@
           "type": "mcq",
           "question": "The terroir includes:",
           "answers": [
-            "Climate and soil",
             "Bottle only",
-            "Price only"
+            "Price only",
+            "Climate and soil"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Climate affects:",
           "answers": [
+            "Label only",
             "Taste",
-            "Color only",
-            "Label only"
+            "Color only"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q3",
@@ -577,11 +577,11 @@
           "type": "mcq",
           "question": "The terroir makes the wine:",
           "answers": [
-            "Unique",
             "Identical everywhere",
-            "Always sweet"
+            "Always sweet",
+            "Unique"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q5",
@@ -633,22 +633,22 @@
           "type": "mcq",
           "question": "Wine evolves thanks to:",
           "answers": [
+            "Bottle",
             "Aging",
-            "Label",
-            "Bottle"
+            "Label"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Over time the aromas:",
           "answers": [
-            "They change",
             "They always disappear",
-            "They don't change"
+            "They don't change",
+            "They change"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q3",
@@ -665,11 +665,11 @@
           "type": "mcq",
           "question": "The young wines are:",
           "answers": [
+            "Always aged",
             "Fresh",
-            "Always complex",
-            "Always aged"
+            "Always complex"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q5",
@@ -721,22 +721,22 @@
           "type": "mcq",
           "question": "What does sensory analysis include?",
           "answers": [
-            "Sight, smell, taste",
             "Just taste",
-            "Just sight"
+            "Just sight",
+            "Sight, smell, taste"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Smell is used for:",
           "answers": [
-            "Flavors",
             "Color",
-            "Price"
+            "Price",
+            "Flavors"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q3",
@@ -753,11 +753,11 @@
           "type": "mcq",
           "question": "The view analyzes:",
           "answers": [
-            "Color",
             "Taste",
-            "Structure"
+            "Structure",
+            "Color"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q5",
@@ -809,11 +809,11 @@
           "type": "mcq",
           "question": "What influences wine?",
           "answers": [
-            "Territory and grape variety",
             "Bottle only",
-            "Price only"
+            "Price only",
+            "Territory and grape variety"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
@@ -830,22 +830,22 @@
           "type": "mcq",
           "question": "Fermentation produces:",
           "answers": [
-            "Alcohol",
             "Sugar",
-            "Water"
+            "Water",
+            "Alcohol"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "The taste depends on:",
           "answers": [
-            "Structure",
             "Color only",
-            "Label only"
+            "Label only",
+            "Structure"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q5",

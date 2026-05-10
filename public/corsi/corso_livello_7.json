@@ -14,22 +14,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "La zona di produzione indica:",
-          "answers": ["Stile del vino", "Prezzo", "Bottiglia"],
-          "correct": 0
+          "answers": [
+            "Prezzo",
+            "Bottiglia",
+            "Stile del vino"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "La provenienza non influisce sul vino.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Conoscere la zona aiuta a:",
-          "answers": ["Scegliere meglio", "Complicare", "Spendere di più"],
-          "correct": 0
+          "answers": [
+            "Complicare",
+            "Spendere di più",
+            "Scegliere meglio"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -40,7 +51,11 @@
             "Ogni zona ha clima, suolo e tradizioni diverse.",
             "Questi elementi influenzano direttamente il gusto del vino."
           ],
-          "keyPoints": ["Clima", "Territorio", "Stile"]
+          "keyPoints": [
+            "Clima",
+            "Territorio",
+            "Stile"
+          ]
         },
         {
           "id": "s2",
@@ -49,11 +64,14 @@
             "Sapere la zona ti permette di prevedere il vino.",
             "È una scorciatoia utile nella scelta."
           ],
-          "keyPoints": ["Prevedere", "Semplificare", "Scegliere"]
+          "keyPoints": [
+            "Prevedere",
+            "Semplificare",
+            "Scegliere"
+          ]
         }
       ]
     },
-
     {
       "id": "l2",
       "title": "Italia: Toscana",
@@ -64,22 +82,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "I vini toscani sono spesso:",
-          "answers": ["Rossi strutturati", "Dolci", "Frizzanti"],
-          "correct": 0
+          "answers": [
+            "Frizzanti",
+            "Rossi strutturati",
+            "Dolci"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "La Toscana è famosa per vini bianchi leggeri.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Un vino tipico è:",
-          "answers": ["Chianti", "Champagne", "Rioja"],
-          "correct": 0
+          "answers": [
+            "Champagne",
+            "Rioja",
+            "Chianti"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -90,7 +119,11 @@
             "I vini sono spesso a base di Sangiovese.",
             "Hanno struttura, acidità e buona capacità di invecchiamento."
           ],
-          "keyPoints": ["Sangiovese", "Struttura", "Acidità"]
+          "keyPoints": [
+            "Sangiovese",
+            "Struttura",
+            "Acidità"
+          ]
         },
         {
           "id": "s2",
@@ -99,11 +132,14 @@
             "Perfetto con carne e piatti saporiti.",
             "Ottimo per chi cerca equilibrio e complessità."
           ],
-          "keyPoints": ["Carne", "Equilibrio", "Classico"]
+          "keyPoints": [
+            "Carne",
+            "Equilibrio",
+            "Classico"
+          ]
         }
       ]
     },
-
     {
       "id": "l3",
       "title": "Italia: Piemonte",
@@ -114,22 +150,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "I vini piemontesi sono spesso:",
-          "answers": ["Tannici ed eleganti", "Dolci", "Leggeri"],
-          "correct": 0
+          "answers": [
+            "Dolci",
+            "Leggeri",
+            "Tannici ed eleganti"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il Piemonte produce vini complessi.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Un vino tipico è:",
-          "answers": ["Barolo", "Prosecco", "Lambrusco"],
-          "correct": 0
+          "answers": [
+            "Lambrusco",
+            "Barolo",
+            "Prosecco"
+          ],
+          "correct": 1
         }
       ],
       "slides": [
@@ -140,17 +187,27 @@
             "Il vitigno principale è il Nebbiolo.",
             "Produce vini strutturati e longevi."
           ],
-          "keyPoints": ["Nebbiolo", "Tannini", "Longevità"]
+          "keyPoints": [
+            "Nebbiolo",
+            "Tannini",
+            "Longevità"
+          ]
         },
         {
           "id": "s2",
           "title": "Carattere",
-          "paragraphs": ["Vini complessi e raffinati.", "Richiedono attenzione e tempo."],
-          "keyPoints": ["Eleganza", "Complessità", "Tempo"]
+          "paragraphs": [
+            "Vini complessi e raffinati.",
+            "Richiedono attenzione e tempo."
+          ],
+          "keyPoints": [
+            "Eleganza",
+            "Complessità",
+            "Tempo"
+          ]
         }
       ]
     },
-
     {
       "id": "l4",
       "title": "Italia: Veneto",
@@ -161,40 +218,64 @@
           "id": "q1",
           "type": "mcq",
           "question": "Il Veneto produce:",
-          "answers": ["Stili diversi", "Solo rossi", "Solo bianchi"],
-          "correct": 0
+          "answers": [
+            "Solo rossi",
+            "Solo bianchi",
+            "Stili diversi"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Il Veneto è una regione varia.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Un vino famoso è:",
-          "answers": ["Amarone", "Barolo", "Bordeaux"],
-          "correct": 0
+          "answers": [
+            "Barolo",
+            "Bordeaux",
+            "Amarone"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
         {
           "id": "s1",
           "title": "Diversità",
-          "paragraphs": ["Dal Prosecco all’Amarone.", "Una regione estremamente versatile."],
-          "keyPoints": ["Prosecco", "Amarone", "Varietà"]
+          "paragraphs": [
+            "Dal Prosecco all’Amarone.",
+            "Una regione estremamente versatile."
+          ],
+          "keyPoints": [
+            "Prosecco",
+            "Amarone",
+            "Varietà"
+          ]
         },
         {
           "id": "s2",
           "title": "Quando sceglierlo",
-          "paragraphs": ["Dipende dallo stile scelto.", "Adatto a molte situazioni diverse."],
-          "keyPoints": ["Versatilità", "Scelta", "Occasione"]
+          "paragraphs": [
+            "Dipende dallo stile scelto.",
+            "Adatto a molte situazioni diverse."
+          ],
+          "keyPoints": [
+            "Versatilità",
+            "Scelta",
+            "Occasione"
+          ]
         }
       ]
     },
-
     {
       "id": "l5",
       "title": "Francia: Bordeaux",
@@ -205,22 +286,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Bordeaux è noto per:",
-          "answers": ["Blend rossi", "Spumanti", "Dolci"],
-          "correct": 0
+          "answers": [
+            "Dolci",
+            "Blend rossi",
+            "Spumanti"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Bordeaux usa spesso più vitigni.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Lo stile è:",
-          "answers": ["Strutturato", "Leggero", "Acido"],
-          "correct": 0
+          "answers": [
+            "Leggero",
+            "Acido",
+            "Strutturato"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -231,17 +323,27 @@
             "Cabernet e Merlot sono i principali.",
             "Il blend crea equilibrio e complessità."
           ],
-          "keyPoints": ["Blend", "Equilibrio", "Struttura"]
+          "keyPoints": [
+            "Blend",
+            "Equilibrio",
+            "Struttura"
+          ]
         },
         {
           "id": "s2",
           "title": "Carattere",
-          "paragraphs": ["Vini potenti ma eleganti.", "Adatti a piatti importanti."],
-          "keyPoints": ["Potenza", "Eleganza", "Cibo"]
+          "paragraphs": [
+            "Vini potenti ma eleganti.",
+            "Adatti a piatti importanti."
+          ],
+          "keyPoints": [
+            "Potenza",
+            "Eleganza",
+            "Cibo"
+          ]
         }
       ]
     },
-
     {
       "id": "l6",
       "title": "Francia: Borgogna",
@@ -252,40 +354,64 @@
           "id": "q1",
           "type": "mcq",
           "question": "La Borgogna è nota per:",
-          "answers": ["Eleganza", "Potenza", "Dolcezza"],
-          "correct": 0
+          "answers": [
+            "Potenza",
+            "Dolcezza",
+            "Eleganza"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Produce vini raffinati.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Vitigno principale:",
-          "answers": ["Pinot Noir", "Cabernet", "Syrah"],
-          "correct": 0
+          "answers": [
+            "Syrah",
+            "Pinot Noir",
+            "Cabernet"
+          ],
+          "correct": 1
         }
       ],
       "slides": [
         {
           "id": "s1",
           "title": "Finezza",
-          "paragraphs": ["Vini più sottili e complessi.", "Grande attenzione al territorio."],
-          "keyPoints": ["Pinot Noir", "Eleganza", "Territorio"]
+          "paragraphs": [
+            "Vini più sottili e complessi.",
+            "Grande attenzione al territorio."
+          ],
+          "keyPoints": [
+            "Pinot Noir",
+            "Eleganza",
+            "Territorio"
+          ]
         },
         {
           "id": "s2",
           "title": "Esperienza",
-          "paragraphs": ["Richiedono attenzione.", "Premiano chi sa ascoltare il vino."],
-          "keyPoints": ["Dettaglio", "Sensibilità", "Esperienza"]
+          "paragraphs": [
+            "Richiedono attenzione.",
+            "Premiano chi sa ascoltare il vino."
+          ],
+          "keyPoints": [
+            "Dettaglio",
+            "Sensibilità",
+            "Esperienza"
+          ]
         }
       ]
     },
-
     {
       "id": "l7",
       "title": "Francia: Champagne",
@@ -296,40 +422,64 @@
           "id": "q1",
           "type": "mcq",
           "question": "Champagne è:",
-          "answers": ["Spumante", "Rosso", "Dolce fermo"],
-          "correct": 0
+          "answers": [
+            "Rosso",
+            "Dolce fermo",
+            "Spumante"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "È una zona francese.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Caratteristica principale:",
-          "answers": ["Bollicine", "Tannini", "Dolcezza"],
-          "correct": 0
+          "answers": [
+            "Tannini",
+            "Dolcezza",
+            "Bollicine"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
         {
           "id": "s1",
           "title": "Metodo",
-          "paragraphs": ["Fermentazione in bottiglia.", "Grande complessità aromatica."],
-          "keyPoints": ["Metodo", "Bollicine", "Qualità"]
+          "paragraphs": [
+            "Fermentazione in bottiglia.",
+            "Grande complessità aromatica."
+          ],
+          "keyPoints": [
+            "Metodo",
+            "Bollicine",
+            "Qualità"
+          ]
         },
         {
           "id": "s2",
           "title": "Quando sceglierlo",
-          "paragraphs": ["Perfetto per celebrazioni.", "Ma anche a tutto pasto."],
-          "keyPoints": ["Feste", "Versatilità", "Eleganza"]
+          "paragraphs": [
+            "Perfetto per celebrazioni.",
+            "Ma anche a tutto pasto."
+          ],
+          "keyPoints": [
+            "Feste",
+            "Versatilità",
+            "Eleganza"
+          ]
         }
       ]
     },
-
     {
       "id": "l8",
       "title": "Nuovo mondo",
@@ -340,40 +490,64 @@
           "id": "q1",
           "type": "mcq",
           "question": "I vini del nuovo mondo sono:",
-          "answers": ["Intensi", "Neutri", "Deboli"],
-          "correct": 0
+          "answers": [
+            "Deboli",
+            "Intensi",
+            "Neutri"
+          ],
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Sono spesso più immediati.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Esempio:",
-          "answers": ["Napa Valley", "Bordeaux", "Chianti"],
-          "correct": 0
+          "answers": [
+            "Bordeaux",
+            "Chianti",
+            "Napa Valley"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
         {
           "id": "s1",
           "title": "Stile",
-          "paragraphs": ["Vini più fruttati e potenti.", "Più facili da capire."],
-          "keyPoints": ["Frutto", "Potenza", "Immediatezza"]
+          "paragraphs": [
+            "Vini più fruttati e potenti.",
+            "Più facili da capire."
+          ],
+          "keyPoints": [
+            "Frutto",
+            "Potenza",
+            "Immediatezza"
+          ]
         },
         {
           "id": "s2",
           "title": "Differenza",
-          "paragraphs": ["Meno legati alla tradizione.", "Più orientati al gusto moderno."],
-          "keyPoints": ["Moderno", "Accessibile", "Diretto"]
+          "paragraphs": [
+            "Meno legati alla tradizione.",
+            "Più orientati al gusto moderno."
+          ],
+          "keyPoints": [
+            "Moderno",
+            "Accessibile",
+            "Diretto"
+          ]
         }
       ]
     },
-
     {
       "id": "l9",
       "title": "Leggere l’etichetta",
@@ -384,40 +558,64 @@
           "id": "q1",
           "type": "mcq",
           "question": "L’etichetta indica:",
-          "answers": ["Origine", "Solo marca", "Colore tavolo"],
-          "correct": 0
+          "answers": [
+            "Solo marca",
+            "Colore tavolo",
+            "Origine"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "La zona è spesso scritta in etichetta.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Serve per:",
-          "answers": ["Capire il vino", "Decorare", "Confondere"],
-          "correct": 0
+          "answers": [
+            "Confondere",
+            "Capire il vino",
+            "Decorare"
+          ],
+          "correct": 1
         }
       ],
       "slides": [
         {
           "id": "s1",
           "title": "Informazioni chiave",
-          "paragraphs": ["Zona, vitigno, produttore.", "Elementi fondamentali per scegliere."],
-          "keyPoints": ["Zona", "Vitigno", "Produttore"]
+          "paragraphs": [
+            "Zona, vitigno, produttore.",
+            "Elementi fondamentali per scegliere."
+          ],
+          "keyPoints": [
+            "Zona",
+            "Vitigno",
+            "Produttore"
+          ]
         },
         {
           "id": "s2",
           "title": "Interpretazione",
-          "paragraphs": ["Più leggi etichette, più impari.", "Diventa un’abitudine."],
-          "keyPoints": ["Esperienza", "Abitudine", "Scelta"]
+          "paragraphs": [
+            "Più leggi etichette, più impari.",
+            "Diventa un’abitudine."
+          ],
+          "keyPoints": [
+            "Esperienza",
+            "Abitudine",
+            "Scelta"
+          ]
         }
       ]
     },
-
     {
       "id": "l10",
       "title": "Scegliere per zona",
@@ -428,22 +626,33 @@
           "id": "q1",
           "type": "mcq",
           "question": "Scegliere per zona è:",
-          "answers": ["Efficace", "Inutile", "Difficile"],
-          "correct": 0
+          "answers": [
+            "Inutile",
+            "Difficile",
+            "Efficace"
+          ],
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "true_false",
           "question": "Le zone aiutano a prevedere il gusto.",
-          "answers": ["Vero", "Falso"],
+          "answers": [
+            "Vero",
+            "Falso"
+          ],
           "correct": 0
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Obiettivo:",
-          "answers": ["Scegliere meglio", "Complicarsi", "Impressionare"],
-          "correct": 0
+          "answers": [
+            "Complicarsi",
+            "Impressionare",
+            "Scegliere meglio"
+          ],
+          "correct": 2
         }
       ],
       "slides": [
@@ -454,13 +663,24 @@
             "Le zone sono un modo rapido per orientarsi.",
             "Ti danno aspettative chiare."
           ],
-          "keyPoints": ["Velocità", "Chiarezza", "Scelta"]
+          "keyPoints": [
+            "Velocità",
+            "Chiarezza",
+            "Scelta"
+          ]
         },
         {
           "id": "s2",
           "title": "Applicazione reale",
-          "paragraphs": ["Usalo al ristorante o in enoteca.", "Semplifica ogni decisione."],
-          "keyPoints": ["Pratico", "Reale", "Utile"]
+          "paragraphs": [
+            "Usalo al ristorante o in enoteca.",
+            "Semplifica ogni decisione."
+          ],
+          "keyPoints": [
+            "Pratico",
+            "Reale",
+            "Utile"
+          ]
         }
       ]
     }

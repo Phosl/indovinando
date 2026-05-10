@@ -15,11 +15,11 @@
           "type": "mcq",
           "question": "What is the first phase of wine production?",
           "answers": [
-            "Harvest",
             "Bottling",
-            "Sale"
+            "Sale",
+            "Harvest"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
@@ -36,22 +36,22 @@
           "type": "mcq",
           "question": "What turns into alcohol?",
           "answers": [
-            "Sugars",
             "Water",
-            "Peels"
+            "Peels",
+            "Sugars"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Who starts the fermentation?",
           "answers": [
-            "Yeasts",
             "Air",
-            "Wood"
+            "Wood",
+            "Yeasts"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q5",
@@ -103,11 +103,11 @@
           "type": "mcq",
           "question": "What is fermentation?",
           "answers": [
+            "Wine cooling",
             "Transformation of sugars into alcohol",
-            "Wine filtration",
-            "Wine cooling"
+            "Wine filtration"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q2",
@@ -124,22 +124,22 @@
           "type": "mcq",
           "question": "What do yeasts produce?",
           "answers": [
-            "Alcohol",
             "Water",
-            "Sugar"
+            "Sugar",
+            "Alcohol"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "The must is:",
           "answers": [
+            "Sugar water",
             "Grape juice",
-            "Finished wine",
-            "Sugar water"
+            "Finished wine"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q5",
@@ -191,33 +191,33 @@
           "type": "mcq",
           "question": "What is a grape variety?",
           "answers": [
-            "Grape varieties",
             "Bottle type",
-            "Sales method"
+            "Sales method",
+            "Grape varieties"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "What is a red grape variety?",
           "answers": [
-            "Merlot",
             "Chardonnay",
-            "Riesling"
+            "Riesling",
+            "Merlot"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "What is a white grape variety?",
           "answers": [
+            "Nebbiolo",
             "Chardonnay",
-            "Sangiovese",
-            "Nebbiolo"
+            "Sangiovese"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q4",
@@ -234,11 +234,11 @@
           "type": "mcq",
           "question": "The grape variety influences:",
           "answers": [
-            "Taste and aroma",
             "Color only",
-            "Price only"
+            "Price only",
+            "Taste and aroma"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -280,33 +280,33 @@
           "type": "mcq",
           "question": "What are aromas?",
           "answers": [
-            "Perfumes",
             "Colors",
-            "Temperatures"
+            "Temperatures",
+            "Perfumes"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "A fruity aroma reminds:",
           "answers": [
+            "Bread",
             "Fruit",
-            "Meat",
-            "Bread"
+            "Meat"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "The aromas are perceived with:",
           "answers": [
-            "Nose",
             "View",
-            "Touch"
+            "Touch",
+            "Nose"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q4",
@@ -323,11 +323,11 @@
           "type": "mcq",
           "question": "A floral wine reminds:",
           "answers": [
+            "Metal",
             "Flowers",
-            "Wood",
-            "Metal"
+            "Wood"
           ],
-          "correct": 0
+          "correct": 1
         }
       ],
       "slides": [
@@ -369,33 +369,33 @@
           "type": "mcq",
           "question": "What is taste?",
           "answers": [
+            "Perfume",
             "Mouthfeel",
-            "Color",
-            "Perfume"
+            "Color"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "A dry wine is:",
           "answers": [
-            "Not very sweet",
             "Sparkling",
-            "Always red"
+            "Always red",
+            "Not very sweet"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Tannins give:",
           "answers": [
-            "Dryness",
             "Sweetness",
-            "Fruit"
+            "Fruit",
+            "Dryness"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q4",
@@ -412,11 +412,11 @@
           "type": "mcq",
           "question": "An acidic wine is:",
           "answers": [
-            "Fresh",
             "Sweet",
-            "Bitter"
+            "Bitter",
+            "Fresh"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -458,33 +458,33 @@
           "type": "mcq",
           "question": "What is the body of wine?",
           "answers": [
-            "Weight in the mouth",
             "Color",
-            "Sweetness"
+            "Sweetness",
+            "Weight in the mouth"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "A light wine is:",
           "answers": [
-            "Easy to drink",
             "Very dense",
-            "Always sweet"
+            "Always sweet",
+            "Easy to drink"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "A structured wine is:",
           "answers": [
+            "Always sparkling",
             "More complex",
-            "Always white",
-            "Always sparkling"
+            "Always white"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q4",
@@ -501,11 +501,11 @@
           "type": "mcq",
           "question": "The body depends on:",
           "answers": [
-            "Structure",
             "Label",
-            "Price"
+            "Price",
+            "Structure"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -547,22 +547,22 @@
           "type": "mcq",
           "question": "What influences wine?",
           "answers": [
-            "Territory",
             "Label",
-            "Bottle"
+            "Bottle",
+            "Territory"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "Climate affects:",
           "answers": [
+            "Price only",
             "Taste",
-            "Color only",
-            "Price only"
+            "Color only"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q3",
@@ -579,11 +579,11 @@
           "type": "mcq",
           "question": "The terroir includes:",
           "answers": [
-            "Climate and soil",
             "Brand only",
-            "Bottle only"
+            "Bottle only",
+            "Climate and soil"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q5",
@@ -635,33 +635,33 @@
           "type": "mcq",
           "question": "The wine goes well with:",
           "answers": [
+            "Only desserts",
             "Food",
-            "Just water",
-            "Only desserts"
+            "Just water"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q2",
           "type": "mcq",
           "question": "White wine with:",
           "answers": [
-            "Fish",
             "Red meat",
-            "Chocolate"
+            "Chocolate",
+            "Fish"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q3",
           "type": "mcq",
           "question": "Red wine with:",
           "answers": [
-            "Red meat",
             "Fish",
-            "Fruit"
+            "Fruit",
+            "Red meat"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q4",
@@ -678,11 +678,11 @@
           "type": "mcq",
           "question": "The combinations are:",
           "answers": [
-            "Guidelines",
             "Absolute rules",
-            "Random"
+            "Random",
+            "Guidelines"
           ],
-          "correct": 0
+          "correct": 2
         }
       ],
       "slides": [
@@ -724,11 +724,11 @@
           "type": "mcq",
           "question": "The phases are:",
           "answers": [
-            "Sight, smell, taste",
             "Just taste",
-            "Just sight"
+            "Just sight",
+            "Sight, smell, taste"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
@@ -745,22 +745,22 @@
           "type": "mcq",
           "question": "Smell is used for:",
           "answers": [
+            "Price",
             "Flavors",
-            "Color",
-            "Price"
+            "Color"
           ],
-          "correct": 0
+          "correct": 1
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Taste evaluates:",
           "answers": [
-            "Balance",
             "Only sweetness",
-            "Only alcohol"
+            "Only alcohol",
+            "Balance"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q5",
@@ -812,11 +812,11 @@
           "type": "mcq",
           "question": "What influences wine?",
           "answers": [
-            "Grape variety and territory",
             "Bottle only",
-            "Price only"
+            "Price only",
+            "Grape variety and territory"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q2",
@@ -833,22 +833,22 @@
           "type": "mcq",
           "question": "Wine comes from:",
           "answers": [
-            "Grape",
             "Water",
-            "Any fruit"
+            "Any fruit",
+            "Grape"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q4",
           "type": "mcq",
           "question": "Fermentation produces:",
           "answers": [
-            "Alcohol",
             "Sugar",
-            "Water"
+            "Water",
+            "Alcohol"
           ],
-          "correct": 0
+          "correct": 2
         },
         {
           "id": "q5",
