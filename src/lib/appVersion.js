@@ -18,8 +18,21 @@ const readPackageVersion = cache(async () => {
   return '0.1.0'
 })
 
+const readChangelogVersion = cache(async () => {
+  try {
+    const changelogPath = path.join(process.cwd(), 'src/app/changelog/page.js')
+    const changelogRaw = await fs.readFile(changelogPath, 'utf8')
+    const match = changelogRaw.match(/version:\s*'([^']+)'/)
+    if (match?.[1]) return match[1].trim()
+  } catch {}
+
+  return null
+})
+
 export async function getAppVersion() {
   const envVersion = process.env.NEXT_PUBLIC_APP_VERSION?.trim()
   if (envVersion) return envVersion
+  const changelogVersion = await readChangelogVersion()
+  if (changelogVersion) return changelogVersion
   return readPackageVersion()
 }
