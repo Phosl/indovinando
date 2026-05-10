@@ -1,7 +1,7 @@
 'use client'
 
 import {useState, useEffect, useCallback, useMemo} from 'react'
-import {useRouter} from 'next/navigation'
+import {useRouter, useSearchParams} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
@@ -63,6 +63,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
   const t = pickLangText(lang, ENOTECA_DICTIONARY.play)
 
   const router = useRouter()
+  const searchParams = useSearchParams()
   const sessionKey = `enoteca_session_${menuId}`
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
 
@@ -110,7 +111,21 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
 
   // Load session on mount
   useEffect(() => {
-    const savedId = localStorage.getItem(sessionKey)
+    let savedId = null
+    try {
+      savedId = localStorage.getItem(sessionKey)
+    } catch {
+      savedId = null
+    }
+
+    const sidFromQuery = searchParams.get('sid')
+    if (!savedId && sidFromQuery) {
+      savedId = sidFromQuery
+      try {
+        localStorage.setItem(sessionKey, sidFromQuery)
+      } catch {}
+    }
+
     if (!savedId) {
       router.replace(`/enoteca/${menuId}`)
       return
@@ -122,7 +137,9 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
       .single()
       .then(({data, error}) => {
         if (error || !data) {
-          localStorage.removeItem(sessionKey)
+          try {
+            localStorage.removeItem(sessionKey)
+          } catch {}
           router.replace(`/enoteca/${menuId}`)
           return
         }
@@ -161,7 +178,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
             setLoading(false)
           })
       })
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [menuId, router, searchParams, sessionKey, bottles, questions])
 
   const handleSelect = useCallback(
     (optionId) => {

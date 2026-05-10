@@ -29,28 +29,64 @@ export default function EnotecaJoinClient({
   const [checkingSession, setCheckingSession] = useState(true)
 
   const sessionKey = `enoteca_session_${menuId}`
+  const startFormId = `enoteca-start-form-${menuId}`
 
   useEffect(() => {
-    const savedId = localStorage.getItem(sessionKey)
+    let savedId = null
+    try {
+      savedId = localStorage.getItem(sessionKey)
+    } catch {}
+
     if (!savedId) {
       setCheckingSession(false)
       return
     }
-    supabaseClient
-      .from('enoteca_tasting_sessions')
-      .select('id, nickname, current_bottle_index, status')
-      .eq('id', savedId)
-      .single()
-      .then(({data}) => {
-        if (data) setExistingSession(data)
-        setCheckingSession(false)
-      })
+
+    let cancelled = false
+
+    const loadSession = async () => {
+      try {
+        const {data, error} = await supabaseClient
+          .from('enoteca_tasting_sessions')
+          .select('id, nickname, current_bottle_index, status')
+          .eq('id', savedId)
+          .single()
+
+        if (error || !data) {
+          try {
+            localStorage.removeItem(sessionKey)
+          } catch {}
+          return
+        }
+
+        if (!cancelled) {
+          setExistingSession(data)
+        }
+      } catch (err) {
+        console.error('enoteca load session error:', err)
+        try {
+          localStorage.removeItem(sessionKey)
+        } catch {}
+      } finally {
+        if (!cancelled) {
+          setCheckingSession(false)
+        }
+      }
+    }
+
+    loadSession()
+
+    return () => {
+      cancelled = true
+    }
   }, [sessionKey])
 
   const handleResume = () => router.push(`/enoteca/${menuId}/play`)
 
   const handleStart = async (e) => {
     e.preventDefault()
+    if (loading) return
+
     const trimmed = nickname.trim()
     if (!trimmed) {
       setError(t.nicknameRequired)
@@ -58,26 +94,43 @@ export default function EnotecaJoinClient({
     }
     setError(null)
     setLoading(true)
+    let didNavigate = false
 
-    const {data: session, error: err} = await supabaseClient
-      .from('enoteca_tasting_sessions')
-      .insert({
-        game_id: menuId,
-        nickname: trimmed,
-        table_name: tableName.trim() || null,
+    try {
+      const response = await fetch('/api/enoteca/session/create', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          gameId: menuId,
+          nickname: trimmed,
+          tableName: tableName.trim() || null,
+        }),
       })
-      .select('id')
-      .single()
 
-    if (err || !session) {
-      console.error('enoteca insert session error:', err)
+      const payload = await response.json().catch(() => null)
+
+      if (!response.ok || !payload?.id) {
+        const serverError = payload?.error ? ` (${payload.error})` : ''
+        setError(`${t.startError}${serverError}`)
+        return
+      }
+
+      try {
+        localStorage.setItem(sessionKey, payload.id)
+      } catch (storageErr) {
+        console.warn('enoteca localStorage unavailable, using sid query fallback', storageErr)
+      }
+
+      didNavigate = true
+      router.push(`/enoteca/${menuId}/play?sid=${payload.id}`)
+    } catch (unexpectedErr) {
+      console.error('enoteca start unexpected error:', unexpectedErr)
       setError(t.startError)
-      setLoading(false)
-      return
+    } finally {
+      if (!didNavigate) {
+        setLoading(false)
+      }
     }
-
-    localStorage.setItem(sessionKey, session.id)
-    router.push(`/enoteca/${menuId}/play`)
   }
 
   if (checkingSession) {
@@ -118,7 +171,7 @@ export default function EnotecaJoinClient({
 
         {/* Form – only if no active session */}
         {!hasActiveSession && (
-          <form className={xStyles.form} onSubmit={handleStart}>
+          <form id={startFormId} className={xStyles.form} onSubmit={handleStart}>
             <div className={xStyles.field}>
               <label htmlFor="nickname">{t.nicknameLabel}</label>
               <input
@@ -175,7 +228,11 @@ export default function EnotecaJoinClient({
             </button>
           </>
         ) : (
-          <button className={styles.continueButton} disabled={loading} onClick={handleStart}>
+          <button
+            type="submit"
+            form={startFormId}
+            className={styles.continueButton}
+            disabled={loading}>
             {loading ? t.starting : `🍷 ${t.start}`}
           </button>
         )}
