@@ -2,6 +2,20 @@ import {useState, useEffect, useCallback, useMemo, useRef} from 'react'
 import {supabaseClient} from '@/lib/supabaseClient'
 
 const SLIDE_TRANSITION_MS = 220
+const ANSWER_CHECK_TIMEOUT_MS = 5000
+
+const withTimeout = async (promise, label, timeoutMs = ANSWER_CHECK_TIMEOUT_MS) => {
+  let timeoutId
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error(`Timeout in ${label}`)), timeoutMs)
+  })
+  try {
+    return await Promise.race([promise, timeoutPromise])
+  } finally {
+    clearTimeout(timeoutId)
+  }
+}
+
 /**
  * Owns all per-round state (answers, slides, combo, results visibility)
  * plus every action handler that mutates it.
@@ -282,12 +296,15 @@ export function useRoundPlay({
 
         let resolvedCorrectOptionId = correctOptionByQuestion[questionId]
         if (!resolvedCorrectOptionId && currentBottle?.id) {
-          const {data: answerRow, error: answerError} = await supabaseClient
-            .from('game_bottle_answers')
-            .select('option_id')
-            .eq('bottle_id', currentBottle.id)
-            .eq('question_id', questionId)
-            .maybeSingle()
+          const {data: answerRow, error: answerError} = await withTimeout(
+            supabaseClient
+              .from('game_bottle_answers')
+              .select('option_id')
+              .eq('bottle_id', currentBottle.id)
+              .eq('question_id', questionId)
+              .maybeSingle(),
+            'load-correct-option',
+          )
 
           if (answerError) {
             console.error('Error loading correct option on demand:', answerError)
@@ -304,17 +321,25 @@ export function useRoundPlay({
 
         if (!resolvedCorrectOptionId) {
           if (isHostUser) {
-            const response = await fetch('/api/live/round-answer/host-submit', {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({
-                sessionId,
-                playerId: playerData.id,
-                questionId,
-                selectedOptionId: optionId,
-                comboCount: comboRef.current,
-              }),
-            })
+            const controller = new AbortController()
+            const abortId = setTimeout(() => controller.abort(), ANSWER_CHECK_TIMEOUT_MS)
+            let response
+            try {
+              response = await fetch('/api/live/round-answer/host-submit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                  sessionId,
+                  playerId: playerData.id,
+                  questionId,
+                  selectedOptionId: optionId,
+                  comboCount: comboRef.current,
+                }),
+                signal: controller.signal,
+              })
+            } finally {
+              clearTimeout(abortId)
+            }
 
             const payload = await response.json().catch(() => ({}))
             if (!response.ok) {
@@ -345,14 +370,17 @@ export function useRoundPlay({
         const comboBonus = isCorrect && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
         const points = isCorrect ? 10 + comboBonus : 0
 
-        const {error} = await supabaseClient.from('live_round_answers').insert({
-          session_id: sessionId,
-          player_id: playerData.id,
-          question_id: questionId,
-          selected_option_id: optionId,
-          is_correct: isCorrect,
-          points,
-        })
+        const {error} = await withTimeout(
+          supabaseClient.from('live_round_answers').insert({
+            session_id: sessionId,
+            player_id: playerData.id,
+            question_id: questionId,
+            selected_option_id: optionId,
+            is_correct: isCorrect,
+            points,
+          }),
+          'insert-round-answer',
+        )
 
         // If the answer already exists, treat it as already submitted for this round.
         if (error && error.code !== '23505') throw error
