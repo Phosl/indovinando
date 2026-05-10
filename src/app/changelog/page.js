@@ -7,6 +7,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.10.4',
+    date: '10 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'keep host check enabled and rely on runtime fallback',
+    ],
+  },
+
+  {
     version: '1.10.3',
     date: '10 maggio 2026',
     label: 'Auto',
