@@ -16,7 +16,7 @@ export default async function Dashboard() {
 
   const {data: profile} = await supabase
     .from('profiles')
-    .select('username')
+    .select('username, super_admin')
     .eq('id', data.user.id)
     .single()
 
@@ -44,6 +44,11 @@ export default async function Dashboard() {
             <a href="/profilo" className="btn secondary">
               {isEnglish ? '👤 Profile' : '👤 Profilo'}
             </a>
+            {profile?.super_admin && (
+              <a href="/admin/corsi" className="btn secondary">
+                ⚙️ Admin
+              </a>
+            )}
           </div>
         </section>
 

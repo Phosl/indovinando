@@ -47,6 +47,7 @@ Profilo utente applicativo (username, onboarding e preferenze UI), legato a `aut
 | `preferred_language` | `TEXT`        | default `it`, valori ammessi `it`/`en` |
 | `avatar_emoji`       | `TEXT`        | opzionale                              |
 | `onboarding`         | `BOOLEAN`     | opzionale                              |
+| `super_admin`        | `BOOLEAN`     | default `false` — gestito solo via Supabase dashboard dal developer |
 | `created_at`         | `TIMESTAMPTZ` | opzionale                              |
 | `updated_at`         | `TIMESTAMPTZ` | aggiornato su salvataggi preferenze    |
 
@@ -57,6 +58,26 @@ Uso in app:
 - upsert in fase signup
 - lingua UI (`preferred_language`)
 - avatar profilo (`avatar_emoji`)
+- accesso admin editor corsi (`super_admin`)
+
+## Storage Bucket
+
+### `corsi` (Supabase Storage)
+
+Bucket **pubblico** che contiene i file JSON dei corsi di vino.
+
+| Path                               | Descrizione                  |
+| ---------------------------------- | ---------------------------- |
+| `corso_livello_{1..10}.json`       | Corsi in italiano            |
+| `en/corso_livello_{1..10}.json`    | Corsi in inglese             |
+
+Policy:
+- **Read:** pubblico (anonimo)
+- **Write/Update/Delete:** solo utenti con `profiles.super_admin = true`
+
+Migration: `SUPABASE_COURSE_ADMIN_PATCH.sql`
+
+---
 
 ## Tabelle Gioco
 

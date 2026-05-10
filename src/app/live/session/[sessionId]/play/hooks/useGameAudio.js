@@ -11,9 +11,9 @@ export function useGameAudio() {
     if (savedPreference === 'off') setAudioEnabled(false)
 
     soundsRef.current = {
-      correct: new Audio('/indovianando-correct.mp3'),
-      wrong: new Audio('/indovianando-wrong.mp3'),
-      bottleCompleted: new Audio('/indovianando-bottle-completed.mp3'),
+      correct: new Audio('/indovinando-correct.mp3'),
+      wrong: new Audio('/indovinando-wrong.mp3'),
+      bottleCompleted: new Audio('/indovinando-bottle-completed.mp3'),
     }
 
     Object.values(soundsRef.current).forEach((audio) => {
