@@ -16,15 +16,6 @@ const CHANGELOG = [
   },
 
   {
-    version: '1.6.1',
-    date: '10 maggio 2026',
-    label: 'Auto',
-    changes: [
-      'automate changelog update on pre-push',
-    ],
-  },
-
-  {
     version: '1.6.0',
     date: '10 maggio 2026',
     label: 'UX & Mobile',
