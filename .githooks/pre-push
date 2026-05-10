@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+set -e
+
+# Auto-update changelog from outgoing commits before push.
+node scripts/update-changelog-from-commits.mjs
+
+if ! git diff --quiet -- src/app/changelog/page.js; then
+  git add src/app/changelog/page.js
+  git commit -m "chore: update changelog"
+  echo "[pre-push] Changelog aggiornato e committato. Rilancia git push per includere il nuovo commit."
+  exit 1
+fi
+
+exit 0
