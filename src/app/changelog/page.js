@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.12.0',
+    date: '11 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'TopBar in storico e changelog',
+    ],
+  },
+
+  {
     version: '1.11.0',
     date: '11 maggio 2026',
     label: 'Auto',
