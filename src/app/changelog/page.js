@@ -1,4 +1,5 @@
 import styles from './changelog.module.scss'
+import TopBarBack from '@/components/TopBarBack'
 
 export const metadata = {
   title: 'Changelog — Indovinando',
@@ -279,6 +280,7 @@ const LABEL_COLORS = {
 export default function ChangelogPage() {
   return (
     <div className={styles.page}>
+      <TopBarBack title="Changelog" href="/dashboard" />
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>📋 Changelog</h1>

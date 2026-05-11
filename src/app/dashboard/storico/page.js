@@ -2,6 +2,7 @@ import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {toLocaleTag} from '@/lib/i18n/config'
+import TopBarBack from '@/components/TopBarBack'
 import styles from './storico.module.scss'
 import it from '@/lib/i18n/locales/it.json'
 import en from '@/lib/i18n/locales/en.json'
@@ -28,10 +29,9 @@ export default async function StoricoPage() {
 
   return (
     <main className={styles.page}>
+      <TopBarBack title={t.title} href="/dashboard" />
       <div className={styles.container}>
         <div className={styles.header}>
-          <a href="/dashboard" className={styles.back}>← {locale.common?.back || 'Indietro'}</a>
-          <h1>{t.title}</h1>
           <p className={styles.subtitle}>{t.subtitle}</p>
         </div>
 
