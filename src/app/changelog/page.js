@@ -7,6 +7,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.11.0',
+    date: '11 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'storico partite live - snapshot, pagina /dashboard/storico',
+    ],
+  },
+
+  {
     version: '1.10.9',
     date: '11 maggio 2026',
     label: 'Auto',
