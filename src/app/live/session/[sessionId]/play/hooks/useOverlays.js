@@ -1,17 +1,20 @@
-import {useState, useCallback, useMemo, useEffect} from 'react'
+import {useState, useCallback, useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
 
 /**
  * Manages leaderboard + exit-modal state, sorted leaderboard computation,
  * and the exit handler.
+ *
+ * The overlay leaderboard standings are fetched from the server-side API
+ * (/api/live/session/standings) so that host (authenticated) and guest
+ * (anonymous) always see IDENTICAL data — single source of truth, no RLS
+ * differences or client-side race conditions between the two roles.
  */
 export function useOverlays({
   sessionId,
   playerData,
   allPlayers,
-  roundAnswersByPlayer,
-  roundStatus,
   setAllPlayers,
   isHostUser,
   playerStorageKey,
@@ -20,57 +23,47 @@ export function useOverlays({
   const router = useRouter()
   const [leaderboardOpen, setLeaderboardOpen] = useState(false)
   const [exitModalOpen, setExitModalOpen] = useState(false)
+  // Standings fetched from server API — same for all clients at any given moment
+  const [overlayStandings, setOverlayStandings] = useState([])
 
-  const sortedLeaderboard = useMemo(() => {
-    const showProjectedLive = roundStatus === 'waiting_answers' || roundStatus === 'showing_results'
-    return [...allPlayers]
-      .map((player) => {
-        const roundPoints = showProjectedLive
-          ? Object.values(roundAnswersByPlayer?.[player.id] || {}).reduce(
-              (sum, answer) => sum + (answer?.points || 0),
-              0,
-            )
-          : 0
+  const fetchStandings = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/live/session/standings?sessionId=${sessionId}`)
+      if (!res.ok) return
+      const {standings} = await res.json()
+      if (standings?.length) setOverlayStandings(standings)
+    } catch (err) {
+      console.error('Error fetching standings:', err)
+    }
+  }, [sessionId])
 
-        const liveTotalScore = (player.total_score || 0) + roundPoints
-        return {
-          ...player,
-          roundPoints,
-          liveTotalScore,
-        }
-      })
-      .sort((a, b) => b.liveTotalScore - a.liveTotalScore)
-  }, [allPlayers, roundAnswersByPlayer, roundStatus])
-
-  const openLeaderboard = useCallback(async () => {
+  const openLeaderboard = useCallback(() => {
     setLeaderboardOpen(true)
-    const {data} = await supabaseClient
+    fetchStandings()
+    // Also refresh allPlayers so the rest of the UI (ResultsScreen) stays in sync
+    supabaseClient
       .from('live_players')
       .select('id, nickname, avatar_id, total_score, updated_at, is_host')
       .eq('session_id', sessionId)
       .order('joined_at')
-    if (data) setAllPlayers(data)
-  }, [sessionId, setAllPlayers])
+      .then(({data}) => {
+        if (data?.length) setAllPlayers(data)
+      })
+  }, [sessionId, fetchStandings, setAllPlayers])
 
-  // While the overlay is open, poll every 3s so scores stay in sync
+  // While the overlay is open, poll every 3s so scores stay live
   useEffect(() => {
     if (!leaderboardOpen) return
-    const interval = setInterval(async () => {
-      const {data} = await supabaseClient
-        .from('live_players')
-        .select('id, nickname, avatar_id, total_score, updated_at, is_host')
-        .eq('session_id', sessionId)
-        .order('joined_at')
-      if (data) setAllPlayers(data)
-    }, 3000)
+    const interval = setInterval(fetchStandings, 3000)
     return () => clearInterval(interval)
-  }, [leaderboardOpen, sessionId, setAllPlayers])
+  }, [leaderboardOpen, fetchStandings])
 
   const kickPlayer = useCallback(
     async (playerId) => {
       if (!isHostUser) return
       await supabaseClient.from('live_players').delete().eq('id', playerId)
       setAllPlayers((prev) => prev.filter((p) => p.id !== playerId))
+      setOverlayStandings((prev) => prev.filter((p) => p.id !== playerId))
     },
     [isHostUser, setAllPlayers],
   )
@@ -93,7 +86,7 @@ export function useOverlays({
     setLeaderboardOpen,
     exitModalOpen,
     setExitModalOpen,
-    sortedLeaderboard,
+    sortedLeaderboard: overlayStandings,
     openLeaderboard,
     kickPlayer,
     openExit,

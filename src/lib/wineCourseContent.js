@@ -131,7 +131,8 @@ function normalizeDidacticSlides(lesson, lang) {
   const introText =
     typeof lesson.intro === 'string'
       ? lesson.intro
-      : (lesson.intro?.paragraphs?.[0] ?? (txt.interactiveLesson || 'Lezione interattiva sul vino.'))
+      : (lesson.intro?.paragraphs?.[0] ??
+        (txt.interactiveLesson || 'Lezione interattiva sul vino.'))
   const closingText =
     lesson.final ??
     (txt.continueWithQuestions ||

@@ -493,6 +493,22 @@
   text-align: center;
 }
 
+.waitingBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+
+.waitingNames {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+  opacity: 0.75;
+}
+
 .transitionHero {
   margin: auto 0;
   display: flex;

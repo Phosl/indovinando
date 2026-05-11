@@ -2,16 +2,6 @@ import {useState, useEffect, useCallback, useMemo, useRef} from 'react'
 import {supabaseClient} from '@/lib/supabaseClient'
 
 const SLIDE_TRANSITION_MS = 220
-const ANSWER_STEP_TIMEOUT_MS = 8000
-
-const withAnswerTimeout = async (task, label, timeoutMs = ANSWER_STEP_TIMEOUT_MS) => {
-  const timeoutPromise = new Promise((_, reject) => {
-    setTimeout(() => reject(new Error(`Answer step timed out: ${label}`)), timeoutMs)
-  })
-
-  return Promise.race([task, timeoutPromise])
-}
-
 /**
  * Owns all per-round state (answers, slides, combo, results visibility)
  * plus every action handler that mutates it.
@@ -39,7 +29,9 @@ export function useRoundPlay({
   const [selectedAnswers, setSelectedAnswers] = useState({})
   const [roundAnswersByPlayer, setRoundAnswersByPlayer] = useState({})
   const [roundAnswers, setRoundAnswers] = useState({})
-  const [correctOptionByQuestion, setCorrectOptionByQuestion] = useState({})
+  const [correctOptionByQuestion, setCorrectOptionByQuestion] = useState(
+    () => currentBottle?._correctAnswers || {},
+  )
   const [clickedReady, setClickedReady] = useState(false)
   const [playerMarkedNext, setPlayerMarkedNext] = useState(false)
   const [resultsOpenedBottleIndex, setResultsOpenedBottleIndex] = useState(null)
@@ -68,21 +60,11 @@ export function useRoundPlay({
     playSound('bottleCompleted')
   }, [showBottleTransition, currentBottleIndex, playSound])
 
-  // ── Load correct answers for current bottle ────────────────────────────────
+  // ── Sync correct answers from server-preloaded data when bottle changes ──
   useEffect(() => {
-    if (!currentBottle?.id) return
-    const load = async () => {
-      const {data} = await supabaseClient
-        .from('game_bottle_answers')
-        .select('question_id, option_id')
-        .eq('bottle_id', currentBottle.id)
-      const map = {}
-      ;(data || []).forEach((row) => {
-        map[row.question_id] = row.option_id
-      })
-      setCorrectOptionByQuestion(map)
+    if (currentBottle?._correctAnswers) {
+      setCorrectOptionByQuestion(currentBottle._correctAnswers)
     }
-    load()
   }, [currentBottle?.id])
 
   // ── Reset all round state (called on bottle advance or realtime sync) ──────
@@ -234,9 +216,26 @@ export function useRoundPlay({
   // not the live_players / live_round_answers Realtime channels are publishing.
   // The realtime-triggered paths (handleAnswerInsert / onPlayersUpdate) act as
   // a speed-up but are not required for correctness.
+  // ── Poll answers when results screen is visible ───────────────────────────
+  // This covers the host (who never sets clickedReady) and catches Realtime gaps.
+  // Gates on resultsOpenedBottleIndex so it only runs while showing that screen.
+  useEffect(() => {
+    const onResultsScreen = resultsOpenedBottleIndex === currentBottleIndex
+    if (!onResultsScreen || allPlayersCompletedThisRound) return
+    handleAnswerInsert()
+    const interval = setInterval(handleAnswerInsert, 2000)
+    return () => clearInterval(interval)
+  }, [
+    resultsOpenedBottleIndex,
+    currentBottleIndex,
+    allPlayersCompletedThisRound,
+    handleAnswerInsert,
+  ])
+
+  // ── Poll answers while waiting (guest path) ───────────────────────────────
   useEffect(() => {
     if (!clickedReady || allPlayersCompletedThisRound) return
-    handleAnswerInsert() // immediate fetch on entry
+    handleAnswerInsert()
     const interval = setInterval(handleAnswerInsert, 2000)
     return () => clearInterval(interval)
   }, [clickedReady, allPlayersCompletedThisRound, handleAnswerInsert])
@@ -279,108 +278,42 @@ export function useRoundPlay({
       try {
         setIsCheckingAnswer(true)
 
-        let isCorrect = false
-        let points = 0
-        let comboBonus = 0
-        let newCombo = 0
-        let lookupError = null
+        // ── 1. Resolve correct option from server-preloaded cache ─────────────
+        const resolvedCorrectOptionId = correctOptionByQuestion[questionId]
 
-        let resolvedCorrectOptionId = correctOptionByQuestion[questionId]
-        if (!resolvedCorrectOptionId && currentBottle?.id) {
-          try {
-            const {data: answerRow, error: answerError} = await withAnswerTimeout(
-              supabaseClient
-                .from('game_bottle_answers')
-                .select('option_id')
-                .eq('bottle_id', currentBottle.id)
-                .eq('question_id', questionId)
-                .maybeSingle(),
-              'load-correct-option',
-              1200,
-            )
-
-            if (answerError) throw answerError
-
-            resolvedCorrectOptionId = answerRow?.option_id || null
-            if (resolvedCorrectOptionId) {
-              setCorrectOptionByQuestion((prev) => ({
-                ...prev,
-                [questionId]: resolvedCorrectOptionId,
-              }))
-            }
-          } catch (err) {
-            lookupError = err
-          }
-        }
-
+        // Answers not loaded yet (should be rare since page.js preloads them)
         if (!resolvedCorrectOptionId) {
-          if (isHostUser) {
-            const response = await withAnswerTimeout(
-              fetch('/api/live/round-answer/host-submit', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                  sessionId,
-                  playerId: playerData.id,
-                  questionId,
-                  selectedOptionId: optionId,
-                  comboCount: comboRef.current,
-                }),
-              }),
-              'host-submit-fallback',
-            )
-            const payload = await response.json().catch(() => ({}))
-            if (!response.ok) {
-              throw new Error(payload?.error || 'Failed to submit host answer')
-            }
-
-            isCorrect = Boolean(payload?.isCorrect)
-            points = Number(payload?.points || 0)
-            comboBonus = Number(payload?.comboBonus || 0)
-            newCombo = Number(payload?.newCombo || 0)
-
-            if (payload?.correctOptionId) {
-              setCorrectOptionByQuestion((prev) => ({
-                ...prev,
-                [questionId]: payload.correctOptionId,
-              }))
-            }
-
-            applyLocalAnswerResult({isCorrect, points, comboBonus, newCombo})
-            return
-          }
-
-          if (lookupError) throw lookupError
-          throw new Error('Correct option not loaded for this question')
+          console.warn('Correct option not in cache for question', questionId)
+          return
         }
 
-        isCorrect = resolvedCorrectOptionId === optionId
-        newCombo = isCorrect ? comboRef.current + 1 : 0
-        comboBonus = isCorrect && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
-        points = isCorrect ? 10 + comboBonus : 0
+        // ── 2. Compute result locally ──────────────────────────────────────────
+        const isCorrect = resolvedCorrectOptionId === optionId
+        const newCombo = isCorrect ? comboRef.current + 1 : 0
+        const comboBonus = isCorrect && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
+        const points = isCorrect ? 10 + comboBonus : 0
 
-        const {error} = await withAnswerTimeout(
-          supabaseClient.from('live_round_answers').insert({
+        // ── 3. Apply UI feedback immediately (before any DB write) ─────────────
+        applyLocalAnswerResult({isCorrect, points, comboBonus, newCombo})
+
+        // ── 4. Persist to DB in background; duplicate inserts (23505) are safe ─
+        supabaseClient
+          .from('live_round_answers')
+          .insert({
             session_id: sessionId,
             player_id: playerData.id,
             question_id: questionId,
             selected_option_id: optionId,
             is_correct: isCorrect,
             points,
-          }),
-          'submit-answer',
-        )
-
-        // If the answer already exists, treat it as already submitted for this round.
-        if (error && error.code !== '23505') throw error
-
-        applyLocalAnswerResult({isCorrect, points, comboBonus, newCombo})
+          })
+          .then(({error}) => {
+            if (error && error.code !== '23505') {
+              console.error('Error saving answer:', error)
+            }
+          })
       } catch (err) {
-        console.error(
-          'Error evaluating answer:',
-          err?.message ?? err?.code ?? JSON.stringify(err),
-          err,
-        )
+        console.error('Error evaluating answer:', err?.message ?? err)
       } finally {
         setIsCheckingAnswer(false)
       }
@@ -391,11 +324,8 @@ export function useRoundPlay({
       checkedQuestions,
       isCheckingAnswer,
       correctOptionByQuestion,
-      currentBottle?.id,
-      roundAnchorAt,
       sessionId,
       playSound,
-      isHostUser,
     ],
   )
 

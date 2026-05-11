@@ -25,8 +25,8 @@ function getByPath(root, key) {
 export function useT(namespace) {
   const {lang} = useLanguage()
   const locale = LOCALES[lang] ?? LOCALES.it
-  const ns = namespace ? (locale[namespace] ?? {}) : locale
-  const fallbackNs = namespace ? (LOCALES.it[namespace] ?? {}) : LOCALES.it
+  const ns = namespace ? (getByPath(locale, namespace) ?? {}) : locale
+  const fallbackNs = namespace ? (getByPath(LOCALES.it, namespace) ?? {}) : LOCALES.it
 
   const t = useCallback(
     (key, vars) => {

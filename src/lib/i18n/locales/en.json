@@ -67,10 +67,13 @@
       "everyoneFinished": "Everyone has finished!",
       "waitingHostContinue": "Waiting for the host to continue...",
       "everyoneProceedNext": "Everyone has finished: proceed to the next bottle.",
+      "nextBottle": "Next bottle",
       "showFinalLeaderboard": "Show final leaderboard"
     },
     "questionSlide": {
       "correct": "Correct! +{points}",
+      "comboStreak": "Combo x{count}!",
+      "comboCorrect": "Combo x{combo}! +{points} (+{bonus} bonus)",
       "correctAnswer": "Correct answer:",
       "checking": "Checking...",
       "check": "Check",
@@ -95,6 +98,7 @@
     "bottleTransition": {
       "finalResultsTitle": "🎉 Final results!",
       "finalResultsDesc": "You will see the final leaderboard shortly.",
+      "bottleCounter": "Bottle {current}/{total}",
       "start": "Start!",
       "finish": "Finish",
       "letsBegin": "Let's begin",
@@ -137,6 +141,12 @@
       "topPlayers": "Top players",
       "finishGame": "Finish game",
       "nextBottle": "Next bottle"
+    },
+    "leaderboard": {
+      "title": "🎉 Final leaderboard",
+      "pointsUnit": "pts",
+      "fullLeaderboard": "Full leaderboard",
+      "backToDashboard": "← Back to dashboard"
     }
   },
   "wineCourseContent": {

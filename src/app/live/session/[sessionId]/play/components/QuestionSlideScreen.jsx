@@ -2,16 +2,12 @@ import {useState, useEffect, useCallback, memo} from 'react'
 import styles from '../playerLive.module.scss'
 import {useT} from '@/lib/i18n/useT'
 
-const COMBO_MESSAGES = [
-  null,
-  null,
-  {emoji: '🔥', label: 'Combo x2!'},
-  {emoji: '💥', label: 'Combo x3!!'},
-  {emoji: '⚡️', label: 'Combo x4!!!'},
-]
-const getComboMsg = (n) => {
-  const fallback = n >= 5 ? {emoji: '🤯', label: `Combo x${n}!!!!`} : (COMBO_MESSAGES[n] ?? null)
-  return fallback
+const COMBO_EMOJIS = [null, null, '🔥', '💥', '⚡️']
+
+const getComboMsg = (n, t) => {
+  if (!n || n < 2) return null
+  const emoji = COMBO_EMOJIS[n] || '🤯'
+  return {emoji, label: t('comboStreak', {count: n})}
 }
 
 export const QuestionSlideScreen = memo(function QuestionSlideScreen({
@@ -41,12 +37,12 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
 
   useEffect(() => {
     if (!comboCount || comboCount < 2) return
-    const msg = getComboMsg(comboCount)
+    const msg = getComboMsg(comboCount, t)
     if (!msg) return
     setVisibleCombo({...msg, key: Date.now()})
-    const t = setTimeout(() => setVisibleCombo(null), 1600)
-    return () => clearTimeout(t)
-  }, [comboCount])
+    const timer = setTimeout(() => setVisibleCombo(null), 1600)
+    return () => clearTimeout(timer)
+  }, [comboCount, t])
 
   // Enter key: triggers Check then Continue
   const handleKeyDown = useCallback(
@@ -130,7 +126,11 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
                 </span>
                 <span className={styles.feedbackLabel}>
                   {checkResult.comboBonus > 0
-                    ? `Combo x${checkResult.newCombo}! +${checkResult.points} (+${checkResult.comboBonus} bonus)`
+                    ? t('comboCorrect', {
+                        combo: checkResult.newCombo,
+                        points: checkResult.points,
+                        bonus: checkResult.comboBonus,
+                      })
                     : t('correct', {points: checkResult.points})}
                 </span>
               </>

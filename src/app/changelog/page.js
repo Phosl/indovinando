@@ -10,45 +10,35 @@ const CHANGELOG = [
     version: '1.10.8',
     date: '11 maggio 2026',
     label: 'Auto',
-    changes: [
-      'i18n: deep copy cleanup and full IT/EN text optimization',
-    ],
+    changes: ['i18n: deep copy cleanup and full IT/EN text optimization'],
   },
 
   {
     version: '1.10.7',
     date: '10 maggio 2026',
     label: 'Auto',
-    changes: [
-      'rimossi i tentativi sperimentali sul check host e sulla latenza',
-    ],
+    changes: ['rimossi i tentativi sperimentali sul check host e sulla latenza'],
   },
 
   {
     version: '1.10.6',
     date: '10 maggio 2026',
     label: 'Auto',
-    changes: [
-      'precaricate le opzioni corrette host per ridurre la latenza al check',
-    ],
+    changes: ['precaricate le opzioni corrette host per ridurre la latenza al check'],
   },
 
   {
     version: '1.10.5',
     date: '10 maggio 2026',
     label: 'Auto',
-    changes: [
-      'evitato il blocco del check host nello stato "checking"',
-    ],
+    changes: ['evitato il blocco del check host nello stato "checking"'],
   },
 
   {
     version: '1.10.4',
     date: '10 maggio 2026',
     label: 'Auto',
-    changes: [
-      'mantenuto il check host attivo con fallback runtime',
-    ],
+    changes: ['mantenuto il check host attivo con fallback runtime'],
   },
 
   {
@@ -64,9 +54,7 @@ const CHANGELOG = [
     version: '1.10.2',
     date: '10 maggio 2026',
     label: 'Auto',
-    changes: [
-      'formattazione automatica changelog',
-    ],
+    changes: ['formattazione automatica changelog'],
   },
 
   {
@@ -80,7 +68,7 @@ const CHANGELOG = [
     version: '1.10.0',
     date: '10 maggio 2026',
     label: 'Auto',
-    changes: ['uniformata la versione dell\'app tra home e changelog'],
+    changes: ["uniformata la versione dell'app tra home e changelog"],
   },
 
   {

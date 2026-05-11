@@ -85,7 +85,7 @@ export const BottleTransitionScreen = memo(function BottleTransitionScreen({
               ))}
             </div>
             <p className={styles.transitionSubtitle}>
-              Bottle {nextBottleNum}/{totalBottles}
+              {t('bottleCounter', {current: nextBottleNum, total: totalBottles})}
             </p>
             <h2 className={styles.transitionTitle}>
               {getBottleLabel(nextBottleIndex, lang)} {t('bottleWord')}

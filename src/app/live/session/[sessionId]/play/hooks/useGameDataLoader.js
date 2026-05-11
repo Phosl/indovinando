@@ -19,13 +19,14 @@ export function useGameDataLoader({
   initialStatus,
   initialQuestionIndex,
   initialUpdatedAt,
+  initialPlayers,
 }) {
   const [liveQuestions, setLiveQuestions] = useState(initialQuestions || [])
   const [liveBottles, setLiveBottles] = useState(initialBottles || [])
   const [currentBottleIndex, setCurrentBottleIndex] = useState(initialQuestionIndex)
   const [roundStatus, setRoundStatus] = useState(initialStatus)
   const [loadingGameData, setLoadingGameData] = useState((initialQuestions || []).length === 0)
-  const [allPlayers, setAllPlayers] = useState([])
+  const [allPlayers, setAllPlayers] = useState(initialPlayers || [])
   const [sessionFinished, setSessionFinished] = useState(false)
   const [roundAnchorAt, setRoundAnchorAt] = useState(initialUpdatedAt || null)
 
@@ -90,8 +91,27 @@ export function useGameDataLoader({
                   .order('joined_at'),
               ])
 
+            // Fetch correct answers for all bottles and embed them
+            const bottles = bottlesData || []
+            if (bottles.length > 0) {
+              const {data: answersData} = await supabaseClient
+                .from('game_bottle_answers')
+                .select('bottle_id, question_id, option_id')
+                .in(
+                  'bottle_id',
+                  bottles.map((b) => b.id),
+                )
+              const answersMap = {}
+              ;(answersData || []).forEach((a) => {
+                if (!answersMap[a.bottle_id]) answersMap[a.bottle_id] = {}
+                answersMap[a.bottle_id][a.question_id] = a.option_id
+              })
+              setLiveBottles(bottles.map((b) => ({...b, _correctAnswers: answersMap[b.id] || {}})))
+            } else {
+              setLiveBottles([])
+            }
+
             setLiveQuestions(questionsData || [])
-            setLiveBottles(bottlesData || [])
             setAllPlayers(playersData || [])
           })(),
           'bootstrap',

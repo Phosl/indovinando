@@ -56,6 +56,28 @@ export default async function PlayerPlayPage({params}) {
 
     questions = questionsData || []
     bottles = bottlesData || []
+
+    // Pre-load correct answers server-side so the client never needs to query
+    // game_bottle_answers directly (avoids RLS/JWT auth differences between
+    // host and guest that caused handleCheck to hang for authenticated users).
+    if (bottles.length > 0) {
+      const bottleIds = (bottlesData || []).map((b) => b.id)
+      const {data: answersData} = await supabase
+        .from('game_bottle_answers')
+        .select('bottle_id, question_id, option_id')
+        .in('bottle_id', bottleIds)
+
+      // Build a map: { [bottleId]: { [questionId]: optionId } }
+      const bottleAnswersMap = {}
+      ;(answersData || []).forEach((a) => {
+        if (!bottleAnswersMap[a.bottle_id]) bottleAnswersMap[a.bottle_id] = {}
+        bottleAnswersMap[a.bottle_id][a.question_id] = a.option_id
+      })
+      bottles = (bottlesData || []).map((b) => ({
+        ...b,
+        _correctAnswers: bottleAnswersMap[b.id] || {},
+      }))
+    }
   }
 
   const {
@@ -75,6 +97,14 @@ export default async function PlayerPlayPage({params}) {
     initialPlayerData = player || null
   }
 
+  // Pre-load all players server-side so the overlay leaderboard is never empty
+  // on first render. The client still refreshes via Realtime + polling.
+  const {data: initialPlayers} = await supabase
+    .from('live_players')
+    .select('id, nickname, avatar_id, total_score, updated_at, is_host')
+    .eq('session_id', sessionId)
+    .order('joined_at')
+
   return (
     <PlayerLiveClient
       sessionId={sessionId}
@@ -86,6 +116,7 @@ export default async function PlayerPlayPage({params}) {
       hostUserId={session?.host_user_id || null}
       userId={user?.id || null}
       initialPlayerData={initialPlayerData}
+      initialPlayers={initialPlayers || []}
     />
   )
 }

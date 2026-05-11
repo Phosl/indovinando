@@ -1,4 +1,4 @@
-import {memo, useMemo, useRef} from 'react'
+import {memo, useMemo} from 'react'
 import styles from '../playerLive.module.scss'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useT} from '@/lib/i18n/useT'
@@ -32,20 +32,9 @@ export const ResultsScreen = memo(function ResultsScreen({
   const t = useT('live.results')
   const readyParticipantsCount = participantsCount || allPlayers.length
 
-  // Freeze baseline total_score per player when the results screen first opens for
-  // a given bottle. This prevents a brief double-count caused by the host's
-  // syncScoresFromAnswers updating allPlayers via Realtime while roundAnswersByPlayer
-  // still contains the current round's points.
-  const baselineRef = useRef({bottleIndex: -1, scores: {}})
-  if (baselineRef.current.bottleIndex !== currentBottleIndex) {
-    baselineRef.current = {
-      bottleIndex: currentBottleIndex,
-      scores: Object.fromEntries(allPlayers.map((p) => [p.id, p.total_score || 0])),
-    }
-  }
-  const baselineScores = baselineRef.current.scores
-
-  // Projected standings: frozen baseline + points earned this round
+  // Projected standings: current DB total + points earned this round
+  // We do NOT freeze the baseline because syncScoresFromAnswers has already
+  // been called (or will be called) before the host advances.
   const standings = useMemo(() => {
     return [...allPlayers]
       .map((p) => {
@@ -53,10 +42,10 @@ export const ResultsScreen = memo(function ResultsScreen({
           (sum, a) => sum + (a.points || 0),
           0,
         )
-        return {...p, roundPts, projected: (baselineScores[p.id] ?? p.total_score ?? 0) + roundPts}
+        // Use total_score from DB as base; add unsaved round points if present
+        return {...p, roundPts, projected: (p.total_score ?? 0) + roundPts}
       })
       .sort((a, b) => b.projected - a.projected)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allPlayers, roundAnswersByPlayer])
 
   const incompletePlayerNames = useMemo(() => {
@@ -67,15 +56,6 @@ export const ResultsScreen = memo(function ResultsScreen({
   }, [allPlayers, questions, roundAnswersByPlayer])
 
   const missingPlayersCount = Math.max(0, readyParticipantsCount - playersReadyCount)
-
-  const waitingText = useMemo(() => {
-    if (missingPlayersCount <= 0) return null
-    if (incompletePlayerNames.length > 0) {
-      return `${t('waitingFor')}${incompletePlayerNames.join(', ')}`
-    }
-    const playerWord = missingPlayersCount === 1 ? t('playerSingular') : t('playerPlural')
-    return t('waitingForCount', {count: missingPlayersCount, playerWord})
-  }, [incompletePlayerNames, missingPlayersCount, t])
 
   return (
     <div className={styles.fullPage}>
@@ -171,16 +151,21 @@ export const ResultsScreen = memo(function ResultsScreen({
       </div>
 
       <div className={styles.bottomPanel}>
-        {!allPlayersCompletedThisRound ? (
-          <p className={styles.readyHint}>
-            {`${playersReadyCount}/${readyParticipantsCount} ${t('playersReady')}`}
-            {waitingText && (
-              <span style={{display: 'block', marginTop: 4, fontSize: '0.85em', opacity: 0.8}}>
-                {waitingText}
-              </span>
+        {!allPlayersCompletedThisRound && (
+          <div className={styles.waitingBlock}>
+            <p className={styles.readyHint}>
+              {`${playersReadyCount}/${readyParticipantsCount} ${t('playersReady')}`}
+            </p>
+            {incompletePlayerNames.length > 0 && (
+              <p className={styles.waitingNames}>
+                {t('waitingFor')}
+                {incompletePlayerNames.join(', ')}
+              </p>
             )}
-          </p>
-        ) : (
+          </div>
+        )}
+
+        {allPlayersCompletedThisRound && (
           <p className={styles.readyHint}>
             {isLastBottle
               ? t('everyoneFinished')
@@ -193,19 +178,16 @@ export const ResultsScreen = memo(function ResultsScreen({
         {isLastBottle ? (
           <button
             className={styles.continueButton}
-            onClick={() => {
-              if (!allPlayersCompletedThisRound) return
-              onViewLeaderboard()
-            }}
+            onClick={onViewLeaderboard}
             disabled={!allPlayersCompletedThisRound}>
             {t('showFinalLeaderboard')}
           </button>
         ) : (
           <button
             className={styles.continueButton}
-            onClick={isHostUser ? onNextBottle : onNextBottle}
+            onClick={onNextBottle}
             disabled={!allPlayersCompletedThisRound || (!isHostUser && playerMarkedNext)}>
-            Next bottle
+            {t('nextBottle')}
           </button>
         )}
       </div>

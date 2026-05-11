@@ -339,7 +339,7 @@
 
 @media (max-width: 768px) {
   .container {
-    padding: 20px;
+    padding: 0px;
   }
 
   .header {
@@ -370,6 +370,9 @@
     :global(.btn) {
       width: 100%;
     }
+  }
+  .enotecaAction {
+    width: 100%;
   }
 
   .secondaryButton {

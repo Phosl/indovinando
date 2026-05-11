@@ -27,6 +27,7 @@ export default function PlayerLiveClient({
   hostUserId,
   userId,
   initialPlayerData,
+  initialPlayers,
 }) {
   const router = useRouter()
   const isHostUser = Boolean(userId && hostUserId && userId === hostUserId)
@@ -70,6 +71,7 @@ export default function PlayerLiveClient({
     initialStatus,
     initialQuestionIndex,
     initialUpdatedAt,
+    initialPlayers,
   })
 
   const currentBottle = liveBottles?.[currentBottleIndex] || null
@@ -98,6 +100,7 @@ export default function PlayerLiveClient({
     handleContinue,
     handleNextBottleClick,
     handleAnswerInsert,
+    syncScoresFromAnswers,
     playersReadyCount,
     participantsCount,
   } = useRoundPlay({
@@ -131,8 +134,6 @@ export default function PlayerLiveClient({
     sessionId,
     playerData,
     allPlayers,
-    roundAnswersByPlayer,
-    roundStatus,
     setAllPlayers,
     isHostUser,
     playerStorageKey,
@@ -155,7 +156,14 @@ export default function PlayerLiveClient({
           updated?.round_status || 'waiting_answers',
         )
       }
-      if (updated?.round_status) setRoundStatus(updated.round_status)
+      if (updated?.round_status) {
+        setRoundStatus(updated.round_status)
+        // When the host broadcasts showing_results, set the results screen open
+        // so polling of round answers starts immediately (even without clickedReady)
+        if (updated.round_status === 'showing_results') {
+          setResultsOpenedBottleIndex(updated.current_question_index ?? currentBottleIndex)
+        }
+      }
     },
     onPlayersUpdate: (incomingPlayers) => {
       setAllPlayers((prevPlayers) => {
@@ -250,9 +258,12 @@ export default function PlayerLiveClient({
       : null
 
   const navigateToLeaderboard = async () => {
-    // Server-side guard: leaderboard is available only after all players complete the round.
     setSessionFinished(true)
     try {
+      // Sync final-round scores before marking session finished
+      if (isHostUser) {
+        await syncScoresFromAnswers(roundAnswersByPlayer)
+      }
       const response = await fetch('/api/live/session/finish', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},

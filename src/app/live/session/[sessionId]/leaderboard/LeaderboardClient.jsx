@@ -2,6 +2,7 @@
 
 import {useRouter} from 'next/navigation'
 import styles from './leaderboard.module.scss'
+import {useT} from '@/lib/i18n/useT'
 
 const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
 
@@ -9,6 +10,7 @@ const MEDALS = ['🥇', '🥈', '🥉']
 
 export default function LeaderboardClient({sessionId, gameName, players}) {
   const router = useRouter()
+  const t = useT('live.leaderboard')
 
   const handleBackHome = () => {
     router.push('/dashboard')
@@ -19,7 +21,7 @@ export default function LeaderboardClient({sessionId, gameName, players}) {
 
   return (
     <div className={styles.container}>
-      <h1>🎉 Leaderboard Finale</h1>
+      <h1>{t('title')}</h1>
       <h2 className={styles.gameName}>{gameName}</h2>
 
       {/* Top 3 - Podio */}
@@ -29,7 +31,9 @@ export default function LeaderboardClient({sessionId, gameName, players}) {
             <div className={styles.medal}>{MEDALS[idx]}</div>
             <div className={styles.avatar}>{APPLE_AVATARS[player.avatar_id - 1] || '👤'}</div>
             <h3 className={styles.nickname}>{player.nickname}</h3>
-            <p className={styles.score}>{player.total_score} points</p>
+            <p className={styles.score}>
+              {player.total_score} {t('pointsUnit')}
+            </p>
           </div>
         ))}
       </div>
@@ -37,7 +41,7 @@ export default function LeaderboardClient({sessionId, gameName, players}) {
       {/* Resto della classifica */}
       {rest.length > 0 && (
         <div className={styles.ranking}>
-          <h3>Leaderboard Completa</h3>
+          <h3>{t('fullLeaderboard')}</h3>
           <div className={styles.rankingList}>
             {rest.map((player, idx) => (
               <div key={player.id} className={styles.rankingRow}>
@@ -54,7 +58,7 @@ export default function LeaderboardClient({sessionId, gameName, players}) {
       )}
 
       <button onClick={handleBackHome} className={styles.homeButton}>
-        ← Torna alla Dashboard
+        {t('backToDashboard')}
       </button>
     </div>
   )
