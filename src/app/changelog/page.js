@@ -7,6 +7,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.10.8',
+    date: '11 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'i18n: deep copy cleanup and full IT/EN text optimization',
+    ],
+  },
+
+  {
     version: '1.10.7',
     date: '10 maggio 2026',
     label: 'Auto',
