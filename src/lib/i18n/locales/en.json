@@ -36,6 +36,7 @@
     "printCard": "Print Card",
     "emptyState": "You haven't created any games yet. Start now!",
     "history": "📜 Match History",
+    "howToPlay": "❓ How to play",
     "storico": {
       "title": "📜 Match History",
       "subtitle": "All live sessions you have hosted.",

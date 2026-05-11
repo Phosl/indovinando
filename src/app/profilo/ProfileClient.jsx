@@ -169,7 +169,15 @@ export default function ProfileClient({
     }
 
     try {
-      await supabaseClient.auth.signOut()
+      // Prefer server-side signout (invalidates cookies reliably).
+      // Fall back to client-side with a 3s timeout to avoid the GoTrueClient
+      // init-queue hang that occurs when @supabase/ssr is used in an
+      // authenticated browser context.
+      await Promise.race([
+        fetch('/api/auth/signout', {method: 'POST'}),
+        supabaseClient.auth.signOut(),
+        new Promise((resolve) => setTimeout(resolve, 3000)),
+      ])
     } catch (error) {
       console.error('[profile] sign out error:', error)
     } finally {
