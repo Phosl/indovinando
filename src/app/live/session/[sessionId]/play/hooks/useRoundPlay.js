@@ -17,7 +17,6 @@ export function useRoundPlay({
   isHostUser,
   isLastBottle,
   currentBottle,
-  roundAnchorAt,
   // setters from useGameDataLoader
   setCurrentBottleIndex,
   setRoundStatus,
@@ -182,20 +181,21 @@ export function useRoundPlay({
   // NOTE: We intentionally ignore payload.new because Supabase RLS may strip it
   // for other players' rows. Re-fetch all answers from DB instead (same pattern
   // as the players channel), so roundAnswersByPlayer is always authoritative.
+  //
+  // NOTE: We do NOT filter by roundAnchorAt here. That filter used a JS-generated
+  // timestamp (new Date().toISOString()) which can be slightly ahead of the DB
+  // server clock, causing valid answers (answered_at = DB NOW()) to be excluded
+  // and producing a mutual deadlock on the last bottle. Old answers from previous
+  // bottles are always deleted by advanceToNextBottleOrFinish, so no stale data
+  // can appear – the questionIds filter alone is sufficient scope.
   const handleAnswerInsert = useCallback(async () => {
     if (liveQuestions.length === 0) return
     const questionIds = liveQuestions.map((q) => q.id)
-    let answersQuery = supabaseClient
+    const {data: answers} = await supabaseClient
       .from('live_round_answers')
       .select('player_id, question_id, selected_option_id, is_correct, points')
       .eq('session_id', sessionId)
       .in('question_id', questionIds)
-
-    if (roundAnchorAt) {
-      answersQuery = answersQuery.gte('answered_at', roundAnchorAt)
-    }
-
-    const {data: answers} = await answersQuery
 
     if (!answers) return
     const rebuilt = {}
@@ -208,7 +208,7 @@ export function useRoundPlay({
       }
     })
     setRoundAnswersByPlayer(rebuilt)
-  }, [sessionId, liveQuestions, roundAnchorAt])
+  }, [sessionId, liveQuestions])
 
   // ── Re-sync answers while waiting for all players to complete ─────────────
   // Polls DB every 2s once the local player has marked ready and the round is

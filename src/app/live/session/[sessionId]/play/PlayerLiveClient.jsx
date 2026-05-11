@@ -62,7 +62,6 @@ export default function PlayerLiveClient({
     setAllPlayers,
     sessionFinished,
     setSessionFinished,
-    roundAnchorAt,
     setRoundAnchorAt,
   } = useGameDataLoader({
     sessionId,
@@ -113,7 +112,6 @@ export default function PlayerLiveClient({
     isHostUser,
     isLastBottle,
     currentBottle,
-    roundAnchorAt,
     setCurrentBottleIndex,
     setRoundStatus,
     setAllPlayers,
