@@ -36,7 +36,7 @@ export async function GET(request) {
     // Fetch session to get round_status and updated_at (current-round anchor)
     const {data: session} = await supabase
       .from('live_sessions')
-      .select('round_status, updated_at')
+      .select('round_status')
       .eq('id', sessionId)
       .maybeSingle()
 
@@ -61,12 +61,11 @@ export async function GET(request) {
 
     const roundPointsByPlayer = {}
 
-    if (showProjectedLive && session.updated_at) {
+    if (showProjectedLive) {
       const {data: answers} = await supabase
         .from('live_round_answers')
         .select('player_id, points')
         .eq('session_id', sessionId)
-        .gte('answered_at', session.updated_at)
 
       ;(answers || []).forEach((a) => {
         roundPointsByPlayer[a.player_id] = (roundPointsByPlayer[a.player_id] || 0) + (a.points || 0)

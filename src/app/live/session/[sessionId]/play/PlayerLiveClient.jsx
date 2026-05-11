@@ -98,7 +98,6 @@ export default function PlayerLiveClient({
     handleContinue,
     handleNextBottleClick,
     handleAnswerInsert,
-    syncScoresFromAnswers,
     playersReadyCount,
     participantsCount,
   } = useRoundPlay({
@@ -256,10 +255,9 @@ export default function PlayerLiveClient({
   const navigateToLeaderboard = async () => {
     setSessionFinished(true)
     try {
-      // Sync final-round scores before marking session finished
-      if (isHostUser) {
-        await syncScoresFromAnswers(roundAnswersByPlayer)
-      }
+      // Score sync is handled server-side by /api/live/session/finish (admin client).
+      // Skipping client-side syncScoresFromAnswers — it uses supabaseClient which
+      // can hang due to GoTrueClient init delay on live_players (auth.uid() in RLS).
       const response = await fetch('/api/live/session/finish', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},

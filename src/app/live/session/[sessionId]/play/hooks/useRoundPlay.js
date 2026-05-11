@@ -140,74 +140,62 @@ export function useRoundPlay({
     [isHostUser, sessionId],
   )
 
+  // Scores, answer deletion, and session advance all use tables with auth.uid()
+  // RLS policies that cause GoTrueClient init hang in @supabase/ssr. Use the
+  // server route /api/live/advance-bottle instead (admin client, bypasses RLS).
   const advanceToNextBottleOrFinish = useCallback(async () => {
     try {
-      if (isLastBottle) {
-        await supabaseClient
-          .from('live_sessions')
-          .update({
-            status: 'finished',
-            finished_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', sessionId)
-        // Opportunistic cleanup: delete sessions finished more than 24h ago
-        supabaseClient
-          .from('live_sessions')
-          .delete()
-          .eq('status', 'finished')
-          .lt('finished_at', new Date(Date.now() - 86_400_000).toISOString())
-          .then(() => {})
-        return
+      const res = await fetch('/api/live/advance-bottle', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({sessionId}),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data?.error || 'Failed to advance bottle')
       }
-      await supabaseClient.from('live_round_answers').delete().eq('session_id', sessionId)
-      const nextIndex = currentBottleIndex + 1
-      await supabaseClient
-        .from('live_sessions')
-        .update({
-          current_question_index: nextIndex,
-          round_status: 'waiting_answers',
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', sessionId)
+      const {nextIndex} = await res.json()
       resetRoundState(nextIndex, 'waiting_answers')
     } catch (err) {
       console.error('Errore in advanceToNextBottleOrFinish:', err)
       setShowBottleTransition(false)
     }
-  }, [currentBottleIndex, isLastBottle, resetRoundState, sessionId])
+  }, [sessionId, resetRoundState])
 
   // ── Realtime answer insert handler (consumed by useLiveRealtime) ───────────
   // NOTE: We intentionally ignore payload.new because Supabase RLS may strip it
   // for other players' rows. Re-fetch all answers from DB instead (same pattern
   // as the players channel), so roundAnswersByPlayer is always authoritative.
   //
-  // NOTE: We do NOT filter by roundAnchorAt here. That filter used a JS-generated
-  // timestamp (new Date().toISOString()) which can be slightly ahead of the DB
-  // server clock, causing valid answers (answered_at = DB NOW()) to be excluded
-  // and producing a mutual deadlock on the last bottle. Old answers from previous
-  // bottles are always deleted by advanceToNextBottleOrFinish, so no stale data
-  // can appear – the questionIds filter alone is sufficient scope.
+  // NOTE: We use a server API route (/api/live/round-answers) instead of a
+  // direct supabaseClient query. The live_round_answers RLS policies all call
+  // auth.uid(), which hangs when createBrowserClient (from @supabase/ssr) has
+  // not yet completed its GoTrueClient init. Tables with simple RLS (TRUE /
+  // status IN (...)) work fine; tables using auth.uid() do not. The server
+  // route bypasses RLS via the service-role key and always returns all answers.
   const handleAnswerInsert = useCallback(async () => {
     if (liveQuestions.length === 0) return
     const questionIds = liveQuestions.map((q) => q.id)
-    const {data: answers} = await supabaseClient
-      .from('live_round_answers')
-      .select('player_id, question_id, selected_option_id, is_correct, points')
-      .eq('session_id', sessionId)
-      .in('question_id', questionIds)
-
-    if (!answers) return
-    const rebuilt = {}
-    answers.forEach((a) => {
-      if (!rebuilt[a.player_id]) rebuilt[a.player_id] = {}
-      rebuilt[a.player_id][a.question_id] = {
-        optionId: a.selected_option_id,
-        isCorrect: a.is_correct,
-        points: a.points,
-      }
-    })
-    setRoundAnswersByPlayer(rebuilt)
+    try {
+      const res = await fetch(`/api/live/round-answers?sessionId=${sessionId}`)
+      if (!res.ok) return
+      const {answers} = await res.json()
+      if (!Array.isArray(answers)) return
+      const rebuilt = {}
+      answers
+        .filter((a) => questionIds.includes(a.question_id))
+        .forEach((a) => {
+          if (!rebuilt[a.player_id]) rebuilt[a.player_id] = {}
+          rebuilt[a.player_id][a.question_id] = {
+            optionId: a.selected_option_id,
+            isCorrect: a.is_correct,
+            points: a.points,
+          }
+        })
+      setRoundAnswersByPlayer(rebuilt)
+    } catch (_) {
+      // Network error — retry on next poll
+    }
   }, [sessionId, liveQuestions])
 
   // ── Re-sync answers while waiting for all players to complete ─────────────
@@ -296,22 +284,25 @@ export function useRoundPlay({
         // ── 3. Apply UI feedback immediately (before any DB write) ─────────────
         applyLocalAnswerResult({isCorrect, points, comboBonus, newCombo})
 
-        // ── 4. Persist to DB in background; duplicate inserts (23505) are safe ─
-        supabaseClient
-          .from('live_round_answers')
-          .insert({
-            session_id: sessionId,
-            player_id: playerData.id,
-            question_id: questionId,
-            selected_option_id: optionId,
-            is_correct: isCorrect,
+        // ── 4. Persist via server route (bypasses GoTrueClient init hang) ────
+        // Duplicate inserts (23505) are safe and handled server-side.
+        fetch('/api/live/round-answer', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            sessionId,
+            playerId: playerData.id,
+            questionId,
+            selectedOptionId: optionId,
+            isCorrect,
             points,
-          })
-          .then(({error}) => {
-            if (error && error.code !== '23505') {
-              console.error('Error saving answer:', error)
-            }
-          })
+          }),
+        }).then(async (res) => {
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}))
+            if (data?.error) console.error('Error saving answer:', data.error)
+          }
+        })
       } catch (err) {
         console.error('Error evaluating answer:', err?.message ?? err)
       } finally {
@@ -366,13 +357,13 @@ export function useRoundPlay({
   const handleNextBottleClick = useCallback(async () => {
     if (!allPlayersCompletedThisRound) return
     if (isHostUser) {
-      await syncScoresFromAnswers(roundAnswersByPlayer)
+      // Score sync is handled by /api/live/advance-bottle (called from BottleTransitionScreen)
       setResultsOpenedBottleIndex(null)
       setShowBottleTransition(true)
     } else {
       setPlayerMarkedNext(true)
     }
-  }, [allPlayersCompletedThisRound, isHostUser, roundAnswersByPlayer, syncScoresFromAnswers])
+  }, [allPlayersCompletedThisRound, isHostUser])
 
   return {
     // state
@@ -399,7 +390,6 @@ export function useRoundPlay({
     handleCheck,
     handleContinue,
     handleNextBottleClick,
-    syncScoresFromAnswers,
     advanceToNextBottleOrFinish,
     // progress
     playersReadyCount,
