@@ -52,6 +52,9 @@ export default async function Dashboard() {
             <a href="/profilo" className="btn secondary">
               {dashboardDict.profile || '👤 Profilo'}
             </a>
+            <a href="/dashboard/storico" className="btn secondary">
+              {dashboardDict.history || '📜 Storico partite'}
+            </a>
             {profile?.super_admin && (
               <a href="/admin/corsi" className="btn secondary">
                 {dashboardDict.admin || '⚙️ Admin'}

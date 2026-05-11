@@ -34,7 +34,17 @@
     "playLive": "Gioca Live",
     "enoteca": "🍷 Enoteca",
     "printCard": "Stampa scheda",
-    "emptyState": "Non hai ancora creato giochi. Inizia ora!"
+    "emptyState": "Non hai ancora creato giochi. Inizia ora!",
+    "history": "📜 Storico partite",
+    "storico": {
+      "title": "📜 Storico partite",
+      "subtitle": "Tutte le sessioni live che hai ospitato.",
+      "empty": "Nessuna partita ancora. Crea un gioco e ospita la tua prima sessione!",
+      "player": "giocatore",
+      "players": "giocatori",
+      "points": "pt",
+      "showAll": "Vedi tutti"
+    }
   },
   "live": {
     "playerLive": {

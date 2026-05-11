@@ -1,0 +1,214 @@
+.page {
+  min-height: 100vh;
+  background: var(--background);
+  padding: 24px 16px;
+}
+
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  h1 {
+    margin: 0;
+    font-size: clamp(22px, 5vw, 30px);
+    font-weight: 900;
+    color: var(--text-primary);
+  }
+}
+
+.back {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-decoration: none;
+  width: fit-content;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+// ── Empty state ─────────────────────────────────────────────────────────────
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 0;
+  color: var(--text-secondary);
+  font-weight: 600;
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+.emptyIcon {
+  font-size: 3rem;
+}
+
+// ── Session cards ────────────────────────────────────────────────────────────
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  box-shadow: 0px 4px 0px 0px var(--gray-light);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.gameName {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.date {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.playerCount {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+// ── Podium (top 3) ───────────────────────────────────────────────────────────
+.podium {
+  display: flex;
+  gap: 8px;
+}
+
+.podiumItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 6px;
+  border-radius: 10px;
+  border: 2px solid var(--button-secondary-border);
+  background: var(--background);
+  text-align: center;
+
+  &.rank1 {
+    border-color: #d97706;
+    background: #fffbeb;
+    box-shadow: 0 3px 0 #d97706;
+  }
+}
+
+.medal {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.avatar {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.nickname {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.score {
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: var(--text-secondary);
+}
+
+// ── Full list (details/summary) ─────────────────────────────────────────────
+.moreDetails {
+  border-top: 1px solid var(--button-secondary-border);
+  padding-top: 10px;
+}
+
+.moreSummary {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+}
+
+.fullList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.fullRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+}
+
+.fullRank {
+  min-width: 28px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.fullAvatar {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.fullNickname {
+  flex: 1;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.fullScore {
+  font-weight: 800;
+  color: var(--text-secondary);
+}

@@ -34,7 +34,17 @@
     "playLive": "Play Live",
     "enoteca": "🍷 Enoteca",
     "printCard": "Print Card",
-    "emptyState": "You haven't created any games yet. Start now!"
+    "emptyState": "You haven't created any games yet. Start now!",
+    "history": "📜 Match History",
+    "storico": {
+      "title": "📜 Match History",
+      "subtitle": "All live sessions you have hosted.",
+      "empty": "No matches yet. Create a game and host your first session!",
+      "player": "player",
+      "players": "players",
+      "points": "pt",
+      "showAll": "Show all"
+    }
   },
   "live": {
     "playerLive": {

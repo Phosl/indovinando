@@ -203,13 +203,15 @@ export async function POST(request) {
       }
     }
 
+    const finishedAt = new Date().toISOString()
+
     if (session.status !== 'finished') {
       const {error: finishError} = await admin
         .from('live_sessions')
         .update({
           status: 'finished',
-          finished_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+          finished_at: finishedAt,
+          updated_at: finishedAt,
         })
         .eq('id', trimmedSessionId)
 
@@ -217,6 +219,52 @@ export async function POST(request) {
         return NextResponse.json({error: finishError.message}, {status: 500})
       }
     }
+
+    // ── Save permanent history snapshot ──────────────────────────────────────
+    // Runs opportunistically — failure is non-fatal (game already finished).
+    ;(async () => {
+      try {
+        // Fetch final player scores + game name
+        const [{data: finalPlayers}, {data: gameRow}] = await Promise.all([
+          admin
+            .from('live_players')
+            .select('id, nickname, avatar_id, total_score, is_host')
+            .eq('session_id', trimmedSessionId)
+            .order('total_score', {ascending: false}),
+          admin.from('games').select('name').eq('id', session.game_id).maybeSingle(),
+        ])
+
+        const players = (finalPlayers || []).map((p, idx) => ({
+          id: p.id,
+          nickname: p.nickname,
+          avatar_id: p.avatar_id,
+          total_score: p.total_score || 0,
+          rank: idx + 1,
+          is_host: p.is_host || false,
+        }))
+
+        // Avoid duplicate snapshot if finish is called multiple times
+        const {data: existing} = await admin
+          .from('live_session_results')
+          .select('id')
+          .eq('session_id', trimmedSessionId)
+          .maybeSingle()
+
+        if (!existing) {
+          await admin.from('live_session_results').insert({
+            session_id: trimmedSessionId,
+            host_user_id: session.host_user_id,
+            game_id: session.game_id,
+            game_name: gameRow?.name || 'Partita',
+            played_at: finishedAt,
+            player_count: players.length,
+            players,
+          })
+        }
+      } catch (err) {
+        console.error('Non-fatal: failed to save session history snapshot', err)
+      }
+    })()
 
     // Opportunistic cleanup: delete sessions finished more than 24h ago.
     admin
