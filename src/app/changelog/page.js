@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.0',
+    date: '11 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'storico - filtro per gioco con pills',
+    ],
+  },
+
+  {
     version: '1.12.0',
     date: '11 maggio 2026',
     label: 'Auto',
