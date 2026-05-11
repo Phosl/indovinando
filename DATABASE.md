@@ -350,6 +350,41 @@ Indici:
 - `idx_enoteca_answers_session`
 - `idx_enoteca_answers_bottle`
 
+## Storico Partite Live
+
+### `live_session_results`
+
+Snapshot permanente salvato al termine di ogni sessione live (via `POST /api/live/session/finish`).
+Non viene mai cancellato; serve come storico consultabile dall'host dal proprio dashboard.
+
+| Colonna        | Tipo          | Note                                                                         |
+| -------------- | ------------- | ---------------------------------------------------------------------------- |
+| `id`           | `UUID PK`     | default `gen_random_uuid()`                                                  |
+| `session_id`   | `UUID`        | soft reference (la sessione può sparire)                                     |
+| `host_user_id` | `UUID`        | `auth.uid()` dell'host al momento del termine                                |
+| `game_id`      | `UUID`        | riferimento al gioco                                                         |
+| `game_name`    | `TEXT`        | snapshot del nome al momento del termine                                     |
+| `played_at`    | `TIMESTAMPTZ` | data/ora di fine sessione                                                    |
+| `player_count` | `INT`         | numero di partecipanti                                                       |
+| `players`      | `JSONB`       | array ordinato per rank: `[{id, nickname, avatar_id, is_host, total_score}]` |
+| `created_at`   | `TIMESTAMPTZ` | default `now()`                                                              |
+
+RLS:
+
+- `SELECT`: `auth.uid() = host_user_id` (solo l'host vede le proprie partite)
+- Insert avviene tramite service role (route `/api/live/session/finish`) — nessun policy INSERT lato
+  client
+
+Indici:
+
+- `idx_lsr_host` su `host_user_id`
+- `idx_lsr_played_at` su `played_at`
+- `idx_lsr_game_id` su `game_id`
+
+Migration: `LIVE_SESSION_HISTORY.sql`
+
+---
+
 ## Punteggio Live (client)
 
 Calcolo usato lato client durante round live:

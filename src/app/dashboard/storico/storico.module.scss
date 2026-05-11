@@ -45,7 +45,10 @@
   font-weight: 700;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    color 0.15s,
+    background 0.15s;
 
   &:hover {
     border-color: var(--text-primary);
@@ -58,7 +61,7 @@
     color: var(--background);
 
     .pillCount {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
       color: inherit;
     }
   }

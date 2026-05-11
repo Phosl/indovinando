@@ -1,151 +1,202 @@
-This is a [Next.js](https://nextjs.org) project - **Indovinando** (Wine Trivia Live Multiplayer
+This is a [Next.js](https://nextjs.org) project — **Indovinando** (Wine Trivia Live Multiplayer
 Game).
 
-## 🎮 Indovinando - Overview
+## 🎮 Indovinando — Overview
 
 A live multiplayer trivia game about wine. Players compete in real-time to guess blind-tasted wine
-bottles by answering multiple-choice questions about each one — varietal, region, vintage, producer,
-etc.
+bottles by answering multiple-choice questions about each one (varietal, region, vintage, producer,
+etc.).
 
-**Key Features:**
+### Tech Stack
 
-- 🎯 Create custom trivia games (questions + wine bottles with correct answers)
-- 👥 Live multiplayer sessions with real-time sync via Supabase Realtime + polling fallback
-- 🔥 Combo system: consecutive correct answers grant bonus points (+5/+10/+15)
-- 🏆 Live leaderboard during the game, full leaderboard at the end
-- 🍷 Bottle reveal at the end of each round (name, producer, year)
-- 📱 Mobile-first Duolingo-style UI with slide animations
+| Layer        | Technology                                       |
+| ------------ | ------------------------------------------------ |
+| Framework    | Next.js 16 (App Router, Turbopack)               |
+| Runtime      | React 19                                         |
+| Backend / DB | Supabase (PostgreSQL + RLS + Realtime)           |
+| Auth         | Supabase Auth (logged-in host, anonymous guests) |
+| Styling      | SCSS Modules + CSS custom properties             |
+| i18n         | Custom `useT` hook, `it.json` / `en.json`        |
+| Deploy       | Vercel                                           |
 
-## Getting Started
+---
 
-First, run the development server:
+## ✨ Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- 🎯 **Game creation** — custom questions + wine bottles with correct answers per (bottle, question)
+- 👥 **Live multiplayer** — real-time sync via Supabase Realtime WebSocket + 2s polling fallback
+- 🔥 **Combo system** — consecutive correct answers grant bonus points (cap at +15)
+- 🏆 **Live leaderboard** — overlay during play (server API, same data for host and guests), full
+  podium at the end
+- 📜 **Match history** — permanent snapshot saved at session end (`live_session_results`), viewable
+  at `/dashboard/storico` with per-game filter
+- 🍷 **Bottle reveal** — name, producer, year shown at the end of each round
+- 🎓 **Wine Course** — 8-level structured course with progressive quizzes and per-lesson progress
+  tracking
+- 🍾 **Enoteca** — anonymous single-player tasting mode (no login required)
+- 📱 **Mobile-first UI** — Duolingo-style slides, emoji avatars, smooth transitions
+
+---
+
+## 🗺️ Key Routes
+
+| Route                            | Description                        |
+| -------------------------------- | ---------------------------------- |
+| `/`                              | Landing page                       |
+| `/auth`                          | Login / register                   |
+| `/dashboard`                     | Host's game list + quick actions   |
+| `/dashboard/storico`             | Match history with per-game filter |
+| `/game/create`                   | Full game creation wizard          |
+| `/game/create-quick`             | 3-step quick game                  |
+| `/game/[id]`                     | View / manage a game               |
+| `/game/[id]/edit`                | Edit game                          |
+| `/game/[id]/live`                | Create live session (lobby)        |
+| `/game/[id]/print`               | Print card                         |
+| `/live/session/[id]`             | Join lobby                         |
+| `/live/session/[id]/play`        | Active gameplay                    |
+| `/live/session/[id]/leaderboard` | Final leaderboard                  |
+| `/corso-vino`                    | Wine course home                   |
+| `/corso-vino/[levelId]`          | Level detail                       |
+| `/enoteca/[menuId]`              | Enoteca tasting                    |
+| `/profilo`                       | User profile + language switcher   |
+| `/changelog`                     | Version history                    |
+| `/info`                          | App info / how-to                  |
+
+---
+
+## 🏗️ Architecture
+
+### Live Multiplayer Flow
+
+```
+Host                         Supabase                        Guests
+ │                               │                              │
+ │── creates live_session ──────►│                              │
+ │                               │◄─ join (insert live_player) ─│
+ │   start() ───────────────────►│── Realtime broadcast ───────►│
+ │                               │                              │
+ │                    [round: waiting_answers]                   │
+ │   answer locally (no wait)    │    answer locally            │
+ │   insert live_round_answers ─►│◄─ insert live_round_answers ─│
+ │                               │── Realtime INSERT ──────────►│
+ │   [allPlayersCompletedThisRound == true]                      │
+ │   syncScoresFromAnswers() ───►│                              │
+ │   update live_session ───────►│── Realtime broadcast ───────►│
+ │                               │                              │
+ │              [round: showing_results]                         │
+ │   handleNextBottle() ────────►│── Realtime broadcast ───────►│
+ │                               │                              │
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Correct answer preloading**: `play/page.js` (server) fetches `game_bottle_answers` using the
+service role key and embeds `_correctAnswers: {questionId: optionId}` directly in each bottle object
+— this avoids a client-side RLS hang that affected authenticated (host) users.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the
-file.
+**Standings API**: `GET /api/live/session/standings` uses the service role key to compute scores
+server-side, guaranteeing identical data for host and guests regardless of RLS differences.
 
-This project uses
-[`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to
-automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### i18n System
 
-## Learn More
+- `useT('namespace.sub')` — hook resolving dot-notation paths into `it.json` / `en.json`
+- Language stored in `profiles.preferred_language` (authenticated) or `localStorage` (guest)
+- `getServerLanguage()` — server-side language resolution
+- All live session UI fully translated (IT / EN)
 
-To learn more about Next.js, take a look at the following resources:
+### State Management (Live Play)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback
-and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the
-[Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
-from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://vercel.com/docs/frameworks/next-js) for
-more details.
+| Hook                | Responsibility                                                  |
+| ------------------- | --------------------------------------------------------------- |
+| `useGameDataLoader` | Loads bottles, questions, players; handles late-join bootstrap  |
+| `usePlayerResolver` | Resolves or creates the local player record                     |
+| `useRoundPlay`      | All per-round state: answers, combo, slides, results visibility |
+| `useOverlays`       | Leaderboard sheet + exit modal; fetches standings from API      |
+| `useLiveRealtime`   | Supabase Realtime subscriptions (sessions, players, answers)    |
+| `useGameAudio`      | Sound effects                                                   |
 
 ---
 
-## 📖 Project Documentation
+## 🏆 Scoring
 
-### Architecture & Guides
+| Condition             | Points    |
+| --------------------- | --------- |
+| Wrong answer          | 0         |
+| Correct answer        | +10       |
+| Correct — 2 in a row  | +15       |
+| Correct — 3 in a row  | +20       |
+| Correct — 4+ in a row | +25 (cap) |
 
-- [Live Multiplayer Guide](./LIVE_MULTIPLAYER_GUIDE.md) - Complete live multiplayer setup & flow
-- [Database Schema](./DATABASE.md) - Full table reference with RLS policies and scoring logic
-- [Code Analysis](./CODE_ANALYSIS.md) - Detailed component & database architecture
-- [Quick Start](./QUICK_START.md) - Dev environment setup
-
-### Key Features
-
-#### 💾 Game Creation
-
-- Create custom trivia games with questions and wine bottles
-- Each bottle has multiple questions with one correct answer per question
-- Publish or keep as draft
-
-#### 🎮 Live Multiplayer
-
-- Host creates session and shares link
-- Players join with nickname + avatar
-- Real-time gameplay: Supabase Realtime WebSocket as primary sync + polling every 2s as fallback
-- **No interruptions:** the host waits for all players to complete the round before advancing
-- Slide-based UI with Duolingo-style animations (220ms transitions)
-- Guests can join anonymously (identified by `localStorage` + nickname)
-
-#### 🏆 Scoring
-
-| Condition                    | Points    |
-| ---------------------------- | --------- |
-| Wrong answer                 | 0         |
-| Correct answer               | +10       |
-| Correct — 2 in a row (combo) | +15       |
-| Correct — 3 in a row         | +20       |
-| Correct — 4+ in a row        | +25 (cap) |
-
-Combo resets on any wrong answer or when the bottle changes. Scores are accumulated on
-`live_players.total_score` by the host after each bottle.
-
-#### 📱 UX/UI
-
-- Mobile-first responsive design
-- Emoji avatars (10 Apple-style options)
-- Smooth left/right slide animations
-- Bottom-fixed panel for actions
-- Progress pills tracking question completion within a bottle
-- In-game leaderboard sheet (refreshed from DB on open)
-- "Vedi classifica" shortcut button on the last bottle
+Combo resets on wrong answer or bottle change. Scores are persisted to `live_players.total_score` by
+the host via `syncScoresFromAnswers()` before advancing. A permanent snapshot is written to
+`live_session_results` when the session finishes.
 
 ---
 
-## 🗄️ Database Schema (Supabase)
+## 🗄️ Database
 
-Full documentation: [DATABASE.md](./DATABASE.md)
+Full schema reference: [DATABASE.md](./DATABASE.md)
 
-Key tables:
+SQL sources (apply in order for a fresh setup):
 
-| Table                   | Purpose                                                           |
-| ----------------------- | ----------------------------------------------------------------- |
-| `games`                 | Game definitions (name, status, creator)                          |
-| `game_questions`        | Questions shared across all bottles of a game                     |
-| `game_question_options` | Multiple-choice options per question                              |
-| `game_bottles`          | Wine bottles (name, producer, year, order)                        |
-| `game_bottle_answers`   | Correct option per (bottle, question) pair                        |
-| `live_sessions`         | Active game sessions (status, current bottle index, round status) |
-| `live_players`          | Participants with avatar, score, host flag                        |
-| `live_round_answers`    | Per-round answer submissions (cleared between bottles)            |
+1. `SUPABASE_RESTORE_FULL.sql` — complete restore (tables + RLS + indexes)
+2. `SUPABASE_LIVE_GUEST_PATCH.sql` — guest/anonymous player policies
+3. `RLS_DELETE_POLICIES_PATCH.sql` — game editor delete policies
+4. `WINE_COURSE_PROGRESS.sql` — wine course progress table
+5. `ENOTECA_SCHEMA.sql` — enoteca tasting tables
+6. `LIVE_SESSION_HISTORY.sql` — match history snapshot table
 
-See [SUPABASE_LIVE_SESSIONS.sql](./SUPABASE_LIVE_SESSIONS.sql) for the full schema with RLS
-policies.
+### Key Tables
+
+| Table                      | Purpose                                           |
+| -------------------------- | ------------------------------------------------- |
+| `games`                    | Game definitions                                  |
+| `game_questions`           | Questions (shared across all bottles)             |
+| `game_question_options`    | Multiple-choice options                           |
+| `game_bottles`             | Wine bottles                                      |
+| `game_bottle_answers`      | Correct option per (bottle, question)             |
+| `live_sessions`            | Active sessions                                   |
+| `live_players`             | Participants (nickname, avatar, score, host flag) |
+| `live_round_answers`       | Per-round submissions (cleared between bottles)   |
+| `live_session_results`     | Permanent match history snapshot                  |
+| `wine_course_progress`     | Per-user per-lesson course progress               |
+| `enoteca_tasting_sessions` | Enoteca anonymous sessions                        |
+| `enoteca_answers`          | Enoteca answers                                   |
 
 ---
 
-## 🚀 Running the App
+## 🚀 Local Development
 
 ```bash
 npm install
-npm run dev
-# Open http://localhost:3000
+npm run dev        # http://localhost:3000
+npm run build      # production build check
 ```
 
-### Key Routes
+### Environment Variables
 
-- `/dashboard` - Game list
-- `/game/create` - Create new game
-- `/game/[id]` - Play/view game
-- `/game/[id]/live` - Create live session
-- `/live/session/[sessionId]` - Join lobby
-- `/live/session/[sessionId]/play` - Play live session
+Copy `.env.example` to `.env.local` and fill in:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=     # required for admin routes (finish, standings, history)
+```
+
+### API Routes
+
+| Route                                  | Auth        | Purpose                                |
+| -------------------------------------- | ----------- | -------------------------------------- |
+| `POST /api/live/session/create`        | host        | Create session                         |
+| `POST /api/live/session/start`         | host        | Start session                          |
+| `POST /api/live/session/finish`        | participant | Finish session + save history snapshot |
+| `POST /api/live/session/cancel`        | host        | Cancel session                         |
+| `GET /api/live/session/standings`      | public      | Server-side standings (service role)   |
+| `POST /api/live/session/players-count` | host        | Players count                          |
+
+---
+
+## 📖 Additional Documentation
+
+- [DATABASE.md](./DATABASE.md) — Full table reference with RLS and scoring
+- [BACKLOG.md](./BACKLOG.md) — Completed work and upcoming tasks
+- [TESTING_CHECKLIST.md](./TESTING_CHECKLIST.md) — Manual QA checklist
+- [SUPABASE_SETUP_GUIDE.md](./SUPABASE_SETUP_GUIDE.md) — Supabase project setup guide

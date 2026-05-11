@@ -2,7 +2,7 @@
 
 import {useState, useEffect, useCallback, useMemo} from 'react'
 import {useRouter, useSearchParams} from 'next/navigation'
-import {supabaseClient} from '@/lib/supabaseClient'
+import {supabaseAnonClient} from '@/lib/supabaseClient'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
 // Reuse live-game stylesheet directly – no duplicate CSS
@@ -130,7 +130,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
       router.replace(`/enoteca/${menuId}`)
       return
     }
-    supabaseClient
+    supabaseAnonClient
       .from('enoteca_tasting_sessions')
       .select('id, current_bottle_index, status')
       .eq('id', savedId)
@@ -151,7 +151,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
         const savedIdx = data.current_bottle_index ?? 0
         setBottleIndex(savedIdx)
 
-        supabaseClient
+        supabaseAnonClient
           .from('enoteca_answers')
           .select('bottle_id, question_id, selected_option_id, is_correct, points')
           .eq('tasting_session_id', savedId)
@@ -201,7 +201,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
     playSound(isCorrect ? 'correct' : 'wrong')
 
     setSaving(true)
-    await supabaseClient.from('enoteca_answers').upsert(
+    await supabaseAnonClient.from('enoteca_answers').upsert(
       {
         tasting_session_id: sessionId,
         bottle_id: currentBottle.id,
@@ -235,7 +235,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
   const handleGoNextBottle = useCallback(async () => {
     if (isLastBottle) {
       const totalScore = Object.values(checked).reduce((sum, c) => sum + (c.points ?? 0), 0)
-      await supabaseClient
+      await supabaseAnonClient
         .from('enoteca_tasting_sessions')
         .update({
           status: 'completed',
@@ -251,7 +251,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
 
   const handleAdvanceFromTransition = useCallback(async () => {
     const nextIndex = bottleIndex + 1
-    await supabaseClient
+    await supabaseAnonClient
       .from('enoteca_tasting_sessions')
       .update({current_bottle_index: nextIndex})
       .eq('id', sessionId)

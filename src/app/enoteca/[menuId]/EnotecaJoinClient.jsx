@@ -2,7 +2,7 @@
 
 import {useState, useEffect} from 'react'
 import {useRouter} from 'next/navigation'
-import {supabaseClient} from '@/lib/supabaseClient'
+import {supabaseAnonClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
@@ -46,7 +46,7 @@ export default function EnotecaJoinClient({
 
     const loadSession = async () => {
       try {
-        const {data, error} = await supabaseClient
+        const {data, error} = await supabaseAnonClient
           .from('enoteca_tasting_sessions')
           .select('id, nickname, current_bottle_index, status')
           .eq('id', savedId)

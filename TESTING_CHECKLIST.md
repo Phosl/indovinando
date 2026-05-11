@@ -1,14 +1,164 @@
-# Testing Checklist - Game Editor Refactoring
+# Testing Checklist
 
-## Pre-Testing Verification
+## Build & Lint
 
 - [ ] No build errors: `npm run build`
-- [ ] No lint errors: `npm run lint` (if available)
 - [ ] Development server starts: `npm run dev`
 
 ---
 
-## Step 1: Game Name
+## 🎮 Game Editor (create / edit)
+
+### Step 1 — Nome gioco
+
+- [ ] Input visibile, testo modificabile
+- [ ] "Prosegui" abilitato solo dopo aver inserito un nome
+- [ ] Nome preservato navigando indietro
+
+### Step 2 — Domande
+
+- [ ] Stato vuoto + pulsante "Nuova Domanda" visible
+- [ ] Modal si apre, testo + opzioni modificabili
+- [ ] Validazione: testo vuoto → alert; meno di 2 opzioni → alert
+- [ ] Domanda salvata appare in griglia con status ✓ / ⚠️
+- [ ] Modifica domanda esistente: valori pre-popolati
+- [ ] "Salva questionario" disabilitato senza domande
+- [ ] Aggiornare questionario (aggiungi domanda) → bottle answers estesi, vecchie risposte
+      preservate
+
+### Step 3 — Bottiglie
+
+- [ ] Modal bottiglia: campi nome, produttore, anno
+- [ ] Validazione: campo mancante → alert; risposta mancante → alert
+- [ ] Bottiglia salvata appare in griglia con status ✓ / ⚠️
+- [ ] "Pubblica Gioco" disabilitato senza bottiglie complete
+- [ ] Pubblicazione → redirect a `/dashboard`
+
+---
+
+## 👥 Live Session — Host flow
+
+- [ ] Creare sessione da `/game/[id]` → lobby si apre
+- [ ] Link sessione copiabile e condivisibile
+- [ ] Giocatori che si uniscono appaiono in lobby (Realtime)
+- [ ] "Avvia partita" abilitato solo con almeno 1 giocatore
+- [ ] Prima bottiglia caricata, domande mostrate in sequenza
+- [ ] Host può rispondere come gli altri (non skippare)
+- [ ] Avanzamento al risultato quando tutti hanno risposto (o host forza avanzamento)
+- [ ] Punteggi aggiornati su DB (`syncScoresFromAnswers`)
+- [ ] Cambio bottiglia → nuova bottiglia mostrata a tutti
+- [ ] Ultima bottiglia → pulsante "Vedi classifica" compare
+- [ ] Fine sessione → classifica finale + salvataggio storico
+
+### Overlay leaderboard (host)
+
+- [ ] Tap sull'icona classifica → overlay si apre
+- [ ] Lista giocatori con punteggio mostrata (non "nessun giocatore")
+- [ ] Ordine per punteggio decrescente
+- [ ] Punteggio round corrente evidenziato
+- [ ] Classifica identica a quella vista dai guest
+
+---
+
+## 👤 Live Session — Guest flow
+
+- [ ] Accedere al link sessione senza account → schermata nickname/avatar
+- [ ] Inserire nickname e selezionare avatar → join riuscito
+- [ ] Lobby mostra altri giocatori (Realtime)
+- [ ] Avvio partita ricevuto correttamente
+- [ ] Domande e opzioni uguali a quelle dell'host
+- [ ] Risposta registrata su DB
+- [ ] Classifica identica a quella dell'host
+
+### Combo e punteggio
+
+- [ ] Risposta corretta → +10 punti
+- [ ] 2 corrette consecutive → +15 (combo attiva)
+- [ ] 3 corrette consecutive → +20
+- [ ] 4+ corrette consecutive → +25 (cap)
+- [ ] Risposta errata → combo reset, 0 punti
+- [ ] Cambio bottiglia → combo reset
+
+---
+
+## 📜 Storico partite (`/dashboard/storico`)
+
+- [ ] Pagina accessibile da dashboard (pulsante "📜 Storico partite")
+- [ ] Lista partite ordinata dalla più recente
+- [ ] Card mostra: nome gioco, data, N giocatori, podio top-3
+- [ ] "Mostra tutti" espande lista completa (>3 giocatori)
+- [ ] Nessuna partita → stato vuoto corretto
+- [ ] Filter pills: visibili solo se ci sono >1 gioco distinto
+- [ ] Pill "Tutti" selezionata di default
+- [ ] Click su pill gioco → filtra le card
+- [ ] Click su pill attiva → deseleziona (torna a tutti)
+- [ ] Conteggio pill aggiornato correttamente
+
+---
+
+## 🏆 Standings API
+
+- [ ] `GET /api/live/session/standings?sessionId=X` risponde 200
+- [ ] Stesso risultato per host e guest (stessa sessione)
+- [ ] Ordine per `liveTotalScore` decrescente
+- [ ] `roundPoints` > 0 solo durante `waiting_answers` / `showing_results`
+
+---
+
+## 🎓 Corso Vino (`/corso-vino`)
+
+- [ ] Pagina livelli carica correttamente
+- [ ] Accedere a un livello → elenco lezioni
+- [ ] Avviare una lezione → slide progressive
+- [ ] Quiz finale → risposte registrate
+- [ ] Progresso salvato su `wine_course_progress`
+- [ ] Lezione completata → badge ✓ in elenco
+- [ ] "Tutte le lezioni" in alto funziona
+
+---
+
+## 🍾 Enoteca (`/enoteca/[menuId]`)
+
+- [ ] Pagina accessibile senza account
+- [ ] Flusso degustazione: bottiglia → domanda → risposta → risultato
+- [ ] Risposte salvate su `enoteca_answers`
+
+---
+
+## 🌍 i18n
+
+- [ ] Cambiare lingua da `/profilo` → UI aggiornata immediatamente
+- [ ] Tutte le schermate live mostrano stringhe nella lingua corretta
+- [ ] Guest senza account: lingua da `localStorage`, non da profilo
+- [ ] Nessuna chiave mancante (`undefined` / `[key]` in UI)
+
+---
+
+## 📱 Mobile (iPhone reale)
+
+- [ ] Lobby: lista giocatori scrollabile
+- [ ] Gameplay: opzioni cliccabili senza zoom
+- [ ] Overlay classifica: list scrollabile
+- [ ] Storico: card leggibili, pills navigabili
+- [ ] Corso: slide quiz funzionanti
+
+---
+
+## 🔒 Auth & Sicurezza
+
+- [ ] Accesso `/dashboard` senza login → redirect a `/auth`
+- [ ] Accesso `/storico` senza login → redirect a `/auth`
+- [ ] Host non può essere kickato dalla propria sessione
+- [ ] Guest non vede le sessioni altrui nel DB (RLS)
+- [ ] `SUPABASE_SERVICE_ROLE_KEY` non esposta al client
+
+---
+
+## Browser
+
+- [ ] Chrome
+- [ ] Safari (desktop + mobile)
+- [ ] Firefox
 
 - [ ] Input field displays correctly
 - [ ] Can type game name
@@ -226,8 +376,8 @@
 
 ## Sign-Off
 
-- **Tester**: ******\_\_\_******
-- **Date**: ******\_\_\_******
+- **Tester**: **\*\***\_\_\_**\*\***
+- **Date**: **\*\***\_\_\_**\*\***
 - **Status**: ☐ Pass ☐ Fail
 
 ### Notes:

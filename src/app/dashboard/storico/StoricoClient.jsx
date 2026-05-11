@@ -90,9 +90,7 @@ export default function StoricoClient({sessions, t, lang}) {
               {s.players?.length > 0 && (
                 <div className={styles.podium}>
                   {s.players.slice(0, 3).map((p, idx) => (
-                    <div
-                      key={p.id}
-                      className={`${styles.podiumItem} ${styles[`rank${idx + 1}`]}`}>
+                    <div key={p.id} className={`${styles.podiumItem} ${styles[`rank${idx + 1}`]}`}>
                       <span className={styles.medal}>
                         {idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}
                       </span>
@@ -100,7 +98,9 @@ export default function StoricoClient({sessions, t, lang}) {
                         {APPLE_AVATARS[p.avatar_id - 1] || '👤'}
                       </span>
                       <span className={styles.nickname}>{p.nickname}</span>
-                      <span className={styles.score}>{p.total_score} {t.points}</span>
+                      <span className={styles.score}>
+                        {p.total_score} {t.points}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -119,7 +119,9 @@ export default function StoricoClient({sessions, t, lang}) {
                           {APPLE_AVATARS[p.avatar_id - 1] || '👤'}
                         </span>
                         <span className={styles.fullNickname}>{p.nickname}</span>
-                        <span className={styles.fullScore}>{p.total_score} {t.points}</span>
+                        <span className={styles.fullScore}>
+                          {p.total_score} {t.points}
+                        </span>
                       </div>
                     ))}
                   </div>

@@ -2,7 +2,7 @@
 
 import {useState, useEffect, useMemo} from 'react'
 import {useRouter} from 'next/navigation'
-import {supabaseClient} from '@/lib/supabaseClient'
+import {supabaseAnonClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
@@ -36,12 +36,12 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
       return
     }
     Promise.all([
-      supabaseClient
+      supabaseAnonClient
         .from('enoteca_tasting_sessions')
         .select('id, nickname, table_name, total_score, status')
         .eq('id', savedId)
         .single(),
-      supabaseClient
+      supabaseAnonClient
         .from('enoteca_answers')
         .select('bottle_id, question_id, selected_option_id, is_correct, points')
         .eq('tasting_session_id', savedId),
