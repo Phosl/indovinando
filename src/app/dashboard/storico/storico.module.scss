@@ -26,6 +26,53 @@
   font-weight: 500;
 }
 
+// ── Filter pills ────────────────────────────────────────────────────────────
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 2px solid var(--button-secondary-border);
+  background: var(--foreground);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+
+  &:hover {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+  }
+
+  &.pillActive {
+    background: var(--text-primary);
+    border-color: var(--text-primary);
+    color: var(--background);
+
+    .pillCount {
+      background: rgba(255,255,255,0.2);
+      color: inherit;
+    }
+  }
+}
+
+.pillCount {
+  background: var(--button-secondary-border);
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+}
+
 // ── Empty state ─────────────────────────────────────────────────────────────
 .empty {
   display: flex;

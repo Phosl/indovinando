@@ -11,27 +11,21 @@ const CHANGELOG = [
     version: '1.12.0',
     date: '11 maggio 2026',
     label: 'Auto',
-    changes: [
-      'TopBar in storico e changelog',
-    ],
+    changes: ['TopBar in storico e changelog'],
   },
 
   {
     version: '1.11.0',
     date: '11 maggio 2026',
     label: 'Auto',
-    changes: [
-      'storico partite live - snapshot, pagina /dashboard/storico',
-    ],
+    changes: ['storico partite live - snapshot, pagina /dashboard/storico'],
   },
 
   {
     version: '1.10.9',
     date: '11 maggio 2026',
     label: 'Auto',
-    changes: [
-      'live session - classifica overlay, t shadow, standings API',
-    ],
+    changes: ['live session - classifica overlay, t shadow, standings API'],
   },
 
   {

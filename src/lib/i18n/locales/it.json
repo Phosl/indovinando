@@ -43,7 +43,8 @@
       "player": "giocatore",
       "players": "giocatori",
       "points": "pt",
-      "showAll": "Vedi tutti"
+      "showAll": "Vedi tutti",
+      "allGames": "Tutti"
     }
   },
   "live": {
