@@ -62,7 +62,6 @@ export default function PlayerLiveClient({
     setAllPlayers,
     sessionFinished,
     setSessionFinished,
-    setRoundAnchorAt,
   } = useGameDataLoader({
     sessionId,
     initialQuestions: questions,
@@ -148,7 +147,6 @@ export default function PlayerLiveClient({
         setTimeout(() => router.push(`/live/session/${sessionId}/leaderboard`), 900)
       }
       if (updated?.current_question_index !== currentBottleIndex) {
-        setRoundAnchorAt(updated?.updated_at || new Date().toISOString())
         resetRoundState(
           updated?.current_question_index || 0,
           updated?.round_status || 'waiting_answers',

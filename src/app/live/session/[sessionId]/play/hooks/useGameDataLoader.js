@@ -28,7 +28,6 @@ export function useGameDataLoader({
   const [loadingGameData, setLoadingGameData] = useState((initialQuestions || []).length === 0)
   const [allPlayers, setAllPlayers] = useState(initialPlayers || [])
   const [sessionFinished, setSessionFinished] = useState(false)
-  const [roundAnchorAt, setRoundAnchorAt] = useState(initialUpdatedAt || null)
 
   // Load player list on mount
   useEffect(() => {
@@ -69,7 +68,6 @@ export function useGameDataLoader({
 
             setCurrentBottleIndex(session.current_question_index || 0)
             setRoundStatus(session.round_status || 'waiting_answers')
-            setRoundAnchorAt(session.updated_at || initialUpdatedAt || null)
             if (session.status === 'finished') setSessionFinished(true)
 
             const [{data: questionsData}, {data: bottlesData}, {data: playersData}] =
@@ -138,7 +136,5 @@ export function useGameDataLoader({
     setAllPlayers,
     sessionFinished,
     setSessionFinished,
-    roundAnchorAt,
-    setRoundAnchorAt,
   }
 }

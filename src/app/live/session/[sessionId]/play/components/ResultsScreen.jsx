@@ -175,7 +175,13 @@ export const ResultsScreen = memo(function ResultsScreen({
           </p>
         )}
 
-        {isLastBottle ? (
+        {isLastBottle && !isHostUser ? (
+          // Guests cannot call /api/live/session/finish (requires auth).
+          // They are auto-redirected when the host broadcasts status:'finished'.
+          allPlayersCompletedThisRound ? (
+            <p className={styles.readyHint}>{t('waitingHostContinue')}</p>
+          ) : null
+        ) : isLastBottle ? (
           <button
             className={styles.continueButton}
             onClick={onViewLeaderboard}
