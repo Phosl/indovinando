@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.1',
+    date: '11 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'enoteca hanging on load for authenticated users + doc update',
+    ],
+  },
+
+  {
     version: '1.13.0',
     date: '11 maggio 2026',
     label: 'Auto',
