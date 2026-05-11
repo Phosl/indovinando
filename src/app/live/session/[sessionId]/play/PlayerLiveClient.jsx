@@ -208,7 +208,7 @@ export default function PlayerLiveClient({
   if (resolvingPlayer || loadingGameData) {
     return (
       <div className={styles.fullPage}>
-        <Loader label="Loading game" />
+        <Loader label={t('loadingGame')} />
       </div>
     )
   }

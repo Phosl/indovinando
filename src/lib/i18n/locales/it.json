@@ -22,7 +22,7 @@
     "createGame": "+ Crea gioco",
     "profile": "👤 Profilo",
     "admin": "⚙️ Admin",
-    "newLabel": "Novita",
+    "newLabel": "Novità",
     "wineCourse": "Corso Vino",
     "wineCourseDesc": "Impara il vino passo dopo passo · gratis 🎓",
     "yourGames": "I tuoi giochi",
@@ -39,10 +39,11 @@
   "live": {
     "playerLive": {
       "gameOverTitle": "🎉 Gioco Terminato!",
-      "redirecting": "Redirezione alla classifica...",
+      "redirecting": "Reindirizzamento alla classifica...",
       "participantNotFound": "👤 Partecipante non trovato",
       "participantNotFoundDesc": "Rientra dalla pagina di accesso alla sessione con il tuo nickname.",
-      "backToJoin": "Torna al join",
+      "backToJoin": "Torna all'accesso",
+      "loadingGame": "Caricamento partita...",
       "sessionNotReadyTitle": "🕒 Sessione non pronta",
       "sessionNotReadyDesc": "Attendi l'avvio del gioco.",
       "bottleComplete": "Bottiglia completata!",
@@ -51,8 +52,10 @@
       "movingToBottle": "Passaggio alla bottiglia {index}."
     },
     "results": {
+      "bottleCounter": "Bottiglia {current}/{total}",
       "theBottleWas": "La bottiglia era",
       "correctAnswer": "Risposta corretta:",
+      "notAnswered": "Non risposto",
       "liveLeaderboard": "🏆 Classifica Live",
       "you": "tu",
       "pointsUnit": "pt",
@@ -71,6 +74,8 @@
       "correctAnswer": "Risposta corretta:",
       "checking": "Controllo...",
       "check": "Controlla",
+      "bottleCounter": "Bottiglia {current}/{total}",
+      "questionCounter": "Domanda {current} di {total}",
       "waitingOthers": "In attesa degli altri...",
       "seeResults": "Vedi risultati",
       "continue": "Continua"
@@ -102,14 +107,15 @@
     },
     "playerJoin": {
       "enterNickname": "Inserisci un nickname",
+      "nicknameLabel": "Nickname",
       "nicknameMin": "Il nickname deve avere almeno 2 caratteri",
       "nicknameTaken": "Questo nickname è già usato in questa partita!",
-      "joinError": "Errore durante l'entrata nel gioco",
+      "joinError": "Errore durante l'accesso al gioco",
       "gameStartingTitle": "🎉 Il gioco inizia...",
       "gameStartingDesc": "Stai per entrare nel gioco!",
       "chooseAvatar": "Scegli il tuo avatar",
       "nicknamePlaceholder": "Es: Marco, Anna...",
-      "joining": "Entrata...",
+      "joining": "Accesso...",
       "joinGame": "Entra nel gioco",
       "loginOptional": "Registrati / Accedi (opzionale)",
       "waitHostCreate": "L'host sta creando la partita...",
@@ -119,13 +125,14 @@
     },
     "host": {
       "gameOverTitle": "🎉 Gioco Terminato!",
-      "redirecting": "Redirezione alla classifica...",
+      "redirecting": "Reindirizzamento alla classifica...",
+      "bottleProgress": "Bottiglia {current} di {total}",
       "bottleFallback": "Bottiglia",
       "roundQuestions": "Domande del round",
       "playersCompleted": "Giocatori che hanno completato",
       "showResults": "Mostra risultati",
       "playersOnline": "Giocatori online",
-      "playersAllCorrect": "Giocatori tutte corrette",
+      "playersAllCorrect": "Giocatori con tutte le risposte corrette",
       "playersAnswered": "Giocatori che hanno risposto",
       "topPlayers": "Top giocatori",
       "finishGame": "Termina gioco",
@@ -138,8 +145,8 @@
     "feedbackWrong": "Non esatto. Riprova: puoi farcela.",
     "keyPointReinforce": "Rispondi alle domande per consolidare i concetti.",
     "keyPointRepeat": "Puoi ripetere la lezione quando vuoi.",
-    "interactiveLesson": "Lesson interattiva sul vino.",
-    "continueWithQuestions": "Continue con le domande per fissare i concetti e verificare quanto hai appreso.",
+    "interactiveLesson": "Lezione interattiva sul vino.",
+    "continueWithQuestions": "Continua con le domande per fissare i concetti e verificare quanto hai appreso.",
     "readCarefully": "Leggi con attenzione questa parte: ti prepara a rispondere in modo consapevole alle domande del quiz.",
     "observeConcepts": "Osserva i concetti chiave della lezione.",
     "connectTheory": "Collega teoria e situazioni reali.",
@@ -152,6 +159,8 @@
     "login": "Accedi",
     "register": "Registrati",
     "usernamePlaceholder": "Nome utente",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
     "loading": "Caricamento...",
     "switchToRegister": "Non hai un account? Registrati",
     "switchToLogin": "Hai già un account? Accedi",
@@ -198,6 +207,7 @@
     }
   },
   "level": {
+    "levelTitle": "Livello {index}",
     "lesson": "Lezione",
     "repeat": "Ripeti"
   },
@@ -213,8 +223,8 @@
         "description": "Una guida pratica per scoprire tutte le funzioni e iniziare velocemente.",
         "points": [
           "Crea format di gioco in pochi minuti.",
-          "Gioca con amici live o in presenza con modalita enoteca.",
-          "Tieni traccia della formazione vino nell area corso."
+          "Gioca con amici live o in presenza con modalità Enoteca.",
+          "Tieni traccia della tua formazione sul vino nell'area corso."
         ]
       },
       {
@@ -232,9 +242,9 @@
       {
         "emoji": "⚡",
         "title": "Crea Gioco Veloce",
-        "description": "Parti da un template pronto e pubblica subito quando vuoi massima velocita.",
+        "description": "Parti da un template pronto e pubblica subito quando vuoi la massima velocità.",
         "points": [
-          "Struttura domande gia impostata.",
+          "Struttura domande già impostata.",
           "Setup rapido per eventi e degustazioni.",
           "Perfetto per sessioni veloci con poca preparazione."
         ],
@@ -243,7 +253,7 @@
       },
       {
         "emoji": "🥂",
-        "title": "Modalita Enoteca",
+        "title": "Modalità Enoteca",
         "description": "Flusso da tavolo per degustazioni in presenza con sessioni a nickname.",
         "points": [
           "Si gioca insieme nello stesso tavolo.",
@@ -258,7 +268,7 @@
         "title": "Live Multiplayer",
         "description": "Crea una sessione realtime con host e giocatori, risultati round per round.",
         "points": [
-          "Join dei partecipanti con nickname e avatar.",
+          "Ingresso dei partecipanti con nickname e avatar.",
           "Stato round e punteggi in tempo reale.",
           "Classifica finale al termine della partita."
         ],

@@ -2,7 +2,7 @@ import {createServerSupabase} from '@/lib/supabaseServer'
 import PlayerJoinClient from './PlayerJoinClient'
 
 export const metadata = {
-  title: 'Join Game',
+  title: 'Entra nella partita',
 }
 
 export default async function PlayerJoinPage({params}) {

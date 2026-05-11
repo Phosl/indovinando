@@ -151,7 +151,7 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
     return () => clearInterval(pollCombined)
   }, [sessionId])
 
-  // Se il gioco è iniziato, reindirizza alla pagina of gioco
+  // Se il gioco è iniziato, reindirizza alla pagina di gioco
   useEffect(() => {
     if (gameStarted) {
       const timer = setTimeout(() => {
@@ -253,7 +253,7 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="nickname">Nickname</label>
+                <label htmlFor="nickname">{t('nicknameLabel')}</label>
                 <input
                   id="nickname"
                   type="text"

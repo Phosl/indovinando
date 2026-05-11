@@ -13,7 +13,7 @@ export default function LevelClient({level, lessons}) {
 
   return (
     <div className={styles.page}>
-      <TopBar title={`Level ${level.order}`} onBack={() => router.push('/corso-vino')}></TopBar>
+      <TopBar title={t('levelTitle', {index: level.order})} onBack={() => router.push('/corso-vino')}></TopBar>
 
       {/* Level hero */}
       <div className={styles.levelHero}>

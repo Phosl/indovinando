@@ -83,7 +83,7 @@ export const ResultsScreen = memo(function ResultsScreen({
 
       <div className={styles.slideContent}>
         <div className={styles.bottleBadge}>
-          Bottle {currentBottleIndex + 1}/{totalBottles}
+          {t('bottleCounter', {current: currentBottleIndex + 1, total: totalBottles})}
         </div>
         <h2 className={styles.waitTitle}>{title}</h2>
         {subtitle && <p className={styles.readyHint}>{subtitle}</p>}
@@ -125,7 +125,7 @@ export const ResultsScreen = memo(function ResultsScreen({
                   ) : (
                     <>
                       <span className={styles.summaryWrong}>
-                        ❌ {selectedOptionText || 'Not answered'}
+                        ❌ {selectedOptionText || t('notAnswered')}
                       </span>
                       <span className={styles.summaryCorrectHint}>
                         {t('correctAnswer')} {correctOptionText || '-'}

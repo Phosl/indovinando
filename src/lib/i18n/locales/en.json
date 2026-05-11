@@ -43,6 +43,7 @@
       "participantNotFound": "👤 Participant not found",
       "participantNotFoundDesc": "Rejoin from the session entry page using your nickname.",
       "backToJoin": "Back to join",
+      "loadingGame": "Loading game...",
       "sessionNotReadyTitle": "🕒 Session not ready",
       "sessionNotReadyDesc": "Wait for the game to start.",
       "bottleComplete": "Bottle complete!",
@@ -51,8 +52,10 @@
       "movingToBottle": "Moving to bottle {index}."
     },
     "results": {
+      "bottleCounter": "Bottle {current}/{total}",
       "theBottleWas": "The bottle was",
       "correctAnswer": "Correct answer:",
+      "notAnswered": "Not answered",
       "liveLeaderboard": "🏆 Live Leaderboard",
       "you": "you",
       "pointsUnit": "pts",
@@ -71,6 +74,8 @@
       "correctAnswer": "Correct answer:",
       "checking": "Checking...",
       "check": "Check",
+      "bottleCounter": "Bottle {current}/{total}",
+      "questionCounter": "Question {current} of {total}",
       "waitingOthers": "Waiting for others...",
       "seeResults": "See results",
       "continue": "Continue"
@@ -102,6 +107,7 @@
     },
     "playerJoin": {
       "enterNickname": "Enter a nickname",
+      "nicknameLabel": "Nickname",
       "nicknameMin": "Nickname must be at least 2 characters",
       "nicknameTaken": "This nickname is already used in this game!",
       "joinError": "Error while joining the game",
@@ -120,12 +126,13 @@
     "host": {
       "gameOverTitle": "🎉 Game Over!",
       "redirecting": "Redirecting to leaderboard...",
+      "bottleProgress": "Bottle {current} of {total}",
       "bottleFallback": "Bottle",
       "roundQuestions": "Round questions",
       "playersCompleted": "Players who completed",
       "showResults": "Show results",
       "playersOnline": "Players online",
-      "playersAllCorrect": "Players all-correct",
+      "playersAllCorrect": "Players with all answers correct",
       "playersAnswered": "Players answered",
       "topPlayers": "Top players",
       "finishGame": "Finish game",
@@ -152,6 +159,8 @@
     "login": "Login",
     "register": "Register",
     "usernamePlaceholder": "Username",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
     "loading": "Loading...",
     "switchToRegister": "Don't have an account? Register",
     "switchToLogin": "Already have an account? Login",
@@ -198,6 +207,7 @@
     }
   },
   "level": {
+    "levelTitle": "Level {index}",
     "lesson": "Lesson",
     "repeat": "Repeat"
   },

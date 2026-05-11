@@ -10,7 +10,7 @@ const ONBOARDING_DICTIONARY = {
     step: 'Passo',
     of: 'di',
     back: '← Indietro',
-    disable: 'Non mostrare piu',
+    disable: 'Non mostrare più',
     next: 'Avanti →',
     start: 'Inizia! 🚀',
     steps: [
@@ -22,7 +22,7 @@ const ONBOARDING_DICTIONARY = {
       {
         title: '❓ Passo 1: Crea il Questionario',
         description:
-          'Aggiungi domande e opzioni di risposta. Ad esempio: "Quale vino e questo?" con diverse opzioni.',
+          'Aggiungi domande e opzioni di risposta. Ad esempio: "Quale vino è questo?" con diverse opzioni.',
         icon: '❓',
       },
       {

@@ -95,7 +95,7 @@ function normalizeIntro(lesson, lang) {
 
   return {
     title: lesson.title,
-    paragraphs: [lesson.intro ?? (txt.interactiveLesson || 'Lesson interattiva sul vino.')],
+    paragraphs: [lesson.intro ?? (txt.interactiveLesson || 'Lezione interattiva sul vino.')],
     keyPoints: [
       txt.keyPointReinforce || 'Rispondi alle domande per consolidare i concetti.',
       txt.keyPointRepeat || 'Puoi ripetere la lezione quando vuoi.',
@@ -131,11 +131,11 @@ function normalizeDidacticSlides(lesson, lang) {
   const introText =
     typeof lesson.intro === 'string'
       ? lesson.intro
-      : (lesson.intro?.paragraphs?.[0] ?? (txt.interactiveLesson || 'Lesson interattiva sul vino.'))
+      : (lesson.intro?.paragraphs?.[0] ?? (txt.interactiveLesson || 'Lezione interattiva sul vino.'))
   const closingText =
     lesson.final ??
     (txt.continueWithQuestions ||
-      'Continue con le domande per fissare i concetti e verificare quanto hai appreso.')
+      'Continua con le domande per fissare i concetti e verificare quanto hai appreso.')
 
   return [
     {

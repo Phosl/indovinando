@@ -2,7 +2,7 @@ import styles from './changelog.module.scss'
 
 export const metadata = {
   title: 'Changelog — Indovinando',
-  description: 'Cronologia degli aggiornamenti e delle versioni of Indovinando',
+  description: 'Cronologia degli aggiornamenti e delle versioni di Indovinando',
 }
 
 const CHANGELOG = [
@@ -11,7 +11,7 @@ const CHANGELOG = [
     date: '10 maggio 2026',
     label: 'Auto',
     changes: [
-      'remove host check latency experiments',
+      'rimossi i tentativi sperimentali sul check host e sulla latenza',
     ],
   },
 
@@ -20,7 +20,7 @@ const CHANGELOG = [
     date: '10 maggio 2026',
     label: 'Auto',
     changes: [
-      'preload host correct options to remove per-check latency',
+      'precaricate le opzioni corrette host per ridurre la latenza al check',
     ],
   },
 
@@ -29,7 +29,7 @@ const CHANGELOG = [
     date: '10 maggio 2026',
     label: 'Auto',
     changes: [
-      'prevent host check from hanging on checking state',
+      'evitato il blocco del check host nello stato "checking"',
     ],
   },
 
@@ -38,7 +38,7 @@ const CHANGELOG = [
     date: '10 maggio 2026',
     label: 'Auto',
     changes: [
-      'keep host check enabled and rely on runtime fallback',
+      'mantenuto il check host attivo con fallback runtime',
     ],
   },
 
@@ -47,7 +47,7 @@ const CHANGELOG = [
     date: '10 maggio 2026',
     label: 'Auto',
     changes: [
-      'simplify host check path, eliminate fallback API and timeout wrappers',
+      'semplificato il percorso check host rimuovendo wrapper timeout e fallback API non necessari',
     ],
   },
 
@@ -56,7 +56,7 @@ const CHANGELOG = [
     date: '10 maggio 2026',
     label: 'Auto',
     changes: [
-      'auto: format changelog',
+      'formattazione automatica changelog',
     ],
   },
 
@@ -64,14 +64,14 @@ const CHANGELOG = [
     version: '1.10.1',
     date: '10 maggio 2026',
     label: 'Auto',
-    changes: ['stabilize enoteca start and loading flow'],
+    changes: ['stabilizzato il flusso di avvio e caricamento in Enoteca'],
   },
 
   {
     version: '1.10.0',
     date: '10 maggio 2026',
     label: 'Auto',
-    changes: ['unify app version across home and changelog'],
+    changes: ['uniformata la versione dell\'app tra home e changelog'],
   },
 
   {
@@ -164,7 +164,7 @@ const CHANGELOG = [
       'Schermata risultato lezione semplificata: mantenuto un solo pulsante principale in basso',
       'Aggiunto nel top header il pulsante "Tutte le lezioni" / "All lessons"',
       'Rimosso il pulsante "Ripeti lezione" dalla schermata finale della lezione',
-      'Elenco lezioni livello: aumentata la visibilita delle lezioni completate con badge "Ripeti/Repeat" e contrasto migliorato',
+      'Elenco lezioni livello: aumentata la visibilità delle lezioni completate con badge "Ripeti/Repeat" e contrasto migliorato',
     ],
   },
   {
@@ -187,12 +187,12 @@ const CHANGELOG = [
     label: 'Risultati e Leaderboard Live',
     changes: [
       'Sezione "🏆 Leaderboard Live" nei risultati bottiglia con proiezione punteggi e badge +N verde',
-      "Fix double-count: snapshot dei punteggi congelato all'apertura of ogni bottiglia",
+      "Fix double-count: snapshot dei punteggi congelato all'apertura di ogni bottiglia",
       'Badge "tu" inline viola per il giocatore corrente nella classifica',
-      'Riga risposta con colore of sfondo e bordo sinistro colorato (verde corretto, rosso errato)',
+      'Riga risposta con colore di sfondo e bordo sinistro colorato (verde corretto, rosso errato)',
       'Punti visualizzati come pill verde (+25 🔥 se combo)',
-      'Unico pulsante "Vedi classifica" sull\'ultima bottiglia (rimosso "Finish")',
-      'Host sempre reindirizzato alla classifica anche in caso of errore nel sync',
+      'Unico pulsante "Vedi classifica" sull\'ultima bottiglia (rimosso "Termina")',
+      'Host sempre reindirizzato alla classifica anche in caso di errore nel sync',
     ],
   },
   {
@@ -200,10 +200,10 @@ const CHANGELOG = [
     date: '7 maggio 2026',
     label: 'Multiplayer — Funzionalità sociali',
     changes: [
-      'Indicatore of progresso: "X/N giocatori pronti..." nella schermata risultati',
+      'Indicatore di progresso: "X/N giocatori pronti..." nella schermata risultati',
       "Kick player: l'host può rimuovere un giocatore dalla partita dal pannello classifica",
       'Auto-reconnect: il giocatore che rientra viene reindirizzato direttamente al gioco se già in sessione',
-      'Pulizia automatica sessioni terminate da più of 24 ore',
+      'Pulizia automatica sessioni terminate da più di 24 ore',
       'Polling fallback live_sessions ogni 3s nel client (copertura se Realtime non è attivo)',
     ],
   },
@@ -223,12 +223,12 @@ const CHANGELOG = [
     date: '5 maggio 2026',
     label: 'Gameplay & UX',
     changes: [
-      'Sistema combo: risposte consecutive correct danno +5/+10/+15 points bonus',
-      'Toast animato 🔥💥⚡️🤯 alla conquista of un combo',
+      'Sistema combo: risposte consecutive corrette danno +5/+10/+15 punti bonus',
+      'Toast animato 🔥💥⚡️🤯 alla conquista di un combo',
       'Reveal bottiglia alla fine del round (nome, produttore, annata)',
       'Riepilogo risposte per domanda con esito corretto/errato',
-      "Schermata of transizione con coriandoli tra una bottiglia e l'altra",
-      'Sheet of uscita con modal of conferma',
+      "Schermata di transizione con coriandoli tra una bottiglia e l'altra",
+      'Pannello di uscita con modale di conferma',
       'Suoni audio: risposta corretta, errata, bottiglia completata (toggle ON/OFF)',
     ],
   },
@@ -237,12 +237,12 @@ const CHANGELOG = [
     date: '4 maggio 2026',
     label: 'Launch',
     changes: [
-      'Editor giochi: crea partite con bottiglie, domande a scelta multipla e risposte correct',
+      'Editor giochi: crea partite con bottiglie, domande a scelta multipla e risposte corrette',
       'Sessioni live multiplayer con Supabase Realtime',
       'Schermata quiz mobile-first con animazioni slide tra le domande',
       'Leaderboard in tempo reale accessibile durante la partita',
       'Leaderboard finale con podio 🥇🥈🥉 alla fine della sessione',
-      'Foglio of stampa per condivisione fisica delle domande',
+      'Foglio di stampa per condivisione fisica delle domande',
       'Dashboard host con lista partite e gestione sessioni',
       'Autenticazione utente (Supabase Auth)',
       'Skeleton loading su tutte le route data-fetching',
@@ -267,7 +267,7 @@ export default function ChangelogPage() {
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>📋 Changelog</h1>
-          <p className={styles.subtitle}>Cronologia degli aggiornamenti of Indovinando</p>
+          <p className={styles.subtitle}>Cronologia degli aggiornamenti di Indovinando</p>
         </div>
 
         <div className={styles.timeline}>

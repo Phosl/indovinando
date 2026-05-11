@@ -64,7 +64,7 @@ export default async function Dashboard() {
         <a href="/corso-vino" className={styles.corsoCard}>
           <span className={styles.corsoEmoji}>🍷</span>
           <div className={styles.corsoInfo}>
-            <span className={styles.corsoLabel}>{dashboardDict.newLabel || 'Novita'}</span>
+            <span className={styles.corsoLabel}>{dashboardDict.newLabel || 'Novità'}</span>
             <strong className={styles.corsoTitle}>
               {dashboardDict.wineCourse || 'Corso Vino'}
             </strong>

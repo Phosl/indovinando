@@ -83,10 +83,10 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
       <div
         className={`${styles.slideContent} ${slideMotionClass} ${!isChecked ? styles.mobileCheckSpacing : ''}`}>
         <div className={styles.bottleBadge}>
-          Bottle {currentBottleIndex + 1}/{totalBottles}
+          {t('bottleCounter', {current: currentBottleIndex + 1, total: totalBottles})}
         </div>
         <p className={styles.questionCounter}>
-          Question {currentSlideIndex + 1} of {totalSlides}
+          {t('questionCounter', {current: currentSlideIndex + 1, total: totalSlides})}
         </p>
         <h2 className={styles.questionText}>{currentQuestion?.text}</h2>
 

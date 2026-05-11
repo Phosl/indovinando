@@ -201,7 +201,7 @@ export default function HostLiveClient({
         <>
           <div className={styles.questionCard}>
             <div className={styles.progress}>
-              Bottle {currentBottleIndex + 1} of {bottles.length}
+              {t('bottleProgress', {current: currentBottleIndex + 1, total: bottles.length})}
             </div>
             <h2>{currentBottle?.name || t('bottleFallback')}</h2>
             <p>

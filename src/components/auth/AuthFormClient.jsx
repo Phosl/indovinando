@@ -151,7 +151,7 @@ function AuthForm() {
               <input
                 type="email"
                 className={styles.input}
-                placeholder="Email"
+                placeholder={t('emailPlaceholder')}
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value)
@@ -163,7 +163,7 @@ function AuthForm() {
               <input
                 type="password"
                 className={styles.input}
-                placeholder="Password"
+                placeholder={t('passwordPlaceholder')}
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value)
