@@ -7,6 +7,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.10.9',
+    date: '11 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'live session - classifica overlay, t shadow, standings API',
+    ],
+  },
+
+  {
     version: '1.10.8',
     date: '11 maggio 2026',
     label: 'Auto',
