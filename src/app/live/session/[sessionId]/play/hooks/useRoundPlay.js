@@ -1,5 +1,4 @@
 import {useState, useEffect, useCallback, useMemo, useRef} from 'react'
-import {supabaseClient} from '@/lib/supabaseClient'
 
 const SLIDE_TRANSITION_MS = 220
 /**
@@ -99,12 +98,16 @@ export function useRoundPlay({
   }, [allPlayers, playerData?.id])
 
   // ── Derive allPlayersCompleted + per-player progress from local state ──────
+  // The host never calls handleContinue so clickedReady stays false for them.
+  // For guests, clickedReady is still required so we don't show results before
+  // the player has finished their last slide.
   const allPlayersCompletedThisRound = useMemo(() => {
-    if (!clickedReady || participantIds.length === 0 || questionIds.length === 0) return false
+    if (participantIds.length === 0 || questionIds.length === 0) return false
+    if (!isHostUser && !clickedReady) return false
     return participantIds.every((playerId) =>
       questionIds.every((qId) => Boolean(roundAnswersByPlayer[playerId]?.[qId])),
     )
-  }, [clickedReady, participantIds, roundAnswersByPlayer, questionIds])
+  }, [clickedReady, isHostUser, participantIds, roundAnswersByPlayer, questionIds])
 
   // How many players have answered every question in the current round
   const playersReadyCount = useMemo(() => {
@@ -113,32 +116,6 @@ export function useRoundPlay({
       questionIds.every((qId) => Boolean(roundAnswersByPlayer[playerId]?.[qId])),
     ).length
   }, [participantIds, roundAnswersByPlayer, questionIds])
-  const syncScoresFromAnswers = useCallback(
-    async (answersByPlayer) => {
-      if (!isHostUser) return
-      const {data: players} = await supabaseClient
-        .from('live_players')
-        .select('id, total_score')
-        .eq('session_id', sessionId)
-      if (!players?.length) return
-
-      const scoreByPlayer = Object.fromEntries(players.map((p) => [p.id, p.total_score || 0]))
-      Object.entries(answersByPlayer).forEach(([playerId, perQuestion]) => {
-        Object.values(perQuestion || {}).forEach((a) => {
-          if (scoreByPlayer[playerId] !== undefined) scoreByPlayer[playerId] += a.points || 0
-        })
-      })
-      await Promise.all(
-        players.map((p) =>
-          supabaseClient
-            .from('live_players')
-            .update({total_score: scoreByPlayer[p.id] || 0})
-            .eq('id', p.id),
-        ),
-      )
-    },
-    [isHostUser, sessionId],
-  )
 
   // Scores, answer deletion, and session advance all use tables with auth.uid()
   // RLS policies that cause GoTrueClient init hang in @supabase/ssr. Use the
@@ -192,7 +169,18 @@ export function useRoundPlay({
             points: a.points,
           }
         })
-      setRoundAnswersByPlayer(rebuilt)
+      // Merge onto existing state instead of replacing.
+      // This preserves optimistic local updates (from handleCheck) in case
+      // the background POST /api/live/round-answer is still in flight or
+      // temporarily failed. Without this, each poll would wipe the local
+      // player's own answers, keeping allPlayersCompletedThisRound = false.
+      setRoundAnswersByPlayer((prev) => {
+        const merged = {...prev}
+        Object.entries(rebuilt).forEach(([pid, qs]) => {
+          merged[pid] = {...(merged[pid] || {}), ...qs}
+        })
+        return merged
+      })
     } catch (_) {
       // Network error — retry on next poll
     }
@@ -335,16 +323,6 @@ export function useRoundPlay({
     if (!playerData || clickedReady) return
     setClickedReady(true)
     setResultsOpenedBottleIndex(currentBottleIndex)
-
-    supabaseClient
-      .from('live_players')
-      .update({updated_at: new Date().toISOString()})
-      .eq('id', playerData.id)
-      .then(({error}) => {
-        if (error) {
-          console.error('Error setting ready status:', error)
-        }
-      })
   }, [
     currentSlideIndex,
     liveQuestions.length,

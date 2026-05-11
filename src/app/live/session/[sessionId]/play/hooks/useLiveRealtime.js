@@ -73,8 +73,12 @@ export function useLiveRealtime({
           table: 'live_round_answers',
           filter: `session_id=eq.${sessionId}`,
         },
-        (payload) => {
-          if (payload.new) onAnswerInsertRef.current(payload.new)
+        () => {
+          // Always trigger a re-fetch regardless of payload.new.
+          // When the admin client inserts a row, Supabase Realtime may strip
+          // payload.new (RLS) — but handleAnswerInsert does its own full fetch,
+          // so payload content is irrelevant.
+          onAnswerInsertRef.current()
         },
       )
       .subscribe()
