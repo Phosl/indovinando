@@ -98,30 +98,46 @@
 .section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 16px;
+  box-shadow: 0px 4px 0px 0px var(--gray-light);
+  padding: 20px 18px;
 }
 
 .sectionTitle {
-  margin-bottom: 4px;
+  font-size: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin: 0 0 4px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--button-secondary-border);
 }
 
 .buttonRow {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  margin-top: 4px;
 }
 
 .bridgeRow {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 32px 0 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 8px 0;
+
+  @media (max-width: 520px) {
+    grid-template-columns: 1fr;
+  }
 
   button {
-    min-width: 200px;
-    padding: 14px 24px;
-    font-size: 16px;
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 0.95rem;
   }
 }
 
@@ -184,4 +200,7 @@
 
 .inputField {
   width: 100%;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 14px 16px;
 }

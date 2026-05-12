@@ -585,6 +585,7 @@ export default function GameEditor({
       {/* STEP 1 */}
       {step === 1 && (
         <div className={styles.section}>
+          <h3 className={styles.sectionTitle}>{editorText.step1Title}</h3>
           <input
             className={styles.inputField}
             placeholder={editorText.step1Placeholder}
@@ -603,6 +604,7 @@ export default function GameEditor({
       {/* STEP 2 */}
       {step === 2 && (
         <div className={styles.section}>
+          <h3 className={styles.sectionTitle}>{editorText.step2Title}</h3>
           <QuestionsList
             questions={questionDraft}
             onEditQuestion={openQuestionModal}

@@ -52,10 +52,7 @@ export default async function Dashboard() {
             {dashboardDict.welcome || 'Benvenuto'}, {profile?.username || data.user.email}!
           </p>
           <div className={styles.heroActions}>
-            <a href="/game/create-quick" className="btn primary">
-              {dashboardDict.createQuickGame || '⚡ Crea gioco rapido'}
-            </a>
-            <a href="/game/create" className="btn accent">
+            <a href="/game/create" className="btn primary">
               {dashboardDict.createGame || '+ Crea gioco'}
             </a>
             <a href="/profilo" className="btn secondary">
