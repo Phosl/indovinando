@@ -27,8 +27,9 @@ export default function PlayerJoinLoading() {
           alignItems: 'center',
           gap: 12,
           width: '100%',
-          padding: '10px 14px',
-          marginBottom: 4,
+          maxWidth: 960,
+          padding: '0 14px 10px',
+          margin: '0 auto 16px auto',
           flexWrap: 'wrap',
           boxSizing: 'border-box',
         }}>

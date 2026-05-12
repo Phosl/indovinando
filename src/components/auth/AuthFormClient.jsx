@@ -158,6 +158,10 @@ function AuthForm() {
     <main className={styles.page}>
       <div className={styles.container}>
         <section className={styles.shell}>
+          <a href="/" className={styles.authExitBtn}>
+            {t('exitToHome')}
+          </a>
+
           <div className={styles.brandBlock}>
             <img
               src="/mascotte_registrati.svg"

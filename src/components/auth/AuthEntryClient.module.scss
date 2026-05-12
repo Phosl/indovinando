@@ -26,10 +26,41 @@
   gap: 14px;
 }
 
+.authExitBtn {
+  width: fit-content;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 999px;
+  background: var(--background);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 8px 12px;
+  box-shadow: 0px 3px 0px 0px var(--gray-light);
+  transition:
+    box-shadow 0.12s,
+    transform 0.1s;
+
+  &:hover {
+    box-shadow: 0px 5px 0px 0px var(--gray-light);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    box-shadow: none;
+    transform: translateY(3px);
+  }
+}
+
 .brandBlock {
   text-align: center;
-  img {
+  .logo {
     max-width: 180px;
+    &[alt='Indovinando Logo'] {
+      max-width: none;
+    }
   }
 }
 

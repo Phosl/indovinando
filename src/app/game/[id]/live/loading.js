@@ -1,5 +1,4 @@
 import styles from './liveSessions.module.scss'
-import topBarStyles from '@/components/TopBar.module.scss'
 
 function Bone({w, h, style}) {
   return (
@@ -21,10 +20,22 @@ function Bone({w, h, style}) {
 export default function LiveSessionLoading() {
   return (
     <div className={styles.container}>
-      {/* TopBar — static replica matching <TopBar title="Creazione sessione" /> */}
-      <div className={topBarStyles.topBar}>
-        <h1 className={topBarStyles.title}>Creazione sessione</h1>
-        <div className={topBarStyles.actions} />
+      <div
+        className="skeleton-frame"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          width: '100%',
+          maxWidth: 960,
+          padding: '0 14px 10px',
+          margin: '0 auto 16px auto',
+          flexWrap: 'wrap',
+          boxSizing: 'border-box',
+        }}>
+        <Bone w="100px" h="40px" style={{borderRadius: 999}} />
+        <Bone w="200px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
+        <div style={{minWidth: 90}} />
       </div>
 
       {/* Indeterminate progress bar */}

@@ -35,9 +35,11 @@ export default function CourseClient({levels, isAdmin = false}) {
 
       {/* Hero */}
       <div className={styles.hero}>
-        <div className={styles.heroEmoji}>🍷</div>
-        <h1 className={styles.heroTitle}>{t('heroTitle')}</h1>
-        <p className={styles.heroSubtitle}>{t('heroSubtitle')}</p>
+        <img src="/mascotte_corso.svg" alt="Mascotte corso" className={styles.heroMascot} />
+        <div className={styles.heroText}>
+          <h1 className={styles.heroTitle}>{t('heroTitle')}</h1>
+          <p className={styles.heroSubtitle}>{t('heroSubtitle')}</p>
+        </div>
       </div>
 
       <GuestWarningModal

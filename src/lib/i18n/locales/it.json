@@ -200,6 +200,7 @@
     "forgotDesc": "Inserisci la tua email e ti mandiamo il link per reimpostare la password.",
     "sendResetLink": "Invia link",
     "resetEmailSent": "Controlla la tua email: ti abbiamo inviato il link per reimpostare la password.",
+    "exitToHome": "← Esci",
     "backToLogin": "← Torna al login",
     "newPasswordPlaceholder": "Nuova password",
     "updatePassword": "Aggiorna password",
