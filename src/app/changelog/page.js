@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.12',
+    date: '12 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'force-add PageLayout.module.css (was ignored by gitignore)',
+    ],
+  },
+
+  {
     version: '1.13.11',
     date: '12 maggio 2026',
     label: 'Auto',
