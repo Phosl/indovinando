@@ -8,6 +8,16 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.5',
+    date: '12 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'fix top bar padding',
+      'UI polish: dashboard gradients bottom, miei giochi tabs pill, game card bigger name + uniform buttons, avatar picker row, SVG avatar fixes, corso vino badges, leaderboard/TopBar avatar unification, bugfixes',
+    ],
+  },
+
+  {
     version: '1.13.4',
     date: '12 maggio 2026',
     label: 'Auto',
