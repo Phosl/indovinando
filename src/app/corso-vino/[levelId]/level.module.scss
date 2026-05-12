@@ -49,6 +49,62 @@
   color: var(--text-primary);
 }
 
+.topProgress {
+  padding: 0 16px 8px;
+}
+
+.topProgressCard {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.topProgressMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.topProgressTitle {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.topProgressTarget {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--selected-dark);
+}
+
+.topProgressBar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--gray-light);
+  overflow: hidden;
+}
+
+.topProgressFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--selected);
+  transition: width 0.35s ease;
+  min-width: 4px;
+}
+
+.topProgressText {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
 // ── Level hero ────────────────────────────────────────────────
 .levelHero {
   padding: 28px 20px 20px;
@@ -238,6 +294,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .topProgress {
+    padding: 0 12px 8px;
+  }
 }
 
 .lessonArrow {

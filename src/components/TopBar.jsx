@@ -12,6 +12,7 @@ export default function TopBar({
   actionsClassName = '',
   maxWidth,
   wrapTitle = false,
+  progress = null, // 0-100, renders slim bar at bottom
   back, // Legacy prop, ignored
 }) {
   const t = useT('common')
@@ -27,6 +28,14 @@ export default function TopBar({
       )}
       {title && <h1 className={`${styles.title} ${titleClassName}`}>{title}</h1>}
       <div className={`${styles.actions} ${actionsClassName}`}>{children}</div>
+      {progress !== null && (
+        <div className={styles.progressTrack}>
+          <div
+            className={styles.progressFill}
+            style={{width: `${Math.min(100, Math.max(0, progress))}%`}}
+          />
+        </div>
+      )}
     </div>
   )
 }

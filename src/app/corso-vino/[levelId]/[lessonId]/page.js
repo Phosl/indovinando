@@ -31,5 +31,5 @@ export default async function LessonPage({params}) {
   const currentIndex = level.lessonIds.indexOf(lessonId)
   const nextLessonId = currentIndex >= 0 ? (level.lessonIds[currentIndex + 1] ?? null) : null
 
-  return <LessonClient level={level} lesson={lesson} nextLessonId={nextLessonId} />
+  return <LessonClient level={level} lesson={lesson} nextLessonId={nextLessonId} levels={levels} />
 }

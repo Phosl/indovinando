@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, useCallback, useEffect, useRef} from 'react'
+import {useState, useCallback, useEffect, useRef, useMemo} from 'react'
 import {useRouter} from 'next/navigation'
 // Reuse live-game fullscreen shell styles
 import pStyles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
@@ -9,6 +9,7 @@ import {useWineCourseProgress} from '../../hooks/useWineCourseProgress'
 import {useGameAudio} from '../../../live/session/[sessionId]/play/hooks/useGameAudio'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {pickLangText} from '@/lib/i18n/dictionaries'
+import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
 
 const LESSON_UI_DICTIONARY = {
   it: {
@@ -35,6 +36,16 @@ const LESSON_UI_DICTIONARY = {
     check: 'Controlla',
     seeResults: 'Vedi risultati',
     continue: 'Continua',
+    chapterLabel: 'Capitolo {index}',
+    levelUpTitle: '🎉 Sei salito di livello!',
+    levelUpPhrases: [
+      'Il tuo naso da sommelier si sta sviluppando!',
+      'I vini tremano quando ti vedono arrivare!',
+      'Presto parlerai di tannini al posto di pasta!',
+      'Brindisi a te, esperto in erba!',
+      'La tua cantina mentale si sta riempiendo!',
+    ],
+    levelUpCta: 'Continua così! 🍷',
   },
   en: {
     exitLesson: 'Exit lesson',
@@ -60,12 +71,22 @@ const LESSON_UI_DICTIONARY = {
     check: 'Check',
     seeResults: 'See results',
     continue: 'Continue',
+    chapterLabel: 'Chapter {index}',
+    levelUpTitle: '🎉 Level up!',
+    levelUpPhrases: [
+      'Your sommelier nose is blossoming!',
+      'Wines tremble when they see you coming!',
+      "Soon you'll talk tannins at dinner parties!",
+      'A toast to you, rising expert!',
+      'Your mental cellar is filling up nicely!',
+    ],
+    levelUpCta: 'Keep it up! 🍷',
   },
 }
 
-export default function LessonClient({level, lesson, nextLessonId}) {
+export default function LessonClient({level, lesson, nextLessonId, levels = []}) {
   const router = useRouter()
-  const {completeLesson} = useWineCourseProgress()
+  const {completeLesson, getLessonProgress, loaded} = useWineCourseProgress()
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
   const {lang} = useLanguage()
   const t = pickLangText(lang, LESSON_UI_DICTIONARY)
@@ -82,6 +103,8 @@ export default function LessonClient({level, lesson, nextLessonId}) {
   const [comboBonus, setComboBonus] = useState(0)
   const [visibleCombo, setVisibleCombo] = useState(null)
   const [slideMotion, setSlideMotion] = useState('idle')
+  const [showLevelUp, setShowLevelUp] = useState(false)
+  const prevLevelNumRef = useRef(null)
   const timersRef = useRef([])
 
   const getComboMsg = useCallback((n) => {
@@ -127,6 +150,23 @@ export default function LessonClient({level, lesson, nextLessonId}) {
       : slideMotion === 'entering'
         ? pStyles.slideEnterRight
         : ''
+
+  // Progress for result screen animation
+  const levelProgress = useMemo(() => {
+    if (!levels?.length || !loaded) return null
+    const totalLessons = levels.reduce((sum, l) => sum + l.lessonIds.length, 0)
+    const completedLessons = levels.reduce(
+      (sum, l) => sum + l.lessonIds.filter((id) => getLessonProgress(l.id, id)?.completed).length,
+      0,
+    )
+    const up = computeUserLevelProgress(completedLessons, totalLessons)
+    return {
+      pct: up.progressInLevel,
+      levelNum: up.levelNum,
+      nextLevelNum: up.nextLevelNum,
+      isMax: up.isMax,
+    }
+  }, [levels, loaded, getLessonProgress])
 
   const getComboBonus = useCallback((nextStreak) => {
     if (nextStreak >= 4) return 15
@@ -185,6 +225,8 @@ export default function LessonClient({level, lesson, nextLessonId}) {
       timersRef.current.push(exitTimer)
     } else {
       const score = answers.filter((a) => a.isCorrect).length + (isCorrect ? 1 : 0)
+      // Snapshot current level before completing (levelProgress is based on pre-complete data)
+      prevLevelNumRef.current = levelProgress?.levelNum ?? null
       completeLesson(level.id, lesson.id, score, questions.length)
       setScreen('result')
     }
@@ -216,6 +258,15 @@ export default function LessonClient({level, lesson, nextLessonId}) {
       timersRef.current = []
     }
   }, [])
+
+  // Detect level-up after lesson completion
+  useEffect(() => {
+    if (screen !== 'result' || prevLevelNumRef.current === null || !levelProgress) return
+    if (levelProgress.levelNum > prevLevelNumRef.current) {
+      const timer = window.setTimeout(() => setShowLevelUp(true), 1600)
+      timersRef.current.push(timer)
+    }
+  }, [screen, levelProgress])
 
   // Enter key shortcut
   useEffect(() => {
@@ -257,7 +308,9 @@ export default function LessonClient({level, lesson, nextLessonId}) {
         <div className={pStyles.topBar}>
           <div className={pStyles.playerInfo}>
             <span className={pStyles.avatar}>{lesson.emoji}</span>
-            <span className={pStyles.nickname}>{level.title}</span>
+            <span className={pStyles.nickname}>
+              {t.chapterLabel.replace('{index}', String(level.order))}
+            </span>
           </div>
           <div className={pStyles.progressPills}>
             {didacticSlides.map((slide, i) => (
@@ -339,7 +392,9 @@ export default function LessonClient({level, lesson, nextLessonId}) {
         <div className={pStyles.topBar}>
           <div className={pStyles.playerInfo}>
             <span className={pStyles.avatar}>{lesson.emoji}</span>
-            <span className={pStyles.nickname}>{lesson.title}</span>
+            <span className={pStyles.nickname}>
+              {t.chapterLabel.replace('{index}', String(level.order))}
+            </span>
           </div>
           <div className={pStyles.topActions}>
             <button
@@ -353,6 +408,24 @@ export default function LessonClient({level, lesson, nextLessonId}) {
         <div className={pStyles.slideContent}>
           <div className={xStyles.resultHero}>
             <p className={xStyles.resultHeadline}>{headline}</p>
+            {levelProgress && (
+              <div className={xStyles.resultProgress}>
+                <div className={xStyles.resultProgressLabels}>
+                  <span className={xStyles.resultProgressLevel}>
+                    {levelProgress.isMax ? '🏆 Max' : `Liv. ${levelProgress.levelNum}`}
+                  </span>
+                  <span className={xStyles.resultProgressNext}>
+                    {levelProgress.isMax ? '' : `→ Liv. ${levelProgress.nextLevelNum}`}
+                  </span>
+                </div>
+                <div className={xStyles.resultProgressTrack}>
+                  <div
+                    className={xStyles.resultProgressFill}
+                    style={{'--pct': `${levelProgress.pct}%`}}
+                  />
+                </div>
+              </div>
+            )}
             <div className={xStyles.resultScore}>
               <span className={xStyles.resultScoreNumber}>{totalCorrect}</span>
               <span className={xStyles.resultScoreOf}>/{total}</span>
@@ -414,6 +487,21 @@ export default function LessonClient({level, lesson, nextLessonId}) {
             {nextLessonPath ? t.nextLesson : t.backToLevel}
           </button>
         </div>
+
+        {showLevelUp && levelProgress && (
+          <div className={xStyles.levelUpOverlay} onClick={() => setShowLevelUp(false)}>
+            <div className={xStyles.levelUpModal} onClick={(e) => e.stopPropagation()}>
+              <div className={xStyles.levelUpBadge}>⭐ {levelProgress.levelNum}</div>
+              <h2 className={xStyles.levelUpTitle}>{t.levelUpTitle}</h2>
+              <p className={xStyles.levelUpPhrase}>
+                {t.levelUpPhrases[(levelProgress.levelNum - 1) % t.levelUpPhrases.length]}
+              </p>
+              <button className={xStyles.levelUpCta} onClick={() => setShowLevelUp(false)}>
+                {t.levelUpCta}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -449,13 +537,16 @@ export default function LessonClient({level, lesson, nextLessonId}) {
       ? currentQuestion.feedback.correct
       : currentQuestion.feedback.wrong
     : null
+  const comboMsg = getComboMsg(comboStreak)
 
   return (
     <div className={pStyles.fullPage}>
       <div className={pStyles.topBar}>
         <div className={pStyles.playerInfo}>
           <span className={pStyles.avatar}>{lesson.emoji}</span>
-          <span className={pStyles.nickname}>{lesson.title}</span>
+          <span className={pStyles.nickname}>
+            {t.chapterLabel.replace('{index}', String(level.order))}
+          </span>
         </div>
         <div className={pStyles.progressPills}>
           {questions.map((_, i) => (
@@ -532,11 +623,17 @@ export default function LessonClient({level, lesson, nextLessonId}) {
             {isCorrect ? (
               <>
                 <span className={pStyles.feedbackIcon}>
-                  {getComboBonus(comboStreak) > 0 ? '🔥' : '🎉'}
+                  {comboMsg ? (
+                    <img className={pStyles.comboEmoji} src={comboMsg.svg} alt="" />
+                  ) : (
+                    '🎉'
+                  )}
                 </span>
                 <span className={pStyles.feedbackLabel}>
-                  {getComboBonus(comboStreak) > 0
-                    ? `Combo x${comboStreak}! +1 (+${getComboBonus(comboStreak)} bonus)`
+                  {comboMsg
+                    ? getComboBonus(comboStreak) > 0
+                      ? `${comboMsg.label} +1 (+${getComboBonus(comboStreak)} bonus)`
+                      : comboMsg.label
                     : t.correctPlusOne}
                 </span>
               </>

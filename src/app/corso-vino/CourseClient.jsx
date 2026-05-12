@@ -1,10 +1,11 @@
 'use client'
 
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useMemo} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import GuestWarningModal from '@/components/course/GuestWarningModal'
 import {useWineCourseProgress} from './hooks/useWineCourseProgress'
+import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
 import styles from './course.module.scss'
 import {useT} from '@/lib/i18n/useT'
 
@@ -14,6 +15,24 @@ export default function CourseClient({levels, isAdmin = false}) {
   const t = useT('course')
   const [showGuestWarning, setShowGuestWarning] = useState(false)
 
+  const nextLevelProgress = useMemo(() => {
+    if (!levels?.length) return null
+
+    const totalLessons = levels.reduce((sum, level) => sum + level.lessonIds.length, 0)
+    const completedLessons = loaded
+      ? levels.reduce((sum, level) => sum + getLevelCompletedCount(level), 0)
+      : 0
+    const userLevel = computeUserLevelProgress(completedLessons, totalLessons)
+
+    return {
+      isMax: userLevel.isMax,
+      pct: userLevel.progressInLevel,
+      completed: completedLessons,
+      total: totalLessons || 1,
+      nextLevel: userLevel.nextLevelNum,
+    }
+  }, [levels, loaded, getLevelCompletedCount])
+
   useEffect(() => {
     if (loaded && authChecked && !userId) {
       setShowGuestWarning(true)
@@ -22,7 +41,10 @@ export default function CourseClient({levels, isAdmin = false}) {
 
   return (
     <div className={styles.page}>
-      <TopBar title={t('title')} onBack={() => router.push('/dashboard')}>
+      <TopBar
+        title={t('title')}
+        onBack={() => router.push('/dashboard')}
+        progress={nextLevelProgress?.pct ?? null}>
         {isAdmin && (
           <a
             href="/admin/corsi"
@@ -62,7 +84,9 @@ export default function CourseClient({levels, isAdmin = false}) {
               <div className={styles.levelEmoji}>{level.emoji}</div>
               <div className={styles.levelInfo}>
                 <div className={styles.levelMeta}>
-                  <span className={styles.levelOrder}>Level {level.order}</span>
+                  <span className={styles.levelOrder}>
+                    {t('chapterLabel', {index: level.order})}
+                  </span>
                   {completed === total && total > 0 && (
                     <span className={styles.levelBadge}>{t('completed')}</span>
                   )}

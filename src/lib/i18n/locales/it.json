@@ -230,6 +230,10 @@
     "title": "Corso Vino",
     "heroTitle": "Impara il vino",
     "heroSubtitle": "Lezioni brevi, quiz interattivi e contenuti accurati. Gratis, senza registrazione.",
+    "chapterLabel": "Capitolo {index}",
+    "nextLevelProgress": "Progress livello utente",
+    "nextLevelLabel": "Livello {index}",
+    "nextLevelMax": "Livello massimo",
     "completed": "✓ Completato",
     "lessons": "lezioni",
     "guest": {
@@ -240,7 +244,7 @@
     }
   },
   "level": {
-    "levelTitle": "Livello {index}",
+    "levelTitle": "Capitolo {index}",
     "lesson": "Lezione",
     "repeat": "Ripeti"
   },

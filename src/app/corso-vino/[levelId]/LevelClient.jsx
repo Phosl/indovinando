@@ -1,23 +1,51 @@
 'use client'
 
+import {useMemo} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import {useWineCourseProgress} from '../hooks/useWineCourseProgress'
+import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
 import {useT} from '@/lib/i18n/useT'
 import styles from './level.module.scss'
 
 const PASS_THRESHOLD = 0.75
 
-export default function LevelClient({level, lessons}) {
+export default function LevelClient({level, lessons, levels = []}) {
   const router = useRouter()
   const {loaded, getLessonStatus, getLessonProgress} = useWineCourseProgress()
   const t = useT('level')
+  const tc = useT('course')
+
+  const topProgress = useMemo(() => {
+    if (!levels?.length) {
+      return {pct: 0, isMax: false, nextLevel: 2, completed: 0, total: 1}
+    }
+
+    const totalLessons = levels.reduce((sum, l) => sum + l.lessonIds.length, 0)
+    const completedLessons = loaded
+      ? levels.reduce(
+          (sum, l) =>
+            sum + l.lessonIds.filter((id) => getLessonProgress(l.id, id)?.completed).length,
+          0,
+        )
+      : 0
+
+    const userLevel = computeUserLevelProgress(completedLessons, totalLessons)
+    return {
+      pct: userLevel.progressInLevel,
+      isMax: userLevel.isMax,
+      nextLevel: userLevel.nextLevelNum,
+      completed: completedLessons,
+      total: totalLessons || 1,
+    }
+  }, [levels, loaded, getLessonProgress])
 
   return (
     <div className={styles.page}>
       <TopBar
         title={t('levelTitle', {index: level.order})}
-        onBack={() => router.push('/corso-vino')}></TopBar>
+        onBack={() => router.push('/corso-vino')}
+        progress={topProgress.pct}></TopBar>
 
       {/* Level hero */}
       <div className={styles.levelHero}>
