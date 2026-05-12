@@ -122,6 +122,7 @@ export default function PlayerLiveClient({
     exitModalOpen,
     setExitModalOpen,
     sortedLeaderboard,
+    isLoadingStandings,
     openLeaderboard,
     kickPlayer,
     openExit,
@@ -187,6 +188,7 @@ export default function PlayerLiveClient({
       leaderboardOpen={leaderboardOpen}
       exitModalOpen={exitModalOpen}
       sortedLeaderboard={sortedLeaderboard}
+      isLoadingStandings={isLoadingStandings}
       playerData={playerData}
       isHostUser={isHostUser}
       onKickPlayer={kickPlayer}

@@ -2,7 +2,6 @@
 
 import {useEffect, useState} from 'react'
 import {useRouter} from 'next/navigation'
-import Loader from '@/components/Loader'
 import TopBar from '@/components/TopBar'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {pickLangText} from '@/lib/i18n/dictionaries'
@@ -193,7 +192,32 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
   if (loading) {
     return (
       <div className={styles.container}>
-        <Loader label={t.creatingSession} />
+        <TopBar title={t.creatingSession} />
+        <div className={styles.progressBarTrack}>
+          <div className={styles.progressBarFill} />
+        </div>
+        <div className={styles.lobbyCard}>
+          <div className={styles.section}>
+            <span className={`skeleton ${styles.skeletonHeading}`} />
+            <div className={styles.linkBox}>
+              <span className={`skeleton ${styles.skeletonLinkInput}`} />
+              <span className={`skeleton ${styles.skeletonCopyBtn}`} />
+            </div>
+          </div>
+          <div className={styles.section}>
+            <span className={`skeleton ${styles.skeletonHeading}`} />
+            <span className={`skeleton ${styles.skeletonInfo}`} />
+          </div>
+          <div className={styles.section}>
+            <span className={`skeleton ${styles.skeletonSubheading}`} />
+            <span className={`skeleton ${styles.skeletonListItem}`} />
+            <span className={`skeleton ${styles.skeletonListItem}`} />
+          </div>
+          <div className={styles.actions}>
+            <span className={`skeleton ${styles.skeletonStartBtn}`} />
+            <span className={`skeleton ${styles.skeletonCancelBtn}`} />
+          </div>
+        </div>
       </div>
     )
   }

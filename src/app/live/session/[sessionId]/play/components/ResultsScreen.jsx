@@ -119,35 +119,42 @@ export const ResultsScreen = memo(function ResultsScreen({
         })}
 
         {/* ── Live standings ──────────────────────────────────────────────── */}
-        {standings.length > 0 && (
-          <div className={styles.standingsSection}>
-            <h4 className={styles.standingsTitle}>{t('liveLeaderboard')}</h4>
-            {standings.map((player, idx) => {
-              const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : null
-              const isMe = player.id === currentPlayerData?.id
-              return (
-                <div
-                  key={player.id}
-                  className={`${styles.standingRow} ${isMe ? styles.standingRowMe : ''}`}>
-                  <span className={styles.standingRank}>{medal ?? `#${idx + 1}`}</span>
-                  <span className={styles.standingAvatar}>
-                    {APPLE_AVATARS[player.avatar_id - 1] || '👤'}
-                  </span>
-                  <span className={styles.standingName}>
-                    {player.nickname}
-                    {isMe ? <span className={styles.standingMe}> {t('you')}</span> : ''}
-                  </span>
-                  <span className={styles.standingScore}>
-                    {player.projected} {t('pointsUnit')}
-                    {player.roundPts > 0 && (
-                      <span className={styles.standingDelta}>+{player.roundPts}</span>
-                    )}
-                  </span>
+        <div className={styles.standingsSection}>
+          <h4 className={styles.standingsTitle}>{t('liveLeaderboard')}</h4>
+          {standings.length === 0
+            ? [0, 1, 2].map((i) => (
+                <div key={i} className={styles.standingRow}>
+                  <span className={`skeleton ${styles.standingSkeletonRank}`} />
+                  <span className={`skeleton ${styles.standingSkeletonAvatar}`} />
+                  <span className={`skeleton ${styles.standingSkeletonName}`} />
+                  <span className={`skeleton ${styles.standingSkeletonScore}`} />
                 </div>
-              )
-            })}
-          </div>
-        )}
+              ))
+            : standings.map((player, idx) => {
+                const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : null
+                const isMe = player.id === currentPlayerData?.id
+                return (
+                  <div
+                    key={player.id}
+                    className={`${styles.standingRow} ${isMe ? styles.standingRowMe : ''}`}>
+                    <span className={styles.standingRank}>{medal ?? `#${idx + 1}`}</span>
+                    <span className={styles.standingAvatar}>
+                      {APPLE_AVATARS[player.avatar_id - 1] || '👤'}
+                    </span>
+                    <span className={styles.standingName}>
+                      {player.nickname}
+                      {isMe ? <span className={styles.standingMe}> {t('you')}</span> : ''}
+                    </span>
+                    <span className={styles.standingScore}>
+                      {player.projected} {t('pointsUnit')}
+                      {player.roundPts > 0 && (
+                        <span className={styles.standingDelta}>+{player.roundPts}</span>
+                      )}
+                    </span>
+                  </div>
+                )
+              })}
+        </div>
       </div>
 
       <div className={styles.bottomPanel}>

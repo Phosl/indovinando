@@ -25,8 +25,10 @@ export function useOverlays({
   const [exitModalOpen, setExitModalOpen] = useState(false)
   // Standings fetched from server API — same for all clients at any given moment
   const [overlayStandings, setOverlayStandings] = useState([])
+  const [isLoadingStandings, setIsLoadingStandings] = useState(false)
 
   const fetchStandings = useCallback(async () => {
+    setIsLoadingStandings(true)
     try {
       const res = await fetch(`/api/live/session/standings?sessionId=${sessionId}`)
       if (!res.ok) return
@@ -34,6 +36,8 @@ export function useOverlays({
       if (standings?.length) setOverlayStandings(standings)
     } catch (err) {
       console.error('Error fetching standings:', err)
+    } finally {
+      setIsLoadingStandings(false)
     }
   }, [sessionId])
 
@@ -87,6 +91,7 @@ export function useOverlays({
     exitModalOpen,
     setExitModalOpen,
     sortedLeaderboard: overlayStandings,
+    isLoadingStandings,
     openLeaderboard,
     kickPlayer,
     openExit,

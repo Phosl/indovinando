@@ -11,11 +11,15 @@ export default function AuthEntryClient({appVersion}) {
       <div className={styles.container}>
         <section className={styles.shell}>
           <div className={styles.brandBlock}>
-            <span className={styles.badge}>
-              {t('versionLabel')} {appVersion}
-            </span>
-            <h1 className={styles.brand}>INDOVINANDO</h1>
-            <p className={styles.tagline}>{t('tagline')}</p>
+            <img
+              className={styles.logo}
+              src="/logo.svg"
+              alt="Indovinando Logo"
+              className={styles.logo}
+            />
+            <div>
+              <p className={styles.tagline}>{t('tagline')}</p>
+            </div>
           </div>
 
           <div className={styles.quickActions}>
@@ -30,6 +34,9 @@ export default function AuthEntryClient({appVersion}) {
             </a>
           </div>
         </section>
+      </div>
+      <div className={styles.badge}>
+        {t('versionLabel')} {appVersion}
       </div>
     </main>
   )

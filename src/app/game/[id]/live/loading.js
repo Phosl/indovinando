@@ -1,4 +1,5 @@
 import styles from './liveSessions.module.scss'
+import topBarStyles from '@/components/TopBar.module.scss'
 
 function Bone({w, h, style}) {
   return (
@@ -20,40 +21,45 @@ function Bone({w, h, style}) {
 export default function LiveSessionLoading() {
   return (
     <div className={styles.container}>
-      <div
-        className="skeleton-frame"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 12,
-          padding: '10px 14px',
-          marginBottom: 4,
-          flexWrap: 'wrap',
-        }}>
-        <Bone w="90px" h="32px" style={{borderRadius: 12}} />
-        <Bone w="220px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
-        <div style={{minWidth: 90}} />
+      {/* TopBar — static replica matching <TopBar title="Creazione sessione" /> */}
+      <div className={topBarStyles.topBar}>
+        <h1 className={topBarStyles.title}>Creazione sessione</h1>
+        <div className={topBarStyles.actions} />
       </div>
 
-      {/* Lobby card */}
+      {/* Indeterminate progress bar */}
+      <div className={styles.progressBarTrack}>
+        <div className={styles.progressBarFill} />
+      </div>
+
+      {/* Lobby card skeleton — same structure as LiveSessionClient loading state */}
       <div className={styles.lobbyCard}>
         {/* Link section */}
         <div className={styles.section}>
-          <Bone w="120px" h="18px" style={{marginBottom: 4}} />
-          <Bone w="100%" h="44px" style={{borderRadius: 10}} />
-          <Bone w="130px" h="36px" style={{borderRadius: 12}} />
+          <Bone w="40%" h="14px" style={{borderRadius: 6, marginBottom: 2}} />
+          <div className={styles.linkBox}>
+            <Bone w="100%" h="44px" style={{borderRadius: 8, flex: 1}} />
+            <Bone w="80px" h="44px" style={{borderRadius: 12, flexShrink: 0}} />
+          </div>
         </div>
 
-        {/* Players section */}
+        {/* Participants section */}
         <div className={styles.section}>
-          <Bone w="160px" h="18px" style={{marginBottom: 4}} />
-          <Bone w="80px" h="40px" style={{borderRadius: 8, alignSelf: 'center'}} />
+          <Bone w="40%" h="14px" style={{borderRadius: 6, marginBottom: 2}} />
+          <Bone w="80%" h="12px" style={{borderRadius: 6}} />
+        </div>
+
+        {/* Details section */}
+        <div className={styles.section}>
+          <Bone w="30%" h="12px" style={{borderRadius: 6, marginBottom: 4}} />
+          <Bone w="100%" h="36px" style={{borderRadius: 8, marginTop: 4}} />
+          <Bone w="100%" h="36px" style={{borderRadius: 8, marginTop: 4}} />
         </div>
 
         {/* Actions */}
-        <div style={{display: 'flex', gap: 10, justifyContent: 'center'}}>
-          <Bone w="140px" h="44px" style={{borderRadius: 12}} />
-          <Bone w="100px" h="44px" style={{borderRadius: 12}} />
+        <div className={styles.actions}>
+          <Bone w="100%" h="48px" style={{borderRadius: 12, flex: 1, minWidth: 160}} />
+          <Bone w="100%" h="48px" style={{borderRadius: 12, flex: 1, minWidth: 120}} />
         </div>
       </div>
     </div>

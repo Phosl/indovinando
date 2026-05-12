@@ -35,7 +35,16 @@ export default async function Dashboard() {
     <main className={styles.dashboard}>
       <div className={styles.container}>
         <section className={styles.arcadeHero}>
-          <h1>INDOVINANDO</h1>
+          {
+            // add svg logo
+          }
+          <img
+            className={styles.logo}
+            src="/logo.svg"
+            alt="Indovinando Logo"
+            className={styles.logo}
+          />
+
           <h4>
             {dashboardDict.versionLabel || 'Versione BETA'} {appVersion}
           </h4>

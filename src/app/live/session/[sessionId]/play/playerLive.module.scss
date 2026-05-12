@@ -714,6 +714,35 @@
   white-space: nowrap;
 }
 
+// skeleton pieces inside a .standingRow
+.standingSkeletonRank {
+  min-width: 26px;
+  width: 26px;
+  height: 16px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.standingSkeletonAvatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.standingSkeletonName {
+  flex: 1;
+  height: 14px;
+  border-radius: 6px;
+}
+
+.standingSkeletonScore {
+  width: 56px;
+  height: 14px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
 // ── Centered fallback cards ──────────────────────────────────────────────────
 .centeredCard {
   flex: 1;
