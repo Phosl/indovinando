@@ -17,7 +17,11 @@ function createAdminClient() {
 }
 
 async function resolveHostAvatarId(admin, userId) {
-  const {data: profile} = await admin.from('profiles').select('avatar_emoji').eq('id', userId).maybeSingle()
+  const {data: profile} = await admin
+    .from('profiles')
+    .select('avatar_emoji')
+    .eq('id', userId)
+    .maybeSingle()
   return profileAvatarToGameId(profile?.avatar_emoji)
 }
 
