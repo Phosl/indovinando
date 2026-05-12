@@ -67,7 +67,7 @@ main.flex-container {
   margin: 0 auto;
   padding: 20px 20px 48px;
   box-sizing: border-box;
-
+  padding-top: 0px;
   @media (max-width: 520px) {
     padding: 12px 12px 32px;
   }
