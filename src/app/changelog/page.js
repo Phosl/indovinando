@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.14',
+    date: '12 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'UX: homepage card buttons, forgot password, guest mode fix, InfoModal, ScrollToTop, BottleAnswersSelector redesign, auth form restyle',
+    ],
+  },
+
+  {
     version: '1.13.13',
     date: '12 maggio 2026',
     label: 'Auto',
