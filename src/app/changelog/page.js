@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.16',
+    date: '12 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'Fix storico filters and spacing',
+    ],
+  },
+
+  {
     version: '1.13.15',
     date: '12 maggio 2026',
     label: 'Auto',
