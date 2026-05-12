@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.3',
+    date: '12 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'UX: skeleton loading su live session lobby e classifica live',
+    ],
+  },
+
+  {
     version: '1.13.2',
     date: '12 maggio 2026',
     label: 'Auto',
