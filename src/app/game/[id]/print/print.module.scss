@@ -58,58 +58,18 @@
   }
 }
 
-.quizTitle {
-  margin: 0 0 2mm 0;
-  font-size: 28px;
-  font-weight: 900;
-  line-height: 1.08;
-  text-align: center;
-  margin-bottom: 6px;
-  color: #7e2d61;
-  letter-spacing: 0.01em;
-}
-
-.quizSubtitle {
-  text-align: center;
-  font-size: 15px;
-  font-weight: 700;
-  color: #b04189;
-  margin-bottom: 10px;
-  letter-spacing: 0.04em;
-}
-
-.headerDivider {
-  width: 60px;
-  height: 3px;
-  background: linear-gradient(90deg, #b04189 0%, #f9f5f7 100%);
-  border-radius: 2px;
-  margin: 0 auto 18px auto;
-}
-
 .playerRow {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  max-width: 320px;
+  gap: 6px;
+  font-size: 11px;
+  max-width: 300px;
   margin: 0 auto;
-  font-weight: 700;
 
-  .playerLabel {
-    color: #7e2d61;
-    font-size: 13px;
-    font-weight: 800;
-    margin-right: 2px;
-  }
-  .playerIcon {
-    font-size: 1.1em;
-    margin-right: 2px;
-  }
   .line {
-    border-bottom: 1.5px solid #b04189;
+    border-bottom: 1px solid #333;
     height: 10px;
     flex: 1;
-    margin-left: 6px;
   }
 }
 

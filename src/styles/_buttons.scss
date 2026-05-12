@@ -61,6 +61,18 @@
   }
 }
 
+.btn.tertiary {
+  background: var(--button-tertiary-hover);
+  border-color: var(--button-tertiary-dark);
+  color: var(--text-tertiary);
+  box-shadow: 0px 3px 0px 0px var(--button-tertiary-dark);
+
+  &:hover {
+    background: var(--button-tertiary-hover);
+    color: var(--text-tertiary);
+  }
+}
+
 .btn.accent {
   background-color: var(--selected);
   color: var(--white);

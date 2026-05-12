@@ -25,7 +25,7 @@ export default function QuestionsList({
         <h3>
           {text.title} ({questions.length})
         </h3>
-        <button className="btn primary" onClick={onNewQuestion}>
+        <button className="btn tertiary" onClick={onNewQuestion}>
           {text.add}
         </button>
       </div>
