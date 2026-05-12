@@ -8,6 +8,20 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.2',
+    date: '12 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'host allPlayersCompleted gate + remove last supabaseClient calls from useRoundPlay',
+      'route all live_round_answers DB ops through server routes',
+      'remove dead HostLiveClient (/host route never used)',
+      'guest last-bottle UX + remove dead roundAnchorAt state',
+      'remove roundAnchorAt filter from handleAnswerInsert to fix end-game deadlock',
+      'fixed',
+    ],
+  },
+
+  {
     version: '1.13.1',
     date: '11 maggio 2026',
     label: 'Auto',
