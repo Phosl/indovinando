@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.6',
+    date: '12 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'fix enoteca header',
+    ],
+  },
+
+  {
     version: '1.13.5',
     date: '12 maggio 2026',
     label: 'Auto',
