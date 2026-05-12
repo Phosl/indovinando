@@ -17,7 +17,7 @@ function Bone({w, h, style}) {
 
 export default function GameLoading() {
   return (
-    <main style={{padding: '16px', maxWidth: 960, margin: '0 auto'}}>
+    <main style={{padding: '0 20px 48px', maxWidth: 960, margin: '0 auto'}}>
       <div
         className="skeleton-frame"
         style={{
@@ -28,7 +28,7 @@ export default function GameLoading() {
           marginBottom: 16,
           flexWrap: 'wrap',
         }}>
-        <Bone w="90px" h="32px" style={{borderRadius: 12}} />
+        <Bone w="100px" h="40px" style={{borderRadius: 999}} />
         <Bone w="220px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
         <div style={{display: 'flex', gap: 6, marginLeft: 'auto', flexWrap: 'wrap'}}>
           <Bone w="110px" h="36px" style={{borderRadius: 12}} />

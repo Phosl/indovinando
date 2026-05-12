@@ -42,71 +42,56 @@ export function useWineCourseProgress() {
   useEffect(() => {
     let cancelled = false
 
-    async function init() {
-      // 1. Load localStorage immediately so UI isn't blank
+    async function loadProgress() {
+      // 1. Read localStorage synchronously — set loaded immediately, no network needed
       let local = {}
       try {
         const raw = localStorage.getItem(STORAGE_KEY)
         if (raw) local = JSON.parse(raw)
       } catch {}
 
-      // 2. Check auth
-      const {
-        data: {user},
-      } = await supabaseClient.auth.getUser()
-
       if (cancelled) return
-
-      if (!user) {
-        setProgress(local)
-        setLoaded(true)
-        return
-      }
-
-      // 3. Logged-in: fetch from DB
-      setUserId(user.id)
-      const {data: rows, error} = await supabaseClient
-        .from('wine_course_progress')
-        .select('level_id, lesson_id, completed, score, max_score, attempts, completed_at')
-        .eq('user_id', user.id)
-
-      if (cancelled) return
-
-      if (error) {
-        // Fall back to localStorage on DB error
-        setProgress(local)
-        setLoaded(true)
-        return
-      }
-
-      const dbProgress = rowsToProgress(rows ?? [])
-
-      // 4. Merge: DB wins, but keep any local entries not yet synced
-      const merged = {...local}
-      for (const [levelId, lessons] of Object.entries(dbProgress)) {
-        merged[levelId] = {...(merged[levelId] ?? {}), ...lessons}
-      }
-
-      setProgress(merged)
-      // Keep localStorage in sync with DB
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(merged))
-      } catch {}
+      setProgress(local)
       setLoaded(true)
+
+      // 2. Get session from local storage (no network call)
+      let uid = null
+      try {
+        const {
+          data: {session},
+        } = await supabaseClient.auth.getSession()
+        uid = session?.user?.id ?? null
+      } catch {}
+
+      if (!uid || cancelled) return
+      setUserId(uid)
+
+      // 3. Fetch DB in background to get authoritative progress
+      try {
+        const {data: rows, error} = await supabaseClient
+          .from('wine_course_progress')
+          .select('level_id, lesson_id, completed, score, max_score, attempts, completed_at')
+          .eq('user_id', uid)
+
+        if (cancelled || error) return
+
+        const dbProgress = rowsToProgress(rows ?? [])
+        const merged = {...local}
+        for (const [levelId, lessons] of Object.entries(dbProgress)) {
+          merged[levelId] = {...(merged[levelId] ?? {}), ...lessons}
+        }
+
+        setProgress(merged)
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(merged))
+        } catch {}
+      } catch {}
     }
 
-    init()
-
-    // Listen for auth changes (login/logout during session)
-    const {
-      data: {subscription},
-    } = supabaseClient.auth.onAuthStateChange(() => {
-      init()
-    })
+    loadProgress()
 
     return () => {
       cancelled = true
-      subscription.unsubscribe()
     }
   }, [])
 

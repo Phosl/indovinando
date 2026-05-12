@@ -33,7 +33,7 @@ export default function DashboardLoading() {
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className={styles.menuCard} style={{pointerEvents: 'none'}}>
               <Bone w="36px" h="36px" style={{borderRadius: 8}} />
-              <Bone w="80px" h="14px" style={{borderRadius: 6}} />
+              <Bone w="100px" h="16px" style={{borderRadius: 6}} />
             </div>
           ))}
         </nav>

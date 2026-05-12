@@ -28,11 +28,13 @@ export default function MieiGiochiLoading() {
           alignItems: 'center',
           gap: 12,
           padding: '10px 14px',
-          margin: '0 0 0 0',
+          maxWidth: 960,
+          margin: '0 auto 16px auto',
           flexWrap: 'wrap',
         }}>
-        <Bone w="40px" h="40px" style={{borderRadius: 10}} />
-        <Bone w="160px" h="20px" style={{borderRadius: 6}} />
+        <Bone w="100px" h="40px" style={{borderRadius: 999}} />
+        <Bone w="160px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
+        <div style={{minWidth: 90}} />
       </div>
 
       {/* Tab bar skeleton */}

@@ -3,6 +3,7 @@
   min-height: 100vh;
   background: var(--background);
   padding: 24px;
+  padding-top: 0px;
 }
 
 .container {
@@ -374,6 +375,7 @@
 @media (max-width: 768px) {
   .page {
     padding: 16px;
+    padding-top: 0px;
   }
 
   .levelCard {

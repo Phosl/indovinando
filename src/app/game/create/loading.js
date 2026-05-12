@@ -19,7 +19,7 @@ export default function GameCreateLoading() {
   return (
     <main
       style={{
-        padding: '16px',
+        padding: '0 20px 48px',
         maxWidth: 960,
         margin: '0 auto',
         display: 'flex',
@@ -34,11 +34,11 @@ export default function GameCreateLoading() {
           gap: 12,
           width: '100%',
           padding: '10px 14px',
-          marginBottom: 4,
+          marginBottom: 16,
           flexWrap: 'wrap',
           boxSizing: 'border-box',
         }}>
-        <Bone w="90px" h="32px" style={{borderRadius: 12}} />
+        <Bone w="100px" h="40px" style={{borderRadius: 999}} />
         <Bone w="170px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
         <div style={{minWidth: 90}} />
       </div>

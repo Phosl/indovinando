@@ -29,7 +29,13 @@ export default async function ProfilePage() {
     .select('id', {count: 'exact', head: true})
     .eq('created_by', user.id)
 
-  const {levels} = await getWineCourseData(lang)
+  let levels = []
+  try {
+    const courseData = await getWineCourseData(lang)
+    levels = courseData.levels ?? []
+  } catch {
+    // Course data unavailable — profile still works, level shows as Novizio
+  }
 
   return (
     <ProfileClient

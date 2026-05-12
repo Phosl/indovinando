@@ -35,44 +35,29 @@ export default async function Dashboard() {
           <h4>
             {dashboardDict.versionLabel || 'Versione BETA'} {appVersion}
           </h4>
-          <p>
+          <h2>
             {dashboardDict.welcome || 'Benvenuto'}, {profile?.username || data.user.email}!
-          </p>
+          </h2>
         </section>
 
         <nav className={styles.menuGrid}>
-          <a href="/game/create" className={`${styles.menuCard} ${styles.menuCardPrimary}`}>
+          <a href="/game/create" className={`${styles.menuCard} ${styles.menuCardGreen}`}>
             <span className={styles.menuCardEmoji}></span>
             <span className={styles.menuCardLabel}>{dashboardDict.createGame || 'Crea gioco'}</span>
           </a>
 
-          <a href="/miei-giochi" className={styles.menuCard}>
+          <a href="/miei-giochi" className={`${styles.menuCard} ${styles.menuCardTertiary}`}>
             <span className={styles.menuCardEmoji}></span>
             <span className={styles.menuCardLabel}>{dashboardDict.myGames || 'I miei giochi'}</span>
           </a>
 
           <a href="/corso-vino" className={`${styles.menuCard} ${styles.menuCardWine}`}>
+            <span className={styles.menuCardBadge}>✨ Novità</span>
             <span className={styles.menuCardEmoji}></span>
             <span className={styles.menuCardLabel}>{dashboardDict.wineCourse || 'Corso Vino'}</span>
           </a>
 
           <a href="/profilo" className={styles.menuCard}>
-            <span className={styles.menuCardEmoji}>
-              {isImgAvatar ? (
-                <img
-                  src={avatar.startsWith('/') ? avatar : `/${avatar}`}
-                  alt=""
-                  style={{
-                    width: '2rem',
-                    height: '2rem',
-                    objectFit: 'contain',
-                    verticalAlign: 'middle',
-                  }}
-                />
-              ) : (
-                avatar
-              )}
-            </span>
             <span className={styles.menuCardLabel}>{dashboardDict.profile || 'Profilo'}</span>
           </a>
         </nav>

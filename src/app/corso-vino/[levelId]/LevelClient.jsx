@@ -72,7 +72,6 @@ export default function LevelClient({level, lessons}) {
                   </div>
                   <span className={styles.lessonTitle}>{lesson.title}</span>
                 </div>
-                <div className={styles.lessonArrow}>{isCompleted ? '↺' : '▶'}</div>
               </div>
             </div>
           )

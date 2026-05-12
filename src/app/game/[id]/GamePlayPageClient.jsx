@@ -7,7 +7,7 @@ import GamePlayView from '@/components/game/GamePlayView'
 import TopBar from '@/components/TopBar'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {pickLangText} from '@/lib/i18n/dictionaries'
-import styles from './GamePlayPage.module.css'
+import styles from './GamePlayPage.module.scss'
 
 const GAME_PLAY_PAGE_DICTIONARY = {
   it: {
