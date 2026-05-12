@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.19',
+    date: '12 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'Format live session avatar helper',
+    ],
+  },
+
+  {
     version: '1.13.18',
     date: '12 maggio 2026',
     label: 'Auto',
