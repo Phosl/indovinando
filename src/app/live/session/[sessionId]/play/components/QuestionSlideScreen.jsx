@@ -2,12 +2,10 @@ import {useState, useEffect, useCallback, memo} from 'react'
 import styles from '../playerLive.module.scss'
 import {useT} from '@/lib/i18n/useT'
 
-const COMBO_EMOJIS = [null, null, '🔥', '💥', '⚡️']
-
 const getComboMsg = (n, t) => {
   if (!n || n < 2) return null
-  const emoji = COMBO_EMOJIS[n] || '🤯'
-  return {emoji, label: t('comboStreak', {count: n})}
+  const idx = String(Math.min(n - 1, 6)).padStart(2, '0')
+  return {svg: `/combo/combo-${idx}.svg`, label: t('comboStreak', {count: n})}
 }
 
 export const QuestionSlideScreen = memo(function QuestionSlideScreen({
@@ -71,7 +69,7 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
 
       {visibleCombo && (
         <div key={visibleCombo.key} className={styles.comboToast}>
-          <span className={styles.comboEmoji}>{visibleCombo.emoji}</span>
+          <img className={styles.comboEmoji} src={visibleCombo.svg} alt="" />
           <span className={styles.comboLabel}>{visibleCombo.label}</span>
         </div>
       )}

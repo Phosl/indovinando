@@ -84,16 +84,20 @@ export default function LessonClient({level, lesson, nextLessonId}) {
   const [slideMotion, setSlideMotion] = useState('idle')
   const timersRef = useRef([])
 
-  const COMBO_MESSAGES = [
-    null,
-    null,
-    {emoji: '🔥', label: 'Combo x2!'},
-    {emoji: '💥', label: 'Combo x3!!'},
-    {emoji: '⚡️', label: 'Combo x4!!!'},
-  ]
-
   const getComboMsg = useCallback((n) => {
-    return n >= 5 ? {emoji: '🤯', label: `Combo x${n}!!!!`} : (COMBO_MESSAGES[n] ?? null)
+    if (n < 2) return null
+    const idx = String(Math.min(n - 1, 6)).padStart(2, '0')
+    const labels = [
+      '',
+      '',
+      'Combo x2!',
+      'Combo x3!!',
+      'Combo x4!!!',
+      'Combo x5!!!!',
+      'Combo x6!!!!!',
+      `Combo x${n}!!!!!!`,
+    ]
+    return {svg: `/combo/combo-${idx}.svg`, label: labels[Math.min(n, 7)] ?? `Combo x${n}!!!!!!`}
   }, [])
 
   const didacticSlides = lesson.didacticSlides?.length
@@ -181,7 +185,7 @@ export default function LessonClient({level, lesson, nextLessonId}) {
       timersRef.current.push(exitTimer)
     } else {
       const score = answers.filter((a) => a.isCorrect).length + (isCorrect ? 1 : 0)
-      completeLesson(level.id, lesson.id, score)
+      completeLesson(level.id, lesson.id, score, questions.length)
       setScreen('result')
     }
   }, [
@@ -482,7 +486,7 @@ export default function LessonClient({level, lesson, nextLessonId}) {
 
       {visibleCombo && (
         <div key={visibleCombo.key} className={pStyles.comboToast}>
-          <span className={pStyles.comboEmoji}>{visibleCombo.emoji}</span>
+          <img className={pStyles.comboEmoji} src={visibleCombo.svg} alt="" />
           <span className={pStyles.comboLabel}>{visibleCombo.label}</span>
         </div>
       )}

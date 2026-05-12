@@ -1,6 +1,6 @@
 import {notFound} from 'next/navigation'
 import {getRawCourseJson} from '@/lib/courseAdmin'
-import TopBar from '@/components/TopBar'
+import TopBarBack from '@/components/TopBarBack'
 import styles from '../admin.module.scss'
 
 export default async function AdminLevelPage({params}) {
@@ -17,11 +17,7 @@ export default async function AdminLevelPage({params}) {
 
   return (
     <main className={styles.page}>
-      <TopBar
-        title={`⚙️ Livello ${levelNum} — ${dataIt.title}`}
-        back="/admin/corsi"
-        backLabel="← Corsi"
-      />
+      <TopBarBack title={`⚙️ Livello ${levelNum} — ${dataIt.title}`} href="/admin/corsi" />
 
       <div className={styles.container}>
         <div className={styles.header}>

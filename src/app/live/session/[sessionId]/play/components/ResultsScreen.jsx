@@ -2,8 +2,7 @@ import {memo, useMemo} from 'react'
 import styles from '../playerLive.module.scss'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useT} from '@/lib/i18n/useT'
-
-const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
+import AvatarDisplay from '@/components/AvatarDisplay'
 
 export const ResultsScreen = memo(function ResultsScreen({
   title,
@@ -139,7 +138,7 @@ export const ResultsScreen = memo(function ResultsScreen({
                     className={`${styles.standingRow} ${isMe ? styles.standingRowMe : ''}`}>
                     <span className={styles.standingRank}>{medal ?? `#${idx + 1}`}</span>
                     <span className={styles.standingAvatar}>
-                      {APPLE_AVATARS[player.avatar_id - 1] || '👤'}
+                      <AvatarDisplay avatarId={player.avatar_id} size={24} />
                     </span>
                     <span className={styles.standingName}>
                       {player.nickname}

@@ -580,9 +580,11 @@
 }
 
 .comboEmoji {
-  font-size: 2.8rem;
-  line-height: 1;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  display: block;
 }
 
 .comboLabel {

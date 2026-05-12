@@ -42,15 +42,18 @@ export default function QuestionsList({
                 className={`${styles.card} ${isComplete ? styles.complete : styles.incomplete}`}
                 onClick={() => onEditQuestion(index)}>
                 <div className={styles.cardHeader}>
-                  <h4>
-                    {text.question} {index + 1}
-                  </h4>
+                  <div>
+                    <h1>{index + 1}°</h1>
+                    <h5>{text.question}</h5>
+                  </div>
                   <span className={styles.status}>{isComplete ? '✓' : '⚠️'}</span>
                 </div>
-                <p className={styles.questionText}>{question.text}</p>
-                <div className={styles.optionsCount}>
-                  {question.options?.length || 0} {text.options}
-                </div>
+                <p className={styles.questionText}>
+                  {question.text} -
+                  <span className={styles.optionsCount}>
+                    {question.options?.length || 0} {text.options}
+                  </span>
+                </p>
                 <div className={styles.buttonGroup}>
                   <button
                     className={styles.editBtn}

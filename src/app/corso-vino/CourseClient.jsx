@@ -8,7 +8,7 @@ import {useWineCourseProgress} from './hooks/useWineCourseProgress'
 import styles from './course.module.scss'
 import {useT} from '@/lib/i18n/useT'
 
-export default function CourseClient({levels}) {
+export default function CourseClient({levels, isAdmin = false}) {
   const router = useRouter()
   const {loaded, userId, getLevelCompletedCount} = useWineCourseProgress()
   const t = useT('course')
@@ -22,7 +22,16 @@ export default function CourseClient({levels}) {
 
   return (
     <div className={styles.page}>
-      <TopBar title={t('title')} onBack={() => router.push('/dashboard')}></TopBar>
+      <TopBar title={t('title')} onBack={() => router.push('/dashboard')}>
+        {isAdmin && (
+          <a
+            href="/admin/corsi"
+            className="btn secondary"
+            style={{fontSize: '13px', padding: '6px 12px'}}>
+            ⚙️ Admin
+          </a>
+        )}
+      </TopBar>
 
       {/* Hero */}
       <div className={styles.hero}>

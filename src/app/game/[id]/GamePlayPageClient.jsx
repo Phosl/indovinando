@@ -48,29 +48,29 @@ export default function GamePlayPageClient({game, questions, bottles, isOwner, o
   return (
     <main className="flex-container">
       <div className="flex-column" style={{width: '100%', maxWidth: 960, margin: '0 auto'}}>
-        <TopBar title={`🎮 ${game.name}`} onBack={() => router.push('/dashboard')}>
-          <a href={`/game/${game.id}/live`} className="btn primary">
-            {t.playLive}
-          </a>
-          <a href={`/game/${game.id}/print`} className="btn secondary">
-            {t.printCard}
+        <TopBar title={`🎮 ${game.name}`} onBack={() => router.push('/dashboard')} />
+
+        <div className={styles.actionsBar}>
+          <a href={`/game/${game.id}/print`} className={`btn secondary ${styles.actionBtn}`}>
+            🖨️ {t.printCard}
           </a>
           {isOwner && (
-            <>
-              <Link href={`/game/${game.id}/edit`} className="btn secondary">
-                {t.edit}
-              </Link>
-              <button
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className={`${styles.dangerAction} ${isDeleting ? styles.disabledAction : ''}`}>
-                {isDeleting ? '...' : t.delete}
-              </button>
-            </>
+            <Link href={`/game/${game.id}/edit`} className={`btn secondary ${styles.actionBtn}`}>
+              ✏️ {t.edit}
+            </Link>
           )}
-        </TopBar>
+        </div>
 
         <GamePlayView game={game} questions={questions} bottles={bottles} />
+
+        {isOwner && (
+          <button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className={`${styles.dangerAction} ${isDeleting ? styles.disabledAction : ''}`}>
+            {isDeleting ? '...' : `🗑️ ${t.delete}`}
+          </button>
+        )}
       </div>
     </main>
   )

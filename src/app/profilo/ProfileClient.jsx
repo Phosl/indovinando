@@ -8,9 +8,29 @@ import {useWineCourseProgress} from '@/app/corso-vino/hooks/useWineCourseProgres
 import {supabaseClient} from '@/lib/supabaseClient'
 import {useT} from '@/lib/i18n/useT'
 import styles from './profilo.module.scss'
+// ── Player rank levels ────────────────────────────────────────────────────────
+const PLAYER_LEVELS = [
+  {idx: 0, num: 1, name: 'Novizio', svg: '/combo/combo-01.svg'},
+  {idx: 1, num: 2, name: 'Curioso', svg: '/combo/combo-02.svg'},
+  {idx: 2, num: 3, name: 'Magico', svg: '/combo/combo-03.svg'},
+  {idx: 3, num: 4, name: 'Esperto', svg: '/combo/combo-04.svg'},
+  {idx: 4, num: 5, name: 'Maestro', svg: '/combo/combo-05.svg'},
+  {idx: 5, num: 6, name: 'Supremo', svg: '/combo/combo-06.svg'},
+]
+
+function computePlayerLevel(completedLessons, totalLessons) {
+  if (!totalLessons) return {level: PLAYER_LEVELS[0], levelIdx: 0, progressInLevel: 0}
+  const pct = completedLessons / totalLessons // 0..1
+  const levelIdx = Math.min(5, Math.floor(pct * 6))
+  const bandStart = levelIdx / 6
+  const progressInLevel =
+    levelIdx === 5 && completedLessons === totalLessons
+      ? 100
+      : Math.round(Math.min(100, Math.max(0, ((pct - bandStart) / (1 / 6)) * 100)))
+  return {level: PLAYER_LEVELS[levelIdx], levelIdx, progressInLevel}
+}
 
 const AVATARS = [
-  '😀',
   '😎',
   '🤓',
   '🧠',
@@ -40,6 +60,27 @@ const AVATARS = [
   '🌊',
   '⛰️',
 ]
+
+const AVATAR_SVGS = [
+  '/avatar/avatar-01.svg',
+  '/avatar/avatar-02.svg',
+  '/avatar/avatar-03.svg',
+  '/avatar/avatar-04.svg',
+  '/avatar/avatar-05.svg',
+  '/avatar/avatar-06.svg',
+]
+
+const ALL_AVATARS = [...AVATARS, ...AVATAR_SVGS]
+
+function isImgAvatar(a) {
+  return typeof a === 'string' && a.includes('.svg')
+}
+
+function normalizeSrc(src) {
+  if (!src) return ''
+  return src.startsWith('/') ? src : `/${src}`
+}
+
 const AVATAR_STORAGE_KEY = 'profile_avatar_emoji'
 
 function computeCourseStats(levels, progress) {
@@ -82,18 +123,19 @@ export default function ProfileClient({
   const {progress, loaded} = useWineCourseProgress()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+  const [showAvatarSheet, setShowAvatarSheet] = useState(false)
 
   const [avatar, setAvatar] = useState(
-    initialAvatar && AVATARS.includes(initialAvatar) ? initialAvatar : '😀',
+    initialAvatar && ALL_AVATARS.includes(initialAvatar) ? initialAvatar : '😎',
   )
 
   useEffect(() => {
     const saved = localStorage.getItem(AVATAR_STORAGE_KEY)
-    if (saved && AVATARS.includes(saved)) {
+    if (saved && ALL_AVATARS.includes(saved)) {
       setAvatar(saved)
       return
     }
-    if (initialAvatar && AVATARS.includes(initialAvatar)) setAvatar(initialAvatar)
+    if (initialAvatar && ALL_AVATARS.includes(initialAvatar)) setAvatar(initialAvatar)
   }, [initialAvatar])
 
   async function selectAvatar(nextAvatar) {
@@ -189,15 +231,49 @@ export default function ProfileClient({
   }
 
   const stats = useMemo(() => computeCourseStats(levels, progress), [levels, progress])
+  const playerLevel = useMemo(
+    () => computePlayerLevel(stats.completedLessons, stats.totalLessons),
+    [stats],
+  )
+
+  // Persist player_level to DB when it increases (only after progress is loaded)
+  useEffect(() => {
+    if (!loaded || !userId) return
+    const newLevelNum = playerLevel.level.num
+    supabaseClient
+      .from('profiles')
+      .select('player_level')
+      .eq('id', userId)
+      .single()
+      .then(({data}) => {
+        const savedLevel = data?.player_level ?? 1
+        if (newLevelNum > savedLevel) {
+          supabaseClient
+            .from('profiles')
+            .update({player_level: newLevelNum, updated_at: new Date().toISOString()})
+            .eq('id', userId)
+            .then(({error}) => {
+              if (error) console.error('[profile] failed to update player_level:', error.message)
+            })
+        }
+      })
+  }, [loaded, userId, playerLevel.level.num])
 
   return (
     <main className={styles.page}>
       <div className={styles.container}>
         <TopBar title={t('title')} onBack={() => router.push('/dashboard')}></TopBar>
 
+        {/* ── Header: user info + lingua + avatar button ── */}
         <section className={styles.headerCard}>
           <div className={styles.userRow}>
-            <div className={styles.avatar}>{avatar}</div>
+            <div className={styles.avatar}>
+              {isImgAvatar(avatar) ? (
+                <img src={normalizeSrc(avatar)} alt="avatar" className={styles.avatarImg} />
+              ) : (
+                avatar
+              )}
+            </div>
             <div>
               <h2 className={styles.name}>{userLabel}</h2>
               <p className={styles.email}>{email}</p>
@@ -208,33 +284,86 @@ export default function ProfileClient({
             <span className={styles.label}>{t('language')}</span>
             <LanguageSwitcher inline />
           </div>
-        </section>
 
-        <section className={styles.card}>
-          <h2>{t('howTheAppWorks')}</h2>
-          <p className={styles.quickInfoText}>{t('howTheAppWorksDesc')}</p>
-          <a href="/info" className="btn accent">
-            {t('openAppGuide')}
-          </a>
-        </section>
-
-        <section className={styles.card}>
-          <h2>{t('chooseAvatar')}</h2>
-          <div className={styles.avatarGrid}>
-            {AVATARS.map((emoji) => (
-              <button
-                key={emoji}
-                className={`${styles.avatarOption} ${avatar === emoji ? styles.avatarOptionActive : ''}`}
-                onClick={() => selectAvatar(emoji)}
-                type="button"
-                aria-label={`avatar ${emoji}`}>
-                {emoji}
-              </button>
-            ))}
+          <div className={styles.avatarRow}>
+            <span className={styles.label}>{t('chooseAvatar')}</span>
+            <button
+              type="button"
+              className={styles.avatarPickerBtn}
+              onClick={() => setShowAvatarSheet(true)}>
+              <span className={styles.avatarPickerDivider} />
+              <span className={styles.avatarPickerLabel}>Scegli</span>
+            </button>
           </div>
         </section>
 
+        {/* ── Livello + Statistiche ── */}
         <section className={styles.card}>
+          {/* Player level */}
+          <div className={styles.levelHeader}>
+            {loaded ? (
+              <img
+                src={playerLevel.level.svg}
+                className={styles.levelBadgeImg}
+                alt={playerLevel.level.name}
+              />
+            ) : (
+              <div className={`skeleton ${styles.levelBadgeImgPlaceholder}`} />
+            )}
+            <div className={styles.levelInfo}>
+              <p className={styles.levelNum}>Livello {loaded ? playerLevel.level.num : '…'}</p>
+              <h3 className={styles.levelName}>{loaded ? playerLevel.level.name : '…'}</h3>
+            </div>
+          </div>
+
+          <div className={styles.levelProgressWrap}>
+            <div className={styles.levelProgressRow}>
+              <div className={styles.levelProgressTrack}>
+                <div
+                  className={styles.levelProgressFill}
+                  style={{width: `${loaded ? playerLevel.progressInLevel : 0}%`}}
+                />
+              </div>
+              <span className={styles.levelProgressLabel}>
+                {loaded ? `${playerLevel.progressInLevel}%` : '…'}
+              </span>
+            </div>
+            <span className={styles.levelProgressNext}>
+              {loaded
+                ? playerLevel.levelIdx >= PLAYER_LEVELS.length - 1
+                  ? '🏆 Livello massimo raggiunto!'
+                  : `Prossimo livello: ${PLAYER_LEVELS[playerLevel.levelIdx + 1].name}`
+                : ''}
+            </span>
+          </div>
+
+          <div className={styles.levelStrip}>
+            {PLAYER_LEVELS.map((lvl) => {
+              const isActive = loaded && lvl.idx === playerLevel.levelIdx
+              const isPast = loaded && lvl.idx < playerLevel.levelIdx
+              return (
+                <div
+                  key={lvl.idx}
+                  className={`${styles.levelStripItem} ${isActive ? styles.levelStripActive : ''}`}>
+                  <img
+                    src={lvl.svg}
+                    className={styles.levelStripImg}
+                    alt={lvl.name}
+                    style={
+                      !loaded || (!isActive && !isPast)
+                        ? {filter: 'grayscale(1) opacity(0.35)'}
+                        : undefined
+                    }
+                  />
+                  <span className={styles.levelStripName}>{lvl.name}</span>
+                </div>
+              )
+            })}
+          </div>
+
+          <div className={styles.cardDivider} />
+
+          {/* Stats */}
           <h2>{t('yourStats')}</h2>
           <div className={styles.statsGrid}>
             <div className={styles.statItem}>
@@ -260,7 +389,16 @@ export default function ProfileClient({
           </div>
         </section>
 
+        {/* ── Come funziona + Changelog ── */}
         <section className={styles.card}>
+          <h2>{t('howTheAppWorks')}</h2>
+          <p className={styles.quickInfoText}>{t('howTheAppWorksDesc')}</p>
+          <a href="/info" className="btn accent">
+            {t('openAppGuide')}
+          </a>
+
+          <div className={styles.cardDivider} />
+
           <h2>{t('changelog')}</h2>
           <p className={styles.quickInfoText}>{t('changelogDesc')}</p>
           <a href="/changelog" className="btn secondary">
@@ -268,6 +406,7 @@ export default function ProfileClient({
           </a>
         </section>
 
+        {/* ── Logout ── */}
         <section className={styles.card}>
           <button
             type="button"
@@ -278,6 +417,48 @@ export default function ProfileClient({
           </button>
         </section>
 
+        {/* ── Avatar bottom sheet ── */}
+        {showAvatarSheet && (
+          <div className={styles.sheetOverlay} onClick={() => setShowAvatarSheet(false)}>
+            <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.sheetHandle} />
+              <h3 className={styles.sheetTitle}>{t('chooseAvatar')}</h3>
+              <div className={styles.avatarSvgGrid}>
+                {AVATAR_SVGS.map((src) => (
+                  <button
+                    key={src}
+                    className={`${styles.avatarOption} ${avatar === src ? styles.avatarOptionActive : ''}`}
+                    onClick={() => {
+                      selectAvatar(src)
+                      setShowAvatarSheet(false)
+                    }}
+                    type="button"
+                    aria-label={`avatar ${src}`}>
+                    <img src={src} alt="" className={styles.avatarSvgThumb} />
+                  </button>
+                ))}
+              </div>
+              <div className={styles.sheetSectionLabel}>Emoji</div>
+              <div className={styles.avatarGrid}>
+                {AVATARS.map((emoji) => (
+                  <button
+                    key={emoji}
+                    className={`${styles.avatarOption} ${avatar === emoji ? styles.avatarOptionActive : ''}`}
+                    onClick={() => {
+                      selectAvatar(emoji)
+                      setShowAvatarSheet(false)
+                    }}
+                    type="button"
+                    aria-label={`avatar ${emoji}`}>
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Logout confirm modal ── */}
         {showLogoutConfirm && (
           <div className={styles.modalOverlay} onClick={() => setShowLogoutConfirm(false)}>
             <div className={styles.modalBox} onClick={(e) => e.stopPropagation()}>

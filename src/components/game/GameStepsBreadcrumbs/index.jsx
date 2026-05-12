@@ -22,7 +22,8 @@ export default function GameStepsBreadcrumbs({
               className={`${styles.breadcrumbButton} ${step.id === currentStep ? styles.active : ''} ${isDisabled ? styles.disabled : ''}`}
               onClick={() => !isDisabled && onStepClick(step.id)}
               disabled={isDisabled}>
-              {step.id}. {step.label}
+              <span className={styles.breadcrumbNum}>{step.id}</span>
+              {step.label}
             </button>
             {index < steps.length - 1 && <span className={styles.separator}>→</span>}
           </div>

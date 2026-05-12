@@ -1,7 +1,11 @@
 .page {
   min-height: 100vh;
   background: var(--background);
-  padding-bottom: 64px;
+  padding: 20px 20px 64px;
+
+  @media (max-width: 520px) {
+    padding: 12px 12px 64px;
+  }
 }
 
 .container {

@@ -2,8 +2,7 @@
 
 import {useMemo, useState} from 'react'
 import styles from './storico.module.scss'
-
-const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
+import AvatarDisplay from '@/components/AvatarDisplay'
 
 export default function StoricoClient({sessions, t, lang}) {
   const [activeGame, setActiveGame] = useState(null) // null = tutti
@@ -95,7 +94,7 @@ export default function StoricoClient({sessions, t, lang}) {
                         {idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}
                       </span>
                       <span className={styles.avatar}>
-                        {APPLE_AVATARS[p.avatar_id - 1] || '👤'}
+                        <AvatarDisplay avatarId={p.avatar_id} size={28} />
                       </span>
                       <span className={styles.nickname}>{p.nickname}</span>
                       <span className={styles.score}>
@@ -116,7 +115,7 @@ export default function StoricoClient({sessions, t, lang}) {
                       <div key={p.id} className={styles.fullRow}>
                         <span className={styles.fullRank}>#{idx + 1}</span>
                         <span className={styles.fullAvatar}>
-                          {APPLE_AVATARS[p.avatar_id - 1] || '👤'}
+                          <AvatarDisplay avatarId={p.avatar_id} size={24} />
                         </span>
                         <span className={styles.fullNickname}>{p.nickname}</span>
                         <span className={styles.fullScore}>

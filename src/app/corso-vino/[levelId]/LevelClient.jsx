@@ -6,6 +6,8 @@ import {useWineCourseProgress} from '../hooks/useWineCourseProgress'
 import {useT} from '@/lib/i18n/useT'
 import styles from './level.module.scss'
 
+const PASS_THRESHOLD = 0.75
+
 export default function LevelClient({level, lessons}) {
   const router = useRouter()
   const {loaded, getLessonStatus, getLessonProgress} = useWineCourseProgress()
@@ -31,6 +33,8 @@ export default function LevelClient({level, lessons}) {
           const lp = loaded ? getLessonProgress(level.id, lesson.id) : null
           const isCompleted = status === 'completed'
           const isCurrent = !isCompleted
+          const hasPassed =
+            isCompleted && lp?.maxScore > 0 ? lp.score / lp.maxScore >= PASS_THRESHOLD : null
 
           return (
             <div key={lesson.id} className={styles.pathItem}>
@@ -56,7 +60,12 @@ export default function LevelClient({level, lessons}) {
                     </span>
                     {isCompleted && lp && (
                       <span className={styles.lessonScore}>
-                        {lp.score}/{lesson.questions.length}
+                        {lp.score}/{lp.maxScore > 0 ? lp.maxScore : lesson.questions.length}
+                      </span>
+                    )}
+                    {hasPassed !== null && (
+                      <span className={hasPassed ? styles.passBadge : styles.failBadge}>
+                        {hasPassed ? '✓ Superato' : '↩ Da ripassare'}
                       </span>
                     )}
                     {isCompleted && <span className={styles.lessonRepeat}>{t('repeat')}</span>}

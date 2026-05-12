@@ -1,6 +1,7 @@
 import CourseClient from './CourseClient'
 import {getWineCourseData} from '@/lib/wineCourseContent'
 import {getServerLanguage} from '@/lib/i18n/server'
+import {createServerSupabase} from '@/lib/supabaseServer'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -17,7 +18,20 @@ export async function generateMetadata() {
 }
 
 export default async function CorsoVino() {
+  const supabase = await createServerSupabase()
   const lang = await getServerLanguage()
   const {levels} = await getWineCourseData(lang)
-  return <CourseClient levels={levels} />
+
+  const {data} = await supabase.auth.getUser()
+  let isAdmin = false
+  if (data?.user) {
+    const {data: profile} = await supabase
+      .from('profiles')
+      .select('super_admin')
+      .eq('id', data.user.id)
+      .single()
+    isAdmin = profile?.super_admin === true
+  }
+
+  return <CourseClient levels={levels} isAdmin={isAdmin} />
 }

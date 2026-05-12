@@ -1,8 +1,7 @@
 import {memo} from 'react'
 import styles from '../playerLive.module.scss'
 import {useT} from '@/lib/i18n/useT'
-
-const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
+import AvatarDisplay from '@/components/AvatarDisplay'
 
 export const GameOverlays = memo(function GameOverlays({
   leaderboardOpen,
@@ -44,7 +43,7 @@ export const GameOverlays = memo(function GameOverlays({
                         className={`${styles.sheetRow} ${isMe ? styles.sheetRowMe : ''}`}>
                         <span className={styles.sheetRank}>{medal ?? `#${idx + 1}`}</span>
                         <span className={styles.sheetAvatar}>
-                          {APPLE_AVATARS[player.avatar_id - 1] || '👤'}
+                          <AvatarDisplay avatarId={player.avatar_id} size={24} />
                         </span>
                         <span className={styles.sheetName}>
                           {player.nickname}

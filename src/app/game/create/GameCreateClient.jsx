@@ -5,7 +5,7 @@ import {createClient} from '@/lib/supabaseClient'
 import GameEditor from '@/components/game/GameEditor'
 import Loader from '@/components/Loader'
 import OnboardingModal from '@/components/game/OnboardingModal'
-import TopBar from '@/components/TopBar'
+import PageLayout from '@/components/PageLayout'
 import styles from './gameCreate.module.css'
 
 const TEMPLATE_QUESTIONS = [
@@ -19,7 +19,16 @@ const TEMPLATE_QUESTIONS = [
   },
   {
     text: 'Uvaggio',
-    options: ['Blend', 'Sangiovese', 'Pinot Nero', 'Aglianico', 'Nebbiolo', 'Merlot', 'Syrah', 'Verdicchio'],
+    options: [
+      'Blend',
+      'Sangiovese',
+      'Pinot Nero',
+      'Aglianico',
+      'Nebbiolo',
+      'Merlot',
+      'Syrah',
+      'Verdicchio',
+    ],
   },
   {
     text: 'Anno',
@@ -34,30 +43,27 @@ const TEMPLATE_QUESTIONS = [
 // null = choosing, 'custom' = full editor, 'quick' = template prefilled
 function ModePickerScreen({onPick}) {
   return (
-    <main className="flex-container">
-      <div className="flex-column">
-        <TopBar title="Crea gioco" onBack={() => (window.location.href = '/dashboard')} />
-        <div className={styles.modePickerGrid}>
-          <button className={styles.modeCard} onClick={() => onPick('custom')}>
-            <span className={styles.modeCardEmoji}>✏️</span>
-            <strong className={styles.modeCardTitle}>Gioco personalizzato</strong>
-            <p className={styles.modeCardDesc}>
-              Crea le tue domande e risposta da zero, adatta ogni dettaglio al tuo stile.
-            </p>
-            <span className={styles.modeCardCta}>Inizia →</span>
-          </button>
+    <PageLayout title="Crea gioco" onBack={() => (window.location.href = '/dashboard')}>
+      <div className={styles.modePickerGrid}>
+        <button className={styles.modeCard} onClick={() => onPick('custom')}>
+          <span className={styles.modeCardEmoji}>✏️</span>
+          <strong className={styles.modeCardTitle}>Gioco personalizzato</strong>
+          <p className={styles.modeCardDesc}>
+            Crea le tue domande e risposta da zero, adatta ogni dettaglio al tuo stile.
+          </p>
+          <span className={styles.modeCardCta}>Inizia →</span>
+        </button>
 
-          <button className={styles.modeCard} onClick={() => onPick('quick')}>
-            <span className={styles.modeCardEmoji}>⚡</span>
-            <strong className={styles.modeCardTitle}>Gioco rapido</strong>
-            <p className={styles.modeCardDesc}>
-              Usa il nostro modello pronto per la degustazione: aggiungi le bottiglie e sei pronto.
-            </p>
-            <span className={styles.modeCardCta}>Usa template →</span>
-          </button>
-        </div>
+        <button className={styles.modeCard} onClick={() => onPick('quick')}>
+          <span className={styles.modeCardEmoji}>⚡</span>
+          <strong className={styles.modeCardTitle}>Gioco rapido</strong>
+          <p className={styles.modeCardDesc}>
+            Usa il nostro modello pronto per la degustazione: aggiungi le bottiglie e sei pronto.
+          </p>
+          <span className={styles.modeCardCta}>Usa template →</span>
+        </button>
       </div>
-    </main>
+    </PageLayout>
   )
 }
 
@@ -96,9 +102,10 @@ export default function GameCreateClient({initialShowOnboarding, userId}) {
               initialGameName="Indovinando"
               userId={userId}
               isQuickCreate={true}
+              onBack={() => setMode(null)}
             />
           ) : (
-            <GameEditor userId={userId} />
+            <GameEditor userId={userId} onBack={() => setMode(null)} />
           )}
         </Suspense>
       </div>

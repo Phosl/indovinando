@@ -1,8 +1,7 @@
 import {memo} from 'react'
 import styles from '../playerLive.module.scss'
 import {useT} from '@/lib/i18n/useT'
-
-const APPLE_AVATARS = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀', '🧑‍🍳', '👨‍⚕️']
+import AvatarDisplay from '@/components/AvatarDisplay'
 
 /**
  * Persistent top bar shown across all game screens.
@@ -23,7 +22,9 @@ export const TopBar = memo(function TopBar({
   return (
     <div className={styles.topBar}>
       <div className={styles.playerInfo}>
-        <span className={styles.avatar}>{APPLE_AVATARS[playerData.avatar_id - 1] || '👤'}</span>
+        <span className={styles.avatar}>
+          <AvatarDisplay avatarId={playerData.avatar_id} size={24} />
+        </span>
         <span className={styles.nickname}>{playerData.nickname}</span>
       </div>
 

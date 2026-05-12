@@ -1,5 +1,5 @@
 import {getWineCourseData} from '@/lib/wineCourseContent'
-import TopBar from '@/components/TopBar'
+import TopBarBack from '@/components/TopBarBack'
 import styles from './admin.module.scss'
 
 const LEVEL_EMOJIS = {
@@ -20,7 +20,7 @@ export default async function AdminCorsiPage() {
 
   return (
     <main className={styles.page}>
-      <TopBar title="⚙️ Admin — Corsi" back="/dashboard" backLabel="← Dashboard" />
+      <TopBarBack title="⚙️ Admin — Corsi" href="/corso-vino" />
 
       <div className={styles.container}>
         <div className={styles.header}>

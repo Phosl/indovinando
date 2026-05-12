@@ -58,6 +58,7 @@ export default function GameEditor({
   onGameSaved,
   initialGameName,
   isQuickCreate = false,
+  onBack,
 }) {
   const {lang} = useLanguage()
   const router = useRouter()
@@ -571,9 +572,10 @@ export default function GameEditor({
     <div className={styles.editor}>
       <TopBar
         title={isEditMode ? editorText.topBarEdit : editorText.topBarCreate}
-        onBack={() =>
+        onBack={() => {
+          if (onBack) return onBack()
           router.push(isEditMode && gameId ? `/game/${gameId}` : '/dashboard')
-        }></TopBar>
+        }}></TopBar>
       <GameStepsBreadcrumbs
         steps={steps}
         currentStep={step}

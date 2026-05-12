@@ -26,6 +26,7 @@ function rowsToProgress(rows) {
     acc[row.level_id][row.lesson_id] = {
       completed: row.completed,
       score: row.score,
+      maxScore: row.max_score,
       attempts: row.attempts,
       completedAt: row.completed_at,
     }
@@ -66,7 +67,7 @@ export function useWineCourseProgress() {
       setUserId(user.id)
       const {data: rows, error} = await supabaseClient
         .from('wine_course_progress')
-        .select('level_id, lesson_id, completed, score, attempts, completed_at')
+        .select('level_id, lesson_id, completed, score, max_score, attempts, completed_at')
         .eq('user_id', user.id)
 
       if (cancelled) return
@@ -117,11 +118,12 @@ export function useWineCourseProgress() {
 
   /** Call after a lesson is completed. Keeps the best score across attempts. */
   const completeLesson = useCallback(
-    (levelId, lessonId, score) => {
+    (levelId, lessonId, score, maxScore) => {
       setProgress((prev) => {
         const level = prev[levelId] ?? {}
         const existing = level[lessonId] ?? {}
         const bestScore = Math.max(score, existing.score ?? 0)
+        const storedMaxScore = maxScore ?? existing.maxScore ?? 0
         const attempts = (existing.attempts ?? 0) + 1
         const completedAt = new Date().toISOString()
 
@@ -132,6 +134,7 @@ export function useWineCourseProgress() {
             [lessonId]: {
               completed: true,
               score: bestScore,
+              maxScore: storedMaxScore,
               attempts,
               completedAt,
             },
@@ -150,6 +153,7 @@ export function useWineCourseProgress() {
                 lesson_id: lessonId,
                 completed: true,
                 score: bestScore,
+                max_score: storedMaxScore,
                 attempts,
                 completed_at: completedAt,
                 updated_at: completedAt,

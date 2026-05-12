@@ -5,7 +5,11 @@
   display: flex;
   flex-direction: column;
   background: var(--background);
-  padding-bottom: 32px;
+  padding: 20px 20px 32px;
+
+  @media (max-width: 520px) {
+    padding: 12px 12px 32px;
+  }
 }
 
 // ── Header ────────────────────────────────────────────────────
@@ -193,6 +197,25 @@
   background: var(--success-surface);
   border-radius: 999px;
   padding: 1px 7px;
+}
+
+.passBadge {
+  font-size: 0.68rem;
+  font-weight: 900;
+  color: #fff;
+  background: #58cc02;
+  border-radius: 999px;
+  padding: 1px 8px;
+}
+
+.failBadge {
+  font-size: 0.68rem;
+  font-weight: 900;
+  color: #664200;
+  background: #ffe08a;
+  border: 1px solid #e6b800;
+  border-radius: 999px;
+  padding: 1px 8px;
 }
 
 .lessonRepeat {

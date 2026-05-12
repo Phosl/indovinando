@@ -4,27 +4,19 @@ import {useState, useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
+import AvatarDisplay from '@/components/AvatarDisplay'
+import {GAME_AVATARS, profileAvatarToGameId} from '@/lib/avatarUtils'
 import styles from './playerJoin.module.scss'
 import {useT} from '@/lib/i18n/useT'
 
-const APPLE_AVATARS = [
-  {id: 1, emoji: '👨‍💼'},
-  {id: 2, emoji: '👩‍💼'},
-  {id: 3, emoji: '👨‍🎓'},
-  {id: 4, emoji: '👩‍🎓'},
-  {id: 5, emoji: '👨‍🎨'},
-  {id: 6, emoji: '👩‍🎨'},
-  {id: 7, emoji: '👨‍🚀'},
-  {id: 8, emoji: '👩‍🚀'},
-  {id: 9, emoji: '🧑‍🍳'},
-  {id: 10, emoji: '👨‍⚕️'},
-]
+const AVATAR_SVG_LIST = GAME_AVATARS.filter((a) => a.type === 'img')
+const AVATAR_EMOJI_LIST = GAME_AVATARS.filter((a) => a.type === 'emoji')
 
 export default function PlayerJoinClient({sessionId, gameName, existingPlayers, userId}) {
   const router = useRouter()
   const t = useT('live.playerJoin')
   const [nickname, setNickname] = useState('')
-  const [selectedAvatar, setSelectedAvatar] = useState(1)
+  const [selectedAvatar, setSelectedAvatar] = useState(11) // default to first SVG
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [gameStarted, setGameStarted] = useState(false)
@@ -125,6 +117,22 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
 
     restorePlayer()
   }, [nicknameStorageKey, playerStorageKey, sessionId, userId])
+
+  // Preselect profile avatar for logged-in users (only if not already restored from session)
+  useEffect(() => {
+    if (!userId || joinedPlayer) return
+    supabaseClient
+      .from('profiles')
+      .select('avatar_emoji')
+      .eq('id', userId)
+      .single()
+      .then(({data}) => {
+        if (data?.avatar_emoji) {
+          const gameId = profileAvatarToGameId(data.avatar_emoji)
+          setSelectedAvatar(gameId)
+        }
+      })
+  }, [userId, joinedPlayer])
 
   // Polling combinato - controlla stato gioco e aggiorna lista giocatori
   useEffect(() => {
@@ -236,17 +244,23 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
             <form onSubmit={handleJoin} className={styles.joinForm}>
               <div className={styles.formGroup}>
                 <label>{t('chooseAvatar')}</label>
-                <div className={styles.avatarGrid}>
-                  {APPLE_AVATARS.map((avatar) => (
+                <div className={styles.avatarGridSvg}>
+                  {AVATAR_SVG_LIST.map((av) => (
                     <button
-                      key={avatar.id}
+                      key={av.id}
                       type="button"
-                      className={`${styles.avatarButton} ${
-                        selectedAvatar === avatar.id ? styles.selected : ''
-                      }`}
-                      onClick={() => setSelectedAvatar(avatar.id)}
-                      title={`Avatar ${avatar.id}`}>
-                      <span className={styles.avatarEmoji}>{avatar.emoji}</span>
+                      className={`${styles.avatarButton} ${selectedAvatar === av.id ? styles.selected : ''}`}
+                      onClick={() => setSelectedAvatar(av.id)}></button>
+                  ))}
+                </div>
+                <div className={styles.avatarGridEmoji}>
+                  {AVATAR_EMOJI_LIST.map((av) => (
+                    <button
+                      key={av.id}
+                      type="button"
+                      className={`${styles.avatarButton} ${selectedAvatar === av.id ? styles.selected : ''}`}
+                      onClick={() => setSelectedAvatar(av.id)}>
+                      <span className={styles.avatarEmoji}>{av.value}</span>
                     </button>
                   ))}
                 </div>
@@ -296,7 +310,7 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
               {players.map((player, idx) => (
                 <div key={idx} className={styles.playerCard}>
                   <span className={styles.emoji}>
-                    {APPLE_AVATARS[player.avatar_id - 1]?.emoji || '👤'}
+                    <AvatarDisplay avatarId={player.avatar_id} size={28} />
                   </span>
                   <p>{player.nickname}</p>
                 </div>

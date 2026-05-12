@@ -11,15 +11,21 @@ import {useGameAudio} from '../../../live/session/[sessionId]/play/hooks/useGame
 
 const POINTS_CORRECT = 25
 
-const COMBO_MESSAGES = [
-  null,
-  null,
-  {emoji: '🔥', label: 'Combo x2!'},
-  {emoji: '💥', label: 'Combo x3!!'},
-  {emoji: '⚡️', label: 'Combo x4!!!'},
-]
-const getComboMsg = (n) =>
-  n >= 5 ? {emoji: '🤯', label: `Combo x${n}!!!!`} : (COMBO_MESSAGES[n] ?? null)
+const getComboMsg = (n) => {
+  if (n < 2) return null
+  const idx = String(Math.min(n - 1, 6)).padStart(2, '0')
+  const labels = [
+    '',
+    '',
+    'Combo x2!',
+    'Combo x3!!',
+    'Combo x4!!!',
+    'Combo x5!!!!',
+    'Combo x6!!!!!',
+    `Combo x${n}!!!!!!`,
+  ]
+  return {svg: `/combo/combo-${idx}.svg`, label: labels[Math.min(n, 7)] ?? `Combo x${n}!!!!!!`}
+}
 
 const stateKey = (bottleId, questionId) => `${bottleId}:${questionId}`
 
@@ -462,7 +468,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
 
       {visibleCombo && (
         <div key={visibleCombo.key} className={styles.comboToast}>
-          <span className={styles.comboEmoji}>{visibleCombo.emoji}</span>
+          <img className={styles.comboEmoji} src={visibleCombo.svg} alt="" />
           <span className={styles.comboLabel}>{visibleCombo.label}</span>
         </div>
       )}

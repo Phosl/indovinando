@@ -88,6 +88,28 @@
   gap: 8px;
 }
 
+.avatarGridSvg {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.avatarGridEmoji {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.avatarSvgThumb {
+  width: 100%;
+  height: 100%;
+  max-width: 40px;
+  max-height: 40px;
+  object-fit: contain;
+  display: block;
+}
+
 .avatarButton {
   aspect-ratio: 1;
   border: 2px solid var(--button-secondary-border);

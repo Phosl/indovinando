@@ -1,6 +1,6 @@
 import {notFound} from 'next/navigation'
 import {getRawCourseJson} from '@/lib/courseAdmin'
-import TopBar from '@/components/TopBar'
+import TopBarBack from '@/components/TopBarBack'
 import LessonEditorClient from './LessonEditorClient'
 import styles from '../../admin.module.scss'
 
@@ -22,11 +22,7 @@ export default async function AdminLessonEditorPage({params, searchParams}) {
 
   return (
     <main className={styles.page}>
-      <TopBar
-        title={`✏️ ${lesson.title}`}
-        back={`/admin/corsi/${levelNum}`}
-        backLabel={`← Livello ${levelNum}`}
-      />
+      <TopBarBack title={`✏️ ${lesson.title}`} href={`/admin/corsi/${levelNum}`} />
 
       <div className={styles.container}>
         {/* Lang switcher */}

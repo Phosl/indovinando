@@ -5,7 +5,11 @@
   display: flex;
   flex-direction: column;
   background: var(--background);
-  padding-bottom: 32px;
+  padding: 20px 20px 32px;
+
+  @media (max-width: 520px) {
+    padding: 12px 12px 32px;
+  }
 }
 
 // ── Header ────────────────────────────────────────────────────
