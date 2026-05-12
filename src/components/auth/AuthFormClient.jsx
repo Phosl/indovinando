@@ -126,7 +126,7 @@ function AuthForm() {
       <div className={styles.container}>
         <section className={styles.shell}>
           <div className={styles.brandBlock}>
-            <h1 className={styles.brand}>INDOVINANDO</h1>
+            <img src="/logo.svg" alt="Indovinando Logo" className={styles.logo} />
             <p className={styles.tagline}>{t('tagline')}</p>
           </div>
 
