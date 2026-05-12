@@ -1,28 +1,43 @@
 'use client'
 
-import {useMemo, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import styles from './storico.module.scss'
 import AvatarDisplay from '@/components/AvatarDisplay'
 
 export default function StoricoClient({sessions, t, lang}) {
   const [activeGame, setActiveGame] = useState(null) // null = tutti
+  const normalizeGameName = (name) =>
+    String(name ?? '')
+      .trim()
+      .toLocaleLowerCase(lang || 'it')
 
-  // Extract unique game names preserving first-seen order
-  const gameNames = useMemo(() => {
-    const seen = new Set()
-    const names = []
+  // Build unique game filter options preserving first-seen order
+  const gameOptions = useMemo(() => {
+    const map = new Map()
     for (const s of sessions) {
-      if (s.game_name && !seen.has(s.game_name)) {
-        seen.add(s.game_name)
-        names.push(s.game_name)
+      const label = String(s.game_name ?? '').trim()
+      if (!label) continue
+      const key = normalizeGameName(label)
+      if (!key) continue
+      if (!map.has(key)) {
+        map.set(key, {key, label, count: 1})
+      } else {
+        map.get(key).count += 1
       }
     }
-    return names
-  }, [sessions])
+    return Array.from(map.values())
+  }, [sessions, lang])
+
+  useEffect(() => {
+    if (activeGame && !gameOptions.some((g) => g.key === activeGame)) {
+      setActiveGame(null)
+    }
+  }, [activeGame, gameOptions])
 
   const filtered = useMemo(
-    () => (activeGame ? sessions.filter((s) => s.game_name === activeGame) : sessions),
-    [sessions, activeGame],
+    () =>
+      activeGame ? sessions.filter((s) => normalizeGameName(s.game_name) === activeGame) : sessions,
+    [sessions, activeGame, lang],
   )
 
   const locale = lang === 'en' ? 'en-GB' : 'it-IT'
@@ -39,23 +54,22 @@ export default function StoricoClient({sessions, t, lang}) {
   return (
     <>
       {/* ── Filter pills ── */}
-      {gameNames.length > 1 && (
+      {gameOptions.length > 1 && (
         <div className={styles.filterBar}>
           <button
             className={`${styles.pill} ${!activeGame ? styles.pillActive : ''}`}
             onClick={() => setActiveGame(null)}>
-            {t.allGames}
+            {t.allGames || (lang === 'en' ? 'All' : 'Tutti')}
             <span className={styles.pillCount}>{sessions.length}</span>
           </button>
-          {gameNames.map((name) => {
-            const count = sessions.filter((s) => s.game_name === name).length
+          {gameOptions.map((option) => {
             return (
               <button
-                key={name}
-                className={`${styles.pill} ${activeGame === name ? styles.pillActive : ''}`}
-                onClick={() => setActiveGame(activeGame === name ? null : name)}>
-                {name}
-                <span className={styles.pillCount}>{count}</span>
+                key={option.key}
+                className={`${styles.pill} ${activeGame === option.key ? styles.pillActive : ''}`}
+                onClick={() => setActiveGame(activeGame === option.key ? null : option.key)}>
+                {option.label}
+                <span className={styles.pillCount}>{option.count}</span>
               </button>
             )
           })}
@@ -70,7 +84,7 @@ export default function StoricoClient({sessions, t, lang}) {
             <div key={s.id} className={styles.card}>
               <div className={styles.cardHeader}>
                 <div>
-                  <h3 className={styles.gameName}>{s.game_name}</h3>
+                  <h3 className={styles.gameName}>{String(s.game_name ?? '').trim() || '—'}</h3>
                   <span className={styles.date}>
                     {played.toLocaleDateString(locale, {
                       day: '2-digit',
