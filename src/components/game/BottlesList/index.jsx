@@ -28,7 +28,7 @@ export default function BottlesList({
         <h3>
           {text.title} ({bottles.length})
         </h3>
-        <button className="btn primary" onClick={onNewBottle}>
+        <button className="btn tertiary" onClick={onNewBottle}>
           {text.add}
         </button>
       </div>

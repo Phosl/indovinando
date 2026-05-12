@@ -6,9 +6,13 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   z-index: 1000;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px;
   animation: fadeIn 0.2s ease-out;
 }
 
@@ -27,35 +31,23 @@
   border: 2px solid var(--button-secondary-border);
   box-shadow: 0px 8px 0px 0px rgba(0, 0, 0, 0.15);
   max-width: 600px;
-  width: 90%;
-  max-height: 90vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  margin: auto 0;
 }
 
 .modalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 32px;
+  padding: 18px 24px;
   border-bottom: 2px solid var(--button-secondary-border);
 
   h3 {
     margin: 0;
-    font-size: 1.3rem;
-    font-weight: 700;
+    font-size: 1.1rem;
+    font-weight: 900;
     color: var(--text-primary);
   }
 }
@@ -80,11 +72,10 @@
 
 .modalBody {
   flex: 1;
-  overflow-y: auto;
-  padding: 24px 32px;
+  padding: 24px 24px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 24px;
 }
 
 .bottleInfoSection {
@@ -127,7 +118,7 @@
 .modalFooter {
   display: flex;
   gap: 12px;
-  padding: 20px 32px;
+  padding: 16px 24px;
   border-top: 2px solid var(--button-secondary-border);
   justify-content: flex-end;
 }

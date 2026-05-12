@@ -19,12 +19,15 @@ function AuthForm() {
   const nextPath = searchParams.get('next') || '/dashboard'
   const safeNextPath = nextPath.startsWith('/') ? nextPath : '/dashboard'
 
-  const [isLogin, setIsLogin] = useState(true)
+  const [mode, setMode] = useState('login')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [info, setInfo] = useState('')
+  const isLogin = mode === 'login'
+  const isForgot = mode === 'forgot'
 
   const validateEmail = (value) => {
     if (!value) return t('emailRequired')
@@ -48,8 +51,8 @@ function AuthForm() {
   const getValidationErrors = () => {
     const errors = []
     const emailError = validateEmail(email)
-    const passwordError = validatePassword(password)
-    const usernameError = !isLogin ? validateUsername(username) : ''
+    const passwordError = isForgot ? '' : validatePassword(password)
+    const usernameError = !isLogin && !isForgot ? validateUsername(username) : ''
     if (emailError) errors.push(emailError)
     if (passwordError) errors.push(passwordError)
     if (usernameError) errors.push(usernameError)
@@ -58,6 +61,7 @@ function AuthForm() {
 
   async function handleAuth() {
     setError('')
+    setInfo('')
 
     const validationErrors = getValidationErrors()
     if (validationErrors.length > 0) {
@@ -68,6 +72,18 @@ function AuthForm() {
     setLoading(true)
 
     try {
+      if (isForgot) {
+        const {error: resetError} = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/auth`,
+        })
+        if (resetError) {
+          setError(resetError.message)
+          return
+        }
+        setInfo(t('resetEmailSent'))
+        return
+      }
+
       if (isLogin) {
         const {error: loginError} = await supabase.auth.signInWithPassword({email, password})
         if (loginError) {
@@ -113,11 +129,28 @@ function AuthForm() {
   }
 
   function toggleMode(nextIsLogin) {
-    if (nextIsLogin === isLogin) return
-    setIsLogin(nextIsLogin)
+    const nextMode = nextIsLogin ? 'login' : 'register'
+    if (nextMode === mode) return
+    setMode(nextMode)
     setError('')
+    setInfo('')
     setUsername('')
     setEmail('')
+    setPassword('')
+  }
+
+  function openForgot() {
+    setMode('forgot')
+    setError('')
+    setInfo('')
+    setPassword('')
+    setUsername('')
+  }
+
+  function backToLogin() {
+    setMode('login')
+    setError('')
+    setInfo('')
     setPassword('')
   }
 
@@ -126,15 +159,25 @@ function AuthForm() {
       <div className={styles.container}>
         <section className={styles.shell}>
           <div className={styles.brandBlock}>
-            <img src="/logo.svg" alt="Indovinando Logo" className={styles.logo} />
-            <p className={styles.tagline}>{t('tagline')}</p>
+            <img
+              src="/mascotte_registrati.svg"
+              alt="Indovinando Registrati"
+              className={styles.logo}
+            />
           </div>
 
           <div className={styles.formCard}>
             {error && <div className={styles.errorMessage}>{error}</div>}
+            {info && (
+              <div
+                className={styles.errorMessage}
+                style={{backgroundColor: '#eefaf1', color: '#1f6d37', border: '1px solid #bfe8c9'}}>
+                {info}
+              </div>
+            )}
 
             <div className={styles.form}>
-              {!isLogin && (
+              {!isLogin && !isForgot && (
                 <input
                   type="text"
                   className={styles.input}
@@ -160,29 +203,63 @@ function AuthForm() {
                 disabled={loading}
               />
 
-              <input
-                type="password"
-                className={styles.input}
-                placeholder={t('passwordPlaceholder')}
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value)
-                  setError('')
-                }}
-                disabled={loading}
-              />
-
-              <button onClick={handleAuth} disabled={loading} className="btn primary" type="button">
-                {loading ? t('loading') : isLogin ? t('login') : t('register')}
-              </button>
+              {!isForgot && (
+                <input
+                  type="password"
+                  className={styles.input}
+                  placeholder={t('passwordPlaceholder')}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value)
+                    setError('')
+                  }}
+                  disabled={loading}
+                />
+              )}
 
               <button
-                onClick={() => toggleMode(!isLogin)}
+                onClick={handleAuth}
                 disabled={loading}
-                className="btn type-text"
+                className={styles.authSubmitBtn}
                 type="button">
-                {isLogin ? t('switchToRegister') : t('switchToLogin')}
+                {loading
+                  ? t('loading')
+                  : isForgot
+                    ? t('sendResetLink')
+                    : isLogin
+                      ? t('login')
+                      : t('register')}
               </button>
+
+              {isLogin && (
+                <button
+                  onClick={openForgot}
+                  disabled={loading}
+                  className={styles.authSecondaryBtn}
+                  type="button">
+                  {t('forgotPassword')}
+                </button>
+              )}
+
+              {isForgot && (
+                <button
+                  onClick={backToLogin}
+                  disabled={loading}
+                  className={styles.authSecondaryBtn}
+                  type="button">
+                  {t('backToLogin')}
+                </button>
+              )}
+
+              {!isForgot && (
+                <button
+                  onClick={() => toggleMode(!isLogin)}
+                  disabled={loading}
+                  className={styles.authSecondaryBtn}
+                  type="button">
+                  {isLogin ? t('switchToRegister') : t('switchToLogin')}
+                </button>
+              )}
             </div>
           </div>
         </section>

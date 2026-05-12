@@ -10,15 +10,15 @@ import {useT} from '@/lib/i18n/useT'
 
 export default function CourseClient({levels, isAdmin = false}) {
   const router = useRouter()
-  const {loaded, userId, getLevelCompletedCount} = useWineCourseProgress()
+  const {loaded, authChecked, userId, getLevelCompletedCount} = useWineCourseProgress()
   const t = useT('course')
   const [showGuestWarning, setShowGuestWarning] = useState(false)
 
   useEffect(() => {
-    if (loaded && !userId) {
+    if (loaded && authChecked && !userId) {
       setShowGuestWarning(true)
     }
-  }, [loaded, userId])
+  }, [loaded, authChecked, userId])
 
   return (
     <div className={styles.page}>

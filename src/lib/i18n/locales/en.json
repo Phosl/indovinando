@@ -194,7 +194,16 @@
     "usernameRequired": "Username is required",
     "usernameTooShort": "Username must be at least {min} characters",
     "usernameInvalid": "Username can contain only letters, numbers and _",
-    "registrationComplete": "Registration completed. Check your email to confirm your account."
+    "registrationComplete": "Registration completed. Check your email to confirm your account.",
+    "forgotPassword": "Forgot password?",
+    "forgotTitle": "Reset password",
+    "forgotDesc": "Enter your email and we'll send you a link to reset your password.",
+    "sendResetLink": "Send link",
+    "resetEmailSent": "Check your email: we've sent you a link to reset your password.",
+    "backToLogin": "← Back to login",
+    "newPasswordPlaceholder": "New password",
+    "updatePassword": "Update password",
+    "passwordUpdated": "Password updated successfully!"
   },
   "profile": {
     "title": "Profile",
@@ -207,7 +216,7 @@
     "gamesCreated": "Games created",
     "lessonsCompleted": "Lessons completed",
     "levelsCompleted": "Levels completed",
-    "currentLevel": "Current level",
+    "currentLevel": "Course chapter",
     "changelog": "Changelog",
     "changelogDesc": "See the full history of updates and new features.",
     "viewChangelog": "📋 View changelog",

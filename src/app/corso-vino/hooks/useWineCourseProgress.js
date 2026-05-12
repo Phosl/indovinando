@@ -38,6 +38,7 @@ export function useWineCourseProgress() {
   const [progress, setProgress] = useState({})
   const [loaded, setLoaded] = useState(false)
   const [userId, setUserId] = useState(null)
+  const [authChecked, setAuthChecked] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -63,8 +64,11 @@ export function useWineCourseProgress() {
         uid = session?.user?.id ?? null
       } catch {}
 
-      if (!uid || cancelled) return
+      if (cancelled) return
       setUserId(uid)
+      setAuthChecked(true)
+
+      if (!uid) return
 
       // 3. Fetch DB in background to get authoritative progress
       try {
@@ -190,6 +194,7 @@ export function useWineCourseProgress() {
     progress,
     loaded,
     userId,
+    authChecked,
     completeLesson,
     getLessonProgress,
     getLessonStatus,

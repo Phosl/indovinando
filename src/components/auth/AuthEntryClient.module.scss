@@ -28,6 +28,9 @@
 
 .brandBlock {
   text-align: center;
+  img {
+    max-width: 180px;
+  }
 }
 
 .badge {
@@ -60,11 +63,129 @@
 .quickActions {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
-.quickActions :global(.btn) {
-  width: 100%;
+.menuCard {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 14px 20px;
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  box-shadow: 0px 4px 0px 0px var(--gray-light);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition:
+    box-shadow 0.12s,
+    transform 0.1s;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0px 6px 0px 0px var(--gray-light);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    box-shadow: none;
+    transform: translateY(4px);
+  }
+}
+
+.menuCardGreen {
+  background: rgba(46, 199, 72, 0.1);
+  border-color: var(--accept-dark);
+  box-shadow: 0px 4px 0px 0px var(--accept-dark);
+
+  .menuCardLabel {
+    color: var(--accept-dark);
+  }
+
+  &:hover {
+    background: rgba(46, 199, 72, 0.18);
+    box-shadow: 0px 6px 0px 0px var(--accept-dark);
+  }
+
+  &:active {
+    box-shadow: none;
+  }
+}
+
+.menuCardTertiary {
+  background: rgba(28, 176, 246, 0.1);
+  border-color: var(--button-tertiary-dark);
+  box-shadow: 0px 4px 0px 0px var(--button-tertiary-dark);
+
+  .menuCardLabel {
+    color: var(--button-tertiary-dark);
+  }
+
+  &:hover {
+    background: rgba(28, 176, 246, 0.18);
+    box-shadow: 0px 6px 0px 0px var(--button-tertiary-dark);
+  }
+
+  &:active {
+    box-shadow: none;
+  }
+}
+
+.menuCardWine {
+  background: rgba(131, 59, 172, 0.08);
+  border-color: var(--selected);
+  box-shadow: 0px 4px 0px 0px var(--selected-dark);
+  position: relative;
+  overflow: hidden;
+
+  .menuCardLabel {
+    color: var(--selected-dark);
+  }
+
+  &:hover {
+    background: rgba(131, 59, 172, 0.15);
+    box-shadow: 0px 6px 0px 0px var(--selected-dark);
+  }
+
+  &:active {
+    box-shadow: none;
+  }
+}
+
+.menuCardBadge {
+  position: absolute;
+  top: 10px;
+  right: -24px;
+  width: 140px;
+  text-align: center;
+  transform: rotate(30deg);
+  background: var(--selected);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 0;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 8px rgba(107, 47, 142, 0.25);
+  pointer-events: none;
+}
+
+.menuCardEmoji {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.menuCardLabel {
+  font-weight: 800;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .formCard {
@@ -123,18 +244,72 @@
   padding: 10px 12px;
 }
 
-@media (max-width: 760px) {
-  .quickActions {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.authSubmitBtn {
+  width: 100%;
+  min-height: 48px;
+  border: 2px solid var(--accept-dark);
+  border-radius: 12px;
+  background: var(--accept);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 0px 4px 0px 0px var(--accept-dark);
+  cursor: pointer;
+  transition:
+    box-shadow 0.12s,
+    transform 0.1s,
+    background 0.12s;
+
+  &:hover {
+    background: #45bf5b;
+    box-shadow: 0px 6px 0px 0px var(--accept-dark);
+    transform: translateY(-1px);
   }
+
+  &:active {
+    box-shadow: none;
+    transform: translateY(4px);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0px 3px 0px 0px var(--accept-dark);
+  }
+}
+
+.authSecondaryBtn {
+  width: fit-content;
+  justify-self: center;
+  border: 0;
+  background: transparent;
+  color: #355647;
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  padding: 2px 4px;
+
+  &:hover {
+    color: #21352a;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@media (max-width: 760px) {
 }
 
 @media (max-width: 520px) {
   .page {
     padding-inline: 10px;
-  }
-
-  .quickActions {
-    grid-template-columns: 1fr;
   }
 }

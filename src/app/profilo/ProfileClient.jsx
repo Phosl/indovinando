@@ -4,6 +4,7 @@ import {useEffect, useMemo, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
+import InfoModal from '@/components/InfoModal'
 import {useWineCourseProgress} from '@/app/corso-vino/hooks/useWineCourseProgress'
 import {supabaseClient} from '@/lib/supabaseClient'
 import {useT} from '@/lib/i18n/useT'
@@ -124,6 +125,7 @@ export default function ProfileClient({
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [showAvatarSheet, setShowAvatarSheet] = useState(false)
+  const [showLevelInfo, setShowLevelInfo] = useState(false)
 
   const [avatar, setAvatar] = useState(
     initialAvatar && ALL_AVATARS.includes(initialAvatar) ? initialAvatar : '😎',
@@ -314,6 +316,12 @@ export default function ProfileClient({
               <p className={styles.levelNum}>Livello {loaded ? playerLevel.level.num : '…'}</p>
               <h3 className={styles.levelName}>{loaded ? playerLevel.level.name : '…'}</h3>
             </div>
+            <button
+              className={styles.levelHelpBtn}
+              onClick={() => setShowLevelInfo(true)}
+              aria-label="Come si sale di livello">
+              ?
+            </button>
           </div>
 
           <div className={styles.levelProgressWrap}>
@@ -485,6 +493,35 @@ export default function ProfileClient({
           </div>
         )}
       </div>
+
+      <InfoModal
+        isOpen={showLevelInfo}
+        onClose={() => setShowLevelInfo(false)}
+        title="Come si sale di livello"
+        icon="🏅">
+        <p>
+          Il tuo <strong>livello</strong> riflette quante lezioni del Corso Vino hai completato.
+        </p>
+        <p>
+          Il corso è diviso in <strong>6 bande di avanzamento</strong> — ogni banda corrisponde a un
+          livello rango:
+        </p>
+        <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
+          {PLAYER_LEVELS.map((lvl) => (
+            <div key={lvl.idx} style={{display: 'flex', alignItems: 'center', gap: 10}}>
+              <img
+                src={lvl.svg}
+                alt={lvl.name}
+                style={{width: 36, height: 36, objectFit: 'contain'}}
+              />
+              <span style={{fontWeight: 900}}>
+                Livello {lvl.num} — {lvl.name}
+              </span>
+            </div>
+          ))}
+        </div>
+        <p style={{marginTop: 4}}>Completa più lezioni per avanzare di livello! 🚀</p>
+      </InfoModal>
     </main>
   )
 }
