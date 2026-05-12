@@ -6,7 +6,7 @@ import GameEditor from '@/components/game/GameEditor'
 import Loader from '@/components/Loader'
 import OnboardingModal from '@/components/game/OnboardingModal'
 import PageLayout from '@/components/PageLayout'
-import styles from './gameCreate.module.css'
+import styles from './gameCreate.module.scss'
 
 const TEMPLATE_QUESTIONS = [
   {
