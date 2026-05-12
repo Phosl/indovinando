@@ -1,6 +1,7 @@
 import {NextResponse} from 'next/server'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {createClient} from '@supabase/supabase-js'
+import {profileAvatarToGameId} from '@/lib/avatarUtils'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -13,6 +14,11 @@ function createAdminClient() {
   return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
     auth: {persistSession: false, autoRefreshToken: false},
   })
+}
+
+async function resolveHostAvatarId(admin, userId) {
+  const {data: profile} = await admin.from('profiles').select('avatar_emoji').eq('id', userId).maybeSingle()
+  return profileAvatarToGameId(profile?.avatar_emoji)
 }
 
 export async function POST(request) {
@@ -45,10 +51,11 @@ export async function POST(request) {
     }
 
     const admin = createAdminClient()
+    const hostAvatarId = await resolveHostAvatarId(admin, user.id)
 
     const {data: existingHostPlayer, error: hostPlayerError} = await admin
       .from('live_players')
-      .select('id')
+      .select('id, avatar_id')
       .eq('session_id', trimmedSessionId)
       .eq('user_id', user.id)
       .maybeSingle()
@@ -58,9 +65,10 @@ export async function POST(request) {
     }
 
     if (existingHostPlayer) {
+      const nextAvatarId = existingHostPlayer.avatar_id || hostAvatarId || 1
       const {error: updateHostError} = await admin
         .from('live_players')
-        .update({nickname: 'Host', avatar_id: 1, is_host: true})
+        .update({nickname: 'Host', avatar_id: nextAvatarId, is_host: true})
         .eq('id', existingHostPlayer.id)
 
       if (updateHostError) {
@@ -81,7 +89,7 @@ export async function POST(request) {
       if (existingHostNicknamePlayer) {
         const {error: claimHostError} = await admin
           .from('live_players')
-          .update({user_id: user.id, avatar_id: 1, is_host: true})
+          .update({user_id: user.id, avatar_id: hostAvatarId || 1, is_host: true})
           .eq('id', existingHostNicknamePlayer.id)
 
         if (claimHostError) {
@@ -91,7 +99,7 @@ export async function POST(request) {
         const {error: insertHostError} = await admin.from('live_players').insert({
           session_id: trimmedSessionId,
           nickname: 'Host',
-          avatar_id: 1,
+          avatar_id: hostAvatarId || 1,
           user_id: user.id,
           is_host: true,
         })
@@ -118,7 +126,7 @@ export async function POST(request) {
 
           const {error: recoverHostError} = await admin
             .from('live_players')
-            .update({user_id: user.id, avatar_id: 1, is_host: true})
+            .update({user_id: user.id, avatar_id: hostAvatarId || 1, is_host: true})
             .eq('id', racedHostPlayer.id)
 
           if (recoverHostError) {
