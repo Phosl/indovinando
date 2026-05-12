@@ -336,7 +336,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
           className={styles.exitButton}
           onClick={() => router.push(`/enoteca/${menuId}`)}
           aria-label={t.exitGame}>
-          ← {lang === 'en' ? 'Back' : 'Indietro'}
+          X
         </button>
       </div>
     </div>
