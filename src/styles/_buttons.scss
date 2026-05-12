@@ -72,6 +72,17 @@
     color: var(--text-tertiary);
   }
 }
+.btn.tertiary-bordered {
+  background: transparent;
+  border: 2px solid var(--button-tertiary-dark);
+  color: var(--button-tertiary-dark);
+  box-shadow: none;
+
+  &:hover {
+    background: var(--button-tertiary-hover);
+    color: var(--text-tertiary);
+  }
+}
 
 .btn.accent {
   background-color: var(--selected);

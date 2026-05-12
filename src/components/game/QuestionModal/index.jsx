@@ -100,7 +100,7 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
                 />
               ))}
             </div>
-            <button className={styles.addOptionBtn} onClick={addOption}>
+            <button className="btn tertiary-bordered" onClick={addOption}>
               {text.addOption}
             </button>
           </div>
