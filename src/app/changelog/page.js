@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.18',
+    date: '12 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'Fix live avatar constraint for SVG avatars',
+    ],
+  },
+
+  {
     version: '1.13.17',
     date: '12 maggio 2026',
     label: 'Auto',
