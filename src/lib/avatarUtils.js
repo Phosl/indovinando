@@ -42,5 +42,11 @@ export function profileAvatarToGameId(avatarEmoji) {
     const match = GAME_AVATARS.find((a) => a.type === 'img' && a.value === avatarEmoji)
     if (match) return match.id
   }
-  return 1
+
+  const emojiMatch = GAME_AVATARS.find((a) => a.type === 'emoji' && a.value === avatarEmoji)
+  if (emojiMatch) return emojiMatch.id
+
+  // Stable fallback for profile-only emojis: distribute across live emoji ids (1..10).
+  const hash = Array.from(avatarEmoji).reduce((acc, ch) => acc + ch.codePointAt(0), 0)
+  return (Math.abs(hash) % 10) + 1
 }
