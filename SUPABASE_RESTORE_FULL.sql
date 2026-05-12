@@ -353,7 +353,7 @@ create table if not exists live_players (
   id uuid primary key default uuid_generate_v4(),
   session_id uuid not null references live_sessions(id) on delete cascade,
   nickname text not null,
-  avatar_id int not null check (avatar_id >= 1 and avatar_id <= 10),
+  avatar_id int not null check (avatar_id >= 1 and avatar_id <= 16),
   user_id uuid references auth.users(id) on delete set null,
   joined_at timestamptz default now(),
   is_host boolean default false,

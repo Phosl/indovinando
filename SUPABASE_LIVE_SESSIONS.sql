@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS live_players (
   session_id UUID NOT NULL REFERENCES live_sessions(id) ON DELETE CASCADE,
 
   nickname TEXT NOT NULL,
-  avatar_id INT NOT NULL CHECK (avatar_id >= 1 AND avatar_id <= 10), -- 1-10 Apple style avatars
+  avatar_id INT NOT NULL CHECK (avatar_id >= 1 AND avatar_id <= 16), -- 1-10 emoji, 11-16 SVG avatars
 
   user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL, -- opzionale (anonimo o loggato)
 
