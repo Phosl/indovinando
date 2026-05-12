@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.10',
+    date: '12 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'fix css import',
+    ],
+  },
+
+  {
     version: '1.13.9',
     date: '12 maggio 2026',
     label: 'Auto',
