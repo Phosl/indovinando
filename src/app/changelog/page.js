@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.13',
+    date: '12 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'UI polish: skeleton loading, fix deploy imports, fix corso vino level loading',
+    ],
+  },
+
+  {
     version: '1.13.12',
     date: '12 maggio 2026',
     label: 'Auto',
