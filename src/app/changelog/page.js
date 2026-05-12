@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.17',
+    date: '12 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'Fix host avatar persistence in live session start',
+    ],
+  },
+
+  {
     version: '1.13.16',
     date: '12 maggio 2026',
     label: 'Auto',
