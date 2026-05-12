@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.4',
+    date: '12 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'UX: step scelta tipo gioco in /game/create + miglioramento grafico wizard',
+    ],
+  },
+
+  {
     version: '1.13.3',
     date: '12 maggio 2026',
     label: 'Auto',
