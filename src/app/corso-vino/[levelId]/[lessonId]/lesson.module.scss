@@ -1,5 +1,11 @@
 // Lesson-specific styles — quiz shell reuses playerLive.module.scss
 
+.courseTopBar {
+  --topbar-progress-track: rgba(16, 185, 129, 0.16);
+  --topbar-progress-fill: linear-gradient(90deg, #34d399, #10b981);
+  --topbar-progress-shadow: 0 0 8px rgba(16, 185, 129, 0.45);
+}
+
 // ── Intro card ────────────────────────────────────────────────
 .introCard {
   background: var(--foreground);

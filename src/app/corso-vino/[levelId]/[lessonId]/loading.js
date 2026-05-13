@@ -27,32 +27,36 @@ export default function CorsoVinoLessonLoading() {
         background: 'var(--background)',
         boxSizing: 'border-box',
       }}>
-      {/* Intro-style top bar */}
+      {/* Standard TopBar-like skeleton */}
       <div
         className="skeleton-frame"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'auto 1fr auto',
+          gridTemplateColumns: '40px 1fr auto',
           alignItems: 'center',
-          gap: 8,
-          padding: '14px 16px',
+          gap: 12,
+          padding: '12px 16px',
           margin: '12px 12px 0',
-          borderRadius: 12,
+          borderRadius: '0 0 12px 12px',
           boxSizing: 'border-box',
+          position: 'relative',
+          overflow: 'hidden',
         }}>
-        <div style={{display: 'flex', alignItems: 'center', gap: 8, minWidth: 0}}>
-          <Bone w="28px" h="28px" style={{borderRadius: 999}} />
-          <Bone w="clamp(84px, 32vw, 120px)" h="14px" style={{borderRadius: 6}} />
-        </div>
-        <div style={{display: 'flex', justifyContent: 'center', gap: 6}}>
-          {Array.from({length: 4}).map((_, index) => (
-            <Bone key={index} w="16px" h="6px" style={{borderRadius: 999}} />
-          ))}
-        </div>
+        <Bone w="40px" h="40px" style={{borderRadius: 10}} />
+        <Bone w="clamp(120px, 38vw, 180px)" h="18px" style={{borderRadius: 6}} />
         <div style={{display: 'flex', gap: 8, justifyContent: 'flex-end'}}>
-          <Bone w="44px" h="28px" style={{borderRadius: 999}} />
-          <Bone w="28px" h="28px" style={{borderRadius: 999}} />
+          <Bone w="74px" h="32px" style={{borderRadius: 999}} />
         </div>
+        <Bone
+          w="100%"
+          h="4px"
+          style={{
+            borderRadius: 0,
+            position: 'absolute',
+            left: 0,
+            bottom: 0,
+          }}
+        />
       </div>
 
       {/* Slide / intro card */}

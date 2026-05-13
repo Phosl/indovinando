@@ -89,9 +89,6 @@ export default function MieiGiochiClient({
                       })}
                     </p>
                     <div className={styles.gameActions}>
-                      <a href={`/game/${game.id}`} className={`btn primary ${styles.actionBtn}`}>
-                        {dashboardDict.view || 'Apri'}
-                      </a>
                       <a
                         href={`/game/${game.id}/live`}
                         className={`${styles.liveAction} ${styles.actionBtn}`}>
@@ -105,9 +102,9 @@ export default function MieiGiochiClient({
                         </a>
                       )}
                       <a
-                        href={`/game/${game.id}/print`}
-                        className={`btn secondary ${styles.actionBtn}`}>
-                        {dashboardDict.printCard || '🖨️ Stampa'}
+                        href={`/game/${game.id}`}
+                        className={`btn tertiary-bordered ${styles.actionBtn} ${styles.optionsAction}`}>
+                        {dashboardDict.view || 'Opzioni'}
                       </a>
                     </div>
                   </div>

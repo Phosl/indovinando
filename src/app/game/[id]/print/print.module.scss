@@ -21,6 +21,16 @@
   text-wrap: balance;
 }
 
+.actionBar {
+  max-width: 210mm;
+  margin: 0 auto 10px auto;
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .toolbarActions {
   justify-content: flex-end;
 }
@@ -30,6 +40,11 @@
 }
 
 @media (max-width: 768px) {
+  .actionBar {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
   .toolbarActions {
     width: 100%;
     justify-content: flex-start;
@@ -199,6 +214,10 @@
   }
 
   .toolbar {
+    display: none;
+  }
+
+  .actionBar {
     display: none;
   }
 

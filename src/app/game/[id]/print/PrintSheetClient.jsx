@@ -25,24 +25,28 @@ export default function PrintSheetClient({gameId, hasResults}) {
   const t = pickLangText(lang, PRINT_SHEET_DICTIONARY)
 
   return (
-    <TopBar
-      title={t.title}
-      className={styles.toolbar}
-      titleClassName={styles.toolbarTitle}
-      actionsClassName={styles.toolbarActions}
-      maxWidth="210mm"
-      wrapTitle>
-      {gameId && !hasResults && (
-        <button
-          type="button"
-          className="btn secondary"
-          onClick={() => router.push(`/game/${gameId}?step=4`)}>
-          {t.addResults}
+    <>
+      <TopBar
+        title={t.title}
+        className={styles.toolbar}
+        titleClassName={styles.toolbarTitle}
+        maxWidth="210mm"
+        onBack={() => router.push(`/game/${gameId}`)}
+      />
+
+      <div className={styles.actionBar}>
+        {gameId && !hasResults && (
+          <button
+            type="button"
+            className="btn secondary"
+            onClick={() => router.push(`/game/${gameId}?step=4`)}>
+            {t.addResults}
+          </button>
+        )}
+        <button type="button" className="btn primary" onClick={() => window.print()}>
+          {t.print}
         </button>
-      )}
-      <button type="button" className="btn primary" onClick={() => window.print()}>
-        {t.print}
-      </button>
-    </TopBar>
+      </div>
+    </>
   )
 }

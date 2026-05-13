@@ -556,7 +556,7 @@ export default function GameEditor({
         window.location.href = `/game/${savedGameId || generatedGameId}`
       } else {
         setSavePhase('redirect-create')
-        router.push('/dashboard')
+        router.push('/miei-giochi')
       }
     } catch (error) {
       const baseError = error.message || alertMessages.GAME_SAVE_ERROR
