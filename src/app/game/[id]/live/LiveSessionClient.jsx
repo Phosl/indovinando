@@ -253,12 +253,14 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
           <h2>{t.inviteLink}</h2>
           <div className={styles.linkBox}>
             <input type="text" readOnly value={sessionLink} className={styles.linkInput} />
-            <button onClick={handleCopyLink} className={styles.copyButton}>
-              {copyFeedback ? t.copied : t.copy}
-            </button>
-            <button onClick={handleShareLink} className={styles.copyButton}>
-              {t.share}
-            </button>
+            <div className={styles.linkActions}>
+              <button onClick={handleCopyLink} className={styles.copyButton}>
+                {copyFeedback ? t.copied : t.copy}
+              </button>
+              <button onClick={handleShareLink} className={styles.copyButton}>
+                {t.share}
+              </button>
+            </div>
           </div>
         </div>
 

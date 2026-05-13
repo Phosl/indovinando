@@ -71,11 +71,10 @@
 
 .linkBox {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr;
   gap: 8px;
 
   .linkInput {
-    flex: 1;
     padding: 12px;
     border: 2px solid var(--button-secondary-border);
     border-radius: 8px;
@@ -103,6 +102,12 @@
       transform: translateY(3px);
     }
   }
+}
+
+.linkActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
 }
 
 .info {
@@ -160,11 +165,13 @@
   }
 
   .linkBox {
-    grid-template-columns: 1fr;
-
     .copyButton {
       width: 100%;
     }
+  }
+
+  .linkActions {
+    grid-template-columns: 1fr;
   }
 
   .actions {
