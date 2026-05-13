@@ -106,8 +106,11 @@ export default function MieiGiochiClient({
                       )}
                       <a
                         href={`/game/${game.id}/print`}
-                        className={`btn secondary ${styles.actionBtn}`}>
-                        {dashboardDict.printCard || '🖨️ Stampa'}
+                        className={`btn secondary ${styles.actionBtn} ${styles.printIconBtn}`}
+                        aria-label={dashboardDict.printCard || 'Stampa'}
+                        title={dashboardDict.printCard || 'Stampa'}>
+                        <span aria-hidden="true">🖨️</span>
+                        <span className={styles.srOnly}>{dashboardDict.printCard || 'Stampa'}</span>
                       </a>
                     </div>
                   </div>
