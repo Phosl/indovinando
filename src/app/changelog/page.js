@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.18.4',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'install CTA login con bottom sheet e harden PWA head/manifest',
+    ],
+  },
+
+  {
     version: '1.18.3',
     date: '13 maggio 2026',
     label: 'Auto',
