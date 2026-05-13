@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.13.30',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'Add enoteca leaderboard and PWA install entrypoint',
+    ],
+  },
+
+  {
     version: '1.13.29',
     date: '13 maggio 2026',
     label: 'Auto',
