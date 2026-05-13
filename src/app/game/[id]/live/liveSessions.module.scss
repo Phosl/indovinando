@@ -70,7 +70,8 @@
 }
 
 .linkBox {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
   gap: 8px;
 
   .linkInput {
@@ -159,7 +160,7 @@
   }
 
   .linkBox {
-    flex-direction: column;
+    grid-template-columns: 1fr;
 
     .copyButton {
       width: 100%;

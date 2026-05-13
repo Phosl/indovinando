@@ -59,6 +59,71 @@
   color: var(--text-secondary);
 }
 
+.bridgeCard {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bridgeTitle {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--selected-dark);
+}
+
+.bridgeHint {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.linkLabel {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.linkRow {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.linkInput {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  background: var(--background);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+@media (max-width: 520px) {
+  .linkRow {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .linkInput {
+    grid-column: 1 / -1;
+  }
+}
+
 // ── Form ──────────────────────────────────────────────────────
 .form {
   display: flex;

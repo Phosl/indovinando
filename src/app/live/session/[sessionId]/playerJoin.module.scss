@@ -47,6 +47,82 @@
   margin-bottom: 20px;
 }
 
+.inviteCard {
+  background: var(--background);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--text-primary);
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+}
+
+.linkLabel {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.linkRow {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.linkInput {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 10px;
+  background: var(--foreground);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+.shareButton {
+  padding: 10px 12px;
+  background: var(--white);
+  color: var(--gray);
+  border: 1px solid var(--gray-light);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0px 3px 0px 0px var(--gray-light);
+
+  &:hover {
+    background: var(--gray-light);
+  }
+
+  &:active {
+    box-shadow: none;
+    transform: translateY(3px);
+  }
+}
+
 .formGroup {
   margin-bottom: 16px;
 
@@ -258,5 +334,15 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     font-weight: 500;
+  }
+}
+
+@media (max-width: 640px) {
+  .linkRow {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .linkInput {
+    grid-column: 1 / -1;
   }
 }

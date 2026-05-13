@@ -133,7 +133,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
     }
 
     if (!savedId) {
-      router.replace(`/enoteca/${menuId}`)
+      router.replace(`/enoteca/${menuId}/join`)
       return
     }
     supabaseAnonClient
@@ -146,7 +146,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
           try {
             localStorage.removeItem(sessionKey)
           } catch {}
-          router.replace(`/enoteca/${menuId}`)
+          router.replace(`/enoteca/${menuId}/join`)
           return
         }
         if (data.status === 'completed') {
@@ -334,7 +334,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
         </button>
         <button
           className={styles.exitButton}
-          onClick={() => router.push(`/enoteca/${menuId}`)}
+          onClick={() => router.push(`/enoteca/${menuId}/join`)}
           aria-label={t.exitGame}>
           X
         </button>

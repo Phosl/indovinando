@@ -30,6 +30,7 @@ export default function EnotecaJoinClient({
 
   const sessionKey = `enoteca_session_${menuId}`
   const startFormId = `enoteca-start-form-${menuId}`
+  const backHref = '/miei-giochi'
 
   useEffect(() => {
     let savedId = null
@@ -145,7 +146,7 @@ export default function EnotecaJoinClient({
 
   return (
     <div className={styles.fullPage}>
-      <TopBar title={`🍷 ${t.enotecaLabel}`} onBack={() => router.push('/game')}></TopBar>
+      <TopBar title={`🍷 ${t.enotecaLabel}`} onBack={() => router.push(backHref)}></TopBar>
 
       <div className={styles.slideContent}>
         {/* Event info card */}

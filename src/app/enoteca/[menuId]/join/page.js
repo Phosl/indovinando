@@ -1,12 +1,11 @@
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {notFound} from 'next/navigation'
-import EnotecaBridgeClient from './EnotecaBridgeClient'
+import EnotecaJoinClient from '../EnotecaJoinClient'
 
-export default async function EnotecaMenuPage({params}) {
+export default async function EnotecaJoinPage({params}) {
   const {menuId} = await params
   const supabase = await createServerSupabase()
 
-  // Usa la tabella games esistente (pubblicato = status 'published')
   const {data: game} = await supabase
     .from('games')
     .select('id, name, status')
@@ -22,7 +21,7 @@ export default async function EnotecaMenuPage({params}) {
     .order('bottle_order')
 
   return (
-    <EnotecaBridgeClient
+    <EnotecaJoinClient
       menuId={menuId}
       menuName={game.name}
       menuDescription={null}

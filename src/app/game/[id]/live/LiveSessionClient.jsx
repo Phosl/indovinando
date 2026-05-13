@@ -17,6 +17,7 @@ const LIVE_SESSION_DICTIONARY = {
     inviteLink: 'Link di Invito',
     copied: '✓ Copiato!',
     copy: 'Copia',
+    share: 'Condividi',
     participants: 'Partecipanti: ',
     waitPlayers: 'Aspetta che i giocatori si uniscano, poi premi Inizia Gioco.',
     gameDetails: 'Dettagli Gioco',
@@ -35,6 +36,7 @@ const LIVE_SESSION_DICTIONARY = {
     inviteLink: 'Invite Link',
     copied: '✓ Copied!',
     copy: 'Copy',
+    share: 'Share',
     participants: 'Participants: ',
     waitPlayers: 'Wait for players to join, then click Start Game.',
     gameDetails: 'Game Details',
@@ -139,6 +141,26 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
     setTimeout(() => setCopyFeedback(false), 2000)
   }
 
+  const handleShareLink = async () => {
+    const shareText = `${gameName} · ${sessionLink}`
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: gameName,
+          text: gameName,
+          url: sessionLink,
+        })
+        return
+      }
+    } catch {
+      return
+    }
+
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
+  }
+
   const handleStartGame = async () => {
     if (isStartingGame) return
 
@@ -233,6 +255,9 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
             <input type="text" readOnly value={sessionLink} className={styles.linkInput} />
             <button onClick={handleCopyLink} className={styles.copyButton}>
               {copyFeedback ? t.copied : t.copy}
+            </button>
+            <button onClick={handleShareLink} className={styles.copyButton}>
+              {t.share}
             </button>
           </div>
         </div>

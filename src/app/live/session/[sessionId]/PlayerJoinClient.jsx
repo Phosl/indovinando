@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useMemo} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
@@ -22,10 +22,45 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
   const [gameStarted, setGameStarted] = useState(false)
   const [players, setPlayers] = useState(existingPlayers)
   const [joinedPlayer, setJoinedPlayer] = useState(null)
+  const [copied, setCopied] = useState(false)
 
   const playerStorageKey = `live_player_id_${sessionId}`
   const nicknameStorageKey = `live_player_nickname_${sessionId}`
   const authReturnUrl = `/auth?next=${encodeURIComponent(`/live/session/${sessionId}`)}`
+  const sessionLink = useMemo(() => {
+    if (typeof window === 'undefined') return `/live/session/${sessionId}`
+    return `${window.location.origin}/live/session/${sessionId}`
+  }, [sessionId])
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(sessionLink)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1400)
+    } catch {
+      setCopied(false)
+    }
+  }
+
+  const handleShareLink = async () => {
+    const shareText = `${gameName} · ${sessionLink}`
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: gameName,
+          text: gameName,
+          url: sessionLink,
+        })
+        return
+      }
+    } catch {
+      return
+    }
+
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
+  }
 
   useEffect(() => {
     const restorePlayer = async () => {
@@ -240,6 +275,28 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
         </div>
       ) : (
         <div className={styles.joinCard}>
+          <div className={styles.inviteCard}>
+            <h3>{t('shareTitle')}</h3>
+            <p>{t('shareHint')}</p>
+            <label className={styles.linkLabel} htmlFor="live-session-link">
+              {t('sessionLinkLabel')}
+            </label>
+            <div className={styles.linkRow}>
+              <input
+                id="live-session-link"
+                className={styles.linkInput}
+                value={sessionLink}
+                readOnly
+              />
+              <button type="button" className={styles.shareButton} onClick={handleCopyLink}>
+                {copied ? t('copied') : t('copyLink')}
+              </button>
+              <button type="button" className={styles.shareButton} onClick={handleShareLink}>
+                {t('shareLink')}
+              </button>
+            </div>
+          </div>
+
           {!joinedPlayer ? (
             <form onSubmit={handleJoin} className={styles.joinForm}>
               <div className={styles.formGroup}>

@@ -22,6 +22,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
   const [answers, setAnswers] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeBIdx, setActiveBIdx] = useState(0)
+  const backHref = '/miei-giochi'
 
   const answersByKey = useMemo(() => {
     const map = {}
@@ -32,7 +33,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
   useEffect(() => {
     const savedId = localStorage.getItem(sessionKey)
     if (!savedId) {
-      router.replace(`/enoteca/${menuId}`)
+      router.replace(`/enoteca/${menuId}/join`)
       return
     }
     Promise.all([
@@ -47,7 +48,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
         .eq('tasting_session_id', savedId),
     ]).then(([{data: sess}, {data: ans}]) => {
       if (!sess) {
-        router.replace(`/enoteca/${menuId}`)
+        router.replace(`/enoteca/${menuId}/join`)
         return
       }
       setSession(sess)
@@ -80,9 +81,9 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
 
   return (
     <div className={styles.fullPage}>
-      <TopBar title={`🍷 ${menuName}`} onBack={() => router.push(`/enoteca/${menuId}`)}></TopBar>
+      <TopBar title={`🍷 ${menuName}`} onBack={() => router.push(backHref)}></TopBar>
 
-      <div className={styles.slideContent}>
+      <div className={`${styles.slideContent} ${xStyles.resultsSlideContent}`}>
         {/* Hero */}
         <div className={xStyles.heroSection}>
           <h1 className={xStyles.heroTitle}>🏆 {t.title}</h1>
@@ -200,7 +201,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
           className={styles.continueButton}
           onClick={() => {
             localStorage.removeItem(sessionKey)
-            router.push(`/enoteca/${menuId}`)
+            router.push(`/enoteca/${menuId}/join`)
           }}>
           🍷 {t.newTasting}
         </button>

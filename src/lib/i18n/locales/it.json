@@ -124,6 +124,12 @@
     },
     "playerJoin": {
       "enterNickname": "Inserisci un nickname",
+      "shareTitle": "Invita giocatori",
+      "shareHint": "Condividi questo link per far entrare altri giocatori nella sessione.",
+      "sessionLinkLabel": "Link sessione",
+      "copyLink": "Copia link",
+      "copied": "Copiato",
+      "shareLink": "Condividi",
       "nicknameLabel": "Nickname",
       "nicknameMin": "Il nickname deve avere almeno 2 caratteri",
       "nicknameTaken": "Questo nickname è già usato in questa partita!",
