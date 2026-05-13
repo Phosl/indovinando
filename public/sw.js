@@ -1,4 +1,4 @@
-const CACHE_NAME = 'indovinando-v1'
+const CACHE_NAME = 'indovinando-v2'
 const OFFLINE_URL = '/offline.html'
 
 // Risorse da pre-cachare all'installazione
@@ -36,12 +36,13 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Cacha i JSON dei corsi e gli asset statici importanti
-        if (
+        // Cacha i JSON dei corsi, gli asset statici e le pagine corso già visitate
+        const shouldCache =
           url.pathname.startsWith('/corsi/') ||
           url.pathname.startsWith('/app_icon/') ||
-          url.pathname === '/logo.svg'
-        ) {
+          url.pathname === '/logo.svg' ||
+          url.pathname.startsWith('/corso-vino')
+        if (shouldCache) {
           const clone = response.clone()
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone))
         }
