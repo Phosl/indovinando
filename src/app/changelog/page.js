@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.13.26',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'Polish sharing QR flows, copyright page, and wine course progress UI',
+    ],
+  },
+
+  {
     version: '1.13.25',
     date: '13 maggio 2026',
     label: 'Auto',
