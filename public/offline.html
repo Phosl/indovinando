@@ -62,6 +62,9 @@
     <h1>Sei offline 🍷</h1>
     <p>Controlla la connessione e riprova. Il Corso Vino potrebbe essere disponibile se l'hai già visitato.</p>
     <button onclick="location.reload()">Riprova</button>
+    <script>
+      window.addEventListener('online', () => location.reload())
+    </script>
 </body>
 
 </html>
