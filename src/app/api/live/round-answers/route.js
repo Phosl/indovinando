@@ -1,11 +1,11 @@
 import {NextResponse} from 'next/server'
 import {createClient} from '@supabase/supabase-js'
 
-function createAdminClient() {
+function createWriteClient(fallback) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!url || !key) throw new Error('Missing Supabase service credentials')
-  return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
+  if (url && key) return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
+  return fallback
 }
 
 /**
@@ -25,9 +25,9 @@ export async function GET(request) {
       return NextResponse.json({answers: []})
     }
 
-    const admin = createAdminClient()
+    const db = createWriteClient(null)
 
-    const {data: answers, error} = await admin
+    const {data: answers, error} = await db
       .from('live_round_answers')
       .select('player_id, question_id, selected_option_id, is_correct, points')
       .eq('session_id', sessionId)

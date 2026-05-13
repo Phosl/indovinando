@@ -5,14 +5,13 @@ import {createClient} from '@supabase/supabase-js'
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-function createAdminClient() {
-  if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
-    throw new Error('Missing Supabase service credentials')
+function createWriteClient(fallback) {
+  if (SUPABASE_URL && SERVICE_ROLE_KEY) {
+    return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
+      auth: {persistSession: false, autoRefreshToken: false},
+    })
   }
-
-  return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
-    auth: {persistSession: false, autoRefreshToken: false},
-  })
+  return fallback
 }
 
 export async function POST(request) {
@@ -44,10 +43,10 @@ export async function POST(request) {
       return NextResponse.json({error: 'Game not found'}, {status: 404})
     }
 
-    const admin = createAdminClient()
+    const db = createWriteClient(supabase)
     const sessionId = crypto.randomUUID()
 
-    const {error} = await admin.from('live_sessions').insert({
+    const {error} = await db.from('live_sessions').insert({
       id: sessionId,
       game_id: trimmedGameId,
       host_user_id: user.id,

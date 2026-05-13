@@ -6,14 +6,11 @@ import {profileAvatarToGameId} from '@/lib/avatarUtils'
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-function createAdminClient() {
-  if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
-    throw new Error('Missing Supabase service credentials')
-  }
-
-  return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
-    auth: {persistSession: false, autoRefreshToken: false},
-  })
+function createWriteClient(fallback) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (url && key) return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
+  return fallback
 }
 
 async function resolveHostAvatarId(admin, userId) {
@@ -54,7 +51,7 @@ export async function POST(request) {
       return NextResponse.json({error: 'Session not found'}, {status: 404})
     }
 
-    const admin = createAdminClient()
+    const db = createWriteClient(supabase)
     const hostAvatarId = await resolveHostAvatarId(admin, user.id)
 
     const {data: existingHostPlayer, error: hostPlayerError} = await admin
@@ -100,7 +97,7 @@ export async function POST(request) {
           return NextResponse.json({error: claimHostError.message}, {status: 500})
         }
       } else {
-        const {error: insertHostError} = await admin.from('live_players').insert({
+        const {error: insertHostError} = await db.from('live_players').insert({
           session_id: trimmedSessionId,
           nickname: 'Host',
           avatar_id: hostAvatarId || 1,

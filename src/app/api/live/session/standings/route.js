@@ -1,16 +1,12 @@
 import {NextResponse} from 'next/server'
 import {createClient} from '@supabase/supabase-js'
+import {createServerSupabase} from '@/lib/supabaseServer'
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-function createAdminClient() {
-  if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
-    throw new Error('Missing Supabase service credentials')
-  }
-  return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
-    auth: {persistSession: false, autoRefreshToken: false},
-  })
+function createWriteClient(fallback) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (url && key) return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
+  return fallback
 }
 
 /**
@@ -31,10 +27,11 @@ export async function GET(request) {
   }
 
   try {
-    const supabase = createAdminClient()
+    const serverSupabase = await createServerSupabase()
+    const db = createWriteClient(serverSupabase)
 
     // Fetch session to get round_status and updated_at (current-round anchor)
-    const {data: session} = await supabase
+    const {data: session} = await db
       .from('live_sessions')
       .select('round_status')
       .eq('id', sessionId)
@@ -45,7 +42,7 @@ export async function GET(request) {
     }
 
     // Fetch all players
-    const {data: players} = await supabase
+    const {data: players} = await db
       .from('live_players')
       .select('id, nickname, avatar_id, total_score, is_host')
       .eq('session_id', sessionId)
@@ -62,7 +59,7 @@ export async function GET(request) {
     const roundPointsByPlayer = {}
 
     if (showProjectedLive) {
-      const {data: answers} = await supabase
+      const {data: answers} = await db
         .from('live_round_answers')
         .select('player_id, points')
         .eq('session_id', sessionId)

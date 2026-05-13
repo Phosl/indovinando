@@ -5,14 +5,11 @@ import {createClient} from '@supabase/supabase-js'
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-function createAdminClient() {
-  if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
-    throw new Error('Missing Supabase service credentials')
-  }
-
-  return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
-    auth: {persistSession: false, autoRefreshToken: false},
-  })
+function createWriteClient(fallback) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (url && key) return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
+  return fallback
 }
 
 export async function POST(request) {
@@ -33,7 +30,7 @@ export async function POST(request) {
       return NextResponse.json({error: 'Not authenticated'}, {status: 401})
     }
 
-    const admin = createAdminClient()
+    const db = createWriteClient(supabase)
 
     const {data: session, error: sessionError} = await admin
       .from('live_sessions')
@@ -231,7 +228,7 @@ export async function POST(request) {
             .select('id, nickname, avatar_id, total_score, is_host')
             .eq('session_id', trimmedSessionId)
             .order('total_score', {ascending: false}),
-          admin.from('games').select('name').eq('id', session.game_id).maybeSingle(),
+          db.from('games').select('name').eq('id', session.game_id).maybeSingle(),
         ])
 
         const players = (finalPlayers || []).map((p, idx) => ({
@@ -251,7 +248,7 @@ export async function POST(request) {
           .maybeSingle()
 
         if (!existing) {
-          await admin.from('live_session_results').insert({
+          await db.from('live_session_results').insert({
             session_id: trimmedSessionId,
             host_user_id: session.host_user_id,
             game_id: session.game_id,

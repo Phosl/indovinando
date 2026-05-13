@@ -2,11 +2,11 @@ import {NextResponse} from 'next/server'
 import {createClient} from '@supabase/supabase-js'
 import {createServerSupabase} from '@/lib/supabaseServer'
 
-function createAdminClient() {
+function createWriteClient(fallback) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!url || !key) throw new Error('Missing Supabase service credentials')
-  return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
+  if (url && key) return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
+  return fallback
 }
 
 /**
@@ -36,7 +36,7 @@ export async function POST(request) {
       return NextResponse.json({error: 'Not authenticated'}, {status: 401})
     }
 
-    const admin = createAdminClient()
+    const db = createWriteClient(supabase)
 
     const {data: session} = await admin
       .from('live_sessions')
@@ -88,7 +88,7 @@ export async function POST(request) {
     }
 
     // ── 2. Clear current-round answers so next round starts fresh ─────────────
-    await admin.from('live_round_answers').delete().eq('session_id', sessionId)
+    await db.from('live_round_answers').delete().eq('session_id', sessionId)
 
     // ── 3. Advance session to next bottle ─────────────────────────────────────
     const nextIndex = (session.current_question_index ?? 0) + 1
