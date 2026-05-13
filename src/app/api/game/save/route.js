@@ -5,9 +5,9 @@ import {createClient} from '@supabase/supabase-js'
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-function createAdminClient() {
+function createWriteClient(fallbackClient) {
   if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
-    throw new Error('Missing Supabase service credentials')
+    return fallbackClient
   }
 
   return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
@@ -44,12 +44,12 @@ export async function POST(request) {
       return NextResponse.json({error: 'Not authenticated'}, {status: 401})
     }
 
-    const admin = createAdminClient()
+    const db = createWriteClient(supabase)
     let currentGameId =
       typeof gameId === 'string' && gameId.trim() ? gameId.trim() : crypto.randomUUID()
 
     if (mode === 'edit' || (mode !== 'create' && gameId)) {
-      const {error: updateError} = await admin
+      const {error: updateError} = await db
         .from('games')
         .update({name: trimmedName})
         .eq('id', currentGameId)
@@ -59,7 +59,7 @@ export async function POST(request) {
         return NextResponse.json({error: updateError.message}, {status: 500})
       }
 
-      const {error: deleteBottlesError} = await admin
+      const {error: deleteBottlesError} = await db
         .from('game_bottles')
         .delete()
         .eq('game_id', currentGameId)
@@ -67,7 +67,7 @@ export async function POST(request) {
         return NextResponse.json({error: deleteBottlesError.message}, {status: 500})
       }
 
-      const {error: deleteQuestionsError} = await admin
+      const {error: deleteQuestionsError} = await db
         .from('game_questions')
         .delete()
         .eq('game_id', currentGameId)
@@ -75,7 +75,7 @@ export async function POST(request) {
         return NextResponse.json({error: deleteQuestionsError.message}, {status: 500})
       }
     } else {
-      const {error: createError} = await admin.from('games').insert({
+      const {error: createError} = await db.from('games').insert({
         id: currentGameId,
         name: trimmedName,
         created_by: user.id,
@@ -93,7 +93,7 @@ export async function POST(request) {
       display_order: index,
     }))
 
-    const {data: insertedQuestions, error: questionsError} = await admin
+    const {data: insertedQuestions, error: questionsError} = await db
       .from('game_questions')
       .insert(questionsToInsert)
       .select('id, display_order')
@@ -116,7 +116,7 @@ export async function POST(request) {
       }))
     })
 
-    const {data: insertedOptions, error: optionsError} = await admin
+    const {data: insertedOptions, error: optionsError} = await db
       .from('game_question_options')
       .insert(optionsToInsert)
       .select('id, question_id, option_order')
@@ -137,7 +137,7 @@ export async function POST(request) {
         bottle_order: index,
       }))
 
-      const {data: insertedBottles, error: bottlesError} = await admin
+      const {data: insertedBottles, error: bottlesError} = await db
         .from('game_bottles')
         .insert(bottleRows)
         .select('id, bottle_order')
@@ -170,7 +170,7 @@ export async function POST(request) {
         .filter((row) => row.bottle_id && row.question_id && row.option_id)
 
       if (answersToInsert.length > 0) {
-        const {error: answersError} = await admin
+        const {error: answersError} = await db
           .from('game_bottle_answers')
           .insert(answersToInsert)
         if (answersError) {
