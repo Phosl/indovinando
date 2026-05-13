@@ -6,12 +6,16 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 
 ## 📱 PWA / App
 
-- [ ] **Offline: Corso Vino** — i JSON dei corsi sono statici in `/public/corsi/`, con cache-first nel SW si può giocare completamente offline
+- [ ] **Offline: Corso Vino** — i JSON dei corsi sono statici in `/public/corsi/`, con cache-first
+      nel SW si può giocare completamente offline
 - [ ] **Offline: shell app** — cachare TopBar, CSS, font per caricamento istantaneo anche senza rete
-- [ ] **Pagina "Sei offline"** — invece del browser error, mostrare una schermata brandizzata con messaggio gentile
-- [ ] **Splash screen animato** — logo/icona animata durante il caricamento iniziale instead della schermata nera
+- [ ] **Pagina "Sei offline"** — invece del browser error, mostrare una schermata brandizzata con
+      messaggio gentile
+- [ ] **Splash screen animato** — logo/icona animata durante il caricamento iniziale instead della
+      schermata nera
 - [ ] **Background Sync** — salvare risposte offline e sincronizzare quando si torna online
-- [ ] **Notifiche Push** — avvisare giocatori di partite live in avvio (richiede backend Supabase Push)
+- [ ] **Notifiche Push** — avvisare giocatori di partite live in avvio (richiede backend Supabase
+      Push)
 - [ ] **Share Target** — condividere un link direttamente a Indovinando da altre app
 - [ ] **Badging API** — mostrare un badge sull'icona home quando c'è una partita in attesa
 
@@ -45,8 +49,10 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 
 ## 🛠️ Tech / Dev
 
-- [ ] **Skeleton sulle transizioni client-side** — attualmente gli skeleton appaiono solo su navigazioni server (loading.js), non su click veloci già cached
+- [ ] **Skeleton sulle transizioni client-side** — attualmente gli skeleton appaiono solo su
+      navigazioni server (loading.js), non su click veloci già cached
 - [ ] **Error boundary globale** — pagina di errore brandizzata invece della crash screen Next.js
-- [ ] **Analytics** — tracciare eventi di gioco (risposta, combo, completamento) con Plausible o simile
+- [ ] **Analytics** — tracciare eventi di gioco (risposta, combo, completamento) con Plausible o
+      simile
 - [ ] **Rate limiting API** — protezione anti-spam sulle route /api
 - [ ] **Test E2E** — Playwright per flussi critici (login → crea partita → gioca)

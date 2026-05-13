@@ -2,24 +2,26 @@ const CACHE_NAME = 'indovinando-v1'
 const OFFLINE_URL = '/offline.html'
 
 // Risorse da pre-cachare all'installazione
-const PRECACHE_URLS = [
-  OFFLINE_URL,
-  '/app_icon/apple-touch-icon.png',
-  '/logo.svg',
-]
+const PRECACHE_URLS = [OFFLINE_URL, '/app_icon/apple-touch-icon.png', '/logo.svg']
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS)).then(() => self.skipWaiting())
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => cache.addAll(PRECACHE_URLS))
+      .then(() => self.skipWaiting()),
   )
 })
 
 self.addEventListener('activate', (event) => {
   // Rimuovi cache vecchie
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    ).then(() => self.clients.claim())
+    caches
+      .keys()
+      .then((keys) =>
+        Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))),
+      )
+      .then(() => self.clients.claim()),
   )
 })
 
@@ -53,6 +55,6 @@ self.addEventListener('fetch', (event) => {
             return caches.match(OFFLINE_URL)
           }
         })
-      })
+      }),
   )
 })
