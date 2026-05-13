@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.13.27',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'Polish course/live UI and fix SVG avatar selection',
+    ],
+  },
+
+  {
     version: '1.13.26',
     date: '13 maggio 2026',
     label: 'Auto',
