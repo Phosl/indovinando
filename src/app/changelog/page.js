@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.17.2',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'configura startup image iPhone 12 via metadata layout',
+    ],
+  },
+
+  {
     version: '1.17.1',
     date: '13 maggio 2026',
     label: 'Auto',
