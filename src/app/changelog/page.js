@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.18.6',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'memoize click handlers for mobile UX fluidity',
+    ],
+  },
+
+  {
     version: '1.18.5',
     date: '13 maggio 2026',
     label: 'Auto',
