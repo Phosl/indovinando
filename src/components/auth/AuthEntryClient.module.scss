@@ -256,13 +256,75 @@
   letter-spacing: 0.04em;
 }
 
-.shareHint {
-  margin: 10px auto 0;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  text-align: center;
+.bottomSheetOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 28, 22, 0.3);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 80;
+  padding: 10px;
+}
+
+.bottomSheet {
+  width: 100%;
   max-width: 560px;
+  background: #fff;
+  border: 1px solid #dbead1;
+  border-radius: 18px 18px 14px 14px;
+  box-shadow: 0 14px 36px rgba(19, 40, 24, 0.22);
+  padding: 10px 14px 14px;
+  animation: sheetIn 0.18s ease-out;
+}
+
+.bottomSheetHandle {
+  width: 44px;
+  height: 4px;
+  border-radius: 999px;
+  background: #d7e7cd;
+  margin: 0 auto 10px;
+}
+
+.bottomSheetText {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.bottomSheetClose {
+  width: 100%;
+  margin-top: 12px;
+  min-height: 42px;
+  border: 2px solid #cfe5bf;
+  border-radius: 12px;
+  background: #f3ffe9;
+  color: #2d4a20;
+  font-size: 0.88rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0px 3px 0px 0px #d3e8c9;
+
+  &:active {
+    box-shadow: none;
+    transform: translateY(3px);
+  }
+}
+
+@keyframes sheetIn {
+  from {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .formCard {

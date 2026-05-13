@@ -1,15 +1,82 @@
 'use client'
 
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useT} from '@/lib/i18n/useT'
 import styles from './AuthEntryClient.module.scss'
 
 export default function AuthEntryClient({appVersion}) {
   const t = useT('home')
   const [shareHint, setShareHint] = useState('')
+  const [deferredInstallPrompt, setDeferredInstallPrompt] = useState(null)
+  const [installPlatform, setInstallPlatform] = useState('generic')
+  const [isStandalone, setIsStandalone] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const mediaQuery = window.matchMedia('(display-mode: standalone)')
+    const updateStandaloneState = () => {
+      setIsStandalone(mediaQuery.matches || window.navigator.standalone === true)
+    }
+
+    const ua = window.navigator.userAgent.toLowerCase()
+    const isIosDevice = /iphone|ipad|ipod/.test(ua)
+    const isAndroidDevice = /android/.test(ua)
+
+    setInstallPlatform(isIosDevice ? 'ios' : isAndroidDevice ? 'android' : 'generic')
+    updateStandaloneState()
+
+    const handleBeforeInstallPrompt = (event) => {
+      event.preventDefault()
+      setDeferredInstallPrompt(event)
+    }
+
+    const handleAppInstalled = () => {
+      setDeferredInstallPrompt(null)
+      setIsStandalone(true)
+      setShareHint(t('installAlready'))
+      window.setTimeout(() => setShareHint(''), 2200)
+    }
+
+    mediaQuery.addEventListener?.('change', updateStandaloneState)
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    window.addEventListener('appinstalled', handleAppInstalled)
+
+    return () => {
+      mediaQuery.removeEventListener?.('change', updateStandaloneState)
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.removeEventListener('appinstalled', handleAppInstalled)
+    }
+  }, [t])
+
+  const showHint = (text, delay = 2600) => {
+    setShareHint(text)
+    window.setTimeout(() => setShareHint(''), delay)
+  }
 
   const handleShare = async () => {
     if (typeof window === 'undefined') return
+
+    if (isStandalone) {
+      showHint(t('installAlready'), 2200)
+      return
+    }
+
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt()
+      const {outcome} = await deferredInstallPrompt.userChoice
+      if (outcome !== 'accepted') {
+        showHint(installPlatform === 'ios' ? t('installIosHint') : t('shareFallbackHint'), 3600)
+      }
+      setDeferredInstallPrompt(null)
+      return
+    }
+
+    if (installPlatform === 'ios') {
+      showHint(t('installIosHint'), 3800)
+      return
+    }
+
     const url = window.location.origin
 
     if (navigator.share) {
@@ -27,11 +94,9 @@ export default function AuthEntryClient({appVersion}) {
 
     try {
       await navigator.clipboard.writeText(url)
-      setShareHint(t('shareLinkCopied'))
-      window.setTimeout(() => setShareHint(''), 1800)
+      showHint(t('shareLinkCopied'), 2200)
     } catch {
-      setShareHint(t('shareFallbackHint'))
-      window.setTimeout(() => setShareHint(''), 2600)
+      showHint(t('shareFallbackHint'), 3200)
     }
   }
 
@@ -79,7 +144,20 @@ export default function AuthEntryClient({appVersion}) {
           {t('copyrightLabel')}
         </a>
       </div>
-      {shareHint ? <p className={styles.shareHint}>{shareHint}</p> : null}
+      {shareHint ? (
+        <div className={styles.bottomSheetOverlay} onClick={() => setShareHint('')}>
+          <div className={styles.bottomSheet} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.bottomSheetHandle} />
+            <p className={styles.bottomSheetText}>{shareHint}</p>
+            <button
+              type="button"
+              className={styles.bottomSheetClose}
+              onClick={() => setShareHint('')}>
+              OK
+            </button>
+          </div>
+        </div>
+      ) : null}
     </main>
   )
 }

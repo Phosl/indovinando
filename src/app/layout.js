@@ -13,6 +13,7 @@ const nunito = Nunito({
 
 export const metadata = {
   applicationName: 'Indovinando',
+  manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -25,6 +26,9 @@ export const metadata = {
 }
 
 export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
   themeColor: '#ffffff',
 }
 

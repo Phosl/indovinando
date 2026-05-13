@@ -17,6 +17,8 @@
     "shareAppText": "Apri Indovinando e aggiungila alla schermata Home.",
     "shareLinkCopied": "Link copiato. Ora condividilo e scegli 'Aggiungi a schermata Home'.",
     "shareFallbackHint": "Apri il menu del browser e scegli 'Condividi' per aggiungerla alla Home.",
+    "installIosHint": "Su iPhone: apri in Safari, tocca Condividi e scegli 'Aggiungi alla schermata Home'.",
+    "installAlready": "App gia aggiunta alla schermata Home.",
     "wineCourse": "Corso Vino",
     "howItWorks": "Come funziona"
   },

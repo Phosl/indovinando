@@ -17,6 +17,8 @@
     "shareAppText": "Open Indovinando and add it to your Home Screen.",
     "shareLinkCopied": "Link copied. Share it and choose 'Add to Home Screen'.",
     "shareFallbackHint": "Open your browser menu and choose 'Share' to add it to Home Screen.",
+    "installIosHint": "On iPhone: open in Safari, tap Share, then choose 'Add to Home Screen'.",
+    "installAlready": "App already added to Home Screen.",
     "wineCourse": "Wine Course",
     "howItWorks": "How It Works"
   },
