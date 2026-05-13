@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.18.1',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'corso pallini con stato lezione (verde/arancione/grigio)',
+    ],
+  },
+
+  {
     version: '1.18.0',
     date: '13 maggio 2026',
     label: 'Auto',
