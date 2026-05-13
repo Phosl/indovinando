@@ -1,4 +1,5 @@
 import {useState, useEffect, useCallback, useRef} from 'react'
+import {haptic} from '@/lib/haptic'
 
 const AUDIO_PREFERENCE_KEY = 'live_audio_enabled'
 
@@ -33,6 +34,11 @@ export function useGameAudio() {
 
   const playSound = useCallback(
     (soundKey) => {
+      // Vibrazione indipendente dall'audio
+      if (soundKey === 'correct') haptic('correct')
+      else if (soundKey === 'wrong') haptic('wrong')
+      else if (soundKey === 'bottleCompleted') haptic('success')
+
       if (!audioEnabled) return
       const sound = soundsRef.current[soundKey]
       if (!sound) return
