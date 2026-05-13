@@ -1,8 +1,15 @@
-const CACHE_NAME = 'indovinando-v2'
+const CACHE_NAME = 'indovinando-v3'
 const OFFLINE_URL = '/offline.html'
 
-// Risorse da pre-cachare all'installazione
-const PRECACHE_URLS = [OFFLINE_URL, '/app_icon/apple-touch-icon.png', '/logo.svg']
+// Pre-scarica tutti i JSON dei corsi (it + en) all'installazione
+const COURSE_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+const PRECACHE_URLS = [
+  OFFLINE_URL,
+  '/app_icon/apple-touch-icon.png',
+  '/logo.svg',
+  ...COURSE_LEVELS.map((n) => `/corsi/corso_livello_${n}.json`),
+  ...COURSE_LEVELS.map((n) => `/corsi/en/corso_livello_${n}.json`),
+]
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
