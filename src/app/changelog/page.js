@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.16.3',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'offline page con link a corso vino, SW cacha pagine corso già visitate',
+    ],
+  },
+
+  {
     version: '1.16.2',
     date: '13 maggio 2026',
     label: 'Auto',
