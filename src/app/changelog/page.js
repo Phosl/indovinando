@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.17.6',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'revert(enoteca): annulla fix slider domande nella card',
+    ],
+  },
+
+  {
     version: '1.17.5',
     date: '13 maggio 2026',
     label: 'Auto',
