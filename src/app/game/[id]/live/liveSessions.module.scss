@@ -338,6 +338,10 @@
   gap: 8px;
 }
 
+.participantJustJoined {
+  animation: participantFlash 1.8s ease-out;
+}
+
 .participantName {
   flex: 1;
   min-width: 0;
@@ -355,6 +359,20 @@
   border: 1px solid color-mix(in srgb, var(--selected-dark) 30%, transparent);
   border-radius: 999px;
   padding: 2px 8px;
+}
+
+@keyframes participantFlash {
+  0% {
+    border-color: var(--accept-dark);
+    background: color-mix(in srgb, var(--accept) 24%, var(--background));
+    transform: translateY(-1px);
+  }
+
+  100% {
+    border-color: var(--button-secondary-border);
+    background: var(--background);
+    transform: translateY(0);
+  }
 }
 
 .actions {

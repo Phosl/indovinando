@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import QRCode from 'qrcode'
 import TopBar from '@/components/TopBar'
@@ -126,10 +126,13 @@ export default function LiveSessionClient({
   const [sessionLink, setSessionLink] = useState('')
   const [playersCount, setPlayersCount] = useState(0)
   const [players, setPlayers] = useState([])
+  const [recentJoinIds, setRecentJoinIds] = useState([])
   const [copyFeedback, setCopyFeedback] = useState(false)
   const [isStartingGame, setIsStartingGame] = useState(false)
   const [qrOpen, setQrOpen] = useState(false)
   const [qrDataUrl, setQrDataUrl] = useState('')
+  const previousPlayerIdsRef = useRef(new Set())
+  const joinTimersRef = useRef(new Map())
 
   // Crea sessione live al caricamento
   useEffect(() => {
@@ -173,6 +176,9 @@ export default function LiveSessionClient({
   useEffect(() => {
     if (!sessionId) return
 
+    previousPlayerIdsRef.current = new Set()
+    setRecentJoinIds([])
+
     const pollPlayers = setInterval(async () => {
       try {
         const response = await fetch('/api/live/session/players-count', {
@@ -185,8 +191,32 @@ export default function LiveSessionClient({
         const payload = await response.json().catch(() => ({}))
         if (!response.ok) return
 
+        const nextPlayers = Array.isArray(payload?.players) ? payload.players : []
+        const nextIds = new Set(nextPlayers.map((player) => player.id).filter(Boolean))
+        const newIds = nextPlayers
+          .map((player) => player.id)
+          .filter((id) => id && !previousPlayerIdsRef.current.has(id))
+
         setPlayersCount(payload?.count || 0)
-        setPlayers(Array.isArray(payload?.players) ? payload.players : [])
+        setPlayers(nextPlayers)
+
+        if (newIds.length > 0) {
+          setRecentJoinIds((prev) => [...new Set([...prev, ...newIds])])
+
+          newIds.forEach((id) => {
+            const existingTimer = joinTimersRef.current.get(id)
+            if (existingTimer) clearTimeout(existingTimer)
+
+            const timerId = setTimeout(() => {
+              setRecentJoinIds((prev) => prev.filter((playerId) => playerId !== id))
+              joinTimersRef.current.delete(id)
+            }, 1800)
+
+            joinTimersRef.current.set(id, timerId)
+          })
+        }
+
+        previousPlayerIdsRef.current = nextIds
       } catch {
         // Ignore transient polling errors and try again on next tick.
       }
@@ -194,6 +224,14 @@ export default function LiveSessionClient({
 
     return () => clearInterval(pollPlayers)
   }, [sessionId])
+
+  useEffect(
+    () => () => {
+      joinTimersRef.current.forEach((timerId) => clearTimeout(timerId))
+      joinTimersRef.current.clear()
+    },
+    [],
+  )
 
   useEffect(() => {
     if (!sessionLink) return
@@ -399,7 +437,9 @@ export default function LiveSessionClient({
                 {players.length > 0 ? (
                   <ul>
                     {players.map((player) => (
-                      <li key={player.id} className={styles.participantItem}>
+                      <li
+                        key={player.id}
+                        className={`${styles.participantItem} ${recentJoinIds.includes(player.id) ? styles.participantJustJoined : ''}`}>
                         <AvatarDisplay avatarId={player.avatar_id} size={24} />
                         <span className={styles.participantName}>
                           {player.nickname || t.participantFallback}
