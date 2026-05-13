@@ -23,6 +23,8 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 
 ## 🎮 Gioco Live
 
+- [ ] **Live offline (modalità locale)** — fallback senza server/realtime per partite locali su un
+      solo dispositivo, con sincronizzazione risultati quando torna la rete
 - [ ] **Chat/Emoji reactions** — giocatori possono mandare emoji durante il gioco
 - [ ] **Spectator mode** — seguire una partita senza giocare
 - [ ] **Timer per domanda** — opzione di aggiungere un countdown visibile ai giocatori
@@ -34,6 +36,8 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 ## 🍷 Enoteca
 
 - [ ] **Modalità offline** — giocare senza account e senza salvare, per demo/test
+- [ ] **Enoteca offline con sync** — salvare sessioni localmente offline e inviarle a Supabase
+      quando la connessione ritorna
 - [ ] **Filtri per regione/vitigno** — selezionare vini per categoria
 - [ ] **Storico degustazioni** — vedere le sessioni passate con dettaglio bottiglie
 
@@ -41,6 +45,8 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 
 ## 🎓 Corso Vino
 
+- [ ] **Navigazione offline completa** — rendere `/corso-vino` e `/corso-vino/[levelId]` client-only
+      (o prerender statico) per aprire i corsi anche offline senza visita precedente
 - [ ] **Certificati** — PDF/immagine scaricabile al completamento di un livello
 - [ ] **Streaks** — mantenere la serie di giorni consecutivi di studio
 - [ ] **Ripasso intelligente** — riproporre domande sbagliate nelle sessioni successive
