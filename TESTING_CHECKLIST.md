@@ -39,7 +39,7 @@
 ## 👥 Live Session — Host flow
 
 - [ ] Creare sessione da `/game/[id]` → lobby si apre
-- [ ] Link sessione copiabile e condivisibile
+- [ ] Link sessione copiabile, condivisibile e stampabile via QR
 - [ ] Giocatori che si uniscono appaiono in lobby (Realtime)
 - [ ] "Avvia partita" abilitato solo con almeno 1 giocatore
 - [ ] Prima bottiglia caricata, domande mostrate in sequenza
@@ -63,7 +63,7 @@
 ## 👤 Live Session — Guest flow
 
 - [ ] Accedere al link sessione senza account → schermata nickname/avatar
-- [ ] Inserire nickname e selezionare avatar → join riuscito
+- [ ] Inserire nickname e selezionare avatar emoji/SVG → join riuscito
 - [ ] Lobby mostra altri giocatori (Realtime)
 - [ ] Avvio partita ricevuto correttamente
 - [ ] Domande e opzioni uguali a quelle dell'host
@@ -109,6 +109,7 @@
 
 - [ ] Pagina livelli carica correttamente
 - [ ] Accedere a un livello → elenco lezioni
+- [ ] Card capitoli mostrano i pallini di progresso
 - [ ] Avviare una lezione → slide progressive
 - [ ] Quiz finale → risposte registrate
 - [ ] Progresso salvato su `wine_course_progress`

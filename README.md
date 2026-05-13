@@ -24,7 +24,8 @@ etc.).
 ## ✨ Key Features
 
 - 🎯 **Game creation** — custom questions + wine bottles with correct answers per (bottle, question)
-- 👥 **Live multiplayer** — real-time sync via Supabase Realtime WebSocket + 2s polling fallback
+- 👥 **Live multiplayer** — real-time sync via Supabase Realtime WebSocket + 2s polling fallback,
+  with share/QR lobby tools
 - 🔥 **Combo system** — consecutive correct answers grant bonus points (cap at +15)
 - 🏆 **Live leaderboard** — overlay during play (server API, same data for host and guests), full
   podium at the end
@@ -34,33 +35,33 @@ etc.).
 - 🎓 **Wine Course** — 8-level structured course with progressive quizzes and per-lesson progress
   tracking
 - 🍾 **Enoteca** — anonymous single-player tasting mode (no login required)
-- 📱 **Mobile-first UI** — Duolingo-style slides, emoji avatars, smooth transitions
+- 📱 **Mobile-first UI** — Duolingo-style slides, emoji + SVG avatars, smooth transitions
 
 ---
 
 ## 🗺️ Key Routes
 
-| Route                            | Description                        |
-| -------------------------------- | ---------------------------------- |
-| `/`                              | Landing page                       |
-| `/auth`                          | Login / register                   |
-| `/dashboard`                     | Host's game list + quick actions   |
-| `/dashboard/storico`             | Match history with per-game filter |
-| `/game/create`                   | Full game creation wizard          |
-| `/game/create-quick`             | 3-step quick game                  |
-| `/game/[id]`                     | View / manage a game               |
-| `/game/[id]/edit`                | Edit game                          |
-| `/game/[id]/live`                | Create live session (lobby)        |
-| `/game/[id]/print`               | Print card                         |
-| `/live/session/[id]`             | Join lobby                         |
-| `/live/session/[id]/play`        | Active gameplay                    |
-| `/live/session/[id]/leaderboard` | Final leaderboard                  |
-| `/corso-vino`                    | Wine course home                   |
-| `/corso-vino/[levelId]`          | Level detail                       |
-| `/enoteca/[menuId]`              | Enoteca tasting                    |
-| `/profilo`                       | User profile + language switcher   |
-| `/changelog`                     | Version history                    |
-| `/info`                          | App info / how-to                  |
+| Route                            | Description                              |
+| -------------------------------- | ---------------------------------------- |
+| `/`                              | Landing page                             |
+| `/auth`                          | Login / register                         |
+| `/dashboard`                     | Host's game list + quick actions         |
+| `/dashboard/storico`             | Match history with per-game filter       |
+| `/game/create`                   | Full game creation wizard                |
+| `/game/create-quick`             | 3-step quick game                        |
+| `/game/[id]`                     | View / manage a game                     |
+| `/game/[id]/edit`                | Edit game                                |
+| `/game/[id]/live`                | Create live session (lobby, share + QR)  |
+| `/game/[id]/print`               | Print card                               |
+| `/live/session/[id]`             | Join lobby (nickname + avatar selection) |
+| `/live/session/[id]/play`        | Active gameplay                          |
+| `/live/session/[id]/leaderboard` | Final leaderboard                        |
+| `/corso-vino`                    | Wine course home                         |
+| `/corso-vino/[levelId]`          | Level detail                             |
+| `/enoteca/[menuId]`              | Enoteca tasting                          |
+| `/profilo`                       | User profile + language switcher         |
+| `/changelog`                     | Version history                          |
+| `/info`                          | App info / how-to                        |
 
 ---
 

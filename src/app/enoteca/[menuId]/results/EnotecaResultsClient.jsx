@@ -136,10 +136,6 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
                     {bottle.year ? ` · ${bottle.year}` : ''}
                   </span>
                 )}
-                <span
-                  className={`${xStyles.bottleCardScore} ${bc === questions.length ? xStyles.perfect : bc === 0 ? xStyles.zero : ''}`}>
-                  {bc}/{questions.length} · +{bs} {t.points}
-                </span>
               </button>
             )
           })}

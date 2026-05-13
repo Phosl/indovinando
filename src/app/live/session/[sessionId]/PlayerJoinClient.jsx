@@ -275,30 +275,21 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
         </div>
       ) : (
         <div className={styles.joinCard}>
-          <div className={styles.inviteCard}>
-            <h3>{t('shareTitle')}</h3>
-            <p>{t('shareHint')}</p>
-            <label className={styles.linkLabel} htmlFor="live-session-link">
-              {t('sessionLinkLabel')}
-            </label>
-            <div className={styles.linkRow}>
-              <input
-                id="live-session-link"
-                className={styles.linkInput}
-                value={sessionLink}
-                readOnly
-              />
-              <button type="button" className={styles.shareButton} onClick={handleCopyLink}>
-                {copied ? t('copied') : t('copyLink')}
-              </button>
-              <button type="button" className={styles.shareButton} onClick={handleShareLink}>
-                {t('shareLink')}
-              </button>
-            </div>
-          </div>
-
           {!joinedPlayer ? (
             <form onSubmit={handleJoin} className={styles.joinForm}>
+              <div className={styles.formGroup}>
+                <label htmlFor="nickname">{t('nicknameLabel')}</label>
+                <input
+                  id="nickname"
+                  type="text"
+                  value={nickname}
+                  onChange={(e) => setNickname(e.target.value)}
+                  placeholder={t('nicknamePlaceholder')}
+                  className={styles.input}
+                  disabled={loading}
+                />
+              </div>
+
               <div className={styles.formGroup}>
                 <label>{t('chooseAvatar')}</label>
                 <div className={styles.avatarGridSvg}>
@@ -328,19 +319,6 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
                     </button>
                   ))}
                 </div>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="nickname">{t('nicknameLabel')}</label>
-                <input
-                  id="nickname"
-                  type="text"
-                  value={nickname}
-                  onChange={(e) => setNickname(e.target.value)}
-                  placeholder={t('nicknamePlaceholder')}
-                  className={styles.input}
-                  disabled={loading}
-                />
               </div>
 
               {error && <div className={styles.error}>{error}</div>}
@@ -379,6 +357,19 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
                   <p>{player.nickname}</p>
                 </div>
               ))}
+            </div>
+          </div>
+          <div className={styles.inviteCard}>
+            <h3>{t('shareTitle')}</h3>
+            {/* <p>{t('shareHint')}</p> */}
+
+            <div className={styles.linkRow}>
+              <button type="button" className={styles.shareButton} onClick={handleCopyLink}>
+                {copied ? t('copied') : t('copyLink')}
+              </button>
+              <button type="button" className={styles.shareButton} onClick={handleShareLink}>
+                {t('shareLink')}
+              </button>
             </div>
           </div>
         </div>
