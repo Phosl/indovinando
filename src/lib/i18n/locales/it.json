@@ -36,6 +36,7 @@
     "changelog": "Changelog",
     "yourGames": "I tuoi giochi",
     "myGames": "I miei giochi",
+    "play": "Gioca",
     "status": "Stato",
     "published": "Pubblicato",
     "draft": "Bozza",
@@ -45,6 +46,8 @@
     "enoteca": "🍷 Enoteca",
     "printCard": "Stampa scheda",
     "emptyState": "Non hai ancora creato giochi. Inizia ora!",
+    "emptyStateFirstGame": "Non hai ancora creato giochi. Crea il tuo primo gioco per iniziare a giocare.",
+    "createFirstGame": "Crea il tuo primo gioco",
     "history": "📜 Storico partite",
     "storico": {
       "title": "📜 Storico partite",

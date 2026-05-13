@@ -50,12 +50,21 @@ export default function MieiGiochiClient({
       <div className={styles.content}>
         {activeTab === 'games' && (
           <div className={styles.gamesTab}>
+            <div className={styles.gamesHeaderActions}>
+              <a href="/game/create" className="btn primary">
+                {dashboardDict.createGame || '+ Crea gioco'}
+              </a>
+            </div>
+
             {games.length === 0 ? (
               <div className={styles.emptyState}>
                 <span className={styles.emptyIcon}>🎮</span>
-                <p>{dashboardDict.emptyState || 'Non hai ancora creato giochi. Inizia ora!'}</p>
+                <p>
+                  {dashboardDict.emptyStateFirstGame ||
+                    'Non hai ancora creato giochi. Crea il tuo primo gioco per iniziare a giocare.'}
+                </p>
                 <a href="/game/create" className="btn primary">
-                  {dashboardDict.createGame || '+ Crea gioco'}
+                  {dashboardDict.createFirstGame || 'Crea il tuo primo gioco'}
                 </a>
               </div>
             ) : (

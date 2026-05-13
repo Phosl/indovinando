@@ -87,6 +87,12 @@
   padding: 20px 20px 0;
 }
 
+.gamesHeaderActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
 // ── Games tab ────────────────────────────────────────────────
 .gamesList {
   display: flex;
