@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.13.25',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'Improve host invite share actions layout',
+    ],
+  },
+
+  {
     version: '1.13.24',
     date: '13 maggio 2026',
     label: 'Auto',
