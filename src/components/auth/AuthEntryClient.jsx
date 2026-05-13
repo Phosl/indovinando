@@ -36,9 +36,14 @@ export default function AuthEntryClient({appVersion}) {
           </div>
         </section>
       </div>
-      <a href="/changelog" className={`${styles.badge} ${styles.badgeLink}`}>
-        {t('versionLabel')} {appVersion}
-      </a>
+      <div className={styles.legalLinks}>
+        <a href="/changelog" className={`${styles.badge} ${styles.badgeLink}`}>
+          {t('versionLabel')} {appVersion}
+        </a>
+        <a href="/copyright" className={`${styles.badge} ${styles.badgeLink}`}>
+          {t('copyrightLabel')}
+        </a>
+      </div>
     </main>
   )
 }

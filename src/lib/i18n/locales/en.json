@@ -10,6 +10,7 @@
   },
   "home": {
     "versionLabel": "Beta Version",
+    "copyrightLabel": "Copyright & protection",
     "tagline": "Play, create and learn wine in one place.",
     "loginOrRegister": "Login or Register",
     "wineCourse": "Wine Course",

@@ -5,6 +5,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding-top: 0px;
 
   h1 {
     text-align: center;
@@ -106,7 +107,7 @@
 
 .linkActions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 8px;
 }
 
@@ -184,6 +185,73 @@
     min-width: 0;
     padding: 11px 14px;
     font-size: 14px;
+  }
+}
+
+.qrOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 40;
+}
+
+.qrModal {
+  width: min(420px, 100%);
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  box-shadow: 0px 6px 0px 0px var(--gray-light);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--text-primary);
+  }
+}
+
+.qrLogo {
+  width: 110px;
+  height: auto;
+  margin: 0 auto 2px;
+}
+
+.qrImage {
+  width: min(300px, 100%);
+  height: auto;
+  margin: 0 auto;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.qrHint {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.qrActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+
+  .startButton,
+  .cancelButton {
+    width: 100%;
+    min-width: 0;
   }
 }
 

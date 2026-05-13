@@ -2,6 +2,7 @@
 
 import {useEffect, useState} from 'react'
 import {useRouter} from 'next/navigation'
+import QRCode from 'qrcode'
 import TopBar from '@/components/TopBar'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {pickLangText} from '@/lib/i18n/dictionaries'
@@ -18,6 +19,10 @@ const LIVE_SESSION_DICTIONARY = {
     copied: '✓ Copiato!',
     copy: 'Copia',
     share: 'Condividi',
+    qr: 'QR',
+    qrTitle: 'QR sessione live',
+    print: 'Stampa',
+    close: 'Chiudi',
     participants: 'Partecipanti: ',
     waitPlayers: 'Aspetta che i giocatori si uniscano, poi premi Inizia Gioco.',
     gameDetails: 'Dettagli Gioco',
@@ -37,6 +42,10 @@ const LIVE_SESSION_DICTIONARY = {
     copied: '✓ Copied!',
     copy: 'Copy',
     share: 'Share',
+    qr: 'QR',
+    qrTitle: 'Live session QR',
+    print: 'Print',
+    close: 'Close',
     participants: 'Participants: ',
     waitPlayers: 'Wait for players to join, then click Start Game.',
     gameDetails: 'Game Details',
@@ -71,6 +80,8 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
   const [playersCount, setPlayersCount] = useState(0)
   const [copyFeedback, setCopyFeedback] = useState(false)
   const [isStartingGame, setIsStartingGame] = useState(false)
+  const [qrOpen, setQrOpen] = useState(false)
+  const [qrDataUrl, setQrDataUrl] = useState('')
 
   // Crea sessione live al caricamento
   useEffect(() => {
@@ -135,6 +146,23 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
     return () => clearInterval(pollPlayers)
   }, [sessionId])
 
+  useEffect(() => {
+    if (!sessionLink) return
+    let cancelled = false
+
+    QRCode.toDataURL(sessionLink, {width: 320, margin: 1, errorCorrectionLevel: 'M'})
+      .then((url) => {
+        if (!cancelled) setQrDataUrl(url)
+      })
+      .catch(() => {
+        if (!cancelled) setQrDataUrl('')
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [sessionLink])
+
   const handleCopyLink = () => {
     navigator.clipboard.writeText(sessionLink)
     setCopyFeedback(true)
@@ -159,6 +187,37 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
 
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
+  }
+
+  const handlePrintQr = () => {
+    if (!qrDataUrl) return
+
+    const printWindow = window.open('', '_blank', 'noopener,noreferrer')
+    if (!printWindow) return
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>${gameName} QR</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 24px; text-align: center; }
+            .logo { width: 120px; height: auto; margin: 0 auto 12px; display: block; }
+            img { width: 280px; height: 280px; }
+            h1 { font-size: 18px; margin: 0 0 12px; }
+            p { font-size: 12px; color: #444; word-break: break-all; }
+          </style>
+        </head>
+        <body>
+          <img class="logo" src="${window.location.origin}/logo.svg" alt="Indovinando" />
+          <h1>${gameName}</h1>
+          <img src="${qrDataUrl}" alt="QR" />
+          <p>${sessionLink}</p>
+        </body>
+      </html>
+    `)
+    printWindow.document.close()
+    printWindow.focus()
+    printWindow.print()
   }
 
   const handleStartGame = async () => {
@@ -260,6 +319,9 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
               <button onClick={handleShareLink} className={styles.copyButton}>
                 {t.share}
               </button>
+              <button onClick={() => setQrOpen(true)} className={styles.copyButton}>
+                {t.qr}
+              </button>
             </div>
           </div>
         </div>
@@ -296,6 +358,28 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
           </button>
         </div>
       </div>
+
+      {qrOpen && (
+        <div className={styles.qrOverlay} onClick={() => setQrOpen(false)}>
+          <div className={styles.qrModal} onClick={(e) => e.stopPropagation()}>
+            <img src="/logo.svg" alt="Indovinando" className={styles.qrLogo} />
+            <h3>{t.qrTitle}</h3>
+            {qrDataUrl ? (
+              <img src={qrDataUrl} alt="QR sessione" className={styles.qrImage} />
+            ) : (
+              <p className={styles.qrHint}>Loading...</p>
+            )}
+            <div className={styles.qrActions}>
+              <button className={styles.startButton} onClick={handlePrintQr}>
+                {t.print}
+              </button>
+              <button className={styles.cancelButton} onClick={() => setQrOpen(false)}>
+                {t.close}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

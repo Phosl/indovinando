@@ -27,6 +27,7 @@ export default function CourseClient({levels, isAdmin = false}) {
 
     return {
       isMax: userLevel.isMax,
+      levelNum: userLevel.levelNum,
       pct: userLevel.progressInLevel,
       completed: completedLessons,
       total: totalLessons || 1,
@@ -42,10 +43,7 @@ export default function CourseClient({levels, isAdmin = false}) {
 
   return (
     <div className={styles.page}>
-      <TopBar
-        title={t('title')}
-        onBack={() => router.push(backHref)}
-        progress={nextLevelProgress?.pct ?? null}>
+      <TopBar title={t('title')} onBack={() => router.push(backHref)}>
         {isAdmin && (
           <a
             href="/admin/corsi"
@@ -62,6 +60,28 @@ export default function CourseClient({levels, isAdmin = false}) {
         <div className={styles.heroText}>
           <h1 className={styles.heroTitle}>{t('heroTitle')}</h1>
           <p className={styles.heroSubtitle}>{t('heroSubtitle')}</p>
+          {nextLevelProgress && (
+            <div className={styles.heroProgress}>
+              <div className={styles.heroProgressLabels}>
+                <span className={styles.heroProgressLevel}>
+                  {nextLevelProgress.isMax
+                    ? t('nextLevelMax')
+                    : t('nextLevelLabel', {index: nextLevelProgress.levelNum})}
+                </span>
+                <span className={styles.heroProgressNext}>
+                  {nextLevelProgress.isMax
+                    ? ''
+                    : `→ ${t('nextLevelLabel', {index: nextLevelProgress.nextLevel})}`}
+                </span>
+              </div>
+              <div className={styles.heroProgressTrack}>
+                <div
+                  className={styles.heroProgressFill}
+                  style={{'--pct': `${nextLevelProgress.pct}%`}}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -75,7 +95,6 @@ export default function CourseClient({levels, isAdmin = false}) {
         {levels.map((level) => {
           const completed = loaded ? getLevelCompletedCount(level) : 0
           const total = level.lessonIds.length
-          const pct = total ? Math.round((completed / total) * 100) : 0
 
           return (
             <div
@@ -95,8 +114,13 @@ export default function CourseClient({levels, isAdmin = false}) {
                 <h2 className={styles.levelTitle}>{level.title}</h2>
                 <p className={styles.levelDesc}>{level.description}</p>
                 <div className={styles.progressRow}>
-                  <div className={styles.progressBar}>
-                    <div className={styles.progressFill} style={{width: `${pct}%`}} />
+                  <div className={styles.progressDots}>
+                    {Array.from({length: total}).map((_, index) => (
+                      <span
+                        key={`${level.id}-dot-${index}`}
+                        className={`${styles.progressDot} ${index < completed ? styles.progressDotDone : ''}`}
+                      />
+                    ))}
                   </div>
                   <span className={styles.progressText}>
                     {completed}/{total} {t('lessons')}
