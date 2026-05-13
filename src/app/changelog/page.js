@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.13.23',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'fix back button no logged user',
+    ],
+  },
+
+  {
     version: '1.13.22',
     date: '13 maggio 2026',
     label: 'Auto',
