@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.17.5',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'contiene slider domande dentro la card su mobile',
+    ],
+  },
+
+  {
     version: '1.17.4',
     date: '13 maggio 2026',
     label: 'Auto',
