@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, useEffect, useCallback, useMemo} from 'react'
+import {useState, useEffect, useCallback, useMemo, useRef} from 'react'
 import {useRouter, useSearchParams} from 'next/navigation'
 import {supabaseAnonClient} from '@/lib/supabaseClient'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
@@ -10,6 +10,7 @@ import styles from '../../../live/session/[sessionId]/play/playerLive.module.scs
 import {useGameAudio} from '../../../live/session/[sessionId]/play/hooks/useGameAudio'
 
 const POINTS_CORRECT = 25
+const SLIDE_TRANSITION_MS = 220
 
 const getComboMsg = (n) => {
   if (n < 2) return null
@@ -84,6 +85,8 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
   const [screen, setScreen] = useState('question') // 'question' | 'reveal' | 'transition'
   const [comboCount, setComboCount] = useState(0)
   const [visibleCombo, setVisibleCombo] = useState(null)
+  const [slideMotion, setSlideMotion] = useState('idle')
+  const slideTimerRef = useRef(null)
 
   const currentBottle = bottles[bottleIndex]
   const currentQuestion = screen === 'question' ? (questions[questionIndex] ?? null) : null
@@ -114,6 +117,12 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
     const t = setTimeout(() => setVisibleCombo(null), 1600)
     return () => clearTimeout(t)
   }, [comboCount])
+
+  useEffect(() => {
+    return () => {
+      if (slideTimerRef.current) clearTimeout(slideTimerRef.current)
+    }
+  }, [])
 
   // Load session on mount
   useEffect(() => {
@@ -231,12 +240,20 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
 
   const handleContinue = useCallback(() => {
     if (!isLastQuestion) {
-      setQuestionIndex((i) => i + 1)
+      if (slideMotion !== 'idle') return
+      setSlideMotion('exiting')
+      slideTimerRef.current = setTimeout(() => {
+        setQuestionIndex((i) => i + 1)
+        setSlideMotion('entering')
+        slideTimerRef.current = setTimeout(() => {
+          setSlideMotion('idle')
+        }, SLIDE_TRANSITION_MS)
+      }, SLIDE_TRANSITION_MS)
     } else {
       playSound('bottleCompleted')
       setScreen('reveal')
     }
-  }, [isLastQuestion, playSound])
+  }, [isLastQuestion, playSound, slideMotion])
 
   const handleGoNextBottle = useCallback(async () => {
     if (isLastBottle) {
@@ -461,6 +478,12 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
   // ── QUESTION SCREEN ───────────────────────────────────────────────────────
   const correctOptId = currentBottle?.correctAnswers?.[currentQuestion?.id]
   const correctOptText = currentQuestion?.options?.find((o) => o.id === correctOptId)?.text
+  const slideMotionClass =
+    slideMotion === 'exiting'
+      ? styles.slideExitLeft
+      : slideMotion === 'entering'
+        ? styles.slideEnterRight
+        : ''
 
   return (
     <div className={styles.fullPage}>
@@ -474,7 +497,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
       )}
 
       <div
-        className={`${styles.slideContent} ${!isCurrentChecked ? styles.mobileCheckSpacing : ''}`}>
+        className={`${styles.slideContent} ${slideMotionClass} ${!isCurrentChecked ? styles.mobileCheckSpacing : ''}`}>
         <div className={styles.bottleBadge}>
           {t.bottle} {bottleIndex + 1}/{bottles.length}
         </div>
@@ -548,7 +571,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
             {saving ? t.saving : t.check}
           </button>
         ) : (
-          <button className={styles.continueButton} onClick={handleContinue}>
+          <button className={styles.continueButton} onClick={handleContinue} disabled={slideMotion !== 'idle'}>
             {isLastQuestion ? `🍷 ${t.revealWine}` : t.continue}
           </button>
         )}
