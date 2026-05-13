@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.15.0',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'aggiunte vibrazioni haptic per risposta corretta/errata/combo in tutti i giochi',
+    ],
+  },
+
+  {
     version: '1.14.2',
     date: '13 maggio 2026',
     label: 'Auto',
