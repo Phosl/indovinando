@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.17.3',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'aggiungi fallback splash iOS per iPhone mini/zoom e dpr3',
+    ],
+  },
+
+  {
     version: '1.17.2',
     date: '13 maggio 2026',
     label: 'Auto',
