@@ -42,7 +42,7 @@ export async function POST(request) {
     }
 
     const db = createWriteClient(supabase)
-    const {count, error: countError} = await admin
+    const {count, error: countError} = await db
       .from('live_players')
       .select('id', {count: 'exact', head: true})
       .eq('session_id', trimmedSessionId)

@@ -32,7 +32,7 @@ export async function POST(request) {
 
     const db = createWriteClient(supabase)
 
-    const {data: session, error: sessionError} = await admin
+    const {data: session, error: sessionError} = await db
       .from('live_sessions')
       .select('id, host_user_id, status, game_id, current_question_index')
       .eq('id', trimmedSessionId)
@@ -42,7 +42,7 @@ export async function POST(request) {
       return NextResponse.json({error: 'Session not found'}, {status: 404})
     }
 
-    const {data: actorPlayer, error: actorPlayerError} = await admin
+    const {data: actorPlayer, error: actorPlayerError} = await db
       .from('live_players')
       .select('id')
       .eq('session_id', trimmedSessionId)
@@ -64,7 +64,7 @@ export async function POST(request) {
     if (session.status !== 'finished') {
       const currentBottleIndex = Math.max(0, Number(session.current_question_index || 0))
 
-      const {data: currentBottleRows, error: bottleError} = await admin
+      const {data: currentBottleRows, error: bottleError} = await db
         .from('game_bottles')
         .select('id')
         .eq('game_id', session.game_id)
@@ -80,7 +80,7 @@ export async function POST(request) {
 
       const currentBottleId = currentBottleRows[0].id
 
-      const {data: bottleQuestions, error: bottleQuestionsError} = await admin
+      const {data: bottleQuestions, error: bottleQuestionsError} = await db
         .from('game_bottle_answers')
         .select('question_id')
         .eq('bottle_id', currentBottleId)
@@ -96,7 +96,7 @@ export async function POST(request) {
         ...new Set(bottleQuestions.map((row) => row.question_id).filter(Boolean)),
       ]
 
-      const {data: players, error: playersListError} = await admin
+      const {data: players, error: playersListError} = await db
         .from('live_players')
         .select('id, nickname')
         .eq('session_id', trimmedSessionId)
@@ -105,7 +105,7 @@ export async function POST(request) {
         return NextResponse.json({error: playersListError.message}, {status: 500})
       }
 
-      const {data: submittedAnswers, error: submittedAnswersError} = await admin
+      const {data: submittedAnswers, error: submittedAnswersError} = await db
         .from('live_round_answers')
         .select('player_id, question_id')
         .eq('session_id', trimmedSessionId)
@@ -141,7 +141,7 @@ export async function POST(request) {
 
     // Apply last round points before finalizing the session.
     // This guarantees final leaderboard totals include the final bottle.
-    const {data: pendingAnswers, error: answersError} = await admin
+    const {data: pendingAnswers, error: answersError} = await db
       .from('live_round_answers')
       .select('player_id, points')
       .eq('session_id', trimmedSessionId)
@@ -159,7 +159,7 @@ export async function POST(request) {
           (roundPointsByPlayer[playerId] || 0) + Number(answer.points || 0)
       })
 
-      const {data: players, error: playersError} = await admin
+      const {data: players, error: playersError} = await db
         .from('live_players')
         .select('id, total_score')
         .eq('session_id', trimmedSessionId)
@@ -173,7 +173,7 @@ export async function POST(request) {
           .map((player) => {
             const add = Number(roundPointsByPlayer[player.id] || 0)
             if (add <= 0) return null
-            return admin
+            return db
               .from('live_players')
               .update({total_score: Number(player.total_score || 0) + add})
               .eq('id', player.id)
@@ -190,7 +190,7 @@ export async function POST(request) {
       }
 
       // Prevent double-apply if host retries finish action.
-      const {error: clearAnswersError} = await admin
+      const {error: clearAnswersError} = await db
         .from('live_round_answers')
         .delete()
         .eq('session_id', trimmedSessionId)
@@ -203,7 +203,7 @@ export async function POST(request) {
     const finishedAt = new Date().toISOString()
 
     if (session.status !== 'finished') {
-      const {error: finishError} = await admin
+      const {error: finishError} = await db
         .from('live_sessions')
         .update({
           status: 'finished',
@@ -223,7 +223,7 @@ export async function POST(request) {
       try {
         // Fetch final player scores + game name
         const [{data: finalPlayers}, {data: gameRow}] = await Promise.all([
-          admin
+          db
             .from('live_players')
             .select('id, nickname, avatar_id, total_score, is_host')
             .eq('session_id', trimmedSessionId)
@@ -241,7 +241,7 @@ export async function POST(request) {
         }))
 
         // Avoid duplicate snapshot if finish is called multiple times
-        const {data: existing} = await admin
+        const {data: existing} = await db
           .from('live_session_results')
           .select('id')
           .eq('session_id', trimmedSessionId)
@@ -264,7 +264,7 @@ export async function POST(request) {
     })()
 
     // Opportunistic cleanup: delete sessions finished more than 24h ago.
-    admin
+    db
       .from('live_sessions')
       .delete()
       .eq('status', 'finished')

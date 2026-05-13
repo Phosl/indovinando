@@ -13,8 +13,8 @@ function createWriteClient(fallback) {
   return fallback
 }
 
-async function resolveHostAvatarId(admin, userId) {
-  const {data: profile} = await admin
+async function resolveHostAvatarId(db, userId) {
+  const {data: profile} = await db
     .from('profiles')
     .select('avatar_emoji')
     .eq('id', userId)
@@ -52,9 +52,9 @@ export async function POST(request) {
     }
 
     const db = createWriteClient(supabase)
-    const hostAvatarId = await resolveHostAvatarId(admin, user.id)
+    const hostAvatarId = await resolveHostAvatarId(db, user.id)
 
-    const {data: existingHostPlayer, error: hostPlayerError} = await admin
+    const {data: existingHostPlayer, error: hostPlayerError} = await db
       .from('live_players')
       .select('id, avatar_id')
       .eq('session_id', trimmedSessionId)
@@ -67,7 +67,7 @@ export async function POST(request) {
 
     if (existingHostPlayer) {
       const nextAvatarId = existingHostPlayer.avatar_id || hostAvatarId || 1
-      const {error: updateHostError} = await admin
+      const {error: updateHostError} = await db
         .from('live_players')
         .update({nickname: 'Host', avatar_id: nextAvatarId, is_host: true})
         .eq('id', existingHostPlayer.id)
@@ -76,7 +76,7 @@ export async function POST(request) {
         return NextResponse.json({error: updateHostError.message}, {status: 500})
       }
     } else {
-      const {data: existingHostNicknamePlayer, error: hostNicknameError} = await admin
+      const {data: existingHostNicknamePlayer, error: hostNicknameError} = await db
         .from('live_players')
         .select('id')
         .eq('session_id', trimmedSessionId)
@@ -88,7 +88,7 @@ export async function POST(request) {
       }
 
       if (existingHostNicknamePlayer) {
-        const {error: claimHostError} = await admin
+        const {error: claimHostError} = await db
           .from('live_players')
           .update({user_id: user.id, avatar_id: hostAvatarId || 1, is_host: true})
           .eq('id', existingHostNicknamePlayer.id)
@@ -111,7 +111,7 @@ export async function POST(request) {
           }
 
           // Another concurrent start request created the Host row first.
-          const {data: racedHostPlayer, error: racedHostError} = await admin
+          const {data: racedHostPlayer, error: racedHostError} = await db
             .from('live_players')
             .select('id')
             .eq('session_id', trimmedSessionId)
@@ -125,7 +125,7 @@ export async function POST(request) {
             )
           }
 
-          const {error: recoverHostError} = await admin
+          const {error: recoverHostError} = await db
             .from('live_players')
             .update({user_id: user.id, avatar_id: hostAvatarId || 1, is_host: true})
             .eq('id', racedHostPlayer.id)
@@ -137,7 +137,7 @@ export async function POST(request) {
       }
     }
 
-    const {error: updateError} = await admin
+    const {error: updateError} = await db
       .from('live_sessions')
       .update({
         status: 'playing',

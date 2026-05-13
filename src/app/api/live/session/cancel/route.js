@@ -32,7 +32,7 @@ export async function POST(request) {
 
     const db = createWriteClient(supabase)
 
-    const {error} = await admin
+    const {error} = await db
       .from('live_sessions')
       .delete()
       .eq('id', trimmedSessionId)

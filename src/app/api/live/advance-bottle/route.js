@@ -38,7 +38,7 @@ export async function POST(request) {
 
     const db = createWriteClient(supabase)
 
-    const {data: session} = await admin
+    const {data: session} = await db
       .from('live_sessions')
       .select('host_user_id, current_question_index, status')
       .eq('id', sessionId)
@@ -55,7 +55,7 @@ export async function POST(request) {
     }
 
     // ── 1. Sync round scores to live_players.total_score ──────────────────────
-    const {data: answers} = await admin
+    const {data: answers} = await db
       .from('live_round_answers')
       .select('player_id, points')
       .eq('session_id', sessionId)
@@ -66,7 +66,7 @@ export async function POST(request) {
         roundPointsByPlayer[a.player_id] = (roundPointsByPlayer[a.player_id] || 0) + (a.points || 0)
       })
 
-      const {data: players} = await admin
+      const {data: players} = await db
         .from('live_players')
         .select('id, total_score')
         .eq('session_id', sessionId)
@@ -77,7 +77,7 @@ export async function POST(request) {
             .map((p) => {
               const add = roundPointsByPlayer[p.id] || 0
               if (add <= 0) return null
-              return admin
+              return db
                 .from('live_players')
                 .update({total_score: (p.total_score || 0) + add})
                 .eq('id', p.id)
@@ -92,7 +92,7 @@ export async function POST(request) {
 
     // ── 3. Advance session to next bottle ─────────────────────────────────────
     const nextIndex = (session.current_question_index ?? 0) + 1
-    await admin
+    await db
       .from('live_sessions')
       .update({
         current_question_index: nextIndex,
