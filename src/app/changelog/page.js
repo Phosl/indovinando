@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.16.2',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'auto-reload pagina offline quando torna la rete',
+    ],
+  },
+
+  {
     version: '1.16.1',
     date: '13 maggio 2026',
     label: 'Auto',
