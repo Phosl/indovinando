@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.14.2',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'aggiorna manifest icons e layout metadata per favicon/apple-touch-icon corretti',
+    ],
+  },
+
+  {
     version: '1.14.1',
     date: '13 maggio 2026',
     label: 'Auto',
