@@ -8,6 +8,15 @@ export const metadata = {
 
 const CHANGELOG = [
   {
+    version: '1.13.22',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'Refine course UX, guest navigation, and loading skeletons',
+    ],
+  },
+
+  {
     version: '1.13.21',
     date: '12 maggio 2026',
     label: 'Auto',
