@@ -28,6 +28,7 @@ export default function InfoClient() {
   const isFirst = current === 0
   const isLast = current === slides.length - 1
   const backHref = authChecked && !userId ? '/' : '/profilo'
+  const doneHref = backHref
 
   useEffect(() => {
     let cancelled = false
@@ -169,7 +170,7 @@ export default function InfoClient() {
                 {tc('next')}
               </button>
             ) : (
-              <a href="/profilo" className="btn primary">
+              <a href={doneHref} className="btn primary">
                 {tc('done')}
               </a>
             )}

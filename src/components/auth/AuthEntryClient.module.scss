@@ -77,6 +77,26 @@
   padding: 6px 10px;
 }
 
+.badgeLink {
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    box-shadow 0.12s,
+    transform 0.1s,
+    background 0.12s;
+
+  &:hover {
+    background: #eeffe4;
+    box-shadow: 0px 4px 0px 0px #d3e8c9;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    box-shadow: none;
+    transform: translateY(3px);
+  }
+}
+
 .brand {
   margin: 10px 0 0;
   font-size: clamp(2rem, 5.5vw, 3rem);

@@ -36,9 +36,9 @@ export default function AuthEntryClient({appVersion}) {
           </div>
         </section>
       </div>
-      <div className={styles.badge}>
+      <a href="/changelog" className={`${styles.badge} ${styles.badgeLink}`}>
         {t('versionLabel')} {appVersion}
-      </div>
+      </a>
     </main>
   )
 }

@@ -1,9 +1,30 @@
 import styles from './changelog.module.scss'
 import TopBarBack from '@/components/TopBarBack'
+import {getServerLanguage} from '@/lib/i18n/server'
 
-export const metadata = {
-  title: 'Changelog — Indovinando',
-  description: 'Cronologia degli aggiornamenti e delle versioni di Indovinando',
+export async function generateMetadata() {
+  const lang = await getServerLanguage()
+  const isEn = lang === 'en'
+
+  return {
+    title: isEn ? 'Changelog — Indovinando' : 'Changelog — Indovinando',
+    description: isEn
+      ? 'History of Indovinando updates and versions.'
+      : 'Cronologia degli aggiornamenti e delle versioni di Indovinando',
+  }
+}
+
+const UI_TEXT = {
+  it: {
+    title: '📋 Changelog',
+    subtitle: 'Cronologia degli aggiornamenti di Indovinando',
+    autoLabel: 'Auto',
+  },
+  en: {
+    title: '📋 Changelog',
+    subtitle: 'History of Indovinando updates',
+    autoLabel: 'Auto',
+  },
 }
 
 const CHANGELOG = [
@@ -11,63 +32,49 @@ const CHANGELOG = [
     version: '1.13.22',
     date: '13 maggio 2026',
     label: 'Auto',
-    changes: [
-      'Refine course UX, guest navigation, and loading skeletons',
-    ],
+    changes: ['Refine course UX, guest navigation, and loading skeletons'],
   },
 
   {
     version: '1.13.21',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'Polish course progress and lesson flow',
-    ],
+    changes: ['Polish course progress and lesson flow'],
   },
 
   {
     version: '1.13.20',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'Auth mascot for password reset and improve avatar mapping',
-    ],
+    changes: ['Auth mascot for password reset and improve avatar mapping'],
   },
 
   {
     version: '1.13.19',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'Format live session avatar helper',
-    ],
+    changes: ['Format live session avatar helper'],
   },
 
   {
     version: '1.13.18',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'Fix live avatar constraint for SVG avatars',
-    ],
+    changes: ['Fix live avatar constraint for SVG avatars'],
   },
 
   {
     version: '1.13.17',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'Fix host avatar persistence in live session start',
-    ],
+    changes: ['Fix host avatar persistence in live session start'],
   },
 
   {
     version: '1.13.16',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'Fix storico filters and spacing',
-    ],
+    changes: ['Fix storico filters and spacing'],
   },
 
   {
@@ -92,72 +99,56 @@ const CHANGELOG = [
     version: '1.13.13',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'UI polish: skeleton loading, fix deploy imports, fix corso vino level loading',
-    ],
+    changes: ['UI polish: skeleton loading, fix deploy imports, fix corso vino level loading'],
   },
 
   {
     version: '1.13.12',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'force-add PageLayout.module.css (was ignored by gitignore)',
-    ],
+    changes: ['force-add PageLayout.module.css (was ignored by gitignore)'],
   },
 
   {
     version: '1.13.11',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'page layout problem',
-    ],
+    changes: ['page layout problem'],
   },
 
   {
     version: '1.13.10',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'fix css import',
-    ],
+    changes: ['fix css import'],
   },
 
   {
     version: '1.13.9',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'Update GameCreateClient.jsx',
-    ],
+    changes: ['Update GameCreateClient.jsx'],
   },
 
   {
     version: '1.13.8',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'fix style',
-    ],
+    changes: ['fix style'],
   },
 
   {
     version: '1.13.7',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'add button variant',
-    ],
+    changes: ['add button variant'],
   },
 
   {
     version: '1.13.6',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'fix enoteca header',
-    ],
+    changes: ['fix enoteca header'],
   },
 
   {
@@ -174,18 +165,14 @@ const CHANGELOG = [
     version: '1.13.4',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'UX: step scelta tipo gioco in /game/create + miglioramento grafico wizard',
-    ],
+    changes: ['UX: step scelta tipo gioco in /game/create + miglioramento grafico wizard'],
   },
 
   {
     version: '1.13.3',
     date: '12 maggio 2026',
     label: 'Auto',
-    changes: [
-      'UX: skeleton loading su live session lobby e classifica live',
-    ],
+    changes: ['UX: skeleton loading su live session lobby e classifica live'],
   },
 
   {
@@ -206,18 +193,14 @@ const CHANGELOG = [
     version: '1.13.1',
     date: '11 maggio 2026',
     label: 'Auto',
-    changes: [
-      'enoteca hanging on load for authenticated users + doc update',
-    ],
+    changes: ['enoteca hanging on load for authenticated users + doc update'],
   },
 
   {
     version: '1.13.0',
     date: '11 maggio 2026',
     label: 'Auto',
-    changes: [
-      'storico - filtro per gioco con pills',
-    ],
+    changes: ['storico - filtro per gioco con pills'],
   },
 
   {
@@ -493,14 +476,61 @@ const LABEL_COLORS = {
   Launch: '#374151',
 }
 
-export default function ChangelogPage() {
+const LABEL_TRANSLATIONS = {
+  'i18n & Session': 'i18n & Session',
+  'Corso Vino UX': 'Wine Course UX',
+  'Performance & UX': 'Performance & UX',
+  'Risultati e Leaderboard Live': 'Live Results & Leaderboard',
+  'Multiplayer — Funzionalità sociali': 'Multiplayer — Social Features',
+  'Stabilità Realtime': 'Realtime Stability',
+  'Gameplay & UX': 'Gameplay & UX',
+  Launch: 'Launch',
+  Auto: 'Auto',
+}
+
+const IT_TO_EN_MONTH = {
+  gennaio: 'January',
+  febbraio: 'February',
+  marzo: 'March',
+  aprile: 'April',
+  maggio: 'May',
+  giugno: 'June',
+  luglio: 'July',
+  agosto: 'August',
+  settembre: 'September',
+  ottobre: 'October',
+  novembre: 'November',
+  dicembre: 'December',
+}
+
+function formatEntryDate(date, lang) {
+  if (lang !== 'en') return date
+  const parts = String(date).trim().split(' ')
+  if (parts.length !== 3) return date
+
+  const [day, month, year] = parts
+  const monthEn = IT_TO_EN_MONTH[month.toLowerCase()]
+  if (!monthEn) return date
+  return `${monthEn} ${day}, ${year}`
+}
+
+function formatEntryLabel(label, lang) {
+  if (lang !== 'en') return label
+  return LABEL_TRANSLATIONS[label] ?? label
+}
+
+export default async function ChangelogPage() {
+  const lang = await getServerLanguage()
+  const text = lang === 'en' ? UI_TEXT.en : UI_TEXT.it
+  const backHref = '/'
+
   return (
     <div className={styles.page}>
-      <TopBarBack title="Changelog" href="/dashboard" />
+      <TopBarBack title={text.title.replace('📋 ', '')} href={backHref} />
       <div className={styles.container}>
         <div className={styles.header}>
-          <h1 className={styles.title}>📋 Changelog</h1>
-          <p className={styles.subtitle}>Cronologia degli aggiornamenti di Indovinando</p>
+          <h1 className={styles.title}>{text.title}</h1>
+          <p className={styles.subtitle}>{text.subtitle}</p>
         </div>
 
         <div className={styles.timeline}>
@@ -508,14 +538,14 @@ export default function ChangelogPage() {
             <div key={entry.version} className={styles.entry}>
               <div className={styles.entryMeta}>
                 <span className={styles.version}>v{entry.version}</span>
-                <span className={styles.date}>{entry.date}</span>
+                <span className={styles.date}>{formatEntryDate(entry.date, lang)}</span>
               </div>
               <div className={styles.entryBody}>
                 <div className={styles.entryHeader}>
                   <span
                     className={styles.label}
                     style={{background: LABEL_COLORS[entry.label] ?? '#374151'}}>
-                    {entry.label}
+                    {formatEntryLabel(entry.label, lang)}
                   </span>
                 </div>
                 <ul className={styles.changeList}>
