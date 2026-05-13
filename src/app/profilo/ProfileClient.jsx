@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useMemo, useState} from 'react'
+import {useEffect, useMemo, useState, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
@@ -181,7 +181,7 @@ export default function ProfileClient({
     }
   }, [])
 
-  async function selectAvatar(nextAvatar) {
+  const selectAvatar = useCallback(async (nextAvatar) => {
     setAvatar(nextAvatar)
     localStorage.setItem(AVATAR_STORAGE_KEY, nextAvatar)
 
@@ -199,9 +199,9 @@ export default function ProfileClient({
         console.error('[profile] failed to persist avatar_emoji:', error.message)
       }
     }
-  }
+  }, [userId])
 
-  async function handleLogout() {
+  const handleLogout = useCallback(async () => {
     if (isLoggingOut) return
     setIsLoggingOut(true)
 
@@ -271,9 +271,9 @@ export default function ProfileClient({
       router.refresh()
       setIsLoggingOut(false)
     }
-  }
+  }, [router, isLoggingOut])
 
-  async function handleInstallApp() {
+  const handleInstallApp = useCallback(async () => {
     if (deferredInstallPrompt) {
       deferredInstallPrompt.prompt()
       const {outcome} = await deferredInstallPrompt.userChoice
@@ -285,7 +285,25 @@ export default function ProfileClient({
     }
 
     setShowInstallHelp(true)
-  }
+  }, [deferredInstallPrompt])
+
+  const handleAvatarSelect = useCallback((selected) => {
+    selectAvatar(selected)
+    setShowAvatarSheet(false)
+  }, [selectAvatar])
+
+  const toggleAvatarSheet = useCallback(
+    (show) => setShowAvatarSheet(typeof show === 'boolean' ? show : (prev) => !prev),
+    [],
+  )
+  const toggleLevelInfo = useCallback(
+    (show) => setShowLevelInfo(typeof show === 'boolean' ? show : (prev) => !prev),
+    [],
+  )
+  const toggleLogoutConfirm = useCallback(
+    (show) => setShowLogoutConfirm(typeof show === 'boolean' ? show : (prev) => !prev),
+    [],
+  )
 
   const stats = useMemo(() => computeCourseStats(levels, progress), [levels, progress])
   const playerLevel = useMemo(
@@ -347,7 +365,7 @@ export default function ProfileClient({
             <button
               type="button"
               className={styles.avatarPickerBtn}
-              onClick={() => setShowAvatarSheet(true)}>
+              onClick={() => toggleAvatarSheet(true)}>
               <span className={styles.avatarPickerDivider} />
               <span className={styles.avatarPickerLabel}>Scegli</span>
             </button>
@@ -373,7 +391,7 @@ export default function ProfileClient({
             </div>
             <button
               className={styles.levelHelpBtn}
-              onClick={() => setShowLevelInfo(true)}
+              onClick={() => toggleLevelInfo(true)}
               aria-label="Come si sale di livello">
               ?
             </button>
@@ -474,7 +492,7 @@ export default function ProfileClient({
           <button
             type="button"
             className={`btn secondary ${styles.logoutBtn}`}
-            onClick={() => setShowLogoutConfirm(true)}
+            onClick={() => toggleLogoutConfirm(true)}
             disabled={isLoggingOut}>
             {t('logoutBtn')}
           </button>
@@ -491,7 +509,7 @@ export default function ProfileClient({
 
         {/* ── Avatar bottom sheet ── */}
         {showAvatarSheet && (
-          <div className={styles.sheetOverlay} onClick={() => setShowAvatarSheet(false)}>
+          <div className={styles.sheetOverlay} onClick={() => toggleAvatarSheet(false)}>
             <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
               <div className={styles.sheetHandle} />
               <h3 className={styles.sheetTitle}>{t('chooseAvatar')}</h3>
@@ -500,10 +518,7 @@ export default function ProfileClient({
                   <button
                     key={src}
                     className={`${styles.avatarOption} ${avatar === src ? styles.avatarOptionActive : ''}`}
-                    onClick={() => {
-                      selectAvatar(src)
-                      setShowAvatarSheet(false)
-                    }}
+                    onClick={() => handleAvatarSelect(src)}
                     type="button"
                     aria-label={`avatar ${src}`}>
                     <img src={src} alt="" className={styles.avatarSvgThumb} />
@@ -516,10 +531,7 @@ export default function ProfileClient({
                   <button
                     key={emoji}
                     className={`${styles.avatarOption} ${avatar === emoji ? styles.avatarOptionActive : ''}`}
-                    onClick={() => {
-                      selectAvatar(emoji)
-                      setShowAvatarSheet(false)
-                    }}
+                    onClick={() => handleAvatarSelect(emoji)}
                     type="button"
                     aria-label={`avatar ${emoji}`}>
                     {emoji}
@@ -532,14 +544,14 @@ export default function ProfileClient({
 
         {/* ── Logout confirm modal ── */}
         {showLogoutConfirm && (
-          <div className={styles.modalOverlay} onClick={() => setShowLogoutConfirm(false)}>
+          <div className={styles.modalOverlay} onClick={() => toggleLogoutConfirm(false)}>
             <div className={styles.modalBox} onClick={(e) => e.stopPropagation()}>
               <p className={styles.modalText}>{t('logoutConfirm')}</p>
               <div className={styles.modalActions}>
                 <button
                   type="button"
                   className="btn secondary"
-                  onClick={() => setShowLogoutConfirm(false)}>
+                  onClick={() => toggleLogoutConfirm(false)}>
                   {tc('cancel')}
                 </button>
                 <button

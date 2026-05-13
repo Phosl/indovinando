@@ -25,6 +25,7 @@
   padding: 3px;
   gap: 3px;
   max-width: 480px;
+  margin: 0 auto;
 }
 
 .tab {
@@ -66,11 +67,11 @@
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
-  background: var(--selected-dark);
   color: #fff;
   border-radius: 999px;
   font-size: 10px;
   font-weight: 900;
+  background: var(--gray);
 }
 
 .tabActive .tabBadge {

@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, useEffect, useMemo} from 'react'
+import {useState, useEffect, useMemo, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import GuestWarningModal from '@/components/course/GuestWarningModal'
@@ -18,6 +18,10 @@ export default function CourseClient({levels, isAdmin = false}) {
   const t = useT('course')
   const [showGuestWarning, setShowGuestWarning] = useState(false)
   const backHref = authChecked && !userId ? '/' : '/dashboard'
+
+  const handleLevelClick = useCallback((levelId) => {
+    router.push(`/corso-vino/${levelId}`)
+  }, [router])
 
   const nextLevelProgress = useMemo(() => {
     if (!levels?.length) return null
@@ -103,7 +107,7 @@ export default function CourseClient({levels, isAdmin = false}) {
             <div
               key={level.id}
               className={styles.levelCard}
-              onClick={() => router.push(`/corso-vino/${level.id}`)}>
+              onClick={() => handleLevelClick(level.id)}>
               <div className={styles.levelEmoji}>{level.emoji}</div>
               <div className={styles.levelInfo}>
                 <div className={styles.levelMeta}>
