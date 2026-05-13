@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.18.2',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'new app icon',
+    ],
+  },
+
+  {
     version: '1.18.1',
     date: '13 maggio 2026',
     label: 'Auto',
