@@ -3,6 +3,7 @@ import './globals.scss'
 import LanguageProvider from '@/components/i18n/LanguageProvider'
 import PwaRegistrar from '@/components/PwaRegistrar'
 import ScrollToTop from '@/components/ScrollToTop'
+import AppleSplashLinks from '@/components/AppleSplashLinks'
 import {getServerLanguage} from '@/lib/i18n/server'
 
 const nunito = Nunito({
@@ -66,6 +67,9 @@ export default async function RootLayout({children}) {
 
   return (
     <html lang={lang}>
+      <head>
+        <AppleSplashLinks />
+      </head>
       <body className={nunito.className}>
         <LanguageProvider initialLang={lang}>
           <PwaRegistrar />
