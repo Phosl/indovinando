@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.18.0',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'aggiungi tasto condividi per installazione da home',
+    ],
+  },
+
+  {
     version: '1.17.8',
     date: '13 maggio 2026',
     label: 'Auto',
