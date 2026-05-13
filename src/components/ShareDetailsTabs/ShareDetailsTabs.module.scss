@@ -1,0 +1,81 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tabBar {
+  padding-top: 2px;
+}
+
+.tabTrack {
+  display: flex;
+  background: var(--background);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.tab {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 12px;
+  background: none;
+  border: none;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    color 0.12s,
+    background 0.12s;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+}
+
+.tabActive {
+  background: var(--foreground);
+  color: var(--selected-dark);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.tabBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: var(--selected-dark);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (max-width: 520px) {
+  .tabTrack {
+    width: 100%;
+  }
+
+  .tab {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+}

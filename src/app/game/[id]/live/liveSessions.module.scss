@@ -6,6 +6,7 @@
   flex-direction: column;
   gap: 16px;
   padding-top: 0px;
+  padding-bottom: 120px;
 
   h1 {
     text-align: center;
@@ -70,6 +71,194 @@
   }
 }
 
+.questionPreviewBlock {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.questionPreviewHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.questionPreviewTitle {
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--selected-dark);
+}
+
+.questionPreviewCount {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.questionPreviewStrip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(180px, 1fr);
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scroll-snap-type: x proximity;
+}
+
+.questionPreviewCard {
+  scroll-snap-align: start;
+  background: var(--background);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: auto;
+}
+
+.questionPreviewIndex {
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--selected-dark);
+}
+
+.questionPreviewText {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 900;
+  line-height: 1.35;
+  color: var(--text-primary);
+}
+
+.questionPreviewEmpty {
+  border: 2px dashed var(--button-secondary-border);
+  border-radius: 14px;
+  padding: 18px 14px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--foreground) 72%, transparent);
+}
+
+@media (max-width: 480px) {
+  .questionPreviewStrip {
+    grid-auto-columns: minmax(160px, 82%);
+  }
+}
+
+.bottlePreviewBlock {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bottlePreviewHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.bottlePreviewTitle {
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--selected-dark);
+}
+
+.bottlePreviewCount {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.bottlePreviewStrip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(148px, 1fr);
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scroll-snap-type: x proximity;
+}
+
+.bottlePreviewCard {
+  scroll-snap-align: start;
+  background: var(--background);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 110px;
+}
+
+.bottlePreviewIndex {
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--selected-dark);
+}
+
+.bottlePreviewName {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.bottlePreviewProducer {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-secondary);
+}
+
+.bottlePreviewYear {
+  margin-top: auto;
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--selected-extra-light);
+  color: var(--selected-dark);
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.bottlePreviewEmpty {
+  border: 2px dashed var(--button-secondary-border);
+  border-radius: 14px;
+  padding: 18px 14px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--foreground) 72%, transparent);
+}
+
+@media (max-width: 480px) {
+  .bottlePreviewStrip {
+    grid-auto-columns: minmax(132px, 78%);
+  }
+}
+
 .linkBox {
   display: grid;
   grid-template-columns: 1fr;
@@ -105,6 +294,31 @@
   }
 }
 
+.bridgeTitle {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--selected-dark);
+}
+
+.bridgeHint {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.linkLabel {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
 .linkActions {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -122,6 +336,21 @@
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.actionsFixed {
+  position: fixed;
+  left: 50%;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  width: min(960px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 14px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--foreground) 96%, transparent);
+  border: 2px solid var(--button-secondary-border);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.14);
+  z-index: 35;
 }
 
 .startButton {
@@ -177,6 +406,12 @@
 
   .actions {
     flex-direction: column;
+  }
+
+  .actionsFixed {
+    width: calc(100% - 24px);
+    padding: 12px;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
   }
 
   .startButton,

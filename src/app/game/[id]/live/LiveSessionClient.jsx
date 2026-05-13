@@ -4,6 +4,7 @@ import {useEffect, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import QRCode from 'qrcode'
 import TopBar from '@/components/TopBar'
+import ShareDetailsTabs from '@/components/ShareDetailsTabs/ShareDetailsTabs'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {pickLangText} from '@/lib/i18n/dictionaries'
 import {supabaseClient} from '@/lib/supabaseClient'
@@ -16,6 +17,12 @@ const LIVE_SESSION_DICTIONARY = {
     cancelFailed: "Errore nell'annullamento. Riprova.",
     creatingSession: 'Creazione sessione',
     inviteLink: 'Link di Invito',
+    inviteLinkTitle: 'Link invito',
+    inviteLinkHint:
+      'Condividi questo link con chi deve entrare nella sessione live: apre direttamente l\'accesso al gioco.',
+    inviteLinkLabel: 'Link sessione live',
+    shareTabLabel: 'Condivisione',
+    detailsTabLabel: 'Dettaglio gioco',
     copied: '✓ Copiato!',
     copy: 'Copia',
     share: 'Condividi',
@@ -27,7 +34,16 @@ const LIVE_SESSION_DICTIONARY = {
     waitPlayers: 'Aspetta che i giocatori si uniscano, poi premi Inizia Gioco.',
     gameDetails: 'Dettagli Gioco',
     questions: 'Domande',
+    questionPreviewTitle: 'Domande del gioco',
+    questionPreviewEmpty: 'Nessuna domanda ancora inserita.',
+    unknownQuestion: 'Domanda senza testo',
+    questionSingular: 'domanda',
+    questionPlural: 'domande',
     bottles: 'Bottiglie',
+    bottlePreviewTitle: 'Bottiglie del gioco',
+    bottlePreviewEmpty: 'Nessuna bottiglia ancora inserita.',
+    unknownBottle: 'Senza nome',
+    unknownProducer: 'Produttore non indicato',
     starting: 'Avvio...',
     startGame: 'Inizia Gioco',
     players: 'giocatori',
@@ -39,6 +55,12 @@ const LIVE_SESSION_DICTIONARY = {
     cancelFailed: 'Failed to cancel session. Please try again.',
     creatingSession: 'Creating session',
     inviteLink: 'Invite Link',
+    inviteLinkTitle: 'Invite link',
+    inviteLinkHint:
+      'Share this link with anyone joining the live session: it opens the game access screen directly.',
+    inviteLinkLabel: 'Live session link',
+    shareTabLabel: 'Share',
+    detailsTabLabel: 'Game details',
     copied: '✓ Copied!',
     copy: 'Copy',
     share: 'Share',
@@ -50,7 +72,16 @@ const LIVE_SESSION_DICTIONARY = {
     waitPlayers: 'Wait for players to join, then click Start Game.',
     gameDetails: 'Game Details',
     questions: 'Questions',
+    questionPreviewTitle: 'Game questions',
+    questionPreviewEmpty: 'No questions added yet.',
+    unknownQuestion: 'Question without text',
+    questionSingular: 'question',
+    questionPlural: 'questions',
     bottles: 'Bottles',
+    bottlePreviewTitle: 'Game bottles',
+    bottlePreviewEmpty: 'No bottles added yet.',
+    unknownBottle: 'Unnamed',
+    unknownProducer: 'Producer not specified',
     starting: 'Starting...',
     startGame: 'Start Game',
     players: 'players',
@@ -70,10 +101,19 @@ const withSaveTimeout = async (taskOrPromise, contextLabel, timeoutMs = 20000) =
   return Promise.race([operationPromise, timeoutPromise])
 }
 
-export default function LiveSessionClient({gameId, gameName, questions, bottles, userId}) {
+export default function LiveSessionClient({
+  gameId,
+  gameName,
+  questions,
+  questionsPreview = questions,
+  bottles,
+  userId,
+}) {
   const router = useRouter()
   const {lang} = useLanguage()
   const t = pickLangText(lang, LIVE_SESSION_DICTIONARY)
+  const safeQuestionsPreview = questionsPreview || []
+  const safeBottles = bottles || []
   const [sessionId, setSessionId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [sessionLink, setSessionLink] = useState('')
@@ -263,7 +303,7 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
         }
       }, 'cancel-live-session')
 
-      router.push('/dashboard')
+      router.push('/miei-giochi')
     } catch (err) {
       console.error('Error canceling session:', err)
       alert(t.cancelFailed)
@@ -273,7 +313,7 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
   if (loading) {
     return (
       <div className={styles.container}>
-        <TopBar title={t.creatingSession} />
+        <TopBar title={t.creatingSession} onBack={() => router.push('/miei-giochi')} />
         <div className={styles.progressBarTrack}>
           <div className={styles.progressBarFill} />
         </div>
@@ -305,48 +345,113 @@ export default function LiveSessionClient({gameId, gameName, questions, bottles,
 
   return (
     <div className={styles.container}>
-      <TopBar title={gameName} />
+      <TopBar title={gameName} onBack={() => router.push('/miei-giochi')} />
 
       <div className={styles.lobbyCard}>
-        <div className={styles.section}>
-          <h2>{t.inviteLink}</h2>
-          <div className={styles.linkBox}>
-            <input type="text" readOnly value={sessionLink} className={styles.linkInput} />
-            <div className={styles.linkActions}>
-              <button onClick={handleCopyLink} className={styles.copyButton}>
-                {copyFeedback ? t.copied : t.copy}
-              </button>
-              <button onClick={handleShareLink} className={styles.copyButton}>
-                {t.share}
-              </button>
-              <button onClick={() => setQrOpen(true)} className={styles.copyButton}>
-                {t.qr}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ShareDetailsTabs
+          shareLabel={t.shareTabLabel}
+          detailsLabel={t.detailsTabLabel}
+          shareContent={
+            <>
+              <div className={styles.section}>
+                <p className={styles.bridgeTitle}>{t.inviteLinkTitle}</p>
+                <p className={styles.bridgeHint}>{t.inviteLinkHint}</p>
+                <label className={styles.linkLabel} htmlFor="live-session-link">
+                  {t.inviteLinkLabel}
+                </label>
+                <div className={styles.linkBox}>
+                  <input
+                    id="live-session-link"
+                    type="text"
+                    readOnly
+                    value={sessionLink}
+                    className={styles.linkInput}
+                  />
+                  <div className={styles.linkActions}>
+                    <button onClick={handleCopyLink} className={styles.copyButton}>
+                      {copyFeedback ? t.copied : t.copy}
+                    </button>
+                    <button onClick={handleShareLink} className={styles.copyButton}>
+                      {t.share}
+                    </button>
+                    <button onClick={() => setQrOpen(true)} className={styles.copyButton}>
+                      {t.qr}
+                    </button>
+                  </div>
+                </div>
+              </div>
 
-        <div className={styles.section}>
-          <h2>
-            {t.participants}
-            {playersCount}
-          </h2>
-          <p className={styles.info}>{t.waitPlayers}</p>
-        </div>
+              <div className={styles.section}>
+                <h2>
+                  {t.participants}
+                  {playersCount}
+                </h2>
+                <p className={styles.info}>{t.waitPlayers}</p>
+              </div>
+            </>
+          }
+          detailsContent={
+            <>
+              <div className={styles.section}>
+                <div className={styles.questionPreviewBlock}>
+                  <div className={styles.questionPreviewHeader}>
+                    <span className={styles.questionPreviewTitle}>{t.questionPreviewTitle}</span>
+                    <span className={styles.questionPreviewCount}>
+                      {safeQuestionsPreview.length}{' '}
+                      {safeQuestionsPreview.length === 1 ? t.questionSingular : t.questionPlural}
+                    </span>
+                  </div>
 
-        <div className={styles.section}>
-          <h3>ℹ️ {t.gameDetails}</h3>
-          <ul>
-            <li>
-              📋 {t.questions}: {questions.length}
-            </li>
-            <li>
-              🍾 {t.bottles}: {bottles.length}
-            </li>
-          </ul>
-        </div>
+                  <div className={styles.questionPreviewStrip} aria-label={t.questionPreviewTitle}>
+                    {safeQuestionsPreview.length === 0 ? (
+                      <div className={styles.questionPreviewEmpty}>{t.questionPreviewEmpty}</div>
+                    ) : (
+                      safeQuestionsPreview.map((question, index) => (
+                        <article key={question.id} className={styles.questionPreviewCard}>
+                          <h4 className={styles.questionPreviewText}>
+                            {question.text || t.unknownQuestion}
+                          </h4>
+                        </article>
+                      ))
+                    )}
+                  </div>
+                </div>
 
-        <div className={styles.actions}>
+                <div className={styles.bottlePreviewBlock}>
+                  <div className={styles.bottlePreviewHeader}>
+                    <span className={styles.bottlePreviewTitle}>{t.bottlePreviewTitle}</span>
+                    <span className={styles.bottlePreviewCount}>
+                      {safeBottles.length}{' '}
+                      {safeBottles.length === 1 ? t.bottleCountSingular : t.bottleCountPlural}
+                    </span>
+                  </div>
+
+                  <div className={styles.bottlePreviewStrip} aria-label={t.bottlePreviewTitle}>
+                    {safeBottles.length === 0 ? (
+                      <div className={styles.bottlePreviewEmpty}>{t.bottlePreviewEmpty}</div>
+                    ) : (
+                      safeBottles.map((bottle, index) => (
+                        <article key={bottle.id} className={styles.bottlePreviewCard}>
+                          <span className={styles.bottlePreviewIndex}>#{index + 1}</span>
+                          <h4 className={styles.bottlePreviewName}>
+                            {bottle.name || t.unknownBottle}
+                          </h4>
+                          <p className={styles.bottlePreviewProducer}>
+                            {bottle.producer || t.unknownProducer}
+                          </p>
+                          {bottle.year && <span className={styles.bottlePreviewYear}>{bottle.year}</span>}
+                        </article>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+
+            </>
+          }
+        />
+
+        <div className={`${styles.actions} ${styles.actionsFixed}`}>
           <button
             onClick={handleStartGame}
             disabled={playersCount < 1 || isStartingGame}

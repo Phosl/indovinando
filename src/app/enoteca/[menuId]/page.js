@@ -17,9 +17,15 @@ export default async function EnotecaMenuPage({params}) {
 
   const {data: bottles} = await supabase
     .from('game_bottles')
-    .select('id')
+    .select('id, name, producer, year, bottle_order')
     .eq('game_id', menuId)
     .order('bottle_order')
+
+  const {data: questions} = await supabase
+    .from('game_questions')
+    .select('id, text, display_order')
+    .eq('game_id', menuId)
+    .order('display_order')
 
   return (
     <EnotecaBridgeClient
@@ -27,7 +33,8 @@ export default async function EnotecaMenuPage({params}) {
       menuName={game.name}
       menuDescription={null}
       menuLocation={null}
-      bottleCount={bottles?.length ?? 0}
+      bottles={bottles || []}
+      questions={questions || []}
     />
   )
 }

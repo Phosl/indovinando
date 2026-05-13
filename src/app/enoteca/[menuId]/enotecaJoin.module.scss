@@ -45,18 +45,190 @@
   line-height: 1.5;
 }
 
-.bottleCount {
-  margin: 4px 0 0;
-  display: inline-flex;
-  align-self: flex-start;
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: 2px solid var(--button-secondary-border);
-  background: var(--background);
-  font-size: 0.75rem;
+.bottlePreviewBlock {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bottlePreviewHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.questionPreviewBlock {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.questionPreviewHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.questionPreviewTitle {
+  font-size: 0.78rem;
   font-weight: 900;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--selected-dark);
+}
+
+.questionPreviewCount {
+  font-size: 0.72rem;
+  font-weight: 800;
   color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.questionPreviewStrip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(180px, 1fr);
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scroll-snap-type: x proximity;
+}
+
+.questionPreviewCard {
+  scroll-snap-align: start;
+  background: var(--background);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 104px;
+}
+
+.questionPreviewIndex {
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--selected-dark);
+}
+
+.questionPreviewText {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 900;
+  line-height: 1.35;
+  color: var(--text-primary);
+}
+
+.questionPreviewEmpty {
+  border: 2px dashed var(--button-secondary-border);
+  border-radius: 14px;
+  padding: 18px 14px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--foreground) 72%, transparent);
+}
+
+@media (max-width: 520px) {
+  .questionPreviewStrip {
+    grid-auto-columns: minmax(160px, 82%);
+  }
+}
+
+.bottlePreviewTitle {
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--selected-dark);
+}
+
+.bottlePreviewCount {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.bottlePreviewStrip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(148px, 1fr);
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scroll-snap-type: x proximity;
+}
+
+.bottlePreviewEmpty {
+  border: 2px dashed var(--button-secondary-border);
+  border-radius: 14px;
+  padding: 18px 14px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--foreground) 72%, transparent);
+}
+
+.bottlePreviewCard {
+  scroll-snap-align: start;
+  background: var(--background);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 110px;
+}
+
+.bottlePreviewIndex {
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--selected-dark);
+}
+
+.bottlePreviewName {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.bottlePreviewProducer {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-secondary);
+}
+
+.bottlePreviewYear {
+  margin-top: auto;
+  display: inline-flex;
+  align-self: flex-start;
+  border-radius: 999px;
+  color: var(--selected-dark);
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+@media (max-width: 520px) {
+  .bottlePreviewStrip {
+    grid-auto-columns: minmax(30%, 50%);
+  }
 }
 
 .bridgeCard {
@@ -114,6 +286,25 @@
   box-sizing: border-box;
 }
 
+.shareActionButton {
+  padding: 12px 20px;
+  min-height: 44px;
+  background: var(--white);
+  color: var(--text-primary);
+  border: 2px solid var(--gray-light);
+  border-radius: 12px;
+  font-weight: 900;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0px 3px 0px 0px var(--gray-light);
+
+  &:active {
+    box-shadow: none;
+    transform: translateY(3px);
+  }
+}
+
 @media (max-width: 520px) {
   .linkRow {
     grid-template-columns: 1fr 1fr;
@@ -121,6 +312,10 @@
 
   .linkInput {
     grid-column: 1 / -1;
+  }
+
+  .shareActionButton {
+    width: 100%;
   }
 }
 

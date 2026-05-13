@@ -4,6 +4,7 @@ import {useEffect, useMemo, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import QRCode from 'qrcode'
 import TopBar from '@/components/TopBar'
+import ShareDetailsTabs from '@/components/ShareDetailsTabs/ShareDetailsTabs'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
 import styles from '../../live/session/[sessionId]/play/playerLive.module.scss'
@@ -14,11 +15,14 @@ export default function EnotecaBridgeClient({
   menuName,
   menuDescription,
   menuLocation,
-  bottleCount,
+  questions = [],
+  bottles = [],
 }) {
   const {lang} = useLanguage()
   const t = pickLangText(lang, ENOTECA_DICTIONARY.join)
   const router = useRouter()
+  const safeQuestions = questions || []
+  const safeBottles = bottles || []
   const [copied, setCopied] = useState(false)
   const [qrOpen, setQrOpen] = useState(false)
   const [qrDataUrl, setQrDataUrl] = useState('')
@@ -118,35 +122,103 @@ export default function EnotecaBridgeClient({
           <h1 className={xStyles.menuName}>{menuName}</h1>
           {menuLocation && <p className={xStyles.location}>📍 {menuLocation}</p>}
           {menuDescription && <p className={xStyles.description}>{menuDescription}</p>}
-          <span className={xStyles.bottleCount}>
-            {bottleCount} {bottleCount === 1 ? t.bottleCountSingular : t.bottleCountPlural}
-          </span>
 
-          <p className={xStyles.bridgeTitle}>{t.bridgeTitle}</p>
-          <p className={xStyles.bridgeHint}>{t.bridgeHint}</p>
-          <label className={xStyles.linkLabel} htmlFor="enoteca-share-link">
-            {t.tastingLinkLabel}
-          </label>
-          <div className={xStyles.linkRow}>
-            <input
-              id="enoteca-share-link"
-              className={xStyles.linkInput}
-              value={shareLink}
-              readOnly
-            />
-            <button type="button" className={styles.secondaryButton} onClick={handleCopyLink}>
-              {copied ? t.copied : t.copyLink}
-            </button>
-            <button type="button" className={styles.secondaryButton} onClick={handleShareLink}>
-              {t.shareLink}
-            </button>
-            <button
-              type="button"
-              className={styles.secondaryButton}
-              onClick={() => setQrOpen(true)}>
-              {t.qr}
-            </button>
-          </div>
+          <ShareDetailsTabs
+            shareLabel={t.shareTabLabel}
+            detailsLabel={t.detailsTabLabel}
+            shareContent={
+              <>
+                <p className={xStyles.bridgeTitle}>{t.bridgeTitle}</p>
+                <p className={xStyles.bridgeHint}>{t.bridgeHint}</p>
+                <label className={xStyles.linkLabel} htmlFor="enoteca-share-link">
+                  {t.tastingLinkLabel}
+                </label>
+                <div className={xStyles.linkRow}>
+                  <input
+                    id="enoteca-share-link"
+                    className={xStyles.linkInput}
+                    value={shareLink}
+                    readOnly
+                  />
+                  <button
+                    type="button"
+                    className={xStyles.shareActionButton}
+                    onClick={handleCopyLink}>
+                    {copied ? t.copied : t.copyLink}
+                  </button>
+                  <button
+                    type="button"
+                    className={xStyles.shareActionButton}
+                    onClick={handleShareLink}>
+                    {t.shareLink}
+                  </button>
+                  <button
+                    type="button"
+                    className={xStyles.shareActionButton}
+                    onClick={() => setQrOpen(true)}>
+                    {t.qr}
+                  </button>
+                </div>
+              </>
+            }
+            detailsContent={
+              <>
+                <div className={xStyles.questionPreviewBlock}>
+                  <div className={xStyles.questionPreviewHeader}>
+                    <span className={xStyles.questionPreviewTitle}>{t.questionPreviewTitle}</span>
+                    <span className={xStyles.questionPreviewCount}>
+                      {safeQuestions.length}{' '}
+                      {safeQuestions.length === 1 ? t.questionSingular : t.questionPlural}
+                    </span>
+                  </div>
+                  <div className={xStyles.questionPreviewStrip} aria-label={t.questionPreviewTitle}>
+                    {safeQuestions.length === 0 ? (
+                      <div className={xStyles.questionPreviewEmpty}>{t.questionPreviewEmpty}</div>
+                    ) : (
+                      safeQuestions.map((question, index) => (
+                        <article key={question.id} className={xStyles.questionPreviewCard}>
+                          <span className={xStyles.questionPreviewIndex}>#{index + 1}</span>
+                          <h2 className={xStyles.questionPreviewText}>
+                            {question.text || t.unknownQuestion}
+                          </h2>
+                        </article>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                <div className={xStyles.bottlePreviewBlock}>
+                  <div className={xStyles.bottlePreviewHeader}>
+                    <span className={xStyles.bottlePreviewTitle}>{t.bottlePreviewTitle}</span>
+                    <span className={xStyles.bottlePreviewCount}>
+                      {safeBottles.length}{' '}
+                      {safeBottles.length === 1 ? t.bottleCountSingular : t.bottleCountPlural}
+                    </span>
+                  </div>
+                  <div className={xStyles.bottlePreviewStrip} aria-label={t.bottlePreviewTitle}>
+                    {safeBottles.length === 0 ? (
+                      <div className={xStyles.bottlePreviewEmpty}>{t.bottlePreviewEmpty}</div>
+                    ) : (
+                      safeBottles.map((bottle, index) => (
+                        <article key={bottle.id} className={xStyles.bottlePreviewCard}>
+                          <span className={xStyles.bottlePreviewIndex}>#{index + 1}</span>
+                          <h2 className={xStyles.bottlePreviewName}>
+                            {bottle.name || t.unknownBottle}
+                          </h2>
+                          <p className={xStyles.bottlePreviewProducer}>
+                            {bottle.producer || t.unknownProducer}
+                          </p>
+                          {bottle.year && (
+                            <span className={xStyles.bottlePreviewYear}>{bottle.year}</span>
+                          )}
+                        </article>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </>
+            }
+          />
         </div>
       </div>
 
