@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.13.24',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'Polish Enoteca/live sharing flows and navigation',
+    ],
+  },
+
+  {
     version: '1.13.23',
     date: '13 maggio 2026',
     label: 'Auto',
