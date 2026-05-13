@@ -18,24 +18,15 @@ export default async function ProfilePage() {
 
   if (!user) redirect('/auth?next=/profilo')
 
-  const {data: profile} = await supabase
-    .from('profiles')
-    .select('username, avatar_emoji')
-    .eq('id', user.id)
-    .single()
+  const [profileResult, gamesResult, courseResult] = await Promise.all([
+    supabase.from('profiles').select('username, avatar_emoji').eq('id', user.id).single(),
+    supabase.from('games').select('id', {count: 'exact', head: true}).eq('created_by', user.id),
+    getWineCourseData(lang).catch(() => ({levels: []})),
+  ])
 
-  const {count: gamesCount} = await supabase
-    .from('games')
-    .select('id', {count: 'exact', head: true})
-    .eq('created_by', user.id)
-
-  let levels = []
-  try {
-    const courseData = await getWineCourseData(lang)
-    levels = courseData.levels ?? []
-  } catch {
-    // Course data unavailable — profile still works, level shows as Novizio
-  }
+  const profile = profileResult.data
+  const gamesCount = gamesResult.count ?? 0
+  const levels = courseResult?.levels ?? []
 
   return (
     <ProfileClient

@@ -20,9 +20,12 @@ export async function generateMetadata() {
 export default async function CorsoVino() {
   const supabase = await createServerSupabase()
   const lang = await getServerLanguage()
-  const {levels} = await getWineCourseData(lang)
 
-  const {data} = await supabase.auth.getUser()
+  const [{levels}, {data}] = await Promise.all([
+    getWineCourseData(lang),
+    supabase.auth.getUser(),
+  ])
+
   let isAdmin = false
   if (data?.user) {
     const {data: profile} = await supabase
