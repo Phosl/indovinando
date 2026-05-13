@@ -17,12 +17,14 @@ export default function EnotecaBridgeClient({
   menuLocation,
   questions = [],
   bottles = [],
+  leaderboard = [],
 }) {
   const {lang} = useLanguage()
   const t = pickLangText(lang, ENOTECA_DICTIONARY.join)
   const router = useRouter()
   const safeQuestions = questions || []
   const safeBottles = bottles || []
+  const safeLeaderboard = leaderboard || []
   const [copied, setCopied] = useState(false)
   const [qrOpen, setQrOpen] = useState(false)
   const [qrDataUrl, setQrDataUrl] = useState('')
@@ -32,6 +34,15 @@ export default function EnotecaBridgeClient({
     if (typeof window === 'undefined') return joinPath
     return `${window.location.origin}${joinPath}`
   }, [joinPath])
+  const leaderboardDateFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(lang === 'it' ? 'it-IT' : 'en-US', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      }),
+    [lang],
+  )
   const backHref = '/miei-giochi'
 
   useEffect(() => {
@@ -126,6 +137,8 @@ export default function EnotecaBridgeClient({
           <ShareDetailsTabs
             shareLabel={t.shareTabLabel}
             detailsLabel={t.detailsTabLabel}
+            leaderboardLabel={t.leaderboardTabLabel}
+            leaderboardBadge={safeLeaderboard.length || null}
             shareContent={
               <>
                 <p className={xStyles.bridgeTitle}>{t.bridgeTitle}</p>
@@ -217,6 +230,56 @@ export default function EnotecaBridgeClient({
                   </div>
                 </div>
               </>
+            }
+            leaderboardContent={
+              <div className={xStyles.leaderboardBlock}>
+                <div className={xStyles.leaderboardHeader}>
+                  <span className={xStyles.leaderboardTitle}>{t.leaderboardTitle}</span>
+                  <span className={xStyles.leaderboardCount}>
+                    {safeLeaderboard.length}{' '}
+                    {safeLeaderboard.length === 1
+                      ? t.leaderboardPlayerSingular
+                      : t.leaderboardPlayerPlural}
+                  </span>
+                </div>
+
+                {safeLeaderboard.length === 0 ? (
+                  <div className={xStyles.leaderboardEmpty}>{t.leaderboardEmpty}</div>
+                ) : (
+                  <div className={xStyles.leaderboardList}>
+                    {safeLeaderboard.map((entry, index) => (
+                      <article key={entry.id} className={xStyles.leaderboardItem}>
+                        <div className={xStyles.leaderboardIdentity}>
+                          <span className={xStyles.leaderboardRank}>#{index + 1}</span>
+                          <div className={xStyles.leaderboardMeta}>
+                            <h3 className={xStyles.leaderboardName}>
+                              {entry.nickname || t.leaderboardAnonymous}
+                            </h3>
+                            {entry.table_name && (
+                              <p className={xStyles.leaderboardTable}>
+                                {t.leaderboardTableLabel}: {entry.table_name}
+                              </p>
+                            )}
+                            {entry.completed_at && (
+                              <p className={xStyles.leaderboardDate}>
+                                {leaderboardDateFormatter.format(new Date(entry.completed_at))}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div className={xStyles.leaderboardScore}>
+                          <span className={xStyles.leaderboardScoreValue}>
+                            {entry.total_score ?? 0}
+                          </span>
+                          <span className={xStyles.leaderboardScoreLabel}>
+                            {t.leaderboardPoints}
+                          </span>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </div>
             }
           />
         </div>

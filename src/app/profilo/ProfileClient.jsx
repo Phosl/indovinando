@@ -126,6 +126,10 @@ export default function ProfileClient({
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [showAvatarSheet, setShowAvatarSheet] = useState(false)
   const [showLevelInfo, setShowLevelInfo] = useState(false)
+  const [showInstallHelp, setShowInstallHelp] = useState(false)
+  const [deferredInstallPrompt, setDeferredInstallPrompt] = useState(null)
+  const [installPlatform, setInstallPlatform] = useState('generic')
+  const [isStandalone, setIsStandalone] = useState(false)
 
   const [avatar, setAvatar] = useState(
     initialAvatar && ALL_AVATARS.includes(initialAvatar) ? initialAvatar : '😎',
@@ -139,6 +143,43 @@ export default function ProfileClient({
     }
     if (initialAvatar && ALL_AVATARS.includes(initialAvatar)) setAvatar(initialAvatar)
   }, [initialAvatar])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const mediaQuery = window.matchMedia('(display-mode: standalone)')
+    const updateStandaloneState = () => {
+      setIsStandalone(mediaQuery.matches || window.navigator.standalone === true)
+    }
+
+    const ua = window.navigator.userAgent.toLowerCase()
+    const isIosDevice = /iphone|ipad|ipod/.test(ua)
+    const isAndroidDevice = /android/.test(ua)
+
+    setInstallPlatform(isIosDevice ? 'ios' : isAndroidDevice ? 'android' : 'generic')
+    updateStandaloneState()
+
+    const handleBeforeInstallPrompt = (event) => {
+      event.preventDefault()
+      setDeferredInstallPrompt(event)
+    }
+
+    const handleAppInstalled = () => {
+      setDeferredInstallPrompt(null)
+      setIsStandalone(true)
+      setShowInstallHelp(false)
+    }
+
+    mediaQuery.addEventListener?.('change', updateStandaloneState)
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    window.addEventListener('appinstalled', handleAppInstalled)
+
+    return () => {
+      mediaQuery.removeEventListener?.('change', updateStandaloneState)
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.removeEventListener('appinstalled', handleAppInstalled)
+    }
+  }, [])
 
   async function selectAvatar(nextAvatar) {
     setAvatar(nextAvatar)
@@ -230,6 +271,20 @@ export default function ProfileClient({
       router.refresh()
       setIsLoggingOut(false)
     }
+  }
+
+  async function handleInstallApp() {
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt()
+      const {outcome} = await deferredInstallPrompt.userChoice
+      if (outcome !== 'accepted') {
+        setShowInstallHelp(true)
+      }
+      setDeferredInstallPrompt(null)
+      return
+    }
+
+    setShowInstallHelp(true)
   }
 
   const stats = useMemo(() => computeCourseStats(levels, progress), [levels, progress])
@@ -423,6 +478,15 @@ export default function ProfileClient({
             disabled={isLoggingOut}>
             {t('logoutBtn')}
           </button>
+
+          {!isStandalone && (
+            <div className={styles.installAppWrap}>
+              <button type="button" className={styles.installAppBtn} onClick={handleInstallApp}>
+                {t('installAppBtn')}
+              </button>
+              <p className={styles.installAppNote}>{t('installAppNote')}</p>
+            </div>
+          )}
         </section>
 
         {/* ── Avatar bottom sheet ── */}
@@ -487,6 +551,38 @@ export default function ProfileClient({
                   }}
                   disabled={isLoggingOut}>
                   {isLoggingOut ? t('loggingOut') : t('logoutAction')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showInstallHelp && (
+          <div className={styles.modalOverlay} onClick={() => setShowInstallHelp(false)}>
+            <div className={styles.modalBox} onClick={(e) => e.stopPropagation()}>
+              <p className={styles.modalText}>{t('installAppTitle')}</p>
+              <div className={styles.installHelpBody}>
+                <p className={styles.installHelpText}>
+                  {installPlatform === 'ios'
+                    ? t('installAppIosLine1')
+                    : installPlatform === 'android'
+                      ? t('installAppAndroidLine1')
+                      : t('installAppGenericLine1')}
+                </p>
+                <p className={styles.installHelpText}>
+                  {installPlatform === 'ios'
+                    ? t('installAppIosLine2')
+                    : installPlatform === 'android'
+                      ? t('installAppAndroidLine2')
+                      : t('installAppGenericLine2')}
+                </p>
+              </div>
+              <div className={styles.modalActions}>
+                <button
+                  type="button"
+                  className="btn secondary"
+                  onClick={() => setShowInstallHelp(false)}>
+                  {tc('close')}
                 </button>
               </div>
             </div>

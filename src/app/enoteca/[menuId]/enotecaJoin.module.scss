@@ -319,6 +319,146 @@
   }
 }
 
+.leaderboardBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.leaderboardHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.leaderboardTitle {
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--selected-dark);
+}
+
+.leaderboardCount {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.leaderboardEmpty {
+  border: 2px dashed var(--button-secondary-border);
+  border-radius: 14px;
+  padding: 18px 14px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--foreground) 72%, transparent);
+}
+
+.leaderboardList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.leaderboardItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  background: var(--background);
+}
+
+.leaderboardIdentity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.leaderboardRank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--selected) 18%, var(--foreground));
+  color: var(--selected-dark);
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.leaderboardMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.leaderboardName {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.leaderboardTable {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.leaderboardDate {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  opacity: 0.9;
+}
+
+.leaderboardScore {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  flex-shrink: 0;
+}
+
+.leaderboardScoreValue {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.leaderboardScoreLabel {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 520px) {
+  .leaderboardItem {
+    align-items: flex-start;
+  }
+
+  .leaderboardScore {
+    align-items: flex-end;
+  }
+}
+
 .qrOverlay {
   position: fixed;
   inset: 0;

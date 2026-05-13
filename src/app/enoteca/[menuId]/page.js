@@ -27,6 +27,13 @@ export default async function EnotecaMenuPage({params}) {
     .eq('game_id', menuId)
     .order('display_order')
 
+  const {data: leaderboard} = await supabase
+    .from('enoteca_tasting_sessions')
+    .select('id, nickname, table_name, total_score, status, completed_at')
+    .eq('game_id', menuId)
+    .eq('status', 'completed')
+    .order('total_score', {ascending: false})
+
   return (
     <EnotecaBridgeClient
       menuId={menuId}
@@ -35,6 +42,7 @@ export default async function EnotecaMenuPage({params}) {
       menuLocation={null}
       bottles={bottles || []}
       questions={questions || []}
+      leaderboard={leaderboard || []}
     />
   )
 }
