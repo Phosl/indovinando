@@ -20,7 +20,7 @@ const LIVE_SESSION_DICTIONARY = {
     inviteLink: 'Link di Invito',
     inviteLinkTitle: 'Link invito',
     inviteLinkHint:
-      'Condividi questo link con chi deve entrare nella sessione live: apre direttamente l\'accesso al gioco.',
+      "Condividi questo link con chi deve entrare nella sessione live: apre direttamente l'accesso al gioco.",
     inviteLinkLabel: 'Link sessione live',
     shareTabLabel: 'Condivisione',
     detailsTabLabel: 'Dettaglio gioco',
@@ -505,14 +505,15 @@ export default function LiveSessionClient({
                           <p className={styles.bottlePreviewProducer}>
                             {bottle.producer || t.unknownProducer}
                           </p>
-                          {bottle.year && <span className={styles.bottlePreviewYear}>{bottle.year}</span>}
+                          {bottle.year && (
+                            <span className={styles.bottlePreviewYear}>{bottle.year}</span>
+                          )}
                         </article>
                       ))
                     )}
                   </div>
                 </div>
               </div>
-
             </>
           }
         />

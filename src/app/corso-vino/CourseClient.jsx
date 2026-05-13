@@ -19,9 +19,12 @@ export default function CourseClient({levels, isAdmin = false}) {
   const [showGuestWarning, setShowGuestWarning] = useState(false)
   const backHref = authChecked && !userId ? '/' : '/dashboard'
 
-  const handleLevelClick = useCallback((levelId) => {
-    router.push(`/corso-vino/${levelId}`)
-  }, [router])
+  const handleLevelClick = useCallback(
+    (levelId) => {
+      router.push(`/corso-vino/${levelId}`)
+    },
+    [router],
+  )
 
   const nextLevelProgress = useMemo(() => {
     if (!levels?.length) return null

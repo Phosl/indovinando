@@ -8,7 +8,8 @@ const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 function createWriteClient(fallback) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (url && key) return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
+  if (url && key)
+    return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
   return fallback
 }
 
@@ -264,8 +265,7 @@ export async function POST(request) {
     })()
 
     // Opportunistic cleanup: delete sessions finished more than 24h ago.
-    db
-      .from('live_sessions')
+    db.from('live_sessions')
       .delete()
       .eq('status', 'finished')
       .lt('finished_at', new Date(Date.now() - 86_400_000).toISOString())

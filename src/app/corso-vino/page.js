@@ -21,10 +21,7 @@ export default async function CorsoVino() {
   const supabase = await createServerSupabase()
   const lang = await getServerLanguage()
 
-  const [{levels}, {data}] = await Promise.all([
-    getWineCourseData(lang),
-    supabase.auth.getUser(),
-  ])
+  const [{levels}, {data}] = await Promise.all([getWineCourseData(lang), supabase.auth.getUser()])
 
   let isAdmin = false
   if (data?.user) {

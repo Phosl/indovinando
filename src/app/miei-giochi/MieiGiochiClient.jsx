@@ -101,16 +101,13 @@ export default function MieiGiochiClient({
                         <a
                           href={`/enoteca/${game.id}`}
                           className={`${styles.enotecaAction} ${styles.actionBtn}`}>
-                          {dashboardDict.enoteca || '🍷 Enoteca'}
+                          {dashboardDict.enoteca || 'Enoteca'}
                         </a>
                       )}
                       <a
                         href={`/game/${game.id}/print`}
-                        className={`btn secondary ${styles.actionBtn} ${styles.printIconBtn}`}
-                        aria-label={dashboardDict.printCard || 'Stampa'}
-                        title={dashboardDict.printCard || 'Stampa'}>
-                        <span aria-hidden="true">🖨️</span>
-                        <span className={styles.srOnly}>{dashboardDict.printCard || 'Stampa'}</span>
+                        className={`btn secondary ${styles.actionBtn}`}>
+                        {dashboardDict.printCard || '🖨️ Stampa'}
                       </a>
                     </div>
                   </div>

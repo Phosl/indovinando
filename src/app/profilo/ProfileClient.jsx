@@ -181,25 +181,28 @@ export default function ProfileClient({
     }
   }, [])
 
-  const selectAvatar = useCallback(async (nextAvatar) => {
-    setAvatar(nextAvatar)
-    localStorage.setItem(AVATAR_STORAGE_KEY, nextAvatar)
+  const selectAvatar = useCallback(
+    async (nextAvatar) => {
+      setAvatar(nextAvatar)
+      localStorage.setItem(AVATAR_STORAGE_KEY, nextAvatar)
 
-    if (userId) {
-      const {error} = await supabaseClient.from('profiles').upsert(
-        {
-          id: userId,
-          avatar_emoji: nextAvatar,
-          updated_at: new Date().toISOString(),
-        },
-        {onConflict: 'id'},
-      )
+      if (userId) {
+        const {error} = await supabaseClient.from('profiles').upsert(
+          {
+            id: userId,
+            avatar_emoji: nextAvatar,
+            updated_at: new Date().toISOString(),
+          },
+          {onConflict: 'id'},
+        )
 
-      if (error) {
-        console.error('[profile] failed to persist avatar_emoji:', error.message)
+        if (error) {
+          console.error('[profile] failed to persist avatar_emoji:', error.message)
+        }
       }
-    }
-  }, [userId])
+    },
+    [userId],
+  )
 
   const handleLogout = useCallback(async () => {
     if (isLoggingOut) return
@@ -287,10 +290,13 @@ export default function ProfileClient({
     setShowInstallHelp(true)
   }, [deferredInstallPrompt])
 
-  const handleAvatarSelect = useCallback((selected) => {
-    selectAvatar(selected)
-    setShowAvatarSheet(false)
-  }, [selectAvatar])
+  const handleAvatarSelect = useCallback(
+    (selected) => {
+      selectAvatar(selected)
+      setShowAvatarSheet(false)
+    },
+    [selectAvatar],
+  )
 
   const toggleAvatarSheet = useCallback(
     (show) => setShowAvatarSheet(typeof show === 'boolean' ? show : (prev) => !prev),

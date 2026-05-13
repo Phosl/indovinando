@@ -170,9 +170,7 @@ export async function POST(request) {
         .filter((row) => row.bottle_id && row.question_id && row.option_id)
 
       if (answersToInsert.length > 0) {
-        const {error: answersError} = await db
-          .from('game_bottle_answers')
-          .insert(answersToInsert)
+        const {error: answersError} = await db.from('game_bottle_answers').insert(answersToInsert)
         if (answersError) {
           return NextResponse.json({error: answersError.message}, {status: 500})
         }
