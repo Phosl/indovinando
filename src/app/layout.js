@@ -3,6 +3,7 @@ import './globals.scss'
 import LanguageProvider from '@/components/i18n/LanguageProvider'
 import PwaRegistrar from '@/components/PwaRegistrar'
 import ScrollToTop from '@/components/ScrollToTop'
+import AppleSplashLinks from '@/components/AppleSplashLinks'
 import {getServerLanguage} from '@/lib/i18n/server'
 
 const nunito = Nunito({
@@ -32,6 +33,12 @@ export default async function RootLayout({children}) {
 
   return (
     <html lang={lang}>
+      <head>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Indovinando" />
+        <AppleSplashLinks />
+      </head>
       <body className={nunito.className}>
         <LanguageProvider initialLang={lang}>
           <PwaRegistrar />
