@@ -13,6 +13,10 @@
     "copyrightLabel": "Copyright e tutela",
     "tagline": "Gioca, crea e impara il vino in un unico posto.",
     "loginOrRegister": "Accedi o registrati",
+    "shareApp": "Condividi app",
+    "shareAppText": "Apri Indovinando e aggiungila alla schermata Home.",
+    "shareLinkCopied": "Link copiato. Ora condividilo e scegli 'Aggiungi a schermata Home'.",
+    "shareFallbackHint": "Apri il menu del browser e scegli 'Condividi' per aggiungerla alla Home.",
     "wineCourse": "Corso Vino",
     "howItWorks": "Come funziona"
   },

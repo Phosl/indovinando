@@ -13,6 +13,10 @@
     "copyrightLabel": "Copyright & protection",
     "tagline": "Play, create and learn wine in one place.",
     "loginOrRegister": "Login or Register",
+    "shareApp": "Share app",
+    "shareAppText": "Open Indovinando and add it to your Home Screen.",
+    "shareLinkCopied": "Link copied. Share it and choose 'Add to Home Screen'.",
+    "shareFallbackHint": "Open your browser menu and choose 'Share' to add it to Home Screen.",
     "wineCourse": "Wine Course",
     "howItWorks": "How It Works"
   },

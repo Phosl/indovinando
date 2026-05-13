@@ -155,6 +155,11 @@
   }
 }
 
+.menuCardButton {
+  width: 100%;
+  font: inherit;
+}
+
 .menuCardGreen {
   background: rgba(46, 199, 72, 0.1);
   border-color: var(--accept-dark);
@@ -245,6 +250,14 @@
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+.shareHint {
+  margin: 2px 2px 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: center;
 }
 
 .formCard {
