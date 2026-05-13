@@ -5,8 +5,8 @@ export default function manifest() {
     description: "Quiz sul vino, gioco live, Enoteca e corso vino in un'unica app.",
     start_url: '/',
     display: 'standalone',
-    background_color: '#f4f8ff',
-    theme_color: '#f4f8ff',
+    background_color: '#ffffff',
+    theme_color: '#ffffff',
     lang: 'it-IT',
     icons: [
       {
