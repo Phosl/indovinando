@@ -42,16 +42,17 @@ export async function POST(request) {
     }
 
     const db = createWriteClient(supabase)
-    const {count, error: countError} = await db
+    const {data: players, error: playersError} = await db
       .from('live_players')
-      .select('id', {count: 'exact', head: true})
+      .select('id, nickname, avatar_id, is_host, joined_at')
       .eq('session_id', trimmedSessionId)
+      .order('joined_at', {ascending: true})
 
-    if (countError) {
-      return NextResponse.json({error: countError.message}, {status: 500})
+    if (playersError) {
+      return NextResponse.json({error: playersError.message}, {status: 500})
     }
 
-    return NextResponse.json({count: count || 0})
+    return NextResponse.json({count: players?.length || 0, players: players || []})
   } catch (error) {
     return NextResponse.json({error: error?.message || 'Unexpected error'}, {status: 500})
   }

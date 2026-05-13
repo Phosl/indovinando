@@ -31,6 +31,8 @@ const LIVE_SESSION_DICTIONARY = {
     print: 'Stampa',
     close: 'Chiudi',
     participants: 'Partecipanti: ',
+    participantsEmpty: 'Nessun partecipante ancora.',
+    participantFallback: 'Giocatore',
     waitPlayers: 'Aspetta che i giocatori si uniscano, poi premi Inizia Gioco.',
     gameDetails: 'Dettagli Gioco',
     questions: 'Domande',
@@ -69,6 +71,8 @@ const LIVE_SESSION_DICTIONARY = {
     print: 'Print',
     close: 'Close',
     participants: 'Participants: ',
+    participantsEmpty: 'No participants yet.',
+    participantFallback: 'Player',
     waitPlayers: 'Wait for players to join, then click Start Game.',
     gameDetails: 'Game Details',
     questions: 'Questions',
@@ -118,6 +122,7 @@ export default function LiveSessionClient({
   const [loading, setLoading] = useState(true)
   const [sessionLink, setSessionLink] = useState('')
   const [playersCount, setPlayersCount] = useState(0)
+  const [players, setPlayers] = useState([])
   const [copyFeedback, setCopyFeedback] = useState(false)
   const [isStartingGame, setIsStartingGame] = useState(false)
   const [qrOpen, setQrOpen] = useState(false)
@@ -178,6 +183,7 @@ export default function LiveSessionClient({
         if (!response.ok) return
 
         setPlayersCount(payload?.count || 0)
+        setPlayers(Array.isArray(payload?.players) ? payload.players : [])
       } catch {
         // Ignore transient polling errors and try again on next tick.
       }
@@ -387,6 +393,15 @@ export default function LiveSessionClient({
                   {playersCount}
                 </h2>
                 <p className={styles.info}>{t.waitPlayers}</p>
+                {players.length > 0 ? (
+                  <ul>
+                    {players.map((player) => (
+                      <li key={player.id}>{player.nickname || t.participantFallback}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className={styles.info}>{t.participantsEmpty}</p>
+                )}
               </div>
             </>
           }
