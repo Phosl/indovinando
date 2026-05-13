@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.17.4',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'renderizza tutti i link splash iOS nel head del RootLayout',
+    ],
+  },
+
+  {
     version: '1.17.3',
     date: '13 maggio 2026',
     label: 'Auto',
