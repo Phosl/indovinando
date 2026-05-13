@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.17.7',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'tab slider scrollabile e animazioni domande ripristinate',
+    ],
+  },
+
+  {
     version: '1.17.6',
     date: '13 maggio 2026',
     label: 'Auto',
