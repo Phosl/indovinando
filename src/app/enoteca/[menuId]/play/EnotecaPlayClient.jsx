@@ -571,7 +571,10 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
             {saving ? t.saving : t.check}
           </button>
         ) : (
-          <button className={styles.continueButton} onClick={handleContinue} disabled={slideMotion !== 'idle'}>
+          <button
+            className={styles.continueButton}
+            onClick={handleContinue}
+            disabled={slideMotion !== 'idle'}>
             {isLastQuestion ? `🍷 ${t.revealWine}` : t.continue}
           </button>
         )}

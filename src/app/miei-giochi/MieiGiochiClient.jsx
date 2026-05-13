@@ -35,13 +35,13 @@ export default function MieiGiochiClient({
           <button
             className={`${styles.tab} ${activeTab === 'games' ? styles.tabActive : ''}`}
             onClick={() => setActiveTab('games')}>
-            🎯 {dashboardDict.myGames || 'I miei giochi'}
+            {dashboardDict.myGames || 'I miei giochi'}
             {games.length > 0 && <span className={styles.tabBadge}>{games.length}</span>}
           </button>
           <button
             className={`${styles.tab} ${activeTab === 'storico' ? styles.tabActive : ''}`}
             onClick={() => setActiveTab('storico')}>
-            📜 {storicoDict.tabLabel || 'Storico'}
+            {storicoDict.tabLabel || 'Storico'}
             {sessions.length > 0 && <span className={styles.tabBadge}>{sessions.length}</span>}
           </button>
         </div>
