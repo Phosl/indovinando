@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.14.1',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'favicon e app icon ora servite solo da /app_icon, head aggiornata per compatibilità',
+    ],
+  },
+
+  {
     version: '1.14.0',
     date: '13 maggio 2026',
     label: 'Auto',
