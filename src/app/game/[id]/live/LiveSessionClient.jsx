@@ -5,6 +5,7 @@ import {useRouter} from 'next/navigation'
 import QRCode from 'qrcode'
 import TopBar from '@/components/TopBar'
 import ShareDetailsTabs from '@/components/ShareDetailsTabs/ShareDetailsTabs'
+import AvatarDisplay from '@/components/AvatarDisplay'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {pickLangText} from '@/lib/i18n/dictionaries'
 import {supabaseClient} from '@/lib/supabaseClient'
@@ -33,6 +34,7 @@ const LIVE_SESSION_DICTIONARY = {
     participants: 'Partecipanti: ',
     participantsEmpty: 'Nessun partecipante ancora.',
     participantFallback: 'Giocatore',
+    hostLabel: 'Host',
     waitPlayers: 'Aspetta che i giocatori si uniscano, poi premi Inizia Gioco.',
     gameDetails: 'Dettagli Gioco',
     questions: 'Domande',
@@ -73,6 +75,7 @@ const LIVE_SESSION_DICTIONARY = {
     participants: 'Participants: ',
     participantsEmpty: 'No participants yet.',
     participantFallback: 'Player',
+    hostLabel: 'Host',
     waitPlayers: 'Wait for players to join, then click Start Game.',
     gameDetails: 'Game Details',
     questions: 'Questions',
@@ -396,7 +399,15 @@ export default function LiveSessionClient({
                 {players.length > 0 ? (
                   <ul>
                     {players.map((player) => (
-                      <li key={player.id}>{player.nickname || t.participantFallback}</li>
+                      <li key={player.id} className={styles.participantItem}>
+                        <AvatarDisplay avatarId={player.avatar_id} size={24} />
+                        <span className={styles.participantName}>
+                          {player.nickname || t.participantFallback}
+                        </span>
+                        {player.is_host ? (
+                          <span className={styles.participantTag}>{t.hostLabel}</span>
+                        ) : null}
+                      </li>
                     ))}
                   </ul>
                 ) : (
