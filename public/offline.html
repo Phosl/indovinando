@@ -61,9 +61,9 @@
     <img src="/app_icon/apple-touch-icon.png" alt="Indovinando" />
     <h1>Sei offline 🍷</h1>
     <p>Controlla la connessione e riprova. Il Corso Vino potrebbe essere disponibile se l'hai già visitato.</p>
-    <button onclick="location.reload()">Riprova</button>
+    <button onclick="location.href='/'">Riprova</button>
     <script>
-      window.addEventListener('online', () => location.reload())
+      window.addEventListener('online', () => { location.href = '/dashboard' })
     </script>
 </body>
 
