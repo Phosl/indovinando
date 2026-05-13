@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.17.8',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'ripristina splash/meta iOS nel head renderizzato',
+    ],
+  },
+
+  {
     version: '1.17.7',
     date: '13 maggio 2026',
     label: 'Auto',
