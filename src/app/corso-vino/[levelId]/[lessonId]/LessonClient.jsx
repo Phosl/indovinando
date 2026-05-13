@@ -86,7 +86,7 @@ const LESSON_UI_DICTIONARY = {
 
 export default function LessonClient({level, lesson, nextLessonId, levels = []}) {
   const router = useRouter()
-  const {completeLesson, getLessonProgress, loaded} = useWineCourseProgress()
+  const {completeLesson, getLessonProgress, loaded, authChecked, userId} = useWineCourseProgress()
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
   const {lang} = useLanguage()
   const t = pickLangText(lang, LESSON_UI_DICTIONARY)
@@ -140,6 +140,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
   const currentQuestion = questions[questionIndex]
   const isLastQuestion = questionIndex >= questions.length - 1
   const correctId = currentQuestion?.correctId
+  const backHref = authChecked && !userId ? '/' : `/corso-vino/${level.id}`
 
   const isCorrect = checked && selectedId === correctId
   const nextLessonPath = nextLessonId ? `/corso-vino/${level.id}/${nextLessonId}` : null
@@ -277,7 +278,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
         return
       }
       if (screen === 'result') {
-        router.push(nextLessonPath ?? `/corso-vino/${level.id}`)
+        router.push(nextLessonPath ?? backHref)
         return
       }
       if (!checked && selectedId && !isSlideTransitioning) {
@@ -299,6 +300,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
     level.id,
     isSlideTransitioning,
     router,
+    backHref,
   ])
 
   // ── INTRO SCREEN ──────────────────────────────────────────────
@@ -332,7 +334,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
             </button>
             <button
               className={pStyles.exitButton}
-              onClick={() => router.push(`/corso-vino/${level.id}`)}
+              onClick={() => router.push(backHref)}
               aria-label={t.exitLesson}>
               ✕
             </button>
@@ -397,9 +399,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
             </span>
           </div>
           <div className={pStyles.topActions}>
-            <button
-              className={pStyles.leaderboardButton}
-              onClick={() => router.push(`/corso-vino/${level.id}`)}>
+            <button className={pStyles.leaderboardButton} onClick={() => router.push(backHref)}>
               {t.allLessons}
             </button>
           </div>
@@ -483,7 +483,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
         <div className={pStyles.bottomPanel}>
           <button
             className={pStyles.continueButton}
-            onClick={() => router.push(nextLessonPath ?? `/corso-vino/${level.id}`)}>
+            onClick={() => router.push(nextLessonPath ?? backHref)}>
             {nextLessonPath ? t.nextLesson : t.backToLevel}
           </button>
         </div>
@@ -522,9 +522,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
           </div>
         </div>
         <div className={pStyles.bottomPanel}>
-          <button
-            className={pStyles.continueButton}
-            onClick={() => router.push(`/corso-vino/${level.id}`)}>
+          <button className={pStyles.continueButton} onClick={() => router.push(backHref)}>
             {t.backToLevel}
           </button>
         </div>
@@ -568,7 +566,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
           </button>
           <button
             className={pStyles.exitButton}
-            onClick={() => router.push(`/corso-vino/${level.id}`)}
+            onClick={() => router.push(backHref)}
             aria-label={t.exitLesson}>
             ✕
           </button>

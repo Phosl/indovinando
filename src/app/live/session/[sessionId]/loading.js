@@ -23,19 +23,19 @@ export default function PlayerJoinLoading() {
       <div
         className="skeleton-frame"
         style={{
-          display: 'flex',
+          display: 'grid',
+          gridTemplateColumns: '40px 1fr 40px',
           alignItems: 'center',
-          gap: 12,
+          columnGap: 12,
           width: '100%',
           maxWidth: 960,
-          padding: '0 14px 10px',
+          padding: '10px 14px',
           margin: '0 auto 16px auto',
-          flexWrap: 'wrap',
           boxSizing: 'border-box',
         }}>
-        <div style={{minWidth: 90}} />
+        <Bone w="40px" h="40px" style={{borderRadius: 10}} />
         <Bone w="240px" h="22px" style={{margin: '0 auto', borderRadius: 6}} />
-        <div style={{minWidth: 90}} />
+        <Bone w="40px" h="40px" style={{borderRadius: 10, marginLeft: 'auto'}} />
       </div>
 
       {/* Join card */}

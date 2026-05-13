@@ -238,9 +238,9 @@
     "lessons": "lezioni",
     "guest": {
       "title": "Modalità ospite attiva",
-      "desc": "I progressi del corso sono salvati solo su questo dispositivo e potrebbero andare persi.",
-      "continueAsGuest": "Continua come ospite",
-      "signUp": "Registrati per salvare i progressi"
+      "desc": "I progressi del corso restano salvati solo su questo dispositivo. Se cambi browser, svuoti i dati o usi un altro device, potresti perderli.",
+      "continueAsGuest": "CONTINUA",
+      "signUp": "REGISTRATI"
     }
   },
   "level": {

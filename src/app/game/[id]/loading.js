@@ -21,16 +21,16 @@ export default function GameLoading() {
       <div
         className="skeleton-frame"
         style={{
-          display: 'flex',
+          display: 'grid',
+          gridTemplateColumns: '40px 1fr auto',
           alignItems: 'center',
-          gap: 12,
+          columnGap: 12,
           width: '100%',
-          padding: '0 14px 10px',
+          padding: '10px 14px',
           margin: '0 auto 16px auto',
-          flexWrap: 'wrap',
           boxSizing: 'border-box',
         }}>
-        <Bone w="100px" h="40px" style={{borderRadius: 999}} />
+        <Bone w="40px" h="40px" style={{borderRadius: 10}} />
         <Bone w="220px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
         <div style={{display: 'flex', gap: 6, marginLeft: 'auto', flexWrap: 'wrap'}}>
           <Bone w="110px" h="36px" style={{borderRadius: 12}} />

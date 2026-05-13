@@ -25,19 +25,19 @@ export default function ProfiloLoading() {
         <div
           className="skeleton-frame"
           style={{
-            display: 'flex',
+            display: 'grid',
+            gridTemplateColumns: '40px 1fr 40px',
             alignItems: 'center',
-            gap: 12,
+            columnGap: 12,
             width: '100%',
             maxWidth: 960,
-            padding: '0 14px 10px',
+            padding: '10px 14px',
             margin: '0 auto 16px auto',
-            flexWrap: 'wrap',
             boxSizing: 'border-box',
           }}>
-          <Bone w="100px" h="40px" style={{borderRadius: 999}} />
-          <Bone w="140px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
-          <div style={{minWidth: 90}} />
+          <Bone w="40px" h="40px" style={{borderRadius: 10}} />
+          <Bone w="160px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
+          <Bone w="40px" h="40px" style={{borderRadius: 10, marginLeft: 'auto'}} />
         </div>
 
         {/* Header card: avatar + nome + email + lingua + avatar picker */}

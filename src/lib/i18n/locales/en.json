@@ -238,9 +238,9 @@
     "lessons": "lessons",
     "guest": {
       "title": "Guest mode active",
-      "desc": "Your course progress is only stored on this device and may be lost.",
-      "continueAsGuest": "Continue as guest",
-      "signUp": "Sign up to save progress"
+      "desc": "Your course progress stays saved only on this device. If you switch browsers, clear data, or use another device, you may lose it.",
+      "continueAsGuest": "CONTINUE",
+      "signUp": "SIGN UP"
     }
   },
   "level": {

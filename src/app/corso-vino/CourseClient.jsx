@@ -14,6 +14,7 @@ export default function CourseClient({levels, isAdmin = false}) {
   const {loaded, authChecked, userId, getLevelCompletedCount} = useWineCourseProgress()
   const t = useT('course')
   const [showGuestWarning, setShowGuestWarning] = useState(false)
+  const backHref = authChecked && !userId ? '/' : '/dashboard'
 
   const nextLevelProgress = useMemo(() => {
     if (!levels?.length) return null
@@ -43,7 +44,7 @@ export default function CourseClient({levels, isAdmin = false}) {
     <div className={styles.page}>
       <TopBar
         title={t('title')}
-        onBack={() => router.push('/dashboard')}
+        onBack={() => router.push(backHref)}
         progress={nextLevelProgress?.pct ?? null}>
         {isAdmin && (
           <a
