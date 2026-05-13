@@ -9,9 +9,12 @@ import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
 import styles from './course.module.scss'
 import {useT} from '@/lib/i18n/useT'
 
+const PASS_THRESHOLD = 0.75
+
 export default function CourseClient({levels, isAdmin = false}) {
   const router = useRouter()
-  const {loaded, authChecked, userId, getLevelCompletedCount} = useWineCourseProgress()
+  const {loaded, authChecked, userId, getLevelCompletedCount, getLessonProgress, getLessonStatus} =
+    useWineCourseProgress()
   const t = useT('course')
   const [showGuestWarning, setShowGuestWarning] = useState(false)
   const backHref = authChecked && !userId ? '/' : '/dashboard'
@@ -115,12 +118,31 @@ export default function CourseClient({levels, isAdmin = false}) {
                 <p className={styles.levelDesc}>{level.description}</p>
                 <div className={styles.progressRow}>
                   <div className={styles.progressDots}>
-                    {Array.from({length: total}).map((_, index) => (
-                      <span
-                        key={`${level.id}-dot-${index}`}
-                        className={`${styles.progressDot} ${index < completed ? styles.progressDotDone : ''}`}
-                      />
-                    ))}
+                    {level.lessonIds.map((lessonId, index) => {
+                      const status = loaded ? getLessonStatus(level, index) : 'unlocked'
+                      const lp = loaded ? getLessonProgress(level.id, lessonId) : null
+                      const isCompleted = status === 'completed'
+                      const hasPassed =
+                        isCompleted && lp?.maxScore > 0
+                          ? lp.score / lp.maxScore >= PASS_THRESHOLD
+                          : isCompleted
+                            ? true
+                            : null
+                      const needsReview = hasPassed === false
+
+                      return (
+                        <span
+                          key={`${level.id}-dot-${index}`}
+                          className={`${
+                            needsReview
+                              ? styles.progressDotReview
+                              : hasPassed === true
+                                ? styles.progressDotDone
+                                : styles.progressDot
+                          }`}
+                        />
+                      )
+                    })}
                   </div>
                   <span className={styles.progressText}>
                     {completed}/{total} {t('lessons')}

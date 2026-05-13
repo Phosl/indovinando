@@ -358,16 +358,25 @@
   flex-wrap: wrap;
 }
 
-.progressDot {
+.progressDot,
+.progressDotDone,
+.progressDotReview {
   width: 9px;
   height: 9px;
   border-radius: 999px;
+  display: inline-block;
+}
+
+.progressDot {
   background: var(--gray-light);
 }
 
 .progressDotDone {
   background: var(--accept-dark);
-  box-shadow: none;
+}
+
+.progressDotReview {
+  background: #f59e0b;
 }
 
 .progressText {

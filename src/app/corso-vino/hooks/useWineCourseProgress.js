@@ -190,6 +190,22 @@ export function useWineCourseProgress() {
     [progress],
   )
 
+  /** Returns array of lesson states: 'passed' | 'review' | 'incomplete' for a whole level. */
+  const getLevelLessonsStatus = useCallback(
+    (level, passThreshold = 0.75) => {
+      return level.lessonIds.map((lessonId) => {
+        const lp = progress[level.id]?.[lessonId]
+        if (!lp?.completed) return 'incomplete'
+        if (lp.maxScore > 0) {
+          const pct = lp.score / lp.maxScore
+          return pct >= passThreshold ? 'passed' : 'review'
+        }
+        return 'passed'
+      })
+    },
+    [progress],
+  )
+
   return {
     progress,
     loaded,
@@ -200,5 +216,6 @@ export function useWineCourseProgress() {
     getLessonStatus,
     getLevelStatus,
     getLevelCompletedCount,
+    getLevelLessonsStatus,
   }
 }

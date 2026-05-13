@@ -62,9 +62,14 @@ export default async function Dashboard() {
           </a>
         </nav>
       </div>
-      <a href="/copyright" className={styles.smallLegalBtn}>
-        {dashboardDict.copyright || 'Copyright'}
-      </a>
+      <div className={styles.legalLinks}>
+        <a href="/copyright" className={styles.smallLegalBtn}>
+          {dashboardDict.copyright || 'Copyright'}
+        </a>
+        <a href="/changelog" className={styles.smallLegalBtn}>
+          {dashboardDict.changelog || 'Changelog'}
+        </a>
+      </div>
     </main>
   )
 }

@@ -13,7 +13,7 @@
     "copyrightLabel": "Copyright & protection",
     "tagline": "Play, create and learn wine in one place.",
     "loginOrRegister": "Login or Register",
-    "shareApp": "Share app",
+    "shareApp": "Add app",
     "shareAppText": "Open Indovinando and add it to your Home Screen.",
     "shareLinkCopied": "Link copied. Share it and choose 'Add to Home Screen'.",
     "shareFallbackHint": "Open your browser menu and choose 'Share' to add it to Home Screen.",
@@ -31,6 +31,7 @@
     "wineCourse": "Wine Course",
     "wineCourseDesc": "Learn wine step by step · free 🎓",
     "copyright": "Copyright",
+    "changelog": "Changelog",
     "yourGames": "Your games",
     "myGames": "My games",
     "status": "Status",
@@ -267,7 +268,8 @@
   "level": {
     "levelTitle": "Chapter {index}",
     "lesson": "Lesson",
-    "repeat": "Repeat"
+    "repeat": "Repeat",
+    "review": "Review"
   },
   "info": {
     "title": "App Info",

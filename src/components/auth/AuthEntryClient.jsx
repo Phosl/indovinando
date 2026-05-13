@@ -55,12 +55,6 @@ export default function AuthEntryClient({appVersion}) {
             <a href="/auth" className={`${styles.menuCard} ${styles.menuCardGreen}`}>
               <span className={styles.menuCardLabel}>{t('loginOrRegister')}</span>
             </a>
-            <button
-              type="button"
-              className={`${styles.menuCard} ${styles.menuCardTertiary} ${styles.menuCardButton}`}
-              onClick={handleShare}>
-              <span className={styles.menuCardLabel}>{t('shareApp')}</span>
-            </button>
             <a href="/corso-vino" className={`${styles.menuCard} ${styles.menuCardWine}`}>
               <span className={styles.menuCardBadge}>NOVITA</span>
               <span className={styles.menuCardLabel}>{t('wineCourse')}</span>
@@ -69,10 +63,15 @@ export default function AuthEntryClient({appVersion}) {
               <span className={styles.menuCardLabel}>{t('howItWorks')}</span>
             </a>
           </div>
-          {shareHint ? <p className={styles.shareHint}>{shareHint}</p> : null}
         </section>
       </div>
       <div className={styles.legalLinks}>
+        <button
+          type="button"
+          className={`${styles.badge} ${styles.badgeLink} ${styles.badgeButton}`}
+          onClick={handleShare}>
+          {t('shareApp')}
+        </button>
         <a href="/changelog" className={`${styles.badge} ${styles.badgeLink}`}>
           {t('versionLabel')} {appVersion}
         </a>
@@ -80,6 +79,7 @@ export default function AuthEntryClient({appVersion}) {
           {t('copyrightLabel')}
         </a>
       </div>
+      {shareHint ? <p className={styles.shareHint}>{shareHint}</p> : null}
     </main>
   )
 }

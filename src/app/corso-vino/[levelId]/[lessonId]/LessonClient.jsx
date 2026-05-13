@@ -106,6 +106,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
   const [showLevelUp, setShowLevelUp] = useState(false)
   const prevLevelNumRef = useRef(null)
   const timersRef = useRef([])
+  const introScrollRef = useRef(null)
 
   const getComboMsg = useCallback((n) => {
     if (n < 2) return null
@@ -260,6 +261,13 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
     }
   }, [])
 
+  useEffect(() => {
+    if (screen !== 'intro') return
+    const container = introScrollRef.current
+    if (!container) return
+    container.scrollTop = 0
+  }, [didacticIndex, screen])
+
   // Detect level-up after lesson completion
   useEffect(() => {
     if (screen !== 'result' || prevLevelNumRef.current === null || !levelProgress) return
@@ -341,7 +349,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
           </div>
         </div>
 
-        <div className={pStyles.slideContent}>
+        <div className={pStyles.slideContent} ref={introScrollRef}>
           <div className={xStyles.introCard}>
             <div className={xStyles.introEmoji}>{lesson.emoji}</div>
             <p className={xStyles.slideMeta}>

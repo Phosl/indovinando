@@ -136,7 +136,7 @@
 .path {
   display: flex;
   flex-direction: column;
-  padding: 8px 24px 16px;
+  padding: 8px 0px 16px;
 }
 
 .pathItem {
@@ -146,15 +146,15 @@
 }
 
 .connector {
-  width: 3px;
-  height: 24px;
+  width: 2px;
+  height: 16px;
   background: var(--gray-light);
   border-radius: 999px;
-  margin: 2px 0;
+  margin: px 0;
   transition: background 0.3s;
 
   &.connectorDone {
-    background: var(--accept);
+    background: var(--accept-light-100);
   }
 }
 

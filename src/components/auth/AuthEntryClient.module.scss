@@ -105,6 +105,10 @@
   }
 }
 
+.badgeButton {
+  border: 1px solid #cfe5bf;
+}
+
 .brand {
   margin: 10px 0 0;
   font-size: clamp(2rem, 5.5vw, 3rem);
@@ -253,11 +257,12 @@
 }
 
 .shareHint {
-  margin: 2px 2px 0;
+  margin: 10px auto 0;
   font-size: 0.8rem;
   font-weight: 700;
   color: var(--text-secondary);
   text-align: center;
+  max-width: 560px;
 }
 
 .formCard {

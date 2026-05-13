@@ -93,18 +93,13 @@ export default function LevelClient({level, lessons, levels = []}) {
                         {lp.score}/{lp.maxScore > 0 ? lp.maxScore : lesson.questions.length}
                       </span>
                     )}
-                    {hasPassed !== null && (
-                      <span className={hasPassed ? styles.passBadge : styles.failBadge}>
-                        {hasPassed ? '✓ Superato' : '↩ Da ripassare'}
-                      </span>
-                    )}
+                    {hasPassed === true && <span className={styles.passBadge}>✓ Superato</span>}
                   </div>
                   <div className={styles.lessonTitleRow}>
                     <span className={styles.lessonTitle}>{lesson.title}</span>
-                    {isCompleted && (
-                      <span
-                        className={`${styles.lessonRepeat} ${needsReview ? styles.lessonRepeatReview : ''}`}>
-                        {t('repeat')}
+                    {needsReview && (
+                      <span className={`${styles.lessonRepeat} ${styles.lessonRepeatReview}`}>
+                        {t('review')}
                       </span>
                     )}
                   </div>

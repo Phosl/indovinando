@@ -13,7 +13,7 @@
     "copyrightLabel": "Copyright e tutela",
     "tagline": "Gioca, crea e impara il vino in un unico posto.",
     "loginOrRegister": "Accedi o registrati",
-    "shareApp": "Condividi app",
+    "shareApp": "Aggiungi app",
     "shareAppText": "Apri Indovinando e aggiungila alla schermata Home.",
     "shareLinkCopied": "Link copiato. Ora condividilo e scegli 'Aggiungi a schermata Home'.",
     "shareFallbackHint": "Apri il menu del browser e scegli 'Condividi' per aggiungerla alla Home.",
@@ -31,6 +31,7 @@
     "wineCourse": "Corso Vino",
     "wineCourseDesc": "Impara il vino passo dopo passo · gratis 🎓",
     "copyright": "Copyright",
+    "changelog": "Changelog",
     "yourGames": "I tuoi giochi",
     "myGames": "I miei giochi",
     "status": "Stato",
@@ -267,7 +268,8 @@
   "level": {
     "levelTitle": "Capitolo {index}",
     "lesson": "Lezione",
-    "repeat": "Ripeti"
+    "repeat": "Ripeti",
+    "review": "Da ripassare"
   },
   "info": {
     "title": "Info App",
