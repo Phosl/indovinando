@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.16.0',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'offline minimale + pagina offline + ICEBUCKET.md con migliorie future',
+    ],
+  },
+
+  {
     version: '1.15.0',
     date: '13 maggio 2026',
     label: 'Auto',
