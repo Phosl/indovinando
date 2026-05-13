@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.14.0',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'aggiunti splash screen Apple automatici e favicon, migliorata gestione head',
+    ],
+  },
+
+  {
     version: '1.13.30',
     date: '13 maggio 2026',
     label: 'Auto',
