@@ -45,15 +45,6 @@ function ModePickerScreen({onPick}) {
   return (
     <PageLayout title="Crea gioco" onBack={() => (window.location.href = '/dashboard')}>
       <div className={styles.modePickerGrid}>
-        <button className={styles.modeCard} onClick={() => onPick('custom')}>
-          <span className={styles.modeCardEmoji}>✏️</span>
-          <strong className={styles.modeCardTitle}>Gioco personalizzato</strong>
-          <p className={styles.modeCardDesc}>
-            Crea le tue domande e risposta da zero, adatta ogni dettaglio al tuo stile.
-          </p>
-          <span className={styles.modeCardCta}>Inizia →</span>
-        </button>
-
         <button className={styles.modeCard} onClick={() => onPick('quick')}>
           <span className={styles.modeCardEmoji}>⚡</span>
           <strong className={styles.modeCardTitle}>Gioco rapido</strong>
@@ -61,6 +52,15 @@ function ModePickerScreen({onPick}) {
             Usa il nostro modello pronto per la degustazione: aggiungi le bottiglie e sei pronto.
           </p>
           <span className={styles.modeCardCta}>Usa template →</span>
+        </button>
+
+        <button className={styles.modeCard} onClick={() => onPick('custom')}>
+          <span className={styles.modeCardEmoji}>✏️</span>
+          <strong className={styles.modeCardTitle}>Gioco personalizzato</strong>
+          <p className={styles.modeCardDesc}>
+            Crea le tue domande e risposta da zero, adatta ogni dettaglio al tuo stile.
+          </p>
+          <span className={styles.modeCardCta}>Inizia →</span>
         </button>
       </div>
     </PageLayout>
