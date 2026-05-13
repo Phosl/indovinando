@@ -25,6 +25,7 @@ export default function CorsoVinoLessonLoading() {
         flexDirection: 'column',
         minHeight: '100dvh',
         background: 'var(--background)',
+        boxSizing: 'border-box',
       }}>
       {/* Intro-style top bar */}
       <div
@@ -33,32 +34,34 @@ export default function CorsoVinoLessonLoading() {
           display: 'grid',
           gridTemplateColumns: 'auto 1fr auto',
           alignItems: 'center',
-          gap: 10,
-          padding: '16px 20px',
-          margin: '16px 16px 0',
+          gap: 8,
+          padding: '14px 16px',
+          margin: '12px 12px 0',
           borderRadius: 12,
+          boxSizing: 'border-box',
         }}>
         <div style={{display: 'flex', alignItems: 'center', gap: 8, minWidth: 0}}>
           <Bone w="28px" h="28px" style={{borderRadius: 999}} />
-          <Bone w="120px" h="14px" style={{borderRadius: 6}} />
+          <Bone w="clamp(84px, 32vw, 120px)" h="14px" style={{borderRadius: 6}} />
         </div>
         <div style={{display: 'flex', justifyContent: 'center', gap: 6}}>
-          {Array.from({length: 3}).map((_, index) => (
-            <Bone key={index} w="20px" h="6px" style={{borderRadius: 999}} />
+          {Array.from({length: 4}).map((_, index) => (
+            <Bone key={index} w="16px" h="6px" style={{borderRadius: 999}} />
           ))}
         </div>
         <div style={{display: 'flex', gap: 8, justifyContent: 'flex-end'}}>
-          <Bone w="52px" h="28px" style={{borderRadius: 999}} />
-          <Bone w="30px" h="30px" style={{borderRadius: 999}} />
+          <Bone w="44px" h="28px" style={{borderRadius: 999}} />
+          <Bone w="28px" h="28px" style={{borderRadius: 999}} />
         </div>
       </div>
 
       {/* Slide / intro card */}
-      <div style={{flex: 1, overflow: 'hidden', padding: '20px 16px 16px', display: 'flex'}}>
+      <div style={{flex: 1, overflow: 'hidden', padding: '18px 12px 12px', display: 'flex'}}>
         <div
           className="skeleton-card"
           style={{
             flex: 1,
+            width: '100%',
             borderRadius: 20,
             padding: '24px 20px',
             display: 'flex',
@@ -74,9 +77,9 @@ export default function CorsoVinoLessonLoading() {
           <Bone w="86%" h="14px" style={{borderRadius: 6}} />
           <div
             style={{width: '100%', marginTop: 4, display: 'flex', flexDirection: 'column', gap: 8}}>
-            <Bone w="100%" h="48px" style={{borderRadius: 14}} />
-            <Bone w="100%" h="48px" style={{borderRadius: 14}} />
-            <Bone w="100%" h="48px" style={{borderRadius: 14}} />
+            <Bone w="100%" h="52px" style={{borderRadius: 14}} />
+            <Bone w="100%" h="52px" style={{borderRadius: 14}} />
+            <Bone w="100%" h="52px" style={{borderRadius: 14}} />
           </div>
         </div>
       </div>
@@ -88,7 +91,7 @@ export default function CorsoVinoLessonLoading() {
           display: 'flex',
           flexDirection: 'column',
           gap: 10,
-          padding: '14px 16px calc(14px + env(safe-area-inset-bottom, 0px))',
+          padding: '12px 12px calc(12px + env(safe-area-inset-bottom, 0px))',
           borderTopLeftRadius: 12,
           borderTopRightRadius: 12,
           margin: 0,

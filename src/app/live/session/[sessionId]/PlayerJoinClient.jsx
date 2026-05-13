@@ -307,7 +307,14 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
                       key={av.id}
                       type="button"
                       className={`${styles.avatarButton} ${selectedAvatar === av.id ? styles.selected : ''}`}
-                      onClick={() => setSelectedAvatar(av.id)}></button>
+                      onClick={() => setSelectedAvatar(av.id)}>
+                      <img
+                        src={av.value}
+                        alt=""
+                        className={styles.avatarSvgThumb}
+                        aria-hidden="true"
+                      />
+                    </button>
                   ))}
                 </div>
                 <div className={styles.avatarGridEmoji}>

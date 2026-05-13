@@ -1,6 +1,7 @@
 import styles from './copyright.module.scss'
 import TopBarBack from '@/components/TopBarBack'
 import {getServerLanguage} from '@/lib/i18n/server'
+import {createServerSupabase} from '@/lib/supabaseServer'
 
 export async function generateMetadata() {
   const lang = await getServerLanguage()
@@ -82,14 +83,19 @@ const UI_TEXT = {
 }
 
 export default async function CopyrightPage() {
+  const supabase = await createServerSupabase()
   const lang = await getServerLanguage()
+  const {
+    data: {user},
+  } = await supabase.auth.getUser()
   const isEn = lang === 'en'
   const text = isEn ? UI_TEXT.en : UI_TEXT.it
+  const backHref = user ? '/dashboard' : '/'
 
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <TopBarBack title={text.title} href="/" />
+        <TopBarBack title={text.title} href={backHref} />
 
         <article className={styles.card}>
           <p className={styles.intro}>{text.intro}</p>

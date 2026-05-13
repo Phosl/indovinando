@@ -14,7 +14,6 @@ export default function LevelClient({level, lessons, levels = []}) {
   const router = useRouter()
   const {loaded, getLessonStatus, getLessonProgress} = useWineCourseProgress()
   const t = useT('level')
-  const tc = useT('course')
 
   const topProgress = useMemo(() => {
     if (!levels?.length) {
@@ -63,6 +62,7 @@ export default function LevelClient({level, lessons, levels = []}) {
           const isCurrent = !isCompleted
           const hasPassed =
             isCompleted && lp?.maxScore > 0 ? lp.score / lp.maxScore >= PASS_THRESHOLD : null
+          const needsReview = hasPassed === false
 
           return (
             <div key={lesson.id} className={styles.pathItem}>
@@ -73,11 +73,13 @@ export default function LevelClient({level, lessons, levels = []}) {
 
               <div
                 className={`${styles.lessonCard} ${
-                  isCompleted
-                    ? styles.lessonCompleted
-                    : isCurrent
-                      ? styles.lessonCurrent
-                      : styles.lessonLocked
+                  needsReview
+                    ? styles.lessonNeedsReview
+                    : isCompleted
+                      ? styles.lessonCompleted
+                      : isCurrent
+                        ? styles.lessonCurrent
+                        : styles.lessonLocked
                 }`}
                 onClick={() => router.push(`/corso-vino/${level.id}/${lesson.id}`)}>
                 <div className={styles.lessonIcon}>{isCompleted ? '✓' : lesson.emoji}</div>
@@ -96,9 +98,16 @@ export default function LevelClient({level, lessons, levels = []}) {
                         {hasPassed ? '✓ Superato' : '↩ Da ripassare'}
                       </span>
                     )}
-                    {isCompleted && <span className={styles.lessonRepeat}>{t('repeat')}</span>}
                   </div>
-                  <span className={styles.lessonTitle}>{lesson.title}</span>
+                  <div className={styles.lessonTitleRow}>
+                    <span className={styles.lessonTitle}>{lesson.title}</span>
+                    {isCompleted && (
+                      <span
+                        className={`${styles.lessonRepeat} ${needsReview ? styles.lessonRepeatReview : ''}`}>
+                        {t('repeat')}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
