@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.17.0',
+    date: '13 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'pre-cacha tutti i JSON dei corsi all\'installazione del SW',
+    ],
+  },
+
+  {
     version: '1.16.3',
     date: '13 maggio 2026',
     label: 'Auto',
