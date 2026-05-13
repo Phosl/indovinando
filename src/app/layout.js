@@ -18,7 +18,8 @@ export const metadata = {
     title: 'Indovinando',
   },
   icons: {
-    apple: '/logo.svg',
+    icon: '/app_icon/favicon.ico',
+    apple: '/app_icon/apple-touch-icon.png',
   },
 }
 
