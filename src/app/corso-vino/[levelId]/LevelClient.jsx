@@ -88,12 +88,15 @@ export default function LevelClient({level, lessons, levels = []}) {
                     <span className={styles.lessonOrder}>
                       {t('lesson')} {i + 1}
                     </span>
-                    {isCompleted && lp && (
-                      <span className={styles.lessonScore}>
-                        {lp.score}/{lp.maxScore > 0 ? lp.maxScore : lesson.questions.length}
-                      </span>
-                    )}
-                    {hasPassed === true && <span className={styles.passBadge}>✓ Superato</span>}
+
+                    <span>
+                      {isCompleted && lp && (
+                        <span className={styles.lessonScore}>
+                          {lp.score}/{lp.maxScore > 0 ? lp.maxScore : lesson.questions.length}
+                        </span>
+                      )}
+                      {hasPassed === true && <span className={styles.passBadge}>✓ Superato</span>}
+                    </span>
                   </div>
                   <div className={styles.lessonTitleRow}>
                     <span className={styles.lessonTitle}>{lesson.title}</span>
