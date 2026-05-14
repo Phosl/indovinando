@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.18.8',
+    date: '14 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'move  illustator file',
+    ],
+  },
+
+  {
     version: '1.18.7',
     date: '14 maggio 2026',
     label: 'Auto',
