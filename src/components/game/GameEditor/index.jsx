@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useState, useRef} from 'react'
+import {memo, useEffect, useState, useRef} from 'react'
 import {usePathname, useRouter, useSearchParams} from 'next/navigation'
 import {createClient} from '@/lib/supabaseClient'
 import QuestionsList from '../QuestionsList'
@@ -48,6 +48,132 @@ function normalizeBottleYear(value) {
     .slice(0, 4)
 }
 
+const StepOneSection = memo(function StepOneSection({
+  editorText,
+  gameName,
+  onGameNameChange,
+  onContinue,
+}) {
+  return (
+    <div className={styles.section}>
+      <h3 className={styles.sectionTitle}>{editorText.step1Title}</h3>
+      <input
+        className={styles.inputField}
+        placeholder={editorText.step1Placeholder}
+        value={gameName}
+        onChange={(e) => onGameNameChange(e.target.value)}
+      />
+
+      <div className={styles.buttonRow}>
+        <button className="btn primary" onClick={onContinue}>
+          {editorText.continue}
+        </button>
+      </div>
+    </div>
+  )
+})
+
+const StepTwoSection = memo(function StepTwoSection({
+  editorText,
+  questionDraft,
+  onEditQuestion,
+  onNewQuestion,
+  onDeleteQuestion,
+  onSaveQuestionnaire,
+  onBack,
+}) {
+  return (
+    <div className={styles.section}>
+      <h3 className={styles.sectionTitle}>{editorText.step2Title}</h3>
+      <QuestionsList
+        questions={questionDraft}
+        onEditQuestion={onEditQuestion}
+        onNewQuestion={onNewQuestion}
+        onDeleteQuestion={onDeleteQuestion}
+      />
+
+      <div className={styles.buttonRow}>
+        <button
+          className="btn primary"
+          onClick={onSaveQuestionnaire}
+          disabled={questionDraft.length === 0}>
+          {editorText.saveQuestionnaire}
+        </button>
+        <button className="btn secondary" onClick={onBack}>
+          {editorText.back}
+        </button>
+      </div>
+    </div>
+  )
+})
+
+const StepThreeSection = memo(function StepThreeSection({
+  editorText,
+  onInsertResults,
+  onSaveAndPrint,
+  isSaving,
+  onBack,
+}) {
+  return (
+    <div className={styles.section}>
+      <h3 className={styles.sectionTitle}>{editorText.bridgeTitle}</h3>
+      <div className={styles.bridgeRow}>
+        <button className="btn primary" onClick={onInsertResults}>
+          {editorText.bridgeInsertResults}
+        </button>
+        <button className="btn secondary" onClick={onSaveAndPrint} disabled={isSaving}>
+          {isSaving ? editorText.saving : editorText.saveAndPrint}
+        </button>
+      </div>
+      <div className={styles.buttonRow}>
+        <button className="btn secondary" onClick={onBack}>
+          {editorText.back}
+        </button>
+      </div>
+    </div>
+  )
+})
+
+const StepFourSection = memo(function StepFourSection({
+  editorText,
+  bottles,
+  questions,
+  onEditBottle,
+  onNewBottle,
+  onDeleteBottle,
+  onBack,
+  onPublish,
+  isSaving,
+  isEditMode,
+}) {
+  return (
+    <div className={styles.section}>
+      <BottlesList
+        bottles={bottles}
+        questions={questions}
+        onEditBottle={onEditBottle}
+        onNewBottle={onNewBottle}
+        onDeleteBottle={onDeleteBottle}
+      />
+
+      <div className={styles.buttonRow}>
+        <button className="btn secondary" onClick={onBack}>
+          {editorText.back}
+        </button>
+        {bottles.length > 0 && (
+          <button className="btn primary" onClick={onPublish} disabled={isSaving}>
+            {isSaving
+              ? editorText.saving
+              : isEditMode
+                ? editorText.updateGame
+                : editorText.publishGame}
+          </button>
+        )}
+      </div>
+    </div>
+  )
+})
+
 export default function GameEditor({
   isEditMode = false,
   gameId,
@@ -85,7 +211,10 @@ export default function GameEditor({
   const [editingQuestionIndex, setEditingQuestionIndex] = useState(null)
   const [resolvedUserId, setResolvedUserId] = useState(userId)
   const [stepDirection, setStepDirection] = useState('forward')
+  const [isStepTransitioning, setIsStepTransitioning] = useState(false)
   const prevStepRef = useRef(1)
+  const stepTransitionLockRef = useRef(false)
+  const stepTransitionTimerRef = useRef(null)
   const savePhaseRef = useRef('idle')
 
   const editorText = getGameEditorText(lang)
@@ -233,11 +362,31 @@ export default function GameEditor({
     if (step !== prev) {
       setStepDirection(step > prev ? 'forward' : 'back')
       prevStepRef.current = step
+
+      setIsStepTransitioning(true)
+
+      if (stepTransitionTimerRef.current) {
+        clearTimeout(stepTransitionTimerRef.current)
+      }
+
+      stepTransitionTimerRef.current = setTimeout(() => {
+        stepTransitionLockRef.current = false
+        setIsStepTransitioning(false)
+      }, 220)
+    }
+
+    return () => {
+      if (stepTransitionTimerRef.current) {
+        clearTimeout(stepTransitionTimerRef.current)
+      }
     }
   }, [step])
 
   function goToStep(nextStep) {
+    if (stepTransitionLockRef.current) return
+
     const safeStep = normalizeStep(String(nextStep))
+    stepTransitionLockRef.current = true
     setStep(safeStep)
     router.push(`${pathname}?step=${safeStep}`)
   }
@@ -504,91 +653,49 @@ export default function GameEditor({
 
   if (step === 1) {
     stepContent = (
-      <div className={styles.section}>
-        <h3 className={styles.sectionTitle}>{editorText.step1Title}</h3>
-        <input
-          className={styles.inputField}
-          placeholder={editorText.step1Placeholder}
-          value={gameName}
-          onChange={(e) => setGameName(e.target.value)}
-        />
-
-        <div className={styles.buttonRow}>
-          <button className="btn primary" onClick={() => goToStep(2)}>
-            {editorText.continue}
-          </button>
-        </div>
-      </div>
+      <StepOneSection
+        editorText={editorText}
+        gameName={gameName}
+        onGameNameChange={setGameName}
+        onContinue={() => goToStep(2)}
+      />
     )
   } else if (step === 2) {
     stepContent = (
-      <div className={styles.section}>
-        <h3 className={styles.sectionTitle}>{editorText.step2Title}</h3>
-        <QuestionsList
-          questions={questionDraft}
-          onEditQuestion={openQuestionModal}
-          onNewQuestion={openNewQuestionModal}
-          onDeleteQuestion={deleteQuestion}
-        />
-
-        <div className={styles.buttonRow}>
-          <button
-            className="btn primary"
-            onClick={saveQuestionnaire}
-            disabled={questionDraft.length === 0}>
-            {editorText.saveQuestionnaire}
-          </button>
-          <button className="btn secondary" onClick={() => goToStep(1)}>
-            {editorText.back}
-          </button>
-        </div>
-      </div>
+      <StepTwoSection
+        editorText={editorText}
+        questionDraft={questionDraft}
+        onEditQuestion={openQuestionModal}
+        onNewQuestion={openNewQuestionModal}
+        onDeleteQuestion={deleteQuestion}
+        onSaveQuestionnaire={saveQuestionnaire}
+        onBack={() => goToStep(1)}
+      />
     )
   } else if (step === 3) {
     stepContent = (
-      <div className={styles.section}>
-        <h3 className={styles.sectionTitle}>{editorText.bridgeTitle}</h3>
-        <div className={styles.bridgeRow}>
-          <button className="btn primary" onClick={() => goToStep(4)}>
-            {editorText.bridgeInsertResults}
-          </button>
-          <button className="btn secondary" onClick={saveGameForPrint} disabled={isSaving}>
-            {isSaving ? editorText.saving : editorText.saveAndPrint}
-          </button>
-        </div>
-        <div className={styles.buttonRow}>
-          <button className="btn secondary" onClick={() => goToStep(2)}>
-            {editorText.back}
-          </button>
-        </div>
-      </div>
+      <StepThreeSection
+        editorText={editorText}
+        onInsertResults={() => goToStep(4)}
+        onSaveAndPrint={saveGameForPrint}
+        isSaving={isSaving}
+        onBack={() => goToStep(2)}
+      />
     )
   } else if (step === 4) {
     stepContent = (
-      <div className={styles.section}>
-        <BottlesList
-          bottles={bottles}
-          questions={templateQuestions}
-          onEditBottle={selectBottle}
-          onNewBottle={startNewBottle}
-          onDeleteBottle={deleteBottle}
-        />
-
-        <div className={styles.buttonRow}>
-          <button className="btn secondary" onClick={() => goToStep(3)}>
-            {editorText.back}
-          </button>
-          {bottles.length > 0 && (
-            <button className="btn primary" onClick={publishGame} disabled={isSaving}>
-              {isSaving
-                ? editorText.saving
-                : isEditMode
-                  ? editorText.updateGame
-                  : editorText.publishGame}
-            </button>
-          )}
-        </div>
-      </div>
+      <StepFourSection
+        editorText={editorText}
+        bottles={bottles}
+        questions={templateQuestions}
+        onEditBottle={selectBottle}
+        onNewBottle={startNewBottle}
+        onDeleteBottle={deleteBottle}
+        onBack={() => goToStep(3)}
+        onPublish={publishGame}
+        isSaving={isSaving}
+        isEditMode={isEditMode}
+      />
     )
   }
 
@@ -684,10 +791,10 @@ export default function GameEditor({
         onStepClick={goToStep}
         isStep2Completed={templateQuestions.length > 0}
         isStep3Completed={templateQuestions.length > 0}
+        isTransitioning={isStepTransitioning}
       />
       {stepContent && (
         <div
-          key={step}
           className={`${styles.stepFrame} ${
             stepDirection === 'back' ? styles.stepEnterBack : styles.stepEnterForward
           }`}>

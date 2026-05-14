@@ -106,7 +106,7 @@ export default function PageTransitionShell({children}) {
       }
 
       queueDirection(anchor.dataset.navDirection)
-  prefetchHref(nextHref)
+      prefetchHref(nextHref)
 
       event.preventDefault()
       transitionLockRef.current = true

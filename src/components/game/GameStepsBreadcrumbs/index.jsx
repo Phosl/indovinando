@@ -8,12 +8,16 @@ export default function GameStepsBreadcrumbs({
   onStepClick,
   isStep2Completed,
   isStep3Completed,
+  isTransitioning = false,
 }) {
   return (
-    <div className={styles.breadcrumbs}>
+    <div
+      className={`${styles.breadcrumbs} ${isTransitioning ? styles.breadcrumbsTransitioning : ''}`}>
       {steps.map((step, index) => {
         const isDisabled =
-          (step.id === 3 && !isStep2Completed) || (step.id === 4 && !isStep3Completed)
+          isTransitioning ||
+          (step.id === 3 && !isStep2Completed) ||
+          (step.id === 4 && !isStep3Completed)
 
         return (
           <div key={step.id} className={styles.breadcrumbItem}>
