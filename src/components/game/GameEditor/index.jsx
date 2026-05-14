@@ -216,6 +216,8 @@ export default function GameEditor({
   const stepTransitionLockRef = useRef(false)
   const stepTransitionTimerRef = useRef(null)
   const savePhaseRef = useRef('idle')
+  const initialStepOverrideRef = useRef(null)
+  const STEP_TRANSITION_LOCK_MS = 360
 
   const editorText = getGameEditorText(lang)
   const alertMessages = getAlertMessages(lang)
@@ -310,8 +312,9 @@ export default function GameEditor({
         setBottles(normalizedBottles)
       }
 
-      // Skip step 1 in edit mode
-      setStep(2)
+      // Skip step 1 in edit mode — set via ref so searchParams effect won't override it
+      initialStepOverrideRef.current = 2
+      prevStepRef.current = 2
     } else if (isQuickCreate && !initializationDoneRef.current) {
       // Initialize for quick create mode
       initializationDoneRef.current = true
@@ -331,7 +334,8 @@ export default function GameEditor({
       }
 
       // Skip step 1 and go to step 2
-      setStep(2)
+      initialStepOverrideRef.current = 2
+      prevStepRef.current = 2
     }
   }, [isEditMode, initialGame, isQuickCreate, initialQuestions, initialGameName])
 
@@ -347,8 +351,14 @@ export default function GameEditor({
   }, [resolvedUserId, supabase])
 
   useEffect(() => {
+    // Skip while a programmatic goToStep() transition is still in flight
+    if (stepTransitionLockRef.current) return
+
     const rawStep = searchParams.get('step')
-    const safeStep = normalizeStep(rawStep)
+    // Initialization may have set an override (edit/quick-create skip step 1)
+    const override = initialStepOverrideRef.current
+    const safeStep = override !== null ? override : normalizeStep(rawStep)
+    initialStepOverrideRef.current = null
 
     setStep((prev) => (prev === safeStep ? prev : safeStep))
 
@@ -372,7 +382,7 @@ export default function GameEditor({
       stepTransitionTimerRef.current = setTimeout(() => {
         stepTransitionLockRef.current = false
         setIsStepTransitioning(false)
-      }, 220)
+      }, STEP_TRANSITION_LOCK_MS)
     }
 
     return () => {
