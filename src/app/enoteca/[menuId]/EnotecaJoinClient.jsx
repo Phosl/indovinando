@@ -146,8 +146,9 @@ export default function EnotecaJoinClient({
 
   return (
     <div className={styles.fullPage}>
-      <TopBar title={`🍷 ${t.enotecaLabel}`} onBack={() => router.push(backHref)}></TopBar>
-
+      <div className={styles.topBarContainer}>
+        <TopBar title={`🍷 ${t.enotecaLabel}`} onBack={() => router.push(backHref)}></TopBar>
+      </div>
       <div className={styles.slideContent}>
         {/* Event info card */}
         <div className={xStyles.infoCard}>

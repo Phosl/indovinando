@@ -7,12 +7,29 @@ import AvatarDisplay from '@/components/AvatarDisplay'
 
 const MEDALS = ['🥇', '🥈', '🥉']
 
-export default function LeaderboardClient({sessionId, gameName, players}) {
+export default function LeaderboardClient({
+  sessionId,
+  gameName,
+  players,
+  isAuthenticated,
+  isHostUser,
+}) {
   const router = useRouter()
   const t = useT('live.leaderboard')
 
-  const handleBackHome = () => {
-    router.push('/dashboard')
+  const handlePrimaryAction = () => {
+    if (!isAuthenticated) {
+      router.push(
+        `/auth?mode=register&next=${encodeURIComponent(`/live/session/${sessionId}/leaderboard`)}`,
+      )
+      return
+    }
+
+    if (isHostUser) {
+      router.push('/miei-giochi')
+    } else {
+      router.push('/')
+    }
   }
 
   const topThree = players.slice(0, 3)
@@ -58,8 +75,8 @@ export default function LeaderboardClient({sessionId, gameName, players}) {
         </div>
       )}
 
-      <button onClick={handleBackHome} className={styles.homeButton}>
-        {t('backToDashboard')}
+      <button onClick={handlePrimaryAction} className={styles.homeButton}>
+        {!isAuthenticated ? t('register') : isHostUser ? t('backToMyGames') : t('exitToHome')}
       </button>
     </div>
   )

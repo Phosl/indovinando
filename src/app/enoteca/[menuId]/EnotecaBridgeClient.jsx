@@ -125,8 +125,9 @@ export default function EnotecaBridgeClient({
 
   return (
     <div className={styles.fullPage}>
-      <TopBar title={`🍷 ${t.enotecaLabel}`} onBack={() => router.push(backHref)}></TopBar>
-
+      <div className={styles.topBarContainer}>
+        <TopBar title={`🍷 ${t.enotecaLabel}`} onBack={() => router.push(backHref)}></TopBar>
+      </div>
       <div className={styles.slideContent}>
         <div className={xStyles.infoCard}>
           <span className={xStyles.wineBadge}>🍷</span>
@@ -143,9 +144,7 @@ export default function EnotecaBridgeClient({
               <>
                 <p className={xStyles.bridgeTitle}>{t.bridgeTitle}</p>
                 <p className={xStyles.bridgeHint}>{t.bridgeHint}</p>
-                <label className={xStyles.linkLabel} htmlFor="enoteca-share-link">
-                  {t.tastingLinkLabel}
-                </label>
+
                 <div className={xStyles.linkRow}>
                   <input
                     id="enoteca-share-link"

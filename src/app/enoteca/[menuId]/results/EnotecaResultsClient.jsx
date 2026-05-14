@@ -81,8 +81,9 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
 
   return (
     <div className={styles.fullPage}>
-      <TopBar title={`🍷 ${menuName}`} onBack={() => router.push(backHref)}></TopBar>
-
+      <div className={styles.topBarContainer}>
+        <TopBar title={`🍷 ${menuName}`} onBack={() => router.push(backHref)}></TopBar>
+      </div>
       <div className={`${styles.slideContent} ${xStyles.resultsSlideContent}`}>
         {/* Hero */}
         <div className={xStyles.heroSection}>

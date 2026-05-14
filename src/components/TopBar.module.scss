@@ -30,15 +30,15 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: rgba(168, 85, 247, 0.12);
+  background: var(--topbar-progress-track, rgba(168, 85, 247, 0.12));
 }
 
 .progressFill {
   height: 100%;
-  background: linear-gradient(90deg, #a855f7, #7c3aed);
+  background: var(--topbar-progress-fill, linear-gradient(90deg, #a855f7, #7c3aed));
   border-radius: 0 2px 2px 0;
   transition: width 0.5s ease;
-  box-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+  box-shadow: var(--topbar-progress-shadow, 0 0 8px rgba(168, 85, 247, 0.5));
 }
 
 .backBtn {

@@ -2,11 +2,12 @@ import {NextResponse} from 'next/server'
 import {createClient} from '@supabase/supabase-js'
 import {createServerSupabase} from '@/lib/supabaseServer'
 
-function createAdminClient() {
+function createWriteClient(fallback) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!url || !key) throw new Error('Missing Supabase service credentials')
-  return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
+  if (url && key)
+    return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
+  return fallback
 }
 
 /**
@@ -36,9 +37,9 @@ export async function POST(request) {
       return NextResponse.json({error: 'Not authenticated'}, {status: 401})
     }
 
-    const admin = createAdminClient()
+    const db = createWriteClient(supabase)
 
-    const {data: session} = await admin
+    const {data: session} = await db
       .from('live_sessions')
       .select('host_user_id, current_question_index, status')
       .eq('id', sessionId)
@@ -55,7 +56,7 @@ export async function POST(request) {
     }
 
     // ── 1. Sync round scores to live_players.total_score ──────────────────────
-    const {data: answers} = await admin
+    const {data: answers} = await db
       .from('live_round_answers')
       .select('player_id, points')
       .eq('session_id', sessionId)
@@ -66,7 +67,7 @@ export async function POST(request) {
         roundPointsByPlayer[a.player_id] = (roundPointsByPlayer[a.player_id] || 0) + (a.points || 0)
       })
 
-      const {data: players} = await admin
+      const {data: players} = await db
         .from('live_players')
         .select('id, total_score')
         .eq('session_id', sessionId)
@@ -77,7 +78,7 @@ export async function POST(request) {
             .map((p) => {
               const add = roundPointsByPlayer[p.id] || 0
               if (add <= 0) return null
-              return admin
+              return db
                 .from('live_players')
                 .update({total_score: (p.total_score || 0) + add})
                 .eq('id', p.id)
@@ -88,11 +89,11 @@ export async function POST(request) {
     }
 
     // ── 2. Clear current-round answers so next round starts fresh ─────────────
-    await admin.from('live_round_answers').delete().eq('session_id', sessionId)
+    await db.from('live_round_answers').delete().eq('session_id', sessionId)
 
     // ── 3. Advance session to next bottle ─────────────────────────────────────
     const nextIndex = (session.current_question_index ?? 0) + 1
-    await admin
+    await db
       .from('live_sessions')
       .update({
         current_question_index: nextIndex,

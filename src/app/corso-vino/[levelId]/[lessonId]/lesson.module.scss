@@ -1,5 +1,11 @@
 // Lesson-specific styles — quiz shell reuses playerLive.module.scss
 
+.courseTopBar {
+  --topbar-progress-track: rgba(16, 185, 129, 0.16);
+  --topbar-progress-fill: linear-gradient(90deg, #34d399, #10b981);
+  --topbar-progress-shadow: 0 0 8px rgba(16, 185, 129, 0.45);
+}
+
 // ── Intro card ────────────────────────────────────────────────
 .introCard {
   background: var(--foreground);
@@ -68,7 +74,7 @@
 // ── Result progress bar ───────────────────────────────────────
 .resultProgress {
   width: 100%;
-  max-width: 320px;
+  max-width: 960px;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -237,7 +243,7 @@
 
 .resultStatsGrid {
   width: 100%;
-  max-width: 320px;
+  max-width: 960px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
@@ -289,7 +295,7 @@
     0 0 0 6px rgba(192, 132, 252, 0.15),
     0 20px 60px rgba(124, 58, 237, 0.35);
   padding: 36px 28px;
-  max-width: 340px;
+  max-width: 960px;
   width: 100%;
   display: flex;
   flex-direction: column;

@@ -332,6 +332,49 @@
   margin: 0;
 }
 
+.participantItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.participantJustJoined {
+  animation: participantFlash 1.8s ease-out;
+}
+
+.participantName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.participantTag {
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--selected-dark);
+  background: var(--selected-extra-light);
+  border: 1px solid color-mix(in srgb, var(--selected-dark) 30%, transparent);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+@keyframes participantFlash {
+  0% {
+    border-color: var(--accept-dark);
+    background: color-mix(in srgb, var(--accept) 24%, var(--background));
+    transform: translateY(-1px);
+  }
+
+  100% {
+    border-color: var(--button-secondary-border);
+    background: var(--background);
+    transform: translateY(0);
+  }
+}
+
 .actions {
   display: flex;
   gap: 12px;

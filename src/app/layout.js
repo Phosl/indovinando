@@ -6,6 +6,10 @@ import ScrollToTop from '@/components/ScrollToTop'
 import AppleSplashLinks from '@/components/AppleSplashLinks'
 import {getServerLanguage} from '@/lib/i18n/server'
 
+const isPreview = process.env.VERCEL_ENV === 'preview'
+const iconBase = isPreview ? '/app_icon_feature' : '/app_icon'
+const themeColor = isPreview ? '#145f4d' : '#ffffff'
+
 const nunito = Nunito({
   subsets: ['latin'],
   display: 'swap',
@@ -20,16 +24,18 @@ export const metadata = {
     title: 'Indovinando',
   },
   icons: {
-    icon: '/app_icon/favicon.ico',
-    apple: '/app_icon/apple-touch-icon.png',
+    icon: `${iconBase}/favicon.ico`,
+    apple: `${iconBase}/apple-touch-icon.png`,
   },
 }
 
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   viewportFit: 'cover',
-  themeColor: '#ffffff',
+  themeColor,
 }
 
 export default async function RootLayout({children}) {

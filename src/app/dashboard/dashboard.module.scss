@@ -94,12 +94,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-
-  @media (min-width: 960px) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
 }
 
 .menuCard {

@@ -1,5 +1,6 @@
 'use client'
 
+import {useCallback, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import Loader from '@/components/Loader'
 import styles from './playerLive.module.scss'
@@ -32,6 +33,7 @@ export default function PlayerLiveClient({
   const router = useRouter()
   const isHostUser = Boolean(userId && hostUserId && userId === hostUserId)
   const t = useT('live.playerLive')
+  const [removedFromSession, setRemovedFromSession] = useState(false)
 
   // ── Hooks ──────────────────────────────────────────────────────────────────
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
@@ -49,6 +51,12 @@ export default function PlayerLiveClient({
     isHostUser,
     initialPlayerData,
   })
+
+  const handleRemovedFromSession = useCallback(() => {
+    localStorage.removeItem(playerStorageKey)
+    localStorage.removeItem(nicknameStorageKey)
+    setRemovedFromSession(true)
+  }, [nicknameStorageKey, playerStorageKey])
 
   const {
     liveQuestions,
@@ -114,6 +122,7 @@ export default function PlayerLiveClient({
     setRoundStatus,
     setAllPlayers,
     playSound,
+    onPlayerRemoved: handleRemovedFromSession,
   })
 
   const {
@@ -162,6 +171,15 @@ export default function PlayerLiveClient({
       }
     },
     onPlayersUpdate: (incomingPlayers) => {
+      if (playerData?.id && Array.isArray(incomingPlayers)) {
+        const stillInSession = incomingPlayers.some((player) => player.id === playerData.id)
+        if (!stillInSession) {
+          setPlayerData(null)
+          handleRemovedFromSession()
+          return
+        }
+      }
+
       setAllPlayers((prevPlayers) => {
         if (incomingPlayers?.length) return incomingPlayers
         return prevPlayers
@@ -199,6 +217,20 @@ export default function PlayerLiveClient({
   ) : null
 
   // ── Loading / error guards ─────────────────────────────────────────────────
+  if (removedFromSession) {
+    return (
+      <div className={styles.fullPage}>
+        <div className={styles.centeredCard}>
+          <h2>{t('removedTitle')}</h2>
+          <p>{t('removedDesc')}</p>
+          <button className={styles.checkButton} onClick={() => router.push('/')}>
+            {t('goHomeNow')}
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   if (sessionFinished) {
     return (
       <div className={styles.fullPage}>

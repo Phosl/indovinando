@@ -1,6 +1,6 @@
 .page {
   min-height: 100dvh;
-  max-width: 640px;
+  max-width: 960px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -132,6 +132,7 @@
   align-items: center;
   gap: 14px;
   text-align: left;
+  width: 100%;
 }
 
 .heroMascot {
@@ -139,6 +140,9 @@
   height: auto;
   object-fit: contain;
   flex-shrink: 0;
+  @media (max-width: 520px) {
+    width: 140px;
+  }
 }
 
 .heroText {
@@ -146,6 +150,7 @@
   flex-direction: column;
   gap: 8px;
   min-width: 0;
+  flex-grow: 1;
 }
 
 .heroTitle {
@@ -160,13 +165,11 @@
   color: var(--text-secondary);
   font-weight: 600;
   margin: 0;
-  max-width: 380px;
   line-height: 1.5;
 }
 
 .heroProgress {
   width: 100%;
-  max-width: 320px;
   display: flex;
   flex-direction: column;
   gap: 4px;

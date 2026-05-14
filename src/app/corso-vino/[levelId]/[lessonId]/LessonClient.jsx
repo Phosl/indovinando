@@ -10,6 +10,7 @@ import {useGameAudio} from '../../../live/session/[sessionId]/play/hooks/useGame
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {pickLangText} from '@/lib/i18n/dictionaries'
 import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
+import TopBar from '@/components/TopBar'
 
 const LESSON_UI_DICTIONARY = {
   it: {
@@ -142,6 +143,12 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
   const isLastQuestion = questionIndex >= questions.length - 1
   const correctId = currentQuestion?.correctId
   const backHref = authChecked && !userId ? '/' : `/corso-vino/${level.id}`
+  const introProgressPct = didacticSlides.length
+    ? Math.round(((didacticIndex + 1) / didacticSlides.length) * 100)
+    : 0
+  const chapterProgressPct = questions.length
+    ? Math.round(((questionIndex + 1) / questions.length) * 100)
+    : 100
 
   const isCorrect = checked && selectedId === correctId
   const nextLessonPath = nextLessonId ? `/corso-vino/${level.id}/${nextLessonId}` : null
@@ -315,39 +322,15 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
   if (screen === 'intro') {
     return (
       <div className={pStyles.fullPage}>
-        <div className={pStyles.topBar}>
-          <div className={pStyles.playerInfo}>
-            <span className={pStyles.avatar}>{lesson.emoji}</span>
-            <span className={pStyles.nickname}>
-              {t.chapterLabel.replace('{index}', String(level.order))}
-            </span>
-          </div>
-          <div className={pStyles.progressPills}>
-            {didacticSlides.map((slide, i) => (
-              <span
-                key={slide.id ?? i}
-                className={`${pStyles.pill}${
-                  i < didacticIndex
-                    ? ` ${pStyles.pillDone}`
-                    : i === didacticIndex
-                      ? ` ${pStyles.pillActive}`
-                      : ''
-                }`}
-              />
-            ))}
-          </div>
-          <div className={pStyles.topActions}>
-            <button className={pStyles.audioButton} onClick={toggleAudio}>
-              {audioEnabled ? '🔊 ON' : '🔇 OFF'}
-            </button>
-            <button
-              className={pStyles.exitButton}
-              onClick={() => router.push(backHref)}
-              aria-label={t.exitLesson}>
-              ✕
-            </button>
-          </div>
-        </div>
+        <TopBar
+          className={xStyles.courseTopBar}
+          title={t.chapterLabel.replace('{index}', String(level.order))}
+          onBack={() => router.push(backHref)}
+          progress={introProgressPct}>
+          <button className={pStyles.audioButton} onClick={toggleAudio}>
+            {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+          </button>
+        </TopBar>
 
         <div className={pStyles.slideContent} ref={introScrollRef}>
           <div className={xStyles.introCard}>
@@ -399,19 +382,18 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
 
     return (
       <div className={pStyles.fullPage}>
-        <div className={pStyles.topBar}>
-          <div className={pStyles.playerInfo}>
-            <span className={pStyles.avatar}>{lesson.emoji}</span>
-            <span className={pStyles.nickname}>
-              {t.chapterLabel.replace('{index}', String(level.order))}
-            </span>
-          </div>
-          <div className={pStyles.topActions}>
-            <button className={pStyles.leaderboardButton} onClick={() => router.push(backHref)}>
-              {t.allLessons}
-            </button>
-          </div>
-        </div>
+        <TopBar
+          className={xStyles.courseTopBar}
+          title={t.chapterLabel.replace('{index}', String(level.order))}
+          onBack={() => router.push(backHref)}
+          progress={100}>
+          <button className={pStyles.audioButton} onClick={toggleAudio}>
+            {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+          </button>
+          <button className={pStyles.leaderboardButton} onClick={() => router.push(backHref)}>
+            {t.allLessons}
+          </button>
+        </TopBar>
 
         <div className={pStyles.slideContent}>
           <div className={xStyles.resultHero}>
@@ -518,12 +500,15 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
   if (!currentQuestion) {
     return (
       <div className={pStyles.fullPage}>
-        <div className={pStyles.topBar}>
-          <div className={pStyles.playerInfo}>
-            <span className={pStyles.avatar}>{lesson.emoji}</span>
-            <span className={pStyles.nickname}>{lesson.title}</span>
-          </div>
-        </div>
+        <TopBar
+          className={xStyles.courseTopBar}
+          title={lesson.title}
+          onBack={() => router.push(backHref)}
+          progress={100}>
+          <button className={pStyles.audioButton} onClick={toggleAudio}>
+            {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+          </button>
+        </TopBar>
         <div className={pStyles.slideContent}>
           <div className={xStyles.resultHero}>
             <p className={xStyles.resultHeadline}>{t.noQuestions}</p>
@@ -547,39 +532,15 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
 
   return (
     <div className={pStyles.fullPage}>
-      <div className={pStyles.topBar}>
-        <div className={pStyles.playerInfo}>
-          <span className={pStyles.avatar}>{lesson.emoji}</span>
-          <span className={pStyles.nickname}>
-            {t.chapterLabel.replace('{index}', String(level.order))}
-          </span>
-        </div>
-        <div className={pStyles.progressPills}>
-          {questions.map((_, i) => (
-            <span
-              key={i}
-              className={`${pStyles.pill}${
-                i < questionIndex
-                  ? ` ${pStyles.pillDone}`
-                  : i === questionIndex
-                    ? ` ${pStyles.pillActive}`
-                    : ''
-              }`}
-            />
-          ))}
-        </div>
-        <div className={pStyles.topActions}>
-          <button className={pStyles.audioButton} onClick={toggleAudio}>
-            {audioEnabled ? '🔊 ON' : '🔇 OFF'}
-          </button>
-          <button
-            className={pStyles.exitButton}
-            onClick={() => router.push(backHref)}
-            aria-label={t.exitLesson}>
-            ✕
-          </button>
-        </div>
-      </div>
+      <TopBar
+        className={xStyles.courseTopBar}
+        title={t.chapterLabel.replace('{index}', String(level.order))}
+        onBack={() => router.push(backHref)}
+        progress={chapterProgressPct}>
+        <button className={pStyles.audioButton} onClick={toggleAudio}>
+          {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+        </button>
+      </TopBar>
 
       {visibleCombo && (
         <div key={visibleCombo.key} className={pStyles.comboToast}>

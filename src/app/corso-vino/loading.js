@@ -17,7 +17,7 @@ function Bone({w, h, style}) {
 
 export default function CorsoVinoLoading() {
   return (
-    <main style={{padding: '0 20px 32px', maxWidth: 640, margin: '0 auto'}}>
+    <main style={{padding: '0 20px 32px', maxWidth: 960, margin: '0 auto'}}>
       {/* TopBar skeleton */}
       <div
         className="skeleton-frame"

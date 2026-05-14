@@ -41,14 +41,9 @@ export default async function Dashboard() {
         </section>
 
         <nav className={styles.menuGrid}>
-          <a href="/game/create" className={`${styles.menuCard} ${styles.menuCardGreen}`}>
-            <span className={styles.menuCardEmoji}></span>
-            <span className={styles.menuCardLabel}>{dashboardDict.createGame || 'Crea gioco'}</span>
-          </a>
-
           <a href="/miei-giochi" className={`${styles.menuCard} ${styles.menuCardTertiary}`}>
             <span className={styles.menuCardEmoji}></span>
-            <span className={styles.menuCardLabel}>{dashboardDict.myGames || 'I miei giochi'}</span>
+            <span className={styles.menuCardLabel}>{dashboardDict.play || 'Gioca'}</span>
           </a>
 
           <a href="/corso-vino" className={`${styles.menuCard} ${styles.menuCardWine}`}>

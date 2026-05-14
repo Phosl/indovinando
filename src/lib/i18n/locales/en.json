@@ -36,15 +36,18 @@
     "changelog": "Changelog",
     "yourGames": "Your games",
     "myGames": "My games",
+    "play": "Play",
     "status": "Status",
     "published": "Published",
     "draft": "Draft",
     "created": "Created",
-    "view": "View",
+    "view": "Options",
     "playLive": "Play Live",
-    "enoteca": "🍷 Enoteca",
+    "enoteca": "Enoteca",
     "printCard": "Print Card",
     "emptyState": "You haven't created any games yet. Start now!",
+    "emptyStateFirstGame": "You haven't created any games yet. Create your first game to start playing.",
+    "createFirstGame": "Create your first game",
     "history": "📜 Match History",
     "storico": {
       "title": "📜 Match History",
@@ -62,6 +65,9 @@
     "playerLive": {
       "gameOverTitle": "🎉 Game Over!",
       "redirecting": "Redirecting to leaderboard...",
+      "removedTitle": "🚪 You were removed",
+      "removedDesc": "The host removed you from this session. Redirecting to home...",
+      "goHomeNow": "Go to home",
       "participantNotFound": "👤 Participant not found",
       "participantNotFoundDesc": "Rejoin from the session entry page using your nickname.",
       "backToJoin": "Back to join",
@@ -110,6 +116,9 @@
       "youSuffix": " (you)",
       "pointsUnit": "pts",
       "remove": "Remove",
+      "removePlayerTitle": "Remove player?",
+      "removePlayerDesc": "Do you want to remove",
+      "removePlayerConfirm": "Remove",
       "noPlayersYet": "No players yet.",
       "close": "Close",
       "leaveGameTitle": "Do you want to leave the game?",
@@ -174,7 +183,10 @@
       "title": "🎉 Final leaderboard",
       "pointsUnit": "pts",
       "fullLeaderboard": "Full leaderboard",
-      "backToDashboard": "← Back to dashboard"
+      "backToDashboard": "← Back to dashboard",
+      "exitToHome": "Exit",
+      "backToMyGames": "My games",
+      "register": "Register"
     }
   },
   "wineCourseContent": {

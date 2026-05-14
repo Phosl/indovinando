@@ -1,11 +1,12 @@
 import {NextResponse} from 'next/server'
 import {createClient} from '@supabase/supabase-js'
 
-function createAdminClient() {
+function createWriteClient(fallback) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!url || !key) throw new Error('Missing Supabase service credentials')
-  return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
+  if (url && key)
+    return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
+  return fallback
 }
 
 /**
@@ -28,10 +29,10 @@ export async function POST(request) {
       return NextResponse.json({error: 'Missing required fields'}, {status: 400})
     }
 
-    const admin = createAdminClient()
+    const db = createWriteClient(null)
 
     // Verify player is in this session (basic integrity check)
-    const {data: player} = await admin
+    const {data: player} = await db
       .from('live_players')
       .select('id')
       .eq('id', playerId)
@@ -42,7 +43,7 @@ export async function POST(request) {
       return NextResponse.json({error: 'Player not found in session'}, {status: 403})
     }
 
-    const {error} = await admin.from('live_round_answers').insert({
+    const {error} = await db.from('live_round_answers').insert({
       session_id: sessionId,
       player_id: playerId,
       question_id: questionId,

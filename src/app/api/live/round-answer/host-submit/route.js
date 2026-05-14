@@ -1,17 +1,13 @@
 import {NextResponse} from 'next/server'
 import {createClient} from '@supabase/supabase-js'
+import {createServerSupabase} from '@/lib/supabaseServer'
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-function createAdminClient() {
-  if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
-    throw new Error('Missing Supabase service credentials')
-  }
-
-  return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
-    auth: {persistSession: false, autoRefreshToken: false},
-  })
+function createWriteClient(fallback) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (url && key)
+    return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
+  return fallback
 }
 
 export async function POST(request) {
@@ -27,9 +23,10 @@ export async function POST(request) {
       return NextResponse.json({error: 'Missing required fields'}, {status: 400})
     }
 
-    const admin = createAdminClient()
+    const supabase = await createServerSupabase()
+    const db = createWriteClient(supabase)
 
-    const {data: session, error: sessionError} = await admin
+    const {data: session, error: sessionError} = await db
       .from('live_sessions')
       .select('id, host_user_id, game_id, current_question_index')
       .eq('id', sessionId)
@@ -39,7 +36,7 @@ export async function POST(request) {
       return NextResponse.json({error: 'Session not found'}, {status: 404})
     }
 
-    const {data: hostPlayer, error: playerError} = await admin
+    const {data: hostPlayer, error: playerError} = await db
       .from('live_players')
       .select('id, session_id, user_id, is_host')
       .eq('id', playerId)
@@ -56,7 +53,7 @@ export async function POST(request) {
 
     const currentBottleIndex = Math.max(0, Number(session.current_question_index || 0))
 
-    const {data: currentBottleRows, error: bottlesError} = await admin
+    const {data: currentBottleRows, error: bottlesError} = await db
       .from('game_bottles')
       .select('id')
       .eq('game_id', session.game_id)
@@ -72,7 +69,7 @@ export async function POST(request) {
       return NextResponse.json({error: 'Invalid current bottle index'}, {status: 400})
     }
 
-    const {data: correctRow, error: correctError} = await admin
+    const {data: correctRow, error: correctError} = await db
       .from('game_bottle_answers')
       .select('option_id')
       .eq('bottle_id', currentBottle.id)
@@ -89,7 +86,7 @@ export async function POST(request) {
     const comboBonus = isCorrect && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
     const points = isCorrect ? 10 + comboBonus : 0
 
-    const {error: answerError} = await admin.from('live_round_answers').upsert(
+    const {error: answerError} = await db.from('live_round_answers').upsert(
       {
         session_id: sessionId,
         player_id: playerId,

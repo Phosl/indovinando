@@ -10,6 +10,10 @@ export default async function LeaderboardPage({params}) {
   const supabase = await createServerSupabase()
   const resolvedParams = await Promise.resolve(params)
   const sessionId = resolvedParams.sessionId
+  const {
+    data: {user},
+  } = await supabase.auth.getUser()
+  let isHostUser = false
 
   // Load session
   const {data: session, error: sessionError} = await supabase
@@ -33,11 +37,23 @@ export default async function LeaderboardPage({params}) {
     .eq('session_id', sessionId)
     .order('total_score', {ascending: false})
 
+  if (user?.id) {
+    const {data: me} = await supabase
+      .from('live_players')
+      .select('is_host')
+      .eq('session_id', sessionId)
+      .eq('user_id', user.id)
+      .maybeSingle()
+    isHostUser = Boolean(me?.is_host)
+  }
+
   return (
     <LeaderboardClient
       sessionId={sessionId}
       gameName={session.games?.name || 'Gioco'}
       players={players || []}
+      isAuthenticated={Boolean(user)}
+      isHostUser={isHostUser}
     />
   )
 }

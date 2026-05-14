@@ -18,8 +18,10 @@ function AuthForm() {
   const searchParams = useSearchParams()
   const nextPath = searchParams.get('next') || '/dashboard'
   const safeNextPath = nextPath.startsWith('/') ? nextPath : '/dashboard'
+  const requestedMode = searchParams.get('mode')
+  const defaultMode = requestedMode === 'register' ? 'register' : 'login'
 
-  const [mode, setMode] = useState('login')
+  const [mode, setMode] = useState(defaultMode)
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

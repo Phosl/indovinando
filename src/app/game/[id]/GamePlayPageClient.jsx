@@ -48,7 +48,7 @@ export default function GamePlayPageClient({game, questions, bottles, isOwner, o
   return (
     <main className="flex-container">
       <div className="flex-column" style={{width: '100%', maxWidth: 960, margin: '0 auto'}}>
-        <TopBar title={`🎮 ${game.name}`} onBack={() => router.push('/dashboard')} />
+        <TopBar title={`🎮 ${game.name}`} onBack={() => router.push('/miei-giochi')} />
 
         <div className={styles.actionsBar}>
           <a href={`/game/${game.id}/print`} className={`btn secondary ${styles.actionBtn}`}>
@@ -68,7 +68,7 @@ export default function GamePlayPageClient({game, questions, bottles, isOwner, o
             onClick={handleDelete}
             disabled={isDeleting}
             className={`${styles.dangerAction} ${isDeleting ? styles.disabledAction : ''}`}>
-            {isDeleting ? '...' : `🗑️ ${t.delete}`}
+            {isDeleting ? '...' : `${t.delete}`}
           </button>
         )}
       </div>

@@ -34,6 +34,37 @@ function rowsToProgress(rows) {
   }, {})
 }
 
+function parseIsoTime(value) {
+  if (!value) return 0
+  const ts = Date.parse(value)
+  return Number.isNaN(ts) ? 0 : ts
+}
+
+function mergeLessonProgress(localLesson = {}, dbLesson = {}) {
+  const localCompleted = localLesson?.completed === true
+  const dbCompleted = dbLesson?.completed === true
+
+  const localScore = Number(localLesson?.score ?? 0)
+  const dbScore = Number(dbLesson?.score ?? 0)
+  const localMax = Number(localLesson?.maxScore ?? 0)
+  const dbMax = Number(dbLesson?.maxScore ?? 0)
+  const localAttempts = Number(localLesson?.attempts ?? 0)
+  const dbAttempts = Number(dbLesson?.attempts ?? 0)
+
+  const localCompletedAt = localLesson?.completedAt ?? null
+  const dbCompletedAt = dbLesson?.completedAt ?? null
+  const completedAt =
+    parseIsoTime(localCompletedAt) >= parseIsoTime(dbCompletedAt) ? localCompletedAt : dbCompletedAt
+
+  return {
+    completed: localCompleted || dbCompleted,
+    score: Math.max(localScore, dbScore),
+    maxScore: Math.max(localMax, dbMax),
+    attempts: Math.max(localAttempts, dbAttempts),
+    completedAt,
+  }
+}
+
 export function useWineCourseProgress() {
   const [progress, setProgress] = useState({})
   const [loaded, setLoaded] = useState(false)
@@ -82,7 +113,13 @@ export function useWineCourseProgress() {
         const dbProgress = rowsToProgress(rows ?? [])
         const merged = {...local}
         for (const [levelId, lessons] of Object.entries(dbProgress)) {
-          merged[levelId] = {...(merged[levelId] ?? {}), ...lessons}
+          const currentLevel = merged[levelId] ?? {}
+          const nextLevel = {...currentLevel}
+          for (const [lessonId, dbLesson] of Object.entries(lessons)) {
+            const localLesson = currentLevel[lessonId] ?? {}
+            nextLevel[lessonId] = mergeLessonProgress(localLesson, dbLesson)
+          }
+          merged[levelId] = nextLevel
         }
 
         setProgress(merged)

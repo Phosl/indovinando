@@ -5,14 +5,12 @@ import {createClient} from '@supabase/supabase-js'
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-function createAdminClient() {
-  if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
-    throw new Error('Missing Supabase service credentials')
-  }
-
-  return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
-    auth: {persistSession: false, autoRefreshToken: false},
-  })
+function createWriteClient(fallback) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (url && key)
+    return createClient(url, key, {auth: {persistSession: false, autoRefreshToken: false}})
+  return fallback
 }
 
 export async function POST(request) {
@@ -44,17 +42,18 @@ export async function POST(request) {
       return NextResponse.json({error: 'Session not found'}, {status: 404})
     }
 
-    const admin = createAdminClient()
-    const {count, error: countError} = await admin
+    const db = createWriteClient(supabase)
+    const {data: players, error: playersError} = await db
       .from('live_players')
-      .select('id', {count: 'exact', head: true})
+      .select('id, nickname, avatar_id, is_host, joined_at')
       .eq('session_id', trimmedSessionId)
+      .order('joined_at', {ascending: true})
 
-    if (countError) {
-      return NextResponse.json({error: countError.message}, {status: 500})
+    if (playersError) {
+      return NextResponse.json({error: playersError.message}, {status: 500})
     }
 
-    return NextResponse.json({count: count || 0})
+    return NextResponse.json({count: players?.length || 0, players: players || []})
   } catch (error) {
     return NextResponse.json({error: error?.message || 'Unexpected error'}, {status: 500})
   }

@@ -76,7 +76,7 @@ export default function GamePlayView({game, questions, bottles}) {
                   })}
                 </div>
 
-                <p className={styles.correctLabel}>{text.correctLabel}</p>
+                {/* <p className={styles.correctLabel}>{text.correctLabel}</p> */}
               </div>
             )
           })}

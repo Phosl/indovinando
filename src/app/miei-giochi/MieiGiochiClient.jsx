@@ -20,14 +20,16 @@ export default function MieiGiochiClient({
 
   return (
     <div className={styles.page}>
-      <TopBar
-        title={
-          activeTab === 'games'
-            ? dashboardDict.myGames || 'I miei giochi'
-            : storicoDict.title || '📜 Storico partite'
-        }
-        onBack={() => router.push('/dashboard')}
-      />
+      <div className={styles.topBarContainer}>
+        <TopBar
+          title={
+            activeTab === 'games'
+              ? dashboardDict.myGames || 'I miei giochi'
+              : storicoDict.title || '📜 Storico partite'
+          }
+          onBack={() => router.push('/dashboard')}
+        />
+      </div>
 
       {/* ── Tab bar ── */}
       <div className={styles.tabBar}>
@@ -46,16 +48,24 @@ export default function MieiGiochiClient({
           </button>
         </div>
       </div>
-
       <div className={styles.content}>
         {activeTab === 'games' && (
           <div className={styles.gamesTab}>
+            <div className={styles.gamesHeaderActions}>
+              <a href="/game/create" className="btn primary">
+                {dashboardDict.createGame || '+ Crea gioco'}
+              </a>
+            </div>
+
             {games.length === 0 ? (
               <div className={styles.emptyState}>
                 <span className={styles.emptyIcon}>🎮</span>
-                <p>{dashboardDict.emptyState || 'Non hai ancora creato giochi. Inizia ora!'}</p>
+                <p>
+                  {dashboardDict.emptyStateFirstGame ||
+                    'Non hai ancora creato giochi. Crea il tuo primo gioco per iniziare a giocare.'}
+                </p>
                 <a href="/game/create" className="btn primary">
-                  {dashboardDict.createGame || '+ Crea gioco'}
+                  {dashboardDict.createFirstGame || 'Crea il tuo primo gioco'}
                 </a>
               </div>
             ) : (
@@ -80,9 +90,6 @@ export default function MieiGiochiClient({
                       })}
                     </p>
                     <div className={styles.gameActions}>
-                      <a href={`/game/${game.id}`} className={`btn primary ${styles.actionBtn}`}>
-                        {dashboardDict.view || 'Apri'}
-                      </a>
                       <a
                         href={`/game/${game.id}/live`}
                         className={`${styles.liveAction} ${styles.actionBtn}`}>
@@ -92,13 +99,13 @@ export default function MieiGiochiClient({
                         <a
                           href={`/enoteca/${game.id}`}
                           className={`${styles.enotecaAction} ${styles.actionBtn}`}>
-                          {dashboardDict.enoteca || '🍷 Enoteca'}
+                          {dashboardDict.enoteca || 'Enoteca'}
                         </a>
                       )}
                       <a
-                        href={`/game/${game.id}/print`}
-                        className={`btn secondary ${styles.actionBtn}`}>
-                        {dashboardDict.printCard || '🖨️ Stampa'}
+                        href={`/game/${game.id}`}
+                        className={`btn tertiary-bordered ${styles.actionBtn} ${styles.optionsAction}`}>
+                        {dashboardDict.view || 'Opzioni'}
                       </a>
                     </div>
                   </div>
