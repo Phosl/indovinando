@@ -65,6 +65,9 @@
     "playerLive": {
       "gameOverTitle": "🎉 Gioco Terminato!",
       "redirecting": "Reindirizzamento alla classifica...",
+      "removedTitle": "Sei stato rimosso",
+      "removedDesc": "L'host ti ha rimosso dalla sessione.",
+      "goHomeNow": "Vai alla home",
       "participantNotFound": "👤 Partecipante non trovato",
       "participantNotFoundDesc": "Rientra dalla pagina di accesso alla sessione con il tuo nickname.",
       "backToJoin": "Torna all'accesso",
@@ -113,6 +116,9 @@
       "youSuffix": " (tu)",
       "pointsUnit": "pt",
       "remove": "Rimuovi",
+      "removePlayerTitle": "Rimuovere giocatore?",
+      "removePlayerDesc": "Confermi di voler rimuovere",
+      "removePlayerConfirm": "Rimuovi",
       "noPlayersYet": "Nessun giocatore ancora.",
       "close": "Chiudi",
       "leaveGameTitle": "Vuoi uscire dal gioco?",
@@ -177,7 +183,10 @@
       "title": "🎉 Classifica finale",
       "pointsUnit": "pt",
       "fullLeaderboard": "Classifica completa",
-      "backToDashboard": "← Torna alla dashboard"
+      "backToDashboard": "← Torna alla dashboard",
+      "exitToHome": "Esci",
+      "backToMyGames": "I miei giochi",
+      "register": "Registrati"
     }
   },
   "wineCourseContent": {

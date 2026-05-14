@@ -1,4 +1,4 @@
-import {memo} from 'react'
+import {memo, useState} from 'react'
 import styles from '../playerLive.module.scss'
 import {useT} from '@/lib/i18n/useT'
 import AvatarDisplay from '@/components/AvatarDisplay'
@@ -16,6 +16,7 @@ export const GameOverlays = memo(function GameOverlays({
   onExitGame,
 }) {
   const t = useT('live.overlays')
+  const [pendingKickPlayer, setPendingKickPlayer] = useState(null)
 
   return (
     <>
@@ -54,15 +55,15 @@ export const GameOverlays = memo(function GameOverlays({
                           {(player.roundPoints || 0) > 0 && (
                             <span className={styles.standingDelta}>+{player.roundPoints}</span>
                           )}
+                          {isHostUser && !isMe && (
+                            <button
+                              className={styles.kickButton}
+                              onClick={() => setPendingKickPlayer(player)}
+                              title={`${t('remove')} ${player.nickname}`}>
+                              ✕
+                            </button>
+                          )}
                         </span>
-                        {isHostUser && !isMe && (
-                          <button
-                            className={styles.kickButton}
-                            onClick={() => onKickPlayer(player.id)}
-                            title={`${t('remove')} ${player.nickname}`}>
-                            ✕
-                          </button>
-                        )}
                       </div>
                     )
                   })}
@@ -73,6 +74,34 @@ export const GameOverlays = memo(function GameOverlays({
             <button className={styles.sheetClose} onClick={onCloseLeaderboard}>
               {t('close')}
             </button>
+
+            {pendingKickPlayer && (
+              <div
+                className={styles.kickConfirmBackdrop}
+                onClick={() => setPendingKickPlayer(null)}>
+                <div className={styles.kickConfirmCard} onClick={(e) => e.stopPropagation()}>
+                  <h4>{t('removePlayerTitle')}</h4>
+                  <p>
+                    {t('removePlayerDesc')} <strong>{pendingKickPlayer.nickname}</strong>?
+                  </p>
+                  <div className={styles.kickConfirmActions}>
+                    <button
+                      className={styles.exitSecondary}
+                      onClick={() => setPendingKickPlayer(null)}>
+                      {t('cancel')}
+                    </button>
+                    <button
+                      className={styles.exitDanger}
+                      onClick={() => {
+                        onKickPlayer(pendingKickPlayer.id)
+                        setPendingKickPlayer(null)
+                      }}>
+                      {t('removePlayerConfirm')}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

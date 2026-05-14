@@ -22,6 +22,7 @@ export function useRoundPlay({
   setAllPlayers,
   // audio
   playSound,
+  onPlayerRemoved,
 }) {
   // ── State ──────────────────────────────────────────────────────────────────
   const [selectedAnswers, setSelectedAnswers] = useState({})
@@ -42,6 +43,7 @@ export function useRoundPlay({
   const [isCheckingAnswer, setIsCheckingAnswer] = useState(false)
   const slideTimerRef = useRef(null)
   const playedBottleSoundRef = useRef(null)
+  const pendingAnswerSavesRef = useRef(new Map())
 
   // ── Cleanup timer on unmount ───────────────────────────────────────────────
   useEffect(() => {
@@ -224,6 +226,79 @@ export function useRoundPlay({
     })
   }, [])
 
+  const persistAnswerWithRetry = useCallback(
+    async ({questionId, selectedOptionId, isCorrect, points}) => {
+      if (!playerData?.id) return true
+
+      const saveKey = `${playerData.id}:${questionId}`
+      const payload = {
+        sessionId,
+        playerId: playerData.id,
+        questionId,
+        selectedOptionId,
+        isCorrect,
+        points,
+      }
+
+      pendingAnswerSavesRef.current.set(saveKey, payload)
+
+      for (let attempt = 0; attempt < 4; attempt += 1) {
+        try {
+          const res = await fetch('/api/live/round-answer', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload),
+          })
+
+          if (res.ok) {
+            pendingAnswerSavesRef.current.delete(saveKey)
+            return true
+          }
+
+          const data = await res.json().catch(() => ({}))
+          if (res.status === 403 && data?.error === 'Player not found in session') {
+            pendingAnswerSavesRef.current.clear()
+            if (typeof onPlayerRemoved === 'function') onPlayerRemoved()
+            return false
+          }
+          if (data?.error) {
+            console.error('Error saving answer:', data.error)
+          }
+        } catch (err) {
+          console.error('Network error saving answer:', err)
+        }
+
+        const waitMs = 250 * Math.pow(2, attempt)
+        await new Promise((resolve) => setTimeout(resolve, waitMs))
+      }
+
+      return false
+    },
+    [onPlayerRemoved, sessionId, playerData?.id],
+  )
+
+  // Retry unsaved answers in the background. This is essential on unstable
+  // mobile networks where the first POST may fail but the user proceeds anyway.
+  useEffect(() => {
+    if (pendingAnswerSavesRef.current.size === 0) return
+
+    const flushPending = async () => {
+      const pending = Array.from(pendingAnswerSavesRef.current.values())
+      for (const answer of pending) {
+        await persistAnswerWithRetry({
+          questionId: answer.questionId,
+          selectedOptionId: answer.selectedOptionId,
+          isCorrect: answer.isCorrect,
+          points: answer.points,
+        })
+      }
+    }
+
+    flushPending()
+    const interval = setInterval(flushPending, 2000)
+    return () => clearInterval(interval)
+  }, [clickedReady, resultsOpenedBottleIndex, currentBottleIndex, persistAnswerWithRetry])
+
   const handleCheck = useCallback(
     async (questionId, optionId) => {
       if (!playerData || roundStatus !== 'waiting_answers') return
@@ -272,24 +347,13 @@ export function useRoundPlay({
         // ── 3. Apply UI feedback immediately (before any DB write) ─────────────
         applyLocalAnswerResult({isCorrect, points, comboBonus, newCombo})
 
-        // ── 4. Persist via server route (bypasses GoTrueClient init hang) ────
+        // ── 4. Persist via server route with retries ────────────────────────
         // Duplicate inserts (23505) are safe and handled server-side.
-        fetch('/api/live/round-answer', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            sessionId,
-            playerId: playerData.id,
-            questionId,
-            selectedOptionId: optionId,
-            isCorrect,
-            points,
-          }),
-        }).then(async (res) => {
-          if (!res.ok) {
-            const data = await res.json().catch(() => ({}))
-            if (data?.error) console.error('Error saving answer:', data.error)
-          }
+        await persistAnswerWithRetry({
+          questionId,
+          selectedOptionId: optionId,
+          isCorrect,
+          points,
         })
       } catch (err) {
         console.error('Error evaluating answer:', err?.message ?? err)
@@ -305,6 +369,7 @@ export function useRoundPlay({
       correctOptionByQuestion,
       sessionId,
       playSound,
+      persistAnswerWithRetry,
     ],
   )
 

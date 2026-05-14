@@ -65,11 +65,20 @@ export function useOverlays({
   const kickPlayer = useCallback(
     async (playerId) => {
       if (!isHostUser) return
-      await supabaseClient.from('live_players').delete().eq('id', playerId)
+      const res = await fetch('/api/live/session/kick-player', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({sessionId, playerId}),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        if (data?.error) console.error('Error removing player:', data.error)
+        return
+      }
       setAllPlayers((prev) => prev.filter((p) => p.id !== playerId))
       setOverlayStandings((prev) => prev.filter((p) => p.id !== playerId))
     },
-    [isHostUser, setAllPlayers],
+    [isHostUser, sessionId, setAllPlayers],
   )
 
   const openExit = useCallback(() => {
@@ -82,8 +91,8 @@ export function useOverlays({
     localStorage.removeItem(nicknameStorageKey)
     setExitModalOpen(false)
     const shouldGoDashboard = isHostUser || Boolean(playerData?.is_host)
-    router.push(shouldGoDashboard ? '/dashboard' : `/live/session/${sessionId}`)
-  }, [isHostUser, nicknameStorageKey, playerData, playerStorageKey, router, sessionId])
+    router.push(shouldGoDashboard ? '/miei-giochi' : '/')
+  }, [isHostUser, nicknameStorageKey, playerData, playerStorageKey, router])
 
   return {
     leaderboardOpen,

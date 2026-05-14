@@ -19,8 +19,9 @@ export default function CorsoVinoLessonLoading() {
   return (
     <div
       style={{
-        maxWidth: 640,
+        maxWidth: 960,
         margin: '0 auto',
+        padding: '0 20px',
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100dvh',
@@ -36,7 +37,7 @@ export default function CorsoVinoLessonLoading() {
           alignItems: 'center',
           gap: 12,
           padding: '12px 16px',
-          margin: '12px 12px 0',
+          margin: '12px 0 0',
           borderRadius: '0 0 12px 12px',
           boxSizing: 'border-box',
           position: 'relative',

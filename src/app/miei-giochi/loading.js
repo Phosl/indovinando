@@ -21,22 +21,24 @@ export default function MieiGiochiLoading() {
   return (
     <div className={styles.page}>
       {/* TopBar skeleton */}
-      <div
-        className="skeleton-frame"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '40px 1fr 40px',
-          alignItems: 'center',
-          columnGap: 12,
-          padding: '10px 14px',
-          maxWidth: 960,
-          margin: '0 auto 16px auto',
-          width: '100%',
-          boxSizing: 'border-box',
-        }}>
-        <Bone w="40px" h="40px" style={{borderRadius: 10}} />
-        <Bone w="180px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
-        <Bone w="40px" h="40px" style={{borderRadius: 10, marginLeft: 'auto'}} />
+      <div style={{padding: '0 20px'}}>
+        <div
+          className="skeleton-frame"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '40px 1fr 40px',
+            alignItems: 'center',
+            columnGap: 12,
+            padding: '10px 14px',
+            maxWidth: 960,
+            margin: '0 auto 16px auto',
+            width: '100%',
+            boxSizing: 'border-box',
+          }}>
+          <Bone w="40px" h="40px" style={{borderRadius: 10}} />
+          <Bone w="180px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
+          <Bone w="40px" h="40px" style={{borderRadius: 10, marginLeft: 'auto'}} />
+        </div>
       </div>
 
       {/* Tab bar skeleton */}
