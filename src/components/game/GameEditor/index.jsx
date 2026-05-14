@@ -84,6 +84,8 @@ export default function GameEditor({
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false)
   const [editingQuestionIndex, setEditingQuestionIndex] = useState(null)
   const [resolvedUserId, setResolvedUserId] = useState(userId)
+  const [stepDirection, setStepDirection] = useState('forward')
+  const prevStepRef = useRef(1)
   const savePhaseRef = useRef('idle')
 
   const editorText = getGameEditorText(lang)
@@ -225,6 +227,14 @@ export default function GameEditor({
       router.replace(`${pathname}?step=${safeStep}`)
     }
   }, [pathname, router, searchParams])
+
+  useEffect(() => {
+    const prev = prevStepRef.current
+    if (step !== prev) {
+      setStepDirection(step > prev ? 'forward' : 'back')
+      prevStepRef.current = step
+    }
+  }, [step])
 
   function goToStep(nextStep) {
     const safeStep = normalizeStep(String(nextStep))
@@ -490,6 +500,98 @@ export default function GameEditor({
     setBottles((prev) => prev.filter((_, i) => i !== index))
   }
 
+  let stepContent = null
+
+  if (step === 1) {
+    stepContent = (
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>{editorText.step1Title}</h3>
+        <input
+          className={styles.inputField}
+          placeholder={editorText.step1Placeholder}
+          value={gameName}
+          onChange={(e) => setGameName(e.target.value)}
+        />
+
+        <div className={styles.buttonRow}>
+          <button className="btn primary" onClick={() => goToStep(2)}>
+            {editorText.continue}
+          </button>
+        </div>
+      </div>
+    )
+  } else if (step === 2) {
+    stepContent = (
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>{editorText.step2Title}</h3>
+        <QuestionsList
+          questions={questionDraft}
+          onEditQuestion={openQuestionModal}
+          onNewQuestion={openNewQuestionModal}
+          onDeleteQuestion={deleteQuestion}
+        />
+
+        <div className={styles.buttonRow}>
+          <button
+            className="btn primary"
+            onClick={saveQuestionnaire}
+            disabled={questionDraft.length === 0}>
+            {editorText.saveQuestionnaire}
+          </button>
+          <button className="btn secondary" onClick={() => goToStep(1)}>
+            {editorText.back}
+          </button>
+        </div>
+      </div>
+    )
+  } else if (step === 3) {
+    stepContent = (
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>{editorText.bridgeTitle}</h3>
+        <div className={styles.bridgeRow}>
+          <button className="btn primary" onClick={() => goToStep(4)}>
+            {editorText.bridgeInsertResults}
+          </button>
+          <button className="btn secondary" onClick={saveGameForPrint} disabled={isSaving}>
+            {isSaving ? editorText.saving : editorText.saveAndPrint}
+          </button>
+        </div>
+        <div className={styles.buttonRow}>
+          <button className="btn secondary" onClick={() => goToStep(2)}>
+            {editorText.back}
+          </button>
+        </div>
+      </div>
+    )
+  } else if (step === 4) {
+    stepContent = (
+      <div className={styles.section}>
+        <BottlesList
+          bottles={bottles}
+          questions={templateQuestions}
+          onEditBottle={selectBottle}
+          onNewBottle={startNewBottle}
+          onDeleteBottle={deleteBottle}
+        />
+
+        <div className={styles.buttonRow}>
+          <button className="btn secondary" onClick={() => goToStep(3)}>
+            {editorText.back}
+          </button>
+          {bottles.length > 0 && (
+            <button className="btn primary" onClick={publishGame} disabled={isSaving}>
+              {isSaving
+                ? editorText.saving
+                : isEditMode
+                  ? editorText.updateGame
+                  : editorText.publishGame}
+            </button>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   async function publishGame() {
     if (isSaving) return
 
@@ -583,96 +685,13 @@ export default function GameEditor({
         isStep2Completed={templateQuestions.length > 0}
         isStep3Completed={templateQuestions.length > 0}
       />
-
-      {/* STEP 1 */}
-      {step === 1 && (
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>{editorText.step1Title}</h3>
-          <input
-            className={styles.inputField}
-            placeholder={editorText.step1Placeholder}
-            value={gameName}
-            onChange={(e) => setGameName(e.target.value)}
-          />
-
-          <div className={styles.buttonRow}>
-            <button className="btn primary" onClick={() => goToStep(2)}>
-              {editorText.continue}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* STEP 2 */}
-      {step === 2 && (
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>{editorText.step2Title}</h3>
-          <QuestionsList
-            questions={questionDraft}
-            onEditQuestion={openQuestionModal}
-            onNewQuestion={openNewQuestionModal}
-            onDeleteQuestion={deleteQuestion}
-          />
-
-          <div className={styles.buttonRow}>
-            <button
-              className="btn primary"
-              onClick={saveQuestionnaire}
-              disabled={questionDraft.length === 0}>
-              {editorText.saveQuestionnaire}
-            </button>
-            <button className="btn secondary" onClick={() => goToStep(1)}>
-              {editorText.back}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* STEP 3 — Bridge */}
-      {step === 3 && (
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>{editorText.bridgeTitle}</h3>
-          <div className={styles.bridgeRow}>
-            <button className="btn primary" onClick={() => goToStep(4)}>
-              {editorText.bridgeInsertResults}
-            </button>
-            <button className="btn secondary" onClick={saveGameForPrint} disabled={isSaving}>
-              {isSaving ? editorText.saving : editorText.saveAndPrint}
-            </button>
-          </div>
-          <div className={styles.buttonRow}>
-            <button className="btn secondary" onClick={() => goToStep(2)}>
-              {editorText.back}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* STEP 4 — Bottiglie */}
-      {step === 4 && (
-        <div className={styles.section}>
-          <BottlesList
-            bottles={bottles}
-            questions={templateQuestions}
-            onEditBottle={selectBottle}
-            onNewBottle={startNewBottle}
-            onDeleteBottle={deleteBottle}
-          />
-
-          <div className={styles.buttonRow}>
-            <button className="btn secondary" onClick={() => goToStep(3)}>
-              {editorText.back}
-            </button>
-            {bottles.length > 0 && (
-              <button className="btn primary" onClick={publishGame} disabled={isSaving}>
-                {isSaving
-                  ? editorText.saving
-                  : isEditMode
-                    ? editorText.updateGame
-                    : editorText.publishGame}
-              </button>
-            )}
-          </div>
+      {stepContent && (
+        <div
+          key={step}
+          className={`${styles.stepFrame} ${
+            stepDirection === 'back' ? styles.stepEnterBack : styles.stepEnterForward
+          }`}>
+          {stepContent}
         </div>
       )}
 

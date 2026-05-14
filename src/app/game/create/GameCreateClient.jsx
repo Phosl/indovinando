@@ -1,6 +1,7 @@
 'use client'
 
 import {Suspense, useState} from 'react'
+import {useRouter} from 'next/navigation'
 import {createClient} from '@/lib/supabaseClient'
 import GameEditor from '@/components/game/GameEditor'
 import Loader from '@/components/Loader'
@@ -42,8 +43,10 @@ const TEMPLATE_QUESTIONS = [
 
 // null = choosing, 'custom' = full editor, 'quick' = template prefilled
 function ModePickerScreen({onPick}) {
+  const router = useRouter()
+
   return (
-    <PageLayout title="Crea gioco" onBack={() => (window.location.href = '/miei-giochi')}>
+    <PageLayout title="Crea gioco" onBack={() => router.push('/miei-giochi')}>
       <div className={styles.modePickerGrid}>
         <button className={styles.modeCard} onClick={() => onPick('quick')}>
           <span className={styles.modeCardEmoji}>⚡</span>

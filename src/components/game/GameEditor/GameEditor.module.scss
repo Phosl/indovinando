@@ -152,6 +152,40 @@
   padding: 20px 18px;
 }
 
+.stepFrame {
+  will-change: opacity, transform;
+}
+
+.stepEnterForward {
+  animation: wizardStepEnterForward 0.2s ease both;
+}
+
+.stepEnterBack {
+  animation: wizardStepEnterBack 0.2s ease both;
+}
+
+@keyframes wizardStepEnterForward {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes wizardStepEnterBack {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .sectionTitle {
   font-size: 1rem;
   font-weight: 900;

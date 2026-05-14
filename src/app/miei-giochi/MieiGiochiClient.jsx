@@ -1,6 +1,7 @@
 'use client'
 
 import {useState} from 'react'
+import Link from 'next/link'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import StoricoClient from '@/app/dashboard/storico/StoricoClient'
@@ -52,9 +53,9 @@ export default function MieiGiochiClient({
         {activeTab === 'games' && (
           <div className={styles.gamesTab}>
             <div className={styles.gamesHeaderActions}>
-              <a href="/game/create" className="btn primary">
+              <Link href="/game/create" className="btn primary">
                 {dashboardDict.createGame || '+ Crea gioco'}
-              </a>
+              </Link>
             </div>
 
             {games.length === 0 ? (
@@ -64,9 +65,9 @@ export default function MieiGiochiClient({
                   {dashboardDict.emptyStateFirstGame ||
                     'Non hai ancora creato giochi. Crea il tuo primo gioco per iniziare a giocare.'}
                 </p>
-                <a href="/game/create" className="btn primary">
+                <Link href="/game/create" className="btn primary">
                   {dashboardDict.createFirstGame || 'Crea il tuo primo gioco'}
-                </a>
+                </Link>
               </div>
             ) : (
               <div className={styles.gamesList}>
@@ -90,23 +91,23 @@ export default function MieiGiochiClient({
                       })}
                     </p>
                     <div className={styles.gameActions}>
-                      <a
+                      <Link
                         href={`/game/${game.id}/live`}
                         className={`${styles.liveAction} ${styles.actionBtn}`}>
                         {dashboardDict.playLive || '⚡ Gioca Live'}
-                      </a>
+                      </Link>
                       {game.status === 'published' && (
-                        <a
+                        <Link
                           href={`/enoteca/${game.id}`}
                           className={`${styles.enotecaAction} ${styles.actionBtn}`}>
                           {dashboardDict.enoteca || 'Enoteca'}
-                        </a>
+                        </Link>
                       )}
-                      <a
+                      <Link
                         href={`/game/${game.id}`}
                         className={`btn tertiary-bordered ${styles.actionBtn} ${styles.optionsAction}`}>
                         {dashboardDict.view || 'Opzioni'}
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 ))}
