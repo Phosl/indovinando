@@ -22,9 +22,9 @@ export default function QuestionsList({
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h3>
+        {/* <h3>
           {text.title} ({questions.length})
-        </h3>
+        </h3> */}
         <button className="btn tertiary" onClick={onNewQuestion}>
           {text.add}
         </button>

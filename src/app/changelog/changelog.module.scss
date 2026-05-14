@@ -2,14 +2,15 @@
   min-height: 100vh;
   background: var(--background);
   padding: 20px 20px 64px;
-
+  padding-top: 0px;
   @media (max-width: 520px) {
     padding: 12px 12px 64px;
+    padding-top: 0px;
   }
 }
 
 .container {
-  max-width: 720px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 16px 16px;
   display: flex;
@@ -44,38 +45,36 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  border-left: 3px solid var(--button-secondary-border);
-  padding-left: 24px;
-  margin-left: 48px;
 }
 
 .entry {
   position: relative;
   padding-bottom: 40px;
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: calc(-24px - 7px);
-    top: 6px;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: var(--selected);
-    border: 3px solid var(--background);
-    box-shadow: 0 0 0 2px var(--selected);
-  }
+  display: flex;
+  gap: 60px;
 }
 
 .entryMeta {
-  position: absolute;
-  left: calc(-24px - 120px);
-  top: 0;
-  width: 100px;
   text-align: right;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  position: relative;
+  flex-basis: 120px;
+  flex-shrink: 0;
+  &::before {
+    content: '';
+    position: absolute;
+    right: -40px;
+    background: var(--selected);
+    top: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 3px solid var(--background);
+    box-shadow: 0 0 0 2px var(--selected);
+    z-index: 1;
+  }
 }
 
 .version {
@@ -95,6 +94,20 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex-grow: 1;
+  position: relative;
+  &:after {
+    content: '';
+    display: block;
+    background: var(--gray-light);
+    position: absolute;
+    left: -28px;
+    top: 0px;
+    height: calc(100% + 40px);
+    width: 2px;
+    z-index: 0;
+  }
+  padding-left: 20px;
 }
 
 .entryHeader {
@@ -137,32 +150,5 @@
     color: var(--text-secondary);
     flex-shrink: 0;
     margin-top: 1px;
-  }
-}
-
-/* ── Mobile ── */
-@media (max-width: 600px) {
-  .timeline {
-    margin-left: 0;
-    border-left: none;
-    padding-left: 0;
-  }
-
-  .entry {
-    padding-bottom: 28px;
-
-    &::before {
-      display: none;
-    }
-  }
-
-  .entryMeta {
-    position: static;
-    text-align: left;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-    width: auto;
   }
 }

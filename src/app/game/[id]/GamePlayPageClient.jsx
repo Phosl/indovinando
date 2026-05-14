@@ -68,7 +68,7 @@ export default function GamePlayPageClient({game, questions, bottles, isOwner, o
             onClick={handleDelete}
             disabled={isDeleting}
             className={`${styles.dangerAction} ${isDeleting ? styles.disabledAction : ''}`}>
-            {isDeleting ? '...' : `🗑️ ${t.delete}`}
+            {isDeleting ? '...' : `${t.delete}`}
           </button>
         )}
       </div>

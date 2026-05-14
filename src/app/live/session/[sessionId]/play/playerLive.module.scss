@@ -36,7 +36,7 @@
   height: 100dvh;
   overflow: hidden;
   background: var(--background);
-  max-width: 640px;
+  max-width: 960px;
   margin: 0 auto;
   position: relative;
   user-select: none; // prevent accidental text selection during gameplay
@@ -45,6 +45,10 @@
 }
 
 // ── Top bar ───────────────────────────────────────────────────
+.topBarContainer {
+  padding: 0px 20px;
+}
+
 .topBar {
   flex-shrink: 0;
   display: flex;

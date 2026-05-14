@@ -20,14 +20,16 @@ export default function MieiGiochiClient({
 
   return (
     <div className={styles.page}>
-      <TopBar
-        title={
-          activeTab === 'games'
-            ? dashboardDict.myGames || 'I miei giochi'
-            : storicoDict.title || '📜 Storico partite'
-        }
-        onBack={() => router.push('/dashboard')}
-      />
+      <div className={styles.topBarContainer}>
+        <TopBar
+          title={
+            activeTab === 'games'
+              ? dashboardDict.myGames || 'I miei giochi'
+              : storicoDict.title || '📜 Storico partite'
+          }
+          onBack={() => router.push('/dashboard')}
+        />
+      </div>
 
       {/* ── Tab bar ── */}
       <div className={styles.tabBar}>
@@ -46,7 +48,6 @@ export default function MieiGiochiClient({
           </button>
         </div>
       </div>
-
       <div className={styles.content}>
         {activeTab === 'games' && (
           <div className={styles.gamesTab}>

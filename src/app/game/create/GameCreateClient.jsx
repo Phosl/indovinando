@@ -43,7 +43,7 @@ const TEMPLATE_QUESTIONS = [
 // null = choosing, 'custom' = full editor, 'quick' = template prefilled
 function ModePickerScreen({onPick}) {
   return (
-    <PageLayout title="Crea gioco" onBack={() => (window.location.href = '/dashboard')}>
+    <PageLayout title="Crea gioco" onBack={() => (window.location.href = '/miei-giochi')}>
       <div className={styles.modePickerGrid}>
         <button className={styles.modeCard} onClick={() => onPick('quick')}>
           <span className={styles.modeCardEmoji}>⚡</span>
