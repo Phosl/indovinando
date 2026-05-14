@@ -170,9 +170,9 @@ export default function InfoClient() {
                 {tc('next')}
               </button>
             ) : (
-              <a href={doneHref} className="btn primary">
+              <button type="button" className="btn primary" onClick={() => router.push(doneHref)}>
                 {tc('done')}
-              </a>
+              </button>
             )}
           </div>
         </section>

@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import {useEffect, useMemo, useState, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
@@ -480,17 +481,17 @@ export default function ProfileClient({
         <section className={styles.card}>
           <h2>{t('howTheAppWorks')}</h2>
           <p className={styles.quickInfoText}>{t('howTheAppWorksDesc')}</p>
-          <a href="/info" className="btn accent">
+          <Link href="/info" className="btn accent">
             {t('openAppGuide')}
-          </a>
+          </Link>
 
           <div className={styles.cardDivider} />
 
           <h2>{t('changelog')}</h2>
           <p className={styles.quickInfoText}>{t('changelogDesc')}</p>
-          <a href="/changelog" className="btn secondary">
+          <Link href="/changelog" className="btn secondary">
             {t('viewChangelog')}
-          </a>
+          </Link>
         </section>
 
         {/* ── Logout ── */}

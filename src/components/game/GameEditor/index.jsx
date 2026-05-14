@@ -655,7 +655,7 @@ export default function GameEditor({
         if (onGameSaved) {
           Promise.resolve(onGameSaved(gameId)).catch(() => {})
         }
-        window.location.href = `/game/${savedGameId || generatedGameId}`
+        router.push(`/game/${savedGameId || generatedGameId}`)
       } else {
         setSavePhase('redirect-create')
         router.push('/miei-giochi')
