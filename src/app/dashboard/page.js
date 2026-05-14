@@ -1,4 +1,5 @@
 import {redirect} from 'next/navigation'
+import Link from 'next/link'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {getAppVersion} from '@/lib/appVersion'
@@ -41,29 +42,29 @@ export default async function Dashboard() {
         </section>
 
         <nav className={styles.menuGrid}>
-          <a href="/miei-giochi" className={`${styles.menuCard} ${styles.menuCardTertiary}`}>
+          <Link href="/miei-giochi" className={`${styles.menuCard} ${styles.menuCardTertiary}`}>
             <span className={styles.menuCardEmoji}></span>
             <span className={styles.menuCardLabel}>{dashboardDict.play || 'Gioca'}</span>
-          </a>
+          </Link>
 
-          <a href="/corso-vino" className={`${styles.menuCard} ${styles.menuCardWine}`}>
+          <Link href="/corso-vino" className={`${styles.menuCard} ${styles.menuCardWine}`}>
             <span className={styles.menuCardBadge}>✨ Novità</span>
             <span className={styles.menuCardEmoji}></span>
             <span className={styles.menuCardLabel}>{dashboardDict.wineCourse || 'Corso Vino'}</span>
-          </a>
+          </Link>
 
-          <a href="/profilo" className={styles.menuCard}>
+          <Link href="/profilo" className={styles.menuCard}>
             <span className={styles.menuCardLabel}>{dashboardDict.profile || 'Profilo'}</span>
-          </a>
+          </Link>
         </nav>
       </div>
       <div className={styles.legalLinks}>
-        <a href="/copyright" className={styles.smallLegalBtn}>
+        <Link href="/copyright" className={styles.smallLegalBtn}>
           {dashboardDict.copyright || 'Copyright'}
-        </a>
-        <a href="/changelog" className={styles.smallLegalBtn}>
+        </Link>
+        <Link href="/changelog" className={styles.smallLegalBtn}>
           {dashboardDict.changelog || 'Changelog'}
-        </a>
+        </Link>
       </div>
     </main>
   )

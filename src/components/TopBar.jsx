@@ -19,10 +19,19 @@ export default function TopBar({
   const containerStyle = maxWidth ? {maxWidth} : {}
   const containerClassName = wrapTitle ? `${styles.topBar} ${styles.wrapped}` : styles.topBar
 
+  const handleBackClick = () => {
+    window.dispatchEvent(new CustomEvent('app:navigation-intent', {detail: {direction: 'back'}}))
+    onBack?.()
+  }
+
   return (
     <div className={`${containerClassName} ${className}`} style={containerStyle}>
       {onBack && (
-        <button type="button" className={styles.backBtn} onClick={onBack} aria-label={t('back')}>
+        <button
+          type="button"
+          className={styles.backBtn}
+          onClick={handleBackClick}
+          aria-label={t('back')}>
           ←
         </button>
       )}

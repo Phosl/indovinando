@@ -173,3 +173,79 @@ main.flex-container {
 .skeleton-button {
   border-radius: 12px;
 }
+
+/* ─── Route transitions ───────────────────────────────── */
+.route-shell {
+  width: 100%;
+  min-height: 100dvh;
+  position: relative;
+  left: 0;
+  will-change: left, opacity;
+}
+
+.route-shell.route-forward.is-leaving {
+  animation: routeLeaveLeft 0.22s ease forwards;
+}
+
+.route-shell.route-forward.is-entering {
+  animation: routeEnterRight 0.22s ease both;
+}
+
+.route-shell.route-back.is-leaving {
+  animation: routeLeaveRight 0.22s ease forwards;
+}
+
+.route-shell.route-back.is-entering {
+  animation: routeEnterLeft 0.22s ease both;
+}
+
+@keyframes routeLeaveLeft {
+  from {
+    opacity: 1;
+    left: 0;
+  }
+  to {
+    opacity: 0;
+    left: -28px;
+  }
+}
+
+@keyframes routeEnterRight {
+  from {
+    opacity: 0;
+    left: 28px;
+  }
+  to {
+    opacity: 1;
+    left: 0;
+  }
+}
+
+@keyframes routeLeaveRight {
+  from {
+    opacity: 1;
+    left: 0;
+  }
+  to {
+    opacity: 0;
+    left: 28px;
+  }
+}
+
+@keyframes routeEnterLeft {
+  from {
+    opacity: 0;
+    left: -28px;
+  }
+  to {
+    opacity: 1;
+    left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-shell.is-leaving,
+  .route-shell.is-entering {
+    animation: none;
+  }
+}

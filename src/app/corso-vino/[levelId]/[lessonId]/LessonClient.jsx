@@ -87,7 +87,7 @@ const LESSON_UI_DICTIONARY = {
 
 export default function LessonClient({level, lesson, nextLessonId, levels = []}) {
   const router = useRouter()
-  const {completeLesson, getLessonProgress, loaded, authChecked, userId} = useWineCourseProgress()
+  const {completeLesson, getLessonProgress, loaded} = useWineCourseProgress()
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
   const {lang} = useLanguage()
   const t = pickLangText(lang, LESSON_UI_DICTIONARY)
@@ -142,7 +142,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
   const currentQuestion = questions[questionIndex]
   const isLastQuestion = questionIndex >= questions.length - 1
   const correctId = currentQuestion?.correctId
-  const backHref = authChecked && !userId ? '/' : `/corso-vino/${level.id}`
+  const backHref = `/corso-vino/${level.id}`
   const introProgressPct = didacticSlides.length
     ? Math.round(((didacticIndex + 1) / didacticSlides.length) * 100)
     : 0

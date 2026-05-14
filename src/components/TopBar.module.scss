@@ -12,7 +12,9 @@
   margin-bottom: 16px;
   border-radius: 0px 0px 12px 12px;
   border-top: 0px;
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 40;
   overflow: hidden;
   @media (max-width: 768px) {
     margin-bottom: 12px;

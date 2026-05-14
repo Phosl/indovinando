@@ -4,6 +4,7 @@ import LanguageProvider from '@/components/i18n/LanguageProvider'
 import PwaRegistrar from '@/components/PwaRegistrar'
 import ScrollToTop from '@/components/ScrollToTop'
 import AppleSplashLinks from '@/components/AppleSplashLinks'
+import PageTransitionShell from '@/components/PageTransitionShell'
 import {getServerLanguage} from '@/lib/i18n/server'
 
 const isPreview = process.env.VERCEL_ENV === 'preview'
@@ -53,7 +54,7 @@ export default async function RootLayout({children}) {
         <LanguageProvider initialLang={lang}>
           <PwaRegistrar />
           <ScrollToTop />
-          {children}
+          <PageTransitionShell>{children}</PageTransitionShell>
         </LanguageProvider>
       </body>
     </html>
