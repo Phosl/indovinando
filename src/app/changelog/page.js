@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.20.0',
+    date: '14 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'smooth create-game navigation and wizard transitions',
+    ],
+  },
+
+  {
     version: '1.19.0',
     date: '14 maggio 2026',
     label: 'Auto',
