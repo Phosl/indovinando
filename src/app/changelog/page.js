@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.19.0',
+    date: '14 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'improve route transitions and fix lesson back navigation',
+    ],
+  },
+
+  {
     version: '1.18.8',
     date: '14 maggio 2026',
     label: 'Auto',
