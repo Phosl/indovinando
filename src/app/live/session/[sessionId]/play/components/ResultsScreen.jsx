@@ -199,7 +199,9 @@ export const ResultsScreen = memo(function ResultsScreen({
             className={styles.continueButton}
             onClick={onNextBottle}
             disabled={!allPlayersCompletedThisRound || (!isHostUser && playerMarkedNext)}>
-            {t('nextBottle')}
+            {!allPlayersCompletedThisRound && isHostUser
+              ? `${playersReadyCount}/${readyParticipantsCount} ${t('playersReady')}`
+              : t('nextBottle')}
           </button>
         )}
       </div>

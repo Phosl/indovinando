@@ -105,6 +105,7 @@ export default function PlayerLiveClient({
     handleCheck,
     handleContinue,
     handleNextBottleClick,
+    advanceToNextBottleOrFinish,
     handleAnswerInsert,
     playersReadyCount,
     participantsCount,

@@ -211,13 +211,10 @@ export default function GameEditor({
   const [editingQuestionIndex, setEditingQuestionIndex] = useState(null)
   const [resolvedUserId, setResolvedUserId] = useState(userId)
   const [stepDirection, setStepDirection] = useState('forward')
-  const [isStepTransitioning, setIsStepTransitioning] = useState(false)
-  const prevStepRef = useRef(1)
-  const stepTransitionLockRef = useRef(false)
-  const stepTransitionTimerRef = useRef(null)
   const savePhaseRef = useRef('idle')
   const initialStepOverrideRef = useRef(null)
-  const STEP_TRANSITION_LOCK_MS = 360
+  const pendingStepRef = useRef(null)
+  const prevStepRef = useRef(1)
 
   const editorText = getGameEditorText(lang)
   const alertMessages = getAlertMessages(lang)
@@ -314,7 +311,6 @@ export default function GameEditor({
 
       // Skip step 1 in edit mode — set via ref so searchParams effect won't override it
       initialStepOverrideRef.current = 2
-      prevStepRef.current = 2
     } else if (isQuickCreate && !initializationDoneRef.current) {
       // Initialize for quick create mode
       initializationDoneRef.current = true
@@ -335,7 +331,6 @@ export default function GameEditor({
 
       // Skip step 1 and go to step 2
       initialStepOverrideRef.current = 2
-      prevStepRef.current = 2
     }
   }, [isEditMode, initialGame, isQuickCreate, initialQuestions, initialGameName])
 
@@ -351,14 +346,23 @@ export default function GameEditor({
   }, [resolvedUserId, supabase])
 
   useEffect(() => {
-    // Skip while a programmatic goToStep() transition is still in flight
-    if (stepTransitionLockRef.current) return
-
     const rawStep = searchParams.get('step')
     // Initialization may have set an override (edit/quick-create skip step 1)
     const override = initialStepOverrideRef.current
     const safeStep = override !== null ? override : normalizeStep(rawStep)
     initialStepOverrideRef.current = null
+
+    // While URL params catch up after a click, keep optimistic step to avoid visual rollback.
+    if (pendingStepRef.current !== null && safeStep !== pendingStepRef.current) {
+      if (rawStep !== String(safeStep)) {
+        router.replace(`${pathname}?step=${safeStep}`)
+      }
+      return
+    }
+
+    if (pendingStepRef.current === safeStep) {
+      pendingStepRef.current = null
+    }
 
     setStep((prev) => (prev === safeStep ? prev : safeStep))
 
@@ -368,35 +372,18 @@ export default function GameEditor({
   }, [pathname, router, searchParams])
 
   useEffect(() => {
-    const prev = prevStepRef.current
-    if (step !== prev) {
-      setStepDirection(step > prev ? 'forward' : 'back')
+    const prevStep = prevStepRef.current
+    if (step !== prevStep) {
+      setStepDirection(step > prevStep ? 'forward' : 'back')
       prevStepRef.current = step
-
-      setIsStepTransitioning(true)
-
-      if (stepTransitionTimerRef.current) {
-        clearTimeout(stepTransitionTimerRef.current)
-      }
-
-      stepTransitionTimerRef.current = setTimeout(() => {
-        stepTransitionLockRef.current = false
-        setIsStepTransitioning(false)
-      }, STEP_TRANSITION_LOCK_MS)
-    }
-
-    return () => {
-      if (stepTransitionTimerRef.current) {
-        clearTimeout(stepTransitionTimerRef.current)
-      }
     }
   }, [step])
 
   function goToStep(nextStep) {
-    if (stepTransitionLockRef.current) return
-
     const safeStep = normalizeStep(String(nextStep))
-    stepTransitionLockRef.current = true
+    if (safeStep === step) return
+
+    pendingStepRef.current = safeStep
     setStep(safeStep)
     router.push(`${pathname}?step=${safeStep}`)
   }
@@ -801,10 +788,10 @@ export default function GameEditor({
         onStepClick={goToStep}
         isStep2Completed={templateQuestions.length > 0}
         isStep3Completed={templateQuestions.length > 0}
-        isTransitioning={isStepTransitioning}
       />
       {stepContent && (
         <div
+          key={step}
           className={`${styles.stepFrame} ${
             stepDirection === 'back' ? styles.stepEnterBack : styles.stepEnterForward
           }`}>

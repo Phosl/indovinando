@@ -30,11 +30,6 @@
   }
 }
 
-.breadcrumbsTransitioning {
-  pointer-events: none;
-  opacity: 0.92;
-}
-
 .breadcrumbItem {
   display: flex;
   align-items: center;
@@ -158,6 +153,7 @@
 }
 
 .stepFrame {
+  width: 100%;
   will-change: opacity, transform;
 }
 
