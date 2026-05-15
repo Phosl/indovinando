@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.21.1',
+    date: '15 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'eliminate step 1 flash on quick-create and edit mode by initializing step state eagerly',
+    ],
+  },
+
+  {
     version: '1.21.0',
     date: '15 maggio 2026',
     label: 'Auto',
