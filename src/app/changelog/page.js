@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.21.2',
+    date: '15 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'start game editor wizard from step 1 for all modes',
+    ],
+  },
+
+  {
     version: '1.21.1',
     date: '15 maggio 2026',
     label: 'Auto',
