@@ -51,9 +51,9 @@ export default function GamePlayPageClient({game, questions, bottles, isOwner, o
         <TopBar title={`🎮 ${game.name}`} onBack={() => router.push('/miei-giochi')} />
 
         <div className={styles.actionsBar}>
-          <a href={`/game/${game.id}/print`} className={`btn secondary ${styles.actionBtn}`}>
+          <Link href={`/game/${game.id}/print`} className={`btn secondary ${styles.actionBtn}`}>
             🖨️ {t.printCard}
-          </a>
+          </Link>
           {isOwner && (
             <Link href={`/game/${game.id}/edit`} className={`btn secondary ${styles.actionBtn}`}>
               ✏️ {t.edit}

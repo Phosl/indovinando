@@ -3,7 +3,7 @@
 import {useEffect, useRef, useState} from 'react'
 import {usePathname, useRouter} from 'next/navigation'
 
-const LEAVE_MS = 220
+const LEAVE_MS = 140
 const ENTER_MS = 220
 
 function shouldIgnoreClick(event) {
@@ -43,6 +43,13 @@ export default function PageTransitionShell({children}) {
   const enterTimeoutRef = useRef(null)
   const transitionLockRef = useRef(false)
   const nextDirectionRef = useRef('forward')
+  const prefetchedHrefsRef = useRef(new Set())
+
+  const prefetchHref = (href) => {
+    if (!href || prefetchedHrefsRef.current.has(href)) return
+    prefetchedHrefsRef.current.add(href)
+    router.prefetch(href)
+  }
 
   const queueDirection = (nextDirection) => {
     const normalized = nextDirection === 'back' ? 'back' : 'forward'
@@ -99,6 +106,7 @@ export default function PageTransitionShell({children}) {
       }
 
       queueDirection(anchor.dataset.navDirection)
+      prefetchHref(nextHref)
 
       event.preventDefault()
       transitionLockRef.current = true
@@ -113,13 +121,33 @@ export default function PageTransitionShell({children}) {
       }, LEAVE_MS)
     }
 
+    const onPointerOver = (event) => {
+      const anchor = event.target instanceof Element ? event.target.closest('a') : null
+      if (!isInternalNavigationAnchor(anchor)) return
+
+      const url = new URL(anchor.href, window.location.origin)
+      prefetchHref(`${url.pathname}${url.search}${url.hash}`)
+    }
+
+    const onFocusIn = (event) => {
+      const anchor = event.target instanceof Element ? event.target.closest('a') : null
+      if (!isInternalNavigationAnchor(anchor)) return
+
+      const url = new URL(anchor.href, window.location.origin)
+      prefetchHref(`${url.pathname}${url.search}${url.hash}`)
+    }
+
     window.addEventListener('app:navigation-intent', onNavigationIntent)
     window.addEventListener('popstate', onPopState)
+    document.addEventListener('pointerover', onPointerOver, true)
+    document.addEventListener('focusin', onFocusIn, true)
     document.addEventListener('click', onDocumentClick, true)
 
     return () => {
       window.removeEventListener('app:navigation-intent', onNavigationIntent)
       window.removeEventListener('popstate', onPopState)
+      document.removeEventListener('pointerover', onPointerOver, true)
+      document.removeEventListener('focusin', onFocusIn, true)
       document.removeEventListener('click', onDocumentClick, true)
       if (leaveTimeoutRef.current) {
         clearTimeout(leaveTimeoutRef.current)

@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.20.1',
+    date: '14 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'reduce click latency and smooth internal navigation',
+    ],
+  },
+
+  {
     version: '1.20.0',
     date: '14 maggio 2026',
     label: 'Auto',

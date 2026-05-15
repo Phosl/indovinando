@@ -3,6 +3,7 @@ import {revalidatePath} from 'next/cache'
 import {Suspense} from 'react'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import GameEditClient from './GameEditClient'
+import GameEditLoading from './loading'
 
 export const metadata = {
   title: 'Modifica Gioco',
@@ -56,7 +57,7 @@ export default async function GameEditPage({params}) {
     .order('bottle_order')
 
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<GameEditLoading />}>
       <GameEditClient
         gameId={gameId}
         initialGame={game}

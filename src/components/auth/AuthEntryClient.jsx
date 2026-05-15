@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import {useEffect, useState} from 'react'
 import {useT} from '@/lib/i18n/useT'
 import styles from './AuthEntryClient.module.scss'
@@ -117,16 +118,16 @@ export default function AuthEntryClient({appVersion}) {
           </div>
 
           <div className={styles.quickActions}>
-            <a href="/auth" className={`${styles.menuCard} ${styles.menuCardGreen}`}>
+            <Link href="/auth" className={`${styles.menuCard} ${styles.menuCardGreen}`}>
               <span className={styles.menuCardLabel}>{t('loginOrRegister')}</span>
-            </a>
-            <a href="/corso-vino" className={`${styles.menuCard} ${styles.menuCardWine}`}>
+            </Link>
+            <Link href="/corso-vino" className={`${styles.menuCard} ${styles.menuCardWine}`}>
               <span className={styles.menuCardBadge}>NOVITA</span>
               <span className={styles.menuCardLabel}>{t('wineCourse')}</span>
-            </a>
-            <a href="/info" className={styles.menuCard}>
+            </Link>
+            <Link href="/info" className={styles.menuCard}>
               <span className={styles.menuCardLabel}>{t('howItWorks')}</span>
-            </a>
+            </Link>
           </div>
         </section>
       </div>
@@ -137,12 +138,12 @@ export default function AuthEntryClient({appVersion}) {
           onClick={handleShare}>
           {t('shareApp')}
         </button>
-        <a href="/changelog" className={`${styles.badge} ${styles.badgeLink}`}>
+        <Link href="/changelog" className={`${styles.badge} ${styles.badgeLink}`}>
           {t('versionLabel')} {appVersion}
-        </a>
-        <a href="/copyright" className={`${styles.badge} ${styles.badgeLink}`}>
+        </Link>
+        <Link href="/copyright" className={`${styles.badge} ${styles.badgeLink}`}>
           {t('copyrightLabel')}
-        </a>
+        </Link>
       </div>
       {shareHint ? (
         <div className={styles.bottomSheetOverlay} onClick={() => setShareHint('')}>
