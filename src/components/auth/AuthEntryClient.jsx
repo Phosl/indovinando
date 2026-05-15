@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import {useEffect, useState} from 'react'
 import {useT} from '@/lib/i18n/useT'
+import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
 import styles from './AuthEntryClient.module.scss'
 
 export default function AuthEntryClient({appVersion}) {
@@ -141,6 +142,7 @@ export default function AuthEntryClient({appVersion}) {
         <Link href="/changelog" className={`${styles.badge} ${styles.badgeLink}`}>
           {t('versionLabel')} {appVersion}
         </Link>
+        <LanguageSwitcher inline className={styles.languageBadge} />
         <Link href="/copyright" className={`${styles.badge} ${styles.badgeLink}`}>
           {t('copyrightLabel')}
         </Link>
