@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.21.0',
+    date: '15 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'add language switcher to home page under changelog, verify translations complete (296 keys both IT/EN)',
+    ],
+  },
+
+  {
     version: '1.20.1',
     date: '14 maggio 2026',
     label: 'Auto',
