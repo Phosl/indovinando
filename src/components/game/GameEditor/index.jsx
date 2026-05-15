@@ -192,7 +192,8 @@ export default function GameEditor({
   const searchParams = useSearchParams()
   const supabase = createClient()
 
-  const [step, setStep] = useState(1)
+  const startsAtStep2 = isQuickCreate || isEditMode
+  const [step, setStep] = useState(() => startsAtStep2 ? 2 : 1)
 
   const [gameName, setGameName] = useState(DEFAULT_GAME_NAME)
   const [questionDraft, setQuestionDraft] = useState([])
@@ -212,9 +213,9 @@ export default function GameEditor({
   const [resolvedUserId, setResolvedUserId] = useState(userId)
   const [stepDirection, setStepDirection] = useState('forward')
   const savePhaseRef = useRef('idle')
-  const initialStepOverrideRef = useRef(null)
+  const initialStepOverrideRef = useRef(startsAtStep2 ? 2 : null)
   const pendingStepRef = useRef(null)
-  const prevStepRef = useRef(1)
+  const prevStepRef = useRef(startsAtStep2 ? 2 : 1)
 
   const editorText = getGameEditorText(lang)
   const alertMessages = getAlertMessages(lang)
@@ -309,8 +310,7 @@ export default function GameEditor({
         setBottles(normalizedBottles)
       }
 
-      // Skip step 1 in edit mode — set via ref so searchParams effect won't override it
-      initialStepOverrideRef.current = 2
+      // Step already initialized to 2 via useState — no override needed here
     } else if (isQuickCreate && !initializationDoneRef.current) {
       // Initialize for quick create mode
       initializationDoneRef.current = true
@@ -329,8 +329,7 @@ export default function GameEditor({
         setTemplateQuestions(normalizedQuestions)
       }
 
-      // Skip step 1 and go to step 2
-      initialStepOverrideRef.current = 2
+      // Step already initialized to 2 via useState — no override needed here
     }
   }, [isEditMode, initialGame, isQuickCreate, initialQuestions, initialGameName])
 
