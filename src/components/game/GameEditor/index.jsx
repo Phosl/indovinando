@@ -192,8 +192,8 @@ export default function GameEditor({
   const searchParams = useSearchParams()
   const supabase = createClient()
 
-  const startsAtStep2 = isQuickCreate || isEditMode
-  const [step, setStep] = useState(() => startsAtStep2 ? 2 : 1)
+  const startsAtStep2 = false
+  const [step, setStep] = useState(() => (startsAtStep2 ? 2 : 1))
 
   const [gameName, setGameName] = useState(DEFAULT_GAME_NAME)
   const [questionDraft, setQuestionDraft] = useState([])
@@ -346,7 +346,7 @@ export default function GameEditor({
 
   useEffect(() => {
     const rawStep = searchParams.get('step')
-    // Initialization may have set an override (edit/quick-create skip step 1)
+    // Initialization may set an override
     const override = initialStepOverrideRef.current
     const safeStep = override !== null ? override : normalizeStep(rawStep)
     initialStepOverrideRef.current = null
