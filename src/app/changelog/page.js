@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.22.1',
+    date: '16 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'improve guide copy, reset create-game step state, and anchor topbar lesson progress',
+    ],
+  },
+
+  {
     version: '1.22.0',
     date: '16 maggio 2026',
     label: 'Auto',
