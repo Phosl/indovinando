@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.23.0',
+    date: '16 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'modale info questionario con animazione, icona help, preferenza non mostrare più e riapertura manuale',
+    ],
+  },
+
+  {
     version: '1.22.1',
     date: '16 maggio 2026',
     label: 'Auto',
