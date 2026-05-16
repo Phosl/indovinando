@@ -52,12 +52,6 @@ export default function MieiGiochiClient({
       <div className={styles.content}>
         {activeTab === 'games' && (
           <div className={styles.gamesTab}>
-            <div className={styles.gamesHeaderActions}>
-              <Link href="/game/create" className="btn primary">
-                {dashboardDict.createGame || '+ Crea gioco'}
-              </Link>
-            </div>
-
             {games.length === 0 ? (
               <div className={styles.emptyState}>
                 <span className={styles.emptyIcon}>🎮</span>

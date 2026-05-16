@@ -236,6 +236,7 @@
   "profile": {
     "title": "Profile",
     "language": "Language",
+    "optionsSection": "Options",
     "howTheAppWorks": "How the app works",
     "howTheAppWorksDesc": "Open the onboarding guide with slides for Create Game, Quick Game, Enoteca, Live and Wine Course.",
     "openAppGuide": "Open app guide",

@@ -208,6 +208,7 @@ export default function GameEditor({
   const [activeBottleIndex, setActiveBottleIndex] = useState(null)
   const [isSaving, setIsSaving] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [bottleModalResetToken, setBottleModalResetToken] = useState(0)
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false)
   const [editingQuestionIndex, setEditingQuestionIndex] = useState(null)
   const [resolvedUserId, setResolvedUserId] = useState(userId)
@@ -573,7 +574,7 @@ export default function GameEditor({
     setIsModalOpen(true)
   }
 
-  function concludeBottle() {
+  function concludeBottle(keepOpenForAnother = false) {
     try {
       validateBottleForm(
         bottleName,
@@ -611,7 +612,12 @@ export default function GameEditor({
       })
     }
 
-    setIsModalOpen(false)
+    const shouldKeepOpen = keepOpenForAnother && activeBottleIndex === null
+    if (shouldKeepOpen) {
+      setBottleModalResetToken((prev) => prev + 1)
+    }
+
+    setIsModalOpen(shouldKeepOpen)
     setActiveBottleIndex(null)
     setBottleName('')
     setProducer('')
@@ -800,6 +806,7 @@ export default function GameEditor({
 
       <BottleModal
         isOpen={isModalOpen}
+        resetToken={bottleModalResetToken}
         bottleIndex={activeBottleIndex}
         bottleName={bottleName}
         producer={producer}
@@ -811,6 +818,7 @@ export default function GameEditor({
         onYearChange={setYear}
         onAnswerChange={handleAnswerChange}
         onSave={concludeBottle}
+        onSaveAndAddAnother={() => concludeBottle(true)}
         onCancel={closeModal}
       />
 

@@ -167,6 +167,27 @@
   margin: 16px 0;
 }
 
+.optionsHeader {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.optionsTitle {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #647169;
+  text-align: left;
+}
+
+.optionDivider {
+  height: 1px;
+  background: #e8f0e4;
+  margin: 12px 0;
+}
+
 // ── Bottom sheet ──────────────────────────────────────────────
 .sheetOverlay {
   position: fixed;

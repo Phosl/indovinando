@@ -362,10 +362,18 @@ export default function ProfileClient({
             </div>
           </div>
 
+          <div className={styles.cardDivider} />
+
+          <div className={styles.optionsHeader}>
+            <h3 className={styles.optionsTitle}>{t('optionsSection')}</h3>
+          </div>
+
           <div className={styles.languageRow}>
             <span className={styles.label}>{t('language')}</span>
             <LanguageSwitcher inline />
           </div>
+
+          <div className={styles.optionDivider} />
 
           <div className={styles.avatarRow}>
             <span className={styles.label}>{t('chooseAvatar')}</span>

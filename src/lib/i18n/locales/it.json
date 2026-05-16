@@ -236,6 +236,7 @@
   "profile": {
     "title": "Profilo",
     "language": "Lingua",
+    "optionsSection": "Opzioni",
     "howTheAppWorks": "Come funziona l'app",
     "howTheAppWorksDesc": "Apri la guida onboarding con slide su Crea Gioco, Gioco Veloce, Enoteca, Live e Corso Vino.",
     "openAppGuide": "Apri guida app",

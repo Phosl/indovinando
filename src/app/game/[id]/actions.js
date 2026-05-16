@@ -34,5 +34,5 @@ export async function deleteGame(gameId) {
 
   await supabase.from('games').delete().eq('id', gameId).eq('created_by', user.id)
 
-  redirect('/dashboard')
+  redirect('/miei-giochi')
 }
