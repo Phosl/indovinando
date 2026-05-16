@@ -1,13 +1,11 @@
 'use client'
 
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import {useT} from '@/lib/i18n/useT'
 import {supabaseClient} from '@/lib/supabaseClient'
 import styles from './info.module.scss'
-
-const SWIPE_THRESHOLD_PX = 70
 
 export default function InfoClient() {
   const router = useRouter()
@@ -16,13 +14,8 @@ export default function InfoClient() {
   const slidesRaw = t('slides')
   const slides = Array.isArray(slidesRaw) ? slidesRaw : []
   const [current, setCurrent] = useState(0)
-  const [dragOffset, setDragOffset] = useState(0)
-  const [isDragging, setIsDragging] = useState(false)
   const [userId, setUserId] = useState(null)
   const [authChecked, setAuthChecked] = useState(false)
-
-  const pointerStartXRef = useRef(0)
-  const pointerIdRef = useRef(null)
 
   const currentSlide = slides[current]
   const isFirst = current === 0
@@ -63,39 +56,6 @@ export default function InfoClient() {
     setCurrent((prev) => Math.max(prev - 1, 0))
   }
 
-  function handlePointerDown(event) {
-    // Left mouse button (or touch/pen) only.
-    if (event.pointerType === 'mouse' && event.button !== 0) return
-    pointerIdRef.current = event.pointerId
-    pointerStartXRef.current = event.clientX
-    setIsDragging(true)
-    setDragOffset(0)
-    try {
-      event.currentTarget.setPointerCapture(event.pointerId)
-    } catch {}
-  }
-
-  function handlePointerMove(event) {
-    if (!isDragging || pointerIdRef.current !== event.pointerId) return
-    const deltaX = event.clientX - pointerStartXRef.current
-    setDragOffset(deltaX)
-  }
-
-  function handlePointerEnd(event) {
-    if (pointerIdRef.current !== event.pointerId) return
-    const deltaX = event.clientX - pointerStartXRef.current
-
-    if (deltaX <= -SWIPE_THRESHOLD_PX && !isLast) {
-      goNext()
-    } else if (deltaX >= SWIPE_THRESHOLD_PX && !isFirst) {
-      goPrev()
-    }
-
-    setIsDragging(false)
-    setDragOffset(0)
-    pointerIdRef.current = null
-  }
-
   return (
     <main className={styles.page}>
       <div className={styles.container}>
@@ -126,17 +86,8 @@ export default function InfoClient() {
             />
           </div>
 
-          <div
-            className={styles.swipeViewport}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerEnd}
-            onPointerCancel={handlePointerEnd}
-            onPointerLeave={handlePointerEnd}
-            role="presentation">
-            <div
-              className={`${styles.swipeTrack} ${isDragging ? styles.swipeTrackDragging : ''}`}
-              style={{transform: `translateX(${dragOffset}px)`}}>
+          <div className={styles.swipeViewport} role="presentation">
+            <div className={styles.swipeTrack}>
               <div className={styles.hero}>
                 <div className={styles.emoji} aria-hidden="true">
                   {currentSlide.emoji}
@@ -157,8 +108,6 @@ export default function InfoClient() {
               </ul>
             </div>
           </div>
-
-          <p className={styles.swipeHint}>{t('swipeHint')}</p>
 
           <div className={styles.actions}>
             <button type="button" className="btn secondary" onClick={goPrev} disabled={isFirst}>

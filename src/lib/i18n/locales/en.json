@@ -294,37 +294,37 @@
     "slides": [
       {
         "emoji": "🧭",
-        "title": "Welcome to Indovinando",
-        "description": "A practical guide to discover every feature and jump in quickly.",
+        "title": "What Indovinando is",
+        "description": "Indovinando is a blind tasting game: players taste covered bottles and answer a quiz.",
         "points": [
-          "Create your game formats in minutes.",
-          "Play with friends live or use enoteca mode in person.",
-          "Track your wine learning progress in the course area."
+          "The questionnaire stays the same for every bottle.",
+          "For each bottle, players select one correct answer per question.",
+          "At the end of each round you see results, points and ranking."
         ]
       },
       {
         "emoji": "🍷",
-        "title": "Create Game",
-        "description": "Build a full custom game with questions, answer options and bottle list.",
+        "title": "How gameplay works",
+        "description": "The match goes bottle by bottle, always using the same questionnaire.",
         "points": [
-          "Choose your own question set.",
-          "Add bottles with producer and vintage.",
-          "Set correct answers for each bottle-question pair."
+          "Round 1: covered bottle, answer all questions.",
+          "Reveal: the bottle is shown and points are assigned.",
+          "Then move to the next bottle until the final leaderboard."
         ],
-        "ctaHref": "/game/create",
-        "ctaLabel": "Open Create Game"
+        "ctaHref": "/miei-giochi",
+        "ctaLabel": "Go to your games"
       },
       {
         "emoji": "⚡",
-        "title": "Create Quick Game",
-        "description": "Start from a ready template and publish immediately when you need speed.",
+        "title": "How to create a game",
+        "description": "First build the questionnaire, then add bottles with the correct answers.",
         "points": [
-          "Pre-filled question structure.",
-          "Faster setup for events and tastings.",
-          "Perfect for quick sessions with minimum prep."
+          "1) Create the questionnaire with questions and options.",
+          "2) Add your selected bottles (name, producer, vintage).",
+          "3) For each bottle, set the correct answer for each question."
         ],
-        "ctaHref": "/game/create-quick",
-        "ctaLabel": "Open Quick Create"
+        "ctaHref": "/game/create",
+        "ctaLabel": "Open Create Game"
       },
       {
         "emoji": "🥂",

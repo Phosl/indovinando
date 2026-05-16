@@ -71,9 +71,24 @@ function ModePickerScreen({onPick}) {
 }
 
 export default function GameCreateClient({initialShowOnboarding, userId}) {
+  const router = useRouter()
   const supabase = createClient()
   const [showOnboarding, setShowOnboarding] = useState(initialShowOnboarding)
   const [mode, setMode] = useState(null)
+
+  function resetEditorStepInUrl() {
+    router.replace('/game/create?step=1')
+  }
+
+  function handlePickMode(nextMode) {
+    resetEditorStepInUrl()
+    setMode(nextMode)
+  }
+
+  function handleBackToModePicker() {
+    setMode(null)
+    resetEditorStepInUrl()
+  }
 
   async function handleDisableOnboarding() {
     if (!userId) {
@@ -85,7 +100,7 @@ export default function GameCreateClient({initialShowOnboarding, userId}) {
   }
 
   if (mode === null) {
-    return <ModePickerScreen onPick={setMode} />
+    return <ModePickerScreen onPick={handlePickMode} />
   }
 
   return (
@@ -105,10 +120,10 @@ export default function GameCreateClient({initialShowOnboarding, userId}) {
               initialGameName="Indovinando"
               userId={userId}
               isQuickCreate={true}
-              onBack={() => setMode(null)}
+              onBack={handleBackToModePicker}
             />
           ) : (
-            <GameEditor userId={userId} onBack={() => setMode(null)} />
+            <GameEditor userId={userId} onBack={handleBackToModePicker} />
           )}
         </Suspense>
       </div>

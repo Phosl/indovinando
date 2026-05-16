@@ -294,37 +294,37 @@
     "slides": [
       {
         "emoji": "🧭",
-        "title": "Benvenuto su Indovinando",
-        "description": "Una guida pratica per scoprire tutte le funzioni e iniziare velocemente.",
+        "title": "Cos'è Indovinando",
+        "description": "Indovinando è un gioco per degustazioni alla cieca: assaggi bottiglie coperte e rispondi a un quiz.",
         "points": [
-          "Crea format di gioco in pochi minuti.",
-          "Gioca con amici live o in presenza con modalità Enoteca.",
-          "Tieni traccia della tua formazione sul vino nell'area corso."
+          "Il questionario è unico: le stesse domande si ripetono per ogni bottiglia.",
+          "Per ogni bottiglia selezioni la risposta corretta per ogni domanda.",
+          "A fine round vedi risultati, punteggio e classifica."
         ]
       },
       {
         "emoji": "🍷",
-        "title": "Crea Gioco",
-        "description": "Costruisci un gioco completo personalizzato con domande, opzioni e bottiglie.",
+        "title": "Come si gioca",
+        "description": "La partita procede bottiglia dopo bottiglia, sempre con lo stesso questionario.",
         "points": [
-          "Definisci le domande che vuoi usare.",
-          "Aggiungi bottiglie con produttore e annata.",
-          "Imposta le risposte corrette per ogni coppia bottiglia-domanda."
+          "Round 1: bottiglia coperta, rispondi a tutte le domande.",
+          "Reveal: si scopre la bottiglia e vedi i punti ottenuti.",
+          "Si passa alla bottiglia successiva fino alla classifica finale."
         ],
-        "ctaHref": "/game/create",
-        "ctaLabel": "Apri Crea Gioco"
+        "ctaHref": "/miei-giochi",
+        "ctaLabel": "Vai ai tuoi giochi"
       },
       {
         "emoji": "⚡",
-        "title": "Crea Gioco Veloce",
-        "description": "Parti da un template pronto e pubblica subito quando vuoi la massima velocità.",
+        "title": "Come creare un gioco",
+        "description": "Prima crei il questionario, poi inserisci le bottiglie e le risposte corrette.",
         "points": [
-          "Struttura domande già impostata.",
-          "Setup rapido per eventi e degustazioni.",
-          "Perfetto per sessioni veloci con poca preparazione."
+          "1) Crea il questionario con domande e opzioni.",
+          "2) Inserisci le bottiglie scelte (nome, produttore, annata).",
+          "3) Per ogni bottiglia imposta la risposta corretta per ogni domanda."
         ],
-        "ctaHref": "/game/create-quick",
-        "ctaLabel": "Apri Crea Veloce"
+        "ctaHref": "/game/create",
+        "ctaLabel": "Apri Crea Gioco"
       },
       {
         "emoji": "🥂",
