@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.23.2',
+    date: '16 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'fix question list',
+    ],
+  },
+
+  {
     version: '1.23.1',
     date: '16 maggio 2026',
     label: 'Auto',
