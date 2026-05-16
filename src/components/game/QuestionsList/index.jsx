@@ -42,27 +42,16 @@ export default function QuestionsList({
                 className={`${styles.card} ${isComplete ? styles.complete : styles.incomplete}`}
                 onClick={() => onEditQuestion(index)}>
                 <div className={styles.cardHeader}>
-                  <div>
+                  {/* <div>
                     <h1>{index + 1}°</h1>
                     <h5>{text.question}</h5>
-                  </div>
-                  <span className={styles.status}>{isComplete ? '✓' : '⚠️'}</span>
-                </div>
-                <p className={styles.questionText}>
-                  {question.text} -
-                  <span className={styles.optionsCount}>
-                    {question.options?.length || 0} {text.options}
-                  </span>
-                </p>
-                <div className={styles.buttonGroup}>
-                  <button
-                    className={styles.editBtn}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onEditQuestion(index)
-                    }}>
-                    {text.edit}
-                  </button>
+                  </div> */}
+                  <h2 className={styles.questionText}>
+                    {question.text}
+                    {/* <span className={styles.optionsCount}>
+                      {question.options?.length || 0} {text.options}
+                    </span> */}
+                  </h2>
                   <button
                     className={styles.deleteBtn}
                     onClick={(e) => {
@@ -73,7 +62,24 @@ export default function QuestionsList({
                     }}>
                     {text.delete}
                   </button>
+                  {/* <span className={styles.status}>{isComplete ? '✓' : '⚠️'}</span> */}
                 </div>
+                <div className={styles.optionsText}>
+                  {question.options?.map((o, i) => (
+                    <p key={i}>{typeof o === 'string' ? o : o.text}</p>
+                  ))}
+                </div>
+
+                {/* <div className={styles.buttonGroup}>
+                  <button
+                    className={styles.editBtn}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onEditQuestion(index)
+                    }}>
+                    {text.edit}
+                  </button>
+                </div> */}
               </div>
             )
           })}

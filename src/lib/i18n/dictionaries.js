@@ -89,9 +89,9 @@ export const GAME_EDITOR_DICTIONARY = {
       saveQuestionnaire: 'Salva questionario',
       back: 'Indietro',
       bridgeTitle: 'Questionario completato! Cosa vuoi fare ora?',
-      bridgeInsertResults: '🍾 Inserisci le bottiglie',
+      bridgeInsertResults: 'Inserisci le bottiglie',
       saving: 'Salvataggio...',
-      saveAndPrint: '🖨️ Salva e stampa scheda',
+      saveAndPrint: 'Salva e stampa scheda',
       publishGame: 'Pubblica gioco',
       updateGame: 'Aggiorna gioco',
     },
@@ -137,7 +137,7 @@ export const GAME_EDITOR_DICTIONARY = {
   bottlesList: {
     it: {
       title: 'Bottiglie',
-      add: '+ Nuova bottiglia',
+      add: 'Aggiungi bottiglia',
       empty: 'Nessuna bottiglia ancora. Aggiungi la prima!',
       edit: 'Modifica',
       delete: 'Elimina',

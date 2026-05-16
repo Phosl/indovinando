@@ -36,7 +36,7 @@ export default function BottleModal({
   onYearChange,
   onAnswerChange,
   onSave,
-  onSaveAndAddAnother,
+  // onSaveAndAddAnother, // rimosso: non più usato
   onCancel,
 }) {
   const {lang} = useLanguage()
@@ -131,7 +131,7 @@ export default function BottleModal({
   const stepLabel = lang === 'en' ? 'Step' : 'Step'
   const nextLabel = lang === 'en' ? 'Next' : 'Avanti'
   const backLabel = lang === 'en' ? 'Back' : 'Indietro'
-  const addAnotherLabel = lang === 'en' ? 'Save and add another' : 'Salva e aggiungi altra'
+  // const addAnotherLabel = lang === 'en' ? 'Save and add another' : 'Salva e aggiungi altra' // rimosso
   const finalTitle = lang === 'en' ? 'Done' : 'Fine'
   const finalHint =
     lang === 'en'
@@ -210,16 +210,26 @@ export default function BottleModal({
               <h4>{finalTitle}</h4>
               <p>{finalHint}</p>
               <div className={styles.finalSummary}>
-                <span>{bottleName || '-'}</span>
-                <span>{producer || '-'}</span>
-                <span>{year || '-'}</span>
-                <span>
-                  {
-                    currentAnswers.filter((answer) => answer !== null && answer !== undefined)
-                      .length
-                  }
-                  /{questionCount} {lang === 'en' ? 'answers set' : 'risposte impostate'}
-                </span>
+                <ul
+                  className={styles.answersList}
+                  style={{margin: '8px 0 0 0', padding: 0, listStyle: 'none'}}>
+                  {questions.map((q, i) => {
+                    const answerIndex = currentAnswers[i]
+                    let options = []
+                    if (Array.isArray(q.options)) options = q.options
+                    else if (Array.isArray(q.game_question_options))
+                      options = q.game_question_options.map((o) => o.text)
+                    const answerText =
+                      answerIndex !== null && answerIndex !== undefined && options[answerIndex]
+                        ? options[answerIndex]
+                        : '-'
+                    return (
+                      <li key={i} style={{fontSize: '0.95em', color: '#444', marginBottom: 2}}>
+                        <b>{q.text}</b>: {answerText}
+                      </li>
+                    )
+                  })}
+                </ul>
               </div>
             </div>
           )}
@@ -242,11 +252,6 @@ export default function BottleModal({
             </button>
           ) : (
             <>
-              {isNewBottle && typeof onSaveAndAddAnother === 'function' && (
-                <button className="btn tertiary" onClick={() => onSaveAndAddAnother()}>
-                  {addAnotherLabel}
-                </button>
-              )}
               <button className="btn primary" onClick={handleSave}>
                 {isNewBottle ? text.saveNew : text.saveEdit}
               </button>

@@ -42,6 +42,11 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
     setOptions((prev) => [...prev, ''])
   }
 
+  function removeOption(index) {
+    if (options.length <= 2) return
+    setOptions((prev) => prev.filter((_, i) => i !== index))
+  }
+
   function handleSave() {
     try {
       validateQuestionForm(questionText, options, alertMessages)
@@ -91,13 +96,34 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
             <label>{text.optionsLabel}</label>
             <div className={styles.optionsList}>
               {options.map((opt, i) => (
-                <input
-                  key={i}
-                  className={styles.optionInput}
-                  placeholder={`${text.optionPlaceholder} ${i + 1}`}
-                  value={opt}
-                  onChange={(e) => updateOption(i, e.target.value)}
-                />
+                <div key={i} style={{display: 'flex', alignItems: 'center', gap: 6}}>
+                  <input
+                    className={styles.optionInput}
+                    placeholder={`${text.optionPlaceholder} ${i + 1}`}
+                    value={opt}
+                    onChange={(e) => updateOption(i, e.target.value)}
+                    style={{flex: 1}}
+                  />
+                  <button
+                    type="button"
+                    aria-label="Elimina opzione"
+                    onClick={() => removeOption(i)}
+                    disabled={options.length <= 2}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#c00',
+                      fontSize: '1.1em',
+                      cursor: options.length > 2 ? 'pointer' : 'not-allowed',
+                      opacity: options.length > 2 ? 1 : 0.4,
+                      padding: '2px 6px',
+                      borderRadius: '50%',
+                      transition: 'background 0.15s',
+                    }}
+                    tabIndex={-1}>
+                    🗑️
+                  </button>
+                </div>
               ))}
             </div>
             <button className="btn tertiary-bordered" onClick={addOption}>
