@@ -47,7 +47,7 @@ export default function QuestionsList({
                     <h5>{text.question}</h5>
                   </div> */}
                   <h2 className={styles.questionText}>
-                    {question.text}
+                    <span>{index + 1}°</span> <span>{question.text}</span>
                     {/* <span className={styles.optionsCount}>
                       {question.options?.length || 0} {text.options}
                     </span> */}

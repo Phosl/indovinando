@@ -158,6 +158,7 @@
   font-weight: 600;
   align-self: flex-start;
   max-width: 50%;
+
   &:active {
     box-shadow: none;
     transform: translateY(3px);
@@ -180,4 +181,8 @@
   min-width: 0;
   max-width: 50%;
   box-sizing: border-box;
+}
+
+.deleteBtn {
+  max-width: 80px;
 }

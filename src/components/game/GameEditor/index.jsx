@@ -205,7 +205,7 @@ const StepThreeSection = memo(function StepThreeSection({
     <div className={styles.section}>
       <h3 className={styles.sectionTitle}>{editorText.bridgeTitle}</h3>
       <div className={styles.bridgeRow}>
-        <button className="btn  tertiary" onClick={onInsertResults}>
+        <button className="btn  primary" onClick={onInsertResults}>
           {editorText.bridgeInsertResults}
         </button>
         <button className="btn secondary" onClick={onSaveAndPrint} disabled={isSaving}>
