@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.22.0',
+    date: '16 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'improve profile options layout and bottle creation flow',
+    ],
+  },
+
+  {
     version: '1.21.2',
     date: '15 maggio 2026',
     label: 'Auto',
