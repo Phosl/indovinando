@@ -56,10 +56,15 @@ function mergeLessonProgress(localLesson = {}, dbLesson = {}) {
   const completedAt =
     parseIsoTime(localCompletedAt) >= parseIsoTime(dbCompletedAt) ? localCompletedAt : dbCompletedAt
 
+  const mergedMaxScore = Math.max(localMax, dbMax)
+  const mergedScoreRaw = Math.max(localScore, dbScore)
+  const mergedScore =
+    mergedMaxScore > 0 ? Math.min(mergedScoreRaw, mergedMaxScore) : Math.max(0, mergedScoreRaw)
+
   return {
     completed: localCompleted || dbCompleted,
-    score: Math.max(localScore, dbScore),
-    maxScore: Math.max(localMax, dbMax),
+    score: mergedScore,
+    maxScore: mergedMaxScore,
     attempts: Math.max(localAttempts, dbAttempts),
     completedAt,
   }
@@ -148,8 +153,13 @@ export function useWineCourseProgress() {
       setProgress((prev) => {
         const level = prev[levelId] ?? {}
         const existing = level[lessonId] ?? {}
-        const bestScore = Math.max(score, existing.score ?? 0)
-        const storedMaxScore = maxScore ?? existing.maxScore ?? 0
+        const storedMaxScore = Number(maxScore ?? existing.maxScore ?? 0)
+        const nextScore = Number(score ?? 0)
+        const previousScore = Number(existing.score ?? 0)
+        const bestScore = Math.max(
+          0,
+          Math.min(storedMaxScore || Number.MAX_SAFE_INTEGER, Math.max(nextScore, previousScore)),
+        )
         const attempts = (existing.attempts ?? 0) + 1
         const completedAt = new Date().toISOString()
 

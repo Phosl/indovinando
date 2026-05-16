@@ -1,5 +1,54 @@
 'use client'
 
+// (rimosso: import duplicato)
+// ...existing code...
+// Modale introduttiva per lo step questionario
+import modalStyles from './QuestionnaireIntroModal.module.scss'
+function QuestionnaireIntroModal({isOpen, onClose, onDisable, isQuickCreate, questions}) {
+  if (!isOpen) return null
+  return (
+    <div className={modalStyles.modalOverlay}>
+      <div className={modalStyles.modalContent}>
+        <h2 style={{marginBottom: 12}}>
+          {isQuickCreate ? 'Questionario precompilato' : 'Crea il questionario'}
+        </h2>
+        <p style={{marginBottom: 16}}>
+          {isQuickCreate
+            ? 'Abbiamo preparato già il questionario con 5 domande. Puoi modificare le risposte a piacere.'
+            : 'Adesso creiamo il questionario: aggiungi le domande e le risposte.'}
+        </p>
+        {isQuickCreate && questions?.length > 0 && (
+          <div
+            style={{
+              textAlign: 'left',
+              margin: '0 auto 16px',
+              background: '#f7f7f7',
+              borderRadius: 8,
+              padding: 12,
+            }}>
+            <b>Domande predefinite:</b>
+            <ul style={{margin: '8px 0 0 16px', padding: 0}}>
+              {questions.map((q, i) => (
+                <li key={i} style={{fontSize: 15}}>
+                  {q.text || `Domanda ${i + 1}`}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <div style={{display: 'flex', gap: 8, justifyContent: 'center', marginTop: 12}}>
+          <button className="btn primary" onClick={onClose}>
+            Ho capito
+          </button>
+          <button className="btn secondary" onClick={onDisable}>
+            Non mostrare più
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 import {memo, useEffect, useState, useRef} from 'react'
 import {usePathname, useRouter, useSearchParams} from 'next/navigation'
 import {createClient} from '@/lib/supabaseClient'
@@ -81,10 +130,48 @@ const StepTwoSection = memo(function StepTwoSection({
   onDeleteQuestion,
   onSaveQuestionnaire,
   onBack,
+  onShowIntro,
 }) {
   return (
     <div className={styles.section}>
-      <h3 className={styles.sectionTitle}>{editorText.step2Title}</h3>
+      <div className={styles.sectionHeader}>
+        <h3 className={styles.sectionTitle} style={{margin: 0}}>
+          {editorText.step2Title}
+        </h3>
+        <button
+          type="button"
+          aria-label="Guida questionario"
+          onClick={onShowIntro}
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            margin: 0,
+            cursor: 'pointer',
+            outline: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 32,
+            height: 32,
+            borderRadius: '50%',
+            border: '1.5px solid #bbb',
+            fontWeight: 700,
+            fontSize: 18,
+            color: '#555',
+            transition: 'border-color 0.2s,color 0.2s',
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.borderColor = '#888'
+            e.currentTarget.style.color = '#222'
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.borderColor = '#bbb'
+            e.currentTarget.style.color = '#555'
+          }}>
+          ?
+        </button>
+      </div>
       <QuestionsList
         questions={questionDraft}
         onEditQuestion={onEditQuestion}
@@ -208,6 +295,22 @@ export default function GameEditor({
   const [activeBottleIndex, setActiveBottleIndex] = useState(null)
   const [isSaving, setIsSaving] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  // Stato per la modale intro questionario
+  const [showQuestionnaireIntro, setShowQuestionnaireIntro] = useState(false)
+  // Mostra la modale intro solo la prima volta che si entra nello step 2, se non disabilitata
+  useEffect(() => {
+    if (step === 2) {
+      const disabled = window?.localStorage?.getItem('hideQuestionnaireIntro') === '1'
+      if (!disabled) setShowQuestionnaireIntro(true)
+    } else {
+      setShowQuestionnaireIntro(false)
+    }
+  }, [step])
+
+  function handleDisableIntro() {
+    window?.localStorage?.setItem('hideQuestionnaireIntro', '1')
+    setShowQuestionnaireIntro(false)
+  }
   const [bottleModalResetToken, setBottleModalResetToken] = useState(0)
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false)
   const [editingQuestionIndex, setEditingQuestionIndex] = useState(null)
@@ -672,6 +775,7 @@ export default function GameEditor({
         onDeleteQuestion={deleteQuestion}
         onSaveQuestionnaire={saveQuestionnaire}
         onBack={() => goToStep(1)}
+        onShowIntro={() => setShowQuestionnaireIntro(true)}
       />
     )
   } else if (step === 3) {
@@ -803,6 +907,15 @@ export default function GameEditor({
           {stepContent}
         </div>
       )}
+
+      {/* Modale intro questionario */}
+      <QuestionnaireIntroModal
+        isOpen={showQuestionnaireIntro}
+        onClose={() => setShowQuestionnaireIntro(false)}
+        onDisable={handleDisableIntro}
+        isQuickCreate={isQuickCreate}
+        questions={questionDraft}
+      />
 
       <BottleModal
         isOpen={isModalOpen}

@@ -198,10 +198,18 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
 
     setChecked(true)
     playSound(correct ? 'correct' : 'wrong')
-    setAnswers((prev) => [
-      ...prev,
-      {questionId: currentQuestion.id, selectedId, isCorrect: correct, combo: nextStreak, bonus},
-    ])
+    // Keep a single answer record per question to avoid accidental double counting.
+    setAnswers((prev) => {
+      const next = prev.filter((answer) => answer.questionId !== currentQuestion.id)
+      next.push({
+        questionId: currentQuestion.id,
+        selectedId,
+        isCorrect: correct,
+        combo: nextStreak,
+        bonus,
+      })
+      return next
+    })
   }, [selectedId, checked, correctId, currentQuestion, playSound, comboStreak, getComboBonus])
 
   const handleDidacticContinue = useCallback(() => {
@@ -233,7 +241,22 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
 
       timersRef.current.push(exitTimer)
     } else {
-      const score = answers.filter((a) => a.isCorrect).length + (isCorrect ? 1 : 0)
+      const answersByQuestion = new Map()
+      answers.forEach((answer) => {
+        answersByQuestion.set(answer.questionId, answer)
+      })
+      if (currentQuestion?.id && selectedId && checked) {
+        answersByQuestion.set(currentQuestion.id, {
+          questionId: currentQuestion.id,
+          selectedId,
+          isCorrect,
+        })
+      }
+
+      const computedCorrect = Array.from(answersByQuestion.values()).filter(
+        (a) => a.isCorrect,
+      ).length
+      const score = Math.min(questions.length, computedCorrect)
       // Snapshot current level before completing (levelProgress is based on pre-complete data)
       prevLevelNumRef.current = levelProgress?.levelNum ?? null
       completeLesson(level.id, lesson.id, score, questions.length)
@@ -370,7 +393,15 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
 
   // ── RESULT SCREEN ─────────────────────────────────────────────
   if (screen === 'result') {
-    const totalCorrect = answers.filter((a) => a.isCorrect).length
+    const answersByQuestion = new Map()
+    answers.forEach((answer) => {
+      answersByQuestion.set(answer.questionId, answer)
+    })
+
+    const totalCorrect = Math.min(
+      questions.length,
+      Array.from(answersByQuestion.values()).filter((answer) => answer.isCorrect).length,
+    )
     const total = questions.length
     const pct = total > 0 ? Math.round((totalCorrect / total) * 100) : 0
     const allCorrect = total > 0 && totalCorrect === total
@@ -437,8 +468,8 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
 
           {/* Per-question breakdown */}
           <div className={xStyles.resultBreakdown}>
-            {questions.map((q, i) => {
-              const ans = answers[i]
+            {questions.map((q) => {
+              const ans = answersByQuestion.get(q.id)
               const correct = ans?.isCorrect
               return (
                 <div
