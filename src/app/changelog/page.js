@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.23.1',
+    date: '16 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'migliora stile card domande, visualizzazione opzioni e pulizia codice',
+    ],
+  },
+
+  {
     version: '1.23.0',
     date: '16 maggio 2026',
     label: 'Auto',
