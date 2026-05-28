@@ -268,12 +268,22 @@
 }
 
 .passBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 0.68rem;
   font-weight: 900;
   color: #fff;
   background: #58cc02;
   border-radius: 999px;
   padding: 1px 8px;
+}
+
+.passBadgeIcon {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .failBadge {

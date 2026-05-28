@@ -15,7 +15,23 @@
   letter-spacing: 0.04em;
   &.btn-small {
     padding: 8px 12px;
-    font-size: 13px;
+    font-size: 14px;
+  }
+  &.btn-mini {
+    padding: 2px 8px;
+    font-size: 14px;
+    width: auto;
+    min-height: auto;
+    font-weight: 600;
+  }
+  &.btn-only-text {
+    padding: 0;
+    min-height: auto;
+    font-size: 16px;
+    letter-spacing: normal;
+    background: transparent !important;
+    border: none;
+    box-shadow: none;
   }
 }
 
@@ -77,6 +93,29 @@
   }
 }
 
+.btn.neutral {
+  background-color: var(--white);
+  color: var(--dark);
+  border-color: var(--dark);
+
+  &:hover {
+    background: var(--button-dark);
+  }
+}
+
+.btn.danger {
+  background-color: var(--danger);
+  color: var(--white);
+  border-color: var(--danger);
+
+  &:hover {
+    background: var(--danger-700);
+  }
+  &.btn-only-text {
+    color: var(--danger);
+  }
+}
+
 .btn.type-text {
   background: none;
   border: none;
@@ -87,17 +126,6 @@
   &:active {
     background: none;
     transform: none;
-  }
-}
-
-.btn.danger {
-  background-color: var(--danger-surface);
-  color: var(--danger-text);
-  border-color: var(--danger-border);
-  box-shadow: 0px 3px 0px 0px #f9a8a8;
-
-  &:hover {
-    background: #ffe4e6;
   }
 }
 

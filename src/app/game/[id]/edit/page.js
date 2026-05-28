@@ -2,6 +2,7 @@ import {notFound, redirect} from 'next/navigation'
 import {revalidatePath} from 'next/cache'
 import {Suspense} from 'react'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {getGameAvatarOptions} from '@/lib/gameAvatarOptions'
 import GameEditClient from './GameEditClient'
 import GameEditLoading from './loading'
 
@@ -33,7 +34,7 @@ export default async function GameEditPage({params}) {
   // Load game - must be owner
   const {data: game, error: gameError} = await supabase
     .from('games')
-    .select('id, name, status, created_by')
+    .select('id, name, status, created_by, cover_index')
     .eq('id', gameId)
     .eq('created_by', user.id)
     .single()
@@ -52,9 +53,12 @@ export default async function GameEditPage({params}) {
   // Load bottles with answers
   const {data: bottles} = await supabase
     .from('game_bottles')
-    .select('id, name, producer, year, bottle_order, game_bottle_answers(question_id, option_id)')
+    .select(
+      'id, name, producer, year, wine_type, bottle_order, game_bottle_answers(question_id, option_id)',
+    )
     .eq('game_id', gameId)
     .order('bottle_order')
+  const avatarOptions = await getGameAvatarOptions()
 
   return (
     <Suspense fallback={<GameEditLoading />}>
@@ -63,6 +67,7 @@ export default async function GameEditPage({params}) {
         initialGame={game}
         initialQuestions={questions || []}
         initialBottles={bottles || []}
+        avatarOptions={avatarOptions}
         userId={user.id}
         onGameSaved={revalidateGamePage}
       />

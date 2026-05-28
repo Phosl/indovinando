@@ -53,7 +53,7 @@ export default function QuestionsList({
                     </span> */}
                   </h2>
                   <button
-                    className={styles.deleteBtn}
+                    className="btn btn-mini danger btn-only-text"
                     onClick={(e) => {
                       e.stopPropagation()
                       if (confirm(text.confirmDelete)) {

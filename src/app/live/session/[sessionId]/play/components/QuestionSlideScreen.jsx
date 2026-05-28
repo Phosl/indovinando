@@ -119,9 +119,12 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
           <div className={styles.resultFeedback}>
             {checkResult?.isCorrect ? (
               <>
-                <span className={styles.feedbackIcon}>
-                  {checkResult.comboBonus > 0 ? '🔥' : '🎉'}
-                </span>
+                <img
+                  className={styles.feedbackIconImg}
+                  src="/check-correct.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
                 <span className={styles.feedbackLabel}>
                   {checkResult.comboBonus > 0
                     ? t('comboCorrect', {
@@ -134,7 +137,12 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
               </>
             ) : (
               <>
-                <span className={styles.feedbackIcon}>💡</span>
+                <img
+                  className={styles.feedbackIconImg}
+                  src="/check-wrong.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
                 <span className={styles.feedbackLabel}>
                   {t('correctAnswer')} <strong>{correctText}</strong>
                 </span>

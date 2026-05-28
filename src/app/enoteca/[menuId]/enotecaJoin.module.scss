@@ -9,7 +9,7 @@
 .infoCard {
   background: var(--foreground);
   border: 2px solid var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 20px 16px;
   display: flex;
   flex-direction: column;
@@ -102,7 +102,7 @@
   scroll-snap-align: start;
   background: var(--background);
   border: 2px solid var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -128,7 +128,7 @@
 
 .questionPreviewEmpty {
   border: 2px dashed var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 18px 14px;
   text-align: center;
   color: var(--text-secondary);
@@ -170,7 +170,7 @@
 
 .bottlePreviewEmpty {
   border: 2px dashed var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 18px 14px;
   text-align: center;
   color: var(--text-secondary);
@@ -183,7 +183,7 @@
   scroll-snap-align: start;
   background: var(--background);
   border: 2px solid var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -234,7 +234,7 @@
 .bridgeCard {
   background: var(--foreground);
   border: 2px solid var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -279,7 +279,7 @@
   padding: 10px 12px;
   background: var(--background);
   border: 2px solid var(--button-secondary-border);
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -349,7 +349,7 @@
 
 .leaderboardEmpty {
   border: 2px dashed var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 18px 14px;
   text-align: center;
   color: var(--text-secondary);
@@ -371,7 +371,7 @@
   gap: 12px;
   padding: 12px;
   border: 2px solid var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 12px;
   background: var(--background);
 }
 
@@ -474,7 +474,7 @@
   width: min(420px, 100%);
   background: var(--foreground);
   border: 2px solid var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 12px;
   box-shadow: 0px 6px 0px 0px var(--gray-light);
   padding: 16px;
   display: flex;
@@ -502,7 +502,7 @@
   height: auto;
   margin: 0 auto;
   border: 2px solid var(--button-secondary-border);
-  border-radius: 10px;
+  border-radius: 8px;
   background: #fff;
 }
 
@@ -544,7 +544,7 @@
     padding: 12px 14px;
     background: var(--foreground);
     border: 2px solid var(--button-secondary-border);
-    border-radius: 10px;
+    border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
     color: var(--text-primary);
@@ -567,7 +567,7 @@
 .resumeCard {
   background: color-mix(in srgb, var(--selected-dark) 6%, var(--foreground));
   border: 2px solid var(--selected-dark);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 16px;
   display: flex;
   flex-direction: column;

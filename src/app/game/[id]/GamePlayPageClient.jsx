@@ -19,7 +19,15 @@ const GAME_PLAY_PAGE_DICTIONARY = {
   },
 }
 
-export default function GamePlayPageClient({game, questions, bottles, isOwner, onDelete}) {
+export default function GamePlayPageClient({
+  game,
+  questions,
+  bottles,
+  historySessions,
+  avatarOptions,
+  isOwner,
+  onDelete,
+}) {
   const router = useRouter()
   const {lang} = useLanguage()
   const t = pickLangText(lang, GAME_PLAY_PAGE_DICTIONARY)
@@ -41,19 +49,25 @@ export default function GamePlayPageClient({game, questions, bottles, isOwner, o
   return (
     <main className="flex-container">
       <div className="flex-column" style={{width: '100%', maxWidth: 960, margin: '0 auto'}}>
-        <TopBar title={`${game.name}`} onBack={() => router.push('/miei-giochi')} />
+        <TopBar title="Dettaglio Degustazione" onBack={() => router.push('/miei-giochi')} />
 
-        <GamePlayView game={game} questions={questions} bottles={bottles} isOwner={isOwner} />
+        <GamePlayView
+          game={game}
+          questions={questions}
+          bottles={bottles}
+          historySessions={historySessions}
+          avatarOptions={avatarOptions}
+          isOwner={isOwner}
+        />
 
         {isOwner && (
           <button
             onClick={handleDelete}
             disabled={isDeleting}
-            className={`${styles.dangerAction} ${isDeleting ? styles.disabledAction : ''}`}>
+            className={`btn btn-small danger ${isDeleting ? 'disabled' : ''}`}>
             {isDeleting ? '...' : `${t.delete}`}
           </button>
         )}
-
       </div>
     </main>
   )

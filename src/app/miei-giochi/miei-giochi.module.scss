@@ -42,7 +42,7 @@
   padding: 9px 12px;
   background: none;
   border: none;
-  border-radius: 9px;
+  border-radius: 8px;
   font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
@@ -116,8 +116,8 @@
   border-radius: 12px;
   box-shadow: 0px 3px 0px 0px var(--gray-light);
   padding: 14px;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
   gap: 10px;
   transition:
     transform 0.12s ease,
@@ -127,6 +127,21 @@
     transform: translateY(-1px);
     box-shadow: 0px 5px 0px 0px var(--gray-light);
   }
+}
+
+.gameCover {
+  width: 92px;
+  height: 92px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--button-secondary-border);
+}
+
+.gameCardBody {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .gameCardTop {
@@ -141,6 +156,14 @@
     font-weight: 900;
     color: var(--text-primary);
     line-height: 1.2;
+    display: flex;
+    align-items: center;
+  }
+  .statusLabel {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--warning);
+    margin-left: 8px;
   }
 }
 

@@ -1,9 +1,9 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
-import {toLocaleTag} from '@/lib/i18n/config'
 import it from '@/lib/i18n/locales/it.json'
 import en from '@/lib/i18n/locales/en.json'
+import {getGameAvatarOptions} from '@/lib/gameAvatarOptions'
 import MieiGiochiClient from './MieiGiochiClient'
 
 export const dynamic = 'force-dynamic'
@@ -25,7 +25,7 @@ export default async function MieiGiochiPage() {
     supabase
       .from('games')
       .select(
-        'id, name, status, created_at, game_bottles(id, name, producer, bottle_order), game_questions(id)',
+        'id, name, status, created_at, cover_index, game_bottles(id, name, producer, bottle_order), game_questions(id)',
       )
       .eq('created_by', user.id)
       .order('created_at', {ascending: false}),
@@ -36,13 +36,14 @@ export default async function MieiGiochiPage() {
       .order('played_at', {ascending: false})
       .limit(100),
   ])
+  const avatarOptions = await getGameAvatarOptions()
 
   return (
     <MieiGiochiClient
       games={games || []}
+      avatarOptions={avatarOptions}
       sessions={sessions || []}
       lang={lang}
-      localeTag={toLocaleTag(lang)}
       dashboardDict={dashboardDict}
       storicoDict={storicoDict}
     />

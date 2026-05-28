@@ -34,7 +34,9 @@ export default function BottlesList({
       </div>
 
       {bottles.length === 0 ? (
-        <p className={styles.emptyState}>{text.empty}</p>
+        <div className={styles.emptyState}>
+          <p>{text.empty}</p>
+        </div>
       ) : (
         <div className={styles.grid}>
           {bottles.map((bottle, index) => {
@@ -45,22 +47,11 @@ export default function BottlesList({
                 className={`${styles.card} ${isComplete ? styles.complete : styles.incomplete}`}
                 onClick={() => onEditBottle(index)}>
                 <div className={styles.cardHeader}>
-                  <h4>{bottle.name}</h4>
-                  <span className={styles.status}>{isComplete ? '✓' : '⚠️'}</span>
-                </div>
-                <p className={styles.producer}>{bottle.producer}</p>
-                <p className={styles.year}>{bottle.year}</p>
-                <div className={styles.buttonGroup}>
+                  <h4>
+                    {bottle.name} {bottle.year}
+                  </h4>
                   <button
-                    className={styles.editBtn}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onEditBottle(index)
-                    }}>
-                    {text.edit}
-                  </button>
-                  <button
-                    className={styles.deleteBtn}
+                    className="btn btn-mini danger btn-only-text"
                     onClick={(e) => {
                       e.stopPropagation()
                       if (confirm(text.confirmDelete)) {
@@ -69,7 +60,18 @@ export default function BottlesList({
                     }}>
                     {text.delete}
                   </button>
+
+                  {!isComplete && (
+                    <img
+                      className={styles.status}
+                      src="/check-warning.svg"
+                      alt=""
+                      aria-hidden="true"
+                    />
+                  )}
                 </div>
+                <p className={styles.producer}>{bottle.producer}</p>
+                {bottle.wineType && <p className={styles.year}>{bottle.wineType}</p>}
               </div>
             )
           })}

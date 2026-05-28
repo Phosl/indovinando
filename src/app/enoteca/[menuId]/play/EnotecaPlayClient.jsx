@@ -543,9 +543,12 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
           <div className={styles.resultFeedback}>
             {curCheckedResult?.isCorrect ? (
               <>
-                <span className={styles.feedbackIcon}>
-                  {curCheckedResult.comboCount >= 2 ? '🔥' : '🎉'}
-                </span>
+                <img
+                  className={styles.feedbackIconImg}
+                  src="/check-correct.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
                 <span className={styles.feedbackLabel}>
                   {curCheckedResult.comboCount >= 2
                     ? `Combo x${curCheckedResult.comboCount}! +${curCheckedResult.points}`
@@ -554,7 +557,12 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
               </>
             ) : (
               <>
-                <span className={styles.feedbackIcon}>💡</span>
+                <img
+                  className={styles.feedbackIconImg}
+                  src="/check-wrong.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
                 <span className={styles.feedbackLabel}>
                   {t.correctAnswer} <strong>{correctOptText}</strong>
                 </span>

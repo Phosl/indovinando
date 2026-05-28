@@ -159,7 +159,7 @@
   padding: 14px 20px;
   background: var(--foreground);
   border: 2px solid var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 12px;
   box-shadow: 0px 4px 0px 0px var(--gray-light);
   text-decoration: none;
   color: var(--text-primary);
@@ -292,7 +292,7 @@
   max-width: 560px;
   background: #fff;
   border: 1px solid #dbead1;
-  border-radius: 18px 18px 14px 14px;
+  border-radius: 16px 18px 14px 14px;
   box-shadow: 0 14px 36px rgba(19, 40, 24, 0.22);
   padding: 10px 14px 14px;
   animation: sheetIn 0.18s ease-out;
@@ -350,7 +350,7 @@
 .formCard {
   background: #fbfff8;
   border: 1px solid #deead7;
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 14px;
 }
 
@@ -385,7 +385,7 @@
   margin-top: 12px;
   background-color: #fee;
   color: #900;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 14px;
 }
 

@@ -32,22 +32,223 @@
   color: var(--text-primary);
 }
 
-.actionsBar {
+.gameHeader {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.gameHeaderInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gameDate {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.gameInfo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.gameAvatar {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--button-secondary-border);
+}
+.gameHeaderInfo .historyToggle {
+  width: fit-content;
+  background: var(--primary-50);
+  border-color: var(--primary-200);
+  color: var(--primary-text);
+  font-weight: 700;
+  padding: 2px 8px;
+  min-height: auto;
+}
+
+.historyPanel {
+  padding: 4px 2px 2px;
+  overflow-y: auto;
+}
+
+.historyEmpty {
+  margin: 0;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.historyItem {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 10px;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: var(--background);
+  flex-wrap: wrap;
+}
+
+.historyMain {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.historyName {
+  margin: 0;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+.historyNameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.historyTypeBadge {
+  display: inline-flex;
+  align-items: center;
+  border: 1.5px solid var(--button-secondary-border);
+  border-radius: 999px;
+  padding: 1px 7px;
+  font-size: 0.66rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: var(--foreground);
+}
+
+.historyMeta {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.historyScore {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.historyPlayers {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 2px;
+}
+
+.historyPlayer {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding: 6px 0;
+  border-top: 1px solid var(--button-secondary-border);
+
+  strong {
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+}
+
+.historySheetBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 44;
+  background: rgba(0, 0, 0, 0.42);
+  display: flex;
+  align-items: flex-end;
+}
+
+.historySheet {
+  width: 100%;
+  max-height: min(78vh, 760px);
+  background: var(--foreground);
+  border-top: 2px solid var(--button-secondary-border);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  box-shadow: 0 -4px 0 0 var(--gray-light);
+  padding: 10px 14px calc(12px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.historySheetHandle {
+  width: 54px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--button-secondary-border);
+  margin: 0 auto;
+}
+
+.historySheetHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 900;
+  }
+}
+
+.historySheetClose {
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 800;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.actionsBar {
+  gap: 16px;
   background: var(--foreground);
   border: 2px solid var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 12px;
   box-shadow: 0px 3px 0px 0px var(--gray-light);
   padding: 12px 14px;
   align-items: center;
+  justify-content: space-between;
+  display: flex;
 }
 
 .actionBtn {
   min-width: 0;
   text-align: center;
   justify-content: center;
+  &.btn-start {
+    grid-column: 1 / -1;
+  }
+}
+.actionsBtnBottom {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: flex-end;
 }
 
 .sliderSection {
@@ -71,7 +272,9 @@
   text-align: left;
   cursor: pointer;
   box-shadow: 0px 3px 0px 0px var(--gray-light);
-
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
   h3 {
     margin: 4px 0 6px;
     font-size: 1.05rem;
@@ -94,12 +297,14 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 4px 9px;
+  background: var(--primary);
+  color: var(--white);
 }
 
 .activeBottle {
   border-color: var(--selected-dark);
-  background: var(--selected-extra-light);
-  box-shadow: 0px 3px 0px 0px var(--selected-dark);
+  background: var(--primary-50);
+  box-shadow: 0px 0px 0px 0px var(--selected-dark);
 }
 
 .card {
@@ -110,7 +315,9 @@
 
 .bottleHeader {
   margin-bottom: 14px;
-
+  background: var(--primary-50);
+  padding: 8px 12px;
+  border-radius: 8px;
   h2 {
     margin: 8px 0 4px;
     font-size: 1.2rem;
@@ -135,7 +342,7 @@
 .questionBlock {
   @extend %framedCard;
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 .questionHeader {
@@ -147,10 +354,20 @@
 
 .questionNumber {
   @extend %capsuleBadge;
-  padding: 4px 10px;
+  padding: 4px 12px;
   font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  background: var(--primary-100);
+  border: 0px;
+  color: var(--primary-text);
+}
+.questionNumberGeneral {
+  background: transparent;
+  color: var(--primary-text);
+  padding: 0px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .questionTitle {
@@ -173,32 +390,21 @@
   padding: 10px 12px;
   text-align: left;
   font-weight: 700;
-  box-shadow: 0px 2px 0px 0px var(--gray-light);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .optionIcon {
-  display: inline-flex;
   width: 22px;
   height: 22px;
-  border-radius: 50%;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: 900;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .correct {
   border-color: var(--accept-dark);
   background: var(--success-surface);
-  box-shadow: 0px 2px 0px 0px var(--accept-dark);
-
-  .optionIcon {
-    background: var(--accept);
-    color: var(--white);
-  }
 }
 
 .wrong {
@@ -214,6 +420,12 @@
   letter-spacing: 0.03em;
 }
 
+@media (max-width: 960px) {
+  .actionsBar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
 @media (max-width: 768px) {
   .container {
     gap: 12px;
@@ -247,7 +459,7 @@
   width: min(420px, 100%);
   background: var(--foreground);
   border: 2px solid var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 12px;
   box-shadow: 0px 4px 0px 0px var(--gray-light);
   padding: 16px;
   display: flex;

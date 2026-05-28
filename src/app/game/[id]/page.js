@@ -1,5 +1,6 @@
 import {notFound, redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {getGameAvatarOptions} from '@/lib/gameAvatarOptions'
 import GamePlayPageClient from './GamePlayPageClient'
 import {deleteGame} from './actions'
 
@@ -12,7 +13,7 @@ export default async function GamePlayPage({params}) {
 
   const {data: game, error: gameError} = await supabase
     .from('games')
-    .select('id, name, status, created_by')
+    .select('id, name, status, created_by, cover_index, created_at')
     .eq('id', gameId)
     .single()
 
@@ -38,9 +39,22 @@ export default async function GamePlayPage({params}) {
 
   const {data: rawBottles, error: bottlesError} = await supabase
     .from('game_bottles')
-    .select('id, name, producer, year, bottle_order, game_bottle_answers(question_id, option_id)')
+    .select(
+      'id, name, producer, year, wine_type, bottle_order, game_bottle_answers(question_id, option_id)',
+    )
     .eq('game_id', gameId)
     .order('bottle_order', {ascending: true})
+
+  const {data: historySessions} = isOwner
+    ? await supabase
+        .from('live_session_results')
+        .select('id, game_name, played_at, player_count, players')
+        .eq('host_user_id', user.id)
+        .eq('game_name', game.name)
+        .order('played_at', {ascending: false})
+        .limit(100)
+    : {data: []}
+  const avatarOptions = await getGameAvatarOptions()
 
   if (questionsError || bottlesError) {
     return (
@@ -64,6 +78,7 @@ export default async function GamePlayPage({params}) {
     name: b.name,
     producer: b.producer,
     year: b.year,
+    wineType: b.wine_type || '',
     answers: b.game_bottle_answers || [],
   }))
 
@@ -86,6 +101,8 @@ export default async function GamePlayPage({params}) {
       game={game}
       questions={questions}
       bottles={bottles}
+      historySessions={historySessions || []}
+      avatarOptions={avatarOptions}
       isOwner={isOwner}
       onDelete={deleteGame}
     />

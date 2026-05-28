@@ -24,7 +24,7 @@ function normalizeYear(value) {
 export async function POST(request) {
   try {
     const payload = await request.json()
-    const {mode, gameId, name, questions = [], bottles = []} = payload || {}
+    const {mode, gameId, name, questions = [], bottles = [], status, coverIndex} = payload || {}
 
     const trimmedName = String(name ?? '').trim()
     if (!trimmedName) {
@@ -48,10 +48,13 @@ export async function POST(request) {
     let currentGameId =
       typeof gameId === 'string' && gameId.trim() ? gameId.trim() : crypto.randomUUID()
 
+    const normalizedStatus = status === 'published' ? 'published' : 'draft'
+    const normalizedCoverIndex = Number.isInteger(coverIndex) && coverIndex >= 0 ? coverIndex : null
+
     if (mode === 'edit' || (mode !== 'create' && gameId)) {
       const {error: updateError} = await db
         .from('games')
-        .update({name: trimmedName})
+        .update({name: trimmedName, status: normalizedStatus, cover_index: normalizedCoverIndex})
         .eq('id', currentGameId)
         .eq('created_by', user.id)
 
@@ -79,7 +82,8 @@ export async function POST(request) {
         id: currentGameId,
         name: trimmedName,
         created_by: user.id,
-        status: 'published',
+        status: normalizedStatus,
+        cover_index: normalizedCoverIndex,
       })
 
       if (createError) {
@@ -134,6 +138,7 @@ export async function POST(request) {
         name: String(bottle.name ?? '').trim(),
         producer: String(bottle.producer ?? '').trim(),
         year: normalizeYear(bottle.year),
+        wine_type: String(bottle.wineType ?? '').trim() || null,
         bottle_order: index,
       }))
 

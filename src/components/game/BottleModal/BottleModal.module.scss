@@ -78,18 +78,6 @@
   gap: 24px;
 }
 
-.stepIndicator {
-  display: inline-flex;
-  align-self: flex-start;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 2px solid var(--button-secondary-border);
-  background: var(--background);
-  color: var(--text-secondary);
-  font-size: 0.82rem;
-  font-weight: 800;
-}
-
 .bottleInfoSection {
   display: flex;
   flex-direction: column;
@@ -153,11 +141,34 @@
   gap: 10px;
 }
 
+.typePills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.typePill {
+  border: 2px solid var(--button-secondary-border);
+  background: var(--foreground);
+  color: var(--text-primary);
+  border-radius: 12px;
+  min-height: 46px;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.typePillActive {
+  border-color: var(--selected-dark);
+  background: var(--selected-extra-light);
+}
+
 .optionButton {
   border: 2px solid var(--button-secondary-border);
   background: var(--foreground);
   color: var(--text-primary);
-  border-radius: 10px;
+  border-radius: 8px;
   box-shadow: 0px 2px 0px 0px var(--gray-light);
   padding: 10px 12px;
   width: 100%;
@@ -211,7 +222,7 @@
   gap: 8px;
   margin-top: 4px;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: 8px;
   border: 2px solid var(--button-secondary-border);
   background: var(--background);
 

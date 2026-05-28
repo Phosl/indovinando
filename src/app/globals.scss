@@ -47,6 +47,11 @@ body {
   font-family: var(--font-geist-sans);
 
   --primary: #9275e2;
+  --primary-50: #f1edfb;
+  --primary-100: #e4dbf8;
+  --primary-200: #c9baf5;
+  --primary-400: #a88ef0;
+  --primary-text: #4d319b;
   --primary-light: #a88ef0;
   --secondary: #fd7ab7;
   --secondary-light: #ff94c9;
@@ -54,6 +59,11 @@ body {
   --tertiary-light: #1cb0f6;
   --success: #18a655;
   --success-light: #30da4c;
+
+  --warning: #e5a500;
+  --danger: #e33c3c;
+  --danger-700: #b91c1c;
+  --dark: #333;
 }
 
 input {
@@ -143,7 +153,7 @@ main.flex-container {
 .card {
   background: var(--foreground);
   border: 2px solid var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 16px 18px;
   display: flex;
   flex-direction: column;

@@ -172,13 +172,25 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
                   <div className={styles.summaryAnswer}>
                     {answer?.is_correct ? (
                       <span className={styles.summaryCorrect}>
-                        ✅ {correctOpt?.text}
+                        <img
+                          className={xStyles.answerIcon}
+                          src="/check-correct.svg"
+                          alt=""
+                          aria-hidden="true"
+                        />
+                        {correctOpt?.text}
                         <span className={styles.summaryPoints}>+{answer.points ?? 0}</span>
                       </span>
                     ) : (
                       <>
                         <span className={styles.summaryWrong}>
-                          ❌ {selectedOpt?.text ?? t.notAnswered}
+                          <img
+                            className={xStyles.answerIcon}
+                            src="/check-wrong.svg"
+                            alt=""
+                            aria-hidden="true"
+                          />
+                          {selectedOpt?.text ?? t.notAnswered}
                         </span>
                         <span className={styles.summaryCorrectHint}>
                           {t.correctAnswer} {correctOpt?.text ?? '—'}

@@ -5,13 +5,14 @@ import Link from 'next/link'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import StoricoClient from '@/app/dashboard/storico/StoricoClient'
+import {formatAppDate} from '@/lib/dateFormat'
 import styles from './miei-giochi.module.scss'
 
 export default function MieiGiochiClient({
   games,
+  avatarOptions = [],
   sessions,
   lang,
-  localeTag,
   dashboardDict,
   storicoDict,
 }) {
@@ -71,49 +72,53 @@ export default function MieiGiochiClient({
                   const questionsCount = (game.game_questions || []).length
                   const bottlePreview = bottles.slice(0, 3)
                   const hiddenBottles = Math.max(0, bottles.length - bottlePreview.length)
+                  const coverPath =
+                    Number.isInteger(game.cover_index) && game.cover_index >= 0
+                      ? avatarOptions[game.cover_index] || ''
+                      : ''
+                  const fallbackAvatar = avatarOptions[0] || '/avatar/avatar-01.svg'
+                  const gameAvatar = coverPath || fallbackAvatar
 
                   return (
                     <Link key={game.id} href={`/game/${game.id}`} className={styles.gameCardLink}>
                       <article className={styles.gameCard}>
-                        <div className={styles.gameCardTop}>
-                          <h3>{game.name}</h3>
-                          <div className={styles.gameCardMeta}>
-                            <p className={styles.date}>
-                              {new Date(game.created_at).toLocaleDateString(localeTag, {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric',
-                              })}
-                            </p>
-                            {/* <span
-                              className={`${styles.statusBadge} ${
-                                game.status === 'published' ? styles.published : styles.draft
-                              }`}>
-                              {game.status === 'published'
-                                ? dashboardDict.published || 'Pubblicato'
-                                : dashboardDict.draft || 'Bozza'}
-                            </span> */}
+                        <img src={gameAvatar} alt="" aria-hidden="true" className={styles.gameCover} />
+                        <div className={styles.gameCardBody}>
+                          <div className={styles.gameCardTop}>
+                            <h3>
+                              {game.name}{' '}
+                              <span className={styles.statusLabel}>
+                                {game.status === 'published'
+                                  ? ''
+                                  : dashboardDict.draft || 'Incompleto'}
+                              </span>{' '}
+                            </h3>
+                            <div className={styles.gameCardMeta}>
+                              <p className={styles.date}>
+                                {formatAppDate(game.created_at, lang)}
+                              </p>
+                            </div>
                           </div>
-                        </div>
 
-                        <div className={styles.statsRow}>
-                          <span>Bottiglie ({bottles.length})</span>
-                          <span>Domande ({questionsCount})</span>
-                        </div>
+                          <div className={styles.statsRow}>
+                            <span>Bottiglie ({bottles.length})</span>
+                            <span>Domande ({questionsCount})</span>
+                          </div>
 
-                        <div className={styles.bottleLabels}>
-                          {bottlePreview.map((bottle, index) => (
-                            <span
-                              key={bottle.id || `${game.id}-preview-bottle-${index}`}
-                              className={styles.bottleLabel}>
-                              {(bottle.name || 'Senza nome') +
-                                ' - ' +
-                                (bottle.producer || 'Produttore non indicato')}
-                            </span>
-                          ))}
-                          {hiddenBottles > 0 && (
-                            <span className={styles.bottleMore}>+{hiddenBottles}...</span>
-                          )}
+                          <div className={styles.bottleLabels}>
+                            {bottlePreview.map((bottle, index) => (
+                              <span
+                                key={bottle.id || `${game.id}-preview-bottle-${index}`}
+                                className={styles.bottleLabel}>
+                                {(bottle.name || 'Senza nome') +
+                                  ' - ' +
+                                  (bottle.producer || 'Produttore non indicato')}
+                              </span>
+                            ))}
+                            {hiddenBottles > 0 && (
+                              <span className={styles.bottleMore}>+{hiddenBottles}...</span>
+                            )}
+                          </div>
                         </div>
                       </article>
                     </Link>

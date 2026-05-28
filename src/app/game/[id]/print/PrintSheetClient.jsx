@@ -8,7 +8,7 @@ import styles from './print.module.scss'
 
 const PRINT_SHEET_DICTIONARY = {
   it: {
-    title: 'Stampa Card',
+    title: 'Stampa',
     addResults: 'Inserisci risultati',
     print: 'Stampa',
   },

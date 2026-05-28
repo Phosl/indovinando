@@ -82,7 +82,7 @@ export default function LevelClient({level, lessons, levels = []}) {
                         : styles.lessonLocked
                 }`}
                 onClick={() => router.push(`/corso-vino/${level.id}/${lesson.id}`)}>
-                <div className={styles.lessonIcon}>{isCompleted ? '✓' : lesson.emoji}</div>
+                {/* <div className={styles.lessonIcon}>{isCompleted ? '✓' : lesson.emoji}</div> */}
                 <div className={styles.lessonBody}>
                   <div className={styles.lessonMeta}>
                     <span className={styles.lessonOrder}>
@@ -95,7 +95,17 @@ export default function LevelClient({level, lessons, levels = []}) {
                           {lp.score}/{lp.maxScore > 0 ? lp.maxScore : lesson.questions.length}
                         </span>
                       )}
-                      {hasPassed === true && <span className={styles.passBadge}>✓ Superato</span>}
+                      {hasPassed === true && (
+                        <span className={styles.passBadge}>
+                          <img
+                            className={styles.passBadgeIcon}
+                            src="/check-correct-white.svg"
+                            alt=""
+                            aria-hidden="true"
+                          />
+                          Superato
+                        </span>
+                      )}
                     </span>
                   </div>
                   <div className={styles.lessonTitleRow}>

@@ -121,22 +121,22 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
                       transition: 'background 0.15s',
                     }}
                     tabIndex={-1}>
-                    🗑️
+                    <img src="/remove-small.svg" alt="Elimina" style={{width: 24, height: 24}} />
                   </button>
                 </div>
               ))}
             </div>
-            <button className="btn tertiary-bordered" onClick={addOption}>
+            <button className="btn tertiary" onClick={addOption}>
               {text.addOption}
             </button>
           </div>
         </div>
 
         <div className={styles.modalFooter}>
-          <button className="btn secondary" onClick={onCancel}>
+          <button className="btn neutral" onClick={onCancel}>
             {text.cancel}
           </button>
-          <button className="btn primary" onClick={handleSave}>
+          <button className="btn success" onClick={handleSave}>
             {isNewQuestion ? text.saveNew : text.saveEdit}
           </button>
         </div>

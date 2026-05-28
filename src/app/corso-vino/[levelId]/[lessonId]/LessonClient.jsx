@@ -480,12 +480,23 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
                     <div className={pStyles.summaryAnswer}>
                       {correct ? (
                         <span className={pStyles.summaryCorrect}>
-                          ✅ {q.options.find((o) => o.id === ans?.selectedId)?.text}
+                          <img
+                            className={xStyles.answerIcon}
+                            src="/check-correct-white.svg"
+                            alt=""
+                            aria-hidden="true"
+                          />{' '}
+                          {q.options.find((o) => o.id === ans?.selectedId)?.text}
                         </span>
                       ) : (
                         <>
                           <span className={pStyles.summaryWrong}>
-                            ❌{' '}
+                            <img
+                              className={xStyles.answerIcon}
+                              src="/check-wrong-white.svg"
+                              alt=""
+                              aria-hidden="true"
+                            />{' '}
                             {q.options.find((o) => o.id === ans?.selectedId)?.text ?? t.notAnswered}
                           </span>
                           <span className={pStyles.summaryCorrectHint}>

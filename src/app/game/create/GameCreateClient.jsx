@@ -71,7 +71,7 @@ function ModePickerScreen({onPick}) {
   )
 }
 
-export default function GameCreateClient({initialShowOnboarding, userId}) {
+export default function GameCreateClient({initialShowOnboarding, userId, avatarOptions = []}) {
   const router = useRouter()
   const supabase = createClient()
   const [showOnboarding, setShowOnboarding] = useState(initialShowOnboarding)
@@ -120,11 +120,12 @@ export default function GameCreateClient({initialShowOnboarding, userId}) {
               initialQuestions={TEMPLATE_QUESTIONS}
               initialGameName="Indovinando"
               userId={userId}
+              avatarOptions={avatarOptions}
               isQuickCreate={true}
               onBack={handleBackToModePicker}
             />
           ) : (
-            <GameEditor userId={userId} onBack={handleBackToModePicker} />
+            <GameEditor userId={userId} avatarOptions={avatarOptions} onBack={handleBackToModePicker} />
           )}
         </Suspense>
       </div>

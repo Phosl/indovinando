@@ -37,7 +37,7 @@ const TEMPLATE_QUESTIONS = [
   },
 ]
 
-export default function GameCreateClient({userId, initialShowOnboarding}) {
+export default function GameCreateClient({userId, initialShowOnboarding, avatarOptions = []}) {
   const supabase = createClient()
   const [showOnboarding, setShowOnboarding] = useState(initialShowOnboarding)
 
@@ -63,6 +63,7 @@ export default function GameCreateClient({userId, initialShowOnboarding}) {
           initialQuestions={TEMPLATE_QUESTIONS}
           initialGameName="Indovinando"
           userId={userId}
+          avatarOptions={avatarOptions}
           isQuickCreate={true}
         />
       </div>
