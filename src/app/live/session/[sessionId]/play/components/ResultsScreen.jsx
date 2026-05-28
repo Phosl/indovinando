@@ -1,10 +1,11 @@
-import {memo, useMemo} from 'react'
+import {memo, useEffect, useMemo, useState} from 'react'
 import styles from '../playerLive.module.scss'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useT} from '@/lib/i18n/useT'
 import AvatarDisplay from '@/components/AvatarDisplay'
 
 export const ResultsScreen = memo(function ResultsScreen({
+  sessionId,
   title,
   subtitle,
   currentBottle,
@@ -30,11 +31,39 @@ export const ResultsScreen = memo(function ResultsScreen({
   const {lang} = useLanguage()
   const t = useT('live.results')
   const readyParticipantsCount = participantsCount || allPlayers.length
+  const [serverStandings, setServerStandings] = useState([])
+
+  useEffect(() => {
+    let cancelled = false
+
+    const fetchStandings = async () => {
+      try {
+        const res = await fetch(`/api/live/session/standings?sessionId=${sessionId}`)
+        if (!res.ok) return
+        const payload = await res.json().catch(() => ({}))
+        if (!cancelled && Array.isArray(payload?.standings)) {
+          setServerStandings(payload.standings)
+        }
+      } catch (_) {
+        // Best-effort polling: keep local fallback when network fails.
+      }
+    }
+
+    fetchStandings()
+    const intervalId = setInterval(() => {
+      if (!document.hidden) fetchStandings()
+    }, 2500)
+
+    return () => {
+      cancelled = true
+      clearInterval(intervalId)
+    }
+  }, [sessionId])
 
   // Projected standings: current DB total + points earned this round
   // We do NOT freeze the baseline because syncScoresFromAnswers has already
   // been called (or will be called) before the host advances.
-  const standings = useMemo(() => {
+  const projectedLocalStandings = useMemo(() => {
     return [...allPlayers]
       .map((p) => {
         const roundPts = Object.values(roundAnswersByPlayer[p.id] || {}).reduce(
@@ -46,6 +75,14 @@ export const ResultsScreen = memo(function ResultsScreen({
       })
       .sort((a, b) => b.projected - a.projected)
   }, [allPlayers, roundAnswersByPlayer])
+
+  const standings = serverStandings.length
+    ? serverStandings.map((player) => ({
+        ...player,
+        projected: player.liveTotalScore ?? player.total_score ?? 0,
+        roundPts: player.roundPoints ?? 0,
+      }))
+    : projectedLocalStandings
 
   const incompletePlayerNames = useMemo(() => {
     return allPlayers

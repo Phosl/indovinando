@@ -46,8 +46,8 @@ function ModePickerScreen({onPick}) {
   const router = useRouter()
 
   return (
-    <PageLayout title="Crea Quiz" onBack={() => router.push('/miei-giochi')}>
-      <h1>Scegli il tipo di quiz</h1>
+    <PageLayout title="Crea Degustazione" onBack={() => router.push('/miei-giochi')}>
+      <h1>Scegli come vuoi preparare il gioco.</h1>
       <div className={styles.modePickerGrid}>
         <button className={styles.modeCard} onClick={() => onPick('quick')}>
           {/* <span className={styles.modeCardEmoji}>⚡</span> */}
@@ -55,7 +55,7 @@ function ModePickerScreen({onPick}) {
           <p className={styles.modeCardDesc}>
             Usa il nostro modello pronto per la degustazione: aggiungi le bottiglie e sei pronto.
           </p>
-          <span className={styles.modeCardCta}>Usa template →</span>
+          <span className={styles.modeCardCta}>Usa modello →</span>
         </button>
 
         <button className={styles.modeCard} onClick={() => onPick('custom')}>
