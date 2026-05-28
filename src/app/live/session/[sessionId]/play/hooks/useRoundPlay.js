@@ -248,7 +248,7 @@ export function useRoundPlay({
   }, [])
 
   const persistAnswerWithRetry = useCallback(
-    async ({questionId, selectedOptionId, isCorrect, points}) => {
+    async ({questionId, selectedOptionId}) => {
       if (!playerData?.id) return true
 
       const saveKey = `${playerData.id}:${questionId}`
@@ -257,8 +257,7 @@ export function useRoundPlay({
         playerId: playerData.id,
         questionId,
         selectedOptionId,
-        isCorrect,
-        points,
+        currentBottleIndex,
       }
 
       pendingAnswerSavesRef.current.set(saveKey, payload)
@@ -277,6 +276,10 @@ export function useRoundPlay({
           }
 
           const data = await res.json().catch(() => ({}))
+          if (res.status === 409 && data?.stale) {
+            pendingAnswerSavesRef.current.delete(saveKey)
+            return false
+          }
           if (res.status === 403 && data?.error === 'Player not found in session') {
             pendingAnswerSavesRef.current.clear()
             if (typeof onPlayerRemoved === 'function') onPlayerRemoved()
@@ -295,7 +298,7 @@ export function useRoundPlay({
 
       return false
     },
-    [onPlayerRemoved, sessionId, playerData?.id],
+    [currentBottleIndex, onPlayerRemoved, sessionId, playerData?.id],
   )
 
   // Retry unsaved answers in the background. This is essential on unstable
@@ -309,8 +312,6 @@ export function useRoundPlay({
         await persistAnswerWithRetry({
           questionId: answer.questionId,
           selectedOptionId: answer.selectedOptionId,
-          isCorrect: answer.isCorrect,
-          points: answer.points,
         })
       }
     }
@@ -373,8 +374,6 @@ export function useRoundPlay({
         await persistAnswerWithRetry({
           questionId,
           selectedOptionId: optionId,
-          isCorrect,
-          points,
         })
       } catch (err) {
         console.error('Error evaluating answer:', err?.message ?? err)
