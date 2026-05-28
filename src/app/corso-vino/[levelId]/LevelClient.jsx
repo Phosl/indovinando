@@ -96,12 +96,7 @@ export default function LevelClient({level, lessons, levels = []}) {
                           {lp.score}/{lp.maxScore > 0 ? lp.maxScore : lesson.questions.length}
                         </span>
                       )}
-                      {hasPassed === true && (
-                        <span className={styles.passBadge}>
-                          <Icon name="checkCorrectWhite" size={24} className={styles.passBadgeIcon} />
-                          Superato
-                        </span>
-                      )}
+                      {hasPassed === true && <span className={styles.passBadge}>Superato</span>}
                     </span>
                   </div>
                   <div className={styles.lessonTitleRow}>
@@ -112,6 +107,9 @@ export default function LevelClient({level, lessons, levels = []}) {
                       </span>
                     )}
                   </div>
+                </div>
+                <div className={styles.cardArrowRail} aria-hidden="true">
+                  <Icon name="forward" size={24} className={styles.cardArrowIcon} />
                 </div>
               </div>
             </div>

@@ -37,50 +37,36 @@ export default function QuestionsList({
         <div className={styles.grid}>
           {questions.map((question, index) => {
             const isComplete = isQuestionComplete(question)
+            const optionsPreview = (question.options || []).slice(0, 4)
             return (
               <div
                 key={question.id}
                 className={`${styles.card} ${isComplete ? styles.complete : styles.incomplete}`}
                 onClick={() => onEditQuestion(index)}>
-                <div className={styles.cardHeader}>
-                  {/* <div>
-                    <h1>{index + 1}°</h1>
-                    <h5>{text.question}</h5>
-                  </div> */}
-                  <h2 className={styles.questionText}>
-                    <span>{index + 1}°</span> <span>{question.text}</span>
-                    {/* <span className={styles.optionsCount}>
-                      {question.options?.length || 0} {text.options}
-                    </span> */}
-                  </h2>
-                  <button
-                    className="btn btn-mini danger btn-only-text"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      if (confirm(text.confirmDelete)) {
-                        onDeleteQuestion(index)
-                      }
-                    }}>
-                    {text.delete}
-                  </button>
-                  {/* <span className={styles.status}>{isComplete ? '✓' : '⚠️'}</span> */}
+                <div className={styles.questionIndex}>{index + 1}</div>
+                <div className={styles.cardInfo}>
+                  <div className={styles.cardHeader}>
+                    <h4 className={styles.questionText}>{question.text}</h4>
+                    <button
+                      className="btn btn-mini danger btn-only-text"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        if (confirm(text.confirmDelete)) {
+                          onDeleteQuestion(index)
+                        }
+                      }}>
+                      {text.delete}
+                    </button>
+                  </div>
+                  <p className={styles.optionsCount}>
+                    {(question.options?.length || 0) + ' ' + text.options}
+                  </p>
+                  <div className={styles.optionsText}>
+                    {optionsPreview.map((o, i) => (
+                      <p key={i}>{typeof o === 'string' ? o : o.text}</p>
+                    ))}
+                  </div>
                 </div>
-                <div className={styles.optionsText}>
-                  {question.options?.map((o, i) => (
-                    <p key={i}>{typeof o === 'string' ? o : o.text}</p>
-                  ))}
-                </div>
-
-                {/* <div className={styles.buttonGroup}>
-                  <button
-                    className={styles.editBtn}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onEditQuestion(index)
-                    }}>
-                    {text.edit}
-                  </button>
-                </div> */}
               </div>
             )
           })}

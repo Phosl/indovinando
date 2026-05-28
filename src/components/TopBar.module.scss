@@ -40,8 +40,8 @@
   width: 40px;
   height: 40px;
   border-radius: 100px;
-  border: 1px solid var(--button-secondary-border);
-  background: var(--foreground);
+  border: 2px solid var(--gray);
+  background: var(--white);
   font-size: 1.1rem;
   cursor: pointer;
   display: grid;
@@ -59,6 +59,13 @@
     transform: translateY(2px);
     box-shadow: none;
   }
+}
+
+.backBtnIcon {
+  width: 24px;
+  height: 24px;
+  display: block;
+  object-fit: contain;
 }
 
 .title {

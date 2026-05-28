@@ -23,6 +23,31 @@
   animation: modalSlideUp 0.32s cubic-bezier(0.33, 1.02, 0.6, 1.01) both;
 }
 
+.modalTitle {
+  margin-bottom: 12px;
+}
+
+.modalDescription {
+  margin-bottom: 16px;
+}
+
+.quickListBox {
+  text-align: left;
+  margin: 0 auto 16px;
+  background: #f7f7f7;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.quickList {
+  margin: 8px 0 0 16px;
+  padding: 0;
+}
+
+.quickListItem {
+  font-size: 15px;
+}
+
 @keyframes modalSlideUp {
   from {
     opacity: 0;

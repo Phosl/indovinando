@@ -7,7 +7,7 @@
   gap: 8px;
   min-height: 42px;
   background-color: var(--foreground);
-  border: 1px solid var(--gray-light);
+  border: 2px solid var(--gray-light);
   text-decoration: none;
   font-size: 18px;
   font-weight: 600;
@@ -33,34 +33,48 @@
     border: none;
     box-shadow: none;
   }
+  &.btn-inline {
+    width: auto;
+  }
+  &.btn-with-icon-end {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.btn-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .btn.primary {
-  background-color: var(--primary);
-  color: var(--white);
+  background-color: var(--primary-100);
+  color: var(--primary-text);
   border-color: var(--primary);
   &:hover {
-    background: var(--primary-light);
+    background: var(--primary-200);
   }
 }
 
 .btn.secondary {
-  background-color: var(--secondary);
+  background-color: var(--secondary-100);
   border-color: var(--secondary);
-  color: var(--white);
+  color: var(--secondary-text);
 
   &:hover {
-    background: var(--button-secondary-hover);
+    background: var(--secondary-200);
   }
 }
 
 .btn.tertiary {
-  background-color: var(--tertiary);
+  background-color: var(--tertiary-100);
+  color: var(--tertiary-text);
   border-color: var(--tertiary);
-  color: var(--white);
   &:hover {
-    background: var(--tertiary-light);
-    color: var(--white);
+    background: var(--tertiary-200);
   }
 }
 .btn.tertiary-bordered {
@@ -74,11 +88,20 @@
 }
 
 .btn.success {
-  background-color: var(--success);
-  color: var(--white);
+  background-color: var(--success-100);
+  color: var(--success-text);
   border-color: var(--success);
   &:hover {
-    background: var(--success-light);
+    background: var(--success-200);
+  }
+}
+
+.btn.quaternary {
+  background-color: var(--quaternary-100);
+  color: var(--quaternary-text);
+  border-color: var(--quaternary);
+  &:hover {
+    background: var(--quaternary-200);
   }
 }
 
@@ -94,12 +117,12 @@
 }
 
 .btn.neutral {
-  background-color: var(--white);
-  color: var(--dark);
+  background-color: var(--dark-100);
+  color: var(--dark-text);
   border-color: var(--dark);
 
   &:hover {
-    background: var(--button-dark);
+    background: var(--dark-200);
   }
 }
 

@@ -5,32 +5,26 @@
 // Modale introduttiva per lo step questionario
 import modalStyles from './QuestionnaireIntroModal.module.scss'
 import {Button} from '@/components/ui/Button'
+import Icon from '@/components/Icon'
 function QuestionnaireIntroModal({isOpen, onClose, onDisable, isQuickCreate, questions}) {
   if (!isOpen) return null
   return (
     <div className={modalStyles.modalOverlay}>
       <div className={modalStyles.modalContent}>
-        <h2 style={{marginBottom: 12}}>
+        <h2 className={modalStyles.modalTitle}>
           {isQuickCreate ? 'Questionario precompilato' : 'Crea il questionario'}
         </h2>
-        <p style={{marginBottom: 16}}>
+        <p className={modalStyles.modalDescription}>
           {isQuickCreate
             ? 'Abbiamo preparato già il questionario con 5 domande. Puoi modificare le risposte a piacere.'
             : 'Adesso creiamo il questionario: aggiungi le domande e le risposte.'}
         </p>
         {isQuickCreate && questions?.length > 0 && (
-          <div
-            style={{
-              textAlign: 'left',
-              margin: '0 auto 16px',
-              background: '#f7f7f7',
-              borderRadius: 8,
-              padding: 12,
-            }}>
+          <div className={modalStyles.quickListBox}>
             <b>Domande predefinite:</b>
-            <ul style={{margin: '8px 0 0 16px', padding: 0}}>
+            <ul className={modalStyles.quickList}>
               {questions.map((q, i) => (
-                <li key={i} style={{fontSize: 15}}>
+                <li key={i} className={modalStyles.quickListItem}>
                   {q.text || `Domanda ${i + 1}`}
                 </li>
               ))}
@@ -57,8 +51,8 @@ function BottlesIntroModal({isOpen, onClose, onDisable}) {
   return (
     <div className={modalStyles.modalOverlay}>
       <div className={modalStyles.modalContent}>
-        <h2 style={{marginBottom: 12}}>Aggiungi bottiglia</h2>
-        <p style={{marginBottom: 16}}>
+        <h2 className={modalStyles.modalTitle}>Aggiungi bottiglia</h2>
+        <p className={modalStyles.modalDescription}>
           Inserisci i dettagli della bottiglia, poi scegli il tipo vino e completa le risposte
           corrette per ogni domanda.
         </p>
@@ -178,40 +172,12 @@ const StepTwoSection = memo(function StepTwoSection({
   return (
     <div className={styles.section}>
       <div className={styles.sectionHeader}>
-        <h3 className={styles.sectionTitle} style={{margin: 0}}>
-          {editorText.step2Title}
-        </h3>
+        <h3 className={styles.sectionTitle}>{editorText.step2Title}</h3>
         <button
           type="button"
           aria-label="Guida questionario"
           onClick={onShowIntro}
-          style={{
-            background: 'none',
-            border: 'none',
-            padding: 0,
-            margin: 0,
-            cursor: 'pointer',
-            outline: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 32,
-            height: 32,
-            borderRadius: '50%',
-            border: '1.5px solid #bbb',
-            fontWeight: 700,
-            fontSize: 18,
-            color: '#555',
-            transition: 'border-color 0.2s,color 0.2s',
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.borderColor = '#888'
-            e.currentTarget.style.color = '#222'
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.borderColor = '#bbb'
-            e.currentTarget.style.color = '#555'
-          }}>
+          className={styles.infoButton}>
           ?
         </button>
       </div>
@@ -228,7 +194,7 @@ const StepTwoSection = memo(function StepTwoSection({
           onClick={onBack}
           aria-label={editorText.back}
           title={editorText.back}>
-          ←
+          <Icon name="back" size={24} />
         </button>
         <button
           className="btn success"
@@ -265,7 +231,7 @@ const StepThreeSection = memo(function StepThreeSection({
           onClick={onBack}
           aria-label={editorText.back}
           title={editorText.back}>
-          ←
+          <Icon name="back" size={24} />
         </button>
       </div>
     </div>
@@ -288,40 +254,12 @@ const StepFourSection = memo(function StepFourSection({
   return (
     <div className={styles.section}>
       <div className={styles.sectionHeader}>
-        <h3 className={styles.sectionTitle} style={{margin: 0}}>
-          {editorText.step4Title || 'Aggiungi bottiglia'}
-        </h3>
+        <h3 className={styles.sectionTitle}>{editorText.step4Title || 'Aggiungi bottiglia'}</h3>
         <button
           type="button"
           aria-label="Guida bottiglie"
           onClick={onShowInfo}
-          style={{
-            background: 'none',
-            border: 'none',
-            padding: 0,
-            margin: 0,
-            cursor: 'pointer',
-            outline: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 32,
-            height: 32,
-            borderRadius: '50%',
-            border: '1.5px solid #bbb',
-            fontWeight: 700,
-            fontSize: 18,
-            color: '#555',
-            transition: 'border-color 0.2s,color 0.2s',
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.borderColor = '#888'
-            e.currentTarget.style.color = '#222'
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.borderColor = '#bbb'
-            e.currentTarget.style.color = '#555'
-          }}>
+          className={styles.infoButton}>
           ?
         </button>
       </div>
@@ -335,11 +273,11 @@ const StepFourSection = memo(function StepFourSection({
 
       <div className={styles.buttonRow}>
         <button
-          className={`btn secondary ${styles.backArrowBtn}`}
+          className={`btn neutral ${styles.backArrowBtn}`}
           onClick={onBack}
           aria-label={editorText.back}
           title={editorText.back}>
-          ←
+          <Icon name="back" size={24} />
         </button>
         <button className="btn success" onClick={onPublish} disabled={isSaving}>
           {isSaving

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import {ButtonLink} from '@/components/ui/Button'
+import Icon from '@/components/Icon'
 import {formatAppDate} from '@/lib/dateFormat'
 import styles from './miei-giochi.module.scss'
 
@@ -54,7 +55,7 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
               return (
                 <Link key={game.id} href={`/game/${game.id}`} className={styles.gameCardLink}>
                   <article className={styles.gameCard}>
-                    <img src={gameAvatar} alt="" aria-hidden="true" className={styles.gameCover} />
+                    <img src={gameAvatar} alt="" aria-hidden="true" className={styles.gameAvatar} />
                     <div className={styles.gameCardBody}>
                       <div className={styles.gameCardTop}>
                         <h3>
@@ -69,8 +70,17 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
                       </div>
 
                       <div className={styles.statsRow}>
-                        <span>Bottiglie ({bottles.length})</span>
-                        <span>Domande ({questionsCount})</span>
+                        <span>
+                          <Icon name="bottle" size={24} className={styles.statsIcon} />
+                          {bottles.length} Bottiglie
+                        </span>
+                        <span className={styles.statsDivider} aria-hidden="true">
+                          -
+                        </span>
+                        <span>
+                          <Icon name="question" size={24} className={styles.statsIcon} />
+                          {questionsCount} Domande
+                        </span>
                       </div>
 
                       <div className={styles.bottleLabels}>

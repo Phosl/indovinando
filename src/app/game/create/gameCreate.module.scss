@@ -5,14 +5,13 @@
   margin-top: 8px;
   padding: 0 20px;
 }
-
-@media (max-width: 520px) {
-  .modePickerGrid {
-    grid-template-columns: 1fr;
-  }
+.modePickerTitle {
+  text-align: center;
 }
 
 .modeCard {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -46,25 +45,80 @@
 }
 
 .modeCardTitle {
-  font-size: 1.05rem;
+  font-size: 20px;
   font-weight: 900;
   color: var(--text-primary);
 }
 
 .modeCardDesc {
-  font-size: 0.88rem;
+  font-size: 1rem;
   font-weight: 500;
   color: var(--text-secondary);
   line-height: 1.45;
   margin: 0;
   flex: 1;
+  max-width: 60%;
 }
 
-.modeCardCta {
-  font-size: 0.85rem;
-  font-weight: 900;
-  color: var(--selected-dark);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-top: 4px;
+.modeCardContent {
+  position: relative;
+  z-index: 2;
+  width: 70%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.modeCardBgImage {
+  position: absolute;
+  right: -4%;
+  bottom: -2%;
+  width: 70%;
+  max-width: 300px;
+  height: auto;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.32;
+}
+
+.modeCardQuick::before,
+.modeCardCustom::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--foreground) 94%, transparent) 0%,
+    color-mix(in srgb, var(--foreground) 90%, transparent) 48%,
+    color-mix(in srgb, var(--foreground) 72%, transparent) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.modeCard {
+  :global(.quaternary) {
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+}
+
+@media (max-width: 520px) {
+  .modePickerGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .modeCardContent {
+    width: 100%;
+  }
+
+  .modeCardBgImage {
+    width: 62%;
+    right: -8%;
+    bottom: -4%;
+    opacity: 0.32;
+  }
 }

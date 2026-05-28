@@ -18,8 +18,12 @@ const GAME_PLAY_VIEW_ACTIONS_DICTIONARY = {
     playEnoteca: 'Enoteca',
     chooseMode: 'Scegli modalita',
     close: 'Chiudi',
+    cancel: 'Annulla',
     printCard: 'Stampa',
     edit: 'Modifica',
+    liveDescription: 'Partita multiplayer dal vivo con host e classifica in tempo reale.',
+    enotecaDescription:
+      'Modalita individuale per giocare in autonomia e vedere il risultato finale.',
   },
   en: {
     startMatch: 'Start a match',
@@ -27,8 +31,11 @@ const GAME_PLAY_VIEW_ACTIONS_DICTIONARY = {
     playEnoteca: 'Enoteca',
     chooseMode: 'Choose mode',
     close: 'Close',
+    cancel: 'Cancel',
     printCard: 'Print Card',
     edit: 'Edit',
+    liveDescription: 'Live multiplayer match with host and real-time leaderboard.',
+    enotecaDescription: 'Solo mode to play on your own and see the final result.',
   },
 }
 
@@ -69,30 +76,42 @@ export default function GamePlayView({
           <img src={gameAvatar} alt="" aria-hidden="true" className={styles.gameAvatar} />
         )}
         <div className={styles.gameHeaderInfo}>
-          <h1 className={styles.gameTitle}>{game.name}</h1>
           <p className={styles.gameDate}>{gameDateLabel}</p>
+          <h1 className={styles.gameTitle}>{game.name}</h1>
+          <div className={styles.gameInfo}>
+            <p className={styles.infoItem}>
+              <Icon name="bottle" size={24} className={styles.infoBottleIcon} />
+              {`${bottles.length} Bottiglie`}
+            </p>
+            <span className={styles.infoDivider} aria-hidden="true">
+              -
+            </span>
+            <p className={styles.infoItem}>
+              <img
+                src="/icons/questions.svg"
+                alt=""
+                aria-hidden="true"
+                className={styles.infoQuestionIcon}
+              />
+              {`${questions.length} Domande`}
+            </p>
+          </div>
+
           <Button
             size="small"
             className={styles.historyToggle}
             onClick={() => setHistoryOpen(true)}
             aria-expanded={historyOpen}
             aria-controls="game-history-panel">
-            {lang === 'en' ? 'Show tasting history' : 'Mostra storico degustazioni'}
+            {lang === 'en' ? 'Tasting history' : ' Storico degustazioni'}
           </Button>
-          <div className={styles.gameInfo}>
-            <p className={styles.infoItem}>
-              <Icon name="bottle" size={24} className={styles.infoBottleIcon} />
-              {` Bottiglie: ${bottles.length}`}
-            </p>
-            <p className={styles.infoItem}>
-              <img src="/icons/questions.svg" alt="" aria-hidden="true" className={styles.infoQuestionIcon} />
-              {` Domande: ${questions.length}`}
-            </p>
-          </div>
         </div>
       </div>
       <div className={styles.actionsBar}>
-        <Button variant="success" className={`btn-start ${styles.actionBtn}`} onClick={() => setStartModalOpen(true)}>
+        <Button
+          variant="success"
+          className={`btn-start ${styles.actionBtn}`}
+          onClick={() => setStartModalOpen(true)}>
           {t.startMatch}
         </Button>
         <div className={styles.actionsBtnBottom}>
@@ -130,7 +149,7 @@ export default function GamePlayView({
               className={`${styles.bottleCard} ${idx === activeBottleIndex ? styles.activeBottle : ''}`}
               onClick={() => setActiveBottleIndex(idx)}>
               <span className={styles.bottleIndex}>{idx + 1}</span>
-              <div>
+              <div className={styles.bottleCardBody}>
                 <h3>
                   {bottle.name || text.unnamed} {bottle.year || text.yearMissing}
                 </h3>
@@ -192,23 +211,41 @@ export default function GamePlayView({
       {startModalOpen && (
         <div className={styles.startModalBackdrop} onClick={() => setStartModalOpen(false)}>
           <div className={styles.startModal} onClick={(event) => event.stopPropagation()}>
-            <h3>{t.chooseMode}</h3>
+            <div className={styles.startModalHeader}>
+              <h3>{t.chooseMode}</h3>
+              <button
+                type="button"
+                className={styles.startModalX}
+                onClick={() => setStartModalOpen(false)}
+                aria-label={t.close}>
+                ×
+              </button>
+            </div>
             <div className={styles.startModalActions}>
-              <ButtonLink href={`/game/${game.id}/live`} variant="success">
-                {t.playLive}
+              <ButtonLink
+                href={`/game/${game.id}/live`}
+                className={`${styles.startModeOption} ${styles.startModeOptionSuccess}`}>
+                <span className={styles.startModeTitle}>{t.playLive}</span>
+                <span className={styles.startModeDescription}>{t.liveDescription}</span>
               </ButtonLink>
               {game.status === 'published' && (
-                <ButtonLink href={`/enoteca/${game.id}`} variant="secondary">
-                  {t.playEnoteca}
+                <ButtonLink
+                  href={`/enoteca/${game.id}`}
+                  className={`${styles.startModeOption} ${styles.startModeOptionQuaternary}`}>
+                  <span className={styles.startModeTitle}>{t.playEnoteca}</span>
+                  <span className={styles.startModeDescription}>{t.enotecaDescription}</span>
                 </ButtonLink>
               )}
             </div>
-            <button
-              type="button"
-              className={styles.startModalClose}
-              onClick={() => setStartModalOpen(false)}>
-              {t.close}
-            </button>
+            <div className={styles.startModalFooter}>
+              <Button
+                type="button"
+                variant="neutral"
+                size="small"
+                onClick={() => setStartModalOpen(false)}>
+                {t.cancel}
+              </Button>
+            </div>
           </div>
         </div>
       )}

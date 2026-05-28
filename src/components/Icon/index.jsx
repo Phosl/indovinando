@@ -13,7 +13,11 @@ const ICONS = {
   print: '/icons/print.svg',
   share: '/icons/share.svg',
   bottle: '/icons/bottle.svg',
+  bottleRed: '/icons/bottle-red.svg',
+  bottleWhite: '/icons/bottle-white.svg',
   plus: '/icons/plus.svg',
+  back: '/icons/back.svg',
+  forward: '/icons/forward-icon.svg',
   question: '/icons/question.svg',
 }
 

@@ -47,7 +47,7 @@
   padding: 16px;
   display: grid;
   grid-template-columns: 92px minmax(0, 1fr);
-  gap: 10px;
+  gap: 16px;
   transition:
     transform 0.12s ease,
     box-shadow 0.12s ease;
@@ -58,19 +58,18 @@
   // }
 }
 
-.gameCover {
+.gameAvatar {
   width: 92px;
   height: 92px;
   object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid var(--button-secondary-border);
+  border-radius: 20px;
 }
 
 .gameCardBody {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .gameCardTop {
@@ -118,12 +117,25 @@
   padding-top: 10px;
 
   span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     font-size: 12px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--text-secondary);
   }
+}
+
+.statsIcon {
+  color: var(--primary-text);
+}
+
+.statsDivider {
+  padding: 0 2px;
+  color: var(--text-secondary);
+  font-weight: 700 !important;
 }
 
 .bottleLabels {

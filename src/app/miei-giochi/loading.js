@@ -41,21 +41,6 @@ export default function MieiGiochiLoading() {
         </div>
       </div>
 
-      {/* Tab bar skeleton */}
-      <div
-        style={{
-          display: 'flex',
-          gap: 8,
-          padding: '0 20px',
-          borderBottom: '2px solid var(--button-secondary-border)',
-          background: 'var(--foreground)',
-          paddingTop: 12,
-          paddingBottom: 10,
-        }}>
-        <Bone w="140px" h="20px" style={{borderRadius: 6}} />
-        <Bone w="110px" h="20px" style={{borderRadius: 6}} />
-      </div>
-
       {/* Content */}
       <div
         style={{
@@ -67,25 +52,36 @@ export default function MieiGiochiLoading() {
           flexDirection: 'column',
           gap: 10,
         }}>
+        <div style={{display: 'flex', justifyContent: 'flex-end', marginBottom: 2}}>
+          <Bone w="210px" h="52px" style={{borderRadius: 24}} />
+        </div>
         {[1, 2, 3].map((i) => (
           <div
             key={i}
             className="skeleton-card"
             style={{
-              padding: '14px 18px',
-              display: 'flex',
-              flexDirection: 'column',
+              padding: '14px',
+              display: 'grid',
+              gridTemplateColumns: '92px 1fr',
+              alignItems: 'start',
+              columnGap: 10,
               gap: 10,
             }}>
-            <Bone w="55%" h="18px" style={{borderRadius: 6}} />
-            <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
-              <Bone w="90px" h="12px" style={{borderRadius: 6}} />
-              <Bone w="64px" h="22px" style={{borderRadius: 999}} />
-            </div>
-            <div style={{display: 'flex', gap: 6, flexWrap: 'wrap'}}>
-              <Bone w="76px" h="36px" style={{borderRadius: 12}} />
-              <Bone w="110px" h="36px" style={{borderRadius: 12}} />
-              <Bone w="110px" h="36px" style={{borderRadius: 12}} />
+            <Bone w="92px" h="92px" style={{borderRadius: 999}} />
+            <div style={{display: 'flex', flexDirection: 'column', gap: 10, minWidth: 0}}>
+              <div style={{display: 'flex', justifyContent: 'space-between', gap: 10, minWidth: 0}}>
+                <Bone w="58%" h="22px" style={{borderRadius: 6}} />
+                <Bone w="90px" h="14px" style={{borderRadius: 6}} />
+              </div>
+              <div style={{display: 'flex', gap: 8, flexWrap: 'wrap'}}>
+                <Bone w="122px" h="14px" style={{borderRadius: 6}} />
+                <Bone w="118px" h="14px" style={{borderRadius: 6}} />
+              </div>
+              <div style={{display: 'flex', gap: 6, flexWrap: 'wrap'}}>
+                <Bone w="160px" h="28px" style={{borderRadius: 999}} />
+                <Bone w="170px" h="28px" style={{borderRadius: 999}} />
+                <Bone w="88px" h="28px" style={{borderRadius: 999}} />
+              </div>
             </div>
           </div>
         ))}

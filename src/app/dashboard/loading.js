@@ -23,17 +23,15 @@ export default function DashboardLoading() {
       <div className={styles.container}>
         {/* Hero */}
         <section className={styles.arcadeHero}>
-          <Bone w="min(320px, 80%)" h="44px" style={{margin: '0 auto'}} />
-          <Bone w="140px" h="13px" style={{margin: '12px auto 0', borderRadius: 6}} />
-          <Bone w="200px" h="15px" style={{margin: '8px auto 0', borderRadius: 6}} />
+          <Bone w="min(320px, 80%)" h="72px" style={{margin: '0 auto', borderRadius: 12}} />
+          <Bone w="260px" h="28px" style={{margin: '14px auto 0', borderRadius: 8}} />
         </section>
 
-        {/* Menu grid — 4 card skeletons */}
+        {/* Main actions */}
         <nav className={styles.menuGrid}>
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className={styles.menuCard} style={{pointerEvents: 'none'}}>
-              <Bone w="36px" h="36px" style={{borderRadius: 8}} />
-              <Bone w="100px" h="16px" style={{borderRadius: 6}} />
+          {[1, 2, 3].map((i) => (
+            <div key={i} style={{pointerEvents: 'none'}}>
+              <Bone w="100%" h="58px" style={{borderRadius: 24}} />
             </div>
           ))}
         </nav>
