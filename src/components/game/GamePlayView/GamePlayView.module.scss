@@ -32,6 +32,24 @@
   color: var(--text-primary);
 }
 
+.actionsBar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  box-shadow: 0px 3px 0px 0px var(--gray-light);
+  padding: 12px 14px;
+  align-items: center;
+}
+
+.actionBtn {
+  min-width: 0;
+  text-align: center;
+  justify-content: center;
+}
+
 .sliderSection {
   width: 100%;
 }
@@ -201,6 +219,10 @@
     gap: 12px;
   }
 
+  .actionsBar {
+    grid-template-columns: 1fr;
+  }
+
   .sliderTrack {
     grid-auto-columns: minmax(230px, 250px);
     gap: 10px;
@@ -209,4 +231,53 @@
   .questionTitle {
     font-size: 1.05rem;
   }
+}
+
+.startModalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.startModal {
+  width: min(420px, 100%);
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  box-shadow: 0px 4px 0px 0px var(--gray-light);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 900;
+  }
+}
+
+.startModalActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+
+  a {
+    width: 100%;
+  }
+}
+
+.startModalClose {
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  align-self: flex-end;
 }

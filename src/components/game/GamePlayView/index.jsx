@@ -1,14 +1,39 @@
 'use client'
 
+import Link from 'next/link'
 import {useMemo, useState} from 'react'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {pickLangText} from '@/lib/i18n/dictionaries'
 import {getGamePlayViewText} from '../utils/constants'
 import styles from './GamePlayView.module.scss'
 
-export default function GamePlayView({game, questions, bottles}) {
+const GAME_PLAY_VIEW_ACTIONS_DICTIONARY = {
+  it: {
+    startMatch: 'Avvia una partita',
+    playLive: 'Gioca Live',
+    playEnoteca: 'Enoteca',
+    chooseMode: 'Scegli modalita',
+    close: 'Chiudi',
+    printCard: 'Stampa Card',
+    edit: 'Modifica',
+  },
+  en: {
+    startMatch: 'Start a match',
+    playLive: 'Play Live',
+    playEnoteca: 'Enoteca',
+    chooseMode: 'Choose mode',
+    close: 'Close',
+    printCard: 'Print Card',
+    edit: 'Edit',
+  },
+}
+
+export default function GamePlayView({game, questions, bottles, isOwner}) {
   const {lang} = useLanguage()
   const text = getGamePlayViewText(lang)
+  const t = pickLangText(lang, GAME_PLAY_VIEW_ACTIONS_DICTIONARY)
   const [activeBottleIndex, setActiveBottleIndex] = useState(0)
+  const [startModalOpen, setStartModalOpen] = useState(false)
 
   const activeBottle = bottles[activeBottleIndex]
 
@@ -20,6 +45,23 @@ export default function GamePlayView({game, questions, bottles}) {
   return (
     <div className={styles.container}>
       <h1 className={styles.gameTitle}>{game.name}</h1>
+
+      <div className={styles.actionsBar}>
+        <button
+          type="button"
+          className={`btn success ${styles.actionBtn}`}
+          onClick={() => setStartModalOpen(true)}>
+          {t.startMatch}
+        </button>
+        {isOwner && (
+          <Link href={`/game/${game.id}/edit`} className={`btn secondary ${styles.actionBtn}`}>
+            {t.edit}
+          </Link>
+        )}
+        <Link href={`/game/${game.id}/print`} className={`btn secondary ${styles.actionBtn}`}>
+          {t.printCard}
+        </Link>
+      </div>
 
       <section className={styles.sliderSection} aria-label={text.sliderAria}>
         <div className={styles.sliderTrack}>
@@ -82,6 +124,30 @@ export default function GamePlayView({game, questions, bottles}) {
           })}
         </div>
       </div>
+
+      {startModalOpen && (
+        <div className={styles.startModalBackdrop} onClick={() => setStartModalOpen(false)}>
+          <div className={styles.startModal} onClick={(event) => event.stopPropagation()}>
+            <h3>{t.chooseMode}</h3>
+            <div className={styles.startModalActions}>
+              <Link href={`/game/${game.id}/live`} className="btn success">
+                {t.playLive}
+              </Link>
+              {game.status === 'published' && (
+                <Link href={`/enoteca/${game.id}`} className="btn secondary">
+                  {t.playEnoteca}
+                </Link>
+              )}
+            </div>
+            <button
+              type="button"
+              className={styles.startModalClose}
+              onClick={() => setStartModalOpen(false)}>
+              {t.close}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

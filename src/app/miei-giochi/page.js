@@ -24,7 +24,9 @@ export default async function MieiGiochiPage() {
   const [{data: games}, {data: sessions}] = await Promise.all([
     supabase
       .from('games')
-      .select('id, name, status, created_at')
+      .select(
+        'id, name, status, created_at, game_bottles(id, name, producer, bottle_order), game_questions(id)',
+      )
       .eq('created_by', user.id)
       .order('created_at', {ascending: false}),
     supabase

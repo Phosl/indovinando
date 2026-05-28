@@ -1,4 +1,5 @@
 import {useState, useEffect, useCallback, useMemo, useRef} from 'react'
+import {runVisiblePoll} from './_polling'
 
 const SLIDE_TRANSITION_MS = 220
 /**
@@ -65,7 +66,7 @@ export function useRoundPlay({
     if (currentBottle?._correctAnswers) {
       setCorrectOptionByQuestion(currentBottle._correctAnswers)
     }
-  }, [currentBottle?.id])
+  }, [currentBottle?._correctAnswers, currentBottle?.id])
 
   // ── Reset all round state (called on bottle advance or realtime sync) ──────
   const resetRoundState = useCallback(
@@ -202,18 +203,7 @@ export function useRoundPlay({
     const onResultsScreen = resultsOpenedBottleIndex === currentBottleIndex
     if (!onResultsScreen || allPlayersCompletedThisRound) return
     handleAnswerInsert()
-    const pollVisibleAnswers = () => {
-      if (!document.hidden) handleAnswerInsert()
-    }
-    const handleVisibilityChange = () => {
-      if (!document.hidden) handleAnswerInsert()
-    }
-    const interval = setInterval(pollVisibleAnswers, 2000)
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    return () => {
-      clearInterval(interval)
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-    }
+    return runVisiblePoll(handleAnswerInsert, 2000)
   }, [
     resultsOpenedBottleIndex,
     currentBottleIndex,
@@ -225,18 +215,7 @@ export function useRoundPlay({
   useEffect(() => {
     if (!clickedReady || allPlayersCompletedThisRound) return
     handleAnswerInsert()
-    const pollVisibleAnswers = () => {
-      if (!document.hidden) handleAnswerInsert()
-    }
-    const handleVisibilityChange = () => {
-      if (!document.hidden) handleAnswerInsert()
-    }
-    const interval = setInterval(pollVisibleAnswers, 2000)
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    return () => {
-      clearInterval(interval)
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-    }
+    return runVisiblePoll(handleAnswerInsert, 2000)
   }, [clickedReady, allPlayersCompletedThisRound, handleAnswerInsert])
 
   // ── Answer interaction handlers ────────────────────────────────────────────
@@ -387,7 +366,6 @@ export function useRoundPlay({
       checkedQuestions,
       isCheckingAnswer,
       correctOptionByQuestion,
-      sessionId,
       playSound,
       persistAnswerWithRetry,
     ],

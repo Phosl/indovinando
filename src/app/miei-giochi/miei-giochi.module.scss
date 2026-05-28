@@ -105,6 +105,30 @@
   gap: 10px;
 }
 
+.gameCardLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.gameCard {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  box-shadow: 0px 3px 0px 0px var(--gray-light);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0px 5px 0px 0px var(--gray-light);
+  }
+}
+
 .gameCardTop {
   display: flex;
   align-items: flex-start;
@@ -120,16 +144,17 @@
   }
 }
 
-.gameMeta {
+.gameCardMeta {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
 }
 
 .date {
   margin: 0;
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 700;
   color: var(--text-secondary);
 }
 
@@ -151,14 +176,51 @@
   color: #92400e;
 }
 
-.gameActions {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 7px;
+.statsRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--button-secondary-border);
+  padding-top: 10px;
+
+  span {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+  }
 }
 
-.optionsAction {
-  grid-column: 1 / -1;
+.bottleLabels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.bottleLabel {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  border: 1px solid var(--button-secondary-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--foreground) 80%, var(--background));
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.bottleMore {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--button-secondary-border);
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-secondary);
 }
 
 // ── Empty state ───────────────────────────────────────────────

@@ -64,41 +64,61 @@ export default function MieiGiochiClient({
               </div>
             ) : (
               <div className={styles.gamesList}>
-                {games.map((game) => (
-                  <div key={game.id} className="card">
-                    <div className={styles.gameCardTop}>
-                      <h3>{game.name}</h3>
-                      <span
-                        className={`${styles.statusBadge} ${game.status === 'published' ? styles.published : styles.draft}`}>
-                        {game.status === 'published'
-                          ? dashboardDict.published || 'Pubblicato'
-                          : dashboardDict.draft || 'Bozza'}
-                      </span>
-                    </div>
-                    <p className={styles.date}>
-                      {dashboardDict.created || 'Creato il'}:{' '}
-                      {new Date(game.created_at).toLocaleDateString(localeTag, {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                      })}
-                    </p>
+                {games.map((game) => {
+                  const bottles = [...(game.game_bottles || [])].sort(
+                    (a, b) => (a.bottle_order || 0) - (b.bottle_order || 0),
+                  )
+                  const questionsCount = (game.game_questions || []).length
+                  const bottlePreview = bottles.slice(0, 3)
+                  const hiddenBottles = Math.max(0, bottles.length - bottlePreview.length)
 
-                    <div className={styles.gameActions}>
-                      <Link href={`/game/${game.id}/live`} className="btn success btn-small ">
-                        {dashboardDict.playLive || '⚡ Gioca Live'}
-                      </Link>
-                      {game.status === 'published' && (
-                        <Link href={`/enoteca/${game.id}`} className="btn secondary btn-small">
-                          {dashboardDict.enoteca || 'Enoteca'}
-                        </Link>
-                      )}
-                      <Link href={`/game/${game.id}`} className="btn tertiary-bordered btn-small">
-                        {dashboardDict.view || 'Opzioni'}
-                      </Link>
-                    </div>
-                  </div>
-                ))}
+                  return (
+                    <Link key={game.id} href={`/game/${game.id}`} className={styles.gameCardLink}>
+                      <article className={styles.gameCard}>
+                        <div className={styles.gameCardTop}>
+                          <h3>{game.name}</h3>
+                          <div className={styles.gameCardMeta}>
+                            <p className={styles.date}>
+                              {new Date(game.created_at).toLocaleDateString(localeTag, {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                              })}
+                            </p>
+                            {/* <span
+                              className={`${styles.statusBadge} ${
+                                game.status === 'published' ? styles.published : styles.draft
+                              }`}>
+                              {game.status === 'published'
+                                ? dashboardDict.published || 'Pubblicato'
+                                : dashboardDict.draft || 'Bozza'}
+                            </span> */}
+                          </div>
+                        </div>
+
+                        <div className={styles.statsRow}>
+                          <span>Bottiglie ({bottles.length})</span>
+                          <span>Domande ({questionsCount})</span>
+                        </div>
+
+                        <div className={styles.bottleLabels}>
+                          {bottlePreview.map((bottle, index) => (
+                            <span
+                              key={bottle.id || `${game.id}-preview-bottle-${index}`}
+                              className={styles.bottleLabel}>
+                              {(bottle.name || 'Senza nome') +
+                                ' - ' +
+                                (bottle.producer || 'Produttore non indicato')}
+                            </span>
+                          ))}
+                          {hiddenBottles > 0 && (
+                            <span className={styles.bottleMore}>+{hiddenBottles}...</span>
+                          )}
+                        </div>
+                      </article>
+                    </Link>
+                  )
+                })}
               </div>
             )}
           </div>

@@ -1,5 +1,6 @@
 import {useEffect, useRef} from 'react'
 import {supabaseClient} from '@/lib/supabaseClient'
+import {runVisiblePoll} from './_polling'
 
 /**
  * Subscribes to the 3 Supabase Realtime channels needed during a live session.
@@ -87,7 +88,6 @@ export function useLiveRealtime({
     // Poll live_sessions every 3 s so every client always tracks the authoritative
     // session state regardless of whether live_sessions is in supabase_realtime.
     const pollSessionState = async () => {
-      if (document.hidden) return
       const {data: session} = await supabaseClient
         .from('live_sessions')
         .select('current_question_index, round_status, status, updated_at')
@@ -96,26 +96,17 @@ export function useLiveRealtime({
       if (session) onSessionUpdateRef.current(session)
     }
 
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        pollSessionState()
-        if (!playerDataRef.current) resolvePlayerRef.current()
-      }
-    }
-
-    const pollSession = setInterval(pollSessionState, 3000)
-    document.addEventListener('visibilitychange', handleVisibilityChange)
+    const stopPollSession = runVisiblePoll(pollSessionState, 3000)
 
     // Lightweight fallback: re-resolve missing player every 10 s
-    const pollPlayer = setInterval(() => {
-      if (document.hidden) return
+    const pollPlayerState = () => {
       if (!playerDataRef.current) resolvePlayerRef.current()
-    }, 10000)
+    }
+    const stopPollPlayer = runVisiblePoll(pollPlayerState, 10000)
 
     return () => {
-      clearInterval(pollSession)
-      clearInterval(pollPlayer)
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      stopPollSession()
+      stopPollPlayer()
       sessionChannel.unsubscribe()
       playersChannel.unsubscribe()
       answersChannel.unsubscribe()
