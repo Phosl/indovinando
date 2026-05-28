@@ -35,7 +35,7 @@ export async function POST(request) {
 
     const {data: session, error: sessionError} = await db
       .from('live_sessions')
-      .select('id, host_user_id, status, game_id, current_question_index')
+      .select('id, host_user_id, status, game_id, current_question_index, round_status')
       .eq('id', trimmedSessionId)
       .maybeSingle()
 
@@ -60,6 +60,14 @@ export async function POST(request) {
         {error: 'Only session participants can finish this session'},
         {status: 403},
       )
+    }
+
+    if (session.status === 'finished') {
+      return NextResponse.json({ok: true, sessionId: trimmedSessionId, alreadyFinished: true})
+    }
+
+    if (session.round_status === 'showing_results') {
+      return NextResponse.json({ok: true, sessionId: trimmedSessionId, pending: true})
     }
 
     if (session.status !== 'finished') {
@@ -138,6 +146,22 @@ export async function POST(request) {
           {status: 409},
         )
       }
+    }
+
+    const {data: lockRows, error: lockError} = await db
+      .from('live_sessions')
+      .update({round_status: 'showing_results', updated_at: new Date().toISOString()})
+      .eq('id', trimmedSessionId)
+      .neq('status', 'finished')
+      .eq('round_status', 'waiting_answers')
+      .select('id')
+
+    if (lockError) {
+      return NextResponse.json({error: lockError.message}, {status: 500})
+    }
+
+    if (!lockRows?.length) {
+      return NextResponse.json({ok: true, sessionId: trimmedSessionId, pending: true})
     }
 
     // Apply last round points before finalizing the session.

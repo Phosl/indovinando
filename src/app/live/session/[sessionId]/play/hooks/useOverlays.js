@@ -58,8 +58,18 @@ export function useOverlays({
   // While the overlay is open, poll every 3s so scores stay live
   useEffect(() => {
     if (!leaderboardOpen) return
-    const interval = setInterval(fetchStandings, 3000)
-    return () => clearInterval(interval)
+    const pollVisibleStandings = () => {
+      if (!document.hidden) fetchStandings()
+    }
+    const handleVisibilityChange = () => {
+      if (!document.hidden) fetchStandings()
+    }
+    const interval = setInterval(pollVisibleStandings, 3000)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      clearInterval(interval)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [leaderboardOpen, fetchStandings])
 
   const kickPlayer = useCallback(

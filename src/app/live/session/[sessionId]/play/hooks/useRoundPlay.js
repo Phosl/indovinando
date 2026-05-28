@@ -127,19 +127,20 @@ export function useRoundPlay({
       const res = await fetch('/api/live/advance-bottle', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({sessionId}),
+        body: JSON.stringify({sessionId, currentBottleIndex}),
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
         throw new Error(data?.error || 'Failed to advance bottle')
       }
-      const {nextIndex} = await res.json()
+      const {nextIndex, pending} = await res.json()
+      if (pending) return
       resetRoundState(nextIndex, 'waiting_answers')
     } catch (err) {
       console.error('Errore in advanceToNextBottleOrFinish:', err)
       setShowBottleTransition(false)
     }
-  }, [sessionId, resetRoundState])
+  }, [sessionId, currentBottleIndex, resetRoundState])
 
   // ── Realtime answer insert handler (consumed by useLiveRealtime) ───────────
   // NOTE: We intentionally ignore payload.new because Supabase RLS may strip it
@@ -201,8 +202,18 @@ export function useRoundPlay({
     const onResultsScreen = resultsOpenedBottleIndex === currentBottleIndex
     if (!onResultsScreen || allPlayersCompletedThisRound) return
     handleAnswerInsert()
-    const interval = setInterval(handleAnswerInsert, 2000)
-    return () => clearInterval(interval)
+    const pollVisibleAnswers = () => {
+      if (!document.hidden) handleAnswerInsert()
+    }
+    const handleVisibilityChange = () => {
+      if (!document.hidden) handleAnswerInsert()
+    }
+    const interval = setInterval(pollVisibleAnswers, 2000)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      clearInterval(interval)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [
     resultsOpenedBottleIndex,
     currentBottleIndex,
@@ -214,8 +225,18 @@ export function useRoundPlay({
   useEffect(() => {
     if (!clickedReady || allPlayersCompletedThisRound) return
     handleAnswerInsert()
-    const interval = setInterval(handleAnswerInsert, 2000)
-    return () => clearInterval(interval)
+    const pollVisibleAnswers = () => {
+      if (!document.hidden) handleAnswerInsert()
+    }
+    const handleVisibilityChange = () => {
+      if (!document.hidden) handleAnswerInsert()
+    }
+    const interval = setInterval(pollVisibleAnswers, 2000)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      clearInterval(interval)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [clickedReady, allPlayersCompletedThisRound, handleAnswerInsert])
 
   // ── Answer interaction handlers ────────────────────────────────────────────

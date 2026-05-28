@@ -22,7 +22,7 @@ function createWriteClient(fallback) {
  */
 export async function POST(request) {
   try {
-    const {sessionId} = await request.json()
+    const {sessionId, currentBottleIndex} = await request.json()
     if (!sessionId) {
       return NextResponse.json({error: 'Missing sessionId'}, {status: 400})
     }
@@ -41,7 +41,7 @@ export async function POST(request) {
 
     const {data: session} = await db
       .from('live_sessions')
-      .select('host_user_id, current_question_index, status')
+      .select('host_user_id, current_question_index, status, round_status')
       .eq('id', sessionId)
       .maybeSingle()
 
@@ -53,6 +53,41 @@ export async function POST(request) {
     }
     if (session.status !== 'playing') {
       return NextResponse.json({error: 'Session is not in playing state'}, {status: 409})
+    }
+
+    const expectedIndex = Number.isInteger(currentBottleIndex)
+      ? currentBottleIndex
+      : Number(session.current_question_index || 0)
+
+    if (Number(session.current_question_index || 0) !== expectedIndex) {
+      return NextResponse.json({
+        ok: true,
+        nextIndex: Number(session.current_question_index || 0),
+        alreadyAdvanced: true,
+      })
+    }
+
+    if (session.round_status === 'showing_results') {
+      return NextResponse.json({ok: true, pending: true, nextIndex: expectedIndex})
+    }
+
+    const lockTime = new Date().toISOString()
+    const {data: lockRows, error: lockError} = await db
+      .from('live_sessions')
+      .update({round_status: 'showing_results', updated_at: lockTime})
+      .eq('id', sessionId)
+      .eq('host_user_id', user.id)
+      .eq('status', 'playing')
+      .eq('current_question_index', expectedIndex)
+      .eq('round_status', 'waiting_answers')
+      .select('id')
+
+    if (lockError) {
+      return NextResponse.json({error: lockError.message}, {status: 500})
+    }
+
+    if (!lockRows?.length) {
+      return NextResponse.json({ok: true, pending: true, nextIndex: expectedIndex})
     }
 
     // ── 1. Sync round scores to live_players.total_score ──────────────────────
@@ -92,8 +127,8 @@ export async function POST(request) {
     await db.from('live_round_answers').delete().eq('session_id', sessionId)
 
     // ── 3. Advance session to next bottle ─────────────────────────────────────
-    const nextIndex = (session.current_question_index ?? 0) + 1
-    await db
+    const nextIndex = expectedIndex + 1
+    const {error: advanceError} = await db
       .from('live_sessions')
       .update({
         current_question_index: nextIndex,
@@ -101,6 +136,12 @@ export async function POST(request) {
         updated_at: new Date().toISOString(),
       })
       .eq('id', sessionId)
+      .eq('current_question_index', expectedIndex)
+      .eq('round_status', 'showing_results')
+
+    if (advanceError) {
+      return NextResponse.json({error: advanceError.message}, {status: 500})
+    }
 
     return NextResponse.json({nextIndex, ok: true})
   } catch (err) {

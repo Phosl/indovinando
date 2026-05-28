@@ -86,23 +86,36 @@ export function useLiveRealtime({
     // ── Polling fallbacks (cover cases where tables are not in Realtime publication) ──
     // Poll live_sessions every 3 s so every client always tracks the authoritative
     // session state regardless of whether live_sessions is in supabase_realtime.
-    const pollSession = setInterval(async () => {
+    const pollSessionState = async () => {
+      if (document.hidden) return
       const {data: session} = await supabaseClient
         .from('live_sessions')
         .select('current_question_index, round_status, status, updated_at')
         .eq('id', sessionId)
         .maybeSingle()
       if (session) onSessionUpdateRef.current(session)
-    }, 3000)
+    }
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        pollSessionState()
+        if (!playerDataRef.current) resolvePlayerRef.current()
+      }
+    }
+
+    const pollSession = setInterval(pollSessionState, 3000)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
 
     // Lightweight fallback: re-resolve missing player every 10 s
     const pollPlayer = setInterval(() => {
+      if (document.hidden) return
       if (!playerDataRef.current) resolvePlayerRef.current()
     }, 10000)
 
     return () => {
       clearInterval(pollSession)
       clearInterval(pollPlayer)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
       sessionChannel.unsubscribe()
       playersChannel.unsubscribe()
       answersChannel.unsubscribe()
