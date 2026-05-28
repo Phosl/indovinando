@@ -4,6 +4,7 @@ import {useState, useEffect, useCallback, useMemo, useRef} from 'react'
 import {useRouter, useSearchParams} from 'next/navigation'
 import {supabaseAnonClient} from '@/lib/supabaseClient'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
+import Icon from '@/components/Icon'
 import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
 // Reuse live-game stylesheet directly – no duplicate CSS
 import styles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
@@ -543,12 +544,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
           <div className={styles.resultFeedback}>
             {curCheckedResult?.isCorrect ? (
               <>
-                <img
-                  className={styles.feedbackIconImg}
-                  src="/check-correct.svg"
-                  alt=""
-                  aria-hidden="true"
-                />
+                <Icon name="checkCorrect" size={24} className={styles.feedbackIconImg} />
                 <span className={styles.feedbackLabel}>
                   {curCheckedResult.comboCount >= 2
                     ? `Combo x${curCheckedResult.comboCount}! +${curCheckedResult.points}`
@@ -557,12 +553,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
               </>
             ) : (
               <>
-                <img
-                  className={styles.feedbackIconImg}
-                  src="/check-wrong.svg"
-                  alt=""
-                  aria-hidden="true"
-                />
+                <Icon name="checkWrong" size={24} className={styles.feedbackIconImg} />
                 <span className={styles.feedbackLabel}>
                   {t.correctAnswer} <strong>{correctOptText}</strong>
                 </span>

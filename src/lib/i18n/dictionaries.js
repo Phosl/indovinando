@@ -115,7 +115,7 @@ export const GAME_EDITOR_DICTIONARY = {
   questionsList: {
     it: {
       title: 'Domande',
-      add: '+ Nuova domanda',
+      add: 'Nuova domanda',
       empty: 'Nessuna domanda ancora. Aggiungi la prima!',
       question: 'Domanda',
       options: 'opzioni',
@@ -186,7 +186,7 @@ export const GAME_EDITOR_DICTIONARY = {
       questionPlaceholder: 'Scrivi la domanda...',
       optionsLabel: 'Opzioni',
       optionPlaceholder: 'Opzione',
-      addOption: '+ Aggiungi opzione',
+      addOption: 'Aggiungi opzione',
       cancel: 'Annulla',
       saveNew: 'Crea domanda',
       saveEdit: 'Salva domanda',
@@ -198,7 +198,7 @@ export const GAME_EDITOR_DICTIONARY = {
       questionPlaceholder: 'Write your question...',
       optionsLabel: 'Options',
       optionPlaceholder: 'Option',
-      addOption: '+ Add option',
+      addOption: 'Add option',
       cancel: 'Cancel',
       saveNew: 'Create question',
       saveEdit: 'Save question',

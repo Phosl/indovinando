@@ -1,6 +1,7 @@
 import {useState, useEffect, useCallback, memo} from 'react'
 import styles from '../playerLive.module.scss'
 import {useT} from '@/lib/i18n/useT'
+import Icon from '@/components/Icon'
 
 const getComboMsg = (n, t) => {
   if (!n || n < 2) return null
@@ -119,12 +120,7 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
           <div className={styles.resultFeedback}>
             {checkResult?.isCorrect ? (
               <>
-                <img
-                  className={styles.feedbackIconImg}
-                  src="/check-correct.svg"
-                  alt=""
-                  aria-hidden="true"
-                />
+                <Icon name="checkCorrect" size={24} className={styles.feedbackIconImg} />
                 <span className={styles.feedbackLabel}>
                   {checkResult.comboBonus > 0
                     ? t('comboCorrect', {
@@ -137,12 +133,7 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
               </>
             ) : (
               <>
-                <img
-                  className={styles.feedbackIconImg}
-                  src="/check-wrong.svg"
-                  alt=""
-                  aria-hidden="true"
-                />
+                <Icon name="checkWrong" size={24} className={styles.feedbackIconImg} />
                 <span className={styles.feedbackLabel}>
                   {t('correctAnswer')} <strong>{correctText}</strong>
                 </span>

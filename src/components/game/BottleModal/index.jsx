@@ -158,8 +158,10 @@ export default function BottleModal({
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
           <h3>
-            {isNewBottle ? text.newTitle : `${text.editTitlePrefix} ${bottleIndex + 1}`} - Step{' '}
-            {wizardStep + 1} di {totalSteps}
+            {isNewBottle ? text.newTitle : `${text.editTitlePrefix} ${bottleIndex + 1}`}{' '}
+            <span className={styles.stepNumber}>
+              Step {wizardStep + 1} di {totalSteps}
+            </span>
           </h3>
           <button className={styles.closeBtn} onClick={onCancel}>
             ✕

@@ -149,7 +149,7 @@
   border: 2px solid var(--button-secondary-border);
   border-radius: 16px;
   box-shadow: 0px 4px 0px 0px var(--gray-light);
-  padding: 20px 18px 104px;
+  padding: 20px 20px 104px 20px;
 }
 
 .stepFrame {
@@ -186,7 +186,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 10px;
+  padding-bottom: 20px;
   border-bottom: 2px solid var(--button-secondary-border);
   margin: 0 0 4px;
 }
@@ -321,7 +321,7 @@
   padding: 12px 14px;
   overflow: hidden;
   border-radius: 8px;
-  box-shadow: 0px 2px 0px 0px var(--gray-light);
+  box-shadow: 0px 0px 0px 0px var(--gray-light);
   font-weight: bold;
   text-align: left;
   background: var(--foreground);
@@ -329,7 +329,7 @@
   user-select: none;
   touch-action: manipulation;
   &.answerOptionLabelActive {
-    box-shadow: 0px 2px 0px 0px var(--selected-dark);
+    box-shadow: 0px 0px 0px 0px var(--selected-dark);
     border: 2px solid var(--selected-dark);
     background-color: var(--selected-extra-light);
     .answerOptionText {

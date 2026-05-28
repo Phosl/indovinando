@@ -3,6 +3,7 @@
 import {useMemo} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
+import Icon from '@/components/Icon'
 import {useWineCourseProgress} from '../hooks/useWineCourseProgress'
 import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
 import {useT} from '@/lib/i18n/useT'
@@ -97,12 +98,7 @@ export default function LevelClient({level, lessons, levels = []}) {
                       )}
                       {hasPassed === true && (
                         <span className={styles.passBadge}>
-                          <img
-                            className={styles.passBadgeIcon}
-                            src="/check-correct-white.svg"
-                            alt=""
-                            aria-hidden="true"
-                          />
+                          <Icon name="checkCorrectWhite" size={24} className={styles.passBadgeIcon} />
                           Superato
                         </span>
                       )}

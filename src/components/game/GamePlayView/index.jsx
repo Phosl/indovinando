@@ -5,6 +5,8 @@ import {useMemo, useState} from 'react'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {pickLangText} from '@/lib/i18n/dictionaries'
 import AvatarDisplay from '@/components/AvatarDisplay'
+import Icon from '@/components/Icon'
+import {Button, ButtonLink} from '@/components/ui/Button'
 import {formatAppDate, formatAppDateTime} from '@/lib/dateFormat'
 import {getGamePlayViewText} from '../utils/constants'
 import styles from './GamePlayView.module.scss'
@@ -69,46 +71,53 @@ export default function GamePlayView({
         <div className={styles.gameHeaderInfo}>
           <h1 className={styles.gameTitle}>{game.name}</h1>
           <p className={styles.gameDate}>{gameDateLabel}</p>
-          <button
-            type="button"
-            className={`btn btn-small ${styles.historyToggle}`}
+          <Button
+            size="small"
+            className={styles.historyToggle}
             onClick={() => setHistoryOpen(true)}
             aria-expanded={historyOpen}
             aria-controls="game-history-panel">
             {lang === 'en' ? 'Show tasting history' : 'Mostra storico degustazioni'}
-          </button>
+          </Button>
           <div className={styles.gameInfo}>
-            <p>
-              <img src="/bottle-icon.svg" alt="" aria-hidden="true" />
+            <p className={styles.infoItem}>
+              <Icon name="bottle" size={24} className={styles.infoBottleIcon} />
               {` Bottiglie: ${bottles.length}`}
             </p>
-            <p>
-              <img src="/question-icon.svg" alt="" aria-hidden="true" />
+            <p className={styles.infoItem}>
+              <img src="/icons/questions.svg" alt="" aria-hidden="true" className={styles.infoQuestionIcon} />
               {` Domande: ${questions.length}`}
             </p>
           </div>
         </div>
       </div>
       <div className={styles.actionsBar}>
-        <button
-          type="button"
-          className={`btn btn-start success ${styles.actionBtn}`}
-          onClick={() => setStartModalOpen(true)}>
+        <Button variant="success" className={`btn-start ${styles.actionBtn}`} onClick={() => setStartModalOpen(true)}>
           {t.startMatch}
-        </button>
+        </Button>
         <div className={styles.actionsBtnBottom}>
           {isOwner && (
-            <Link
+            <ButtonLink
               href={`/game/${game.id}/edit`}
-              className={`btn btn-small neutral ${styles.actionBtn}`}>
-              {t.edit}
-            </Link>
+              variant="neutral"
+              size="small"
+              className={styles.actionBtn}>
+              <span className={styles.actionBtnContent}>
+                <Icon name="edit" size={24} className={styles.actionBtnIcon} />
+                <span>{t.edit}</span>
+              </span>
+            </ButtonLink>
           )}
-          <Link
+          <ButtonLink
             href={`/game/${game.id}/print`}
-            className={`btn btn-small neutral ${styles.actionBtn}`}>
-            {t.printCard}
-          </Link>
+            variant="neutral"
+            size="small"
+            className={styles.actionBtn}>
+            <span className={styles.actionBtnContent}>
+              <Icon name="print" size={24} className={styles.actionBtnIcon} />
+              <span>{t.printCard}</span>
+            </span>
+          </ButtonLink>
         </div>
       </div>
 
@@ -162,11 +171,10 @@ export default function GamePlayView({
                       <div
                         key={opt.id}
                         className={`${styles.option} ${isCorrect ? styles.correct : styles.wrong}`}>
-                        <img
+                        <Icon
                           className={styles.optionIcon}
-                          src={isCorrect ? '/check-correct.svg' : '/check-wrong.svg'}
-                          alt=""
-                          aria-hidden="true"
+                          name={isCorrect ? 'checkCorrect' : 'checkWrong'}
+                          size={24}
                         />
                         <span>{opt.text}</span>
                       </div>
@@ -186,13 +194,13 @@ export default function GamePlayView({
           <div className={styles.startModal} onClick={(event) => event.stopPropagation()}>
             <h3>{t.chooseMode}</h3>
             <div className={styles.startModalActions}>
-              <Link href={`/game/${game.id}/live`} className="btn success">
+              <ButtonLink href={`/game/${game.id}/live`} variant="success">
                 {t.playLive}
-              </Link>
+              </ButtonLink>
               {game.status === 'published' && (
-                <Link href={`/enoteca/${game.id}`} className="btn secondary">
+                <ButtonLink href={`/enoteca/${game.id}`} variant="secondary">
                   {t.playEnoteca}
-                </Link>
+                </ButtonLink>
               )}
             </div>
             <button

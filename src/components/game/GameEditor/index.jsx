@@ -4,6 +4,7 @@
 // ...existing code...
 // Modale introduttiva per lo step questionario
 import modalStyles from './QuestionnaireIntroModal.module.scss'
+import {Button} from '@/components/ui/Button'
 function QuestionnaireIntroModal({isOpen, onClose, onDisable, isQuickCreate, questions}) {
   if (!isOpen) return null
   return (
@@ -37,13 +38,13 @@ function QuestionnaireIntroModal({isOpen, onClose, onDisable, isQuickCreate, que
           </div>
         )}
         <div className={modalStyles.buttonContainer}>
-          <button className="btn success" onClick={onClose}>
+          <Button variant="success" onClick={onClose}>
             Ho capito
-          </button>
+          </Button>
 
-          <button className="btn btn-only-text neutral btn-small" onClick={onDisable}>
+          <Button variant="neutral" size="small" textOnly onClick={onDisable}>
             Non mostrare più
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -62,12 +63,12 @@ function BottlesIntroModal({isOpen, onClose, onDisable}) {
           corrette per ogni domanda.
         </p>
         <div className={modalStyles.buttonContainer}>
-          <button className="btn success" onClick={onClose}>
+          <Button variant="success" onClick={onClose}>
             Ho capito
-          </button>
-          <button className="btn btn-only-text neutral btn-small" onClick={onDisable}>
+          </Button>
+          <Button variant="neutral" size="small" textOnly onClick={onDisable}>
             Non mostrare più
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -254,7 +255,7 @@ const StepThreeSection = memo(function StepThreeSection({
         <button className="btn neutral" onClick={onSaveAndPrint} disabled={isSaving}>
           {isSaving ? editorText.saving : editorText.saveAndPrint}
         </button>
-        <button className="btn  success" onClick={onInsertResults}>
+        <button className="btn success" onClick={onInsertResults}>
           {editorText.bridgeInsertResults}
         </button>
       </div>

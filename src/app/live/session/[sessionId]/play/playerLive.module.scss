@@ -235,7 +235,7 @@
   text-align: left;
   cursor: pointer;
   color: var(--text-primary);
-  box-shadow: 0px 2px 0px 0px var(--gray-light);
+  box-shadow: 0px 0px 0px 0px var(--gray-light);
   transition:
     border-color 0.15s,
     background 0.15s;
@@ -259,20 +259,20 @@
 .optSelected {
   border-color: var(--selected-dark);
   background: var(--selected-extra-light);
-  box-shadow: 0px 2px 0px 0px var(--selected-dark);
+  box-shadow: 0px 0px 0px 0px var(--selected-dark);
 }
 
 .optCorrect {
   border-color: var(--accept-dark);
   background: var(--success-surface);
-  box-shadow: 0px 2px 0px 0px var(--accept-dark);
+  box-shadow: 0px 0px 0px 0px var(--accept-dark);
   color: var(--accept-dark);
 }
 
 .optWrong {
   border-color: var(--danger-border);
   background: var(--danger-surface);
-  box-shadow: 0px 2px 0px 0px var(--danger-border);
+  box-shadow: 0px 0px 0px 0px var(--danger-border);
   color: var(--danger-text);
 }
 

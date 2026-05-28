@@ -1,6 +1,7 @@
 import {isQuestionComplete} from '../utils/validations'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {getQuestionsListText} from '../utils/constants'
+import Icon from '@/components/Icon'
 import styles from './QuestionsList.module.scss'
 
 /**
@@ -26,7 +27,7 @@ export default function QuestionsList({
           {text.title} ({questions.length})
         </h3> */}
         <button className="btn tertiary" onClick={onNewQuestion}>
-          {text.add}
+          <Icon name="plus" size={24} /> <span>{text.add}</span>
         </button>
       </div>
 

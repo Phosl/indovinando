@@ -46,10 +46,6 @@ export default async function Dashboard() {
             <span className={styles.menuCardLabel}>{dashboardDict.myGames || 'I miei giochi'}</span>
           </Link>
 
-          <Link href="/game/create" className="btn success">
-            <span className={styles.menuCardLabel}>{dashboardDict.createGame || 'Crea gioco'}</span>
-          </Link>
-
           <Link href="/corso-vino" className="btn tertiary">
             <span className={styles.menuCardLabel}>{dashboardDict.wineCourse || 'Corso Vino'}</span>
           </Link>

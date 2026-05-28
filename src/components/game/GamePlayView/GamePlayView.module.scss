@@ -26,8 +26,7 @@
 
 .gameTitle {
   margin: 0;
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  line-height: 1.2;
+  font-size: 28px;
   font-weight: 900;
   color: var(--text-primary);
 }
@@ -56,6 +55,24 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  p {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    color: var(--primary-text);
+  }
+}
+
+.infoBottleIcon {
+  color: var(--primary-text);
+}
+
+.infoQuestionIcon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  object-fit: contain;
 }
 .gameAvatar {
   width: 96px;
@@ -234,6 +251,7 @@
   align-items: center;
   justify-content: space-between;
   display: flex;
+  margin-bottom: 24px;
 }
 
 .actionBtn {
@@ -244,6 +262,17 @@
     grid-column: 1 / -1;
   }
 }
+
+.actionBtnContent {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.actionBtnIcon {
+  color: currentColor;
+}
+
 .actionsBtnBottom {
   display: flex;
   flex-direction: row;
