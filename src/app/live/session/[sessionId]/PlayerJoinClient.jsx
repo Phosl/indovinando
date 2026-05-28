@@ -266,7 +266,7 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
 
   return (
     <div className={styles.container}>
-      <TopBar title={`🎮 ${gameName}`} onBack={() => router.push('/')}></TopBar>
+      <TopBar title={`${gameName}`} onBack={() => router.push('/')}></TopBar>
 
       {gameStarted ? (
         <div className={styles.waitingCard}>

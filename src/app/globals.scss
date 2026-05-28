@@ -7,7 +7,7 @@ html {
 }
 
 body {
-  --background: #fafafa;
+  --background: #fcf9ef;
   --foreground: #fff;
   --tertiary: #1a9de0;
   --text-primary: #000;
@@ -45,6 +45,15 @@ body {
   color: var(--text-primary);
   background-color: var(--background);
   font-family: var(--font-geist-sans);
+
+  --primary: #9275e2;
+  --primary-light: #a88ef0;
+  --secondary: #fd7ab7;
+  --secondary-light: #ff94c9;
+  --tertiary: #1ca6fb;
+  --tertiary-light: #1cb0f6;
+  --success: #18a655;
+  --success-light: #30da4c;
 }
 
 input {
@@ -127,6 +136,18 @@ main.flex-container {
       opacity: 1;
     }
   }
+}
+
+/*  CARD */
+
+.card {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 /* ─── Skeleton loading ──────────────────────────────────── */

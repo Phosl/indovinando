@@ -5,19 +5,13 @@
   justify-content: space-between;
   gap: 12px;
   flex-wrap: nowrap;
-  padding: 12px 16px;
-  background: var(--foreground);
-  border: 2px solid var(--button-secondary-border);
-  border-radius: 12px;
-  box-shadow: 0px 4px 0px 0px var(--gray-light);
   margin-bottom: 16px;
-  border-radius: 0px 0px 12px 12px;
   border-top: 0px;
   overflow: hidden;
+  padding: 8px 0px;
   @media (max-width: 768px) {
     margin-bottom: 12px;
   }
-
   &.wrapped {
     flex-direction: column;
     align-items: flex-start;
@@ -45,10 +39,9 @@
   flex-shrink: 0;
   width: 40px;
   height: 40px;
-  border-radius: 10px;
-  border: 2px solid var(--button-secondary-border);
+  border-radius: 100px;
+  border: 1px solid var(--button-secondary-border);
   background: var(--foreground);
-  box-shadow: 0px 3px 0px 0px var(--gray-light);
   font-size: 1.1rem;
   cursor: pointer;
   display: grid;
@@ -79,6 +72,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: calc(100% - 40px);
+  text-align: center;
+  margin-right: 40px;
 }
 
 .actions {

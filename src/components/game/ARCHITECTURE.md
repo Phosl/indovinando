@@ -2,11 +2,15 @@
 
 ## Architecture Overview
 
-The game editor follows a **3-step modal-based workflow**:
+The game editor currently follows a **4-screen modal-based workflow**:
 
 1. **Step 1**: Game Name (simple text input)
 2. **Step 2**: Questionnaire Management (QuestionsList + QuestionModal)
-3. **Step 3**: Bottle Management (BottlesList + BottleModal) + Publish
+3. **Step 3**: Bridge screen (add bottles or save/print card)
+4. **Step 4**: Bottle Management (BottlesList + BottleModal) + Publish
+
+Note: the product may return to a 3-step flow later. For now, `GAME_EDITOR_DICTIONARY.steps`
+and `GameEditor/index.jsx` are the source of truth.
 
 ## Component Structure
 
@@ -14,7 +18,7 @@ The game editor follows a **3-step modal-based workflow**:
 
 #### GameEditor.jsx
 
-Main orchestrator component that manages the 3-step workflow.
+Main orchestrator component that manages the editor workflow.
 
 **Responsibilities:**
 
@@ -53,7 +57,7 @@ Main orchestrator component that manages the 3-step workflow.
 
 ---
 
-#### Step 3: Bottles
+#### Step 4: Bottles
 
 **BottlesList.jsx**
 
@@ -124,7 +128,7 @@ Centralized constants:
 
 ### Questionnaire Propagation
 
-When questionnaire is saved (Step 2 → Step 3):
+When questionnaire is saved (Step 2 → Step 3 bridge, then optionally Step 4):
 
 1. `saveQuestionnaire()` is called
 2. Existing bottles' answers are remapped to match new question order

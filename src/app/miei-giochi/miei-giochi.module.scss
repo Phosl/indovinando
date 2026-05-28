@@ -105,17 +105,6 @@
   gap: 10px;
 }
 
-.gameCard {
-  background: var(--foreground);
-  border: 2px solid var(--button-secondary-border);
-  border-radius: 14px;
-  padding: 16px 18px;
-  box-shadow: 0px 4px 0px 0px var(--gray-light);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
 .gameCardTop {
   display: flex;
   align-items: flex-start;
@@ -168,64 +157,8 @@
   gap: 7px;
 }
 
-.actionBtn {
-  width: 100% !important;
-  min-height: 42px;
-  font-size: 13px !important;
-}
-
 .optionsAction {
   grid-column: 1 / -1;
-}
-
-.gameActions a:first-child {
-  background: #d7f2db !important;
-  color: var(--accept-dark);
-  box-shadow: 0px 3px 0px 0px var(--accept-dark);
-  border: 1px solid var(--accept-dark) !important;
-}
-
-.liveAction {
-  padding: 8px 16px;
-  border-radius: 12px;
-  color: #d52798;
-  border: 1px solid #d52798;
-  background-color: #fff5fb;
-  box-shadow: 0px 3px 0px 0px #d52798;
-  font-weight: 900;
-  font-size: 14px;
-  text-transform: uppercase;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  &:active {
-    box-shadow: none;
-    transform: translateY(3px);
-  }
-}
-
-.enotecaAction {
-  padding: 8px 16px;
-  border-radius: 12px;
-  color: #3d1760;
-  border: 1px solid #6b2f8e;
-  background-color: #f3dfff;
-  box-shadow: 0px 3px 0px 0px #6b2f8e;
-  font-weight: 900;
-  font-size: 14px;
-  text-transform: uppercase;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-
-  &:active {
-    box-shadow: none;
-    transform: translateY(3px);
-  }
 }
 
 // ── Empty state ───────────────────────────────────────────────

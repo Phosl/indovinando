@@ -69,7 +69,7 @@ export default async function GamePrintPage({params}) {
         <header className={styles.header}>
           <h1>{game.name}</h1>
           <div className={styles.playerRow}>
-            <span>Playtore:</span>
+            <span>Nome:</span>
             <div className={styles.line} />
           </div>
         </header>
@@ -95,7 +95,11 @@ export default async function GamePrintPage({params}) {
               className={`${styles.tableCard} ${bottleIndex % 2 === 0 ? styles.peach : styles.white}`}>
               <div className={styles.questionsGrid}>
                 <aside className={styles.bottleImageCol} aria-hidden="true">
-                  <img src="/bottle-print.svg" alt="" className={styles.bottleImage} />
+                  <img
+                    src={`/bottle-print-${bottleIndex + 1}.svg`}
+                    alt=""
+                    className={styles.bottleImage}
+                  />
                 </aside>
 
                 {Array.from({length: 5}).map((__, questionIndex) => {

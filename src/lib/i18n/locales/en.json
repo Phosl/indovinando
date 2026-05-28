@@ -48,9 +48,9 @@
     "emptyState": "You haven't created any games yet. Start now!",
     "emptyStateFirstGame": "You haven't created any games yet. Create your first game to start playing.",
     "createFirstGame": "Create your first game",
-    "history": "📜 Match History",
+    "history": " Match History",
     "storico": {
-      "title": "📜 Match History",
+      "title": "Match History",
       "tabLabel": "History",
       "subtitle": "All live sessions you have hosted.",
       "empty": "No matches yet. Create a game and host your first session!",

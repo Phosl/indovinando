@@ -46,11 +46,12 @@ function ModePickerScreen({onPick}) {
   const router = useRouter()
 
   return (
-    <PageLayout title="Crea gioco" onBack={() => router.push('/miei-giochi')}>
+    <PageLayout title="Crea Quiz" onBack={() => router.push('/miei-giochi')}>
+      <h1>Scegli il tipo di quiz</h1>
       <div className={styles.modePickerGrid}>
         <button className={styles.modeCard} onClick={() => onPick('quick')}>
-          <span className={styles.modeCardEmoji}>⚡</span>
-          <strong className={styles.modeCardTitle}>Gioco rapido</strong>
+          {/* <span className={styles.modeCardEmoji}>⚡</span> */}
+          <strong className={styles.modeCardTitle}>Quiz rapido</strong>
           <p className={styles.modeCardDesc}>
             Usa il nostro modello pronto per la degustazione: aggiungi le bottiglie e sei pronto.
           </p>
@@ -58,8 +59,8 @@ function ModePickerScreen({onPick}) {
         </button>
 
         <button className={styles.modeCard} onClick={() => onPick('custom')}>
-          <span className={styles.modeCardEmoji}>✏️</span>
-          <strong className={styles.modeCardTitle}>Gioco personalizzato</strong>
+          {/* <span className={styles.modeCardEmoji}>✏️</span> */}
+          <strong className={styles.modeCardTitle}>Quiz personalizzato</strong>
           <p className={styles.modeCardDesc}>
             Crea le tue domande e risposta da zero, adatta ogni dettaglio al tuo stile.
           </p>

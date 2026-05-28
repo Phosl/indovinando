@@ -83,7 +83,7 @@ export const GAME_EDITOR_DICTIONARY = {
       topBarCreate: 'Crea gioco',
       topBarEdit: 'Modifica gioco',
       step1Placeholder: 'Nome gioco',
-      step1Title: 'Come si chiama il tuo gioco?',
+      step1Title: 'Inserisci il nome del tuo quiz',
       step2Title: 'Crea il questionario',
       continue: 'Prosegui',
       saveQuestionnaire: 'Salva questionario',

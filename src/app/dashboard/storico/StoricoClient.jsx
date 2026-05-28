@@ -96,7 +96,7 @@ export default function StoricoClient({sessions, t, lang}) {
                   </span>
                 </div>
                 <span className={styles.playerCount}>
-                  👥 {s.player_count} {s.player_count === 1 ? t.player : t.players}
+                  {s.player_count} {s.player_count === 1 ? t.player : t.players}
                 </span>
               </div>
 

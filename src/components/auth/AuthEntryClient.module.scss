@@ -1,3 +1,23 @@
+.infoModalList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.infoModalList li {
+  font-size: 1rem;
+  font-weight: 500;
+}
+.infoModalList a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  transition: color 0.15s;
+}
+.infoModalList a:hover {
+  color: var(--primary);
+}
 .page {
   min-height: 100dvh;
   background: linear-gradient(180deg, #f4f8ff 0%, #eef9ec 100%);

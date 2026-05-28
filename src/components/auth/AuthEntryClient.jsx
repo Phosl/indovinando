@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import {useEffect, useState} from 'react'
 import {useT} from '@/lib/i18n/useT'
-import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
+import AuthInfoFab from './AuthInfoFab'
 import styles from './AuthEntryClient.module.scss'
 
 export default function AuthEntryClient({appVersion}) {
@@ -132,21 +132,10 @@ export default function AuthEntryClient({appVersion}) {
           </div>
         </section>
       </div>
-      <div className={styles.legalLinks}>
-        <button
-          type="button"
-          className={`${styles.badge} ${styles.badgeLink} ${styles.badgeButton}`}
-          onClick={handleShare}>
-          {t('shareApp')}
-        </button>
-        <Link href="/changelog" className={`${styles.badge} ${styles.badgeLink}`}>
-          {t('versionLabel')} {appVersion}
-        </Link>
-        <LanguageSwitcher inline className={styles.languageBadge} />
-        <Link href="/copyright" className={`${styles.badge} ${styles.badgeLink}`}>
-          {t('copyrightLabel')}
-        </Link>
-      </div>
+      <AuthInfoFab
+        changelogLabel={t('versionLabel') + ' ' + appVersion}
+        copyrightLabel={t('copyrightLabel')}
+      />
       {shareHint ? (
         <div className={styles.bottomSheetOverlay} onClick={() => setShareHint('')}>
           <div className={styles.bottomSheet} onClick={(e) => e.stopPropagation()}>

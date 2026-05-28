@@ -6,7 +6,6 @@ import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import StoricoClient from '@/app/dashboard/storico/StoricoClient'
 import styles from './miei-giochi.module.scss'
-import storicoStyles from '@/app/dashboard/storico/storico.module.scss'
 
 export default function MieiGiochiClient({
   games,
@@ -59,14 +58,14 @@ export default function MieiGiochiClient({
                   {dashboardDict.emptyStateFirstGame ||
                     'Non hai ancora creato giochi. Crea il tuo primo gioco per iniziare a giocare.'}
                 </p>
-                <Link href="/game/create" className="btn primary">
+                <Link href="/game/create" className="btn success">
                   {dashboardDict.createFirstGame || 'Crea il tuo primo gioco'}
                 </Link>
               </div>
             ) : (
               <div className={styles.gamesList}>
                 {games.map((game) => (
-                  <div key={game.id} className={styles.gameCard}>
+                  <div key={game.id} className="card">
                     <div className={styles.gameCardTop}>
                       <h3>{game.name}</h3>
                       <span
@@ -84,22 +83,17 @@ export default function MieiGiochiClient({
                         year: 'numeric',
                       })}
                     </p>
+
                     <div className={styles.gameActions}>
-                      <Link
-                        href={`/game/${game.id}/live`}
-                        className={`${styles.liveAction} ${styles.actionBtn}`}>
+                      <Link href={`/game/${game.id}/live`} className="btn success btn-small ">
                         {dashboardDict.playLive || '⚡ Gioca Live'}
                       </Link>
                       {game.status === 'published' && (
-                        <Link
-                          href={`/enoteca/${game.id}`}
-                          className={`${styles.enotecaAction} ${styles.actionBtn}`}>
+                        <Link href={`/enoteca/${game.id}`} className="btn secondary btn-small">
                           {dashboardDict.enoteca || 'Enoteca'}
                         </Link>
                       )}
-                      <Link
-                        href={`/game/${game.id}`}
-                        className={`btn tertiary-bordered ${styles.actionBtn} ${styles.optionsAction}`}>
+                      <Link href={`/game/${game.id}`} className="btn tertiary-bordered btn-small">
                         {dashboardDict.view || 'Opzioni'}
                       </Link>
                     </div>
