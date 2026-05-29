@@ -3,8 +3,7 @@ import LevelClient from './LevelClient'
 import {getWineCourseData} from '@/lib/wineCourseContent'
 import {getServerLanguage} from '@/lib/i18n/server'
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+export const revalidate = 300
 
 export async function generateStaticParams() {
   const {levels} = await getWineCourseData('it')
@@ -21,9 +20,9 @@ export async function generateMetadata({params}) {
 }
 
 export default async function LevelPage({params}) {
-  const lang = await getServerLanguage()
+  const [lang, resolvedParams] = await Promise.all([getServerLanguage(), params])
   const {levels, lessonsById} = await getWineCourseData(lang)
-  const {levelId} = await params
+  const {levelId} = resolvedParams
   const level = levels.find((l) => l.id === levelId)
   if (!level) notFound()
 

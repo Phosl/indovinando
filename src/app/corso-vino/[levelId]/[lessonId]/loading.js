@@ -25,6 +25,7 @@ export default function CorsoVinoLessonLoading() {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100dvh',
+        paddingBottom: '112px',
         background: 'var(--background)',
         boxSizing: 'border-box',
       }}>
@@ -37,7 +38,7 @@ export default function CorsoVinoLessonLoading() {
           alignItems: 'center',
           gap: 12,
           padding: '12px 16px',
-          margin: '12px 0 0',
+          margin: '0',
           borderRadius: '0 0 12px 12px',
           boxSizing: 'border-box',
           position: 'relative',
@@ -76,15 +77,15 @@ export default function CorsoVinoLessonLoading() {
             textAlign: 'center',
           }}>
           <Bone w="72px" h="72px" style={{borderRadius: 999}} />
-          <Bone w="70px" h="12px" style={{borderRadius: 999}} />
+          <Bone w="86px" h="12px" style={{borderRadius: 999}} />
           <Bone w="78%" h="22px" style={{borderRadius: 6}} />
           <Bone w="90%" h="14px" style={{borderRadius: 6}} />
           <Bone w="86%" h="14px" style={{borderRadius: 6}} />
           <div
             style={{width: '100%', marginTop: 4, display: 'flex', flexDirection: 'column', gap: 8}}>
-            <Bone w="100%" h="52px" style={{borderRadius: 14}} />
-            <Bone w="100%" h="52px" style={{borderRadius: 14}} />
-            <Bone w="100%" h="52px" style={{borderRadius: 14}} />
+            <Bone w="100%" h="42px" style={{borderRadius: 10}} />
+            <Bone w="100%" h="42px" style={{borderRadius: 10}} />
+            <Bone w="72%" h="42px" style={{borderRadius: 10}} />
           </div>
         </div>
       </div>

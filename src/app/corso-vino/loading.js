@@ -17,13 +17,13 @@ function Bone({w, h, style}) {
 
 export default function CorsoVinoLoading() {
   return (
-    <main style={{padding: '0 20px 32px', maxWidth: 960, margin: '0 auto'}}>
+    <main style={{padding: '0 20px 112px', maxWidth: 960, margin: '0 auto'}}>
       {/* TopBar skeleton */}
       <div
         className="skeleton-frame"
         style={{
           display: 'grid',
-          gridTemplateColumns: '40px 1fr auto',
+          gridTemplateColumns: '40px 1fr 40px',
           alignItems: 'center',
           columnGap: 12,
           width: '100%',
@@ -33,7 +33,7 @@ export default function CorsoVinoLoading() {
         }}>
         <Bone w="40px" h="40px" style={{borderRadius: 10}} />
         <Bone w="180px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
-        <Bone w="80px" h="34px" style={{borderRadius: 12, marginLeft: 'auto'}} />
+        <Bone w="40px" h="40px" style={{borderRadius: 10, marginLeft: 'auto'}} />
       </div>
 
       {/* Hero skeleton */}
@@ -56,7 +56,7 @@ export default function CorsoVinoLoading() {
 
       {/* Level list skeleton */}
       <div style={{display: 'flex', flexDirection: 'column', gap: 12, padding: '0 16px'}}>
-        {Array.from({length: 5}).map((_, index) => (
+        {Array.from({length: 6}).map((_, index) => (
           <div
             key={index}
             className="skeleton-card"
@@ -78,6 +78,7 @@ export default function CorsoVinoLoading() {
                 {Array.from({length: 7}).map((__, dotIndex) => (
                   <Bone key={dotIndex} w="9px" h="9px" style={{borderRadius: 999}} />
                 ))}
+                <Bone w="42px" h="10px" style={{borderRadius: 6, marginLeft: 4}} />
               </div>
             </div>
             <div

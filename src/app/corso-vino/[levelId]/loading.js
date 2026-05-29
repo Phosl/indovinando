@@ -17,7 +17,7 @@ function Bone({w, h, style}) {
 
 export default function CorsoVinoLevelLoading() {
   return (
-    <main style={{padding: '0 20px 32px', maxWidth: 960, margin: '0 auto'}}>
+    <main style={{padding: '0 20px 112px', maxWidth: 960, margin: '0 auto'}}>
       {/* TopBar skeleton */}
       <div
         className="skeleton-frame"
@@ -56,7 +56,7 @@ export default function CorsoVinoLevelLoading() {
 
       {/* Lesson cards skeleton */}
       <div style={{display: 'flex', flexDirection: 'column', padding: '8px 24px 16px'}}>
-        {Array.from({length: 5}).map((_, index) => (
+        {Array.from({length: 6}).map((_, index) => (
           <div key={index} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             {index > 0 && (
               <div
