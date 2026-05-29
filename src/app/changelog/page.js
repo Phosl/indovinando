@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.25.0',
+    date: '29 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'add global bottom nav with route guards and refine game creation wizard transitions',
+    ],
+  },
+
+  {
     version: '1.24.3',
     date: '29 maggio 2026',
     label: 'Auto',
