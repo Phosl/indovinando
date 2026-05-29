@@ -143,6 +143,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  &:first-child .lessonCard {
+    border-radius: 16px 16px 0px 0px;
+  }
+  &:last-child .lessonCard {
+    border-radius: 0px 0px 16px 16px;
+  }
 }
 
 .connector {
@@ -152,20 +159,21 @@
   border-radius: 999px;
   margin: px 0;
   transition: background 0.3s;
-
+  position: absolute;
+  left: 0px;
   &.connectorDone {
     background: var(--accept-light-100);
   }
+  display: none;
 }
 
 // ── Lesson card ───────────────────────────────────────────────
 .lessonCard {
   width: 100%;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 14px;
-  padding: 14px 16px;
-  border-radius: 16px;
+  padding: 14px 0 14px 16px;
   border: 2px solid var(--button-secondary-border);
   background: var(--foreground);
   cursor: pointer;
@@ -173,40 +181,40 @@
     border-color 0.15s,
     box-shadow 0.15s;
   user-select: none;
-
+  border-radius: 0;
+  border-bottom: 0px;
   &.lessonCurrent {
     border-color: var(--selected);
-    box-shadow: 0 1px 5px rgba(131, 59, 172, 0.1);
-
-    &:hover {
-      box-shadow: 0 2px 8px rgba(131, 59, 172, 0.14);
-    }
   }
 
   &.lessonCompleted {
-    border-color: var(--accept);
-    background: var(--success-surface);
-    box-shadow: 0 1px 6px rgba(46, 199, 72, 0.14);
-
-    &:hover {
-      box-shadow: 0 2px 10px rgba(46, 199, 72, 0.2);
-    }
   }
 
   &.lessonNeedsReview {
-    border-color: #f59e0b;
     background: #fff4db;
-    box-shadow: 0 1px 6px rgba(245, 158, 11, 0.14);
-
-    &:hover {
-      box-shadow: 0 2px 10px rgba(245, 158, 11, 0.2);
-    }
   }
 
   &.lessonLocked {
     opacity: 0.5;
     cursor: default;
   }
+}
+
+.cardArrowRail {
+  width: 52px;
+  flex: 0 0 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+}
+
+.cardArrowIcon {
+  color: var(--primary-text);
+}
+
+.lessonCurrent .cardArrowIcon {
+  color: var(--selected);
 }
 
 .lessonIcon {
@@ -248,6 +256,10 @@
   align-items: center;
   gap: 8px;
   justify-content: space-between;
+  span {
+    align-items: center;
+    display: flex;
+  }
 }
 
 .lessonOrder {
@@ -261,19 +273,29 @@
 .lessonScore {
   font-size: 0.7rem;
   font-weight: 900;
-  color: var(--accept-dark);
-  background: var(--success-surface);
+  color: var(--success-text);
+  background: var(--success-100);
   border-radius: 999px;
   padding: 1px 7px;
 }
 
 .passBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 0.68rem;
-  font-weight: 900;
-  color: #fff;
-  background: #58cc02;
+  font-weight: 700;
+  color: var(--success-text);
+  background: var(--success-100);
   border-radius: 999px;
   padding: 1px 8px;
+}
+
+.passBadgeIcon {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .failBadge {
@@ -294,13 +316,11 @@
   font-weight: 900;
   color: #fff;
   background: var(--selected);
-  border: 2px solid var(--selected-dark);
   border-radius: 999px;
   padding: 5px 12px;
   text-transform: none;
   letter-spacing: 0.02em;
   flex-shrink: 0;
-  box-shadow: 0 1px 0 var(--selected-dark);
   line-height: 1;
 }
 
@@ -308,7 +328,6 @@
   background: #f59e0b;
   border-color: #d97706;
   color: #fff;
-  box-shadow: 0 1px 0 #d97706;
 }
 
 .lessonTitle {

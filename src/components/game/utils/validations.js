@@ -19,6 +19,7 @@ export const isBottleComplete = (bottle, questionsLength) => {
     bottle.name &&
     bottle.producer &&
     bottle.year &&
+    bottle.wineType &&
     Array.isArray(bottle.answers) &&
     bottle.answers.length === questionsLength &&
     bottle.answers.every((a) => a !== null && a !== undefined)
@@ -68,11 +69,13 @@ export const validateBottleForm = (
   bottleName,
   producer,
   year,
+  wineType,
   currentAnswers,
   questionsLength,
   messages,
 ) => {
-  const isBottleMetaMissing = !bottleName?.trim() || !producer?.trim() || !year?.trim()
+  const isBottleMetaMissing =
+    !bottleName?.trim() || !producer?.trim() || !year?.trim() || !wineType?.trim()
 
   if (isBottleMetaMissing) {
     throw new Error(

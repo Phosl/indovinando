@@ -179,7 +179,8 @@ export default function LiveSessionClient({
     previousPlayerIdsRef.current = new Set()
     setRecentJoinIds([])
 
-    const pollPlayers = setInterval(async () => {
+    const pollPlayersNow = async () => {
+      if (document.hidden) return
       try {
         const response = await fetch('/api/live/session/players-count', {
           method: 'POST',
@@ -220,9 +221,19 @@ export default function LiveSessionClient({
       } catch {
         // Ignore transient polling errors and try again on next tick.
       }
-    }, 1000) // Poll ogni 1 secondo
+    }
 
-    return () => clearInterval(pollPlayers)
+    const handleVisibilityChange = () => {
+      if (!document.hidden) pollPlayersNow()
+    }
+
+    const pollPlayers = setInterval(pollPlayersNow, 1000) // Poll ogni 1 secondo
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      clearInterval(pollPlayers)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [sessionId])
 
   useEffect(

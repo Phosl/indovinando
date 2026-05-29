@@ -26,7 +26,7 @@
     "welcome": "Benvenuto",
     "versionLabel": "Versione Beta",
     "createQuickGame": "⚡ Crea gioco rapido",
-    "createGame": "Crea gioco",
+    "createGame": "Crea Degustazione",
     "profile": "Profilo",
     "admin": "⚙️ Admin",
     "newLabel": "Novità",
@@ -34,8 +34,8 @@
     "wineCourseDesc": "Impara il vino passo dopo passo · gratis 🎓",
     "copyright": "Copyright",
     "changelog": "Changelog",
-    "yourGames": "I tuoi giochi",
-    "myGames": "I miei giochi",
+    "yourGames": "I tuoi quiz",
+    "myGames": "Degustazioni",
     "play": "Gioca",
     "status": "Stato",
     "published": "Pubblicato",
@@ -45,12 +45,12 @@
     "playLive": "Gioca Live",
     "enoteca": "Enoteca",
     "printCard": "Stampa ",
-    "emptyState": "Non hai ancora creato giochi. Inizia ora!",
-    "emptyStateFirstGame": "Non hai ancora creato giochi. Crea il tuo primo gioco per iniziare a giocare.",
+    "emptyState": "Non hai ancora creato quiz. Inizia ora!",
+    "emptyStateFirstGame": "Non hai ancora creato quiz. Crea il tuo primo gioco per iniziare a giocare.",
     "createFirstGame": "Crea il tuo primo gioco",
-    "history": "📜 Storico partite",
+    "history": "Storico partite",
     "storico": {
-      "title": "📜 Storico partite",
+      "title": "Storico partite",
       "tabLabel": "Storico",
       "subtitle": "Tutte le sessioni live che hai ospitato.",
       "empty": "Nessuna partita ancora. Crea un gioco e ospita la tua prima sessione!",
@@ -185,7 +185,7 @@
       "fullLeaderboard": "Classifica completa",
       "backToDashboard": "← Torna alla dashboard",
       "exitToHome": "Esci",
-      "backToMyGames": "I miei giochi",
+      "backToMyGames": "I miei quiz",
       "register": "Registrati"
     }
   },
@@ -242,14 +242,14 @@
     "openAppGuide": "Apri guida app",
     "chooseAvatar": "Scegli il tuo avatar",
     "yourStats": "Le tue statistiche",
-    "gamesCreated": "Giochi creati",
+    "gamesCreated": "quiz creati",
     "lessonsCompleted": "Lezioni completate",
     "levelsCompleted": "Livelli completati",
     "currentLevel": "Capitolo corso",
     "changelog": "Changelog",
     "changelogDesc": "Vedi la cronologia completa degli aggiornamenti e delle nuove funzionalità.",
-    "viewChangelog": "📋 Vedi changelog",
-    "logoutBtn": "🚪 Esci",
+    "viewChangelog": "Vedi changelog",
+    "logoutBtn": "Esci",
     "installAppBtn": "Aggiungi come app",
     "installAppNote": "Installala su iPhone o Android per aprirla dalla home.",
     "installAppTitle": "Aggiungi Indovinando alla home",
@@ -312,7 +312,7 @@
           "Si passa alla bottiglia successiva fino alla classifica finale."
         ],
         "ctaHref": "/miei-giochi",
-        "ctaLabel": "Vai ai tuoi giochi"
+        "ctaLabel": "Vai ai tuoi quiz"
       },
       {
         "emoji": "⚡",
@@ -336,7 +336,7 @@
           "Ideale per wine bar, corsi e degustazioni private."
         ],
         "ctaHref": "/dashboard",
-        "ctaLabel": "Vai ai tuoi giochi"
+        "ctaLabel": "Vai ai tuoi quiz"
       },
       {
         "emoji": "🛰️",

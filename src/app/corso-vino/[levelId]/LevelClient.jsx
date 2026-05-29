@@ -3,6 +3,7 @@
 import {useMemo} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
+import Icon from '@/components/Icon'
 import {useWineCourseProgress} from '../hooks/useWineCourseProgress'
 import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
 import {useT} from '@/lib/i18n/useT'
@@ -82,7 +83,7 @@ export default function LevelClient({level, lessons, levels = []}) {
                         : styles.lessonLocked
                 }`}
                 onClick={() => router.push(`/corso-vino/${level.id}/${lesson.id}`)}>
-                <div className={styles.lessonIcon}>{isCompleted ? '✓' : lesson.emoji}</div>
+                {/* <div className={styles.lessonIcon}>{isCompleted ? '✓' : lesson.emoji}</div> */}
                 <div className={styles.lessonBody}>
                   <div className={styles.lessonMeta}>
                     <span className={styles.lessonOrder}>
@@ -95,7 +96,7 @@ export default function LevelClient({level, lessons, levels = []}) {
                           {lp.score}/{lp.maxScore > 0 ? lp.maxScore : lesson.questions.length}
                         </span>
                       )}
-                      {hasPassed === true && <span className={styles.passBadge}>✓ Superato</span>}
+                      {hasPassed === true && <span className={styles.passBadge}>Superato</span>}
                     </span>
                   </div>
                   <div className={styles.lessonTitleRow}>
@@ -106,6 +107,9 @@ export default function LevelClient({level, lessons, levels = []}) {
                       </span>
                     )}
                   </div>
+                </div>
+                <div className={styles.cardArrowRail} aria-hidden="true">
+                  <Icon name="forward" size={24} className={styles.cardArrowIcon} />
                 </div>
               </div>
             </div>

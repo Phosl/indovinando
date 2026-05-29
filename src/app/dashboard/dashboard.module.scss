@@ -1,12 +1,70 @@
+.infoModalList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.infoModalList li {
+  font-size: 1rem;
+  font-weight: 500;
+}
+.infoModalList a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  transition: color 0.15s;
+}
+.infoModalList a:hover {
+  color: var(--primary);
+}
+.infoFabWrapper {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1200;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  pointer-events: none;
+}
+
+.infoFab {
+  pointer-events: auto;
+  background: var(--foreground);
+  color: var(--text-primary);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 999px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 12px 22px;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    box-shadow 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.infoFab:hover {
+  background: var(--button-secondary-hover);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.13);
+}
+
+.infoModalLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: stretch;
+  margin-top: 10px;
+}
 .dashboard {
   width: 100%;
   min-height: 100vh;
   background: var(--background);
   padding: 24px;
-  background:
-    radial-gradient(circle at 20% 80%, rgba(176, 65, 137, 0.12), transparent 42%),
-    radial-gradient(circle at -80% 100%, rgba(126, 45, 97, 0.18), transparent 38%),
-    var(--foreground);
 }
 
 .container {
@@ -95,125 +153,6 @@
   flex-direction: column;
   gap: 16px;
 }
-
-.menuCard {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 16px 20px;
-  background: var(--foreground);
-  border: 2px solid var(--button-secondary-border);
-  border-radius: 14px;
-  box-shadow: 0px 4px 0px 0px var(--gray-light);
-  text-decoration: none;
-  color: var(--text-primary);
-  transition:
-    box-shadow 0.12s,
-    transform 0.1s;
-  cursor: pointer;
-
-  &:hover {
-    box-shadow: 0px 6px 0px 0px var(--gray-light);
-    transform: translateY(-1px);
-  }
-
-  &:active {
-    box-shadow: none;
-    transform: translateY(4px);
-  }
-}
-
-.menuCardGreen {
-  background: rgba(46, 199, 72, 0.1);
-  border-color: var(--accept-dark);
-  box-shadow: 0px 4px 0px 0px var(--accept-dark);
-
-  .menuCardLabel {
-    color: var(--accept-dark);
-  }
-
-  &:hover {
-    background: rgba(46, 199, 72, 0.18);
-    box-shadow: 0px 6px 0px 0px var(--accept-dark);
-  }
-
-  &:active {
-    box-shadow: none;
-  }
-}
-
-.menuCardTertiary {
-  background: rgba(28, 176, 246, 0.1);
-  border-color: var(--button-tertiary-dark);
-  box-shadow: 0px 4px 0px 0px var(--button-tertiary-dark);
-
-  .menuCardLabel {
-    color: var(--button-tertiary-dark);
-  }
-
-  &:hover {
-    background: rgba(28, 176, 246, 0.18);
-    box-shadow: 0px 6px 0px 0px var(--button-tertiary-dark);
-  }
-
-  &:active {
-    box-shadow: none;
-  }
-}
-
-.menuCardWine {
-  background: rgba(131, 59, 172, 0.08);
-  border-color: var(--selected);
-  box-shadow: 0px 4px 0px 0px var(--selected-dark);
-  position: relative;
-  overflow: hidden;
-
-  .menuCardLabel {
-    color: var(--selected-dark);
-  }
-
-  &:hover {
-    background: rgba(131, 59, 172, 0.15);
-    box-shadow: 0px 6px 0px 0px var(--selected-dark);
-  }
-
-  &:active {
-    box-shadow: none;
-  }
-}
-
-.menuCardBadge {
-  position: absolute;
-  top: 14px;
-  right: -22px;
-  width: 150px;
-  text-align: center;
-  transform: rotate(32deg);
-  background: var(--selected);
-  color: #fff;
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 4px 0;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.4);
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 2px 8px rgba(107, 47, 142, 0.25);
-  pointer-events: none;
-}
-
-.menuCardEmoji {
-  font-size: 2rem;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
 .menuCardLabel {
-  font-size: 16px;
-  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  text-align: center;
 }

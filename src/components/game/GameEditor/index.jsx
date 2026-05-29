@@ -4,45 +4,65 @@
 // ...existing code...
 // Modale introduttiva per lo step questionario
 import modalStyles from './QuestionnaireIntroModal.module.scss'
+import {Button} from '@/components/ui/Button'
+import Icon from '@/components/Icon'
 function QuestionnaireIntroModal({isOpen, onClose, onDisable, isQuickCreate, questions}) {
   if (!isOpen) return null
   return (
     <div className={modalStyles.modalOverlay}>
       <div className={modalStyles.modalContent}>
-        <h2 style={{marginBottom: 12}}>
+        <h2 className={modalStyles.modalTitle}>
           {isQuickCreate ? 'Questionario precompilato' : 'Crea il questionario'}
         </h2>
-        <p style={{marginBottom: 16}}>
+        <p className={modalStyles.modalDescription}>
           {isQuickCreate
             ? 'Abbiamo preparato già il questionario con 5 domande. Puoi modificare le risposte a piacere.'
             : 'Adesso creiamo il questionario: aggiungi le domande e le risposte.'}
         </p>
         {isQuickCreate && questions?.length > 0 && (
-          <div
-            style={{
-              textAlign: 'left',
-              margin: '0 auto 16px',
-              background: '#f7f7f7',
-              borderRadius: 8,
-              padding: 12,
-            }}>
+          <div className={modalStyles.quickListBox}>
             <b>Domande predefinite:</b>
-            <ul style={{margin: '8px 0 0 16px', padding: 0}}>
+            <ul className={modalStyles.quickList}>
               {questions.map((q, i) => (
-                <li key={i} style={{fontSize: 15}}>
+                <li key={i} className={modalStyles.quickListItem}>
                   {q.text || `Domanda ${i + 1}`}
                 </li>
               ))}
             </ul>
           </div>
         )}
-        <div style={{display: 'flex', gap: 8, justifyContent: 'center', marginTop: 12}}>
-          <button className="btn primary" onClick={onClose}>
+        <div className={modalStyles.buttonContainer}>
+          <Button variant="success" onClick={onClose}>
             Ho capito
-          </button>
-          <button className="btn secondary" onClick={onDisable}>
+          </Button>
+
+          <Button variant="neutral" size="small" textOnly onClick={onDisable}>
             Non mostrare più
-          </button>
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function BottlesIntroModal({isOpen, onClose, onDisable}) {
+  if (!isOpen) return null
+
+  return (
+    <div className={modalStyles.modalOverlay}>
+      <div className={modalStyles.modalContent}>
+        <h2 className={modalStyles.modalTitle}>Aggiungi bottiglia</h2>
+        <p className={modalStyles.modalDescription}>
+          Inserisci i dettagli della bottiglia, poi scegli il tipo vino e completa le risposte
+          corrette per ogni domanda.
+        </p>
+        <div className={modalStyles.buttonContainer}>
+          <Button variant="success" onClick={onClose}>
+            Ho capito
+          </Button>
+          <Button variant="neutral" size="small" textOnly onClick={onDisable}>
+            Non mostrare più
+          </Button>
         </div>
       </div>
     </div>
@@ -58,12 +78,7 @@ import GameStepsBreadcrumbs from '../GameStepsBreadcrumbs'
 import BottlesList from '../BottlesList'
 import BottleModal from '../BottleModal'
 import TopBar from '@/components/TopBar'
-import {
-  validateGameName,
-  validateQuestionnaire,
-  validateBottles,
-  validateBottleForm,
-} from '../utils/validations'
+import {validateGameName, validateQuestionnaire, validateBottleForm} from '../utils/validations'
 import {
   MIN_STEP,
   MAX_STEP,
@@ -101,6 +116,9 @@ const StepOneSection = memo(function StepOneSection({
   editorText,
   gameName,
   onGameNameChange,
+  avatarOptions,
+  selectedAvatarIndex,
+  onAvatarChange,
   onContinue,
 }) {
   return (
@@ -112,9 +130,28 @@ const StepOneSection = memo(function StepOneSection({
         value={gameName}
         onChange={(e) => onGameNameChange(e.target.value)}
       />
+      {avatarOptions.length > 0 && (
+        <div className={styles.avatarPicker}>
+          <p className={styles.avatarPickerTitle}>Scegli immagine degustazione</p>
+          <div className={styles.avatarGrid}>
+            {avatarOptions.map((avatarPath, avatarIndex) => (
+              <button
+                key={avatarPath}
+                type="button"
+                className={`${styles.avatarOption} ${
+                  selectedAvatarIndex === avatarIndex ? styles.avatarOptionActive : ''
+                }`}
+                onClick={() => onAvatarChange(avatarIndex)}
+                aria-pressed={selectedAvatarIndex === avatarIndex}>
+                <img src={avatarPath} alt="" aria-hidden="true" />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className={styles.buttonRow}>
-        <button className="btn primary" onClick={onContinue}>
+        <button className="btn success" onClick={onContinue}>
           {editorText.continue}
         </button>
       </div>
@@ -135,40 +172,12 @@ const StepTwoSection = memo(function StepTwoSection({
   return (
     <div className={styles.section}>
       <div className={styles.sectionHeader}>
-        <h3 className={styles.sectionTitle} style={{margin: 0}}>
-          {editorText.step2Title}
-        </h3>
+        <h3 className={styles.sectionTitle}>{editorText.step2Title}</h3>
         <button
           type="button"
           aria-label="Guida questionario"
           onClick={onShowIntro}
-          style={{
-            background: 'none',
-            border: 'none',
-            padding: 0,
-            margin: 0,
-            cursor: 'pointer',
-            outline: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 32,
-            height: 32,
-            borderRadius: '50%',
-            border: '1.5px solid #bbb',
-            fontWeight: 700,
-            fontSize: 18,
-            color: '#555',
-            transition: 'border-color 0.2s,color 0.2s',
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.borderColor = '#888'
-            e.currentTarget.style.color = '#222'
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.borderColor = '#bbb'
-            e.currentTarget.style.color = '#555'
-          }}>
+          className={styles.infoButton}>
           ?
         </button>
       </div>
@@ -181,13 +190,17 @@ const StepTwoSection = memo(function StepTwoSection({
 
       <div className={styles.buttonRow}>
         <button
-          className="btn primary"
+          className={`btn neutral ${styles.backArrowBtn}`}
+          onClick={onBack}
+          aria-label={editorText.back}
+          title={editorText.back}>
+          <Icon name="back" size={24} />
+        </button>
+        <button
+          className="btn success"
           onClick={onSaveQuestionnaire}
           disabled={questionDraft.length === 0}>
           {editorText.saveQuestionnaire}
-        </button>
-        <button className="btn secondary" onClick={onBack}>
-          {editorText.back}
         </button>
       </div>
     </div>
@@ -205,16 +218,20 @@ const StepThreeSection = memo(function StepThreeSection({
     <div className={styles.section}>
       <h3 className={styles.sectionTitle}>{editorText.bridgeTitle}</h3>
       <div className={styles.bridgeRow}>
-        <button className="btn  primary" onClick={onInsertResults}>
-          {editorText.bridgeInsertResults}
-        </button>
-        <button className="btn secondary" onClick={onSaveAndPrint} disabled={isSaving}>
+        <button className="btn neutral" onClick={onSaveAndPrint} disabled={isSaving}>
           {isSaving ? editorText.saving : editorText.saveAndPrint}
+        </button>
+        <button className="btn success" onClick={onInsertResults}>
+          {editorText.bridgeInsertResults}
         </button>
       </div>
       <div className={styles.buttonRow}>
-        <button className="btn secondary" onClick={onBack}>
-          {editorText.back}
+        <button
+          className={`btn neutral ${styles.backArrowBtn}`}
+          onClick={onBack}
+          aria-label={editorText.back}
+          title={editorText.back}>
+          <Icon name="back" size={24} />
         </button>
       </div>
     </div>
@@ -228,6 +245,7 @@ const StepFourSection = memo(function StepFourSection({
   onEditBottle,
   onNewBottle,
   onDeleteBottle,
+  onShowInfo,
   onBack,
   onPublish,
   isSaving,
@@ -235,6 +253,16 @@ const StepFourSection = memo(function StepFourSection({
 }) {
   return (
     <div className={styles.section}>
+      <div className={styles.sectionHeader}>
+        <h3 className={styles.sectionTitle}>{editorText.step4Title || 'Aggiungi bottiglia'}</h3>
+        <button
+          type="button"
+          aria-label="Guida bottiglie"
+          onClick={onShowInfo}
+          className={styles.infoButton}>
+          ?
+        </button>
+      </div>
       <BottlesList
         bottles={bottles}
         questions={questions}
@@ -244,18 +272,20 @@ const StepFourSection = memo(function StepFourSection({
       />
 
       <div className={styles.buttonRow}>
-        <button className="btn secondary" onClick={onBack}>
-          {editorText.back}
+        <button
+          className={`btn neutral ${styles.backArrowBtn}`}
+          onClick={onBack}
+          aria-label={editorText.back}
+          title={editorText.back}>
+          <Icon name="back" size={24} />
         </button>
-        {bottles.length > 0 && (
-          <button className="btn primary" onClick={onPublish} disabled={isSaving}>
-            {isSaving
-              ? editorText.saving
-              : isEditMode
-                ? editorText.updateGame
-                : editorText.publishGame}
-          </button>
-        )}
+        <button className="btn success" onClick={onPublish} disabled={isSaving}>
+          {isSaving
+            ? editorText.saving
+            : isEditMode
+              ? editorText.updateGame
+              : editorText.publishGame}
+        </button>
       </div>
     </div>
   )
@@ -270,6 +300,7 @@ export default function GameEditor({
   userId,
   onGameSaved,
   initialGameName,
+  avatarOptions = [],
   isQuickCreate = false,
   onBack,
 }) {
@@ -284,10 +315,12 @@ export default function GameEditor({
 
   const [gameName, setGameName] = useState(DEFAULT_GAME_NAME)
   const [questionDraft, setQuestionDraft] = useState([])
+  const [selectedAvatarIndex, setSelectedAvatarIndex] = useState(0)
 
   const [bottleName, setBottleName] = useState('')
   const [producer, setProducer] = useState('')
   const [year, setYear] = useState('')
+  const [wineType, setWineType] = useState('')
 
   const [templateQuestions, setTemplateQuestions] = useState([])
   const [currentAnswers, setCurrentAnswers] = useState([])
@@ -297,6 +330,7 @@ export default function GameEditor({
   const [isModalOpen, setIsModalOpen] = useState(false)
   // Stato per la modale intro questionario
   const [showQuestionnaireIntro, setShowQuestionnaireIntro] = useState(false)
+  const [showBottlesIntro, setShowBottlesIntro] = useState(false)
   // Mostra la modale intro solo la prima volta che si entra nello step 2, se non disabilitata
   useEffect(() => {
     if (step === 2) {
@@ -307,9 +341,23 @@ export default function GameEditor({
     }
   }, [step])
 
+  useEffect(() => {
+    if (step === 4) {
+      const disabled = window?.localStorage?.getItem('hideBottlesIntro') === '1'
+      if (!disabled) setShowBottlesIntro(true)
+    } else {
+      setShowBottlesIntro(false)
+    }
+  }, [step])
+
   function handleDisableIntro() {
     window?.localStorage?.setItem('hideQuestionnaireIntro', '1')
     setShowQuestionnaireIntro(false)
+  }
+
+  function handleDisableBottlesIntro() {
+    window?.localStorage?.setItem('hideBottlesIntro', '1')
+    setShowBottlesIntro(false)
   }
   const [bottleModalResetToken, setBottleModalResetToken] = useState(0)
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false)
@@ -367,6 +415,7 @@ export default function GameEditor({
 
   // Track if initialization has already run to prevent resetting on deps change
   const initializationDoneRef = useRef(false)
+  const avatarInitializedRef = useRef(false)
 
   // Initialize from props if in edit mode
   useEffect(() => {
@@ -408,6 +457,7 @@ export default function GameEditor({
               name: b.name,
               producer: b.producer,
               year: b.year,
+              wineType: b.wine_type || '',
               answers,
             }
           })
@@ -436,6 +486,18 @@ export default function GameEditor({
       // Step already initialized to 2 via useState — no override needed here
     }
   }, [isEditMode, initialGame, isQuickCreate, initialQuestions, initialGameName])
+
+  useEffect(() => {
+    if (avatarInitializedRef.current) return
+    if (avatarOptions.length === 0) return
+
+    const nextIndex =
+      Number.isInteger(initialGame?.cover_index) && initialGame.cover_index >= 0
+        ? Math.min(initialGame.cover_index, avatarOptions.length - 1)
+        : 0
+    setSelectedAvatarIndex(nextIndex)
+    avatarInitializedRef.current = true
+  }, [avatarOptions, initialGame?.cover_index])
 
   // Resolve userId if not provided (for create mode)
   useEffect(() => {
@@ -619,6 +681,7 @@ export default function GameEditor({
               name: gameName.trim(),
               questions: templateQuestions,
               bottles: [],
+              coverIndex: avatarOptions.length > 0 ? selectedAvatarIndex : null,
             }),
           })
 
@@ -657,6 +720,7 @@ export default function GameEditor({
     setBottleName(selected.name ?? '')
     setProducer(selected.producer ?? '')
     setYear(selected.year ?? '')
+    setWineType(selected.wineType ?? '')
     const normalizedAnswers = templateQuestions.map((question, qIndex) => {
       const candidate = selected.answers?.[qIndex]
       const isValid =
@@ -673,6 +737,7 @@ export default function GameEditor({
     setBottleName('')
     setProducer('')
     setYear('')
+    setWineType('')
     setCurrentAnswers(Array(templateQuestions.length).fill(null))
     setIsModalOpen(true)
   }
@@ -683,6 +748,7 @@ export default function GameEditor({
         bottleName,
         producer,
         year,
+        wineType,
         currentAnswers,
         templateQuestions.length,
         alertMessages,
@@ -699,6 +765,7 @@ export default function GameEditor({
           name: bottleName.trim(),
           producer: producer.trim(),
           year: year.trim(),
+          wineType: wineType.trim(),
           answers: [...currentAnswers],
         },
       ])
@@ -709,6 +776,7 @@ export default function GameEditor({
           name: bottleName.trim(),
           producer: producer.trim(),
           year: year.trim(),
+          wineType: wineType.trim(),
           answers: [...currentAnswers],
         }
         return updated
@@ -725,6 +793,7 @@ export default function GameEditor({
     setBottleName('')
     setProducer('')
     setYear('')
+    setWineType('')
     setCurrentAnswers(Array(templateQuestions.length).fill(null))
   }
 
@@ -734,6 +803,7 @@ export default function GameEditor({
     setBottleName('')
     setProducer('')
     setYear('')
+    setWineType('')
     setCurrentAnswers(Array(templateQuestions.length).fill(null))
   }
 
@@ -762,6 +832,9 @@ export default function GameEditor({
         editorText={editorText}
         gameName={gameName}
         onGameNameChange={setGameName}
+        avatarOptions={avatarOptions}
+        selectedAvatarIndex={selectedAvatarIndex}
+        onAvatarChange={setSelectedAvatarIndex}
         onContinue={() => goToStep(2)}
       />
     )
@@ -797,6 +870,7 @@ export default function GameEditor({
         onEditBottle={selectBottle}
         onNewBottle={startNewBottle}
         onDeleteBottle={deleteBottle}
+        onShowInfo={() => setShowBottlesIntro(true)}
         onBack={() => goToStep(3)}
         onPublish={publishGame}
         isSaving={isSaving}
@@ -811,7 +885,6 @@ export default function GameEditor({
     try {
       validateGameName(gameName, alertMessages)
       validateQuestionnaire(templateQuestions, alertMessages)
-      validateBottles(bottles, templateQuestions, alertMessages)
 
       if (!resolvedUserId) {
         throw new Error(alertMessages.USER_NOT_AUTHENTICATED)
@@ -831,6 +904,7 @@ export default function GameEditor({
 
     try {
       const desiredGameName = gameName.trim()
+      const nextStatus = bottles.length > 0 ? 'published' : 'draft'
       setSavePhase('prepare-payloads')
       const routeMode = isEditMode ? 'edit' : 'create'
       const generatedGameId = gameId || crypto.randomUUID()
@@ -847,6 +921,8 @@ export default function GameEditor({
               name: desiredGameName,
               questions: templateQuestions,
               bottles,
+              status: nextStatus,
+              coverIndex: avatarOptions.length > 0 ? selectedAvatarIndex : null,
             }),
           })
 
@@ -916,6 +992,11 @@ export default function GameEditor({
         isQuickCreate={isQuickCreate}
         questions={questionDraft}
       />
+      <BottlesIntroModal
+        isOpen={showBottlesIntro}
+        onClose={() => setShowBottlesIntro(false)}
+        onDisable={handleDisableBottlesIntro}
+      />
 
       <BottleModal
         isOpen={isModalOpen}
@@ -924,11 +1005,13 @@ export default function GameEditor({
         bottleName={bottleName}
         producer={producer}
         year={year}
+        wineType={wineType}
         questions={templateQuestions}
         currentAnswers={currentAnswers}
         onBottleNameChange={setBottleName}
         onProducerChange={setProducer}
         onYearChange={setYear}
+        onWineTypeChange={setWineType}
         onAnswerChange={handleAnswerChange}
         onSave={concludeBottle}
         onSaveAndAddAnother={() => concludeBottle(true)}

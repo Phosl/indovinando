@@ -4,6 +4,7 @@ import {useState, useEffect, useMemo} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseAnonClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
+import Icon from '@/components/Icon'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
 import styles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
@@ -172,13 +173,15 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
                   <div className={styles.summaryAnswer}>
                     {answer?.is_correct ? (
                       <span className={styles.summaryCorrect}>
-                        ✅ {correctOpt?.text}
+                        <Icon name="checkCorrect" size={24} className={xStyles.answerIcon} />
+                        {correctOpt?.text}
                         <span className={styles.summaryPoints}>+{answer.points ?? 0}</span>
                       </span>
                     ) : (
                       <>
                         <span className={styles.summaryWrong}>
-                          ❌ {selectedOpt?.text ?? t.notAnswered}
+                          <Icon name="checkWrong" size={24} className={xStyles.answerIcon} />
+                          {selectedOpt?.text ?? t.notAnswered}
                         </span>
                         <span className={styles.summaryCorrectHint}>
                           {t.correctAnswer} {correctOpt?.text ?? '—'}

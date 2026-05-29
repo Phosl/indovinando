@@ -11,6 +11,7 @@ import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {pickLangText} from '@/lib/i18n/dictionaries'
 import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
 import TopBar from '@/components/TopBar'
+import Icon from '@/components/Icon'
 
 const LESSON_UI_DICTIONARY = {
   it: {
@@ -480,12 +481,13 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
                     <div className={pStyles.summaryAnswer}>
                       {correct ? (
                         <span className={pStyles.summaryCorrect}>
-                          ✅ {q.options.find((o) => o.id === ans?.selectedId)?.text}
+                          <Icon name="checkCorrectWhite" size={24} className={xStyles.answerIcon} />{' '}
+                          {q.options.find((o) => o.id === ans?.selectedId)?.text}
                         </span>
                       ) : (
                         <>
                           <span className={pStyles.summaryWrong}>
-                            ❌{' '}
+                            <Icon name="checkWrongWhite" size={24} className={xStyles.answerIcon} />{' '}
                             {q.options.find((o) => o.id === ans?.selectedId)?.text ?? t.notAnswered}
                           </span>
                           <span className={pStyles.summaryCorrectHint}>

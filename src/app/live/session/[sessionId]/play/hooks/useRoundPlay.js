@@ -1,4 +1,5 @@
 import {useState, useEffect, useCallback, useMemo, useRef} from 'react'
+import {runVisiblePoll} from './_polling'
 
 const SLIDE_TRANSITION_MS = 220
 /**
@@ -65,7 +66,7 @@ export function useRoundPlay({
     if (currentBottle?._correctAnswers) {
       setCorrectOptionByQuestion(currentBottle._correctAnswers)
     }
-  }, [currentBottle?.id])
+  }, [currentBottle?._correctAnswers, currentBottle?.id])
 
   // ── Reset all round state (called on bottle advance or realtime sync) ──────
   const resetRoundState = useCallback(
@@ -127,19 +128,20 @@ export function useRoundPlay({
       const res = await fetch('/api/live/advance-bottle', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({sessionId}),
+        body: JSON.stringify({sessionId, currentBottleIndex}),
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
         throw new Error(data?.error || 'Failed to advance bottle')
       }
-      const {nextIndex} = await res.json()
+      const {nextIndex, pending} = await res.json()
+      if (pending) return
       resetRoundState(nextIndex, 'waiting_answers')
     } catch (err) {
       console.error('Errore in advanceToNextBottleOrFinish:', err)
       setShowBottleTransition(false)
     }
-  }, [sessionId, resetRoundState])
+  }, [sessionId, currentBottleIndex, resetRoundState])
 
   // ── Realtime answer insert handler (consumed by useLiveRealtime) ───────────
   // NOTE: We intentionally ignore payload.new because Supabase RLS may strip it
@@ -201,8 +203,7 @@ export function useRoundPlay({
     const onResultsScreen = resultsOpenedBottleIndex === currentBottleIndex
     if (!onResultsScreen || allPlayersCompletedThisRound) return
     handleAnswerInsert()
-    const interval = setInterval(handleAnswerInsert, 2000)
-    return () => clearInterval(interval)
+    return runVisiblePoll(handleAnswerInsert, 2000)
   }, [
     resultsOpenedBottleIndex,
     currentBottleIndex,
@@ -214,8 +215,7 @@ export function useRoundPlay({
   useEffect(() => {
     if (!clickedReady || allPlayersCompletedThisRound) return
     handleAnswerInsert()
-    const interval = setInterval(handleAnswerInsert, 2000)
-    return () => clearInterval(interval)
+    return runVisiblePoll(handleAnswerInsert, 2000)
   }, [clickedReady, allPlayersCompletedThisRound, handleAnswerInsert])
 
   // ── Answer interaction handlers ────────────────────────────────────────────
@@ -227,7 +227,7 @@ export function useRoundPlay({
   }, [])
 
   const persistAnswerWithRetry = useCallback(
-    async ({questionId, selectedOptionId, isCorrect, points}) => {
+    async ({questionId, selectedOptionId}) => {
       if (!playerData?.id) return true
 
       const saveKey = `${playerData.id}:${questionId}`
@@ -236,8 +236,7 @@ export function useRoundPlay({
         playerId: playerData.id,
         questionId,
         selectedOptionId,
-        isCorrect,
-        points,
+        currentBottleIndex,
       }
 
       pendingAnswerSavesRef.current.set(saveKey, payload)
@@ -256,6 +255,10 @@ export function useRoundPlay({
           }
 
           const data = await res.json().catch(() => ({}))
+          if (res.status === 409 && data?.stale) {
+            pendingAnswerSavesRef.current.delete(saveKey)
+            return false
+          }
           if (res.status === 403 && data?.error === 'Player not found in session') {
             pendingAnswerSavesRef.current.clear()
             if (typeof onPlayerRemoved === 'function') onPlayerRemoved()
@@ -274,7 +277,7 @@ export function useRoundPlay({
 
       return false
     },
-    [onPlayerRemoved, sessionId, playerData?.id],
+    [currentBottleIndex, onPlayerRemoved, sessionId, playerData?.id],
   )
 
   // Retry unsaved answers in the background. This is essential on unstable
@@ -288,8 +291,6 @@ export function useRoundPlay({
         await persistAnswerWithRetry({
           questionId: answer.questionId,
           selectedOptionId: answer.selectedOptionId,
-          isCorrect: answer.isCorrect,
-          points: answer.points,
         })
       }
     }
@@ -352,8 +353,6 @@ export function useRoundPlay({
         await persistAnswerWithRetry({
           questionId,
           selectedOptionId: optionId,
-          isCorrect,
-          points,
         })
       } catch (err) {
         console.error('Error evaluating answer:', err?.message ?? err)
@@ -367,7 +366,6 @@ export function useRoundPlay({
       checkedQuestions,
       isCheckingAnswer,
       correctOptionByQuestion,
-      sessionId,
       playSound,
       persistAnswerWithRetry,
     ],

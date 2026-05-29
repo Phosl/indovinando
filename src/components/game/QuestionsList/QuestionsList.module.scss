@@ -36,36 +36,39 @@
 .card {
   border: 2px solid var(--button-secondary-border);
   border-radius: 12px;
-  padding: 20px;
   background: var(--foreground);
-  box-shadow: 0px 4px 0px 0px var(--gray-light);
+  box-shadow: 0px 0px 0px 0px var(--gray-light);
   cursor: pointer;
   transition: all 0.15s;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0px 6px 0px 0px var(--gray-light);
-  }
+  flex-direction: row;
+  gap: 0;
+  overflow: hidden;
 
   &.incomplete {
     opacity: 0.7;
     border-color: #ff9800;
-
-    .status {
-      color: #ff9800;
-    }
   }
 
   &.complete {
     border-color: var(--tertiary);
-
-    .status {
-      color: var(--accept);
-    }
   }
+}
+
+.questionIndex {
+  color: var(--tertiary-text);
+  background: var(--tertiary-100);
+  padding: 16px;
+  font-weight: 900;
+  font-size: 20px;
+}
+
+.cardInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px;
+  min-width: 0;
 }
 
 .cardHeader {
@@ -83,18 +86,12 @@
   }
 }
 
-.status {
-  font-size: 1.2rem;
-  font-weight: bold;
-  flex-shrink: 0;
-}
-
 .questionText {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: var(--text-primary);
-  font-weight: 600;
-  line-height: 1.4;
+  font-weight: 700;
+  line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -102,87 +99,23 @@
   overflow: hidden;
 }
 
+.optionsCount {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
 .optionsText {
+  margin-top: 6px;
   p {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     color: var(--text-secondary);
     padding: 0px 8px;
     border: 1px solid var(--button-secondary-border);
     display: inline-block;
     margin-right: 5px;
     margin-bottom: 5px;
-    border-radius: 10px;
+    border-radius: 8px;
   }
-}
-
-.optionsCount {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  font-style: italic;
-}
-
-.editBtn {
-  padding: 8px 16px;
-  font-size: 0.875rem;
-  background: #e0e7ef;
-  color: #2b3c39;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0px 3px 0px 0px #b0b8c1;
-  transition: all 0.15s;
-  font-weight: 600;
-  align-self: flex-start;
-
-  &:active {
-    box-shadow: none;
-    transform: translateY(3px);
-  }
-
-  &:hover {
-    background: #d1dbe7;
-  }
-}
-
-.deleteBtn {
-  padding: 4px 16px;
-  font-size: 0.875rem;
-  background: var(--white);
-  color: #e53935;
-  border-radius: 8px;
-  border: 2px solid var(--gray);
-  cursor: pointer;
-  box-shadow: 0px 3px 0px 0px var(--gray);
-  transition: all 0.15s;
-  font-weight: 600;
-  align-self: flex-start;
-  max-width: 50%;
-
-  &:active {
-    box-shadow: none;
-    transform: translateY(3px);
-  }
-  &:hover {
-    border: 2px solid #e53935;
-    box-shadow: 0px 3px 0px 0px #e53935;
-  }
-}
-
-.buttonGroup {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-}
-
-.editBtn,
-.deleteBtn {
-  flex: 1 1 0%;
-  min-width: 0;
-  max-width: 50%;
-  box-sizing: border-box;
-}
-
-.deleteBtn {
-  max-width: 80px;
 }

@@ -1,6 +1,7 @@
 import {isBottleComplete} from '../utils/validations'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {getBottlesListText} from '../utils/constants'
+import Icon from '@/components/Icon'
 import styles from './BottlesList.module.scss'
 
 /**
@@ -29,12 +30,14 @@ export default function BottlesList({
           {text.title} ({bottles.length})
         </h3> */}
         <button className="btn tertiary" onClick={onNewBottle}>
-          {text.add}
+          <Icon name="plus" size={24} /> <span>{text.add}</span>
         </button>
       </div>
 
       {bottles.length === 0 ? (
-        <p className={styles.emptyState}>{text.empty}</p>
+        <div className={styles.emptyState}>
+          <p>{text.empty}</p>
+        </div>
       ) : (
         <div className={styles.grid}>
           {bottles.map((bottle, index) => {
@@ -44,31 +47,34 @@ export default function BottlesList({
                 key={index}
                 className={`${styles.card} ${isComplete ? styles.complete : styles.incomplete}`}
                 onClick={() => onEditBottle(index)}>
-                <div className={styles.cardHeader}>
-                  <h4>{bottle.name}</h4>
-                  <span className={styles.status}>{isComplete ? '✓' : '⚠️'}</span>
-                </div>
-                <p className={styles.producer}>{bottle.producer}</p>
-                <p className={styles.year}>{bottle.year}</p>
-                <div className={styles.buttonGroup}>
-                  <button
-                    className={styles.editBtn}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onEditBottle(index)
-                    }}>
-                    {text.edit}
-                  </button>
-                  <button
-                    className={styles.deleteBtn}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      if (confirm(text.confirmDelete)) {
-                        onDeleteBottle(index)
-                      }
-                    }}>
-                    {text.delete}
-                  </button>
+                <div className={styles.bottleIndex}>{index + 1}</div>
+                <div className={styles.cardInfo}>
+                  <div className={styles.cardHeader}>
+                    <h4>
+                      {bottle.name} {bottle.year}
+                    </h4>
+                    <button
+                      className="btn btn-mini danger btn-only-text"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        if (confirm(text.confirmDelete)) {
+                          onDeleteBottle(index)
+                        }
+                      }}>
+                      {text.delete}
+                    </button>
+
+                    {!isComplete && (
+                      <img
+                        className={styles.status}
+                        src="/check-warning.svg"
+                        alt=""
+                        aria-hidden="true"
+                      />
+                    )}
+                  </div>
+                  <p className={styles.producer}>{bottle.producer}</p>
+                  {bottle.wineType && <p className={styles.year}>{bottle.wineType}</p>}
                 </div>
               </div>
             )

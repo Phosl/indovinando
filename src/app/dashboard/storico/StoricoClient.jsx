@@ -3,6 +3,7 @@
 import {useEffect, useMemo, useState} from 'react'
 import styles from './storico.module.scss'
 import AvatarDisplay from '@/components/AvatarDisplay'
+import {formatAppDateTime} from '@/lib/dateFormat'
 
 export default function StoricoClient({sessions, t, lang}) {
   const [activeGame, setActiveGame] = useState(null) // null = tutti
@@ -39,8 +40,6 @@ export default function StoricoClient({sessions, t, lang}) {
       activeGame ? sessions.filter((s) => normalizeGameName(s.game_name) === activeGame) : sessions,
     [sessions, activeGame, lang],
   )
-
-  const locale = lang === 'en' ? 'en-GB' : 'it-IT'
 
   if (!sessions.length) {
     return (
@@ -79,24 +78,17 @@ export default function StoricoClient({sessions, t, lang}) {
       {/* ── Session list ── */}
       <div className={styles.list}>
         {filtered.map((s) => {
-          const played = new Date(s.played_at)
           return (
             <div key={s.id} className={styles.card}>
               <div className={styles.cardHeader}>
                 <div>
                   <h3 className={styles.gameName}>{String(s.game_name ?? '').trim() || '—'}</h3>
                   <span className={styles.date}>
-                    {played.toLocaleDateString(locale, {
-                      day: '2-digit',
-                      month: 'short',
-                      year: 'numeric',
-                    })}
-                    {' · '}
-                    {played.toLocaleTimeString(locale, {hour: '2-digit', minute: '2-digit'})}
+                    {formatAppDateTime(s.played_at, lang)}
                   </span>
                 </div>
                 <span className={styles.playerCount}>
-                  👥 {s.player_count} {s.player_count === 1 ? t.player : t.players}
+                  {s.player_count} {s.player_count === 1 ? t.player : t.players}
                 </span>
               </div>
 

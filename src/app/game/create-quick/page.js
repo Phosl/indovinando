@@ -1,6 +1,7 @@
 import {redirect} from 'next/navigation'
 import {Suspense} from 'react'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {getGameAvatarOptions} from '@/lib/gameAvatarOptions'
 import GameCreateClient from './GameCreateClient'
 import GameCreateLoading from '../create/loading'
 
@@ -26,10 +27,15 @@ export default async function Page() {
     .eq('created_by', user.id)
 
   const shouldShowOnboarding = profile?.onboarding !== false && (createdGamesCount || 0) < 1
+  const avatarOptions = await getGameAvatarOptions()
 
   return (
     <Suspense fallback={<GameCreateLoading />}>
-      <GameCreateClient initialShowOnboarding={shouldShowOnboarding} userId={user.id} />
+      <GameCreateClient
+        initialShowOnboarding={shouldShowOnboarding}
+        userId={user.id}
+        avatarOptions={avatarOptions}
+      />
     </Suspense>
   )
 }

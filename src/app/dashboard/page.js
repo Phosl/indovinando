@@ -1,5 +1,6 @@
 import {redirect} from 'next/navigation'
 import Link from 'next/link'
+import DashboardInfoFabWrapper from './DashboardInfoFabWrapper'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {getAppVersion} from '@/lib/appVersion'
@@ -8,6 +9,7 @@ import en from '@/lib/i18n/locales/en.json'
 import styles from './dashboard.module.scss'
 
 export default async function Dashboard() {
+  // Server-side data
   const supabase = await createServerSupabase()
   const lang = await getServerLanguage()
   const locale = lang === 'en' ? en : it
@@ -33,40 +35,34 @@ export default async function Dashboard() {
       <div className={styles.container}>
         <section className={styles.arcadeHero}>
           <img src="/logo.svg" alt="Indovinando Logo" className={styles.logo} />
-          <h4>
-            {dashboardDict.versionLabel || 'Versione BETA'} {appVersion}
-          </h4>
+
           <h2>
             {dashboardDict.welcome || 'Benvenuto'}, {profile?.username || data.user.email}!
           </h2>
         </section>
 
         <nav className={styles.menuGrid}>
-          <Link href="/miei-giochi" className={`${styles.menuCard} ${styles.menuCardTertiary}`}>
+          <Link href="/miei-giochi" className="btn primary">
             <span className={styles.menuCardLabel}>{dashboardDict.myGames || 'I miei giochi'}</span>
           </Link>
 
-          <Link href="/game/create" className={`${styles.menuCard} ${styles.menuCardGreen}`}>
-            <span className={styles.menuCardLabel}>{dashboardDict.createGame || 'Crea gioco'}</span>
-          </Link>
-
-          <Link href="/corso-vino" className={`${styles.menuCard} ${styles.menuCardWine}`}>
+          <Link href="/corso-vino" className="btn tertiary">
             <span className={styles.menuCardLabel}>{dashboardDict.wineCourse || 'Corso Vino'}</span>
           </Link>
 
-          <Link href="/profilo" className={styles.menuCard}>
+          <Link href="/profilo" className="btn secondary">
             <span className={styles.menuCardLabel}>{dashboardDict.profile || 'Profilo'}</span>
           </Link>
         </nav>
       </div>
-      <div className={styles.legalLinks}>
-        <Link href="/copyright" className={styles.smallLegalBtn}>
-          {dashboardDict.copyright || 'Copyright'}
-        </Link>
-        <Link href="/changelog" className={styles.smallLegalBtn}>
-          {dashboardDict.changelog || 'Changelog'}
-        </Link>
-      </div>
+
+      {/* Pulsante informazioni client-side */}
+      <DashboardInfoFabWrapper
+        changelogLabel={dashboardDict.changelog || 'Changelog'}
+        copyrightLabel={dashboardDict.copyright || 'Copyright'}
+        dashboardDict={dashboardDict}
+        appVersion={appVersion}
+      />
     </main>
   )
 }

@@ -29,11 +29,13 @@ export default function BottleModal({
   bottleName,
   producer,
   year,
+  wineType,
   questions,
   currentAnswers,
   onBottleNameChange,
   onProducerChange,
   onYearChange,
+  onWineTypeChange,
   onAnswerChange,
   onSave,
   // onSaveAndAddAnother, // rimosso: non più usato
@@ -44,14 +46,22 @@ export default function BottleModal({
   const alertMessages = getAlertMessages(lang)
   const isNewBottle = bottleIndex === null
   const [wizardStep, setWizardStep] = useState(0)
+  const WINE_TYPES = [
+    {value: 'rosso', label: 'Rosso'},
+    {value: 'bianco', label: 'Bianco'},
+    {value: 'rose', label: 'Rosé'},
+    {value: 'champagne', label: 'Champagne'},
+    {value: 'altro', label: 'Altro'},
+  ]
 
   const questionCount = questions.length
-  const totalSteps = questionCount + 2 // details + one step per question + final
+  const totalSteps = questionCount + 3 // details + info + one step per question + final
   const isDetailsStep = wizardStep === 0
-  const isQuestionStep = wizardStep > 0 && wizardStep <= questionCount
+  const isInfoStep = wizardStep === 1
+  const isQuestionStep = wizardStep > 1 && wizardStep <= questionCount + 1
   const isFinalStep = wizardStep === totalSteps - 1
 
-  const currentQuestionIndex = isQuestionStep ? wizardStep - 1 : -1
+  const currentQuestionIndex = isQuestionStep ? wizardStep - 2 : -1
   const currentQuestion = isQuestionStep ? questions[currentQuestionIndex] : null
   const currentQuestionOptions = useMemo(() => {
     if (!currentQuestion) return []
@@ -79,6 +89,7 @@ export default function BottleModal({
         bottleName,
         producer,
         year,
+        wineType,
         currentAnswers,
         questions.length,
         alertMessages,
@@ -113,6 +124,11 @@ export default function BottleModal({
       return
     }
 
+    if (isInfoStep && !wineType?.trim()) {
+      alert(lang === 'en' ? 'Select wine type.' : 'Seleziona il tipo di vino.')
+      return
+    }
+
     if (isQuestionStep && (selectedAnswer === null || selectedAnswer === undefined)) {
       alert(
         alertMessages?.BOTTLE_ANSWERS_INCOMPLETE ||
@@ -128,7 +144,6 @@ export default function BottleModal({
     setWizardStep((prev) => Math.max(prev - 1, 0))
   }
 
-  const stepLabel = lang === 'en' ? 'Step' : 'Step'
   const nextLabel = lang === 'en' ? 'Next' : 'Avanti'
   const backLabel = lang === 'en' ? 'Back' : 'Indietro'
   // const addAnotherLabel = lang === 'en' ? 'Save and add another' : 'Salva e aggiungi altra' // rimosso
@@ -142,17 +157,18 @@ export default function BottleModal({
     <div className={styles.modalOverlay} onClick={onCancel}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h3>{isNewBottle ? text.newTitle : `${text.editTitlePrefix} ${bottleIndex + 1}`}</h3>
+          <h3>
+            {isNewBottle ? text.newTitle : `${text.editTitlePrefix} ${bottleIndex + 1}`}{' '}
+            <span className={styles.stepNumber}>
+              Step {wizardStep + 1} di {totalSteps}
+            </span>
+          </h3>
           <button className={styles.closeBtn} onClick={onCancel}>
             ✕
           </button>
         </div>
 
         <div className={styles.modalBody}>
-          <div className={styles.stepIndicator}>
-            {stepLabel} {wizardStep + 1}/{totalSteps}
-          </div>
-
           {isDetailsStep && (
             <div className={styles.bottleInfoSection}>
               <h4>{text.details}</h4>
@@ -175,6 +191,25 @@ export default function BottleModal({
                 maxLength={4}
                 onChange={(e) => onYearChange(e.target.value)}
               />
+            </div>
+          )}
+
+          {isInfoStep && (
+            <div className={styles.bottleInfoSection}>
+              <h4>{lang === 'en' ? 'Wine info' : 'Info vino'}</h4>
+              <div className={styles.typePills} role="radiogroup" aria-label="wine type">
+                {WINE_TYPES.map((item) => (
+                  <button
+                    key={item.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={wineType === item.value}
+                    className={`${styles.typePill} ${wineType === item.value ? styles.typePillActive : ''}`}
+                    onClick={() => onWineTypeChange(item.value)}>
+                    {item.label}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
@@ -236,23 +271,19 @@ export default function BottleModal({
         </div>
 
         <div className={styles.modalFooter}>
-          <button className="btn secondary" onClick={onCancel}>
-            {text.cancel}
-          </button>
-
           {wizardStep > 0 && (
-            <button className="btn secondary" onClick={handlePrevStep}>
+            <button className="btn neutral" onClick={handlePrevStep}>
               {backLabel}
             </button>
           )}
 
           {!isFinalStep ? (
-            <button className="btn primary" onClick={handleNextStep}>
+            <button className="btn success" onClick={handleNextStep}>
               {nextLabel}
             </button>
           ) : (
             <>
-              <button className="btn primary" onClick={handleSave}>
+              <button className="btn success" onClick={handleSave}>
                 {isNewBottle ? text.saveNew : text.saveEdit}
               </button>
             </>

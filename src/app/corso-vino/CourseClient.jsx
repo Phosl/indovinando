@@ -3,6 +3,7 @@
 import {useState, useEffect, useMemo, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
+import Icon from '@/components/Icon'
 import GuestWarningModal from '@/components/course/GuestWarningModal'
 import {useWineCourseProgress} from './hooks/useWineCourseProgress'
 import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
@@ -66,7 +67,6 @@ export default function CourseClient({levels, isAdmin = false}) {
 
       {/* Hero */}
       <div className={styles.hero}>
-        <img src="/mascotte_corso.svg" alt="Mascotte corso" className={styles.heroMascot} />
         <div className={styles.heroText}>
           <h1 className={styles.heroTitle}>{t('heroTitle')}</h1>
           <p className={styles.heroSubtitle}>{t('heroSubtitle')}</p>
@@ -115,7 +115,7 @@ export default function CourseClient({levels, isAdmin = false}) {
               <div className={styles.levelInfo}>
                 <div className={styles.levelMeta}>
                   <span className={styles.levelOrder}>
-                    {t('chapterLabel', {index: level.order})}
+                    {t('chapterLabel', {index: level.order})} - {completed}/{total} {t('lessons')}
                   </span>
                   {completed === total && total > 0 && (
                     <span className={styles.levelBadge}>{t('completed')}</span>
@@ -151,10 +151,10 @@ export default function CourseClient({levels, isAdmin = false}) {
                       )
                     })}
                   </div>
-                  <span className={styles.progressText}>
-                    {completed}/{total} {t('lessons')}
-                  </span>
                 </div>
+              </div>
+              <div className={styles.cardArrowRail} aria-hidden="true">
+                <Icon name="forward" size={24} className={styles.cardArrowIcon} />
               </div>
             </div>
           )

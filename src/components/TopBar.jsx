@@ -32,7 +32,7 @@ export default function TopBar({
           className={styles.backBtn}
           onClick={handleBackClick}
           aria-label={t('back')}>
-          ←
+          <img src="/icons/back-icon.svg" alt="" aria-hidden="true" className={styles.backBtnIcon} />
         </button>
       )}
       {title && <h1 className={`${styles.title} ${titleClassName}`}>{title}</h1>}

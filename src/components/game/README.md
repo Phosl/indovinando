@@ -1,6 +1,6 @@
 # Game Editor Components
 
-This directory contains all components for the **Game Editor** - a 3-step modal-based workflow for
+This directory contains all components for the **Game Editor** - the current modal-based workflow for
 creating wine tasting games.
 
 ## Quick Start
@@ -14,13 +14,18 @@ import {GameEditor, QuestionsList, BottlesList} from '@/components/game'
 
 ## Architecture
 
-The game editor follows a **3-step modal-based workflow**:
+The game editor currently follows a **4-screen workflow**:
 
-| Step | Component                     | Purpose                       |
-| ---- | ----------------------------- | ----------------------------- |
-| 1    | Simple Input                  | Enter game name               |
-| 2    | QuestionsList + QuestionModal | Create/edit questions         |
-| 3    | BottlesList + BottleModal     | Create/edit bottles & publish |
+| Step | Component                     | Purpose                                            |
+| ---- | ----------------------------- | -------------------------------------------------- |
+| 1    | Simple Input                  | Enter game name                                    |
+| 2    | QuestionsList + QuestionModal | Create/edit questions                              |
+| 3    | Bridge screen                 | Add bottles or save a printable card               |
+| 4    | BottlesList + BottleModal     | Create/edit bottles & publish                      |
+
+Note: this may return to a 3-step workflow later. The source of truth is
+`GAME_EDITOR_DICTIONARY.steps` in `src/lib/i18n/dictionaries.js` plus the step rendering in
+`GameEditor/index.jsx`.
 
 ## Core Components
 
@@ -41,7 +46,7 @@ Main orchestrator managing the entire workflow.
 - **QuestionsList** - Grid of question cards
 - **QuestionModal** - Form for creating/editing questions
 
-### Step 3: Bottles
+### Step 4: Bottles
 
 - **BottlesList** - Grid of bottle cards
 - **BottleModal** - Form for creating/editing bottles with inline answer selection

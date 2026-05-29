@@ -4,6 +4,7 @@ import {useState, useEffect} from 'react'
 import {validateQuestionForm} from '../utils/validations'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {getAlertMessages, getQuestionModalText} from '../utils/constants'
+import Icon from '@/components/Icon'
 import styles from './QuestionModal.module.scss'
 
 /**
@@ -121,22 +122,22 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
                       transition: 'background 0.15s',
                     }}
                     tabIndex={-1}>
-                    🗑️
+                    <img src="/icons/remove-small.svg" alt="" aria-hidden="true" style={{width: 24, height: 24}} />
                   </button>
                 </div>
               ))}
             </div>
-            <button className="btn tertiary-bordered" onClick={addOption}>
-              {text.addOption}
+            <button className="btn tertiary" onClick={addOption}>
+              <Icon name="plus" size={24} /> <span>{text.addOption}</span>
             </button>
           </div>
         </div>
 
         <div className={styles.modalFooter}>
-          <button className="btn secondary" onClick={onCancel}>
+          <button className="btn neutral" onClick={onCancel}>
             {text.cancel}
           </button>
-          <button className="btn primary" onClick={handleSave}>
+          <button className="btn success" onClick={handleSave}>
             {isNewQuestion ? text.saveNew : text.saveEdit}
           </button>
         </div>

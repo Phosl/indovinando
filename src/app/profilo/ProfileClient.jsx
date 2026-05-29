@@ -489,7 +489,7 @@ export default function ProfileClient({
         <section className={styles.card}>
           <h2>{t('howTheAppWorks')}</h2>
           <p className={styles.quickInfoText}>{t('howTheAppWorksDesc')}</p>
-          <Link href="/info" className="btn accent">
+          <Link href="/info" className="btn quaternary btn-small">
             {t('openAppGuide')}
           </Link>
 
@@ -497,7 +497,7 @@ export default function ProfileClient({
 
           <h2>{t('changelog')}</h2>
           <p className={styles.quickInfoText}>{t('changelogDesc')}</p>
-          <Link href="/changelog" className="btn secondary">
+          <Link href="/changelog" className="btn neutral btn-small">
             {t('viewChangelog')}
           </Link>
         </section>
@@ -506,7 +506,7 @@ export default function ProfileClient({
         <section className={styles.card}>
           <button
             type="button"
-            className={`btn secondary ${styles.logoutBtn}`}
+            className={`btn neutral btn-small ${styles.logoutBtn}`}
             onClick={() => toggleLogoutConfirm(true)}
             disabled={isLoggingOut}>
             {t('logoutBtn')}

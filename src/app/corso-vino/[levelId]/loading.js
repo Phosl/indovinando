@@ -76,9 +76,9 @@ export default function CorsoVinoLevelLoading() {
               style={{
                 width: '100%',
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'stretch',
                 gap: 14,
-                padding: '14px 16px',
+                padding: '14px 0 14px 16px',
                 borderRadius: 16,
                 boxSizing: 'border-box',
               }}>
@@ -95,6 +95,17 @@ export default function CorsoVinoLevelLoading() {
                   <Bone w="62%" h="16px" style={{borderRadius: 6}} />
                   <Bone w="62px" h="22px" style={{borderRadius: 999}} />
                 </div>
+              </div>
+              <div
+                style={{
+                  width: 52,
+                  minWidth: 52,
+                  borderLeft: '2px solid var(--button-secondary-border)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Bone w="18px" h="18px" style={{borderRadius: 6}} />
               </div>
             </div>
           </div>

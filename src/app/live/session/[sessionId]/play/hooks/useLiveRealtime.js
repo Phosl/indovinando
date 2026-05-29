@@ -1,5 +1,6 @@
 import {useEffect, useRef} from 'react'
 import {supabaseClient} from '@/lib/supabaseClient'
+import {runVisiblePoll} from './_polling'
 
 /**
  * Subscribes to the 3 Supabase Realtime channels needed during a live session.
@@ -86,23 +87,26 @@ export function useLiveRealtime({
     // ── Polling fallbacks (cover cases where tables are not in Realtime publication) ──
     // Poll live_sessions every 3 s so every client always tracks the authoritative
     // session state regardless of whether live_sessions is in supabase_realtime.
-    const pollSession = setInterval(async () => {
+    const pollSessionState = async () => {
       const {data: session} = await supabaseClient
         .from('live_sessions')
         .select('current_question_index, round_status, status, updated_at')
         .eq('id', sessionId)
         .maybeSingle()
       if (session) onSessionUpdateRef.current(session)
-    }, 3000)
+    }
+
+    const stopPollSession = runVisiblePoll(pollSessionState, 3000)
 
     // Lightweight fallback: re-resolve missing player every 10 s
-    const pollPlayer = setInterval(() => {
+    const pollPlayerState = () => {
       if (!playerDataRef.current) resolvePlayerRef.current()
-    }, 10000)
+    }
+    const stopPollPlayer = runVisiblePoll(pollPlayerState, 10000)
 
     return () => {
-      clearInterval(pollSession)
-      clearInterval(pollPlayer)
+      stopPollSession()
+      stopPollPlayer()
       sessionChannel.unsubscribe()
       playersChannel.unsubscribe()
       answersChannel.unsubscribe()

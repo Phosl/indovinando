@@ -24,6 +24,14 @@ export async function POST(request) {
     }
 
     const supabase = await createServerSupabase()
+    const {
+      data: {user},
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+      return NextResponse.json({error: 'Not authenticated'}, {status: 401})
+    }
+
     const db = createWriteClient(supabase)
 
     const {data: session, error: sessionError} = await db
@@ -34,6 +42,10 @@ export async function POST(request) {
 
     if (sessionError || !session) {
       return NextResponse.json({error: 'Session not found'}, {status: 404})
+    }
+
+    if (!session.host_user_id || session.host_user_id !== user.id) {
+      return NextResponse.json({error: 'Only the host can submit answers'}, {status: 403})
     }
 
     const {data: hostPlayer, error: playerError} = await db

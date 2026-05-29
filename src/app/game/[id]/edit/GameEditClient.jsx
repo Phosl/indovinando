@@ -7,6 +7,7 @@ export default function GameEditClient({
   initialGame,
   initialQuestions,
   initialBottles,
+  avatarOptions,
   userId,
   onGameSaved,
 }) {
@@ -19,6 +20,7 @@ export default function GameEditClient({
           initialGame={initialGame}
           initialQuestions={initialQuestions}
           initialBottles={initialBottles}
+          avatarOptions={avatarOptions}
           userId={userId}
           onGameSaved={onGameSaved}
         />

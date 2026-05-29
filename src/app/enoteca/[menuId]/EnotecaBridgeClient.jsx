@@ -7,6 +7,7 @@ import TopBar from '@/components/TopBar'
 import ShareDetailsTabs from '@/components/ShareDetailsTabs/ShareDetailsTabs'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
+import {formatAppDate} from '@/lib/dateFormat'
 import styles from '../../live/session/[sessionId]/play/playerLive.module.scss'
 import xStyles from './enotecaJoin.module.scss'
 
@@ -34,15 +35,6 @@ export default function EnotecaBridgeClient({
     if (typeof window === 'undefined') return joinPath
     return `${window.location.origin}${joinPath}`
   }, [joinPath])
-  const leaderboardDateFormatter = useMemo(
-    () =>
-      new Intl.DateTimeFormat(lang === 'it' ? 'it-IT' : 'en-US', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      }),
-    [lang],
-  )
   const backHref = '/miei-giochi'
 
   useEffect(() => {
@@ -261,7 +253,7 @@ export default function EnotecaBridgeClient({
                             )}
                             {entry.completed_at && (
                               <p className={xStyles.leaderboardDate}>
-                                {leaderboardDateFormatter.format(new Date(entry.completed_at))}
+                                {formatAppDate(entry.completed_at, lang)}
                               </p>
                             )}
                           </div>

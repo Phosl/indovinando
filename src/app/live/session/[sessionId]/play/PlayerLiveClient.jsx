@@ -329,6 +329,7 @@ export default function PlayerLiveClient({
   if (roundStatus === 'showing_results' && resultsOpenedBottleIndex !== currentBottleIndex) {
     return (
       <ResultsScreen
+        sessionId={sessionId}
         title={resultsTitle}
         subtitle={resultsSubtitle}
         currentBottle={currentBottle}
@@ -362,6 +363,7 @@ export default function PlayerLiveClient({
   ) {
     return (
       <ResultsScreen
+        sessionId={sessionId}
         title={resultsTitle}
         subtitle={resultsSubtitle}
         currentBottle={currentBottle}

@@ -1,6 +1,7 @@
 import {useState, useCallback, useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
+import {runVisiblePoll} from './_polling'
 
 /**
  * Manages leaderboard + exit-modal state, sorted leaderboard computation,
@@ -58,8 +59,7 @@ export function useOverlays({
   // While the overlay is open, poll every 3s so scores stay live
   useEffect(() => {
     if (!leaderboardOpen) return
-    const interval = setInterval(fetchStandings, 3000)
-    return () => clearInterval(interval)
+    return runVisiblePoll(fetchStandings, 3000)
   }, [leaderboardOpen, fetchStandings])
 
   const kickPlayer = useCallback(

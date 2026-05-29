@@ -1,34 +1,3 @@
-/* ── Actions bar ────────────────────────────────────────────── */
-.actionsBar {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  background: var(--foreground);
-  border: 2px solid var(--button-secondary-border);
-  border-radius: 14px;
-  box-shadow: 0px 3px 0px 0px var(--gray-light);
-  padding: 12px 14px;
-  align-items: center;
-}
-
-.actionBtn {
-  flex: 1;
-  min-width: 120px;
-  text-align: center;
-  justify-content: center;
-}
-
-@media (max-width: 520px) {
-  .actionBtn {
-    min-width: 0;
-    flex: 1 1 calc(50% - 5px);
-  }
-
-  .dangerAction {
-    flex: 1 1 calc(50% - 5px);
-  }
-}
-
 /* ── Danger action (bottom) ────────────────────────────────── */
 .dangerAction {
   align-self: flex-start;

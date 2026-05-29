@@ -135,16 +135,6 @@
   width: 100%;
 }
 
-.heroMascot {
-  width: 180px;
-  height: auto;
-  object-fit: contain;
-  flex-shrink: 0;
-  @media (max-width: 520px) {
-    width: 140px;
-  }
-}
-
 .heroText {
   display: flex;
   flex-direction: column;
@@ -161,7 +151,7 @@
 }
 
 .heroSubtitle {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--text-secondary);
   font-weight: 600;
   margin: 0;
@@ -252,11 +242,6 @@
     padding: 18px 12px 16px;
     gap: 10px;
   }
-
-  .heroMascot {
-    width: 160px;
-    height: 160px;
-  }
 }
 
 // ── LevelCards ───────────────────────────────────────────────
@@ -271,11 +256,11 @@
   background: var(--foreground);
   border: 2px solid var(--button-secondary-border);
   border-radius: 16px;
-  padding: 16px;
+  padding: 16px 0 16px 16px;
   cursor: pointer;
   display: flex;
   gap: 14px;
-  align-items: flex-start;
+  align-items: stretch;
   transition:
     border-color 0.15s,
     box-shadow 0.15s;
@@ -290,6 +275,19 @@
     opacity: 0.55;
     cursor: default;
   }
+}
+
+.cardArrowRail {
+  width: 52px;
+  flex: 0 0 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+}
+
+.cardArrowIcon {
+  color: var(--primary-text);
 }
 
 .levelEmoji {
@@ -319,7 +317,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--text-secondary);
+  color: var(--primary-text);
 }
 
 .levelBadge {
@@ -332,14 +330,14 @@
 }
 
 .levelTitle {
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 900;
   margin: 0;
   color: var(--text-primary);
 }
 
 .levelDesc {
-  font-size: 0.83rem;
+  font-size: 1rem;
   color: var(--text-secondary);
   margin: 0;
   font-weight: 600;
@@ -380,13 +378,6 @@
 
 .progressDotReview {
   background: #f59e0b;
-}
-
-.progressText {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: var(--text-secondary);
-  flex-shrink: 0;
 }
 
 .lockHint {
