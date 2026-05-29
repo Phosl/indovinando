@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.26.1',
+    date: '29 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'Refactor game creation routes and loading states to reduce bottom-nav flicker',
+    ],
+  },
+
+  {
     version: '1.26.0',
     date: '29 maggio 2026',
     label: 'Auto',
