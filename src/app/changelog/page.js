@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.24.1',
+    date: '29 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'ui(modals): fullscreen per aggiungi domanda/bottiglia con footer fisso e navigazione semplificata (freccia back + CTA primaria)',
+    ],
+  },
+
+  {
     version: '1.24.0',
     date: '29 maggio 2026',
     label: 'Auto',
