@@ -1,40 +1,22 @@
 import {redirect} from 'next/navigation'
 import {Suspense} from 'react'
-import {createServerSupabase} from '@/lib/supabaseServer'
-import {getGameAvatarOptions} from '@/lib/gameAvatarOptions'
 import GameCreateClient from './GameCreateClient'
 import GameCreateLoading from './loading'
+import {getCreateGameData} from './createGameData'
 
-export default async function Page() {
-  const supabase = await createServerSupabase()
-  const {
-    data: {user},
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect('/auth')
-  }
-
-  const {data: profile} = await supabase
-    .from('profiles')
-    .select('onboarding')
-    .eq('id', user.id)
-    .single()
-
-  const {count: createdGamesCount} = await supabase
-    .from('games')
-    .select('id', {count: 'exact', head: true})
-    .eq('created_by', user.id)
-
-  const shouldShowOnboarding = profile?.onboarding !== false && (createdGamesCount || 0) < 1
-  const avatarOptions = await getGameAvatarOptions()
+export default async function Page({searchParams}) {
+  const params = await searchParams
+  if (params?.mode === 'quick') redirect('/game/create/quick')
+  if (params?.mode === 'custom') redirect('/game/create/custom')
+  const {initialShowOnboarding, userId, avatarOptions} = await getCreateGameData()
 
   return (
     <Suspense fallback={<GameCreateLoading />}>
       <GameCreateClient
-        initialShowOnboarding={shouldShowOnboarding}
-        userId={user.id}
+        initialShowOnboarding={initialShowOnboarding}
+        userId={userId}
         avatarOptions={avatarOptions}
+        mode="choose"
       />
     </Suspense>
   )

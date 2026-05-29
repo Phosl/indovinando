@@ -8,7 +8,6 @@ import Loader from '@/components/Loader'
 import OnboardingModal from '@/components/game/OnboardingModal'
 import PageLayout from '@/components/PageLayout'
 import Icon from '@/components/Icon'
-import BottomNav from '@/components/BottomNav'
 import {useT} from '@/lib/i18n/useT'
 import styles from './gameCreate.module.scss'
 
@@ -44,14 +43,12 @@ const TEMPLATE_QUESTIONS = [
   },
 ]
 
-// null = choosing, 'custom' = full editor, 'quick' = template prefilled
 function ModePickerScreen({onPick}) {
   const router = useRouter()
   const t = useT('gameCreate')
 
   return (
-    <>
-      <PageLayout title={t('title')} onBack={() => router.push('/miei-giochi')}>
+    <PageLayout title={t('title')} onBack={() => router.push('/miei-giochi')}>
         <h1 className={styles.modePickerTitle}>{t('chooseModeTitle')}</h1>
         <div className={styles.modePickerGrid}>
           <button
@@ -93,30 +90,26 @@ function ModePickerScreen({onPick}) {
           </button>
         </div>
       </PageLayout>
-      <BottomNav />
-    </>
   )
 }
 
-export default function GameCreateClient({initialShowOnboarding, userId, avatarOptions = []}) {
+export default function GameCreateClient({
+  initialShowOnboarding,
+  userId,
+  avatarOptions = [],
+  mode = 'choose',
+}) {
   const router = useRouter()
   const t = useT('gameCreate')
   const supabase = createClient()
   const [showOnboarding, setShowOnboarding] = useState(initialShowOnboarding)
-  const [mode, setMode] = useState(null)
-
-  function resetEditorStepInUrl() {
-    router.replace('/game/create?step=1')
-  }
 
   function handlePickMode(nextMode) {
-    resetEditorStepInUrl()
-    setMode(nextMode)
+    router.push(nextMode === 'quick' ? '/game/create/quick' : '/game/create/custom')
   }
 
   function handleBackToModePicker() {
-    setMode(null)
-    resetEditorStepInUrl()
+    router.push('/game/create')
   }
 
   async function handleDisableOnboarding() {
@@ -128,7 +121,7 @@ export default function GameCreateClient({initialShowOnboarding, userId, avatarO
     setShowOnboarding(false)
   }
 
-  if (mode === null) {
+  if (mode === 'choose') {
     return <ModePickerScreen onPick={handlePickMode} />
   }
 

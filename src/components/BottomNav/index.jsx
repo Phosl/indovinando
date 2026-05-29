@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import {usePathname, useSearchParams} from 'next/navigation'
+import {usePathname} from 'next/navigation'
+import {useMemo} from 'react'
 import Icon from '@/components/Icon'
 import {useT} from '@/lib/i18n/useT'
 import styles from './BottomNav.module.scss'
@@ -15,16 +16,12 @@ function isActive(pathname, href, key) {
   return pathname === href
 }
 
-function shouldRender(pathname, searchParams) {
+function shouldRender(pathname) {
   if (!pathname) return false
   if (pathname === '/dashboard') return true
   if (pathname.startsWith('/miei-giochi')) return true
   if (pathname.startsWith('/profilo')) return true
-
-  if (pathname === '/game/create') {
-    const stepValue = searchParams?.get('step')
-    return stepValue === '1' || stepValue === null
-  }
+  if (pathname === '/game/create') return true
 
   const gameMatch = pathname.match(/^\/game\/([^/]+)$/)
   if (gameMatch && gameMatch[1] !== 'create') return true
@@ -35,12 +32,15 @@ function shouldRender(pathname, searchParams) {
   return false
 }
 
-export default function BottomNav() {
+export default function BottomNav({forceVisible = false}) {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
   const t = useT('bottomNav')
-
-  if (!shouldRender(pathname, searchParams)) return null
+  const initialLocation = useMemo(() => {
+    if (typeof window === 'undefined') return {pathname: ''}
+    return {pathname: window.location.pathname}
+  }, [])
+  const effectivePathname = pathname || initialLocation.pathname
+  if (!forceVisible && !shouldRender(effectivePathname)) return null
 
   const items = [
     {key: 'home', href: '/dashboard', label: t('home'), icon: 'home'},
@@ -55,7 +55,7 @@ export default function BottomNav() {
       <nav className={styles.nav} aria-label={t('ariaLabel')}>
         <div className={styles.inner}>
           {items.map((item) => {
-            const active = isActive(pathname, item.href, item.key)
+            const active = isActive(effectivePathname, item.href, item.key)
             return (
               <Link
                 key={item.key}

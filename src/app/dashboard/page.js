@@ -54,7 +54,7 @@ export default async function Dashboard() {
           <img src="/logo.svg" alt="Indovinando Logo" className={styles.logo} />
           <div className={styles.welcomeTextContainer}>
             <h1>
-              {dashboardDict.welcome || 'Benvenuto'}, {profile?.username || data.user.email}!
+              {dashboardDict.welcome}, {profile?.username || data.user.email}!
             </h1>
           </div>
         </section>
@@ -63,12 +63,12 @@ export default async function Dashboard() {
           <Link href="/game/create" className={styles.createGameLink}>
             <div className={styles.createGameCard}>
               <div className={styles.createGameContent}>
-                <h2>Crea una nuova degustazione</h2>
-                <p>Inizia a creare la tua nuova degustazione e condividila con i tuoi amici.</p>
+                <h2>{dashboardDict.createGameCardTitle}</h2>
+                <p>{dashboardDict.createGameCardDescription}</p>
               </div>
               <div className={styles.createGameContainer}>
                 <div className={styles.createGameBtn}>
-                  <span>Iniziamo</span>
+                  <span>{dashboardDict.createGameCardAction}</span>
                   <img
                     src="/icons/forward-icon.svg"
                     alt=""
@@ -90,12 +90,8 @@ export default async function Dashboard() {
             href="/miei-giochi"
             className={`${styles.sectionCard} ${styles.sectionCardPrimary} ${styles.sectionCardBottomArrow}`}>
             <div className={styles.sectionCardInfo}>
-              <h3>{dashboardDict.myGames || 'Degustazioni'}</h3>
-              <p>
-                {lang === 'en'
-                  ? 'Create, manage and play with your tasting games.'
-                  : 'Crea, gestisci e gioca con le tue degustazioni.'}
-              </p>
+              <h3>{dashboardDict.myGames}</h3>
+              <p>{dashboardDict.myGamesCardDescription}</p>
             </div>
             <div className={styles.sectionCardArrowRail} aria-hidden="true">
               <Icon name="forward" size={24} className={styles.sectionCardArrowIcon} />
@@ -122,30 +118,24 @@ export default async function Dashboard() {
             href="/corso-vino"
             className={`${styles.sectionCard} ${styles.sectionCardTertiary} ${styles.sectionCardBottomArrow}`}>
             <div className={styles.sectionCardInfo}>
-              <span className={styles.sectionCardEyebrow}>
-                {lang === 'en' ? 'Your progress' : 'I tuoi progressi'}
-              </span>
-              <h3>{dashboardDict.wineCourse || 'Corso Vino'}</h3>
+              <span className={styles.sectionCardEyebrow}>{dashboardDict.yourProgress}</span>
+              <h3>{dashboardDict.wineCourse}</h3>
               <p>
                 {hasStartedCourse
-                  ? lang === 'en'
-                    ? 'Keep going with your wine path.'
-                    : 'Continua il tuo percorso nel mondo del vino.'
-                  : lang === 'en'
-                    ? 'You have not started the course yet.'
-                    : 'Non hai ancora iniziato il corso.'}
+                  ? dashboardDict.courseStartedDescription
+                  : dashboardDict.courseNotStartedDescription}
               </p>
               <ProgressBar
                 value={progressPct}
                 variant="course"
                 className={styles.courseProgressBar}
-                ariaLabel={lang === 'en' ? 'Your progress' : 'I tuoi progressi'}
+                ariaLabel={dashboardDict.yourProgress}
               />
               <div className={styles.courseProgressMeta}>
                 <span className={styles.courseProgressLessons}>
-                  {lang === 'en'
-                    ? `${completedLessons}/${totalLessons} lessons completed`
-                    : `${completedLessons}/${totalLessons} lezioni completate`}
+                  {dashboardDict.completedLessonsLabel
+                    .replace('{completed}', String(completedLessons))
+                    .replace('{total}', String(totalLessons))}
                 </span>
                 <span className={styles.courseProgressPercent}>{progressPct}%</span>
               </div>
@@ -171,8 +161,8 @@ export default async function Dashboard() {
 
       {/* Pulsante informazioni client-side */}
       <DashboardInfoFabWrapper
-        changelogLabel={dashboardDict.changelog || 'Changelog'}
-        copyrightLabel={dashboardDict.copyright || 'Copyright'}
+        changelogLabel={dashboardDict.changelog}
+        copyrightLabel={dashboardDict.copyright}
         dashboardDict={dashboardDict}
         appVersion={appVersion}
       />
