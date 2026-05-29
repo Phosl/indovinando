@@ -89,16 +89,11 @@ export default function GamePlayView({
               <span className={styles.infoDivider} aria-hidden="true">
                 -
               </span>
-              <p className={styles.infoItem}>
-                <img
-                  src="/icons/questions.svg"
-                  alt=""
-                  aria-hidden="true"
-                  className={styles.infoQuestionIcon}
-                />
-                {`${questions.length} Domande`}
-              </p>
-            </div>
+            <p className={styles.infoItem}>
+              <Icon name="question" size={24} className={styles.infoQuestionIcon} />
+              {`${questions.length} Domande`}
+            </p>
+          </div>
 
             <Button
               size="small"

@@ -16,9 +16,10 @@ const ICONS = {
   bottleRed: '/icons/bottle-red.svg',
   bottleWhite: '/icons/bottle-white.svg',
   plus: '/icons/plus.svg',
+  plusSimple: '/icons/plus-simple.svg',
   back: '/icons/back.svg',
   forward: '/icons/forward-icon.svg',
-  question: '/icons/question.svg',
+  question: '/icons/questions.svg',
 }
 
 const ICON_RENDER_MODE = {
@@ -28,7 +29,6 @@ const ICON_RENDER_MODE = {
   checkWrongWhite: 'image',
   checkWarning: 'image',
   removeSmall: 'image',
-  question: 'image',
 }
 
 function normalizeIconSize(size) {

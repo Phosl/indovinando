@@ -21,9 +21,26 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
       </div>
       <div className={styles.content}>
         <div className={styles.gamesHeaderActions}>
-          <ButtonLink href="/game/create" variant="success">
-            Crea Degustazione
-          </ButtonLink>
+          <Link href="/game/create" className={styles.createGameLink}>
+            <div className={styles.createGameCard}>
+              <div className={styles.createGameContent}>
+                <h2>Crea una nuova degustazione</h2>
+                <p>Inizia a creare la tua nuova degustazione e condividila con i tuoi amici.</p>
+              </div>
+              <div className={styles.createGameContainer}>
+                <div className={styles.createGameBtn}>
+                  <span>Iniziamo</span>
+                  <Icon name="forward" size={24} className={styles.createGameBtnIcon} />
+                </div>
+              </div>
+              <img
+                src="/img-card-create.svg"
+                alt=""
+                aria-hidden="true"
+                className={styles.createGameIllustration}
+              />
+            </div>
+          </Link>
         </div>
         {games.length === 0 ? (
           <div className={styles.emptyState}>
@@ -38,6 +55,9 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
           </div>
         ) : (
           <div className={styles.gamesList}>
+            <div className={styles.gamesSectionTitle}>
+              {dashboardDict.yourGames || 'I tuoi giochi'}
+            </div>
             {games.map((game) => {
               const bottles = [...(game.game_bottles || [])].sort(
                 (a, b) => (a.bottle_order || 0) - (b.bottle_order || 0),

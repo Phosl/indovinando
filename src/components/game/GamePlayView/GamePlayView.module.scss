@@ -74,14 +74,11 @@
 }
 
 .infoBottleIcon {
-  color: var(--primary-text);
+  color: currentColor;
 }
 
 .infoQuestionIcon {
-  width: 24px;
-  height: 24px;
-  display: inline-block;
-  object-fit: contain;
+  color: currentColor;
 }
 .gameAvatar {
   width: 96px;
@@ -91,15 +88,16 @@
 }
 .gameHeaderInfo .historyToggle {
   width: fit-content;
-  background: var(--primary-50);
-  border-color: var(--primary-200);
-  color: var(--primary-text);
+  background: var(--quaternary-100);
+  border-color: var(--quaternary-100);
+  color: var(--quaternary-text);
   font-weight: 700;
   padding: 2px 8px;
   min-height: auto;
   border-radius: 4px;
   &:hover {
-    background: var(--primary-200);
+    background: var(--quaternary-200);
+    border-color: var(--quaternary-200);
   }
 }
 
