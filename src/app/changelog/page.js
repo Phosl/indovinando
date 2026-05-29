@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.26.0',
+    date: '29 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'unify i18n sources and refresh bottom nav icons',
+    ],
+  },
+
+  {
     version: '1.25.0',
     date: '29 maggio 2026',
     label: 'Auto',
