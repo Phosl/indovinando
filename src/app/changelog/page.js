@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.26.2',
+    date: '29 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'Refine onboarding UX: add reopen guide, unify modal actions, and polish create/info flows',
+    ],
+  },
+
+  {
     version: '1.26.1',
     date: '29 maggio 2026',
     label: 'Auto',
