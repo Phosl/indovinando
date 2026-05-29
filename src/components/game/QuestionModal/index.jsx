@@ -72,8 +72,8 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
   const isNewQuestion = questionIndex === null || questionIndex === undefined
 
   return (
-    <div className={styles.modalOverlay} onClick={onCancel}>
-      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
           <h3>{isNewQuestion ? text.newTitle : `${text.editTitlePrefix} ${questionIndex + 1}`}</h3>
           <button className={styles.closeBtn} onClick={onCancel}>
@@ -97,32 +97,21 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
             <label>{text.optionsLabel}</label>
             <div className={styles.optionsList}>
               {options.map((opt, i) => (
-                <div key={i} style={{display: 'flex', alignItems: 'center', gap: 6}}>
+                <div key={i} className={styles.optionRow}>
                   <input
                     className={styles.optionInput}
                     placeholder={`${text.optionPlaceholder} ${i + 1}`}
                     value={opt}
                     onChange={(e) => updateOption(i, e.target.value)}
-                    style={{flex: 1}}
                   />
                   <button
                     type="button"
                     aria-label="Elimina opzione"
                     onClick={() => removeOption(i)}
                     disabled={options.length <= 2}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: '#c00',
-                      fontSize: '1.1em',
-                      cursor: options.length > 2 ? 'pointer' : 'not-allowed',
-                      opacity: options.length > 2 ? 1 : 0.4,
-                      padding: '2px 6px',
-                      borderRadius: '50%',
-                      transition: 'background 0.15s',
-                    }}
+                    className={styles.removeOptionBtn}
                     tabIndex={-1}>
-                    <img src="/icons/remove-small.svg" alt="" aria-hidden="true" style={{width: 24, height: 24}} />
+                    <img src="/icons/remove-small.svg" alt="" aria-hidden="true" className={styles.removeOptionIcon} />
                   </button>
                 </div>
               ))}

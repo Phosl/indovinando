@@ -2,6 +2,7 @@
   "common": {
     "back": "Back",
     "cancel": "Cancel",
+    "exit": "Exit",
     "loading": "Loading...",
     "saving": "Saving...",
     "logout": "Logout",
@@ -124,6 +125,7 @@
       "leaveGameTitle": "Do you want to leave the game?",
       "leaveGameDesc": "You can rejoin from the session page, but you will leave this screen.",
       "cancel": "Cancel",
+      "exit": "Exit",
       "exitGame": "Exit game"
     },
     "bottleTransition": {

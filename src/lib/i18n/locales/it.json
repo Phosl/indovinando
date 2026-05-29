@@ -2,6 +2,7 @@
   "common": {
     "back": "Indietro",
     "cancel": "Annulla",
+    "exit": "Esci",
     "loading": "Caricamento...",
     "saving": "Salvataggio...",
     "logout": "Logout",
@@ -124,6 +125,7 @@
       "leaveGameTitle": "Vuoi uscire dal gioco?",
       "leaveGameDesc": "Puoi rientrare dalla pagina della sessione, ma lascerai questa schermata.",
       "cancel": "Annulla",
+      "exit": "Esci",
       "exitGame": "Esci dal gioco"
     },
     "bottleTransition": {

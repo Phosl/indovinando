@@ -138,6 +138,13 @@
   }
 }
 
+.btn.ghost {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border-color: var(--gray-light);
+  width: auto;
+}
+
 .btn.danger {
   background-color: var(--danger);
   color: var(--white);

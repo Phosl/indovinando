@@ -4,6 +4,7 @@ import {useEffect, useMemo, useState} from 'react'
 import {validateBottleForm} from '../utils/validations'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {getAlertMessages, getBottleModalText} from '../utils/constants'
+import Icon from '@/components/Icon'
 import styles from './BottleModal.module.scss'
 
 /**
@@ -154,8 +155,8 @@ export default function BottleModal({
       : "Controlla e salva questa bottiglia, poi aggiungine un'altra se serve."
 
   return (
-    <div className={styles.modalOverlay} onClick={onCancel}>
-      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
           <h3>
             {isNewBottle ? text.newTitle : `${text.editTitlePrefix} ${bottleIndex + 1}`}{' '}
@@ -245,9 +246,7 @@ export default function BottleModal({
               <h4>{finalTitle}</h4>
               <p>{finalHint}</p>
               <div className={styles.finalSummary}>
-                <ul
-                  className={styles.answersList}
-                  style={{margin: '8px 0 0 0', padding: 0, listStyle: 'none'}}>
+                <ul className={styles.answersList}>
                   {questions.map((q, i) => {
                     const answerIndex = currentAnswers[i]
                     let options = []
@@ -259,7 +258,7 @@ export default function BottleModal({
                         ? options[answerIndex]
                         : '-'
                     return (
-                      <li key={i} style={{fontSize: '0.95em', color: '#444', marginBottom: 2}}>
+                      <li key={i} className={styles.answerItem}>
                         <b>{q.text}</b>: {answerText}
                       </li>
                     )
@@ -271,23 +270,30 @@ export default function BottleModal({
         </div>
 
         <div className={styles.modalFooter}>
-          {wizardStep > 0 && (
-            <button className="btn neutral" onClick={handlePrevStep}>
-              {backLabel}
-            </button>
-          )}
-
-          {!isFinalStep ? (
-            <button className="btn success" onClick={handleNextStep}>
-              {nextLabel}
-            </button>
-          ) : (
-            <>
+          <button className="btn ghost" onClick={onCancel}>
+            {text.exit}
+          </button>
+          <div className={styles.footerActionsRight}>
+            {wizardStep > 0 && (
+              <button
+                type="button"
+                className={styles.backArrowBtn}
+                onClick={handlePrevStep}
+                aria-label={backLabel}
+                title={backLabel}>
+                <Icon name="back" size={20} />
+              </button>
+            )}
+            {!isFinalStep ? (
+              <button className="btn success" onClick={handleNextStep}>
+                {nextLabel}
+              </button>
+            ) : (
               <button className="btn success" onClick={handleSave}>
                 {isNewBottle ? text.saveNew : text.saveEdit}
               </button>
-            </>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
