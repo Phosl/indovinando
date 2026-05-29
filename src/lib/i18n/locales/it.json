@@ -91,6 +91,7 @@
     "customTitle": "Quiz personalizzato",
     "customDescription": "Crea le tue domande e risposta da zero, adatta ogni dettaglio al tuo stile.",
     "customAction": "Inizia",
+    "openGuide": "Riapri guida",
     "loadingEditor": "Caricamento editor"
   },
   "gamePlayPage": {
@@ -120,16 +121,36 @@
   "onboarding": {
     "step": "Passo",
     "of": "di",
-    "back": "← Indietro",
+    "back": "Indietro",
     "disable": "Non mostrare più",
-    "next": "Avanti →",
-    "start": "Inizia! 🚀",
+    "next": "Avanti",
+    "start": "Inizia",
     "steps": [
-      {"title": "🎮 Benvenuto!", "description": "Stai per creare un incredibile gioco per scoprire il vino con i tuoi amici.", "icon": "🎮"},
-      {"title": "❓ Passo 1: Crea il Questionario", "description": "Aggiungi domande e opzioni di risposta. Ad esempio: \"Quale vino è questo?\" con diverse opzioni.", "icon": "❓"},
-      {"title": "🍷 Passo 2: Aggiungi le Bottiglie", "description": "Per ogni domanda, seleziona la risposta corretta e aggiungi i dettagli della bottiglia (nome, produttore, anno).", "icon": "🍷"},
-      {"title": "👥 Passo 3: Invita gli Amici", "description": "Una volta finito, pubblica il gioco e invita i tuoi amici a partecipare! Loro cercheranno di indovinare le risposte corrette.", "icon": "👥"},
-      {"title": "🎉 Iniziamo!", "description": "Sei pronto? Clicca \"Inizia\" per cominciare a creare il tuo gioco.", "icon": "🎉"}
+      {
+        "title": "Benvenuto",
+        "description": "Stai per creare un incredibile gioco per scoprire il vino con i tuoi amici.",
+        "icon": "🎮"
+      },
+      {
+        "title": "Passo 1: Crea il Questionario",
+        "description": "Aggiungi domande e opzioni di risposta. Ad esempio: \"Quale vino è questo?\" con diverse opzioni.",
+        "icon": "❓"
+      },
+      {
+        "title": "Passo 2: Aggiungi le Bottiglie",
+        "description": "Per ogni domanda, seleziona la risposta corretta e aggiungi i dettagli della bottiglia (nome, produttore, anno).",
+        "icon": "🍷"
+      },
+      {
+        "title": "Passo 3: Invita gli Amici",
+        "description": "Una volta finito, pubblica il gioco e invita i tuoi amici a partecipare. Loro cercheranno di indovinare le risposte corrette.",
+        "icon": "👥"
+      },
+      {
+        "title": "Iniziamo",
+        "description": "Sei pronto? Clicca \"Inizia\" per cominciare a creare il tuo gioco.",
+        "icon": "🎉"
+      }
     ]
   },
   "printSheet": {
@@ -651,74 +672,46 @@
     "swipeHint": "Scorri a destra o sinistra per cambiare slide.",
     "slides": [
       {
-        "emoji": "🧭",
-        "title": "Cos'è Indovinando",
-        "description": "Indovinando è un gioco per degustazioni alla cieca: assaggi bottiglie coperte e rispondi a un quiz.",
-        "points": [
-          "Il questionario è unico: le stesse domande si ripetono per ogni bottiglia.",
-          "Per ogni bottiglia selezioni la risposta corretta per ogni domanda.",
-          "A fine round vedi risultati, punteggio e classifica."
-        ]
+        "image": "/onboarding/onboarding_01.svg",
+        "imageAlt": "Cos'è IndoVinando",
+        "kicker": "1. Cos'è IndoVinando?",
+        "title": "Degusta. Gioca. Indovina.",
+        "description": "IndoVinando è un gioco per degustazioni alla cieca: assaggi bottiglie coperte e rispondi a un quiz per scoprire quanto ne sai davvero di vino."
       },
       {
-        "emoji": "🍷",
-        "title": "Come si gioca",
-        "description": "La partita procede bottiglia dopo bottiglia, sempre con lo stesso questionario.",
-        "points": [
-          "Round 1: bottiglia coperta, rispondi a tutte le domande.",
-          "Reveal: si scopre la bottiglia e vedi i punti ottenuti.",
-          "Si passa alla bottiglia successiva fino alla classifica finale."
-        ],
-        "ctaHref": "/miei-giochi",
-        "ctaLabel": "Vai ai tuoi quiz"
+        "image": "/onboarding/onboarding_02.svg",
+        "imageAlt": "Tutto in una sola app",
+        "kicker": "2. Tutto in una sola app",
+        "title": "Degustazioni, corso e classifiche",
+        "description": "Crea degustazioni personalizzate, sfida gli amici, segui il corso gratuito e monitora i tuoi progressi."
       },
       {
-        "emoji": "⚡",
-        "title": "Come creare un gioco",
-        "description": "Prima crei il questionario, poi inserisci le bottiglie e le risposte corrette.",
-        "points": [
-          "1) Crea il questionario con domande e opzioni.",
-          "2) Inserisci le bottiglie scelte (nome, produttore, annata).",
-          "3) Per ogni bottiglia imposta la risposta corretta per ogni domanda."
-        ],
-        "ctaHref": "/game/create",
-        "ctaLabel": "Apri Crea Gioco"
+        "image": "/onboarding/onboarding_03.svg",
+        "imageAlt": "Crea la tua degustazione",
+        "kicker": "3. Crea la tua degustazione",
+        "title": "Scegli bottiglie e domande",
+        "description": "Inserisci le bottiglie, crea le domande e salva le risposte corrette. IndoVinando farà il resto."
       },
       {
-        "emoji": "🥂",
-        "title": "Modalità Enoteca",
-        "description": "Flusso da tavolo per degustazioni in presenza con sessioni a nickname.",
-        "points": [
-          "Si gioca insieme nello stesso tavolo.",
-          "Punteggio bottiglia per bottiglia guidato.",
-          "Ideale per wine bar, corsi e degustazioni private."
-        ],
-        "ctaHref": "/dashboard",
-        "ctaLabel": "Vai ai tuoi quiz"
+        "image": "/onboarding/onboarding_04.svg",
+        "imageAlt": "Gioca da solo o con amici",
+        "kicker": "4. Gioca da solo o con gli amici",
+        "title": "Single Player o Multiplayer",
+        "description": "Allenati da solo oppure crea una partita live e sfida amici, clienti o partecipanti alla degustazione."
       },
       {
-        "emoji": "🛰️",
-        "title": "Live Multiplayer",
-        "description": "Crea una sessione realtime con host e giocatori, risultati round per round.",
-        "points": [
-          "Ingresso dei partecipanti con nickname e avatar.",
-          "Stato round e punteggi in tempo reale.",
-          "Classifica finale al termine della partita."
-        ],
-        "ctaHref": "/dashboard",
-        "ctaLabel": "Parti dalla Dashboard"
+        "image": "/onboarding/onboarding_05.svg",
+        "imageAlt": "Impara il vino gratuitamente",
+        "kicker": "5. Impara il vino gratuitamente",
+        "title": "Corso vino con attestato finale",
+        "description": "Lezioni brevi, quiz interattivi e progressione a livelli. Completa il corso e ottieni il tuo attestato."
       },
       {
-        "emoji": "🎓",
-        "title": "Corso Vino",
-        "description": "Impara il vino passo passo con slide didattiche, quiz e tracciamento progressi.",
-        "points": [
-          "Livelli e lezioni organizzati per argomento.",
-          "Miglior punteggio e tentativi salvati per lezione.",
-          "Perfetto per allenamento continuo nel tempo."
-        ],
-        "ctaHref": "/corso-vino",
-        "ctaLabel": "Apri Corso Vino"
+        "image": "/onboarding/onboarding_06.svg",
+        "imageAlt": "Pronto a iniziare",
+        "kicker": "6. Pronto a iniziare?",
+        "title": "Pronto a iniziare?",
+        "description": "Crea la tua prima degustazione oppure entra in una partita esistente."
       }
     ]
   }

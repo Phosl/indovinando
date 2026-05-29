@@ -43,54 +43,65 @@ const TEMPLATE_QUESTIONS = [
   },
 ]
 
-function ModePickerScreen({onPick}) {
+function ModePickerScreen({onPick, onOpenGuide}) {
   const router = useRouter()
   const t = useT('gameCreate')
 
   return (
     <PageLayout title={t('title')} onBack={() => router.push('/miei-giochi')}>
-        <h1 className={styles.modePickerTitle}>{t('chooseModeTitle')}</h1>
-        <div className={styles.modePickerGrid}>
-          <button
-            className={`${styles.modeCard} ${styles.modeCardQuick}`}
-            onClick={() => onPick('quick')}>
-            <img
-              src="/game-options-quick.svg"
-              alt=""
-              aria-hidden="true"
-              className={styles.modeCardBgImage}
-            />
-            <div className={styles.modeCardContent}>
-              <strong className={styles.modeCardTitle}>{t('quickTitle')}</strong>
-              <p className={styles.modeCardDesc}>{t('quickDescription')}</p>
-              <span className="btn btn-small quaternary btn-quick-game btn-inline btn-with-icon-end">
-                <span>{t('quickAction')}</span>
-                <Icon name="forward" size={24} className="btn-icon" />
-              </span>
-            </div>
-          </button>
+      <h1 className={styles.modePickerTitle}>{t('chooseModeTitle')}</h1>
+      <div className={styles.modePickerGrid}>
+        <button
+          className={`${styles.modeCard} ${styles.modeCardQuick}`}
+          onClick={() => onPick('quick')}>
+          <img
+            src="/game-options-quick.svg"
+            alt=""
+            aria-hidden="true"
+            className={styles.modeCardBgImage}
+          />
+          <div className={styles.modeCardContent}>
+            <strong className={styles.modeCardTitle}>{t('quickTitle')}</strong>
+            <p className={styles.modeCardDesc}>{t('quickDescription')}</p>
+            <span className="btn btn-small quaternary btn-quick-game btn-inline btn-with-icon-end">
+              <span>{t('quickAction')}</span>
+              <Icon name="forward" size={24} className="btn-icon" />
+            </span>
+          </div>
+        </button>
 
-          <button
-            className={`${styles.modeCard} ${styles.modeCardCustom}`}
-            onClick={() => onPick('custom')}>
-            <img
-              src="/game-options-custom.svg"
-              alt=""
-              aria-hidden="true"
-              className={styles.modeCardBgImage}
-            />
-            <div className={styles.modeCardContent}>
-              <strong className={styles.modeCardTitle}>{t('customTitle')}</strong>
-              <p className={styles.modeCardDesc}>{t('customDescription')}</p>
-              <span className="btn btn-small quaternary btn-custom-game btn-inline btn-with-icon-end">
-                <span>{t('customAction')}</span>
-                <Icon name="forward" size={24} className="btn-icon" />
-              </span>
-            </div>
-          </button>
-        </div>
-      </PageLayout>
+        <button
+          className={`${styles.modeCard} ${styles.modeCardCustom}`}
+          onClick={() => onPick('custom')}>
+          <img
+            src="/game-options-custom.svg"
+            alt=""
+            aria-hidden="true"
+            className={styles.modeCardBgImage}
+          />
+          <div className={styles.modeCardContent}>
+            <strong className={styles.modeCardTitle}>{t('customTitle')}</strong>
+            <p className={styles.modeCardDesc}>{t('customDescription')}</p>
+            <span className="btn btn-small quaternary btn-custom-game btn-inline btn-with-icon-end">
+              <span>{t('customAction')}</span>
+              <Icon name="forward" size={24} className="btn-icon" />
+            </span>
+          </div>
+        </button>
+      </div>
+      <button
+        type="button"
+        className={`btn neutral btn-small ${styles.openGuideBtn}`}
+        onClick={onOpenGuide}>
+        {t('openGuide')}
+      </button>
+    </PageLayout>
   )
+}
+
+function CreateOnboardingModal({showOnboarding, onClose, onDisable}) {
+  if (!showOnboarding) return null
+  return <OnboardingModal onClose={onClose} onDisable={onDisable} />
 }
 
 export default function GameCreateClient({
@@ -122,18 +133,26 @@ export default function GameCreateClient({
   }
 
   if (mode === 'choose') {
-    return <ModePickerScreen onPick={handlePickMode} />
+    return (
+      <>
+        <CreateOnboardingModal
+          showOnboarding={showOnboarding}
+          onClose={() => setShowOnboarding(false)}
+          onDisable={handleDisableOnboarding}
+        />
+        <ModePickerScreen onPick={handlePickMode} onOpenGuide={() => setShowOnboarding(true)} />
+      </>
+    )
   }
 
   return (
     <main className="flex-container">
       <div className="flex-column">
-        {showOnboarding && (
-          <OnboardingModal
-            onClose={() => setShowOnboarding(false)}
-            onDisable={handleDisableOnboarding}
-          />
-        )}
+        <CreateOnboardingModal
+          showOnboarding={showOnboarding}
+          onClose={() => setShowOnboarding(false)}
+          onDisable={handleDisableOnboarding}
+        />
 
         <Suspense fallback={<Loader label={t('loadingEditor')} />}>
           {mode === 'quick' ? (

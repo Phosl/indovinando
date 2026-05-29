@@ -116,7 +116,7 @@ export default function CourseClient({levels, isAdmin = false}) {
               <div className={styles.levelInfo}>
                 <div className={styles.levelMeta}>
                   <span className={styles.levelOrder}>
-                    {t('chapterLabel', {index: level.order})} - {completed}/{total} {t('lessons')}
+                    {t('chapterLabel', {index: level.order})}
                   </span>
                   {completed === total && total > 0 && (
                     <span className={styles.levelBadge}>{t('completed')}</span>
@@ -125,6 +125,7 @@ export default function CourseClient({levels, isAdmin = false}) {
                 <h2 className={styles.levelTitle}>{level.title}</h2>
                 <p className={styles.levelDesc}>{level.description}</p>
                 <div className={styles.progressRow}>
+                  <span className={styles.progressLabel}>{t('lessons')}</span>
                   <div className={styles.progressDots}>
                     {level.lessonIds.map((lessonId, index) => {
                       const status = loaded ? getLessonStatus(level, index) : 'unlocked'
@@ -151,6 +152,9 @@ export default function CourseClient({levels, isAdmin = false}) {
                         />
                       )
                     })}
+                    <span className={styles.progressLabel}>
+                      {completed}/{total}
+                    </span>
                   </div>
                 </div>
               </div>

@@ -1,7 +1,7 @@
 .page {
   min-height: 100dvh;
-  background: linear-gradient(180deg, #f4f8ff 0%, #eef9ec 100%);
-  padding: 24px 12px 40px;
+  background: var(--background);
+  padding: 24px 12px 120px;
   padding-top: 0px;
 }
 
@@ -13,11 +13,11 @@
 }
 
 .card {
-  background: #ffffff;
-  border: 1px solid #d8e6d2;
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
   border-radius: 16px;
-  box-shadow: 0 3px 0 #d3e8c9;
-  padding: 16px;
+  box-shadow: 0 0 0 0 var(--gray-light);
+  padding: 16px 16px 96px;
 }
 
 .progressRow {
@@ -30,7 +30,7 @@
 
 .progressText {
   font-weight: 800;
-  color: #2e3f3a;
+  color: var(--text-primary);
 }
 
 .dots {
@@ -44,19 +44,19 @@
   height: 9px;
   border: 0;
   border-radius: 999px;
-  background: #d8e6d2;
+  background: var(--button-secondary-border);
   cursor: pointer;
 }
 
 .dotActive {
   width: 22px;
-  background: #58cc02;
+  background: var(--selected-dark);
 }
 
 .progressBar {
   height: 8px;
   border-radius: 999px;
-  background: #e6efe1;
+  background: var(--button-secondary-border);
   overflow: hidden;
   margin-bottom: 14px;
 }
@@ -65,7 +65,11 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #58cc02 0%, #7bd63a 100%);
+  background: linear-gradient(
+    90deg,
+    var(--selected, #833bac) 0%,
+    var(--selected-light, #9c4ed8) 100%
+  );
   transition: width 220ms ease;
 }
 
@@ -85,11 +89,26 @@
 }
 
 .hero {
-  background: linear-gradient(160deg, #f7fff2 0%, #f6fbff 100%);
-  border: 1px solid #d8eec9;
-  border-radius: 16px;
+  background: var(--white);
   padding: 16px;
-  box-shadow: 0 2px 0 #dbead4;
+  text-align: center;
+}
+
+.imageWrap {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--foreground);
+  margin-bottom: 12px;
+}
+
+.image {
+  width: 100%;
+  max-width: 60%;
+  margin: 0 auto;
+  height: auto;
+  display: block;
+  object-fit: cover;
 }
 
 .emoji {
@@ -98,22 +117,30 @@
   display: grid;
   place-items: center;
   border-radius: 12px;
-  background: #ffffff;
-  border: 1px solid #deead7;
+  background: var(--foreground);
+  border: 1px solid var(--button-secondary-border);
   font-size: 1.8rem;
   margin-bottom: 10px;
 }
 
+.kicker {
+  margin: 0 0 4px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--primary-text, #6b2f8e);
+}
+
 .title {
   margin: 0;
-  font-size: 1.2rem;
-  color: #23312f;
+  font-size: 1.3rem;
+  color: var(--selected);
 }
 
 .description {
   margin: 8px 0 0;
-  color: #6c7672;
+  color: var(--text-secondary);
   line-height: 1.45;
+  font-size: 18px;
 }
 
 .list {
@@ -125,11 +152,11 @@
 }
 
 .listItem {
-  border: 1px solid #deead7;
+  border: 1px solid var(--button-secondary-border);
   border-radius: 12px;
   padding: 11px 12px;
-  color: #2f3f3a;
-  background: #fbfff8;
+  color: var(--text-primary);
+  background: var(--foreground);
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -139,9 +166,9 @@
   width: 18px;
   height: 18px;
   border-radius: 999px;
-  background: #ebf9df;
-  border: 1px solid #cfeab8;
-  color: #2e7d00;
+  background: var(--success-100);
+  border: 1px solid var(--success);
+  color: var(--success-text);
   font-size: 0.72rem;
   line-height: 1;
   display: inline-flex;
@@ -154,18 +181,37 @@
 .swipeHint {
   margin: 10px 2px 0;
   font-size: 0.85rem;
-  color: #647169;
+  color: var(--text-secondary);
 }
 
 .actions {
-  margin-top: 16px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 35;
+  background: var(--dark);
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+}
+
+.actionsInner {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  flex-wrap: wrap;
-  padding-top: 10px;
-  border-top: 1px solid #e3ecdd;
+}
+
+.actionsInner :global(.btn) {
+  min-width: 140px;
+  width: 100%;
+}
+
+.actionsInner :global(.neutral) {
+  min-width: 140px;
+  width: auto;
 }
 
 @media (max-width: 640px) {
@@ -173,12 +219,11 @@
     padding: 14px;
   }
 
-  .actions {
+  .actionsInner {
     justify-content: stretch;
   }
 
-  .actions :global(.btn) {
-    flex: 1 1 calc(50% - 6px);
+  .actionsInner :global(.btn) {
     text-align: center;
   }
 }

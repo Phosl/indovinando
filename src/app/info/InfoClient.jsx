@@ -21,7 +21,7 @@ export default function InfoClient() {
   const isFirst = current === 0
   const isLast = current === slides.length - 1
   const backHref = authChecked && !userId ? '/' : '/profilo'
-  const doneHref = backHref
+  const doneHref = authChecked && userId ? '/dashboard' : '/'
 
   useEffect(() => {
     let cancelled = false
@@ -89,40 +89,58 @@ export default function InfoClient() {
           <div className={styles.swipeViewport} role="presentation">
             <div className={styles.swipeTrack}>
               <div className={styles.hero}>
-                <div className={styles.emoji} aria-hidden="true">
-                  {currentSlide.emoji}
-                </div>
+                {currentSlide.image ? (
+                  <div className={styles.imageWrap}>
+                    <img
+                      src={currentSlide.image}
+                      alt={currentSlide.imageAlt || currentSlide.title}
+                      className={styles.image}
+                    />
+                  </div>
+                ) : (
+                  <div className={styles.emoji} aria-hidden="true">
+                    {currentSlide.emoji}
+                  </div>
+                )}
+                {currentSlide.kicker && <p className={styles.kicker}>{currentSlide.kicker}</p>}
                 <h2 className={styles.title}>{currentSlide.title}</h2>
                 <p className={styles.description}>{currentSlide.description}</p>
               </div>
 
-              <ul className={styles.list}>
-                {currentSlide.points.map((point) => (
-                  <li key={point} className={styles.listItem}>
-                    <span className={styles.pointIcon} aria-hidden="true">
-                      ✓
-                    </span>
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
+              {Array.isArray(currentSlide.points) && currentSlide.points.length > 0 && (
+                <ul className={styles.list}>
+                  {currentSlide.points.map((point) => (
+                    <li key={point} className={styles.listItem}>
+                      <span className={styles.pointIcon} aria-hidden="true">
+                        ✓
+                      </span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
 
           <div className={styles.actions}>
-            <button type="button" className="btn secondary" onClick={goPrev} disabled={isFirst}>
-              {tc('back')}
-            </button>
+            <div className={styles.actionsInner}>
+              <button type="button" className="btn neutral" onClick={goPrev} disabled={isFirst}>
+                {tc('back')}
+              </button>
 
-            {!isLast ? (
-              <button type="button" className="btn primary" onClick={goNext}>
-                {tc('next')}
-              </button>
-            ) : (
-              <button type="button" className="btn primary" onClick={() => router.push(doneHref)}>
-                {tc('done')}
-              </button>
-            )}
+              {!isLast ? (
+                <button type="button" className="btn success-filled" onClick={goNext}>
+                  {tc('next')}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn success-filled"
+                  onClick={() => router.push(doneHref)}>
+                  {tc('done')}
+                </button>
+              )}
+            </div>
           </div>
         </section>
       </div>

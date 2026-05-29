@@ -104,6 +104,15 @@
     background: var(--quaternary-200);
   }
 }
+.btn.success-filled {
+  background-color: var(--success);
+  color: var(--white);
+  border-color: var(--success);
+  &:hover {
+    background: var(--success-text);
+    border-color: var(--success-text);
+  }
+}
 
 .btn.accent {
   background-color: var(--selected);

@@ -91,6 +91,7 @@
     "customTitle": "Custom quiz",
     "customDescription": "Create your own questions and answers from scratch, and tailor every detail.",
     "customAction": "Start",
+    "openGuide": "Open guide",
     "loadingEditor": "Loading editor"
   },
   "gamePlayPage": {
@@ -120,16 +121,36 @@
   "onboarding": {
     "step": "Step",
     "of": "of",
-    "back": "← Back",
+    "back": "Back",
     "disable": "Do not show again",
-    "next": "Next →",
-    "start": "Start! 🚀",
+    "next": "Next",
+    "start": "Start",
     "steps": [
-      {"title": "🎮 Welcome!", "description": "You are about to create an amazing wine game for your friends.", "icon": "🎮"},
-      {"title": "❓ Step 1: Create the Quiz", "description": "Add questions and answer options. Example: \"Which wine is this?\" with different options.", "icon": "❓"},
-      {"title": "🍷 Step 2: Add Bottles", "description": "For each question, select the correct answer and add bottle details (name, producer, year).", "icon": "🍷"},
-      {"title": "👥 Step 3: Invite Friends", "description": "Once done, publish the game and invite your friends to play! They will try to guess the right answers.", "icon": "👥"},
-      {"title": "🎉 Let's begin!", "description": "Ready? Click \"Start\" to begin creating your game.", "icon": "🎉"}
+      {
+        "title": "Welcome",
+        "description": "You are about to create an amazing wine game for your friends.",
+        "icon": "🎮"
+      },
+      {
+        "title": "Create the Quiz",
+        "description": "Add questions and answer options. Example: \"Which wine is this?\" with different options.",
+        "icon": "❓"
+      },
+      {
+        "title": "Add Bottles",
+        "description": "For each question, select the correct answer and add bottle details (name, producer, year).",
+        "icon": "🍷"
+      },
+      {
+        "title": "Invite Friends",
+        "description": "Once done, publish the game and invite your friends to play! They will try to guess the right answers.",
+        "icon": "👥"
+      },
+      {
+        "title": "Let's begin",
+        "description": "Ready? Click \"Start\" to begin creating your game.",
+        "icon": "🎉"
+      }
     ]
   },
   "printSheet": {
@@ -345,9 +366,9 @@
       "saveQuestionnaire": "Save questionnaire",
       "back": "Back",
       "bridgeTitle": "Questionnaire done! What next?",
-      "bridgeInsertResults": "🍾 Add bottles",
+      "bridgeInsertResults": "Add bottles",
       "saving": "Saving...",
-      "saveAndPrint": "🖨️ Save and print card",
+      "saveAndPrint": "Save and print card",
       "publishGame": "Publish game",
       "updateGame": "Update game"
     },
@@ -498,7 +519,7 @@
       "nicknameMin": "Nickname must be at least 2 characters",
       "nicknameTaken": "This nickname is already used in this game!",
       "joinError": "Error while joining the game",
-      "gameStartingTitle": "🎉 The game is starting...",
+      "gameStartingTitle": "The game is starting...",
       "gameStartingDesc": "You are about to enter the game!",
       "chooseAvatar": "Choose your avatar",
       "nicknamePlaceholder": "Ex: Alex, Emma...",
@@ -507,7 +528,7 @@
       "loginOptional": "Register / Login (optional)",
       "waitHostCreate": "The host is creating the game...",
       "waitHostStart": "Wait for the host to start the game.",
-      "joinedAs": "✅ You joined as {nickname}",
+      "joinedAs": "You joined as {nickname}",
       "connectedPlayers": "Connected players"
     },
     "host": {
@@ -651,74 +672,46 @@
     "swipeHint": "Swipe left or right to change slide.",
     "slides": [
       {
-        "emoji": "🧭",
-        "title": "What Indovinando is",
-        "description": "Indovinando is a blind tasting game: players taste covered bottles and answer a quiz.",
-        "points": [
-          "The questionnaire stays the same for every bottle.",
-          "For each bottle, players select one correct answer per question.",
-          "At the end of each round you see results, points and ranking."
-        ]
+        "image": "/onboarding/onboarding_01.svg",
+        "imageAlt": "What IndoVinando is",
+        "kicker": "What is IndoVinando?",
+        "title": "Taste. Play. Guess.",
+        "description": "IndoVinando is a blind tasting game: taste covered bottles and answer a quiz to discover how much you really know about wine."
       },
       {
-        "emoji": "🍷",
-        "title": "How gameplay works",
-        "description": "The match goes bottle by bottle, always using the same questionnaire.",
-        "points": [
-          "Round 1: covered bottle, answer all questions.",
-          "Reveal: the bottle is shown and points are assigned.",
-          "Then move to the next bottle until the final leaderboard."
-        ],
-        "ctaHref": "/miei-giochi",
-        "ctaLabel": "Go to your games"
+        "image": "/onboarding/onboarding_02.svg",
+        "imageAlt": "All in one app",
+        "kicker": "Everything in one app",
+        "title": "Tastings, course and leaderboards",
+        "description": "Create custom tastings, challenge friends, follow the free wine course and track your progress."
       },
       {
-        "emoji": "⚡",
-        "title": "How to create a game",
-        "description": "First build the questionnaire, then add bottles with the correct answers.",
-        "points": [
-          "1) Create the questionnaire with questions and options.",
-          "2) Add your selected bottles (name, producer, vintage).",
-          "3) For each bottle, set the correct answer for each question."
-        ],
-        "ctaHref": "/game/create",
-        "ctaLabel": "Open Create Game"
+        "image": "/onboarding/onboarding_03.svg",
+        "imageAlt": "Create your tasting",
+        "kicker": "Create your tasting",
+        "title": "Choose bottles and questions",
+        "description": "Add bottles, create questions and save the correct answers. IndoVinando handles the rest."
       },
       {
-        "emoji": "🥂",
-        "title": "Enoteca Mode",
-        "description": "A table-friendly flow for in-person tasting rounds with nickname sessions.",
-        "points": [
-          "Join and play from the same table.",
-          "Score bottle by bottle in a guided flow.",
-          "Great for wine bars, classes and private tastings."
-        ],
-        "ctaHref": "/dashboard",
-        "ctaLabel": "Go to your games"
+        "image": "/onboarding/onboarding_04.svg",
+        "imageAlt": "Play solo or with friends",
+        "kicker": "Play solo or with friends",
+        "title": "Single Player or Multiplayer",
+        "description": "Train by yourself or start a live match and challenge friends, customers or tasting participants."
       },
       {
-        "emoji": "🛰️",
-        "title": "Live Multiplayer",
-        "description": "Host a realtime game session and show results round by round.",
-        "points": [
-          "Players join with nickname and avatar.",
-          "Round status and scoring updates live.",
-          "Final leaderboard at the end of the game."
-        ],
-        "ctaHref": "/dashboard",
-        "ctaLabel": "Start from Dashboard"
+        "image": "/onboarding/onboarding_05.svg",
+        "imageAlt": "Learn wine for free",
+        "kicker": "Learn wine for free",
+        "title": "Wine course with final certificate",
+        "description": "Short lessons, interactive quizzes and level-based progression. Complete the course and get your certificate."
       },
       {
-        "emoji": "🎓",
-        "title": "Wine Course",
-        "description": "Learn wine step by step with didactic slides, quiz rounds and progress tracking.",
-        "points": [
-          "Levels and lessons organized by topic.",
-          "Best score and attempts tracked per lesson.",
-          "Great for continuous training over time."
-        ],
-        "ctaHref": "/corso-vino",
-        "ctaLabel": "Open Wine Course"
+        "image": "/onboarding/onboarding_06.svg",
+        "imageAlt": "Ready to start",
+        "kicker": "6. Ready to start?",
+        "title": "Ready to start?",
+        "description": "Create your first tasting or join an existing match."
       }
     ]
   }

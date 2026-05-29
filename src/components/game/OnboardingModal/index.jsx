@@ -4,6 +4,7 @@ import {useState} from 'react'
 import styles from './OnboardingModal.module.scss'
 import {useT} from '@/lib/i18n/useT'
 import ProgressBar from '@/components/ui/ProgressBar'
+import Icon from '@/components/Icon'
 
 /**
  * OnboardingModal component - displays onboarding information for game creation
@@ -26,44 +27,48 @@ export default function OnboardingModal({onClose, onDisable}) {
           ✕
         </button>
 
-        <div className={styles.content}>
-          <div className={styles.icon}>{currentStep.icon}</div>
-          <h2>{currentStep.title}</h2>
-          <p>{currentStep.description}</p>
-
+        <div className={styles.topProgress}>
           <div className={styles.stepIndicator}>
             {t('step')} {step} {t('of')} {steps.length}
           </div>
+          {/* <ProgressBar
+            value={(step / steps.length) * 100}
+            variant="course"
+            className={styles.progress}
+            ariaLabel="Onboarding progress"
+          /> */}
         </div>
 
-        <ProgressBar
-          value={(step / steps.length) * 100}
-          variant="course"
-          className={styles.progress}
-          ariaLabel="Onboarding progress"
-        />
+        <div className={styles.content}>
+          <h2>{currentStep.title}</h2>
+          <p>{currentStep.description}</p>
+        </div>
 
         <div className={styles.buttons}>
-          {!isFirstStep && (
-            <button className="btn secondary" onClick={() => setStep(step - 1)}>
-              {t('back')}
-            </button>
-          )}
+          <div className={styles.primaryActions}>
+            {!isFirstStep && (
+              <button className={`btn neutral ${styles.backBtn}`} onClick={() => setStep(step - 1)}>
+                <Icon name="back" size={24} />
+              </button>
+            )}
+
+            {!isLastStep && (
+              <button
+                className={`btn success-filled ${styles.nextBtn}`}
+                onClick={() => setStep(step + 1)}>
+                {t('next')}
+              </button>
+            )}
+            {isLastStep && (
+              <button className={`btn success-filled ${styles.nextBtn}`} onClick={onClose}>
+                {t('start')}
+              </button>
+            )}
+          </div>
 
           {onDisable && (
-            <button className="btn secondary" onClick={onDisable}>
+            <button className={`btn btn-only-text`} onClick={onDisable}>
               {t('disable')}
-            </button>
-          )}
-
-          {!isLastStep && (
-            <button className="btn primary" onClick={() => setStep(step + 1)}>
-              {t('next')}
-            </button>
-          )}
-          {isLastStep && (
-            <button className="btn primary" onClick={onClose}>
-              {t('start')}
             </button>
           )}
         </div>

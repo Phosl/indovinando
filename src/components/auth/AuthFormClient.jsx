@@ -164,14 +164,6 @@ function AuthForm() {
             {t('exitToHome')}
           </a>
 
-          <div className={styles.brandBlock}>
-            <img
-              src={isForgot ? '/mascotte_cambio_psw.svg' : '/mascotte_registrati.svg'}
-              alt={isForgot ? 'Indovinando Cambia Password' : 'Indovinando Registrati'}
-              className={styles.logo}
-            />
-          </div>
-
           <div className={styles.formCard}>
             {error && <div className={styles.errorMessage}>{error}</div>}
             {info && (

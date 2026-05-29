@@ -125,6 +125,14 @@
   }
 }
 
+.progressLabel {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
 // ── Hero ──────────────────────────────────────────────────────
 .hero {
   padding: 24px 20px 20px;
