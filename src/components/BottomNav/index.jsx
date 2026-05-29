@@ -24,6 +24,7 @@ function shouldRender(pathname) {
   if (pathname === '/game/create') return true
   if (pathname === '/changelog') return true
   if (pathname === '/copyright') return true
+  if (pathname.startsWith('/admin')) return true
 
   const gameMatch = pathname.match(/^\/game\/([^/]+)$/)
   if (gameMatch && gameMatch[1] !== 'create') return true

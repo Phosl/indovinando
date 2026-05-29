@@ -1,23 +1,31 @@
 import {notFound} from 'next/navigation'
 import {getRawCourseJson} from '@/lib/courseAdmin'
 import TopBarBack from '@/components/TopBarBack'
+import Link from 'next/link'
 import styles from '../admin.module.scss'
 
-export default async function AdminLevelPage({params}) {
+export default async function AdminLevelPage({params, searchParams}) {
   const {levelId} = await params
+  const sp = await searchParams
+  const lang = sp?.lang === 'en' ? 'en' : 'it'
   const levelNum = parseInt(levelId, 10)
   if (!levelNum || levelNum < 1 || levelNum > 10) notFound()
 
-  const [dataIt, dataEn] = await Promise.all([
-    getRawCourseJson('it', levelNum),
-    getRawCourseJson('en', levelNum),
-  ])
+  let dataIt = null
+  let dataEn = null
+  try {
+    dataIt = await getRawCourseJson('it', levelNum)
+  } catch {}
+  try {
+    dataEn = await getRawCourseJson('en', levelNum)
+  } catch {}
 
   if (!dataIt) notFound()
+  const activeData = lang === 'en' && dataEn ? dataEn : dataIt
 
   return (
     <main className={styles.page}>
-      <TopBarBack title={`⚙️ Livello ${levelNum} — ${dataIt.title}`} href="/admin/corsi" />
+      <TopBarBack title={`⚙️ Livello ${levelNum} — ${activeData.title}`} href="/admin/corsi" />
 
       <div className={styles.container}>
         <div className={styles.header}>
@@ -29,17 +37,23 @@ export default async function AdminLevelPage({params}) {
 
         {/* Lang tabs — static links */}
         <div className={styles.langTabs}>
-          <span className={`${styles.langTab} ${styles.active}`}>🇮🇹 Italiano</span>
-          <a href={`/admin/corsi/${levelNum}?lang=en`} className={styles.langTab}>
+          <Link
+            href={`/admin/corsi/${levelNum}`}
+            className={`${styles.langTab} ${lang === 'it' ? styles.active : ''}`}>
+            🇮🇹 Italiano
+          </Link>
+          <Link
+            href={`/admin/corsi/${levelNum}?lang=en`}
+            className={`${styles.langTab} ${lang === 'en' ? styles.active : ''}`}>
             🇬🇧 English
-          </a>
+          </Link>
         </div>
 
         <div className={styles.lessonList}>
-          {(dataIt.lessons ?? []).map((lesson, i) => (
-            <a
+          {(activeData.lessons ?? []).map((lesson, i) => (
+            <Link
               key={lesson.id ?? i}
-              href={`/admin/corsi/${levelNum}/${i + 1}`}
+              href={`/admin/corsi/${levelNum}/${i + 1}${lang === 'en' ? '?lang=en' : ''}`}
               className={styles.lessonCard}>
               <span className={styles.lessonNum}>#{i + 1}</span>
               <span className={styles.lessonTitle}>{lesson.title}</span>
@@ -48,7 +62,7 @@ export default async function AdminLevelPage({params}) {
                 {lesson.slides?.length ?? (lesson.intro ? 1 : 0)} slide
               </span>
               <span style={{color: 'var(--selected)', fontWeight: 900}}>›</span>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

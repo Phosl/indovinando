@@ -1,6 +1,7 @@
 import {notFound} from 'next/navigation'
 import {getRawCourseJson} from '@/lib/courseAdmin'
 import TopBarBack from '@/components/TopBarBack'
+import Link from 'next/link'
 import LessonEditorClient from './LessonEditorClient'
 import styles from '../../admin.module.scss'
 
@@ -14,7 +15,15 @@ export default async function AdminLessonEditorPage({params, searchParams}) {
 
   if (!levelNum || !lessonId || lessonIndex < 0) notFound()
 
-  const rawData = await getRawCourseJson(lang, levelNum)
+  let rawData = null
+  try {
+    rawData = await getRawCourseJson(lang, levelNum)
+  } catch {
+    // Fallback to Italian if EN file is missing or unavailable
+    try {
+      rawData = await getRawCourseJson('it', levelNum)
+    } catch {}
+  }
   if (!rawData) notFound()
 
   const lesson = rawData.lessons?.[lessonIndex]
@@ -22,21 +31,24 @@ export default async function AdminLessonEditorPage({params, searchParams}) {
 
   return (
     <main className={styles.page}>
-      <TopBarBack title={`✏️ ${lesson.title}`} href={`/admin/corsi/${levelNum}`} />
+      <TopBarBack
+        title={`✏️ ${lesson.title}`}
+        href={`/admin/corsi/${levelNum}${lang === 'en' ? '?lang=en' : ''}`}
+      />
 
       <div className={styles.container}>
         {/* Lang switcher */}
         <div className={styles.langTabs}>
-          <a
+          <Link
             href={`/admin/corsi/${levelNum}/${lessonId}`}
             className={`${styles.langTab} ${lang === 'it' ? styles.active : ''}`}>
             🇮🇹 Italiano
-          </a>
-          <a
+          </Link>
+          <Link
             href={`/admin/corsi/${levelNum}/${lessonId}?lang=en`}
             className={`${styles.langTab} ${lang === 'en' ? styles.active : ''}`}>
             🇬🇧 English
-          </a>
+          </Link>
         </div>
 
         <LessonEditorClient

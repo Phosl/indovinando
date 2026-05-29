@@ -62,6 +62,10 @@ etc.).
 | `/profilo`                       | User profile + language switcher         |
 | `/changelog`                     | Version history                          |
 | `/info`                          | App info / how-to                        |
+| `/admin`                         | Admin home (super_admin only)            |
+| `/admin/produttori`              | Catalog producers list                   |
+| `/admin/produttori/dettaglio`    | Producer detail with bottles list        |
+| `/admin/vini`                    | Catalog wines list                       |
 
 ---
 
@@ -144,6 +148,19 @@ SQL sources (apply in order for a fresh setup):
 4. `WINE_COURSE_PROGRESS.sql` — wine course progress table
 5. `ENOTECA_SCHEMA.sql` — enoteca tasting tables
 6. `LIVE_SESSION_HISTORY.sql` — match history snapshot table
+7. `WINE_CATALOG_SCHEMA.sql` — wine catalog schema + RLS
+8. `WINE_CATALOG_IMPORT.sql` — CSV staging -> normalized wine catalog import pipeline
+
+### Wine Catalog Notes
+
+- Catalog model is normalized (`wine_producers`, `wine_labels`, `wine_vintages`, `wine_grapes`,
+  `wine_label_grapes`, `wine_sources`) with `wine_import_staging` as CSV ingestion table.
+- Compatibility views:
+  - `wine_catalog` (main list/query view used by admin pages)
+  - `wine_catalog_producer_stats` (producer aggregates)
+- Grape relations are imported in **sync mode** for impacted labels:
+  existing `wine_label_grapes` rows are replaced by current CSV values to avoid stale/wrong
+  associations accumulating over time.
 
 ### Key Tables
 

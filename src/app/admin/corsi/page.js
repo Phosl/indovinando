@@ -1,5 +1,6 @@
 import {getWineCourseData} from '@/lib/wineCourseContent'
 import TopBarBack from '@/components/TopBarBack'
+import Link from 'next/link'
 import styles from './admin.module.scss'
 
 const LEVEL_EMOJIS = {
@@ -32,7 +33,7 @@ export default async function AdminCorsiPage() {
           {levels.map((level) => {
             const levelNum = level.order
             return (
-              <a key={level.id} href={`/admin/corsi/${levelNum}`} className={styles.levelCard}>
+              <Link key={level.id} href={`/admin/corsi/${levelNum}`} className={styles.levelCard}>
                 <span className={styles.levelEmoji}>{LEVEL_EMOJIS[levelNum] ?? '🍷'}</span>
                 <div className={styles.levelInfo}>
                   <span className={styles.levelNum}>Livello {levelNum}</span>
@@ -40,7 +41,7 @@ export default async function AdminCorsiPage() {
                   <span className={styles.levelDesc}>{level.description}</span>
                 </div>
                 <span className={styles.arrow}>›</span>
-              </a>
+              </Link>
             )
           })}
         </div>

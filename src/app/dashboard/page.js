@@ -23,7 +23,7 @@ export default async function Dashboard() {
   }
 
   const [profileResult, courseResult, completedLessonsResult, appVersion] = await Promise.all([
-    supabase.from('profiles').select('username').eq('id', data.user.id).single(),
+    supabase.from('profiles').select('username, super_admin').eq('id', data.user.id).single(),
     getWineCourseData(lang).catch(() => ({levels: []})),
     supabase
       .from('wine_course_progress')
@@ -34,6 +34,7 @@ export default async function Dashboard() {
   ])
 
   const profile = profileResult.data
+  const isSuperAdmin = profile?.super_admin === true
   const {levels} = courseResult
   const totalLessons = (levels || []).reduce(
     (sum, level) => sum + (level.lessonIds?.length || 0),
@@ -144,6 +145,20 @@ export default async function Dashboard() {
               <Icon name="forward" size={24} className={styles.sectionCardArrowIcon} />
             </div>
           </Link>
+
+          {isSuperAdmin && (
+            <Link
+              href="/admin"
+              className={`${styles.sectionCard} ${styles.sectionCardPrimary} ${styles.sectionCardBottomArrow}`}>
+              <div className={styles.sectionCardInfo}>
+                <h3>{dashboardDict.admin || 'Admin'}</h3>
+                <p>{lang === 'en' ? 'Catalog and course management tools.' : 'Strumenti gestione catalogo e corsi.'}</p>
+              </div>
+              <div className={styles.sectionCardArrowRail} aria-hidden="true">
+                <Icon name="forward" size={24} className={styles.sectionCardArrowIcon} />
+              </div>
+            </Link>
+          )}
 
           {/* <Link href="/miei-giochi" className="btn primary">
             <span className={styles.menuCardLabel}>{dashboardDict.myGames || 'I miei giochi'}</span>

@@ -11,6 +11,7 @@ Panoramica aggiornata delle tabelle Supabase (PostgreSQL) usate dall'app.
 - `RLS_DELETE_POLICIES_PATCH.sql` - patch delete policy editor giochi
 - `WINE_COURSE_PROGRESS.sql` - progresso corso vino
 - `ENOTECA_SCHEMA.sql` - schema enoteca minimale
+- `WINE_CATALOG_SCHEMA.sql` - catalogo vini per creazione degustazione automatica
 
 ## Diagramma ER (semplificato)
 
@@ -161,6 +162,106 @@ Indici:
 
 - `idx_game_bottle_answers_bottle_id`
 - `idx_game_bottle_answers_question_id`
+
+## Catalogo Vini (Auto Degustazione)
+
+Nota aggiornamento schema:
+dal file `WINE_CATALOG_SCHEMA.sql` il modello e normalizzato (`wine_producers`, `wine_labels`,
+`wine_vintages`, `wine_grapes`, `wine_label_grapes`, `wine_sources`) con tabella
+`wine_import_staging` per import CSV. La view `wine_catalog` resta disponibile per compatibilita
+con pagine/admin query esistenti.
+
+### Modello Normalizzato (principale)
+
+Tabelle principali:
+
+- `wine_producers`
+- `wine_grapes`
+- `wine_labels`
+- `wine_label_grapes`
+- `wine_vintages`
+- `wine_sources`
+- `wine_import_staging` (ingestion)
+
+### View Compatibilita: `wine_catalog`
+
+Vista catalogo vini usata per:
+
+- match da etichetta (OCR/vision)
+- precompilazione bottiglie
+- generazione quiz rapido (paese, regione, annata, tipologia, vitigni, prezzo)
+
+| Colonna              | Tipo          | Note |
+| -------------------- | ------------- | ---- |
+| `id`                 | `UUID`        | id vintage |
+| `external_id`        | `TEXT`        | id sorgente scraper |
+| `ean`                | `TEXT`        | barcode/ean |
+| `name`               | `TEXT`        | nome vino completo |
+| `name_normalized`    | `TEXT`        | nome normalizzato |
+| `producer`           | `TEXT`        | produttore |
+| `producer_normalized`| `TEXT`        | produttore normalizzato |
+| `country`            | `TEXT`        | paese |
+| `region`             | `TEXT`        | regione |
+| `appellation`        | `TEXT`        | doc/docg/igt |
+| `type`               | `TEXT`        | red/white/rose/sparkling |
+| `grapes`             | `TEXT[]`      | lista vitigni |
+| `grapes_normalized`  | `TEXT[]`      | lista vitigni normalizzati |
+| `vintage`            | `INT`         | annata |
+| `abv`                | `NUMERIC(5,2)`| gradazione |
+| `price`              | `NUMERIC(10,2)` | prezzo |
+| `currency`           | `TEXT`        | valuta |
+| `image_url`          | `TEXT`        | url immagine |
+| `source`             | `TEXT`        | fonte (tannico, open food facts, ecc.) |
+| `source_url`         | `TEXT`        | url prodotto |
+| `scraped_at`         | `TIMESTAMPTZ` | data scraping |
+| `last_updated`       | `TIMESTAMPTZ` | aggiornamento record |
+| `confidence`         | `NUMERIC(4,3)`| affidabilita estrazione |
+| `search_text`        | `TEXT`        | testo indicizzato per match fuzzy |
+| `dedupe_key`         | `TEXT`        | chiave deduplica |
+| `notes`              | `TEXT`        | note tecniche |
+| `is_active`          | `BOOLEAN`     | attivo a livello label |
+| `created_at`         | `TIMESTAMPTZ` | default `now()` |
+| `updated_at`         | `TIMESTAMPTZ` | default `now()` |
+
+Indici principali:
+
+- `ean`
+- `producer_normalized`
+- `vintage`
+- `type`
+- trigram su `search_text` (richiede `pg_trgm`)
+- unique parziale su `dedupe_key`
+
+Vista supporto admin:
+
+- `wine_catalog_producer_stats` (aggregazione produttori)
+
+### RLS (tabelle wine_*)
+
+- `SELECT`: utenti autenticati
+- `INSERT/UPDATE/DELETE`: solo `profiles.super_admin = true`
+- La view `wine_catalog` eredita la sicurezza dalle tabelle sottostanti.
+
+### Import CSV in Supabase
+
+1. Esegui `WINE_CATALOG_SCHEMA.sql` in SQL Editor (una volta sola).
+2. Converti il file Excel in CSV UTF-8 (foglio principale).
+3. Importa il CSV in `wine_import_staging`:
+   `Table Editor -> wine_import_staging -> Insert -> Import data via CSV`.
+4. Mappa le colonne CSV su:
+   `external_id, ean, name, name_normalized, producer, producer_normalized, country, region, appellation, type, grapes, grapes_normalized, vintage, abv, price, currency, image_url, source, source_url, scraped_at, last_updated, confidence, search_text, dedupe_key, notes`.
+5. Esegui `WINE_CATALOG_IMPORT.sql` per popolare tabelle normalizzate (`wine_producers`, `wine_labels`, `wine_vintages`, `wine_grapes`, `wine_label_grapes`, `wine_sources`) e marcare `processed = true` in staging.
+6. Controlli rapidi:
+   - count record su `wine_catalog`
+   - count record su `wine_catalog_producer_stats`
+   - `wine_import_staging where processed = false` deve essere 0
+
+### Comportamento Import (sync)
+
+- `wine_label_grapes` e gestita in modalita **replace** per i `wine_label` impattati dal batch:
+  - delete relazioni esistenti dei label nel batch
+  - insert delle sole relazioni presenti nel CSV corrente
+- Questo evita accumulo storico di vitigni errati da import precedenti.
 
 ## Tabelle Live Multiplayer
 
