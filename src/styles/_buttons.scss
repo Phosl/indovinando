@@ -70,7 +70,7 @@
 }
 
 .btn.tertiary {
-  background-color: var(--tertiary-100);
+  background-color: var(--tertiary-50);
   color: var(--tertiary-text);
   border-color: var(--tertiary);
   &:hover {
@@ -114,6 +114,18 @@
   &:hover {
     background: var(--selected-light);
   }
+}
+
+.btn.info-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 100px;
+  border: 2px solid var(--button-secondary-border);
+  background: var(--background);
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-weight: 900;
+  padding: 0;
 }
 
 .btn.neutral {

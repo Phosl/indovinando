@@ -1,5 +1,6 @@
 import {NextResponse} from 'next/server'
 import {createClient} from '@supabase/supabase-js'
+import {createServerSupabase} from '@/lib/supabaseServer'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -32,6 +33,10 @@ export async function POST(request) {
     }
 
     const supabase = createAnonClient()
+    const serverSupabase = await createServerSupabase()
+    const {
+      data: {user},
+    } = await serverSupabase.auth.getUser()
 
     const {data: game, error: gameError} = await supabase
       .from('games')
@@ -44,15 +49,37 @@ export async function POST(request) {
       return NextResponse.json({error: 'Game not found or unpublished'}, {status: 404})
     }
 
-    const {data: session, error: insertError} = await supabase
-      .from('enoteca_tasting_sessions')
-      .insert({
-        game_id: trimmedGameId,
-        nickname: trimmedNickname,
-        table_name: normalizedTable,
-      })
-      .select('id')
-      .single()
+    const baseInsertPayload = {
+      game_id: trimmedGameId,
+      nickname: trimmedNickname,
+      table_name: normalizedTable,
+    }
+
+    let session = null
+    let insertError = null
+
+    if (user?.id) {
+      const withUserResult = await supabase
+        .from('enoteca_tasting_sessions')
+        .insert({
+          ...baseInsertPayload,
+          user_id: user.id,
+        })
+        .select('id')
+        .single()
+      session = withUserResult.data
+      insertError = withUserResult.error
+    }
+
+    if (!session?.id) {
+      const fallbackResult = await supabase
+        .from('enoteca_tasting_sessions')
+        .insert(baseInsertPayload)
+        .select('id')
+        .single()
+      session = fallbackResult.data
+      insertError = fallbackResult.error
+    }
 
     if (insertError || !session?.id) {
       return NextResponse.json({error: insertError?.message || 'Insert failed'}, {status: 500})

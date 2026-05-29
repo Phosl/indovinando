@@ -261,7 +261,19 @@
     "installAppGenericLine2": "Cerca l'opzione per aggiungere il sito alla home o installarlo come app.",
     "logoutConfirm": "Sei sicuro di voler uscire?",
     "loggingOut": "Disconnessione...",
-    "logoutAction": "Esci"
+    "logoutAction": "Esci",
+    "matchesTitle": "Le tue partite",
+    "matchesSubtitle": "Riepilogo generale e cronologia completa delle tue partite.",
+    "showMatches": "Mostra partite",
+    "hideMatches": "Nascondi partite",
+    "totalMatches": "Partite",
+    "totalWins": "Vinte",
+    "totalScore": "Punteggio totale",
+    "rankSummary": "Posizione classifica: #{rank} su {total}",
+    "rankPending": "Posizione classifica non disponibile al momento.",
+    "matchesEmpty": "Nessuna partita trovata per questo profilo.",
+    "pointsUnit": "pt",
+    "won": "Vinta"
   },
   "course": {
     "title": "Corso Vino",

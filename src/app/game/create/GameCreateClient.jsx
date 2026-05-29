@@ -50,7 +50,9 @@ function ModePickerScreen({onPick}) {
     <PageLayout title="Crea Degustazione" onBack={() => router.push('/miei-giochi')}>
       <h1 className={styles.modePickerTitle}>Scegli come vuoi preparare il gioco.</h1>
       <div className={styles.modePickerGrid}>
-        <button className={`${styles.modeCard} ${styles.modeCardQuick}`} onClick={() => onPick('quick')}>
+        <button
+          className={`${styles.modeCard} ${styles.modeCardQuick}`}
+          onClick={() => onPick('quick')}>
           <img
             src="/game-options-quick.svg"
             alt=""
@@ -62,14 +64,16 @@ function ModePickerScreen({onPick}) {
             <p className={styles.modeCardDesc}>
               Usa il nostro modello pronto per la degustazione: aggiungi le bottiglie e sei pronto.
             </p>
-            <span className="btn btn-small quaternary btn-inline btn-with-icon-end">
+            <span className="btn btn-small quaternary btn-quick-game btn-inline btn-with-icon-end">
               <span>Usa modello</span>
               <Icon name="forward" size={24} className="btn-icon" />
             </span>
           </div>
         </button>
 
-        <button className={`${styles.modeCard} ${styles.modeCardCustom}`} onClick={() => onPick('custom')}>
+        <button
+          className={`${styles.modeCard} ${styles.modeCardCustom}`}
+          onClick={() => onPick('custom')}>
           <img
             src="/game-options-custom.svg"
             alt=""
@@ -81,7 +85,7 @@ function ModePickerScreen({onPick}) {
             <p className={styles.modeCardDesc}>
               Crea le tue domande e risposta da zero, adatta ogni dettaglio al tuo stile.
             </p>
-            <span className="btn btn-small quaternary btn-inline btn-with-icon-end">
+            <span className="btn btn-small quaternary btn-custom-game btn-inline btn-with-icon-end">
               <span>Inizia</span>
               <Icon name="forward" size={24} className="btn-icon" />
             </span>

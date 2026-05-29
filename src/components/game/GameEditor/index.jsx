@@ -177,7 +177,7 @@ const StepTwoSection = memo(function StepTwoSection({
           type="button"
           aria-label="Guida questionario"
           onClick={onShowIntro}
-          className={styles.infoButton}>
+          className="btn info-circle">
           ?
         </button>
       </div>
@@ -259,7 +259,7 @@ const StepFourSection = memo(function StepFourSection({
           type="button"
           aria-label="Guida bottiglie"
           onClick={onShowInfo}
-          className={styles.infoButton}>
+          className="btn info-circle">
           ?
         </button>
       </div>

@@ -7,6 +7,8 @@
 }
 .modePickerTitle {
   text-align: center;
+  line-height: 1.2;
+  margin-bottom: 8px;
 }
 
 .modeCard {
@@ -31,7 +33,6 @@
 
 .modeCard:hover {
   border-color: var(--selected);
-  box-shadow: 0px 4px 0px 0px var(--selected-dark);
 }
 
 .modeCard:active {
@@ -73,21 +74,31 @@
 
 .modeCardBgImage {
   position: absolute;
-  right: 0%;
-  top: 10%;
+  right: 2%;
+  top: 20%;
   width: auto;
 
-  height: 80%;
+  height: 60%;
   z-index: 1;
   pointer-events: none;
   user-select: none;
-  opacity: 0.32;
+  opacity: 0.7;
 }
 
 .modeCard {
   :global(.quaternary) {
     font-size: 16px;
     text-transform: uppercase;
+  }
+  :global(.btn-quick-game) {
+    background: #ffe8b8;
+    border-color: #f8b624;
+    color: #ee7600;
+  }
+  :global(.btn-custom-game) {
+    background: #f4cfdb;
+    border-color: #cf2c61;
+    color: #cf2c61;
   }
 }
 

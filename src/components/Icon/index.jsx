@@ -1,6 +1,6 @@
 import styles from './Icon.module.scss'
 
-const ICON_SIZE_SCALE = [24, 32, 40, 48]
+const ICON_SIZE_SCALE = [16, 20, 24, 32, 40, 48]
 
 const ICONS = {
   checkCorrect: '/icons/check-correct.svg',
@@ -20,6 +20,8 @@ const ICONS = {
   back: '/icons/back.svg',
   forward: '/icons/forward-icon.svg',
   question: '/icons/questions.svg',
+  language: '/icons/language.svg',
+  avatar: '/icons/avatar.svg',
 }
 
 const ICON_RENDER_MODE = {

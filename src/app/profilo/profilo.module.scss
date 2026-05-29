@@ -170,16 +170,6 @@
   margin-bottom: 10px;
 }
 
-.optionsTitle {
-  margin: 0;
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #647169;
-  text-align: left;
-}
-
 .optionDivider {
   height: 1px;
   background: #e8f0e4;
@@ -318,6 +308,25 @@
 .label {
   font-weight: 700;
   color: #2e3f3a;
+}
+
+.labelWithIcon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #2e3f3a;
+}
+
+.historyToggle {
+  width: 100%;
+  justify-content: center;
+  background: var(--primary-50);
+  color: var(--primary-text);
+  border-color: var(--primary-100);
+
+  &:hover {
+    background: var(--primary-100);
+  }
 }
 
 .card h2 {

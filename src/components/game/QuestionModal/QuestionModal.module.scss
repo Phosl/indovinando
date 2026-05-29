@@ -171,4 +171,7 @@
   padding: 20px 32px;
   border-top: 2px solid var(--button-secondary-border);
   justify-content: flex-end;
+  :global(.neutral) {
+    width: auto;
+  }
 }

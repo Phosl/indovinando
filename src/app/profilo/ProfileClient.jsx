@@ -6,6 +6,7 @@ import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
 import InfoModal from '@/components/InfoModal'
+import Icon from '@/components/Icon'
 import {useWineCourseProgress} from '@/app/corso-vino/hooks/useWineCourseProgress'
 import {supabaseClient} from '@/lib/supabaseClient'
 import {useT} from '@/lib/i18n/useT'
@@ -364,19 +365,25 @@ export default function ProfileClient({
 
           <div className={styles.cardDivider} />
 
-          <div className={styles.optionsHeader}>
+          {/* <div className={styles.optionsHeader}>
             <h3 className={styles.optionsTitle}>{t('optionsSection')}</h3>
-          </div>
+          </div> */}
 
           <div className={styles.languageRow}>
-            <span className={styles.label}>{t('language')}</span>
+            <span className={styles.labelWithIcon}>
+              <Icon name="language" size={20} />
+              <span className={styles.label}>{t('language')}</span>
+            </span>
             <LanguageSwitcher inline />
           </div>
 
           <div className={styles.optionDivider} />
 
           <div className={styles.avatarRow}>
-            <span className={styles.label}>{t('chooseAvatar')}</span>
+            <span className={styles.labelWithIcon}>
+              <Icon name="avatar" size={24} />
+              <span className={styles.label}>{t('chooseAvatar')}</span>
+            </span>
             <button
               type="button"
               className={styles.avatarPickerBtn}
@@ -385,6 +392,12 @@ export default function ProfileClient({
               <span className={styles.avatarPickerLabel}>Scegli</span>
             </button>
           </div>
+
+          <div className={styles.optionDivider} />
+
+          <Link href="/profilo/partite" className={`btn btn-small ${styles.historyToggle}`}>
+            {t('showMatches')}
+          </Link>
         </section>
 
         {/* ── Livello + Statistiche ── */}

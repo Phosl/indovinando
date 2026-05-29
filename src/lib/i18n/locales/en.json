@@ -261,7 +261,19 @@
     "installAppGenericLine2": "Look for the option to add this site to your home screen or install it as an app.",
     "logoutConfirm": "Are you sure you want to log out?",
     "loggingOut": "Logging out...",
-    "logoutAction": "Log out"
+    "logoutAction": "Log out",
+    "matchesTitle": "Your matches",
+    "matchesSubtitle": "Overview and full history of your matches.",
+    "showMatches": "Show matches",
+    "hideMatches": "Hide matches",
+    "totalMatches": "Matches",
+    "totalWins": "Wins",
+    "totalScore": "Total score",
+    "rankSummary": "Leaderboard position: #{rank} of {total}",
+    "rankPending": "Leaderboard position is currently unavailable.",
+    "matchesEmpty": "No matches found for this profile.",
+    "pointsUnit": "pts",
+    "won": "Won"
   },
   "course": {
     "title": "Wine Course",
