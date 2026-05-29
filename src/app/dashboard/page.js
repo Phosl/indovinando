@@ -4,6 +4,9 @@ import DashboardInfoFabWrapper from './DashboardInfoFabWrapper'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {getAppVersion} from '@/lib/appVersion'
+import {getWineCourseData} from '@/lib/wineCourseContent'
+import ProgressBar from '@/components/ui/ProgressBar'
+import Icon from '@/components/Icon'
 import it from '@/lib/i18n/locales/it.json'
 import en from '@/lib/i18n/locales/en.json'
 import styles from './dashboard.module.scss'
@@ -27,8 +30,22 @@ export default async function Dashboard() {
     .eq('id', data.user.id)
     .single()
 
-  const avatar = profile?.avatar_emoji || '👤'
-  const isImgAvatar = typeof avatar === 'string' && avatar.includes('.svg')
+  const {levels} = await getWineCourseData(lang).catch(() => ({levels: []}))
+  const totalLessons = (levels || []).reduce(
+    (sum, level) => sum + (level.lessonIds?.length || 0),
+    0,
+  )
+
+  const {count: completedLessonsCount} = await supabase
+    .from('wine_course_progress')
+    .select('id', {count: 'exact', head: true})
+    .eq('user_id', data.user.id)
+    .eq('completed', true)
+
+  const completedLessons = completedLessonsCount || 0
+  const progressPct =
+    totalLessons > 0 ? Math.round(Math.min(100, (completedLessons / totalLessons) * 100)) : 0
+  const hasStartedCourse = completedLessons > 0
 
   return (
     <main className={styles.dashboard}>
@@ -69,7 +86,76 @@ export default async function Dashboard() {
             </div>
           </Link>
 
-          <Link href="/miei-giochi" className="btn primary">
+          <Link
+            href="/miei-giochi"
+            className={`${styles.sectionCard} ${styles.sectionCardPrimary} ${styles.sectionCardBottomArrow}`}>
+            <div className={styles.sectionCardInfo}>
+              <h3>{dashboardDict.myGames || 'Degustazioni'}</h3>
+              <p>
+                {lang === 'en'
+                  ? 'Create, manage and play with your tasting games.'
+                  : 'Crea, gestisci e gioca con le tue degustazioni.'}
+              </p>
+            </div>
+            <div className={styles.sectionCardArrowRail} aria-hidden="true">
+              <Icon name="forward" size={24} className={styles.sectionCardArrowIcon} />
+            </div>
+          </Link>
+
+          {/* <Link
+            href="/corso-vino"
+            className={`${styles.sectionCard} ${styles.sectionCardTertiary} ${styles.sectionCardBottomArrow}`}>
+            <div className={styles.sectionCardInfo}>
+              <h3>{dashboardDict.wineCourse || 'Corso Vino'}</h3>
+              <p>
+                {lang === 'en'
+                  ? 'Learn, discover and become a true expert.'
+                  : 'Impara, scopri e diventa un esperto.'}
+              </p>
+            </div>
+            <div className={styles.sectionCardArrowRail} aria-hidden="true">
+              <Icon name="forward" size={24} className={styles.sectionCardArrowIcon} />
+            </div>
+          </Link> */}
+
+          <Link
+            href="/corso-vino"
+            className={`${styles.sectionCard} ${styles.sectionCardTertiary} ${styles.sectionCardBottomArrow}`}>
+            <div className={styles.sectionCardInfo}>
+              <span className={styles.sectionCardEyebrow}>
+                {lang === 'en' ? 'Your progress' : 'I tuoi progressi'}
+              </span>
+              <h3>{dashboardDict.wineCourse || 'Corso Vino'}</h3>
+              <p>
+                {hasStartedCourse
+                  ? lang === 'en'
+                    ? 'Keep going with your wine path.'
+                    : 'Continua il tuo percorso nel mondo del vino.'
+                  : lang === 'en'
+                    ? 'You have not started the course yet.'
+                    : 'Non hai ancora iniziato il corso.'}
+              </p>
+              <ProgressBar
+                value={progressPct}
+                variant="course"
+                className={styles.courseProgressBar}
+                ariaLabel={lang === 'en' ? 'Your progress' : 'I tuoi progressi'}
+              />
+              <div className={styles.courseProgressMeta}>
+                <span className={styles.courseProgressLessons}>
+                  {lang === 'en'
+                    ? `${completedLessons}/${totalLessons} lessons completed`
+                    : `${completedLessons}/${totalLessons} lezioni completate`}
+                </span>
+                <span className={styles.courseProgressPercent}>{progressPct}%</span>
+              </div>
+            </div>
+            <div className={styles.sectionCardArrowRail} aria-hidden="true">
+              <Icon name="forward" size={24} className={styles.sectionCardArrowIcon} />
+            </div>
+          </Link>
+
+          {/* <Link href="/miei-giochi" className="btn primary">
             <span className={styles.menuCardLabel}>{dashboardDict.myGames || 'I miei giochi'}</span>
           </Link>
 
@@ -79,7 +165,7 @@ export default async function Dashboard() {
 
           <Link href="/profilo" className="btn secondary">
             <span className={styles.menuCardLabel}>{dashboardDict.profile || 'Profilo'}</span>
-          </Link>
+          </Link> */}
         </nav>
       </div>
 

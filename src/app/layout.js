@@ -5,6 +5,7 @@ import PwaRegistrar from '@/components/PwaRegistrar'
 import ScrollToTop from '@/components/ScrollToTop'
 import AppleSplashLinks from '@/components/AppleSplashLinks'
 import PageTransitionShell from '@/components/PageTransitionShell'
+import BottomNav from '@/components/BottomNav'
 import {getServerLanguage} from '@/lib/i18n/server'
 
 const isPreview = process.env.VERCEL_ENV === 'preview'
@@ -55,6 +56,7 @@ export default async function RootLayout({children}) {
           <PwaRegistrar />
           <ScrollToTop />
           <PageTransitionShell>{children}</PageTransitionShell>
+          <BottomNav />
         </LanguageProvider>
       </body>
     </html>

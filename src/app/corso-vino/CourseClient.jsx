@@ -5,6 +5,7 @@ import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import Icon from '@/components/Icon'
 import GuestWarningModal from '@/components/course/GuestWarningModal'
+import ProgressBar from '@/components/ui/ProgressBar'
 import {useWineCourseProgress} from './hooks/useWineCourseProgress'
 import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
 import styles from './course.module.scss'
@@ -84,12 +85,12 @@ export default function CourseClient({levels, isAdmin = false}) {
                     : `→ ${t('nextLevelLabel', {index: nextLevelProgress.nextLevel})}`}
                 </span>
               </div>
-              <div className={styles.heroProgressTrack}>
-                <div
-                  className={styles.heroProgressFill}
-                  style={{'--pct': `${nextLevelProgress.pct}%`}}
-                />
-              </div>
+              <ProgressBar
+                value={nextLevelProgress.pct}
+                variant="course"
+                className={styles.heroProgressTrack}
+                ariaLabel="Course hero progress"
+              />
             </div>
           )}
         </div>

@@ -123,32 +123,34 @@ const StepOneSection = memo(function StepOneSection({
 }) {
   return (
     <div className={styles.section}>
-      <h3 className={styles.sectionTitle}>{editorText.step1Title}</h3>
-      <input
-        className={styles.inputField}
-        placeholder={editorText.step1Placeholder}
-        value={gameName}
-        onChange={(e) => onGameNameChange(e.target.value)}
-      />
-      {avatarOptions.length > 0 && (
-        <div className={styles.avatarPicker}>
-          <p className={styles.avatarPickerTitle}>Scegli immagine degustazione</p>
-          <div className={styles.avatarGrid}>
-            {avatarOptions.map((avatarPath, avatarIndex) => (
-              <button
-                key={avatarPath}
-                type="button"
-                className={`${styles.avatarOption} ${
-                  selectedAvatarIndex === avatarIndex ? styles.avatarOptionActive : ''
-                }`}
-                onClick={() => onAvatarChange(avatarIndex)}
-                aria-pressed={selectedAvatarIndex === avatarIndex}>
-                <img src={avatarPath} alt="" aria-hidden="true" />
-              </button>
-            ))}
+      <div className={styles.stepBody}>
+        <h3 className={styles.sectionTitle}>{editorText.step1Title}</h3>
+        <input
+          className={styles.inputField}
+          placeholder={editorText.step1Placeholder}
+          value={gameName}
+          onChange={(e) => onGameNameChange(e.target.value)}
+        />
+        {avatarOptions.length > 0 && (
+          <div className={styles.avatarPicker}>
+            <p className={styles.avatarPickerTitle}>Scegli immagine degustazione</p>
+            <div className={styles.avatarGrid}>
+              {avatarOptions.map((avatarPath, avatarIndex) => (
+                <button
+                  key={avatarPath}
+                  type="button"
+                  className={`${styles.avatarOption} ${
+                    selectedAvatarIndex === avatarIndex ? styles.avatarOptionActive : ''
+                  }`}
+                  onClick={() => onAvatarChange(avatarIndex)}
+                  aria-pressed={selectedAvatarIndex === avatarIndex}>
+                  <img src={avatarPath} alt="" aria-hidden="true" />
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className={styles.buttonRow}>
         <button className="btn success" onClick={onContinue}>
@@ -171,22 +173,24 @@ const StepTwoSection = memo(function StepTwoSection({
 }) {
   return (
     <div className={styles.section}>
-      <div className={styles.sectionHeader}>
-        <h3 className={styles.sectionTitle}>{editorText.step2Title}</h3>
-        <button
-          type="button"
-          aria-label="Guida questionario"
-          onClick={onShowIntro}
-          className="btn info-circle">
-          ?
-        </button>
+      <div className={styles.stepBody}>
+        <div className={styles.sectionHeader}>
+          <h3 className={styles.sectionTitle}>{editorText.step2Title}</h3>
+          <button
+            type="button"
+            aria-label="Guida questionario"
+            onClick={onShowIntro}
+            className="btn info-circle">
+            ?
+          </button>
+        </div>
+        <QuestionsList
+          questions={questionDraft}
+          onEditQuestion={onEditQuestion}
+          onNewQuestion={onNewQuestion}
+          onDeleteQuestion={onDeleteQuestion}
+        />
       </div>
-      <QuestionsList
-        questions={questionDraft}
-        onEditQuestion={onEditQuestion}
-        onNewQuestion={onNewQuestion}
-        onDeleteQuestion={onDeleteQuestion}
-      />
 
       <div className={styles.buttonRow}>
         <button
@@ -216,14 +220,16 @@ const StepThreeSection = memo(function StepThreeSection({
 }) {
   return (
     <div className={styles.section}>
-      <h3 className={styles.sectionTitle}>{editorText.bridgeTitle}</h3>
-      <div className={styles.bridgeRow}>
-        <button className="btn neutral" onClick={onSaveAndPrint} disabled={isSaving}>
-          {isSaving ? editorText.saving : editorText.saveAndPrint}
-        </button>
-        <button className="btn success" onClick={onInsertResults}>
-          {editorText.bridgeInsertResults}
-        </button>
+      <div className={styles.stepBody}>
+        <h3 className={styles.sectionTitle}>{editorText.bridgeTitle}</h3>
+        <div className={styles.bridgeRow}>
+          <button className="btn neutral" onClick={onSaveAndPrint} disabled={isSaving}>
+            {isSaving ? editorText.saving : editorText.saveAndPrint}
+          </button>
+          <button className="btn success" onClick={onInsertResults}>
+            {editorText.bridgeInsertResults}
+          </button>
+        </div>
       </div>
       <div className={styles.buttonRow}>
         <button
@@ -253,23 +259,25 @@ const StepFourSection = memo(function StepFourSection({
 }) {
   return (
     <div className={styles.section}>
-      <div className={styles.sectionHeader}>
-        <h3 className={styles.sectionTitle}>{editorText.step4Title || 'Aggiungi bottiglia'}</h3>
-        <button
-          type="button"
-          aria-label="Guida bottiglie"
-          onClick={onShowInfo}
-          className="btn info-circle">
-          ?
-        </button>
+      <div className={styles.stepBody}>
+        <div className={styles.sectionHeader}>
+          <h3 className={styles.sectionTitle}>{editorText.step4Title || 'Aggiungi bottiglia'}</h3>
+          <button
+            type="button"
+            aria-label="Guida bottiglie"
+            onClick={onShowInfo}
+            className="btn info-circle">
+            ?
+          </button>
+        </div>
+        <BottlesList
+          bottles={bottles}
+          questions={questions}
+          onEditBottle={onEditBottle}
+          onNewBottle={onNewBottle}
+          onDeleteBottle={onDeleteBottle}
+        />
       </div>
-      <BottlesList
-        bottles={bottles}
-        questions={questions}
-        onEditBottle={onEditBottle}
-        onNewBottle={onNewBottle}
-        onDeleteBottle={onDeleteBottle}
-      />
 
       <div className={styles.buttonRow}>
         <button
@@ -364,6 +372,7 @@ export default function GameEditor({
   const [editingQuestionIndex, setEditingQuestionIndex] = useState(null)
   const [resolvedUserId, setResolvedUserId] = useState(userId)
   const [stepDirection, setStepDirection] = useState('forward')
+  const [animateStep, setAnimateStep] = useState(false)
   const savePhaseRef = useRef('idle')
   const initialStepOverrideRef = useRef(startsAtStep2 ? 2 : null)
   const pendingStepRef = useRef(null)
@@ -542,6 +551,12 @@ export default function GameEditor({
       setStepDirection(step > prevStep ? 'forward' : 'back')
       prevStepRef.current = step
     }
+  }, [step])
+
+  useEffect(() => {
+    setAnimateStep(false)
+    const raf = requestAnimationFrame(() => setAnimateStep(true))
+    return () => cancelAnimationFrame(raf)
   }, [step])
 
   function goToStep(nextStep) {
@@ -976,9 +991,12 @@ export default function GameEditor({
       />
       {stepContent && (
         <div
-          key={step}
           className={`${styles.stepFrame} ${
-            stepDirection === 'back' ? styles.stepEnterBack : styles.stepEnterForward
+            animateStep
+              ? stepDirection === 'back'
+                ? styles.stepEnterBack
+                : styles.stepEnterForward
+              : ''
           }`}>
           {stepContent}
         </div>

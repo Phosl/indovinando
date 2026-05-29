@@ -94,17 +94,8 @@
 }
 
 .progress {
-  height: 4px;
-  background: #e0e0e0;
-  border-radius: 2px;
+  height: 10px;
   margin-bottom: 24px;
-  overflow: hidden;
-}
-
-.progressBar {
-  height: 100%;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-  transition: width 0.3s ease-in-out;
 }
 
 .buttons {

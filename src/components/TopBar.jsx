@@ -2,6 +2,7 @@
 
 import styles from './TopBar.module.scss'
 import {useT} from '@/lib/i18n/useT'
+import ProgressBar from '@/components/ui/ProgressBar'
 
 export default function TopBar({
   title,
@@ -38,12 +39,12 @@ export default function TopBar({
       {title && <h1 className={`${styles.title} ${titleClassName}`}>{title}</h1>}
       <div className={`${styles.actions} ${actionsClassName}`}>{children}</div>
       {progress !== null && (
-        <div className={styles.progressTrack}>
-          <div
-            className={styles.progressFill}
-            style={{width: `${Math.min(100, Math.max(0, progress))}%`}}
-          />
-        </div>
+        <ProgressBar
+          value={progress}
+          className={styles.progressTrack}
+          fillClassName={styles.progressFill}
+          ariaLabel="Top bar progress"
+        />
       )}
     </div>
   )

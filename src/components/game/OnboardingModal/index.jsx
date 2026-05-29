@@ -4,6 +4,7 @@ import {useState} from 'react'
 import styles from './OnboardingModal.module.scss'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {pickLangText} from '@/lib/i18n/dictionaries'
+import ProgressBar from '@/components/ui/ProgressBar'
 
 const ONBOARDING_DICTIONARY = {
   it: {
@@ -116,9 +117,12 @@ export default function OnboardingModal({onClose, onDisable}) {
           </div>
         </div>
 
-        <div className={styles.progress}>
-          <div className={styles.progressBar} style={{width: `${(step / steps.length) * 100}%`}} />
-        </div>
+        <ProgressBar
+          value={(step / steps.length) * 100}
+          variant="course"
+          className={styles.progress}
+          ariaLabel="Onboarding progress"
+        />
 
         <div className={styles.buttons}>
           {!isFirstStep && (

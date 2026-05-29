@@ -7,6 +7,7 @@ import TopBar from '@/components/TopBar'
 import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
 import InfoModal from '@/components/InfoModal'
 import Icon from '@/components/Icon'
+import ProgressBar from '@/components/ui/ProgressBar'
 import {useWineCourseProgress} from '@/app/corso-vino/hooks/useWineCourseProgress'
 import {supabaseClient} from '@/lib/supabaseClient'
 import {useT} from '@/lib/i18n/useT'
@@ -427,12 +428,13 @@ export default function ProfileClient({
 
           <div className={styles.levelProgressWrap}>
             <div className={styles.levelProgressRow}>
-              <div className={styles.levelProgressTrack}>
-                <div
-                  className={styles.levelProgressFill}
-                  style={{width: `${loaded ? playerLevel.progressInLevel : 0}%`}}
-                />
-              </div>
+              <ProgressBar
+                value={loaded ? playerLevel.progressInLevel : 0}
+                variant="course"
+                className={styles.levelProgressTrack}
+                fillClassName={styles.levelProgressFill}
+                ariaLabel="Progress livello"
+              />
               <span className={styles.levelProgressLabel}>
                 {loaded ? `${playerLevel.progressInLevel}%` : '…'}
               </span>

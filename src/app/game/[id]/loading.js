@@ -17,7 +17,8 @@ function Bone({w, h, style}) {
 
 export default function GameLoading() {
   return (
-    <main style={{padding: '0 20px 48px', maxWidth: 960, margin: '0 auto', display: 'grid', gap: 14}}>
+    <main
+      style={{padding: '0 20px 48px', maxWidth: 960, margin: '0 auto', display: 'grid', gap: 14}}>
       <div
         className="skeleton-frame"
         style={{

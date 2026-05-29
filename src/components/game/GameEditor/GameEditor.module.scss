@@ -152,34 +152,50 @@
   padding: 20px 20px 104px 20px;
 }
 
+.stepBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .stepFrame {
   width: 100%;
   will-change: opacity;
 }
 
 .stepEnterForward {
-  animation: wizardStepEnterForward 0.18s ease-out both;
+  .stepBody {
+    animation: wizardStepSlideForward 0.22s ease forwards;
+    will-change: transform, opacity;
+  }
 }
 
 .stepEnterBack {
-  animation: wizardStepEnterBack 0.18s ease-out both;
-}
-
-@keyframes wizardStepEnterForward {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
+  .stepBody {
+    animation: wizardStepSlideBack 0.22s ease forwards;
+    will-change: transform, opacity;
   }
 }
 
-@keyframes wizardStepEnterBack {
+@keyframes wizardStepSlideForward {
   from {
     opacity: 0;
+    transform: translateX(28px);
   }
   to {
     opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes wizardStepSlideBack {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 .sectionHeader {
