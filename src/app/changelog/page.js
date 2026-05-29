@@ -29,6 +29,17 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.26.4',
+    date: '29 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'stabilize catalog producer detail matching, fix admin course lang switching/fallback, extend bottom nav on admin routes, and harden wine import sync docs/pipeline',
+      'optimize course route fetching and align course/level/lesson skeletons with current layouts',
+      'speed up navigation by removing page transition leave delay (LEAVE_MS = 0)',
+    ],
+  },
+
+  {
     version: '1.26.3',
     date: '29 maggio 2026',
     label: 'Auto',
