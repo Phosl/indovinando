@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.26.3',
+    date: '29 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'parallelize server fetches on dashboard/my-games/profile and fix info modal bottom-nav overlap',
+    ],
+  },
+
+  {
     version: '1.26.2',
     date: '29 maggio 2026',
     label: 'Auto',
