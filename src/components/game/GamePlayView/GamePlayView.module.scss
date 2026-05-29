@@ -269,6 +269,20 @@
   margin-bottom: 24px;
 }
 
+.setupCtaWrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setupCtaHint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
 .actionBtn {
   min-width: 0;
   text-align: center;

@@ -1,19 +1,21 @@
 'use client'
 
 import Link from 'next/link'
-import {useMemo, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {pickLangText} from '@/lib/i18n/dictionaries'
 import AvatarDisplay from '@/components/AvatarDisplay'
 import Icon from '@/components/Icon'
 import {Button, ButtonLink} from '@/components/ui/Button'
 import {formatAppDate, formatAppDateTime} from '@/lib/dateFormat'
+import {watchMobileViewport} from '@/lib/deviceUtils'
 import {getGamePlayViewText} from '../utils/constants'
 import styles from './GamePlayView.module.scss'
-
 const GAME_PLAY_VIEW_ACTIONS_DICTIONARY = {
   it: {
     startMatch: 'Avvia una partita',
+    completeGame: 'Inserisci bottiglie',
+    completeGameHint: 'Completa bottiglie e risultati per avviare una partita.',
     playLive: 'Gioca Live',
     playEnoteca: 'Enoteca',
     chooseMode: 'Scegli modalita',
@@ -27,6 +29,8 @@ const GAME_PLAY_VIEW_ACTIONS_DICTIONARY = {
   },
   en: {
     startMatch: 'Start a match',
+    completeGame: 'Add bottles',
+    completeGameHint: 'Complete bottles and answers before starting a match.',
     playLive: 'Play Live',
     playEnoteca: 'Enoteca',
     chooseMode: 'Choose mode',
@@ -53,6 +57,12 @@ export default function GamePlayView({
   const [activeBottleIndex, setActiveBottleIndex] = useState(0)
   const [startModalOpen, setStartModalOpen] = useState(false)
   const [historyOpen, setHistoryOpen] = useState(false)
+  const [isMobileViewport, setIsMobileViewport] = useState(false)
+  const isReadyToPlay = questions.length > 0 && bottles.length > 0
+
+  useEffect(() => {
+    return watchMobileViewport(setIsMobileViewport)
+  }, [])
 
   const activeBottle = bottles[activeBottleIndex]
 
@@ -89,11 +99,11 @@ export default function GamePlayView({
               <span className={styles.infoDivider} aria-hidden="true">
                 -
               </span>
-            <p className={styles.infoItem}>
-              <Icon name="question" size={24} className={styles.infoQuestionIcon} />
-              {`${questions.length} Domande`}
-            </p>
-          </div>
+              <p className={styles.infoItem}>
+                <Icon name="question" size={24} className={styles.infoQuestionIcon} />
+                {`${questions.length} Domande`}
+              </p>
+            </div>
 
             <Button
               size="small"
@@ -106,18 +116,29 @@ export default function GamePlayView({
           </div>
         </div>
         <div className={styles.actionsBar}>
-          <Button
-            variant="success"
-            className={`btn-start ${styles.actionBtn}`}
-            onClick={() => setStartModalOpen(true)}>
-            {t.startMatch}
-          </Button>
+          {isReadyToPlay ? (
+            <Button
+              variant="success"
+              className={`btn-start ${styles.actionBtn}`}
+              onClick={() => setStartModalOpen(true)}>
+              {t.startMatch}
+            </Button>
+          ) : (
+            <div className={styles.setupCtaWrap}>
+              <ButtonLink
+                href={`/game/${game.id}/edit?step=4`}
+                variant="success"
+                className={`btn-start ${styles.actionBtn}`}>
+                {t.completeGame}
+              </ButtonLink>
+            </div>
+          )}
           <div className={styles.actionsBtnBottom}>
             {isOwner && (
               <ButtonLink
                 href={`/game/${game.id}/edit`}
                 variant="neutral"
-                size="small"
+                size={isMobileViewport ? 'small' : undefined}
                 className={styles.actionBtn}>
                 <span className={styles.actionBtnContent}>
                   <Icon name="edit" size={24} className={styles.actionBtnIcon} />
@@ -128,7 +149,7 @@ export default function GamePlayView({
             <ButtonLink
               href={`/game/${game.id}/print`}
               variant="neutral"
-              size="small"
+              size={isMobileViewport ? 'small' : undefined}
               className={styles.actionBtn}>
               <span className={styles.actionBtnContent}>
                 <Icon name="print" size={24} className={styles.actionBtnIcon} />
@@ -139,74 +160,78 @@ export default function GamePlayView({
         </div>
       </div>
 
-      <section className={styles.sliderSection} aria-label={text.sliderAria}>
-        <div className={styles.sliderTrack}>
-          {bottles.map((bottle, idx) => (
-            <button
-              key={bottle.id}
-              className={`${styles.bottleCard} ${idx === activeBottleIndex ? styles.activeBottle : ''}`}
-              onClick={() => setActiveBottleIndex(idx)}>
-              <span className={styles.bottleIndex}>{idx + 1}</span>
-              <div className={styles.bottleCardBody}>
-                <h3>
-                  {bottle.name || text.unnamed} {bottle.year || text.yearMissing}
-                </h3>
-                <p>{bottle.producer || text.producerMissing}</p>
-              </div>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <div className={styles.card}>
-        <div className={styles.bottleHeader}>
-          <span className={styles.questionNumberGeneral}>
-            {text.bottle} {activeBottleIndex + 1} {text.bottleCounterOf} {bottles.length}
-          </span>
-          <h2>{activeBottle?.name || text.bottle}</h2>
-          <p>
-            {activeBottle?.producer || text.producerMissing} - {activeBottle?.year || text.yearNA}
-          </p>
-        </div>
-
-        <div className={styles.questionsList}>
-          {questions.map((q, idx) => {
-            const correctOptionId = answerMap.get(q.id)
-            return (
-              <div key={q.id} className={styles.questionBlock}>
-                <div className={styles.questionHeader}>
-                  <span className={styles.questionNumber}>
-                    {text.question} {idx + 1}
-                  </span>
-                  <p className={styles.questionTitle}>{q.text}</p>
+      {isReadyToPlay && (
+        <section className={styles.sliderSection} aria-label={text.sliderAria}>
+          <div className={styles.sliderTrack}>
+            {bottles.map((bottle, idx) => (
+              <button
+                key={bottle.id}
+                className={`${styles.bottleCard} ${idx === activeBottleIndex ? styles.activeBottle : ''}`}
+                onClick={() => setActiveBottleIndex(idx)}>
+                <span className={styles.bottleIndex}>{idx + 1}</span>
+                <div className={styles.bottleCardBody}>
+                  <h3>
+                    {bottle.name || text.unnamed} {bottle.year || text.yearMissing}
+                  </h3>
+                  <p>{bottle.producer || text.producerMissing}</p>
                 </div>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
 
-                <div className={styles.options}>
-                  {q.options.map((opt) => {
-                    const isCorrect = opt.id === correctOptionId
-                    return (
-                      <div
-                        key={opt.id}
-                        className={`${styles.option} ${isCorrect ? styles.correct : styles.wrong}`}>
-                        <Icon
-                          className={styles.optionIcon}
-                          name={isCorrect ? 'checkCorrect' : 'checkWrong'}
-                          size={24}
-                        />
-                        <span>{opt.text}</span>
-                      </div>
-                    )
-                  })}
+      {isReadyToPlay && (
+        <div className={styles.card}>
+          <div className={styles.bottleHeader}>
+            <span className={styles.questionNumberGeneral}>
+              {text.bottle} {activeBottleIndex + 1} {text.bottleCounterOf} {bottles.length}
+            </span>
+            <h2>{activeBottle?.name || text.bottle}</h2>
+            <p>
+              {activeBottle?.producer || text.producerMissing} - {activeBottle?.year || text.yearNA}
+            </p>
+          </div>
+
+          <div className={styles.questionsList}>
+            {questions.map((q, idx) => {
+              const correctOptionId = answerMap.get(q.id)
+              return (
+                <div key={q.id} className={styles.questionBlock}>
+                  <div className={styles.questionHeader}>
+                    <span className={styles.questionNumber}>
+                      {text.question} {idx + 1}
+                    </span>
+                    <p className={styles.questionTitle}>{q.text}</p>
+                  </div>
+
+                  <div className={styles.options}>
+                    {q.options.map((opt) => {
+                      const isCorrect = opt.id === correctOptionId
+                      return (
+                        <div
+                          key={opt.id}
+                          className={`${styles.option} ${isCorrect ? styles.correct : styles.wrong}`}>
+                          <Icon
+                            className={styles.optionIcon}
+                            name={isCorrect ? 'checkCorrect' : 'checkWrong'}
+                            size={24}
+                          />
+                          <span>{opt.text}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  {/* <p className={styles.correctLabel}>{text.correctLabel}</p> */}
                 </div>
-
-                {/* <p className={styles.correctLabel}>{text.correctLabel}</p> */}
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
-      {startModalOpen && (
+      {isReadyToPlay && startModalOpen && (
         <div className={styles.startModalBackdrop} onClick={() => setStartModalOpen(false)}>
           <div className={styles.startModal} onClick={(event) => event.stopPropagation()}>
             <div className={styles.startModalHeader}>

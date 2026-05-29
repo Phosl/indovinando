@@ -1,8 +1,11 @@
 import {notFound, redirect} from 'next/navigation'
+import Link from 'next/link'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getGameAvatarOptions} from '@/lib/gameAvatarOptions'
+import TopBarBack from '@/components/TopBarBack'
 import GamePlayPageClient from './GamePlayPageClient'
 import {deleteGame} from './actions'
+import styles from './GamePlayPage.module.scss'
 
 export default async function GamePlayPage({params}) {
   const supabase = await createServerSupabase()
@@ -58,10 +61,18 @@ export default async function GamePlayPage({params}) {
 
   if (questionsError || bottlesError) {
     return (
-      <main className="flex-container">
-        <div className="flex-column">
-          <h1>Errore caricamento partita</h1>
-          <p>{questionsError?.message || bottlesError?.message}</p>
+      <main className={styles.page}>
+        <div className={styles.container}>
+          <TopBarBack title={game.name || 'Gioco'} href="/miei-giochi" />
+          <section className={styles.emptyCard}>
+            <h1 className={styles.emptyTitle}>Errore caricamento partita</h1>
+            <p className={styles.emptyText}>{questionsError?.message || bottlesError?.message}</p>
+            <div className={styles.emptyActions}>
+              <Link href="/miei-giochi" className="btn neutral btn-small">
+                Torna indietro
+              </Link>
+            </div>
+          </section>
         </div>
       </main>
     )
@@ -81,20 +92,6 @@ export default async function GamePlayPage({params}) {
     wineType: b.wine_type || '',
     answers: b.game_bottle_answers || [],
   }))
-
-  if (questions.length === 0 || bottles.length === 0) {
-    return (
-      <main className="flex-container">
-        <div className="flex-column">
-          <h1>{game.name}</h1>
-          <p>Questo gioco non è ancora pronto per essere giocato.</p>
-          <a href={`/game/${game.id}/edit?step=4`} className="btn primary">
-            Inserisci i risultati
-          </a>
-        </div>
-      </main>
-    )
-  }
 
   return (
     <GamePlayPageClient
