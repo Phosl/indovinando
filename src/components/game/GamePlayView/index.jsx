@@ -71,77 +71,80 @@ export default function GamePlayView({
 
   return (
     <div className={styles.container}>
-      <div className={styles.gameHeader}>
-        {gameAvatar && (
-          <img src={gameAvatar} alt="" aria-hidden="true" className={styles.gameAvatar} />
-        )}
-        <div className={styles.gameHeaderInfo}>
-          <p className={styles.gameDate}>{gameDateLabel}</p>
-          <h1 className={styles.gameTitle}>{game.name}</h1>
-          <div className={styles.gameInfo}>
-            <p className={styles.infoItem}>
-              <Icon name="bottle" size={24} className={styles.infoBottleIcon} />
-              {`${bottles.length} Bottiglie`}
-            </p>
-            <span className={styles.infoDivider} aria-hidden="true">
-              -
-            </span>
-            <p className={styles.infoItem}>
-              <img
-                src="/icons/questions.svg"
-                alt=""
-                aria-hidden="true"
-                className={styles.infoQuestionIcon}
-              />
-              {`${questions.length} Domande`}
-            </p>
-          </div>
+      <div className={styles.card}>
+        <div className={styles.gameHeader}>
+          {gameAvatar && (
+            <img src={gameAvatar} alt="" aria-hidden="true" className={styles.gameAvatar} />
+          )}
+          <div className={styles.gameHeaderInfo}>
+            <div>
+              <p className={styles.gameDate}>{gameDateLabel}</p>
+              <h1 className={styles.gameTitle}>{game.name}</h1>
+            </div>
+            <div className={styles.gameInfo}>
+              <p className={styles.infoItem}>
+                <Icon name="bottle" size={24} className={styles.infoBottleIcon} />
+                {`${bottles.length} Bottiglie`}
+              </p>
+              <span className={styles.infoDivider} aria-hidden="true">
+                -
+              </span>
+              <p className={styles.infoItem}>
+                <img
+                  src="/icons/questions.svg"
+                  alt=""
+                  aria-hidden="true"
+                  className={styles.infoQuestionIcon}
+                />
+                {`${questions.length} Domande`}
+              </p>
+            </div>
 
-          <Button
-            size="small"
-            className={styles.historyToggle}
-            onClick={() => setHistoryOpen(true)}
-            aria-expanded={historyOpen}
-            aria-controls="game-history-panel">
-            {lang === 'en' ? 'Tasting history' : ' Storico degustazioni'}
-          </Button>
+            <Button
+              size="small"
+              className={styles.historyToggle}
+              onClick={() => setHistoryOpen(true)}
+              aria-expanded={historyOpen}
+              aria-controls="game-history-panel">
+              {lang === 'en' ? 'Tasting history' : ' Storico degustazioni'}
+            </Button>
+          </div>
         </div>
-      </div>
-      <div className={styles.actionsBar}>
-        <Button
-          variant="success"
-          className={`btn-start ${styles.actionBtn}`}
-          onClick={() => setStartModalOpen(true)}>
-          {t.startMatch}
-        </Button>
-        <div className={styles.actionsBtnBottom}>
-          {isOwner && (
+        <div className={styles.actionsBar}>
+          <Button
+            variant="success"
+            className={`btn-start ${styles.actionBtn}`}
+            onClick={() => setStartModalOpen(true)}>
+            {t.startMatch}
+          </Button>
+          <div className={styles.actionsBtnBottom}>
+            {isOwner && (
+              <ButtonLink
+                href={`/game/${game.id}/edit`}
+                variant="neutral"
+                size="small"
+                className={styles.actionBtn}>
+                <span className={styles.actionBtnContent}>
+                  <Icon name="edit" size={24} className={styles.actionBtnIcon} />
+                  <span>{t.edit}</span>
+                </span>
+              </ButtonLink>
+            )}
             <ButtonLink
-              href={`/game/${game.id}/edit`}
+              href={`/game/${game.id}/print`}
               variant="neutral"
               size="small"
               className={styles.actionBtn}>
               <span className={styles.actionBtnContent}>
-                <Icon name="edit" size={24} className={styles.actionBtnIcon} />
-                <span>{t.edit}</span>
+                <Icon name="print" size={24} className={styles.actionBtnIcon} />
+                <span>{t.printCard}</span>
               </span>
             </ButtonLink>
-          )}
-          <ButtonLink
-            href={`/game/${game.id}/print`}
-            variant="neutral"
-            size="small"
-            className={styles.actionBtn}>
-            <span className={styles.actionBtnContent}>
-              <Icon name="print" size={24} className={styles.actionBtnIcon} />
-              <span>{t.printCard}</span>
-            </span>
-          </ButtonLink>
+          </div>
         </div>
       </div>
 
       <section className={styles.sliderSection} aria-label={text.sliderAria}>
-        <h3>Le bottiglie:</h3>
         <div className={styles.sliderTrack}>
           {bottles.map((bottle, idx) => (
             <button
@@ -223,6 +226,7 @@ export default function GamePlayView({
             </div>
             <div className={styles.startModalActions}>
               <ButtonLink
+                variant="custom"
                 href={`/game/${game.id}/live`}
                 className={`${styles.startModeOption} ${styles.startModeOptionSuccess}`}>
                 <span className={styles.startModeTitle}>{t.playLive}</span>
@@ -230,6 +234,7 @@ export default function GamePlayView({
               </ButtonLink>
               {game.status === 'published' && (
                 <ButtonLink
+                  variant="custom"
                   href={`/enoteca/${game.id}`}
                   className={`${styles.startModeOption} ${styles.startModeOptionQuaternary}`}>
                   <span className={styles.startModeTitle}>{t.playEnoteca}</span>

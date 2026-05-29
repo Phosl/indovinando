@@ -43,20 +43,34 @@ export default function GameCreateLoading() {
         <Bone w="40px" h="40px" style={{borderRadius: 10, marginLeft: 'auto'}} />
       </div>
 
-      {/* Breadcrumbs */}
-      <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
-        {[1, 2, 3, 4].map((i) => (
-          <Bone key={i} w="80px" h="28px" style={{borderRadius: 999}} />
-        ))}
-      </div>
+      {/* Mode picker title */}
+      <Bone w="340px" h="30px" style={{margin: '0 auto 4px', borderRadius: 8}} />
 
-      {/* Form card */}
+      {/* Mode cards */}
       <div
-        className="skeleton-card"
-        style={{padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 16}}>
-        <Bone w="160px" h="22px" />
-        <Bone w="100%" h="48px" style={{borderRadius: 10}} />
-        <Bone w="140px" h="44px" style={{borderRadius: 12, marginTop: 8}} />
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          gap: 16,
+        }}>
+        {[1, 2].map((i) => (
+          <div
+            key={i}
+            className="skeleton-card"
+            style={{
+              padding: '22px 18px 18px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 10,
+              minHeight: 210,
+            }}>
+            <Bone w="62%" h="22px" style={{borderRadius: 8}} />
+            <Bone w="94%" h="14px" style={{borderRadius: 6}} />
+            <Bone w="88%" h="14px" style={{borderRadius: 6}} />
+            <Bone w="76%" h="14px" style={{borderRadius: 6}} />
+            <Bone w="160px" h="40px" style={{borderRadius: 22, marginTop: 'auto'}} />
+          </div>
+        ))}
       </div>
     </main>
   )

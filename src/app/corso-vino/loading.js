@@ -61,23 +61,35 @@ export default function CorsoVinoLoading() {
             key={index}
             className="skeleton-card"
             style={{
-              padding: '16px',
+              padding: '16px 0 16px 16px',
               display: 'flex',
               gap: 14,
-              alignItems: 'flex-start',
+              alignItems: 'stretch',
             }}>
             <Bone w="36px" h="36px" style={{borderRadius: 12, marginTop: 2}} />
             <div style={{flex: 1, display: 'flex', flexDirection: 'column', gap: 8, minWidth: 0}}>
-              <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
-                <Bone w="82px" h="12px" style={{borderRadius: 999}} />
-                <Bone w="62px" h="18px" style={{borderRadius: 999}} />
+              <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8}}>
+                <Bone w="168px" h="12px" style={{borderRadius: 999}} />
+                <Bone w="72px" h="18px" style={{borderRadius: 999}} />
               </div>
               <Bone w="68%" h="16px" style={{borderRadius: 6}} />
               <Bone w="90%" h="12px" style={{borderRadius: 6}} />
-              <div style={{display: 'flex', alignItems: 'center', gap: 10}}>
-                <Bone w={undefined} h="12px" style={{borderRadius: 999, flex: 1, minWidth: 0}} />
-                <Bone w="54px" h="12px" style={{borderRadius: 999}} />
+              <div style={{display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap'}}>
+                {Array.from({length: 7}).map((__, dotIndex) => (
+                  <Bone key={dotIndex} w="9px" h="9px" style={{borderRadius: 999}} />
+                ))}
               </div>
+            </div>
+            <div
+              style={{
+                width: 52,
+                minWidth: 52,
+                borderLeft: '2px solid var(--button-secondary-border)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Bone w="18px" h="18px" style={{borderRadius: 6}} />
             </div>
           </div>
         ))}
