@@ -2,32 +2,17 @@
 
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
-import {pickLangText} from '@/lib/i18n/dictionaries'
+import {useT} from '@/lib/i18n/useT'
 import styles from './print.module.scss'
-
-const PRINT_SHEET_DICTIONARY = {
-  it: {
-    title: 'Stampa',
-    addResults: 'Inserisci risultati',
-    print: 'Stampa',
-  },
-  en: {
-    title: 'Print Card',
-    addResults: 'Add results',
-    print: 'Print',
-  },
-}
 
 export default function PrintSheetClient({gameId, hasResults}) {
   const router = useRouter()
-  const {lang} = useLanguage()
-  const t = pickLangText(lang, PRINT_SHEET_DICTIONARY)
+  const t = useT('printSheet')
 
   return (
     <>
       <TopBar
-        title={t.title}
+        title={t('title')}
         className={styles.toolbar}
         titleClassName={styles.toolbarTitle}
         maxWidth="210mm"
@@ -40,11 +25,11 @@ export default function PrintSheetClient({gameId, hasResults}) {
             type="button"
             className="btn secondary"
             onClick={() => router.push(`/game/${gameId}?step=4`)}>
-            {t.addResults}
+            {t('addResults')}
           </button>
         )}
         <button type="button" className="btn primary" onClick={() => window.print()}>
-          {t.print}
+          {t('print')}
         </button>
       </div>
     </>

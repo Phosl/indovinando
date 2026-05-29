@@ -6,95 +6,9 @@ import QRCode from 'qrcode'
 import TopBar from '@/components/TopBar'
 import ShareDetailsTabs from '@/components/ShareDetailsTabs/ShareDetailsTabs'
 import AvatarDisplay from '@/components/AvatarDisplay'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
-import {pickLangText} from '@/lib/i18n/dictionaries'
+import {useT} from '@/lib/i18n/useT'
 import {supabaseClient} from '@/lib/supabaseClient'
 import styles from './liveSessions.module.scss'
-
-const LIVE_SESSION_DICTIONARY = {
-  it: {
-    createFailed: 'Errore nella creazione sessione. Riprova.',
-    startFailed: "Errore nell'avvio del gioco. Riprova.",
-    cancelFailed: "Errore nell'annullamento. Riprova.",
-    creatingSession: 'Creazione sessione',
-    inviteLink: 'Link di Invito',
-    inviteLinkTitle: 'Link invito',
-    inviteLinkHint:
-      "Condividi questo link con chi deve entrare nella sessione live: apre direttamente l'accesso al gioco.",
-    inviteLinkLabel: 'Link sessione live',
-    shareTabLabel: 'Condivisione',
-    detailsTabLabel: 'Dettaglio gioco',
-    copied: '✓ Copiato!',
-    copy: 'Copia',
-    share: 'Condividi',
-    qr: 'QR',
-    qrTitle: 'QR sessione live',
-    print: 'Stampa',
-    close: 'Chiudi',
-    participants: 'Partecipanti: ',
-    participantsEmpty: 'Nessun partecipante ancora.',
-    participantFallback: 'Giocatore',
-    hostLabel: 'Host',
-    waitPlayers: 'Aspetta che i giocatori si uniscano, poi premi Inizia Gioco.',
-    gameDetails: 'Dettagli Gioco',
-    questions: 'Domande',
-    questionPreviewTitle: 'Domande del gioco',
-    questionPreviewEmpty: 'Nessuna domanda ancora inserita.',
-    unknownQuestion: 'Domanda senza testo',
-    questionSingular: 'domanda',
-    questionPlural: 'domande',
-    bottles: 'Bottiglie',
-    bottlePreviewTitle: 'Bottiglie del gioco',
-    bottlePreviewEmpty: 'Nessuna bottiglia ancora inserita.',
-    unknownBottle: 'Senza nome',
-    unknownProducer: 'Produttore non indicato',
-    starting: 'Avvio...',
-    startGame: 'Inizia Gioco',
-    players: 'giocatori',
-    cancel: 'Annulla',
-  },
-  en: {
-    createFailed: 'Failed to create session. Please try again.',
-    startFailed: 'Failed to start game. Please try again.',
-    cancelFailed: 'Failed to cancel session. Please try again.',
-    creatingSession: 'Creating session',
-    inviteLink: 'Invite Link',
-    inviteLinkTitle: 'Invite link',
-    inviteLinkHint:
-      'Share this link with anyone joining the live session: it opens the game access screen directly.',
-    inviteLinkLabel: 'Live session link',
-    shareTabLabel: 'Share',
-    detailsTabLabel: 'Game details',
-    copied: '✓ Copied!',
-    copy: 'Copy',
-    share: 'Share',
-    qr: 'QR',
-    qrTitle: 'Live session QR',
-    print: 'Print',
-    close: 'Close',
-    participants: 'Participants: ',
-    participantsEmpty: 'No participants yet.',
-    participantFallback: 'Player',
-    hostLabel: 'Host',
-    waitPlayers: 'Wait for players to join, then click Start Game.',
-    gameDetails: 'Game Details',
-    questions: 'Questions',
-    questionPreviewTitle: 'Game questions',
-    questionPreviewEmpty: 'No questions added yet.',
-    unknownQuestion: 'Question without text',
-    questionSingular: 'question',
-    questionPlural: 'questions',
-    bottles: 'Bottles',
-    bottlePreviewTitle: 'Game bottles',
-    bottlePreviewEmpty: 'No bottles added yet.',
-    unknownBottle: 'Unnamed',
-    unknownProducer: 'Producer not specified',
-    starting: 'Starting...',
-    startGame: 'Start Game',
-    players: 'players',
-    cancel: 'Cancel',
-  },
-}
 
 const withSaveTimeout = async (taskOrPromise, contextLabel, timeoutMs = 20000) => {
   const timeoutPromise = new Promise((_, reject) => {
@@ -117,8 +31,7 @@ export default function LiveSessionClient({
   userId,
 }) {
   const router = useRouter()
-  const {lang} = useLanguage()
-  const t = pickLangText(lang, LIVE_SESSION_DICTIONARY)
+  const t = useT('liveSession')
   const safeQuestionsPreview = questionsPreview || []
   const safeBottles = bottles || []
   const [sessionId, setSessionId] = useState(null)
@@ -164,13 +77,13 @@ export default function LiveSessionClient({
         setLoading(false)
       } catch (err) {
         console.error('Error creating live session:', err)
-        alert(t.createFailed)
+        alert(t('createFailed'))
         setLoading(false)
       }
     }
 
     createSession()
-  }, [gameId, userId, t.createFailed])
+  }, [gameId, userId, t])
 
   // Polling - ascolta i giocatori che si uniscono
   useEffect(() => {
@@ -340,7 +253,7 @@ export default function LiveSessionClient({
       router.push(`/live/session/${sessionId}/play`)
     } catch (err) {
       console.error('Error starting game:', err)
-      alert(t.startFailed)
+      alert(t('startFailed'))
     } finally {
       setIsStartingGame(false)
     }
@@ -364,14 +277,14 @@ export default function LiveSessionClient({
       router.push('/miei-giochi')
     } catch (err) {
       console.error('Error canceling session:', err)
-      alert(t.cancelFailed)
+      alert(t('cancelFailed'))
     }
   }
 
   if (loading) {
     return (
       <div className={styles.container}>
-        <TopBar title={t.creatingSession} onBack={() => router.push('/miei-giochi')} />
+        <TopBar title={t('creatingSession')} onBack={() => router.push('/miei-giochi')} />
         <div className={styles.progressBarTrack}>
           <div className={styles.progressBarFill} />
         </div>
@@ -407,15 +320,15 @@ export default function LiveSessionClient({
 
       <div className={styles.lobbyCard}>
         <ShareDetailsTabs
-          shareLabel={t.shareTabLabel}
-          detailsLabel={t.detailsTabLabel}
+          shareLabel={t('shareTabLabel')}
+          detailsLabel={t('detailsTabLabel')}
           shareContent={
             <>
               <div className={styles.section}>
-                <p className={styles.bridgeTitle}>{t.inviteLinkTitle}</p>
-                <p className={styles.bridgeHint}>{t.inviteLinkHint}</p>
+                <p className={styles.bridgeTitle}>{t('inviteLinkTitle')}</p>
+                <p className={styles.bridgeHint}>{t('inviteLinkHint')}</p>
                 <label className={styles.linkLabel} htmlFor="live-session-link">
-                  {t.inviteLinkLabel}
+                  {t('inviteLinkLabel')}
                 </label>
                 <div className={styles.linkBox}>
                   <input
@@ -427,13 +340,13 @@ export default function LiveSessionClient({
                   />
                   <div className={styles.linkActions}>
                     <button onClick={handleCopyLink} className={styles.copyButton}>
-                      {copyFeedback ? t.copied : t.copy}
+                      {copyFeedback ? t('copied') : t('copy')}
                     </button>
                     <button onClick={handleShareLink} className={styles.copyButton}>
-                      {t.share}
+                      {t('share')}
                     </button>
                     <button onClick={() => setQrOpen(true)} className={styles.copyButton}>
-                      {t.qr}
+                      {t('qr')}
                     </button>
                   </div>
                 </div>
@@ -441,10 +354,10 @@ export default function LiveSessionClient({
 
               <div className={styles.section}>
                 <h2>
-                  {t.participants}
+                  {t('participants')}
                   {playersCount}
                 </h2>
-                <p className={styles.info}>{t.waitPlayers}</p>
+                <p className={styles.info}>{t('waitPlayers')}</p>
                 {players.length > 0 ? (
                   <ul>
                     {players.map((player) => (
@@ -453,16 +366,16 @@ export default function LiveSessionClient({
                         className={`${styles.participantItem} ${recentJoinIds.includes(player.id) ? styles.participantJustJoined : ''}`}>
                         <AvatarDisplay avatarId={player.avatar_id} size={24} />
                         <span className={styles.participantName}>
-                          {player.nickname || t.participantFallback}
+                          {player.nickname || t('participantFallback')}
                         </span>
                         {player.is_host ? (
-                          <span className={styles.participantTag}>{t.hostLabel}</span>
+                          <span className={styles.participantTag}>{t('hostLabel')}</span>
                         ) : null}
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className={styles.info}>{t.participantsEmpty}</p>
+                  <p className={styles.info}>{t('participantsEmpty')}</p>
                 )}
               </div>
             </>
@@ -472,21 +385,21 @@ export default function LiveSessionClient({
               <div className={styles.section}>
                 <div className={styles.questionPreviewBlock}>
                   <div className={styles.questionPreviewHeader}>
-                    <span className={styles.questionPreviewTitle}>{t.questionPreviewTitle}</span>
+                    <span className={styles.questionPreviewTitle}>{t('questionPreviewTitle')}</span>
                     <span className={styles.questionPreviewCount}>
                       {safeQuestionsPreview.length}{' '}
-                      {safeQuestionsPreview.length === 1 ? t.questionSingular : t.questionPlural}
+                      {safeQuestionsPreview.length === 1 ? t('questionSingular') : t('questionPlural')}
                     </span>
                   </div>
 
-                  <div className={styles.questionPreviewStrip} aria-label={t.questionPreviewTitle}>
+                  <div className={styles.questionPreviewStrip} aria-label={t('questionPreviewTitle')}>
                     {safeQuestionsPreview.length === 0 ? (
-                      <div className={styles.questionPreviewEmpty}>{t.questionPreviewEmpty}</div>
+                      <div className={styles.questionPreviewEmpty}>{t('questionPreviewEmpty')}</div>
                     ) : (
                       safeQuestionsPreview.map((question, index) => (
                         <article key={question.id} className={styles.questionPreviewCard}>
                           <h4 className={styles.questionPreviewText}>
-                            {question.text || t.unknownQuestion}
+                            {question.text || t('unknownQuestion')}
                           </h4>
                         </article>
                       ))
@@ -496,25 +409,25 @@ export default function LiveSessionClient({
 
                 <div className={styles.bottlePreviewBlock}>
                   <div className={styles.bottlePreviewHeader}>
-                    <span className={styles.bottlePreviewTitle}>{t.bottlePreviewTitle}</span>
+                    <span className={styles.bottlePreviewTitle}>{t('bottlePreviewTitle')}</span>
                     <span className={styles.bottlePreviewCount}>
                       {safeBottles.length}{' '}
-                      {safeBottles.length === 1 ? t.bottleCountSingular : t.bottleCountPlural}
+                      {safeBottles.length === 1 ? t('bottleCountSingular') : t('bottleCountPlural')}
                     </span>
                   </div>
 
-                  <div className={styles.bottlePreviewStrip} aria-label={t.bottlePreviewTitle}>
+                  <div className={styles.bottlePreviewStrip} aria-label={t('bottlePreviewTitle')}>
                     {safeBottles.length === 0 ? (
-                      <div className={styles.bottlePreviewEmpty}>{t.bottlePreviewEmpty}</div>
+                      <div className={styles.bottlePreviewEmpty}>{t('bottlePreviewEmpty')}</div>
                     ) : (
                       safeBottles.map((bottle, index) => (
                         <article key={bottle.id} className={styles.bottlePreviewCard}>
                           <span className={styles.bottlePreviewIndex}>#{index + 1}</span>
                           <h4 className={styles.bottlePreviewName}>
-                            {bottle.name || t.unknownBottle}
+                            {bottle.name || t('unknownBottle')}
                           </h4>
                           <p className={styles.bottlePreviewProducer}>
-                            {bottle.producer || t.unknownProducer}
+                            {bottle.producer || t('unknownProducer')}
                           </p>
                           {bottle.year && (
                             <span className={styles.bottlePreviewYear}>{bottle.year}</span>
@@ -534,10 +447,10 @@ export default function LiveSessionClient({
             onClick={handleStartGame}
             disabled={playersCount < 1 || isStartingGame}
             className={styles.startButton}>
-            {isStartingGame ? t.starting : t.startGame} ({playersCount} {t.players})
+            {isStartingGame ? t('starting') : t('startGame')} ({playersCount} {t('players')})
           </button>
           <button onClick={handleCancel} className={styles.cancelButton}>
-            {t.cancel}
+            {t('cancel')}
           </button>
         </div>
       </div>
@@ -546,7 +459,7 @@ export default function LiveSessionClient({
         <div className={styles.qrOverlay} onClick={() => setQrOpen(false)}>
           <div className={styles.qrModal} onClick={(e) => e.stopPropagation()}>
             <img src="/logo.svg" alt="Indovinando" className={styles.qrLogo} />
-            <h3>{t.qrTitle}</h3>
+            <h3>{t('qrTitle')}</h3>
             {qrDataUrl ? (
               <img src={qrDataUrl} alt="QR sessione" className={styles.qrImage} />
             ) : (
@@ -554,10 +467,10 @@ export default function LiveSessionClient({
             )}
             <div className={styles.qrActions}>
               <button className={styles.startButton} onClick={handlePrintQr}>
-                {t.print}
+                {t('print')}
               </button>
               <button className={styles.cancelButton} onClick={() => setQrOpen(false)}>
-                {t.close}
+                {t('close')}
               </button>
             </div>
           </div>

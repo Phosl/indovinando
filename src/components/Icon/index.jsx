@@ -22,6 +22,10 @@ const ICONS = {
   question: '/icons/questions.svg',
   language: '/icons/language.svg',
   avatar: '/icons/avatar.svg',
+  home: '/icons/home.svg',
+  testing: '/icons/testing.svg',
+  course: '/icons/course.svg',
+  profile: '/icons/profile.svg',
 }
 
 const ICON_RENDER_MODE = {

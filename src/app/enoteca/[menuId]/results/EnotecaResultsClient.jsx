@@ -5,16 +5,14 @@ import {useRouter} from 'next/navigation'
 import {supabaseAnonClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
 import Icon from '@/components/Icon'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
-import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
+import {useT} from '@/lib/i18n/useT'
 import styles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
 import xStyles from './enotecaResults.module.scss'
 
 const stateKey = (bottleId, questionId) => `${bottleId}:${questionId}`
 
 export default function EnotecaResultsClient({menuId, menuName, bottles, questions}) {
-  const {lang} = useLanguage()
-  const t = pickLangText(lang, ENOTECA_DICTIONARY.results)
+  const t = useT('enoteca.results')
 
   const router = useRouter()
   const sessionKey = `enoteca_session_${menuId}`
@@ -61,7 +59,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
   if (loading) {
     return (
       <div className={styles.fullPage} style={{alignItems: 'center', justifyContent: 'center'}}>
-        <p className={styles.readyHint}>{t.loading}</p>
+        <p className={styles.readyHint}>{t('loading')}</p>
       </div>
     )
   }
@@ -88,11 +86,11 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
       <div className={`${styles.slideContent} ${xStyles.resultsSlideContent}`}>
         {/* Hero */}
         <div className={xStyles.heroSection}>
-          <h1 className={xStyles.heroTitle}>🏆 {t.title}</h1>
+          <h1 className={xStyles.heroTitle}>🏆 {t('title')}</h1>
           <p className={xStyles.heroNickname}>{session.nickname}</p>
           {session.table_name && (
             <p className={xStyles.heroTable}>
-              {t.table}: {session.table_name}
+              {t('table')}: {session.table_name}
             </p>
           )}
         </div>
@@ -101,13 +99,13 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
         <div className={xStyles.scoreCard}>
           <div className={xStyles.scoreMain}>
             <span className={xStyles.scoreValue}>{totalScore}</span>
-            <span className={xStyles.scoreLabel}>{t.points}</span>
+            <span className={xStyles.scoreLabel}>{t('points')}</span>
           </div>
           <div className={xStyles.scoreDivider} />
           <div className={xStyles.scoreMeta}>
             <span className={xStyles.scorePct}>{pct}%</span>
             <span className={xStyles.scorePctLabel}>
-              {totalCorrect}/{totalQuestions} {t.correct}
+              {totalCorrect}/{totalQuestions} {t('correct')}
             </span>
           </div>
         </div>
@@ -129,7 +127,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
                 className={`${xStyles.bottleCard} ${isActive ? xStyles.activeBottle : ''}`}
                 onClick={() => setActiveBIdx(i)}>
                 <span className={xStyles.bottleCardIndex}>
-                  {t.bottle} {i + 1}
+                  {t('bottle')} {i + 1}
                 </span>
                 <strong className={xStyles.bottleCardName}>{bottle.name}</strong>
                 {bottle.producer && (
@@ -146,7 +144,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
         {/* Detail panel for active bottle */}
         <div className={xStyles.detailPanel}>
           <div className={styles.bottleReveal}>
-            <span className={styles.bottleRevealLabel}>{t.bottleWas}</span>
+            <span className={styles.bottleRevealLabel}>{t('bottleWas')}</span>
             <span className={styles.bottleRevealName}>{activeBottle.name}</span>
             {(activeBottle.producer || activeBottle.year) && (
               <span className={styles.bottleRevealMeta}>
@@ -154,7 +152,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
               </span>
             )}
             <span className={xStyles.bottleRevealScore}>
-              {bCorrect}/{questions.length} {t.correct} · +{bScore} {t.points}
+              {bCorrect}/{questions.length} {t('correct')} · +{bScore} {t('points')}
             </span>
           </div>
 
@@ -181,10 +179,10 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
                       <>
                         <span className={styles.summaryWrong}>
                           <Icon name="checkWrong" size={24} className={xStyles.answerIcon} />
-                          {selectedOpt?.text ?? t.notAnswered}
+                          {selectedOpt?.text ?? t('notAnswered')}
                         </span>
                         <span className={styles.summaryCorrectHint}>
-                          {t.correctAnswer} {correctOpt?.text ?? '—'}
+                          {t('correctAnswer')} {correctOpt?.text ?? '—'}
                         </span>
                       </>
                     )}
@@ -203,10 +201,10 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
             localStorage.removeItem(sessionKey)
             router.push(`/enoteca/${menuId}/join`)
           }}>
-          🍷 {t.newTasting}
+          🍷 {t('newTasting')}
         </button>
         <button className={styles.secondaryButton} onClick={() => router.push('/')}>
-          {t.home}
+          {t('home')}
         </button>
       </div>
     </div>

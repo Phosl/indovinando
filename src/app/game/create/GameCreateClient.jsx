@@ -9,6 +9,7 @@ import OnboardingModal from '@/components/game/OnboardingModal'
 import PageLayout from '@/components/PageLayout'
 import Icon from '@/components/Icon'
 import BottomNav from '@/components/BottomNav'
+import {useT} from '@/lib/i18n/useT'
 import styles from './gameCreate.module.scss'
 
 const TEMPLATE_QUESTIONS = [
@@ -46,11 +47,12 @@ const TEMPLATE_QUESTIONS = [
 // null = choosing, 'custom' = full editor, 'quick' = template prefilled
 function ModePickerScreen({onPick}) {
   const router = useRouter()
+  const t = useT('gameCreate')
 
   return (
     <>
-      <PageLayout title="Crea Degustazione" onBack={() => router.push('/miei-giochi')}>
-        <h1 className={styles.modePickerTitle}>Scegli come vuoi preparare il gioco.</h1>
+      <PageLayout title={t('title')} onBack={() => router.push('/miei-giochi')}>
+        <h1 className={styles.modePickerTitle}>{t('chooseModeTitle')}</h1>
         <div className={styles.modePickerGrid}>
           <button
             className={`${styles.modeCard} ${styles.modeCardQuick}`}
@@ -62,13 +64,10 @@ function ModePickerScreen({onPick}) {
               className={styles.modeCardBgImage}
             />
             <div className={styles.modeCardContent}>
-              <strong className={styles.modeCardTitle}>Quiz rapido</strong>
-              <p className={styles.modeCardDesc}>
-                Usa il nostro modello pronto per la degustazione: aggiungi le bottiglie e sei
-                pronto.
-              </p>
+              <strong className={styles.modeCardTitle}>{t('quickTitle')}</strong>
+              <p className={styles.modeCardDesc}>{t('quickDescription')}</p>
               <span className="btn btn-small quaternary btn-quick-game btn-inline btn-with-icon-end">
-                <span>Usa modello</span>
+                <span>{t('quickAction')}</span>
                 <Icon name="forward" size={24} className="btn-icon" />
               </span>
             </div>
@@ -84,12 +83,10 @@ function ModePickerScreen({onPick}) {
               className={styles.modeCardBgImage}
             />
             <div className={styles.modeCardContent}>
-              <strong className={styles.modeCardTitle}>Quiz personalizzato</strong>
-              <p className={styles.modeCardDesc}>
-                Crea le tue domande e risposta da zero, adatta ogni dettaglio al tuo stile.
-              </p>
+              <strong className={styles.modeCardTitle}>{t('customTitle')}</strong>
+              <p className={styles.modeCardDesc}>{t('customDescription')}</p>
               <span className="btn btn-small quaternary btn-custom-game btn-inline btn-with-icon-end">
-                <span>Inizia</span>
+                <span>{t('customAction')}</span>
                 <Icon name="forward" size={24} className="btn-icon" />
               </span>
             </div>
@@ -103,6 +100,7 @@ function ModePickerScreen({onPick}) {
 
 export default function GameCreateClient({initialShowOnboarding, userId, avatarOptions = []}) {
   const router = useRouter()
+  const t = useT('gameCreate')
   const supabase = createClient()
   const [showOnboarding, setShowOnboarding] = useState(initialShowOnboarding)
   const [mode, setMode] = useState(null)
@@ -144,7 +142,7 @@ export default function GameCreateClient({initialShowOnboarding, userId, avatarO
           />
         )}
 
-        <Suspense fallback={<Loader label="Caricamento editor" />}>
+        <Suspense fallback={<Loader label={t('loadingEditor')} />}>
           {mode === 'quick' ? (
             <GameEditor
               initialQuestions={TEMPLATE_QUESTIONS}

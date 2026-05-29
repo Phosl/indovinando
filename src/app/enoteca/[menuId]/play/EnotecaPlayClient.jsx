@@ -4,8 +4,8 @@ import {useState, useEffect, useCallback, useMemo, useRef} from 'react'
 import {useRouter, useSearchParams} from 'next/navigation'
 import {supabaseAnonClient} from '@/lib/supabaseClient'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {useT} from '@/lib/i18n/useT'
 import Icon from '@/components/Icon'
-import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
 // Reuse live-game stylesheet directly – no duplicate CSS
 import styles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
 import {useGameAudio} from '../../../live/session/[sessionId]/play/hooks/useGameAudio'
@@ -68,7 +68,7 @@ const CONFETTI = Array.from({length: 18}).map((_, idx) => ({
 
 export default function EnotecaPlayClient({menuId, menuName, bottles, questions}) {
   const {lang} = useLanguage()
-  const t = pickLangText(lang, ENOTECA_DICTIONARY.play)
+  const t = useT('enoteca.play')
 
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -88,6 +88,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
   const [visibleCombo, setVisibleCombo] = useState(null)
   const [slideMotion, setSlideMotion] = useState('idle')
   const slideTimerRef = useRef(null)
+  const comboToastTimerRef = useRef(null)
 
   const currentBottle = bottles[bottleIndex]
   const currentQuestion = screen === 'question' ? (questions[questionIndex] ?? null) : null
@@ -109,19 +110,10 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
     [currentQuestion],
   )
 
-  // Combo toast
-  useEffect(() => {
-    if (comboCount < 2) return
-    const msg = getComboMsg(comboCount)
-    if (!msg) return
-    setVisibleCombo({...msg, key: Date.now()})
-    const t = setTimeout(() => setVisibleCombo(null), 1600)
-    return () => clearTimeout(t)
-  }, [comboCount])
-
   useEffect(() => {
     return () => {
       if (slideTimerRef.current) clearTimeout(slideTimerRef.current)
+      if (comboToastTimerRef.current) clearTimeout(comboToastTimerRef.current)
     }
   }, [])
 
@@ -215,6 +207,23 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
     setComboCount(newCombo)
     setChecked((prev) => ({...prev, [k]: {isCorrect, points, comboCount: newCombo}}))
     playSound(isCorrect ? 'correct' : 'wrong')
+
+    if (comboToastTimerRef.current) {
+      clearTimeout(comboToastTimerRef.current)
+      comboToastTimerRef.current = null
+    }
+    if (newCombo >= 2) {
+      const msg = getComboMsg(newCombo)
+      if (msg) {
+        setVisibleCombo({...msg, key: Date.now()})
+        comboToastTimerRef.current = setTimeout(() => {
+          setVisibleCombo(null)
+          comboToastTimerRef.current = null
+        }, 1600)
+      }
+    } else {
+      setVisibleCombo(null)
+    }
 
     setSaving(true)
     await supabaseAnonClient.from('enoteca_answers').upsert(
@@ -320,7 +329,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
   if (loading) {
     return (
       <div className={styles.fullPage} style={{alignItems: 'center', justifyContent: 'center'}}>
-        <p className={styles.readyHint}>{t.loading}</p>
+        <p className={styles.readyHint}>{t('loading')}</p>
       </div>
     )
   }
@@ -348,12 +357,12 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
       </div>
       <div className={styles.topActions}>
         <button className={styles.audioButton} onClick={toggleAudio}>
-          {audioEnabled ? `🔊 ${t.audioOn}` : `🔇 ${t.audioOff}`}
+          {audioEnabled ? `🔊 ${t('audioOn')}` : `🔇 ${t('audioOff')}`}
         </button>
         <button
           className={styles.exitButton}
           onClick={() => router.push(`/enoteca/${menuId}/join`)}
-          aria-label={t.exitGame}>
+          aria-label={t('exitGame')}>
           X
         </button>
       </div>
@@ -378,17 +387,17 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
               ))}
             </div>
             <p className={styles.transitionSubtitle}>
-              {t.bottle} {nextIdx + 1}/{bottles.length}
+              {t('bottle')} {nextIdx + 1}/{bottles.length}
             </p>
             <h2 className={styles.transitionTitle}>
-              {getBottleLabel(nextIdx, lang, t.ordinalFallback)} {t.bottle}!
+              {getBottleLabel(nextIdx, lang, t('ordinalFallback'))} {t('bottle')}!
             </h2>
-            <p className={styles.readyHint}>{t.transitionReady}</p>
+            <p className={styles.readyHint}>{t('transitionReady')}</p>
           </div>
         </div>
         <div className={styles.bottomPanel}>
           <button className={styles.continueButton} onClick={handleAdvanceFromTransition}>
-            {t.letsBegin}
+            {t('letsBegin')}
           </button>
         </div>
       </div>
@@ -406,22 +415,22 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
     ).length
     const revealTitle =
       correctCount === questions.length
-        ? `🎉 ${t.perfect}`
+        ? `🎉 ${t('perfect')}`
         : correctCount > questions.length / 2
-          ? `👍 ${t.wellDone}`
-          : `💪 ${t.keepGoing}`
+          ? `👍 ${t('wellDone')}`
+          : `💪 ${t('keepGoing')}`
 
     return (
       <div className={styles.fullPage}>
         {topBar}
         <div className={styles.slideContent}>
           <div className={styles.bottleBadge}>
-            {t.bottle} {bottleIndex + 1}/{bottles.length}
+            {t('bottle')} {bottleIndex + 1}/{bottles.length}
           </div>
           <h2 className={styles.waitTitle}>{revealTitle}</h2>
 
           <div className={styles.bottleReveal}>
-            <span className={styles.bottleRevealLabel}>{t.bottleWas}</span>
+            <span className={styles.bottleRevealLabel}>{t('bottleWas')}</span>
             <span className={styles.bottleRevealName}>{currentBottle.name}</span>
             {(currentBottle.producer || currentBottle.year) && (
               <span className={styles.bottleRevealMeta}>
@@ -450,10 +459,10 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
                     ) : (
                       <>
                         <span className={styles.summaryWrong}>
-                          ❌ {selectedOpt?.text ?? t.notAnswered}
+                          ❌ {selectedOpt?.text ?? t('notAnswered')}
                         </span>
                         <span className={styles.summaryCorrectHint}>
-                          {t.correctAnswer} {correctOpt?.text ?? '—'}
+                          {t('correctAnswer')} {correctOpt?.text ?? '—'}
                         </span>
                       </>
                     )}
@@ -466,10 +475,10 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
 
         <div className={styles.bottomPanel}>
           <p className={styles.readyHint}>
-            {correctCount}/{questions.length} {t.correct} · +{bottleScore} {t.points}
+            {correctCount}/{questions.length} {t('correct')} · +{bottleScore} {t('points')}
           </p>
           <button className={styles.continueButton} onClick={handleGoNextBottle}>
-            {isLastBottle ? `🏆 ${t.finalResults}` : t.nextBottle}
+            {isLastBottle ? `🏆 ${t('finalResults')}` : t('nextBottle')}
           </button>
         </div>
       </div>
@@ -500,10 +509,10 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
       <div
         className={`${styles.slideContent} ${slideMotionClass} ${!isCurrentChecked ? styles.mobileCheckSpacing : ''}`}>
         <div className={styles.bottleBadge}>
-          {t.bottle} {bottleIndex + 1}/{bottles.length}
+          {t('bottle')} {bottleIndex + 1}/{bottles.length}
         </div>
         <p className={styles.questionCounter}>
-          {t.question} {questionIndex + 1} {t.of} {questions.length}
+          {t('question')} {questionIndex + 1} {t('of')} {questions.length}
         </p>
         <h2 className={styles.questionText}>{currentQuestion?.text}</h2>
 
@@ -548,14 +557,14 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
                 <span className={styles.feedbackLabel}>
                   {curCheckedResult.comboCount >= 2
                     ? `Combo x${curCheckedResult.comboCount}! +${curCheckedResult.points}`
-                    : `${t.comboCorrect} +${curCheckedResult.points}`}
+                    : `${t('comboCorrect')} +${curCheckedResult.points}`}
                 </span>
               </>
             ) : (
               <>
                 <Icon name="checkWrong" size={24} className={styles.feedbackIconImg} />
                 <span className={styles.feedbackLabel}>
-                  {t.correctAnswer} <strong>{correctOptText}</strong>
+                  {t('correctAnswer')} <strong>{correctOptText}</strong>
                 </span>
               </>
             )}
@@ -567,14 +576,14 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
             className={styles.checkButton}
             disabled={!curSelectedId || saving}
             onClick={handleCheck}>
-            {saving ? t.saving : t.check}
+            {saving ? t('saving') : t('check')}
           </button>
         ) : (
           <button
             className={styles.continueButton}
             onClick={handleContinue}
             disabled={slideMotion !== 'idle'}>
-            {isLastQuestion ? `🍷 ${t.revealWine}` : t.continue}
+            {isLastQuestion ? `🍷 ${t('revealWine')}` : t('continue')}
           </button>
         )}
       </div>

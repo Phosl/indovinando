@@ -4,8 +4,7 @@ import {useState, useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseAnonClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
-import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
+import {useT} from '@/lib/i18n/useT'
 // Shared layout from live game – same header/button system as play & results
 import styles from '../../live/session/[sessionId]/play/playerLive.module.scss'
 import xStyles from './enotecaJoin.module.scss'
@@ -17,8 +16,7 @@ export default function EnotecaJoinClient({
   menuLocation,
   bottleCount,
 }) {
-  const {lang} = useLanguage()
-  const t = pickLangText(lang, ENOTECA_DICTIONARY.join)
+  const t = useT('enoteca.join')
 
   const router = useRouter()
   const [nickname, setNickname] = useState('')
@@ -90,7 +88,7 @@ export default function EnotecaJoinClient({
 
     const trimmed = nickname.trim()
     if (!trimmed) {
-      setError(t.nicknameRequired)
+      setError(t('nicknameRequired'))
       return
     }
     setError(null)
@@ -112,7 +110,7 @@ export default function EnotecaJoinClient({
 
       if (!response.ok || !payload?.id) {
         const serverError = payload?.error ? ` (${payload.error})` : ''
-        setError(`${t.startError}${serverError}`)
+        setError(`${t('startError')}${serverError}`)
         return
       }
 
@@ -126,7 +124,7 @@ export default function EnotecaJoinClient({
       router.push(`/enoteca/${menuId}/play?sid=${payload.id}`)
     } catch (unexpectedErr) {
       console.error('enoteca start unexpected error:', unexpectedErr)
-      setError(t.startError)
+      setError(t('startError'))
     } finally {
       if (!didNavigate) {
         setLoading(false)
@@ -137,7 +135,7 @@ export default function EnotecaJoinClient({
   if (checkingSession) {
     return (
       <div className={styles.fullPage} style={{alignItems: 'center', justifyContent: 'center'}}>
-        <p className={styles.readyHint}>{t.loading}</p>
+        <p className={styles.readyHint}>{t('loading')}</p>
       </div>
     )
   }
@@ -147,7 +145,7 @@ export default function EnotecaJoinClient({
   return (
     <div className={styles.fullPage}>
       <div className={styles.topBarContainer}>
-        <TopBar title={`🍷 ${t.enotecaLabel}`} onBack={() => router.push(backHref)}></TopBar>
+        <TopBar title={`🍷 ${t('enotecaLabel')}`} onBack={() => router.push(backHref)}></TopBar>
       </div>
       <div className={styles.slideContent}>
         {/* Event info card */}
@@ -157,16 +155,16 @@ export default function EnotecaJoinClient({
           {menuLocation && <p className={xStyles.location}>📍 {menuLocation}</p>}
           {menuDescription && <p className={xStyles.description}>{menuDescription}</p>}
           <span className={xStyles.bottleCount}>
-            {bottleCount} {bottleCount === 1 ? t.bottleCountSingular : t.bottleCountPlural}
+            {bottleCount} {bottleCount === 1 ? t('bottleCountSingular') : t('bottleCountPlural')}
           </span>
         </div>
 
         {/* Resume banner */}
         {hasActiveSession && (
           <div className={xStyles.resumeCard}>
-            <span className={xStyles.resumeTitle}>{t.sessionInProgress}</span>
+            <span className={xStyles.resumeTitle}>{t('sessionInProgress')}</span>
             <p className={xStyles.resumeText}>
-              {t.welcomeBack}, <strong>{existingSession.nickname}</strong>! {t.progressHint}
+              {t('welcomeBack')}, <strong>{existingSession.nickname}</strong>! {t('progressHint')}
             </p>
           </div>
         )}
@@ -175,11 +173,11 @@ export default function EnotecaJoinClient({
         {!hasActiveSession && (
           <form id={startFormId} className={xStyles.form} onSubmit={handleStart}>
             <div className={xStyles.field}>
-              <label htmlFor="nickname">{t.nicknameLabel}</label>
+              <label htmlFor="nickname">{t('nicknameLabel')}</label>
               <input
                 id="nickname"
                 type="text"
-                placeholder={t.nicknamePlaceholder}
+                placeholder={t('nicknamePlaceholder')}
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 maxLength={40}
@@ -189,11 +187,11 @@ export default function EnotecaJoinClient({
               />
             </div>
             <div className={xStyles.field}>
-              <label htmlFor="table">{t.tableLabel}</label>
+              <label htmlFor="table">{t('tableLabel')}</label>
               <input
                 id="table"
                 type="text"
-                placeholder={t.tablePlaceholder}
+                placeholder={t('tablePlaceholder')}
                 value={tableName}
                 onChange={(e) => setTableName(e.target.value)}
                 maxLength={40}
@@ -210,7 +208,7 @@ export default function EnotecaJoinClient({
         {hasActiveSession ? (
           <>
             <button className={styles.continueButton} onClick={handleResume}>
-              {t.resume}
+              {t('resume')}
             </button>
             <button
               className={styles.secondaryButton}
@@ -218,7 +216,7 @@ export default function EnotecaJoinClient({
                 localStorage.removeItem(sessionKey)
                 setExistingSession(null)
               }}>
-              {t.startNew}
+              {t('startNew')}
             </button>
             <button
               className={styles.secondaryButton}
@@ -226,7 +224,7 @@ export default function EnotecaJoinClient({
                 localStorage.removeItem(sessionKey)
                 router.push('/')
               }}>
-              {t.leave}
+              {t('leave')}
             </button>
           </>
         ) : (
@@ -235,7 +233,7 @@ export default function EnotecaJoinClient({
             form={startFormId}
             className={styles.continueButton}
             disabled={loading}>
-            {loading ? t.starting : `🍷 ${t.start}`}
+            {loading ? t('starting') : `🍷 ${t('start')}`}
           </button>
         )}
       </div>

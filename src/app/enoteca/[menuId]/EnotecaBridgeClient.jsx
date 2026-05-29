@@ -6,7 +6,7 @@ import QRCode from 'qrcode'
 import TopBar from '@/components/TopBar'
 import ShareDetailsTabs from '@/components/ShareDetailsTabs/ShareDetailsTabs'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
-import {ENOTECA_DICTIONARY, pickLangText} from '@/lib/i18n/dictionaries'
+import {useT} from '@/lib/i18n/useT'
 import {formatAppDate} from '@/lib/dateFormat'
 import styles from '../../live/session/[sessionId]/play/playerLive.module.scss'
 import xStyles from './enotecaJoin.module.scss'
@@ -21,7 +21,7 @@ export default function EnotecaBridgeClient({
   leaderboard = [],
 }) {
   const {lang} = useLanguage()
-  const t = pickLangText(lang, ENOTECA_DICTIONARY.join)
+  const t = useT('enoteca.join')
   const router = useRouter()
   const safeQuestions = questions || []
   const safeBottles = bottles || []
@@ -118,7 +118,7 @@ export default function EnotecaBridgeClient({
   return (
     <div className={styles.fullPage}>
       <div className={styles.topBarContainer}>
-        <TopBar title={`🍷 ${t.enotecaLabel}`} onBack={() => router.push(backHref)}></TopBar>
+        <TopBar title={`🍷 ${t('enotecaLabel')}`} onBack={() => router.push(backHref)}></TopBar>
       </div>
       <div className={styles.slideContent}>
         <div className={xStyles.infoCard}>
@@ -128,14 +128,14 @@ export default function EnotecaBridgeClient({
           {menuDescription && <p className={xStyles.description}>{menuDescription}</p>}
 
           <ShareDetailsTabs
-            shareLabel={t.shareTabLabel}
-            detailsLabel={t.detailsTabLabel}
-            leaderboardLabel={t.leaderboardTabLabel}
+            shareLabel={t('shareTabLabel')}
+            detailsLabel={t('detailsTabLabel')}
+            leaderboardLabel={t('leaderboardTabLabel')}
             leaderboardBadge={safeLeaderboard.length || null}
             shareContent={
               <>
-                <p className={xStyles.bridgeTitle}>{t.bridgeTitle}</p>
-                <p className={xStyles.bridgeHint}>{t.bridgeHint}</p>
+                <p className={xStyles.bridgeTitle}>{t('bridgeTitle')}</p>
+                <p className={xStyles.bridgeHint}>{t('bridgeHint')}</p>
 
                 <div className={xStyles.linkRow}>
                   <input
@@ -148,19 +148,19 @@ export default function EnotecaBridgeClient({
                     type="button"
                     className={xStyles.shareActionButton}
                     onClick={handleCopyLink}>
-                    {copied ? t.copied : t.copyLink}
+                    {copied ? t('copied') : t('copyLink')}
                   </button>
                   <button
                     type="button"
                     className={xStyles.shareActionButton}
                     onClick={handleShareLink}>
-                    {t.shareLink}
+                    {t('shareLink')}
                   </button>
                   <button
                     type="button"
                     className={xStyles.shareActionButton}
                     onClick={() => setQrOpen(true)}>
-                    {t.qr}
+                    {t('qr')}
                   </button>
                 </div>
               </>
@@ -169,21 +169,21 @@ export default function EnotecaBridgeClient({
               <>
                 <div className={xStyles.questionPreviewBlock}>
                   <div className={xStyles.questionPreviewHeader}>
-                    <span className={xStyles.questionPreviewTitle}>{t.questionPreviewTitle}</span>
+                    <span className={xStyles.questionPreviewTitle}>{t('questionPreviewTitle')}</span>
                     <span className={xStyles.questionPreviewCount}>
                       {safeQuestions.length}{' '}
-                      {safeQuestions.length === 1 ? t.questionSingular : t.questionPlural}
+                      {safeQuestions.length === 1 ? t('questionSingular') : t('questionPlural')}
                     </span>
                   </div>
-                  <div className={xStyles.questionPreviewStrip} aria-label={t.questionPreviewTitle}>
+                  <div className={xStyles.questionPreviewStrip} aria-label={t('questionPreviewTitle')}>
                     {safeQuestions.length === 0 ? (
-                      <div className={xStyles.questionPreviewEmpty}>{t.questionPreviewEmpty}</div>
+                      <div className={xStyles.questionPreviewEmpty}>{t('questionPreviewEmpty')}</div>
                     ) : (
                       safeQuestions.map((question, index) => (
                         <article key={question.id} className={xStyles.questionPreviewCard}>
                           <span className={xStyles.questionPreviewIndex}>#{index + 1}</span>
                           <h2 className={xStyles.questionPreviewText}>
-                            {question.text || t.unknownQuestion}
+                            {question.text || t('unknownQuestion')}
                           </h2>
                         </article>
                       ))
@@ -193,24 +193,24 @@ export default function EnotecaBridgeClient({
 
                 <div className={xStyles.bottlePreviewBlock}>
                   <div className={xStyles.bottlePreviewHeader}>
-                    <span className={xStyles.bottlePreviewTitle}>{t.bottlePreviewTitle}</span>
+                    <span className={xStyles.bottlePreviewTitle}>{t('bottlePreviewTitle')}</span>
                     <span className={xStyles.bottlePreviewCount}>
                       {safeBottles.length}{' '}
-                      {safeBottles.length === 1 ? t.bottleCountSingular : t.bottleCountPlural}
+                      {safeBottles.length === 1 ? t('bottleCountSingular') : t('bottleCountPlural')}
                     </span>
                   </div>
-                  <div className={xStyles.bottlePreviewStrip} aria-label={t.bottlePreviewTitle}>
+                  <div className={xStyles.bottlePreviewStrip} aria-label={t('bottlePreviewTitle')}>
                     {safeBottles.length === 0 ? (
-                      <div className={xStyles.bottlePreviewEmpty}>{t.bottlePreviewEmpty}</div>
+                      <div className={xStyles.bottlePreviewEmpty}>{t('bottlePreviewEmpty')}</div>
                     ) : (
                       safeBottles.map((bottle, index) => (
                         <article key={bottle.id} className={xStyles.bottlePreviewCard}>
                           <span className={xStyles.bottlePreviewIndex}>#{index + 1}</span>
                           <h2 className={xStyles.bottlePreviewName}>
-                            {bottle.name || t.unknownBottle}
+                            {bottle.name || t('unknownBottle')}
                           </h2>
                           <p className={xStyles.bottlePreviewProducer}>
-                            {bottle.producer || t.unknownProducer}
+                            {bottle.producer || t('unknownProducer')}
                           </p>
                           {bottle.year && (
                             <span className={xStyles.bottlePreviewYear}>{bottle.year}</span>
@@ -225,17 +225,17 @@ export default function EnotecaBridgeClient({
             leaderboardContent={
               <div className={xStyles.leaderboardBlock}>
                 <div className={xStyles.leaderboardHeader}>
-                  <span className={xStyles.leaderboardTitle}>{t.leaderboardTitle}</span>
+                  <span className={xStyles.leaderboardTitle}>{t('leaderboardTitle')}</span>
                   <span className={xStyles.leaderboardCount}>
                     {safeLeaderboard.length}{' '}
                     {safeLeaderboard.length === 1
-                      ? t.leaderboardPlayerSingular
-                      : t.leaderboardPlayerPlural}
+                      ? t('leaderboardPlayerSingular')
+                      : t('leaderboardPlayerPlural')}
                   </span>
                 </div>
 
                 {safeLeaderboard.length === 0 ? (
-                  <div className={xStyles.leaderboardEmpty}>{t.leaderboardEmpty}</div>
+                  <div className={xStyles.leaderboardEmpty}>{t('leaderboardEmpty')}</div>
                 ) : (
                   <div className={xStyles.leaderboardList}>
                     {safeLeaderboard.map((entry, index) => (
@@ -244,11 +244,11 @@ export default function EnotecaBridgeClient({
                           <span className={xStyles.leaderboardRank}>#{index + 1}</span>
                           <div className={xStyles.leaderboardMeta}>
                             <h3 className={xStyles.leaderboardName}>
-                              {entry.nickname || t.leaderboardAnonymous}
+                              {entry.nickname || t('leaderboardAnonymous')}
                             </h3>
                             {entry.table_name && (
                               <p className={xStyles.leaderboardTable}>
-                                {t.leaderboardTableLabel}: {entry.table_name}
+                                {t('leaderboardTableLabel')}: {entry.table_name}
                               </p>
                             )}
                             {entry.completed_at && (
@@ -263,7 +263,7 @@ export default function EnotecaBridgeClient({
                             {entry.total_score ?? 0}
                           </span>
                           <span className={xStyles.leaderboardScoreLabel}>
-                            {t.leaderboardPoints}
+                            {t('leaderboardPoints')}
                           </span>
                         </div>
                       </article>
@@ -278,7 +278,7 @@ export default function EnotecaBridgeClient({
 
       <div className={styles.bottomPanel}>
         <button className={styles.continueButton} onClick={() => router.push(joinPath)}>
-          🍷 {t.goToTasting ?? t.start}
+          🍷 {t('goToTasting') || t('start')}
         </button>
       </div>
 
@@ -286,21 +286,21 @@ export default function EnotecaBridgeClient({
         <div className={xStyles.qrOverlay} onClick={() => setQrOpen(false)}>
           <div className={xStyles.qrModal} onClick={(e) => e.stopPropagation()}>
             <img src="/logo.svg" alt="Indovinando" className={xStyles.qrLogo} />
-            <h3>{t.qrTitle}</h3>
+            <h3>{t('qrTitle')}</h3>
             {qrDataUrl ? (
               <img src={qrDataUrl} alt="QR degustazione" className={xStyles.qrImage} />
             ) : (
-              <p className={xStyles.qrHint}>{t.loading ?? 'Loading...'}</p>
+              <p className={xStyles.qrHint}>{t('loading') || 'Loading...'}</p>
             )}
             <div className={xStyles.qrActions}>
               <button type="button" className={styles.continueButton} onClick={handlePrintQr}>
-                {t.print}
+                {t('print')}
               </button>
               <button
                 type="button"
                 className={styles.secondaryButton}
                 onClick={() => setQrOpen(false)}>
-                {t.close}
+                {t('close')}
               </button>
             </div>
           </div>

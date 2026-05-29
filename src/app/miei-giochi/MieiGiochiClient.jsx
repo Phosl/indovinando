@@ -24,12 +24,12 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
           <Link href="/game/create" className={styles.createGameLink}>
             <div className={styles.createGameCard}>
               <div className={styles.createGameContent}>
-                <h2>Crea una nuova degustazione</h2>
-                <p>Inizia a creare la tua nuova degustazione e condividila con i tuoi amici.</p>
+                <h2>{dashboardDict.createGameCardTitle}</h2>
+                <p>{dashboardDict.createGameCardDescription}</p>
               </div>
               <div className={styles.createGameContainer}>
                 <div className={styles.createGameBtn}>
-                  <span>Iniziamo</span>
+                  <span>{dashboardDict.createGameCardAction}</span>
                   <Icon name="forward" size={24} className={styles.createGameBtnIcon} />
                 </div>
               </div>
@@ -46,18 +46,15 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
           <div className={styles.emptyState}>
             <span className={styles.emptyIcon}>🎮</span>
             <p>
-              {dashboardDict.emptyStateFirstGame ||
-                'Non hai ancora creato giochi. Crea il tuo primo gioco per iniziare a giocare.'}
+              {dashboardDict.emptyStateFirstGame}
             </p>
             <ButtonLink href="/game/create" variant="success">
-              {dashboardDict.createFirstGame || 'Crea il tuo primo gioco'}
+              {dashboardDict.createFirstGame}
             </ButtonLink>
           </div>
         ) : (
           <div className={styles.gamesList}>
-            <div className={styles.gamesSectionTitle}>
-              {dashboardDict.yourGames || 'I tuoi giochi'}
-            </div>
+            <div className={styles.gamesSectionTitle}>{dashboardDict.yourGames}</div>
             {games.map((game) => {
               const bottles = [...(game.game_bottles || [])].sort(
                 (a, b) => (a.bottle_order || 0) - (b.bottle_order || 0),
@@ -81,7 +78,7 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
                         <h3>
                           {game.name}{' '}
                           <span className={styles.statusLabel}>
-                            {game.status === 'published' ? '' : dashboardDict.draft || 'Incompleto'}
+                            {game.status === 'published' ? '' : dashboardDict.incomplete}
                           </span>{' '}
                         </h3>
                         <div className={styles.gameCardMeta}>
@@ -92,14 +89,17 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
                       <div className={styles.statsRow}>
                         <span>
                           <Icon name="bottle" size={24} className={styles.statsIcon} />
-                          {bottles.length} Bottiglie
+                          {dashboardDict.bottlesCountLabel.replace('{count}', String(bottles.length))}
                         </span>
                         <span className={styles.statsDivider} aria-hidden="true">
                           -
                         </span>
                         <span>
                           <Icon name="question" size={24} className={styles.statsIcon} />
-                          {questionsCount} Domande
+                          {dashboardDict.questionsCountLabel.replace(
+                            '{count}',
+                            String(questionsCount),
+                          )}
                         </span>
                       </div>
 
@@ -108,9 +108,9 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
                           <span
                             key={bottle.id || `${game.id}-preview-bottle-${index}`}
                             className={styles.bottleLabel}>
-                            {(bottle.name || 'Senza nome') +
+                            {(bottle.name || dashboardDict.unnamedBottle) +
                               ' - ' +
-                              (bottle.producer || 'Produttore non indicato')}
+                              (bottle.producer || dashboardDict.unknownProducer)}
                           </span>
                         ))}
                         {hiddenBottles > 0 && (

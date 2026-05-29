@@ -4,20 +4,8 @@ import {useRouter} from 'next/navigation'
 import {useState} from 'react'
 import GamePlayView from '@/components/game/GamePlayView'
 import TopBar from '@/components/TopBar'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
-import {pickLangText} from '@/lib/i18n/dictionaries'
+import {useT} from '@/lib/i18n/useT'
 import styles from './GamePlayPage.module.scss'
-
-const GAME_PLAY_PAGE_DICTIONARY = {
-  it: {
-    deleteConfirm: 'Sei sicuro di voler eliminare questo gioco? Non sara recuperabile.',
-    delete: 'Elimina',
-  },
-  en: {
-    deleteConfirm: 'Are you sure you want to delete this game? It cannot be recovered.',
-    delete: 'Delete',
-  },
-}
 
 export default function GamePlayPageClient({
   game,
@@ -29,12 +17,11 @@ export default function GamePlayPageClient({
   onDelete,
 }) {
   const router = useRouter()
-  const {lang} = useLanguage()
-  const t = pickLangText(lang, GAME_PLAY_PAGE_DICTIONARY)
+  const t = useT('gamePlayPage')
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleDelete = async () => {
-    const message = t.deleteConfirm
+    const message = t('deleteConfirm')
     if (!window.confirm(message)) {
       return
     }
@@ -49,7 +36,7 @@ export default function GamePlayPageClient({
   return (
     <main className="flex-container">
       <div className="flex-column" style={{width: '100%', maxWidth: 960, margin: '0 auto'}}>
-        <TopBar title="Dettaglio Degustazione" onBack={() => router.push('/miei-giochi')} />
+        <TopBar title={t('title')} onBack={() => router.push('/miei-giochi')} />
 
         <GamePlayView
           game={game}
@@ -65,7 +52,7 @@ export default function GamePlayPageClient({
             onClick={handleDelete}
             disabled={isDeleting}
             className={`btn btn-small danger ${isDeleting ? 'disabled' : ''}`}>
-            {isDeleting ? '...' : `${t.delete}`}
+            {isDeleting ? '...' : t('delete')}
           </button>
         )}
       </div>

@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import {useEffect, useMemo, useState} from 'react'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
-import {pickLangText} from '@/lib/i18n/dictionaries'
+import {useT} from '@/lib/i18n/useT'
 import AvatarDisplay from '@/components/AvatarDisplay'
 import Icon from '@/components/Icon'
 import {Button, ButtonLink} from '@/components/ui/Button'
@@ -11,37 +11,6 @@ import {formatAppDate, formatAppDateTime} from '@/lib/dateFormat'
 import {watchMobileViewport} from '@/lib/deviceUtils'
 import {getGamePlayViewText} from '../utils/constants'
 import styles from './GamePlayView.module.scss'
-const GAME_PLAY_VIEW_ACTIONS_DICTIONARY = {
-  it: {
-    startMatch: 'Avvia una partita',
-    completeGame: 'Inserisci bottiglie',
-    completeGameHint: 'Completa bottiglie e risultati per avviare una partita.',
-    playLive: 'Gioca Live',
-    playEnoteca: 'Enoteca',
-    chooseMode: 'Scegli modalita',
-    close: 'Chiudi',
-    cancel: 'Annulla',
-    printCard: 'Stampa',
-    edit: 'Modifica',
-    liveDescription: 'Partita multiplayer dal vivo con host e classifica in tempo reale.',
-    enotecaDescription:
-      'Modalita individuale per giocare in autonomia e vedere il risultato finale.',
-  },
-  en: {
-    startMatch: 'Start a match',
-    completeGame: 'Add bottles',
-    completeGameHint: 'Complete bottles and answers before starting a match.',
-    playLive: 'Play Live',
-    playEnoteca: 'Enoteca',
-    chooseMode: 'Choose mode',
-    close: 'Close',
-    cancel: 'Cancel',
-    printCard: 'Print Card',
-    edit: 'Edit',
-    liveDescription: 'Live multiplayer match with host and real-time leaderboard.',
-    enotecaDescription: 'Solo mode to play on your own and see the final result.',
-  },
-}
 
 export default function GamePlayView({
   game,
@@ -52,8 +21,8 @@ export default function GamePlayView({
   isOwner,
 }) {
   const {lang} = useLanguage()
+  const t = useT('gamePlayViewActions')
   const text = getGamePlayViewText(lang)
-  const t = pickLangText(lang, GAME_PLAY_VIEW_ACTIONS_DICTIONARY)
   const [activeBottleIndex, setActiveBottleIndex] = useState(0)
   const [startModalOpen, setStartModalOpen] = useState(false)
   const [historyOpen, setHistoryOpen] = useState(false)
@@ -94,14 +63,14 @@ export default function GamePlayView({
             <div className={styles.gameInfo}>
               <p className={styles.infoItem}>
                 <Icon name="bottle" size={24} className={styles.infoBottleIcon} />
-                {`${bottles.length} Bottiglie`}
+                {t('bottlesCount', {count: bottles.length})}
               </p>
               <span className={styles.infoDivider} aria-hidden="true">
                 -
               </span>
               <p className={styles.infoItem}>
                 <Icon name="question" size={24} className={styles.infoQuestionIcon} />
-                {`${questions.length} Domande`}
+                {t('questionsCount', {count: questions.length})}
               </p>
             </div>
 
@@ -111,7 +80,7 @@ export default function GamePlayView({
               onClick={() => setHistoryOpen(true)}
               aria-expanded={historyOpen}
               aria-controls="game-history-panel">
-              {lang === 'en' ? 'Tasting history' : ' Storico degustazioni'}
+              {t('history')}
             </Button>
           </div>
         </div>
@@ -121,7 +90,7 @@ export default function GamePlayView({
               variant="success"
               className={`btn-start ${styles.actionBtn}`}
               onClick={() => setStartModalOpen(true)}>
-              {t.startMatch}
+              {t('startMatch')}
             </Button>
           ) : (
             <div className={styles.setupCtaWrap}>
@@ -129,7 +98,7 @@ export default function GamePlayView({
                 href={`/game/${game.id}/edit?step=4`}
                 variant="success"
                 className={`btn-start ${styles.actionBtn}`}>
-                {t.completeGame}
+                {t('completeGame')}
               </ButtonLink>
             </div>
           )}
@@ -142,7 +111,7 @@ export default function GamePlayView({
                 className={styles.actionBtn}>
                 <span className={styles.actionBtnContent}>
                   <Icon name="edit" size={24} className={styles.actionBtnIcon} />
-                  <span>{t.edit}</span>
+                  <span>{t('edit')}</span>
                 </span>
               </ButtonLink>
             )}
@@ -153,7 +122,7 @@ export default function GamePlayView({
               className={styles.actionBtn}>
               <span className={styles.actionBtnContent}>
                 <Icon name="print" size={24} className={styles.actionBtnIcon} />
-                <span>{t.printCard}</span>
+                <span>{t('printCard')}</span>
               </span>
             </ButtonLink>
           </div>
@@ -235,12 +204,12 @@ export default function GamePlayView({
         <div className={styles.startModalBackdrop} onClick={() => setStartModalOpen(false)}>
           <div className={styles.startModal} onClick={(event) => event.stopPropagation()}>
             <div className={styles.startModalHeader}>
-              <h3>{t.chooseMode}</h3>
+              <h3>{t('chooseMode')}</h3>
               <button
                 type="button"
                 className={styles.startModalX}
                 onClick={() => setStartModalOpen(false)}
-                aria-label={t.close}>
+                aria-label={t('close')}>
                 ×
               </button>
             </div>
@@ -249,16 +218,16 @@ export default function GamePlayView({
                 variant="custom"
                 href={`/game/${game.id}/live`}
                 className={`${styles.startModeOption} ${styles.startModeOptionSuccess}`}>
-                <span className={styles.startModeTitle}>{t.playLive}</span>
-                <span className={styles.startModeDescription}>{t.liveDescription}</span>
+                <span className={styles.startModeTitle}>{t('playLive')}</span>
+                <span className={styles.startModeDescription}>{t('liveDescription')}</span>
               </ButtonLink>
               {game.status === 'published' && (
                 <ButtonLink
                   variant="custom"
                   href={`/enoteca/${game.id}`}
                   className={`${styles.startModeOption} ${styles.startModeOptionQuaternary}`}>
-                  <span className={styles.startModeTitle}>{t.playEnoteca}</span>
-                  <span className={styles.startModeDescription}>{t.enotecaDescription}</span>
+                  <span className={styles.startModeTitle}>{t('playEnoteca')}</span>
+                  <span className={styles.startModeDescription}>{t('enotecaDescription')}</span>
                 </ButtonLink>
               )}
             </div>
@@ -268,7 +237,7 @@ export default function GamePlayView({
                 variant="neutral"
                 size="small"
                 onClick={() => setStartModalOpen(false)}>
-                {t.cancel}
+                {t('cancel')}
               </Button>
             </div>
           </div>
@@ -283,18 +252,18 @@ export default function GamePlayView({
             onClick={(event) => event.stopPropagation()}>
             <div className={styles.historySheetHandle} />
             <div className={styles.historySheetHeader}>
-              <h3>{lang === 'en' ? 'Tasting History' : 'Storico degustazioni'}</h3>
+              <h3>{t('historyTitle')}</h3>
               <button
                 type="button"
                 className={styles.historySheetClose}
                 onClick={() => setHistoryOpen(false)}>
-                {lang === 'en' ? 'Close' : 'Chiudi'}
+                {t('close')}
               </button>
             </div>
             <div className={styles.historyPanel}>
               {historySessions.length === 0 ? (
                 <p className={styles.historyEmpty}>
-                  {lang === 'en' ? 'No sessions yet.' : 'Nessuna partita ancora.'}
+                  {t('historyEmpty')}
                 </p>
               ) : (
                 <div className={styles.historyList}>
@@ -304,9 +273,7 @@ export default function GamePlayView({
                         <div>
                           <div className={styles.historyNameRow}>
                             <p className={styles.historyName}>
-                              {lang === 'en'
-                                ? `Match #${historySessions.length - index}`
-                                : `Partita #${historySessions.length - index}`}
+                              {t('historyMatchLabel', {number: historySessions.length - index})}
                             </p>
                             <span className={styles.historyTypeBadge}>
                               {(session.player_count || (session.players || []).length) > 1

@@ -3,23 +3,8 @@
 import Link from 'next/link'
 import {usePathname, useSearchParams} from 'next/navigation'
 import Icon from '@/components/Icon'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {useT} from '@/lib/i18n/useT'
 import styles from './BottomNav.module.scss'
-
-const LABELS = {
-  it: {
-    home: 'Home',
-    tastings: 'Degustazioni',
-    course: 'Corso',
-    profile: 'Profilo',
-  },
-  en: {
-    home: 'Home',
-    tastings: 'Tastings',
-    course: 'Course',
-    profile: 'Profile',
-  },
-}
 
 function isActive(pathname, href, key) {
   if (!pathname) return false
@@ -53,22 +38,21 @@ function shouldRender(pathname, searchParams) {
 export default function BottomNav() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const {lang} = useLanguage()
-  const l = LABELS[lang] || LABELS.it
+  const t = useT('bottomNav')
 
   if (!shouldRender(pathname, searchParams)) return null
 
   const items = [
-    {key: 'home', href: '/dashboard', label: l.home},
-    {key: 'tastings', href: '/miei-giochi', label: l.tastings},
-    {key: 'course', href: '/corso-vino', label: l.course},
-    {key: 'profile', href: '/profilo', label: l.profile},
+    {key: 'home', href: '/dashboard', label: t('home'), icon: 'home'},
+    {key: 'tastings', href: '/miei-giochi', label: t('tastings'), icon: 'testing'},
+    {key: 'course', href: '/corso-vino', label: t('course'), icon: 'course'},
+    {key: 'profile', href: '/profilo', label: t('profile'), icon: 'profile'},
   ]
 
   return (
     <>
       <div className={styles.spacer} aria-hidden="true" />
-      <nav className={styles.nav} aria-label="Bottom navigation">
+      <nav className={styles.nav} aria-label={t('ariaLabel')}>
         <div className={styles.inner}>
           {items.map((item) => {
             const active = isActive(pathname, item.href, item.key)
@@ -77,7 +61,7 @@ export default function BottomNav() {
                 key={item.key}
                 href={item.href}
                 className={`${styles.item} ${active ? styles.active : ''}`}>
-                <Icon name="plusSimple" size={20} className={styles.icon} />
+                <Icon name={item.icon} size={24} className={styles.icon} />
                 <span className={styles.label}>{item.label}</span>
               </Link>
             )
