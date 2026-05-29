@@ -83,25 +83,12 @@
 
 .arcadeHero {
   border-radius: 16px;
-  padding: 26px 20px 20px;
   text-align: center;
   padding-bottom: 0px;
-
-  h4 {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--gray-200);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 20px;
-  }
-
-  p {
-    margin: 6px 0 0 0;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text-secondary);
-  }
+}
+.welcomeTextContainer {
+  text-align: left;
+  margin-top: 24px;
 }
 
 .legalLinks {
@@ -155,4 +142,84 @@
 }
 .menuCardLabel {
   text-transform: uppercase;
+}
+
+.createGameLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  background: var(--primary);
+  color: var(--primary-text);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.12s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.createGameCard {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.createGameContent {
+  max-width: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h2 {
+    color: var(--white);
+    line-height: 1.2;
+    font-size: 24px;
+    margin: 0;
+  }
+
+  p {
+    color: var(--white);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.2;
+    margin: 0;
+  }
+}
+
+.createGameContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 16px;
+}
+
+.createGameBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 42px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--primary-text);
+  font-size: 18px;
+  font-weight: 900;
+  box-shadow: 0px 10px 15px -4px var(--primary-text);
+}
+
+.createGameBtnIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.createGameIllustration {
+  object-fit: contain;
+  width: auto;
+  height: 120%;
+  position: absolute;
+  top: -10%;
+  right: -10%;
+  z-index: -1;
+  opacity: 0.3;
 }

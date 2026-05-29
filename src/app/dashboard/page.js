@@ -35,13 +35,40 @@ export default async function Dashboard() {
       <div className={styles.container}>
         <section className={styles.arcadeHero}>
           <img src="/logo.svg" alt="Indovinando Logo" className={styles.logo} />
-
-          <h2>
-            {dashboardDict.welcome || 'Benvenuto'}, {profile?.username || data.user.email}!
-          </h2>
+          <div className={styles.welcomeTextContainer}>
+            <h1>
+              {dashboardDict.welcome || 'Benvenuto'}, {profile?.username || data.user.email}!
+            </h1>
+          </div>
         </section>
 
         <nav className={styles.menuGrid}>
+          <Link href="/game/create" className={styles.createGameLink}>
+            <div className={styles.createGameCard}>
+              <div className={styles.createGameContent}>
+                <h2>Crea una nuova degustazione</h2>
+                <p>Inizia a creare la tua nuova degustazione e condividila con i tuoi amici.</p>
+              </div>
+              <div className={styles.createGameContainer}>
+                <div className={styles.createGameBtn}>
+                  <span>Iniziamo</span>
+                  <img
+                    src="/icons/forward-icon.svg"
+                    alt=""
+                    aria-hidden="true"
+                    className={styles.createGameBtnIcon}
+                  />
+                </div>
+              </div>
+              <img
+                src="/img-card-create.svg"
+                alt=""
+                aria-hidden="true"
+                className={styles.createGameIllustration}
+              />
+            </div>
+          </Link>
+
           <Link href="/miei-giochi" className="btn primary">
             <span className={styles.menuCardLabel}>{dashboardDict.myGames || 'I miei giochi'}</span>
           </Link>
