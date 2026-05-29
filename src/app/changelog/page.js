@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.24.2',
+    date: '29 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'centralizza rilevamento mobile in deviceUtils e aggiorna GamePlayView con watcher viewport',
+    ],
+  },
+
+  {
     version: '1.24.1',
     date: '29 maggio 2026',
     label: 'Auto',
