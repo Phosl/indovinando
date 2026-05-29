@@ -3,7 +3,7 @@
 import {useEffect, useRef, useState} from 'react'
 import {usePathname, useRouter} from 'next/navigation'
 
-const LEAVE_MS = 140
+const LEAVE_MS = 0
 const ENTER_MS = 220
 
 function shouldIgnoreClick(event) {
