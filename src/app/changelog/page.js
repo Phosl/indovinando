@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.23.4',
+    date: '29 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'restyle my games and create mode card',
+    ],
+  },
+
+  {
     version: '1.23.3',
     date: '28 maggio 2026',
     label: 'Auto',
