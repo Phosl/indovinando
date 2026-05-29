@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.24.0',
+    date: '29 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'sposta storico partite su pagina dedicata con card migliorate, avatar game e filtri a pill per nome partita',
+    ],
+  },
+
+  {
     version: '1.23.4',
     date: '29 maggio 2026',
     label: 'Auto',
