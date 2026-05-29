@@ -13,25 +13,25 @@ export const metadata = {
 
 export default async function ProfileMatchesPage() {
   const supabase = await createServerSupabase()
-  const lang = await getServerLanguage()
+  const [lang, authResult] = await Promise.all([getServerLanguage(), supabase.auth.getUser()])
   const locale = lang === 'en' ? en : it
   const t = locale.profile || it.profile
 
   const {
     data: {user},
-  } = await supabase.auth.getUser()
+  } = authResult
 
   if (!user) redirect('/auth?next=/profilo/partite')
 
-  const {data: profile} = await supabase
-    .from('profiles')
-    .select('username, avatar_emoji')
-    .eq('id', user.id)
-    .single()
+  const [profileResult, gameAvatarOptions] = await Promise.all([
+    supabase.from('profiles').select('username, avatar_emoji').eq('id', user.id).single(),
+    getGameAvatarOptions(),
+  ])
+
+  const profile = profileResult.data
 
   const profileName = String(profile?.username || '').trim()
   const myAvatarId = profileAvatarToGameId(profile?.avatar_emoji || '')
-  const gameAvatarOptions = await getGameAvatarOptions()
 
   const loadEnotecaSessions = async () => {
     const byUser = await supabase

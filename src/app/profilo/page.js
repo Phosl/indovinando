@@ -10,11 +10,11 @@ export const metadata = {
 
 export default async function ProfilePage() {
   const supabase = await createServerSupabase()
-  const lang = await getServerLanguage()
+  const [lang, authResult] = await Promise.all([getServerLanguage(), supabase.auth.getUser()])
 
   const {
     data: {user},
-  } = await supabase.auth.getUser()
+  } = authResult
 
   if (!user) redirect('/auth?next=/profilo')
 

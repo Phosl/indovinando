@@ -12,35 +12,35 @@ import en from '@/lib/i18n/locales/en.json'
 import styles from './dashboard.module.scss'
 
 export default async function Dashboard() {
-  // Server-side data
   const supabase = await createServerSupabase()
-  const lang = await getServerLanguage()
+  const [lang, authResult] = await Promise.all([getServerLanguage(), supabase.auth.getUser()])
   const locale = lang === 'en' ? en : it
   const dashboardDict = locale.dashboard || it.dashboard || {}
-  const appVersion = await getAppVersion()
-  const {data} = await supabase.auth.getUser()
+  const {data} = authResult
 
   if (!data.user) {
     redirect('/auth')
   }
 
-  const {data: profile} = await supabase
-    .from('profiles')
-    .select('username, super_admin, avatar_emoji')
-    .eq('id', data.user.id)
-    .single()
+  const [profileResult, courseResult, completedLessonsResult, appVersion] = await Promise.all([
+    supabase.from('profiles').select('username').eq('id', data.user.id).single(),
+    getWineCourseData(lang).catch(() => ({levels: []})),
+    supabase
+      .from('wine_course_progress')
+      .select('id', {count: 'exact', head: true})
+      .eq('user_id', data.user.id)
+      .eq('completed', true),
+    getAppVersion(),
+  ])
 
-  const {levels} = await getWineCourseData(lang).catch(() => ({levels: []}))
+  const profile = profileResult.data
+  const {levels} = courseResult
   const totalLessons = (levels || []).reduce(
     (sum, level) => sum + (level.lessonIds?.length || 0),
     0,
   )
 
-  const {count: completedLessonsCount} = await supabase
-    .from('wine_course_progress')
-    .select('id', {count: 'exact', head: true})
-    .eq('user_id', data.user.id)
-    .eq('completed', true)
+  const {count: completedLessonsCount} = completedLessonsResult
 
   const completedLessons = completedLessonsCount || 0
   const progressPct =

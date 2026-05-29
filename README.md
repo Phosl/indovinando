@@ -202,4 +202,5 @@ SUPABASE_SERVICE_ROLE_KEY=     # required for admin routes (finish, standings, h
 - [TESTING_CHECKLIST.md](./TESTING_CHECKLIST.md) — Manual QA checklist
 - [SUPABASE_SETUP_GUIDE.md](./SUPABASE_SETUP_GUIDE.md) — Supabase project setup guide
 
-- [SPLASHSCREEN] https://progressier.com/pwa-icons-and-ios-splash-screen-generator
+- [SPLASHSCREEN] https://progressier.com/pwa-icons-and-ios-splash-screen-generator -[FAVICON]
+  https://favicon.io/favicon-converter/
