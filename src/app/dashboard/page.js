@@ -62,12 +62,6 @@ export default async function Dashboard() {
         </section>
 
         <nav className={styles.menuGrid}>
-          <CreateGameCardLink
-            title={dashboardDict.createGameCardTitle}
-            description={dashboardDict.createGameCardDescription}
-            action={dashboardDict.createGameCardAction}
-          />
-
           <Link
             href="/miei-giochi"
             className={`${styles.sectionCard} ${styles.sectionCardPrimary} ${styles.sectionCardBottomArrow}`}>
@@ -81,7 +75,11 @@ export default async function Dashboard() {
               </span>
             </div>
           </Link>
-
+          <CreateGameCardLink
+            title={dashboardDict.createGameCardTitle}
+            description={dashboardDict.createGameCardDescription}
+            action={dashboardDict.createGameCardAction}
+          />
           {/* <Link
             href="/corso-vino"
             className={`${styles.sectionCard} ${styles.sectionCardTertiary} ${styles.sectionCardBottomArrow}`}>
@@ -139,7 +137,11 @@ export default async function Dashboard() {
               className={`${styles.sectionCard} ${styles.sectionCardPrimary} ${styles.sectionCardBottomArrow}`}>
               <div className={styles.sectionCardInfo}>
                 <h3>{dashboardDict.admin || 'Admin'}</h3>
-                <p>{lang === 'en' ? 'Catalog and course management tools.' : 'Strumenti gestione catalogo e corsi.'}</p>
+                <p>
+                  {lang === 'en'
+                    ? 'Catalog and course management tools.'
+                    : 'Strumenti gestione catalogo e corsi.'}
+                </p>
               </div>
               <div className={styles.sectionCardArrowRail} aria-hidden="true">
                 <span className={`btn icon-circle ${styles.sectionCardArrowBtn}`}>
