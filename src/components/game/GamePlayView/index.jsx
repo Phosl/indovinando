@@ -262,9 +262,7 @@ export default function GamePlayView({
             </div>
             <div className={styles.historyPanel}>
               {historySessions.length === 0 ? (
-                <p className={styles.historyEmpty}>
-                  {t('historyEmpty')}
-                </p>
+                <p className={styles.historyEmpty}>{t('historyEmpty')}</p>
               ) : (
                 <div className={styles.historyList}>
                   {historySessions.map((session, index) => (

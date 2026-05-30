@@ -119,7 +119,6 @@ function AutomaticModePlaceholder({onBack, userId}) {
   const supabase = useMemo(() => createClient(), [])
   const fileInputRef = useRef(null)
   const [isUploading, setIsUploading] = useState(false)
-  const [wizardStep, setWizardStep] = useState(2)
   const [uploadProgress, setUploadProgress] = useState({
     current: 0,
     total: 0,
@@ -595,84 +594,63 @@ function AutomaticModePlaceholder({onBack, userId}) {
         <h1 className={styles.autoModeTitleCentered}>{t('automaticFlowTitle')}</h1>
         <p className={styles.autoModeDescriptionCentered}>{t('automaticFlowDescription')}</p>
 
-        {wizardStep === 2 && (
-          <>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              capture="environment"
-              multiple
-              className={styles.autoModeFileInput}
-              onChange={event => handleFilesUpload(event.target.files)}
-            />
+        <>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            multiple
+            className={styles.autoModeFileInput}
+            onChange={event => handleFilesUpload(event.target.files)}
+          />
 
-            {isUploading && uploadProgress.total > 0 ? (
-              <div className={styles.autoModeUploadProgressWrap}>
-                <p className={styles.autoModeUploadProgress}>
-                  {uploadProgress.current}/{uploadProgress.total} {uploadProgress.phase}{' '}
-                  {uploadProgress.fileName} ({uploadProgress.percent}%)
-                </p>
-                <div className={styles.autoModeUploadProgressBar}>
-                  <span style={{width: `${uploadProgress.percent}%`}} />
-                </div>
+          {isUploading && uploadProgress.total > 0 ? (
+            <div className={styles.autoModeUploadProgressWrap}>
+              <p className={styles.autoModeUploadProgress}>
+                {uploadProgress.current}/{uploadProgress.total} {uploadProgress.phase}{' '}
+                {uploadProgress.fileName} ({uploadProgress.percent}%)
+              </p>
+              <div className={styles.autoModeUploadProgressBar}>
+                <span style={{width: `${uploadProgress.percent}%`}} />
               </div>
-            ) : null}
-            {!isUploading && uploadedImages.length > 0 ? (
-              <div className={styles.autoModeTopActions}>
-                <button
-                  type="button"
-                  className="btn btn-small neutral"
-                  disabled={isUploading || isAnalyzingAll || !!analyzingImageId || isCreatingQuiz}
-                  onClick={handleAnalyzeAll}>
-                  {isAnalyzingAll ? t('automaticAnalyzingAll') : t('automaticAnalyzeAllAction')}
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-small neutral"
-                  disabled={
-                    isUploading || isAnalyzingAll || !!analyzingImageId || uploadedImages.length === 0
-                  }
-                  onClick={() => setWizardStep(3)}>
-                  {t('automaticPreviewQuizAction')}
-                </button>
-              </div>
-            ) : null}
-
-            <div className={styles.autoStepFixedRow}>
-              <button
-                type="button"
-                className="btn success"
-                disabled={isUploading || !!analyzingImageId || isAnalyzingAll}
-                onClick={() => fileInputRef.current?.click()}>
-                {isUploading ? t('automaticUploading') : t('automaticScanAction')}
-              </button>
             </div>
-          </>
-        )}
-
-        {wizardStep === 3 && (
-          <section className={styles.autoModeEmptyState}>
-            <strong>{t('automaticPreviewTitle')}</strong>
-            {quizPreview ? (
+          ) : null}
+          {!isUploading && uploadedImages.length > 0 ? (
+            <div className={styles.autoModeTopActions}>
               <button
                 type="button"
                 className="btn btn-small neutral"
-                onClick={() => setIsPreviewOpen(true)}>
-                {t('automaticOpenPreviewModal')}
+                disabled={isUploading || isAnalyzingAll || !!analyzingImageId || isCreatingQuiz}
+                onClick={handleAnalyzeAll}>
+                {isAnalyzingAll ? t('automaticAnalyzingAll') : t('automaticAnalyzeAllAction')}
               </button>
-            ) : (
-              <p>{t('automaticPreviewEmpty')}</p>
-            )}
+              <button
+                type="button"
+                className="btn btn-small neutral"
+                disabled={
+                  isUploading ||
+                  isAnalyzingAll ||
+                  !!analyzingImageId ||
+                  uploadedImages.length === 0 ||
+                  !quizPreview
+                }
+                onClick={() => setIsPreviewOpen(true)}>
+                {t('automaticPreviewQuizAction')}
+              </button>
+            </div>
+          ) : null}
+
+          <div className={styles.autoStepFixedRow}>
             <button
               type="button"
-              className="btn btn-small success"
-              disabled={isCreatingQuiz || !quizPreview}
-              onClick={handleCreateQuickQuiz}>
-              {isCreatingQuiz ? t('automaticCreatingQuiz') : t('automaticCreateQuizAction')}
+              className="btn success"
+              disabled={isUploading || !!analyzingImageId || isAnalyzingAll}
+              onClick={() => fileInputRef.current?.click()}>
+              {isUploading ? t('automaticUploading') : t('automaticScanAction')}
             </button>
-          </section>
-        )}
+          </div>
+        </>
 
         {isPreviewOpen && quizPreview && (
           <div className={styles.autoPreviewModalOverlay} onClick={() => setIsPreviewOpen(false)}>

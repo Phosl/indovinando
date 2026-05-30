@@ -344,6 +344,10 @@
   flex: 1;
   overflow-y: auto;
   padding: 14px 16px 110px;
+  :global(.prova) {
+    padding: 0px;
+    border: 0px;
+  }
 }
 
 .autoPreviewModalFooter {

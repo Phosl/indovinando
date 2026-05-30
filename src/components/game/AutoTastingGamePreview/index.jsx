@@ -14,7 +14,9 @@ export default function AutoTastingGamePreview({preview, labels}) {
 
   return (
     <>
-      <section className={playViewStyles.sliderSection} aria-label={labels?.sliderAria || 'Bottles'}>
+      <section
+        className={playViewStyles.sliderSection}
+        aria-label={labels?.sliderAria || 'Bottles'}>
         <div className={playViewStyles.sliderTrack}>
           {bottles.map((bottle, idx) => (
             <button
@@ -24,7 +26,8 @@ export default function AutoTastingGamePreview({preview, labels}) {
               <span className={playViewStyles.bottleIndex}>{idx + 1}</span>
               <div className={playViewStyles.bottleCardBody}>
                 <h3>
-                  {bottle.name || labels?.unnamedBottle || 'Bottle'} {bottle.year || labels?.yearMissing || '-'}
+                  {bottle.name || labels?.unnamedBottle || 'Bottle'}{' '}
+                  {bottle.year || labels?.yearMissing || '-'}
                 </h3>
                 <p>{bottle.producer || labels?.producerMissing || '-'}</p>
               </div>
@@ -33,11 +36,11 @@ export default function AutoTastingGamePreview({preview, labels}) {
         </div>
       </section>
 
-      <div className={playViewStyles.card}>
+      <div className={playViewStyles.card + ' prova'}>
         <div className={playViewStyles.bottleHeader}>
           <span className={playViewStyles.questionNumberGeneral}>
             {(labels?.bottle || 'Bottle') + ' '}
-            {activeBottleIndex + 1} {(labels?.of || 'of')} {bottles.length}
+            {activeBottleIndex + 1} {labels?.of || 'of'} {bottles.length}
           </span>
           <h2>{activeBottle?.name || labels?.bottle || 'Bottle'}</h2>
           <p>
