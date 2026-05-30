@@ -19,6 +19,7 @@ function isActive(pathname, href, key) {
 
 function shouldRender(pathname) {
   if (!pathname) return false
+  if (pathname.startsWith('/table-live/session/')) return false
   if (pathname === '/dashboard') return true
   if (pathname.startsWith('/miei-giochi')) return true
   if (pathname.startsWith('/profilo')) return true
@@ -26,9 +27,11 @@ function shouldRender(pathname) {
   if (pathname === '/changelog') return true
   if (pathname === '/copyright') return true
   if (pathname.startsWith('/admin')) return true
+  if (pathname.startsWith('/table-live')) return true
 
   const gameMatch = pathname.match(/^\/game\/([^/]+)$/)
   if (gameMatch && gameMatch[1] !== 'create') return true
+  if (/^\/game\/[^/]+\/table-live$/.test(pathname)) return true
 
   if (pathname === '/corso-vino') return true
   if (/^\/corso-vino\/[^/]+$/.test(pathname)) return true
@@ -76,6 +79,7 @@ export default function BottomNav({forceVisible = false}) {
   }, [])
 
   const isGuest = authChecked && !userId
+  if (!forceVisible && effectivePathname.startsWith('/table-live/event/') && isGuest) return null
   if (!forceVisible && !shouldRender(effectivePathname)) return null
 
   const items = [

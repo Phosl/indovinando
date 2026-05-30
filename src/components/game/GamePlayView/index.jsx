@@ -230,6 +230,13 @@ export default function GamePlayView({
                   <span className={styles.startModeDescription}>{t('enotecaDescription')}</span>
                 </ButtonLink>
               )}
+              <ButtonLink
+                variant="custom"
+                href={`/game/${game.id}/table-live`}
+                className={`${styles.startModeOption} ${styles.startModeOptionSelected}`}>
+                <span className={styles.startModeTitle}>{t('playTableLive')}</span>
+                <span className={styles.startModeDescription}>{t('tableLiveDescription')}</span>
+              </ButtonLink>
             </div>
             <div className={styles.startModalFooter}>
               <Button

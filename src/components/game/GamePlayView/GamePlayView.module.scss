@@ -652,6 +652,21 @@
   }
 }
 
+.startModeOptionSelected {
+  background: var(--selected-extra-light);
+  border-color: var(--selected);
+  box-shadow: 0px 0px 0px 0px var(--selected);
+
+  .startModeTitle {
+    color: var(--selected-dark);
+  }
+
+  &::before {
+    background: var(--selected);
+    opacity: 0;
+  }
+}
+
 .startModalFooter {
   display: flex;
   justify-content: flex-end;

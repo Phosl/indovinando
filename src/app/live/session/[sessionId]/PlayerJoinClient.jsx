@@ -12,7 +12,7 @@ import {useT} from '@/lib/i18n/useT'
 const AVATAR_SVG_LIST = GAME_AVATARS.filter((a) => a.type === 'img')
 const AVATAR_EMOJI_LIST = GAME_AVATARS.filter((a) => a.type === 'emoji')
 
-export default function PlayerJoinClient({sessionId, gameName, existingPlayers, userId}) {
+export default function PlayerJoinClient({sessionId, gameName, existingPlayers, userId, tableJoinCode}) {
   const router = useRouter()
   const t = useT('live.playerJoin')
   const [nickname, setNickname] = useState('')
@@ -267,6 +267,13 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
   return (
     <div className={styles.container}>
       <TopBar title={`${gameName}`} onBack={() => router.push('/')}></TopBar>
+
+      {tableJoinCode ? (
+        <div className={styles.tableCodeBanner}>
+          <span className={styles.tableCodeLabel}>Codice partita</span>
+          <strong className={styles.tableCodeValue}>{tableJoinCode}</strong>
+        </div>
+      ) : null}
 
       {gameStarted ? (
         <div className={styles.waitingCard}>

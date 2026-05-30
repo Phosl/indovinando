@@ -74,3 +74,4 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 
 - [ ] **Partita con codice** - Admin crea QR code utenti vanno su QR code, utente vede schermata con
       Numero 1545, altri utenti partecipano a 1545. Parte partita Live
+      Specifica step 1: `LIVE_TABLE_GROUPS_STEP1.md`

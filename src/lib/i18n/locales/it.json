@@ -167,6 +167,7 @@
     "completeGame": "Inserisci bottiglie",
     "playLive": "Gioca Live",
     "playEnoteca": "Enoteca",
+    "playTableLive": "Tavoli e Gruppi",
     "chooseMode": "Scegli modalita",
     "close": "Chiudi",
     "cancel": "Annulla",
@@ -174,6 +175,7 @@
     "edit": "Modifica",
     "liveDescription": "Partita multiplayer dal vivo con host e classifica in tempo reale.",
     "enotecaDescription": "Modalita individuale per giocare in autonomia e vedere il risultato finale.",
+    "tableLiveDescription": "Modalita separata per eventi con QR unico, codici tavolo e partite parallele.",
     "bottlesCount": "{count} Bottiglie",
     "questionsCount": "{count} Domande"
   },

@@ -20,6 +20,31 @@
   }
 }
 
+.tableCodeBanner {
+  background: var(--selected-extra-light);
+  border: 2px solid var(--selected);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tableCodeLabel {
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--selected-dark);
+}
+
+.tableCodeValue {
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  color: var(--selected-dark);
+}
+
 .joinCard,
 .waitingCard {
   background: var(--foreground);
@@ -321,7 +346,7 @@
 }
 
 .playerCard {
-  background: var(--background);
+  background: var(--white);
   border: 2px solid var(--button-secondary-border);
   border-radius: 8px;
   padding: 10px;
@@ -351,4 +376,12 @@
   .linkInput {
     grid-column: 1 / -1;
   }
+}
+
+.shareButtons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 12px;
+  width: 100%;
 }

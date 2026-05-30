@@ -44,6 +44,8 @@ export default function LiveSessionClient({
   const [isStartingGame, setIsStartingGame] = useState(false)
   const [qrOpen, setQrOpen] = useState(false)
   const [qrDataUrl, setQrDataUrl] = useState('')
+  const [qrTitle, setQrTitle] = useState(t('qrTitle'))
+  const [qrLink, setQrLink] = useState('')
   const previousPlayerIdsRef = useRef(new Set())
   const joinTimersRef = useRef(new Map())
 
@@ -174,6 +176,13 @@ export default function LiveSessionClient({
     }
   }, [sessionLink])
 
+  useEffect(() => {
+    if (!sessionLink) return
+    setQrTitle(t('qrTitle'))
+    setQrLink(sessionLink)
+  }, [sessionLink, t])
+
+
   const handleCopyLink = () => {
     navigator.clipboard.writeText(sessionLink)
     setCopyFeedback(true)
@@ -201,7 +210,7 @@ export default function LiveSessionClient({
   }
 
   const handlePrintQr = () => {
-    if (!qrDataUrl) return
+    if (!qrDataUrl || !qrLink) return
 
     const printWindow = window.open('', '_blank', 'noopener,noreferrer')
     if (!printWindow) return
@@ -220,9 +229,9 @@ export default function LiveSessionClient({
         </head>
         <body>
           <img class="logo" src="${window.location.origin}/logo.svg" alt="Indovinando" />
-          <h1>${gameName}</h1>
+          <h1>${qrTitle || gameName}</h1>
           <img src="${qrDataUrl}" alt="QR" />
-          <p>${sessionLink}</p>
+          <p>${qrLink}</p>
         </body>
       </html>
     `)
@@ -230,6 +239,7 @@ export default function LiveSessionClient({
     printWindow.focus()
     printWindow.print()
   }
+
 
   const handleStartGame = async () => {
     if (isStartingGame) return
@@ -345,7 +355,14 @@ export default function LiveSessionClient({
                     <button onClick={handleShareLink} className={styles.copyButton}>
                       {t('share')}
                     </button>
-                    <button onClick={() => setQrOpen(true)} className={styles.copyButton}>
+                    <button
+                      onClick={() => {
+                        setQrDataUrl(qrDataUrl)
+                        setQrTitle(t('qrTitle'))
+                        setQrLink(sessionLink)
+                        setQrOpen(true)
+                      }}
+                      className={styles.copyButton}>
                       {t('qr')}
                     </button>
                   </div>
@@ -378,6 +395,7 @@ export default function LiveSessionClient({
                   <p className={styles.info}>{t('participantsEmpty')}</p>
                 )}
               </div>
+
             </>
           }
           detailsContent={
@@ -459,7 +477,7 @@ export default function LiveSessionClient({
         <div className={styles.qrOverlay} onClick={() => setQrOpen(false)}>
           <div className={styles.qrModal} onClick={(e) => e.stopPropagation()}>
             <img src="/logo.svg" alt="Indovinando" className={styles.qrLogo} />
-            <h3>{t('qrTitle')}</h3>
+            <h3>{qrTitle}</h3>
             {qrDataUrl ? (
               <img src={qrDataUrl} alt="QR sessione" className={styles.qrImage} />
             ) : (

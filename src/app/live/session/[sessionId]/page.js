@@ -24,6 +24,12 @@ export default async function PlayerJoinPage({params}) {
     .eq('id', sessionId)
     .maybeSingle()
 
+  const {data: tableLiveSession} = await supabase
+    .from('table_live_sessions')
+    .select('join_code')
+    .eq('id', sessionId)
+    .maybeSingle()
+
   // Load existing players per mostrare gli avatar scelti
   const {data: players} = await supabase
     .from('live_players')
@@ -41,6 +47,7 @@ export default async function PlayerJoinPage({params}) {
       gameName={session?.games?.name || 'Gioco'}
       existingPlayers={players || []}
       userId={user?.id || null}
+      tableJoinCode={tableLiveSession?.join_code || ''}
     />
   )
 }

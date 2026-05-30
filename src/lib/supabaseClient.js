@@ -1,11 +1,16 @@
 import {createBrowserClient} from '@supabase/ssr'
 import {createClient as createSupabaseClient} from '@supabase/supabase-js'
 
+let browserClientSingleton = null
+
 export function createClient() {
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  )
+  if (!browserClientSingleton) {
+    browserClientSingleton = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    )
+  }
+  return browserClientSingleton
 }
 
 export const supabaseClient = createClient()

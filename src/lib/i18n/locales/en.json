@@ -167,6 +167,7 @@
     "completeGame": "Add bottles",
     "playLive": "Play Live",
     "playEnoteca": "Enoteca",
+    "playTableLive": "Tables & Groups",
     "chooseMode": "Choose mode",
     "close": "Close",
     "cancel": "Cancel",
@@ -174,6 +175,7 @@
     "edit": "Edit",
     "liveDescription": "Live multiplayer match with host and real-time leaderboard.",
     "enotecaDescription": "Solo mode to play on your own and see the final result.",
+    "tableLiveDescription": "Separate mode for event QR, table codes, and parallel matches.",
     "bottlesCount": "{count} Bottles",
     "questionsCount": "{count} Questions"
   },
