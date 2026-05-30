@@ -705,12 +705,17 @@
   "course": {
     "title": "Corso Vino",
     "heroTitle": "Impara il vino",
-    "heroSubtitle": "Lezioni brevi, quiz interattivi e contenuti accurati. Gratis, senza registrazione.",
+    "heroSubtitle": "Lezioni brevi, quiz interattivi e contenuti accurati. I primi capitoli sono gratis.",
     "chapterLabel": "Capitolo {index}",
     "nextLevelProgress": "Progress livello utente",
     "nextLevelLabel": "Livello {index}",
     "nextLevelMax": "Livello massimo",
     "completed": "✓ Completato",
+    "lockedRegister": "Accedi",
+    "lockedPremium": "Premium",
+    "accessPanelTitle": "I primi 2 capitoli sono gratuiti",
+    "accessPanelDescription": "Per continuare dal capitolo 3, registrati e sblocca tutto il corso.",
+    "accessPanelCta": "Registrati",
     "lessons": "lezioni",
     "guest": {
       "title": "Modalità ospite attiva",

@@ -705,12 +705,17 @@
   "course": {
     "title": "Wine Course",
     "heroTitle": "Learn wine",
-    "heroSubtitle": "Short lessons, interactive quizzes and accurate content. Free, no signup required.",
+    "heroSubtitle": "Short lessons, interactive quizzes and accurate content. The first chapters are free.",
     "chapterLabel": "Chapter {index}",
     "nextLevelProgress": "Next level",
     "nextLevelLabel": "Level {index}",
     "nextLevelMax": "Max level",
     "completed": "✓ Completed",
+    "lockedRegister": "Sign up",
+    "lockedPremium": "Premium",
+    "accessPanelTitle": "The first 2 chapters are free",
+    "accessPanelDescription": "To continue from chapter 3, sign up and unlock the full course.",
+    "accessPanelCta": "Sign up",
     "lessons": "lessons",
     "guest": {
       "title": "Guest mode active",

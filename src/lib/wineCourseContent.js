@@ -197,6 +197,7 @@ function normalizeLevel(rawLevel, lang) {
     title: rawLevel.title,
     description: rawLevel.description,
     emoji: rawLevel.emoji ?? LEVEL_EMOJIS[levelNumber] ?? '🍷',
+    access: rawLevel.access ?? null,
     order: levelNumber,
     lessonIds: lessons.map((lesson) => lesson.id),
     lessons,

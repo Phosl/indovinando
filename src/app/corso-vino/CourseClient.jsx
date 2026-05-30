@@ -8,12 +8,13 @@ import GuestWarningModal from '@/components/course/GuestWarningModal'
 import ProgressBar from '@/components/ui/ProgressBar'
 import {useWineCourseProgress} from './hooks/useWineCourseProgress'
 import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
+import {canAccessLevel, getAuthRedirectPath, getLockedReason} from '@/lib/courseAccess'
 import styles from './course.module.scss'
 import {useT} from '@/lib/i18n/useT'
 
 const PASS_THRESHOLD = 0.75
 
-export default function CourseClient({levels, isAdmin = false}) {
+export default function CourseClient({levels, isAdmin = false, viewer, lang = 'it'}) {
   const router = useRouter()
   const {loaded, authChecked, userId, getLevelCompletedCount, getLessonProgress, getLessonStatus} =
     useWineCourseProgress()
@@ -22,10 +23,21 @@ export default function CourseClient({levels, isAdmin = false}) {
   const backHref = authChecked && !userId ? '/' : '/dashboard'
 
   const handleLevelClick = useCallback(
-    (levelId) => {
-      router.push(`/corso-vino/${levelId}`)
+    (level) => {
+      const path = `/corso-vino/${level.id}`
+      const canAccess = canAccessLevel(level, viewer)
+      if (!canAccess) {
+        const reason = getLockedReason(level, viewer)
+        if (reason === 'registered') {
+          router.push(getAuthRedirectPath(path, lang))
+          return
+        }
+        router.push('/profilo')
+        return
+      }
+      router.push(path)
     },
-    [router],
+    [lang, router, viewer],
   )
 
   const nextLevelProgress = useMemo(() => {
@@ -101,17 +113,34 @@ export default function CourseClient({levels, isAdmin = false}) {
         onClose={() => setShowGuestWarning(false)}
       />
 
+      {!viewer?.isRegistered && (
+        <section className={styles.accessPanel}>
+          <div className={styles.accessPanelText}>
+            <strong>{t('accessPanelTitle')}</strong>
+            <p>{t('accessPanelDescription')}</p>
+          </div>
+          <button
+            type="button"
+            className="btn success-filled btn-small"
+            onClick={() => router.push(getAuthRedirectPath('/corso-vino', lang))}>
+            {t('accessPanelCta')}
+          </button>
+        </section>
+      )}
+
       {/* Level list */}
       <div className={styles.levels}>
         {levels.map((level) => {
+          const canAccess = canAccessLevel(level, viewer)
+          const lockedReason = getLockedReason(level, viewer)
           const completed = loaded ? getLevelCompletedCount(level) : 0
           const total = level.lessonIds.length
 
           return (
             <div
               key={level.id}
-              className={styles.levelCard}
-              onClick={() => handleLevelClick(level.id)}>
+              className={`${styles.levelCard} ${!canAccess ? styles.locked : ''}`}
+              onClick={() => handleLevelClick(level)}>
               <div className={styles.levelEmoji}>{level.emoji}</div>
               <div className={styles.levelInfo}>
                 <div className={styles.levelMeta}>
@@ -120,6 +149,12 @@ export default function CourseClient({levels, isAdmin = false}) {
                   </span>
                   {completed === total && total > 0 && (
                     <span className={styles.levelBadge}>{t('completed')}</span>
+                  )}
+                  {!canAccess && lockedReason === 'registered' && (
+                    <span className={styles.levelBadgeLocked}>{t('lockedRegister')}</span>
+                  )}
+                  {!canAccess && lockedReason === 'premium' && (
+                    <span className={styles.levelBadgeLocked}>{t('lockedPremium')}</span>
                   )}
                 </div>
                 <h2 className={styles.levelTitle}>{level.title}</h2>

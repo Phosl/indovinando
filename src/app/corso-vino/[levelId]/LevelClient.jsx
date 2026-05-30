@@ -15,6 +15,7 @@ export default function LevelClient({level, lessons, levels = []}) {
   const router = useRouter()
   const {loaded, getLessonStatus, getLessonProgress} = useWineCourseProgress()
   const t = useT('level')
+  const backHref = '/corso-vino'
 
   const topProgress = useMemo(() => {
     if (!levels?.length) {
@@ -44,7 +45,7 @@ export default function LevelClient({level, lessons, levels = []}) {
     <div className={styles.page}>
       <TopBar
         title={t('levelTitle', {index: level.order})}
-        onBack={() => router.push('/corso-vino')}
+        onBack={() => router.push(backHref)}
         progress={topProgress.pct}></TopBar>
 
       {/* Level hero */}
