@@ -29,6 +29,16 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.26.6',
+    date: '30 maggio 2026',
+    label: 'Auto',
+    changes: [
+      '"fix(table-live): align endgame flow with live and add dedicated leaderboard page" -m "Prevent last-question auto-skip, keep answer feedback visible, and route final standings to /table-live/session/[id]/leaderboard. Add table-live leaderboard page/client with host/guest end actions (Fine gioco / Registrati). Improve table-live event/settings and session lobby UX polish, nav visibility, and topbar spacing."',
+      'align event/session UX, fix final-round flow, and polish navigation/layout" -m "Improve table-live event/settings pages (compact layout, topbar spacing, link/QR flow, regenerate confirm). Refine session lobby controls and player cards. Fix guest last-question results transition and host final leaderboard behavior. Tune bottom-nav visibility on table-live routes and keep event page focused."',
+    ],
+  },
+
+  {
     version: '1.26.5',
     date: '30 maggio 2026',
     label: 'Auto',
