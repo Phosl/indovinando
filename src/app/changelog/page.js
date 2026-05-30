@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.26.7',
+    date: '30 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'ix(table-live): align endgame flow with live and fix leaderboard routing"',
+    ],
+  },
+
+  {
     version: '1.26.6',
     date: '30 maggio 2026',
     label: 'Auto',
