@@ -41,6 +41,25 @@ const WINE_NOISE_TERMS = new Set([
   'sulfites',
 ])
 
+const REGION_HINTS = [
+  {canonical: 'Sicilia', aliases: ['sicilia', 'sicily', 'etna']},
+  {canonical: 'Piemonte', aliases: ['piemonte', 'piedmont']},
+  {canonical: 'Toscana', aliases: ['toscana', 'tuscany']},
+  {canonical: 'Veneto', aliases: ['veneto']},
+  {canonical: 'Lombardia', aliases: ['lombardia', 'lombardy']},
+  {canonical: 'Trentino-Alto Adige', aliases: ['trentino', 'alto adige', 'sudtirol']},
+  {canonical: 'Friuli-Venezia Giulia', aliases: ['friuli']},
+  {canonical: 'Abruzzo', aliases: ['abruzzo']},
+  {canonical: 'Puglia', aliases: ['puglia', 'apulia']},
+  {canonical: 'Campania', aliases: ['campania']},
+  {canonical: 'Marche', aliases: ['marche']},
+  {canonical: 'Umbria', aliases: ['umbria']},
+  {canonical: 'Sardegna', aliases: ['sardegna', 'sardinia']},
+  {canonical: 'Lazio', aliases: ['lazio']},
+  {canonical: 'Borgogna', aliases: ['borgogna', 'bourgogne', 'burgundy']},
+  {canonical: 'Champagne', aliases: ['champagne']},
+]
+
 function withTimeout(promise, ms, label) {
   let timeoutId
   const timeoutPromise = new Promise((_, reject) => {
@@ -159,6 +178,22 @@ function looksLikeInstitutionalLine(value) {
   )
 }
 
+function looksLikeInstitutionalFragment(value) {
+  const normalized = normalizeForCheck(value)
+  if (!normalized) return false
+  return (
+    normalized.includes('denomin') ||
+    normalized.includes('nominaz') ||
+    normalized.includes('indicaz') ||
+    normalized.includes('geografic') ||
+    normalized.includes('origine') ||
+    normalized.includes('protett') ||
+    normalized.includes('controllat') ||
+    normalized.includes('garantit') ||
+    normalized.includes('solfit')
+  )
+}
+
 function parseFilenameParts(originalFilename, storagePath) {
   const raw = String(originalFilename || storagePath || '')
     .replace(/^.*[\\/]/, '')
@@ -183,6 +218,17 @@ function parseFilenameParts(originalFilename, storagePath) {
   }
 
   return parts
+}
+
+function detectRegionHint(value) {
+  const normalized = normalizeForCheck(value)
+  if (!normalized) return null
+  for (const region of REGION_HINTS) {
+    for (const alias of region.aliases) {
+      if (normalized.includes(alias)) return region.canonical
+    }
+  }
+  return null
 }
 
 function extractVintage(text) {
@@ -268,6 +314,7 @@ function extractFromOcrText(rawText, originalFilename, storagePath) {
       normalizeForCheck(line) !== normalizeForCheck(producer) &&
       !looksLikeRegionOnly(line) &&
       !looksLikeInstitutionalLine(line) &&
+      !looksLikeInstitutionalFragment(line) &&
       line.length <= 80,
   )
   if (nameCandidates.length >= 1) {
@@ -277,6 +324,10 @@ function extractFromOcrText(rawText, originalFilename, storagePath) {
     if (words.length > 1) {
       name = cleanWineName(words.slice(1).join(' '))
     }
+  }
+
+  if (name && (looksLikeInstitutionalLine(name) || looksLikeInstitutionalFragment(name))) {
+    name = null
   }
 
   const payload = {
@@ -376,6 +427,16 @@ async function enrichWithWineCatalog(supabase, extracted) {
   const keyName = toNormalizedKey(guessedName)
   const keyProducer = toNormalizedKey(guessedProducer)
   const firstNameToken = keyName.split(' ').filter(Boolean)[0] || ''
+  const ocrContext = [
+    extracted?.recognized_payload?.text_preview,
+    ...(Array.isArray(extracted?.recognized_payload?.ranked_lines)
+      ? extracted.recognized_payload.ranked_lines.slice(0, 6)
+      : []),
+    guessedName,
+  ]
+    .filter(Boolean)
+    .join(' ')
+  const regionHint = detectRegionHint(ocrContext)
 
   let labelsQuery = supabase
     .from('wine_labels')
@@ -415,7 +476,15 @@ async function enrichWithWineCatalog(supabase, extracted) {
     const producerScore = producer
       ? Math.max(overlapScore(guessedProducer, producer.name), overlapScore(guessedProducer, producer.normalized_name))
       : 0
-    const score = labelNameScore * 0.72 + producerScore * 0.28
+    const labelRegionContext = [label.region, label.appellation, label.name].filter(Boolean).join(' ')
+    const labelRegionHint = detectRegionHint(labelRegionContext)
+    const regionScore =
+      regionHint && labelRegionHint
+        ? labelRegionHint === regionHint
+          ? 0.1
+          : -0.1
+        : 0
+    const score = labelNameScore * 0.72 + producerScore * 0.28 + regionScore
     if (!best || score > best.score) {
       best = {label, producer, score, labelNameScore, producerScore}
     }
@@ -460,6 +529,8 @@ async function enrichWithWineCatalog(supabase, extracted) {
     Math.max(Number(extracted.recognition_confidence || 0), 0.68 + best.score * 0.2),
   )
 
+  const resolvedRegion = regionHint || best.label?.region || null
+
   return {
     ...extracted,
     recognized_name: best.label?.name || extracted.recognized_name,
@@ -478,7 +549,7 @@ async function enrichWithWineCatalog(supabase, extracted) {
       catalog_details: {
         appellation: best.label?.appellation || null,
         country: best.label?.country || null,
-        region: best.label?.region || null,
+        region: resolvedRegion,
         type: best.label?.type || null,
         grapes,
         known_vintages: knownVintages,

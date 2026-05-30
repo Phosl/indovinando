@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import TopBarBack from '@/components/TopBarBack'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {requireSuperAdmin} from '@/lib/courseAdmin'
 import styles from '../catalog/catalog.module.scss'
 
 export const metadata = {
@@ -8,6 +9,8 @@ export const metadata = {
 }
 
 export default async function AdminProduttoriPage({searchParams}) {
+  await requireSuperAdmin()
+
   const params = await searchParams
   const supabase = await createServerSupabase()
   const q = String(params?.q || '').trim()

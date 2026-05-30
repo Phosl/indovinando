@@ -167,6 +167,16 @@
   }
 }
 
+.btn.ai {
+  background-color: #d5f1ff;
+  color: #1d6e93;
+  border-color: #2e88b5;
+
+  &:hover {
+    background: #c4eafc;
+  }
+}
+
 .btn.type-text {
   background: none;
   border: none;

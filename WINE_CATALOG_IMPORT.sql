@@ -159,6 +159,31 @@ where s.processed = false
 -- ---------------------------------------------------------------------------
 -- 3) Vintages
 -- ---------------------------------------------------------------------------
+with parsed_staging as (
+  select
+    s.*,
+    case
+      when nullif(trim(s.vintage::text), '') ~ '^-?\d+$'
+        then trim(s.vintage::text)::int
+      else null
+    end as vintage_int,
+    case
+      when nullif(trim(s.abv::text), '') ~ '^-?\d+([.,]\d+)?$'
+        then replace(trim(s.abv::text), ',', '.')::numeric
+      else null
+    end as abv_num,
+    case
+      when nullif(trim(s.price::text), '') ~ '^-?\d+([.,]\d+)?$'
+        then replace(trim(s.price::text), ',', '.')::numeric
+      else null
+    end as price_num,
+    case
+      when nullif(trim(s.confidence::text), '') ~ '^-?\d+([.,]\d+)?$'
+        then replace(trim(s.confidence::text), ',', '.')::numeric
+      else null
+    end as confidence_num
+  from public.wine_import_staging s
+)
 insert into public.wine_vintages (
   wine_label_id,
   vintage,
@@ -174,17 +199,17 @@ insert into public.wine_vintages (
 )
 select
   wl.id as wine_label_id,
-  s.vintage,
+  s.vintage_int,
   nullif(trim(s.ean), '') as ean,
-  s.abv,
-  s.price,
+  s.abv_num,
+  s.price_num,
   nullif(trim(s.currency), '') as currency,
   nullif(trim(s.image_url), '') as image_url,
-  s.confidence,
+  s.confidence_num,
   nullif(trim(s.notes), '') as notes,
   s.scraped_at,
   coalesce(s.last_updated, s.updated_at, s.scraped_at)
-from public.wine_import_staging s
+from parsed_staging s
 left join public.wine_producers p
   on p.normalized_name = trim(coalesce(s.producer_normalized, s.normalized_producer))
 join public.wine_labels wl
@@ -196,23 +221,49 @@ where s.processed = false
     select 1
     from public.wine_vintages v
     where v.wine_label_id = wl.id
-      and coalesce(v.vintage, -1) = coalesce(s.vintage, -1)
-  );
+      and coalesce(v.vintage, -1) = coalesce(s.vintage_int, -1)
+  )
+on conflict do nothing;
 
 -- Update existing vintages with fresher details
+with parsed_staging as (
+  select
+    s.*,
+    case
+      when nullif(trim(s.vintage::text), '') ~ '^-?\d+$'
+        then trim(s.vintage::text)::int
+      else null
+    end as vintage_int,
+    case
+      when nullif(trim(s.abv::text), '') ~ '^-?\d+([.,]\d+)?$'
+        then replace(trim(s.abv::text), ',', '.')::numeric
+      else null
+    end as abv_num,
+    case
+      when nullif(trim(s.price::text), '') ~ '^-?\d+([.,]\d+)?$'
+        then replace(trim(s.price::text), ',', '.')::numeric
+      else null
+    end as price_num,
+    case
+      when nullif(trim(s.confidence::text), '') ~ '^-?\d+([.,]\d+)?$'
+        then replace(trim(s.confidence::text), ',', '.')::numeric
+      else null
+    end as confidence_num
+  from public.wine_import_staging s
+)
 update public.wine_vintages v
 set
   ean = coalesce(nullif(trim(s.ean), ''), v.ean),
-  abv = coalesce(s.abv, v.abv),
-  price = coalesce(s.price, v.price),
+  abv = coalesce(s.abv_num, v.abv),
+  price = coalesce(s.price_num, v.price),
   currency = coalesce(nullif(trim(s.currency), ''), v.currency),
   image_url = coalesce(nullif(trim(s.image_url), ''), v.image_url),
-  confidence = greatest(coalesce(v.confidence, 0), coalesce(s.confidence, 0)),
+  confidence = greatest(coalesce(v.confidence, 0), coalesce(s.confidence_num, 0)),
   notes = coalesce(nullif(trim(s.notes), ''), v.notes),
   first_seen_at = least(coalesce(v.first_seen_at, s.scraped_at), coalesce(s.scraped_at, v.first_seen_at)),
   last_seen_at = greatest(coalesce(v.last_seen_at, s.last_updated, s.scraped_at), coalesce(s.last_updated, s.scraped_at, v.last_seen_at)),
   updated_at = now()
-from public.wine_import_staging s
+from parsed_staging s
 left join public.wine_producers p
   on p.normalized_name = trim(coalesce(s.producer_normalized, s.normalized_producer))
 join public.wine_labels wl
@@ -221,7 +272,7 @@ join public.wine_labels wl
  and coalesce(wl.appellation, '') = coalesce(nullif(trim(s.appellation), ''), '')
 where s.processed = false
   and v.wine_label_id = wl.id
-  and coalesce(v.vintage, -1) = coalesce(s.vintage, -1);
+  and coalesce(v.vintage, -1) = coalesce(s.vintage_int, -1);
 
 -- ---------------------------------------------------------------------------
 -- 4) Grapes dictionary + relationship table
@@ -305,15 +356,35 @@ insert into public.wine_sources (
   scraped_at,
   confidence
 )
+with parsed_staging as (
+  select
+    s.*,
+    case
+      when nullif(trim(s.vintage::text), '') ~ '^-?\d+$'
+        then trim(s.vintage::text)::int
+      else null
+    end as vintage_int,
+    case
+      when nullif(trim(s.price::text), '') ~ '^-?\d+([.,]\d+)?$'
+        then replace(trim(s.price::text), ',', '.')::numeric
+      else null
+    end as price_num,
+    case
+      when nullif(trim(s.confidence::text), '') ~ '^-?\d+([.,]\d+)?$'
+        then replace(trim(s.confidence::text), ',', '.')::numeric
+      else null
+    end as confidence_num
+  from public.wine_import_staging s
+)
 select
   v.id as wine_vintage_id,
   coalesce(nullif(trim(s.source), ''), 'unknown') as source,
   nullif(trim(s.source_url), '') as source_url,
-  s.price,
+  s.price_num,
   nullif(trim(s.currency), '') as currency,
   s.scraped_at,
-  s.confidence
-from public.wine_import_staging s
+  s.confidence_num
+from parsed_staging s
 left join public.wine_producers p
   on p.normalized_name = trim(coalesce(s.producer_normalized, s.normalized_producer))
 join public.wine_labels wl
@@ -322,7 +393,7 @@ join public.wine_labels wl
  and coalesce(wl.appellation, '') = coalesce(nullif(trim(s.appellation), ''), '')
 join public.wine_vintages v
   on v.wine_label_id = wl.id
- and coalesce(v.vintage, -1) = coalesce(s.vintage, -1)
+ and coalesce(v.vintage, -1) = coalesce(s.vintage_int, -1)
 where s.processed = false
   and not exists (
     select 1

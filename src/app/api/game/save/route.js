@@ -52,14 +52,19 @@ export async function POST(request) {
     const normalizedCoverIndex = Number.isInteger(coverIndex) && coverIndex >= 0 ? coverIndex : null
 
     if (mode === 'edit' || (mode !== 'create' && gameId)) {
-      const {error: updateError} = await db
+      const {data: updatedGame, error: updateError} = await db
         .from('games')
         .update({name: trimmedName, status: normalizedStatus, cover_index: normalizedCoverIndex})
         .eq('id', currentGameId)
         .eq('created_by', user.id)
+        .select('id')
+        .maybeSingle()
 
       if (updateError) {
         return NextResponse.json({error: updateError.message}, {status: 500})
+      }
+      if (!updatedGame) {
+        return NextResponse.json({error: 'Game not found'}, {status: 404})
       }
 
       const {error: deleteBottlesError} = await db

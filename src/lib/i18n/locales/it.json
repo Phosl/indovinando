@@ -21,7 +21,7 @@
     "installIosHint": "Su iPhone: apri in Safari, tocca Condividi e scegli 'Aggiungi alla schermata Home'.",
     "installAlready": "App gia aggiunta alla schermata Home.",
     "wineCourse": "Corso Vino",
-    "howItWorks": "Come funziona"
+    "howItWorks": "Guida"
   },
   "dashboard": {
     "welcome": "Benvenuto",
@@ -144,6 +144,8 @@
     "automaticQuestionPrice": "Prezzo",
     "automaticExtractorGoogleVision": "Trovato con Google Vision API",
     "automaticCatalogMatchFound": "Match trovato nel catalogo",
+    "automaticVisionBadge": "Vision",
+    "automaticMatchBadge": "Match",
     "automaticQuizDataLabel": "Dati quiz rapido",
     "automaticQuizResolvedLabel": "Valori usati nel quiz",
     "automaticPriceLabel": "Prezzo",

@@ -1,6 +1,6 @@
 .modePickerGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 16px;
   margin-top: 8px;
 }
@@ -239,8 +239,8 @@
 }
 
 .autoModeTopActions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -390,8 +390,9 @@
 }
 
 .autoModeUploadedItem {
-  display: flex;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr) auto;
+  align-items: start;
   gap: 10px;
   border: 1px solid var(--button-secondary-border);
   border-radius: 8px;
@@ -426,11 +427,44 @@
 
 .autoModeUploadedMeta {
   min-width: 0;
-  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 4px;
+}
+
+.autoModeUploadedBadges {
+  display: flex;
+  flex-wrap: wrap;
   gap: 6px;
+}
+
+.autoModeFeatureBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  border: 1px solid var(--button-secondary-border);
+  background: #eef5fb;
+  color: #37424c;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.autoModeFeatureIcon {
+  color: #2e88b5;
+}
+
+.autoModeUploadedActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: center;
+}
+
+.autoModeUploadedActions :global(.btn.icon-circle) {
+  width: 36px;
+  min-width: 36px;
 }
 
 .autoModeUploadedName {
@@ -442,41 +476,6 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-}
-
-.autoModeUploadedStatus {
-  width: fit-content;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  border-radius: 999px;
-  padding: 3px 8px;
-  border: 1px solid transparent;
-}
-
-.autoModeUploadedStatusProcessing {
-  color: #1d6e93;
-  background: #d5f1ff;
-  border-color: #8cd0f0;
-}
-
-.autoModeUploadedStatusRecognized {
-  color: #256336;
-  background: #dff4e5;
-  border-color: #97d9a8;
-}
-
-.autoModeUploadedStatusFailed {
-  color: #9d2d2d;
-  background: #fde4e4;
-  border-color: #f2abab;
-}
-
-.autoModeUploadedStatusUploaded {
-  color: #4f5660;
-  background: #eceff3;
-  border-color: #ced5dd;
 }
 
 .autoModeUploadedExtracted {
@@ -512,8 +511,7 @@
   }
 
   .autoModeUploadedItem {
-    align-items: stretch;
-    flex-wrap: wrap;
+    grid-template-columns: 52px minmax(0, 1fr);
     gap: 8px;
   }
 
@@ -525,15 +523,22 @@
 
   .autoModeUploadedMeta {
     min-width: 0;
-    flex: 1;
   }
 
   .autoModeUploadedName {
     font-size: 13px;
   }
 
+  .autoModeUploadedActions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+
+  .autoModeUploadedActions :global(.btn.btn-small) {
+    min-width: 0;
+  }
+
   .autoModeTopActions {
-    display: grid;
     grid-template-columns: 1fr;
   }
 

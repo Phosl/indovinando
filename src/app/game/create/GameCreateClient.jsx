@@ -281,6 +281,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
 
       for (let index = 0; index < files.length; index += 1) {
         const file = files[index]
+        const uploadFile = file
         setUploadProgress({
           current: index + 1,
           total: files.length,
@@ -289,7 +290,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
           percent: 0,
         })
         const formData = new FormData()
-        formData.append('file', file)
+        formData.append('file', uploadFile)
 
         let uploadResponse
         try {
@@ -327,8 +328,8 @@ function AutomaticModePlaceholder({onBack, userId}) {
           storage_bucket: uploadInfo.storage_bucket || 'tasting-bottles',
           storage_path: uploadInfo.storage_path,
           original_filename: uploadInfo.original_filename || file.name,
-          mime_type: uploadInfo.mime_type || file.type || null,
-          size_bytes: uploadInfo.size_bytes ?? file.size,
+          mime_type: uploadInfo.mime_type || uploadFile.type || file.type || null,
+          size_bytes: uploadInfo.size_bytes ?? uploadFile.size ?? file.size,
         }
 
         let metadataResponse
@@ -620,14 +621,15 @@ function AutomaticModePlaceholder({onBack, userId}) {
             <div className={styles.autoModeTopActions}>
               <button
                 type="button"
-                className="btn btn-small neutral"
+                className="btn btn-small ai btn-with-icon-end"
                 disabled={isUploading || isAnalyzingAll || !!analyzingImageId || isCreatingQuiz}
                 onClick={handleAnalyzeAll}>
+                <Icon src="/icons/vision.svg" size={20} className="btn-icon" />
                 {isAnalyzingAll ? t('automaticAnalyzingAll') : t('automaticAnalyzeAllAction')}
               </button>
               <button
                 type="button"
-                className="btn btn-small neutral"
+                className="btn btn-small tertiary"
                 disabled={
                   isUploading ||
                   isAnalyzingAll ||
@@ -720,25 +722,29 @@ function AutomaticModePlaceholder({onBack, userId}) {
                     <span className={styles.autoModeUploadedName}>
                       {image.original_filename || image.storage_path}
                     </span>
+                    <div className={styles.autoModeUploadedBadges}>
+                      {(image.recognized_payload?.provider === 'google_vision_api' ||
+                        String(image.recognized_payload?.extractor || '').startsWith(
+                          'google-vision',
+                        )) && (
+                        <span className={styles.autoModeFeatureBadge}>
+                          <Icon src="/icons/vision.svg" size={16} className={styles.autoModeFeatureIcon} />
+                          {t('automaticVisionBadge')}
+                        </span>
+                      )}
+                      {image.recognized_payload?.catalog_match?.matched && (
+                        <span className={styles.autoModeFeatureBadge}>
+                          <Icon src="/icons/match.svg" size={16} className={styles.autoModeFeatureIcon} />
+                          {t('automaticMatchBadge')}
+                        </span>
+                      )}
+                    </div>
                     {(image.recognized_name ||
                       image.recognized_producer ||
                       image.recognized_vintage) && (
                       <span className={styles.autoModeUploadedExtracted}>
                         {image.recognized_name || '-'} | {image.recognized_producer || '-'} |{' '}
                         {image.recognized_vintage || '-'}
-                      </span>
-                    )}
-                    {(image.recognized_payload?.provider === 'google_vision_api' ||
-                      String(image.recognized_payload?.extractor || '').startsWith(
-                        'google-vision',
-                      )) && (
-                      <span className={styles.autoModeUploadedExtractor}>
-                        {t('automaticExtractorGoogleVision')}
-                      </span>
-                    )}
-                    {image.recognized_payload?.catalog_match?.matched && (
-                      <span className={styles.autoModeUploadedExtractor}>
-                        {t('automaticCatalogMatchFound')}
                       </span>
                     )}
                     {image.recognized_payload?.catalog_details && (
@@ -783,38 +789,27 @@ function AutomaticModePlaceholder({onBack, userId}) {
                     {image.error_message && (
                       <span className={styles.autoModeUploadedError}>{image.error_message}</span>
                     )}
-                    <span
-                      className={`${styles.autoModeUploadedStatus} ${
-                        image.status === 'processing'
-                          ? styles.autoModeUploadedStatusProcessing
-                          : image.status === 'recognized'
-                            ? styles.autoModeUploadedStatusRecognized
-                            : image.status === 'failed'
-                              ? styles.autoModeUploadedStatusFailed
-                              : styles.autoModeUploadedStatusUploaded
-                      }`}>
-                      {image.status}
-                    </span>
                   </div>
-                <button
-                  type="button"
-                  className="btn btn-small neutral"
-                  disabled={isAnalyzingAll || !!analyzingImageId || !!deletingImageId}
-                  onClick={() => handleAnalyzeImage(image.id)}>
-                  {analyzingImageId === image.id
-                      ? t('automaticAnalyzingSingle')
-                      : t('automaticAnalyzeAction')}
-                  </button>
-                <button
-                  type="button"
-                  className="btn btn-small danger"
-                  disabled={!!deletingImageId || !!analyzingImageId || isAnalyzingAll}
-                  aria-label={`${t('automaticDeleteAction')} ${image.original_filename || image.storage_path}`}
-                  onClick={() => handleDeleteImage(image.id)}>
-                    {deletingImageId === image.id
-                      ? t('automaticDeleting')
-                      : t('automaticDeleteAction')}
-                  </button>
+                  <div className={styles.autoModeUploadedActions}>
+                    <button
+                      type="button"
+                      className="btn btn-small ai btn-with-icon-end"
+                      disabled={isAnalyzingAll || !!analyzingImageId || !!deletingImageId}
+                      onClick={() => handleAnalyzeImage(image.id)}>
+                      <Icon src="/icons/vision.svg" size={20} className="btn-icon" />
+                      {analyzingImageId === image.id
+                        ? t('automaticAnalyzingSingle')
+                        : t('automaticAnalyzeAction')}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn icon-circle"
+                      disabled={!!deletingImageId || !!analyzingImageId || isAnalyzingAll}
+                      aria-label={`${t('automaticDeleteAction')} ${image.original_filename || image.storage_path}`}
+                      onClick={() => handleDeleteImage(image.id)}>
+                      <Icon name="removeSmall" size={20} />
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>

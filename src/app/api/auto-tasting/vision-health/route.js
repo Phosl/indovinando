@@ -1,4 +1,5 @@
 import {NextResponse} from 'next/server'
+import {isSuperAdmin} from '@/lib/courseAdmin'
 
 const GOOGLE_CLOUD_VISION_API_KEY = process.env.GOOGLE_CLOUD_VISION_API_KEY
 
@@ -12,6 +13,11 @@ function withTimeout(promise, ms, label) {
 
 export async function GET() {
   try {
+    const allowed = await isSuperAdmin()
+    if (!allowed) {
+      return NextResponse.json({ok: false, error: 'Not authorized'}, {status: 403})
+    }
+
     if (!GOOGLE_CLOUD_VISION_API_KEY) {
       return NextResponse.json({ok: false, error: 'GOOGLE_CLOUD_VISION_API_KEY missing'}, {status: 500})
     }
@@ -66,4 +72,3 @@ export async function GET() {
     return NextResponse.json({ok: false, error: error?.message || 'Unexpected error'}, {status: 500})
   }
 }
-

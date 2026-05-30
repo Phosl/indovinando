@@ -1,5 +1,6 @@
-import TopBarBack from '@/components/TopBarBack'
+import TopBar from '@/components/TopBar'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {requireSuperAdmin} from '@/lib/courseAdmin'
 import {formatAppDate} from '@/lib/dateFormat'
 import Link from 'next/link'
 import styles from '../catalog/catalog.module.scss'
@@ -23,6 +24,8 @@ function formatGrapes(grapes) {
 }
 
 export default async function AdminViniPage({searchParams}) {
+  await requireSuperAdmin()
+
   const params = await searchParams
   const supabase = await createServerSupabase()
   const q = String(params?.q || '').trim()
@@ -43,7 +46,7 @@ export default async function AdminViniPage({searchParams}) {
 
   return (
     <main className={styles.page}>
-      <TopBarBack title="Admin - Vini" href="/admin" />
+      <TopBar title="Admin - Vini" back="/admin" backLabel="← Admin" />
 
       <div className={styles.container}>
         <div className={styles.header}>

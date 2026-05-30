@@ -1,8 +1,11 @@
 import Link from 'next/link'
 import TopBarBack from '@/components/TopBarBack'
+import {requireSuperAdmin} from '@/lib/courseAdmin'
 import styles from './corsi/admin.module.scss'
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  await requireSuperAdmin()
+
   return (
     <main className={styles.page}>
       <TopBarBack title="Admin" href="/dashboard" />

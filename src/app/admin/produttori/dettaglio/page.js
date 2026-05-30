@@ -1,5 +1,6 @@
 import TopBarBack from '@/components/TopBarBack'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {requireSuperAdmin} from '@/lib/courseAdmin'
 import {formatAppDate} from '@/lib/dateFormat'
 import Link from 'next/link'
 import styles from '../../catalog/catalog.module.scss'
@@ -19,6 +20,8 @@ function formatGrapes(grapes) {
 }
 
 export default async function AdminProduttoreDettaglioPage({searchParams}) {
+  await requireSuperAdmin()
+
   const params = await searchParams
   const producerId = params?.producerId ? String(params.producerId).trim() : ''
   const producerFromQuery = params?.producer ? String(params.producer).trim() : ''

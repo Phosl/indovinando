@@ -21,7 +21,7 @@
     "installIosHint": "On iPhone: open in Safari, tap Share, then choose 'Add to Home Screen'.",
     "installAlready": "App already added to Home Screen.",
     "wineCourse": "Wine Course",
-    "howItWorks": "How It Works"
+    "howItWorks": "Guide"
   },
   "dashboard": {
     "welcome": "Welcome",
@@ -144,6 +144,8 @@
     "automaticQuestionPrice": "Price",
     "automaticExtractorGoogleVision": "Found with Google Vision API",
     "automaticCatalogMatchFound": "Catalog match found",
+    "automaticVisionBadge": "Vision",
+    "automaticMatchBadge": "Match",
     "automaticQuizDataLabel": "Quick quiz data",
     "automaticQuizResolvedLabel": "Values used in quiz",
     "automaticPriceLabel": "Price",
