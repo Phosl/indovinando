@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.26.8',
+    date: '30 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'revert(ui): restore classic CTA button in create game card',
+    ],
+  },
+
+  {
     version: '1.26.7',
     date: '30 maggio 2026',
     label: 'Auto',
