@@ -180,8 +180,6 @@ export default function TableLiveSessionClient({sessionId}) {
   const currentBottle = data?.bottles?.[currentBottleIndex] || null
   const isLastBottle = currentBottleIndex >= (data?.bottles?.length || 1) - 1
   const currentQuestion = questions[slideIndex]
-  const allQuestionsChecked = questions.length > 0 && questions.every((q) => checkedQuestions[q.id])
-
   const roundAnswersByPlayer = useMemo(() => {
     const byPlayer = {}
     for (const answer of data?.roundAnswers || []) {
@@ -340,22 +338,13 @@ export default function TableLiveSessionClient({sessionId}) {
       return
     }
     playSound('bottleCompleted')
-    const response = await fetch('/api/table-live/advance-auto', {
+    router.push(`/table-live/session/${sessionId}/leaderboard`)
+    // Best-effort: close/advance server-side state in background.
+    fetch('/api/table-live/advance-auto', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({sessionId}),
-    })
-    const payload = await response.json().catch(() => null)
-    if (!response.ok) return
-
-    // If the server confirms round close / game finish, go to dedicated leaderboard page.
-    if (payload?.finished || payload?.advanced) {
-      router.push(`/table-live/session/${sessionId}/leaderboard`)
-      return
-    }
-
-    // Fallback: refresh local state and try again on next tick.
-    await loadSession()
+    }).catch(() => {})
   }
 
   useEffect(() => {
@@ -553,7 +542,7 @@ export default function TableLiveSessionClient({sessionId}) {
     )
   }
 
-  if (clickedReady || allQuestionsChecked) {
+  if (clickedReady) {
     return (
       <ResultsScreen
         sessionId={sessionId}
