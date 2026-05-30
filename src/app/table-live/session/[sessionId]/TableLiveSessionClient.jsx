@@ -302,9 +302,6 @@ export default function TableLiveSessionClient({sessionId}) {
           points: payload?.points || points,
         },
       }))
-      if (slideIndex >= questions.length - 1) {
-        setClickedReady(true)
-      }
       loadSession()
     } catch {
       setError('Errore di rete')
@@ -343,14 +340,29 @@ export default function TableLiveSessionClient({sessionId}) {
       return
     }
     playSound('bottleCompleted')
-    await fetch('/api/table-live/advance-auto', {
+    const response = await fetch('/api/table-live/advance-auto', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({sessionId}),
     })
+    const payload = await response.json().catch(() => null)
+    if (!response.ok) return
+
+    // If the server confirms round close / game finish, go to dedicated leaderboard page.
+    if (payload?.finished || payload?.advanced) {
+      router.push(`/table-live/session/${sessionId}/leaderboard`)
+      return
+    }
+
+    // Fallback: refresh local state and try again on next tick.
     await loadSession()
-    setLeaderboardOpen(true)
   }
+
+  useEffect(() => {
+    if (data?.session?.status === 'finished') {
+      router.replace(`/table-live/session/${sessionId}/leaderboard`)
+    }
+  }, [data?.session?.status, router, sessionId])
 
   const goEvent = () => {
     const slug = data?.event?.slug
@@ -524,7 +536,7 @@ export default function TableLiveSessionClient({sessionId}) {
         participantsCount={data.players?.length || 0}
         currentPlayerData={topBarPlayer}
         onNextBottle={() => {}}
-        onViewLeaderboard={goEvent}
+        onViewLeaderboard={() => router.push(`/table-live/session/${sessionId}/leaderboard`)}
         topBar={
           <TopBar
             playerData={topBarPlayer}
