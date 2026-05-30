@@ -98,3 +98,26 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 - [x] **UI consistency pagine Tavoli** — fatto grosso lavoro su spacing/topbar/CTA; **resta polish finale**
 - [ ] **Safe area mobile** — evitare overlap navbar/bottom actions nei quiz
 - [ ] **Checklist QA pre-release** — script test manuale rapido per create/join/play/leaderboard/endgame
+
+---
+
+## 🧭 Live Architecture Map (attuale)
+
+### Shared (Live classico + Tavolo)
+
+- `TopBar` → `src/app/live/session/[sessionId]/play/components/TopBar.jsx`
+- `ResultsScreen` → `src/app/live/session/[sessionId]/play/components/ResultsScreen.jsx`
+- `GameOverlays` → `src/app/live/session/[sessionId]/play/components/GameOverlays.jsx`
+- `useGameAudio` → `src/app/live/session/[sessionId]/play/hooks/useGameAudio.js`
+- Stili gameplay principali → `src/app/live/session/[sessionId]/play/playerLive.module.scss`
+
+### Dedicated (solo Live classico)
+
+- Orchestrazione round/realtime avanzata → `PlayerLiveClient` + `useRoundPlay`
+- API live classiche (`/api/live/*`)
+
+### Dedicated (solo Tavolo)
+
+- Sessioni/eventi tavoli + join code → `TableLiveSessionClient` / `table-live/*`
+- API tavoli (`/api/table-live/*`)
+- DB separato tavoli (`table_live_*`)

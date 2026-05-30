@@ -6,6 +6,7 @@ const AUDIO_PREFERENCE_KEY = 'live_audio_enabled'
 export function useGameAudio() {
   const [audioEnabled, setAudioEnabled] = useState(true)
   const soundsRef = useRef({correct: null, wrong: null, bottleCompleted: null})
+  const primedRef = useRef(false)
 
   useEffect(() => {
     const savedPreference = localStorage.getItem(AUDIO_PREFERENCE_KEY)
@@ -21,7 +22,39 @@ export function useGameAudio() {
       if (!audio) return
       audio.preload = 'auto'
       audio.volume = 0.9
+      audio.load()
     })
+
+    // Prime audio after first user interaction to reduce iOS/Safari start latency.
+    const primeAudio = () => {
+      if (primedRef.current) return
+      primedRef.current = true
+
+      Object.values(soundsRef.current).forEach((audio) => {
+        if (!audio) return
+        const prevMuted = audio.muted
+        audio.muted = true
+        audio.currentTime = 0
+        audio
+          .play()
+          .then(() => {
+            audio.pause()
+            audio.currentTime = 0
+            audio.muted = prevMuted
+          })
+          .catch(() => {
+            audio.muted = prevMuted
+          })
+      })
+    }
+
+    window.addEventListener('pointerdown', primeAudio, {once: true, passive: true})
+    window.addEventListener('keydown', primeAudio, {once: true})
+
+    return () => {
+      window.removeEventListener('pointerdown', primeAudio)
+      window.removeEventListener('keydown', primeAudio)
+    }
   }, [])
 
   const toggleAudio = useCallback(() => {

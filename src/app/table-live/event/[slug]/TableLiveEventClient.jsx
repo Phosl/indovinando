@@ -108,12 +108,12 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
 
         {step === 'home' ? (
           <section className={styles.card}>
-            <label>Codice partita</label>
+            <label>Inserisci il codice partita</label>
             <input
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value.replace(/\D+/g, '').slice(0, 4))}
               inputMode="numeric"
-              placeholder="1545"
+              placeholder="0000"
             />
             <button
               className="btn primary"
@@ -130,7 +130,7 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
             </button>
             <hr className={styles.orSeparator} />
             <button
-              className="btn success"
+              className="btn secondary"
               type="button"
               onClick={() => {
                 setError('')

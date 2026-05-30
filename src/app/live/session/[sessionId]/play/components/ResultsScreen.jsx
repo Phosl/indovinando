@@ -3,6 +3,7 @@ import styles from '../playerLive.module.scss'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useT} from '@/lib/i18n/useT'
 import AvatarDisplay from '@/components/AvatarDisplay'
+import Icon from '@/components/Icon'
 
 export const ResultsScreen = memo(function ResultsScreen({
   sessionId,
@@ -132,7 +133,8 @@ export const ResultsScreen = memo(function ResultsScreen({
                 <div className={styles.summaryAnswer}>
                   {ans?.isCorrect ? (
                     <span className={styles.summaryCorrect}>
-                      ✅ {selectedOptionText}
+                      <Icon name="checkCorrect" size={18} className={styles.feedbackIconImg} />
+                      {selectedOptionText}
                       <span className={styles.summaryPoints}>
                         +{ans.points}
                         {ans.comboBonus > 0 ? ' 🔥' : ''}
@@ -141,7 +143,8 @@ export const ResultsScreen = memo(function ResultsScreen({
                   ) : (
                     <>
                       <span className={styles.summaryWrong}>
-                        ❌ {selectedOptionText || t('notAnswered')}
+                        <Icon name="checkWrong" size={18} className={styles.feedbackIconImg} />
+                        {selectedOptionText || t('notAnswered')}
                       </span>
                       <span className={styles.summaryCorrectHint}>
                         {t('correctAnswer')} {correctOptionText || '-'}
