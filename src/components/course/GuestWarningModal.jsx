@@ -2,6 +2,7 @@
 
 import styles from './GuestWarningModal.module.scss'
 import {useT} from '@/lib/i18n/useT'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 
 /**
  * GuestWarningModal component - displays a warning for guest users about progress loss
@@ -16,9 +17,7 @@ export default function GuestWarningModal({isOpen, onClose}) {
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.closeBtn} onClick={onClose}>
-          ✕
-        </button>
+        <ModalCloseButton className={styles.closeBtn} onClick={onClose} />
 
         <div className={styles.content}>
           <div className={styles.icon}>👤</div>

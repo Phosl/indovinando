@@ -5,6 +5,7 @@ import {validateQuestionForm} from '../utils/validations'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {getAlertMessages, getQuestionModalText} from '../utils/constants'
 import Icon from '@/components/Icon'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import styles from './QuestionModal.module.scss'
 
 /**
@@ -76,9 +77,7 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
       <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
           <h3>{isNewQuestion ? text.newTitle : `${text.editTitlePrefix} ${questionIndex + 1}`}</h3>
-          <button className={styles.closeBtn} onClick={onCancel}>
-            ✕
-          </button>
+          <ModalCloseButton className={styles.closeBtn} onClick={onCancel} />
         </div>
 
         <div className={styles.modalBody}>

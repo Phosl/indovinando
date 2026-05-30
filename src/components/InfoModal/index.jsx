@@ -2,6 +2,7 @@
 
 import {useEffect} from 'react'
 import styles from './InfoModal.module.scss'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 
 /**
  * Generic info modal with a title, optional icon, and body content.
@@ -30,9 +31,7 @@ export default function InfoModal({isOpen, onClose, title, icon, children}) {
         <div className={styles.header}>
           {icon && <span className={styles.headerIcon}>{icon}</span>}
           <h3 className={styles.title}>{title}</h3>
-          <button className={styles.closeBtn} onClick={onClose} aria-label="Chiudi">
-            ✕
-          </button>
+          <ModalCloseButton className={styles.closeBtn} onClick={onClose} />
         </div>
         <div className={styles.body}>{children}</div>
       </div>

@@ -5,6 +5,7 @@ import styles from './OnboardingModal.module.scss'
 import {useT} from '@/lib/i18n/useT'
 import ProgressBar from '@/components/ui/ProgressBar'
 import Icon from '@/components/Icon'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 
 /**
  * OnboardingModal component - displays onboarding information for game creation
@@ -23,9 +24,7 @@ export default function OnboardingModal({onClose, onDisable}) {
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.closeBtn} onClick={onClose}>
-          ✕
-        </button>
+        <ModalCloseButton className={styles.closeBtn} onClick={onClose} />
 
         <div className={styles.topProgress}>
           <div className={styles.stepIndicator}>
