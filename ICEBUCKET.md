@@ -75,3 +75,26 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 - [ ] **Partita con codice** - Admin crea QR code utenti vanno su QR code, utente vede schermata con
       Numero 1545, altri utenti partecipano a 1545. Parte partita Live
       Specifica step 1: `LIVE_TABLE_GROUPS_STEP1.md`
+
+---
+
+## 🚀 TODO — Miglioramenti stato attuale (focus breve termine)
+
+### P0 — Stabilità flusso di gioco (iniziamo da qui)
+
+- [x] **Fix ultima domanda (tavoli)** — applicato fix anti-skip; **da validare** con test host+guest endgame
+- [x] **Classifica Tavoli robusta** — applicato fix redirect/fallback; **da validare** su sessioni reali
+- [ ] **Allineamento completo Live Tavoli vs Live classico** — stessa UX su fine round, classifica, prossimo step
+- [ ] **Stabilità realtime multi-device** — test host + 2 guest su round finali e cambio bottiglia
+
+### P1 — Qualità UX percepita
+
+- [ ] **Riduzione latenza percepita risposte** — ottimizzare check answer + refresh stato round
+- [ ] **Audio UX Tavoli** — ridurre delay e allineare timing feedback con Live originale
+- [x] **Flusso uscita partita** — introdotta modale uscita; **da rifinire** allineamento completo con Live
+
+### P2 — UI polish e hardening
+
+- [x] **UI consistency pagine Tavoli** — fatto grosso lavoro su spacing/topbar/CTA; **resta polish finale**
+- [ ] **Safe area mobile** — evitare overlap navbar/bottom actions nei quiz
+- [ ] **Checklist QA pre-release** — script test manuale rapido per create/join/play/leaderboard/endgame
