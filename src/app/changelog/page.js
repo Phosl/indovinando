@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.26.5',
+    date: '30 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'git add -A git commit -m "feat: automatic tasting wizard, vision/catalog pipeline, and shared create-game card"',
+    ],
+  },
+
+  {
     version: '1.26.4',
     date: '29 maggio 2026',
     label: 'Auto',
