@@ -11,7 +11,7 @@ export default function CreateGameCardLink({href = '/game/create', title, descri
           <p>{description}</p>
         </div>
         <div className={styles.createGameContainer}>
-          <div className={styles.createGameBtn}>
+          <div className={`btn card-cta btn-inline ${styles.createGameBtn}`}>
             <span>{action}</span>
             <Icon name="forward" size={24} className={styles.createGameBtnIcon} />
           </div>

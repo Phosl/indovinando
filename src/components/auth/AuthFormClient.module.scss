@@ -28,11 +28,6 @@
   text-align: center;
 }
 
-.logo {
-  width: 140px;
-  height: auto;
-}
-
 .title {
   margin: 0;
   font-size: 1.8rem;
@@ -44,12 +39,6 @@
   margin: 0;
   color: var(--text-secondary);
   font-size: 0.95rem;
-}
-
-.modeSwitch {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
 }
 
 .errorMessage {

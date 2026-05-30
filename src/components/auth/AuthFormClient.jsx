@@ -171,25 +171,6 @@ function AuthForm() {
             <p className={styles.subtitle}>{t('tagline')}</p>
           </div>
 
-          {/* {!isForgot && (
-            <div className={styles.modeSwitch}>
-              <button
-                type="button"
-                className={`btn btn-small ${isLogin ? 'success-filled' : 'neutral'}`}
-                disabled={loading}
-                onClick={() => toggleMode(true)}>
-                {t('login')}
-              </button>
-              <button
-                type="button"
-                className={`btn btn-small ${!isLogin ? 'success-filled' : 'neutral'}`}
-                disabled={loading}
-                onClick={() => toggleMode(false)}>
-                {t('register')}
-              </button>
-            </div>
-          )} */}
-
           {error && <div className={styles.errorMessage}>{error}</div>}
           {info && <div className={styles.infoMessage}>{info}</div>}
 

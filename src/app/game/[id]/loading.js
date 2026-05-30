@@ -18,22 +18,29 @@ function Bone({w, h, style}) {
 export default function GameLoading() {
   return (
     <main
-      style={{padding: '0 20px 48px', maxWidth: 960, margin: '0 auto', display: 'grid', gap: 14}}>
+      style={{
+        padding: '0 12px 48px',
+        maxWidth: 960,
+        margin: '0 auto',
+        display: 'grid',
+        gap: 14,
+        boxSizing: 'border-box',
+      }}>
       <div
         className="skeleton-frame"
         style={{
           display: 'grid',
-          gridTemplateColumns: '40px 1fr 40px',
+          gridTemplateColumns: '40px minmax(0, 1fr) 32px',
           alignItems: 'center',
           columnGap: 12,
           width: '100%',
           padding: '10px 14px',
-          margin: '0 auto 16px auto',
+          margin: '0 0 14px',
           boxSizing: 'border-box',
         }}>
         <Bone w="40px" h="40px" style={{borderRadius: 10}} />
-        <Bone w="220px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
-        <Bone w="40px" h="40px" style={{borderRadius: 10, marginLeft: 'auto'}} />
+        <Bone w="clamp(160px, 44vw, 240px)" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
+        <Bone w="24px" h="24px" style={{borderRadius: 999, marginLeft: 'auto'}} />
       </div>
 
       <div
@@ -41,15 +48,15 @@ export default function GameLoading() {
         style={{
           padding: '14px',
           display: 'grid',
-          gridTemplateColumns: '96px 1fr',
+          gridTemplateColumns: '92px minmax(0, 1fr)',
           columnGap: 12,
           alignItems: 'start',
         }}>
-        <Bone w="96px" h="96px" style={{borderRadius: 999}} />
-        <div style={{display: 'grid', gap: 8}}>
+        <Bone w="92px" h="92px" style={{borderRadius: 999}} />
+        <div style={{display: 'grid', gap: 8, minWidth: 0}}>
           <Bone w="52%" h="30px" />
           <Bone w="100px" h="14px" style={{borderRadius: 6}} />
-          <Bone w="190px" h="30px" style={{borderRadius: 12}} />
+          <Bone w="min(190px, 100%)" h="30px" style={{borderRadius: 12}} />
           <div style={{display: 'flex', gap: 12, flexWrap: 'wrap', minWidth: 0}}>
             <Bone w="min(130px, 100%)" h="18px" style={{borderRadius: 6}} />
             <Bone w="min(130px, 100%)" h="18px" style={{borderRadius: 6}} />
@@ -87,7 +94,7 @@ export default function GameLoading() {
             <Bone w="64%" h="16px" />
             <div style={{display: 'flex', gap: 8, flexWrap: 'wrap'}}>
               {[1, 2, 3, 4].map((j) => (
-                <Bone key={j} w="120px" h="38px" style={{borderRadius: 10}} />
+                <Bone key={j} w="min(120px, 44%)" h="38px" style={{borderRadius: 10}} />
               ))}
             </div>
           </div>

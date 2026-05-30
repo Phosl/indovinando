@@ -76,7 +76,9 @@ export default async function Dashboard() {
               <p>{dashboardDict.myGamesCardDescription}</p>
             </div>
             <div className={styles.sectionCardArrowRail} aria-hidden="true">
-              <Icon name="forward" size={24} className={styles.sectionCardArrowIcon} />
+              <span className={`btn icon-circle ${styles.sectionCardArrowBtn}`}>
+                <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
+              </span>
             </div>
           </Link>
 
@@ -92,7 +94,9 @@ export default async function Dashboard() {
               </p>
             </div>
             <div className={styles.sectionCardArrowRail} aria-hidden="true">
-              <Icon name="forward" size={24} className={styles.sectionCardArrowIcon} />
+              <span className={`btn icon-circle ${styles.sectionCardArrowBtn}`}>
+                <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
+              </span>
             </div>
           </Link> */}
 
@@ -123,7 +127,9 @@ export default async function Dashboard() {
               </div>
             </div>
             <div className={styles.sectionCardArrowRail} aria-hidden="true">
-              <Icon name="forward" size={24} className={styles.sectionCardArrowIcon} />
+              <span className={`btn icon-circle ${styles.sectionCardArrowBtn}`}>
+                <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
+              </span>
             </div>
           </Link>
 
@@ -136,7 +142,9 @@ export default async function Dashboard() {
                 <p>{lang === 'en' ? 'Catalog and course management tools.' : 'Strumenti gestione catalogo e corsi.'}</p>
               </div>
               <div className={styles.sectionCardArrowRail} aria-hidden="true">
-                <Icon name="forward" size={24} className={styles.sectionCardArrowIcon} />
+                <span className={`btn icon-circle ${styles.sectionCardArrowBtn}`}>
+                  <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
+                </span>
               </div>
             </Link>
           )}
