@@ -4,7 +4,8 @@ import {useState, Suspense} from 'react'
 import {createClient} from '@/lib/supabaseClient'
 import {useRouter, useSearchParams} from 'next/navigation'
 import {useT} from '@/lib/i18n/useT'
-import styles from '@/components/auth/AuthEntryClient.module.scss'
+import TopBar from '@/components/TopBar'
+import styles from './AuthFormClient.module.scss'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const MIN_PASSWORD_LENGTH = 6
@@ -15,6 +16,7 @@ function AuthForm() {
   const supabase = createClient()
   const router = useRouter()
   const t = useT('auth')
+  const tHome = useT('home')
   const searchParams = useSearchParams()
   const nextPath = searchParams.get('next') || '/dashboard'
   const safeNextPath = nextPath.startsWith('/') ? nextPath : '/dashboard'
@@ -159,24 +161,46 @@ function AuthForm() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <section className={styles.shell}>
-          <a href="/" className={styles.authExitBtn}>
-            {t('exitToHome')}
-          </a>
+        <TopBar title={tHome('loginOrRegister')} onBack={() => router.push('/')} />
 
-          <div className={styles.formCard}>
-            {error && <div className={styles.errorMessage}>{error}</div>}
-            {info && (
-              <div
-                className={styles.errorMessage}
-                style={{backgroundColor: '#eefaf1', color: '#1f6d37', border: '1px solid #bfe8c9'}}>
-                {info}
-              </div>
-            )}
+        <section className={styles.card}>
+          <div className={styles.brandBlock}>
+            <h1 className={styles.title}>
+              {isForgot ? t('forgotTitle') : isLogin ? t('login') : t('register')}
+            </h1>
+            <p className={styles.subtitle}>{t('tagline')}</p>
+          </div>
 
-            <div className={styles.form}>
-              {!isLogin && !isForgot && (
+          {/* {!isForgot && (
+            <div className={styles.modeSwitch}>
+              <button
+                type="button"
+                className={`btn btn-small ${isLogin ? 'success-filled' : 'neutral'}`}
+                disabled={loading}
+                onClick={() => toggleMode(true)}>
+                {t('login')}
+              </button>
+              <button
+                type="button"
+                className={`btn btn-small ${!isLogin ? 'success-filled' : 'neutral'}`}
+                disabled={loading}
+                onClick={() => toggleMode(false)}>
+                {t('register')}
+              </button>
+            </div>
+          )} */}
+
+          {error && <div className={styles.errorMessage}>{error}</div>}
+          {info && <div className={styles.infoMessage}>{info}</div>}
+
+          <div className={styles.form}>
+            {!isLogin && !isForgot && (
+              <div className={styles.fieldBlock}>
+                <label className={styles.fieldLabel} htmlFor="auth-username">
+                  {t('usernamePlaceholder')}
+                </label>
                 <input
+                  id="auth-username"
                   type="text"
                   className={styles.input}
                   placeholder={t('usernamePlaceholder')}
@@ -187,9 +211,15 @@ function AuthForm() {
                   }}
                   disabled={loading}
                 />
-              )}
+              </div>
+            )}
 
+            <div className={styles.fieldBlock}>
+              <label className={styles.fieldLabel} htmlFor="auth-email">
+                {t('emailPlaceholder')}
+              </label>
               <input
+                id="auth-email"
                 type="email"
                 className={styles.input}
                 placeholder={t('emailPlaceholder')}
@@ -200,9 +230,26 @@ function AuthForm() {
                 }}
                 disabled={loading}
               />
+            </div>
 
-              {!isForgot && (
+            {!isForgot && (
+              <div className={styles.fieldBlock}>
+                <div className={styles.fieldHeader}>
+                  <label className={styles.fieldLabel} htmlFor="auth-password">
+                    {t('passwordPlaceholder')}
+                  </label>
+                  {isLogin && (
+                    <button
+                      onClick={openForgot}
+                      disabled={loading}
+                      className={`btn type-text ${styles.forgotInlineBtn}`}
+                      type="button">
+                      {t('forgotPassword')}
+                    </button>
+                  )}
+                </div>
                 <input
+                  id="auth-password"
                   type="password"
                   className={styles.input}
                   placeholder={t('passwordPlaceholder')}
@@ -213,12 +260,14 @@ function AuthForm() {
                   }}
                   disabled={loading}
                 />
-              )}
+              </div>
+            )}
 
+            <div className={styles.actions}>
               <button
                 onClick={handleAuth}
                 disabled={loading}
-                className={styles.authSubmitBtn}
+                className="btn success-filled"
                 type="button">
                 {loading
                   ? t('loading')
@@ -229,21 +278,11 @@ function AuthForm() {
                       : t('register')}
               </button>
 
-              {isLogin && (
-                <button
-                  onClick={openForgot}
-                  disabled={loading}
-                  className={styles.authSecondaryBtn}
-                  type="button">
-                  {t('forgotPassword')}
-                </button>
-              )}
-
               {isForgot && (
                 <button
                   onClick={backToLogin}
                   disabled={loading}
-                  className={styles.authSecondaryBtn}
+                  className="btn neutral"
                   type="button">
                   {t('backToLogin')}
                 </button>
@@ -253,7 +292,7 @@ function AuthForm() {
                 <button
                   onClick={() => toggleMode(!isLogin)}
                   disabled={loading}
-                  className={styles.authSecondaryBtn}
+                  className="btn type-text btn-small"
                   type="button">
                   {isLogin ? t('switchToRegister') : t('switchToLogin')}
                 </button>

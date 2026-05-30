@@ -27,10 +27,10 @@ export default function GuestWarningModal({isOpen, onClose}) {
         </div>
 
         <div className={styles.actions}>
-          <a href="/?next=/corso-vino" className={`${styles.primaryBtn} ${styles.menuCardGreen}`}>
+          <a href="/?next=/corso-vino" className="btn success">
             {t('guest.signUp')}
           </a>
-          <button className={`${styles.secondaryBtn} ${styles.menuCardTertiary}`} onClick={onClose}>
+          <button className="btn tertiary btn-small" onClick={onClose}>
             {t('guest.continueAsGuest')}
           </button>
         </div>

@@ -630,6 +630,8 @@
   },
   "auth": {
     "tagline": "Gioca, crea e impara il vino in un unico posto.",
+    "loginOrRegister": "Accedi o Registrati",
+    "authShortDescription": "Accedi per continuare o crea un nuovo account in pochi secondi.",
     "login": "Accedi",
     "register": "Registrati",
     "usernamePlaceholder": "Nome utente",
@@ -647,6 +649,7 @@
     "usernameInvalid": "Lo username può contenere solo lettere, numeri e _",
     "registrationComplete": "Registrazione completata. Controlla l'email per confermare l'account.",
     "forgotPassword": "Password dimenticata?",
+    "forgotPasswordTitle": "Recupera Password",
     "forgotTitle": "Reimposta password",
     "forgotDesc": "Inserisci la tua email e ti mandiamo il link per reimpostare la password.",
     "sendResetLink": "Invia link",
@@ -731,42 +734,42 @@
       {
         "image": "/onboarding/onboarding_01.svg",
         "imageAlt": "Cos'è IndoVinando",
-        "kicker": "1. Cos'è IndoVinando?",
+        "kicker": "Cos'è IndoVinando?",
         "title": "Degusta. Gioca. Indovina.",
         "description": "IndoVinando è un gioco per degustazioni alla cieca: assaggi bottiglie coperte e rispondi a un quiz per scoprire quanto ne sai davvero di vino."
       },
       {
         "image": "/onboarding/onboarding_02.svg",
         "imageAlt": "Tutto in una sola app",
-        "kicker": "2. Tutto in una sola app",
+        "kicker": "Tutto in una sola app",
         "title": "Degustazioni, corso e classifiche",
         "description": "Crea degustazioni personalizzate, sfida gli amici, segui il corso gratuito e monitora i tuoi progressi."
       },
       {
         "image": "/onboarding/onboarding_03.svg",
         "imageAlt": "Crea la tua degustazione",
-        "kicker": "3. Crea la tua degustazione",
+        "kicker": "Crea la tua degustazione",
         "title": "Scegli bottiglie e domande",
         "description": "Inserisci le bottiglie, crea le domande e salva le risposte corrette. IndoVinando farà il resto."
       },
       {
         "image": "/onboarding/onboarding_04.svg",
         "imageAlt": "Gioca da solo o con amici",
-        "kicker": "4. Gioca da solo o con gli amici",
+        "kicker": "Gioca da solo o con gli amici",
         "title": "Single Player o Multiplayer",
         "description": "Allenati da solo oppure crea una partita live e sfida amici, clienti o partecipanti alla degustazione."
       },
       {
         "image": "/onboarding/onboarding_05.svg",
         "imageAlt": "Impara il vino gratuitamente",
-        "kicker": "5. Impara il vino gratuitamente",
+        "kicker": "Impara il vino gratuitamente",
         "title": "Corso vino con attestato finale",
         "description": "Lezioni brevi, quiz interattivi e progressione a livelli. Completa il corso e ottieni il tuo attestato."
       },
       {
         "image": "/onboarding/onboarding_06.svg",
         "imageAlt": "Pronto a iniziare",
-        "kicker": "6. Pronto a iniziare?",
+        "kicker": "Pronto a iniziare?",
         "title": "Pronto a iniziare?",
         "description": "Crea la tua prima degustazione oppure entra in una partita esistente."
       }

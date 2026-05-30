@@ -53,16 +53,12 @@ export default function GameCreateLoading() {
         </div>
 
         {/* Mode picker title */}
-        <Bone w="340px" h="30px" style={{margin: '0 auto 4px', borderRadius: 8}} />
+        <Bone w="min(340px, 90%)" h="30px" style={{margin: '0 auto 4px', borderRadius: 8}} />
 
         {/* Mode cards */}
         <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: 16,
-          }}>
-          {[1, 2].map((i) => (
+          style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16}}>
+          {[1, 2, 3].map((i) => (
             <div
               key={i}
               className="skeleton-card"

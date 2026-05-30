@@ -630,6 +630,8 @@
   },
   "auth": {
     "tagline": "Play, create and learn wine in one place.",
+    "loginOrRegister": "Login or Register",
+    "authShortDescription": "Log in to continue or create your account in just a few seconds.",
     "login": "Login",
     "register": "Register",
     "usernamePlaceholder": "Username",
@@ -647,6 +649,7 @@
     "usernameInvalid": "Username can contain only letters, numbers and _",
     "registrationComplete": "Registration completed. Check your email to confirm your account.",
     "forgotPassword": "Forgot password?",
+    "forgotPasswordTitle": "Recover Password",
     "forgotTitle": "Reset password",
     "forgotDesc": "Enter your email and we'll send you a link to reset your password.",
     "sendResetLink": "Send link",
