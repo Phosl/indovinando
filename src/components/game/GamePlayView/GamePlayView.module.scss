@@ -316,7 +316,7 @@
 .sliderTrack {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(240px, 290px);
+  grid-auto-columns: max-content;
   gap: 12px;
   overflow-x: auto;
   padding: 2px 2px 8px;
@@ -327,7 +327,7 @@
   @extend %framedCard;
   scroll-snap-align: start;
   padding: 16px 14px 14px;
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   box-shadow: 0px 3px 0px 0px var(--gray-light);
   display: flex;
@@ -338,6 +338,8 @@
   position: relative;
   min-height: 132px;
   width: fit-content;
+  min-width: 148px;
+  max-width: 232px;
   h3 {
     font-size: 1.05rem;
     font-weight: 900;
@@ -360,7 +362,7 @@
 .bottleCardBody {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 0;
   min-width: 0;
   width: 100%;
@@ -512,7 +514,7 @@
   }
 
   .sliderTrack {
-    grid-auto-columns: minmax(230px, 250px);
+    grid-auto-columns: max-content;
     gap: 10px;
   }
 

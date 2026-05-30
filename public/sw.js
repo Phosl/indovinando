@@ -1,4 +1,4 @@
-const CACHE_NAME = 'indovinando-v3'
+const CACHE_NAME = 'indovinando-v4'
 const OFFLINE_URL = '/offline.html'
 
 // Pre-scarica tutti i JSON dei corsi (it + en) all'installazione
@@ -59,9 +59,13 @@ self.addEventListener('fetch', (event) => {
         // Offline: prova la cache, altrimenti pagina offline per navigazione
         return caches.match(event.request).then((cached) => {
           if (cached) return cached
-          if (event.request.headers.get('accept')?.includes('text/html')) {
-            return caches.match(OFFLINE_URL)
+          const isNavigation =
+            event.request.mode === 'navigate' ||
+            event.request.headers.get('accept')?.includes('text/html')
+          if (isNavigation) {
+            return caches.match(OFFLINE_URL).then((offline) => offline || Response.error())
           }
+          return Response.error()
         })
       }),
   )
