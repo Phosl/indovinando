@@ -150,6 +150,7 @@ SQL sources (apply in order for a fresh setup):
 6. `LIVE_SESSION_HISTORY.sql` — match history snapshot table
 7. `WINE_CATALOG_SCHEMA.sql` — wine catalog schema + RLS
 8. `WINE_CATALOG_IMPORT.sql` — CSV staging -> normalized wine catalog import pipeline
+9. `AUTO_TASTING_MEDIA_SCHEMA.sql` — optional bucket + table for bottle photo upload/recognition
 
 ### Wine Catalog Notes
 
@@ -161,6 +162,14 @@ SQL sources (apply in order for a fresh setup):
 - Grape relations are imported in **sync mode** for impacted labels:
   existing `wine_label_grapes` rows are replaced by current CSV values to avoid stale/wrong
   associations accumulating over time.
+
+### Automatic Photo Mode (Optional / Decoupled)
+
+- `AUTO_TASTING_MEDIA_SCHEMA.sql` adds:
+  - private storage bucket `tasting-bottles`
+  - table `tasting_bottle_images` for recognition pipeline metadata/state
+  - isolated RLS/policies for per-user access
+- This module is optional and does **not** affect existing quick/custom game creation.
 
 ### Key Tables
 

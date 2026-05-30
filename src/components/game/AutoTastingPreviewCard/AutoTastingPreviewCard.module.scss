@@ -1,0 +1,68 @@
+.card {
+  background: var(--white);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  box-shadow: 0px 0px 0px 0px var(--gray-light);
+  padding: 12px 14px;
+  margin-top: 8px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  p {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    font-weight: 700;
+    color: var(--primary-text);
+  }
+}
+
+.divider {
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.questions {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.questionCard {
+  border: 1px solid var(--button-secondary-border);
+  border-radius: 8px;
+  padding: 8px;
+  background: var(--background);
+}
+
+.questionTitle {
+  margin: 0 0 4px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.options {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}

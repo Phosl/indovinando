@@ -71,7 +71,7 @@ export const GameOverlays = memo(function GameOverlays({
                 <p className={styles.readyHint}>{t('noPlayersYet')}</p>
               )}
             </div>
-            <button className={styles.sheetClose} onClick={onCloseLeaderboard}>
+            <button className={styles.sheetClose + ' btn neutral'} onClick={onCloseLeaderboard}>
               {t('close')}
             </button>
 
@@ -118,10 +118,10 @@ export const GameOverlays = memo(function GameOverlays({
             <h3>{t('leaveGameTitle')}</h3>
             <p className={styles.exitHint}>{t('leaveGameDesc')}</p>
             <div className={styles.exitActions}>
-              <button className={styles.exitSecondary} onClick={onCloseExit}>
+              <button className="btn neutral" onClick={onCloseExit}>
                 {t('cancel')}
               </button>
-              <button className={styles.exitDanger} onClick={onExitGame}>
+              <button className="btn danger" onClick={onExitGame}>
                 {t('exitGame')}
               </button>
             </div>

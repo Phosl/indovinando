@@ -368,7 +368,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
 
         <div className={pStyles.slideContent} ref={introScrollRef}>
           <div className={xStyles.introCard}>
-            <div className={xStyles.introEmoji}>{lesson.emoji}</div>
+            {/* <div className={xStyles.introEmoji}>{lesson.emoji}</div> */}
             <p className={xStyles.slideMeta}>
               {t('slide')} {didacticIndex + 1} {t('of')} {didacticSlides.length}
             </p>
@@ -450,7 +450,9 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
                       : t('levelBadge', {level: levelProgress.levelNum})}
                   </span>
                   <span className={xStyles.resultProgressNext}>
-                    {levelProgress.isMax ? '' : t('nextLevelBadge', {level: levelProgress.nextLevelNum})}
+                    {levelProgress.isMax
+                      ? ''
+                      : t('nextLevelBadge', {level: levelProgress.nextLevelNum})}
                   </span>
                 </div>
                 <div className={xStyles.resultProgressTrack}>

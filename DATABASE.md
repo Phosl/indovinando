@@ -12,6 +12,7 @@ Panoramica aggiornata delle tabelle Supabase (PostgreSQL) usate dall'app.
 - `WINE_COURSE_PROGRESS.sql` - progresso corso vino
 - `ENOTECA_SCHEMA.sql` - schema enoteca minimale
 - `WINE_CATALOG_SCHEMA.sql` - catalogo vini per creazione degustazione automatica
+- `AUTO_TASTING_MEDIA_SCHEMA.sql` - bucket + tabella immagini bottiglie (opzionale, isolato)
 
 ## Diagramma ER (semplificato)
 
@@ -78,6 +79,21 @@ Policy:
 - **Write/Update/Delete:** solo utenti con `profiles.super_admin = true`
 
 Migration: `SUPABASE_COURSE_ADMIN_PATCH.sql`
+
+### `tasting-bottles` (Supabase Storage, opzionale)
+
+Bucket **privato** per upload foto bottiglie nella modalita automatica.
+
+Regola path consigliata:
+
+- `<auth.uid()>/draft/<file>.jpg`
+- `<auth.uid()>/game/<game_id>/<file>.jpg`
+
+Policy:
+
+- **Read/Write/Update/Delete:** solo owner del path (prima cartella uguale a `auth.uid()`)
+
+Migration: `AUTO_TASTING_MEDIA_SCHEMA.sql`
 
 ---
 
@@ -257,6 +273,33 @@ Vista supporto admin:
    - `wine_import_staging where processed = false` deve essere 0
 
 ### Comportamento Import (sync)
+
+## Immagini Bottiglie (modulo opzionale)
+
+### `tasting_bottle_images`
+
+Metadati immagini caricati per riconoscimento etichetta. Tabella separata dal core game flow
+(quick/custom restano invariati anche se questa tabella non e presente).
+
+| Colonna                  | Tipo            | Note |
+| ------------------------ | --------------- | ---- |
+| `id`                     | `UUID PK`       | default `gen_random_uuid()` |
+| `uploaded_by`            | `UUID FK`       | owner (`auth.users.id`) |
+| `game_id`                | `UUID FK`       | opzionale, `on delete set null` |
+| `storage_bucket`         | `TEXT`          | default `tasting-bottles` |
+| `storage_path`           | `TEXT`          | path file nel bucket |
+| `original_filename`      | `TEXT`          | opzionale |
+| `mime_type`              | `TEXT`          | opzionale |
+| `size_bytes`             | `BIGINT`        | opzionale |
+| `status`                 | `TEXT`          | `uploaded` / `processing` / `recognized` / `failed` |
+| `recognized_payload`     | `JSONB`         | payload OCR/vision raw |
+| `recognized_name`        | `TEXT`          | valore estratto |
+| `recognized_producer`    | `TEXT`          | valore estratto |
+| `recognized_vintage`     | `INT`           | valore estratto |
+| `recognition_confidence` | `NUMERIC(5,4)`  | confidenza |
+| `error_message`          | `TEXT`          | dettaglio errore pipeline |
+| `created_at`             | `TIMESTAMPTZ`   | default `now()` |
+| `updated_at`             | `TIMESTAMPTZ`   | trigger `set_updated_at()` |
 
 - `wine_label_grapes` e gestita in modalita **replace** per i `wine_label` impattati dal batch:
   - delete relazioni esistenti dei label nel batch

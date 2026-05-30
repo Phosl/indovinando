@@ -7,6 +7,7 @@ import {getAppVersion} from '@/lib/appVersion'
 import {getWineCourseData} from '@/lib/wineCourseContent'
 import ProgressBar from '@/components/ui/ProgressBar'
 import Icon from '@/components/Icon'
+import CreateGameCardLink from '@/components/CreateGameCardLink'
 import it from '@/lib/i18n/locales/it.json'
 import en from '@/lib/i18n/locales/en.json'
 import styles from './dashboard.module.scss'
@@ -61,31 +62,11 @@ export default async function Dashboard() {
         </section>
 
         <nav className={styles.menuGrid}>
-          <Link href="/game/create" className={styles.createGameLink}>
-            <div className={styles.createGameCard}>
-              <div className={styles.createGameContent}>
-                <h2>{dashboardDict.createGameCardTitle}</h2>
-                <p>{dashboardDict.createGameCardDescription}</p>
-              </div>
-              <div className={styles.createGameContainer}>
-                <div className={styles.createGameBtn}>
-                  <span>{dashboardDict.createGameCardAction}</span>
-                  <img
-                    src="/icons/forward-icon.svg"
-                    alt=""
-                    aria-hidden="true"
-                    className={styles.createGameBtnIcon}
-                  />
-                </div>
-              </div>
-              <img
-                src="/img-card-create.svg"
-                alt=""
-                aria-hidden="true"
-                className={styles.createGameIllustration}
-              />
-            </div>
-          </Link>
+          <CreateGameCardLink
+            title={dashboardDict.createGameCardTitle}
+            description={dashboardDict.createGameCardDescription}
+            action={dashboardDict.createGameCardAction}
+          />
 
           <Link
             href="/miei-giochi"
