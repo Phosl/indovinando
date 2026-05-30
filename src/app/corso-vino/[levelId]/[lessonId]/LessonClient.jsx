@@ -14,7 +14,7 @@ import Icon from '@/components/Icon'
 
 export default function LessonClient({level, lesson, nextLessonId, levels = []}) {
   const router = useRouter()
-  const {completeLesson, getLessonProgress, loaded} = useWineCourseProgress()
+  const {completeLesson, getLessonProgress, loaded, authChecked, userId} = useWineCourseProgress()
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
   const t = useT('lesson')
 
@@ -70,7 +70,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
   const currentQuestion = questions[questionIndex]
   const isLastQuestion = questionIndex >= questions.length - 1
   const correctId = currentQuestion?.correctId
-  const backHref = `/corso-vino/${level.id}`
+  const backHref = authChecked && !userId ? '/' : `/corso-vino/${level.id}`
   const introProgressPct = didacticSlides.length
     ? Math.round(((didacticIndex + 1) / didacticSlides.length) * 100)
     : 0
@@ -368,7 +368,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
 
         <div className={pStyles.slideContent} ref={introScrollRef}>
           <div className={xStyles.introCard}>
-            <div className={xStyles.introEmoji}>{lesson.emoji}</div>
+            {/* <div className={xStyles.introEmoji}>{lesson.emoji}</div> */}
             <p className={xStyles.slideMeta}>
               {t('slide')} {didacticIndex + 1} {t('of')} {didacticSlides.length}
             </p>
@@ -450,7 +450,9 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
                       : t('levelBadge', {level: levelProgress.levelNum})}
                   </span>
                   <span className={xStyles.resultProgressNext}>
-                    {levelProgress.isMax ? '' : t('nextLevelBadge', {level: levelProgress.nextLevelNum})}
+                    {levelProgress.isMax
+                      ? ''
+                      : t('nextLevelBadge', {level: levelProgress.nextLevelNum})}
                   </span>
                 </div>
                 <div className={xStyles.resultProgressTrack}>

@@ -12,7 +12,7 @@ export default function AuthInfoFab({changelogLabel, copyrightLabel}) {
       <div className={styles.legalLinks}>
         <button
           type="button"
-          className={styles.badge}
+          className="btn neutral btn-mini"
           style={{marginTop: 0, marginBottom: 0}}
           onClick={() => setInfoOpen(true)}>
           Info

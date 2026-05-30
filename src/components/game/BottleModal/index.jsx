@@ -5,6 +5,7 @@ import {validateBottleForm} from '../utils/validations'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {getAlertMessages, getBottleModalText} from '../utils/constants'
 import Icon from '@/components/Icon'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import styles from './BottleModal.module.scss'
 
 /**
@@ -164,9 +165,7 @@ export default function BottleModal({
               Step {wizardStep + 1} di {totalSteps}
             </span>
           </h3>
-          <button className={styles.closeBtn} onClick={onCancel}>
-            ✕
-          </button>
+          <ModalCloseButton className={styles.closeBtn} onClick={onCancel} />
         </div>
 
         <div className={styles.modalBody}>

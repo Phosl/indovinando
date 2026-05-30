@@ -47,16 +47,6 @@
   position: absolute;
   top: 16px;
   right: 16px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #999;
-  transition: color 0.2s;
-
-  &:hover {
-    color: #333;
-  }
 }
 
 .content {

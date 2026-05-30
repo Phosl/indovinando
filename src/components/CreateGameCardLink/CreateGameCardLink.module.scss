@@ -1,0 +1,73 @@
+.createGameLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  background: var(--primary);
+  color: var(--primary-text);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.12s ease;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.createGameCard {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.createGameContent {
+  max-width: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h2 {
+    color: var(--white);
+    line-height: 1.2;
+    font-size: 24px;
+    margin: 0;
+  }
+
+  p {
+    color: var(--white);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.2;
+    margin: 0;
+  }
+}
+
+.createGameContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 16px;
+}
+
+.createGameBtn {
+  gap: 6px;
+  font-size: 18px;
+}
+
+.createGameBtnIcon {
+  color: currentColor;
+}
+
+.createGameIllustration {
+  object-fit: contain;
+  width: auto;
+  height: 120%;
+  position: absolute;
+  top: -10%;
+  right: -10%;
+  z-index: -1;
+  opacity: 0.3;
+
+  @media (max-width: 768px) {
+    right: -45%;
+  }
+}

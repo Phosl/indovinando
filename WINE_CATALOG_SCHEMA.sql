@@ -196,6 +196,13 @@ create table if not exists public.wine_import_staging (
   dedupe_key text,
   notes text,
   raw_row jsonb,
+  reference_price text,
+  price_band text,
+  ocr_search_text text,
+  quiz_tags text,
+  data_quality_score text,
+  import_ready boolean,
+  is_active boolean,
   processed boolean not null default false,
   created_at timestamptz not null default now()
 );
@@ -205,6 +212,20 @@ create index if not exists wine_import_staging_batch_idx
 
 create index if not exists wine_import_staging_processed_idx
   on public.wine_import_staging (processed);
+
+-- Keep staging compatible with evolving CSV headers/types.
+alter table public.wine_import_staging
+  add column if not exists reference_price text,
+  add column if not exists price_band text,
+  add column if not exists ocr_search_text text,
+  add column if not exists quiz_tags text,
+  add column if not exists data_quality_score text,
+  add column if not exists import_ready boolean,
+  add column if not exists is_active boolean;
+
+alter table public.wine_import_staging
+  alter column reference_price type text using reference_price::text,
+  alter column data_quality_score type text using data_quality_score::text;
 
 -- ---------------------------------------------------------------------------
 -- Compatibility views (for existing pages / admin tools)

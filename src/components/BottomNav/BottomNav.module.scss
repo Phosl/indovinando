@@ -49,3 +49,8 @@
   background: var(--primary-50);
   color: var(--primary-text);
 }
+
+.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}

@@ -17,23 +17,23 @@ function Bone({w, h, style}) {
 
 export default function CorsoVinoLevelLoading() {
   return (
-    <main style={{padding: '0 20px 112px', maxWidth: 960, margin: '0 auto'}}>
+    <main style={{padding: '0 12px 112px', maxWidth: 960, margin: '0 auto', boxSizing: 'border-box'}}>
       {/* TopBar skeleton */}
       <div
         className="skeleton-frame"
         style={{
           display: 'grid',
-          gridTemplateColumns: '40px 1fr 40px',
+          gridTemplateColumns: '40px minmax(0, 1fr) 32px',
           alignItems: 'center',
           columnGap: 12,
           width: '100%',
           padding: '10px 14px',
-          margin: '0 auto 16px auto',
+          margin: '0 0 14px',
           boxSizing: 'border-box',
         }}>
         <Bone w="40px" h="40px" style={{borderRadius: 10}} />
-        <Bone w="170px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
-        <Bone w="40px" h="40px" style={{borderRadius: 10, marginLeft: 'auto'}} />
+        <Bone w="clamp(140px, 40vw, 210px)" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
+        <Bone w="24px" h="24px" style={{borderRadius: 999, marginLeft: 'auto'}} />
       </div>
 
       {/* Hero skeleton */}
@@ -55,7 +55,7 @@ export default function CorsoVinoLevelLoading() {
       </div>
 
       {/* Lesson cards skeleton */}
-      <div style={{display: 'flex', flexDirection: 'column', padding: '8px 24px 16px'}}>
+      <div style={{display: 'flex', flexDirection: 'column', padding: '6px 0 10px'}}>
         {Array.from({length: 6}).map((_, index) => (
           <div key={index} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             {index > 0 && (
@@ -77,8 +77,8 @@ export default function CorsoVinoLevelLoading() {
                 width: '100%',
                 display: 'flex',
                 alignItems: 'stretch',
-                gap: 14,
-                padding: '14px 0 14px 16px',
+                gap: 12,
+                padding: '14px 12px',
                 borderRadius: 16,
                 boxSizing: 'border-box',
               }}>
@@ -96,15 +96,7 @@ export default function CorsoVinoLevelLoading() {
                   <Bone w="62px" h="22px" style={{borderRadius: 999}} />
                 </div>
               </div>
-              <div
-                style={{
-                  width: 52,
-                  minWidth: 52,
-                  borderLeft: '2px solid var(--button-secondary-border)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
+              <div style={{width: 42, minWidth: 42, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                 <Bone w="18px" h="18px" style={{borderRadius: 6}} />
               </div>
             </div>

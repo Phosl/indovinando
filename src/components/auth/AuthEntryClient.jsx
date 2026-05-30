@@ -119,15 +119,15 @@ export default function AuthEntryClient({appVersion}) {
           </div>
 
           <div className={styles.quickActions}>
-            <Link href="/auth" className={`${styles.menuCard} ${styles.menuCardGreen}`}>
-              <span className={styles.menuCardLabel}>{t('loginOrRegister')}</span>
+            <Link href="/auth" className="btn success">
+              {t('loginOrRegister')}
             </Link>
-            <Link href="/corso-vino" className={`${styles.menuCard} ${styles.menuCardWine}`}>
+            <Link href="/corso-vino" className="btn quaternary">
               <span className={styles.menuCardBadge}>NOVITA</span>
-              <span className={styles.menuCardLabel}>{t('wineCourse')}</span>
+              {t('wineCourse')}
             </Link>
-            <Link href="/info" className={styles.menuCard}>
-              <span className={styles.menuCardLabel}>{t('howItWorks')}</span>
+            <Link href="/info" className="btn neutral">
+              {t('howItWorks')}
             </Link>
           </div>
         </section>

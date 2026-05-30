@@ -146,9 +146,11 @@
   position: relative;
   &:first-child .lessonCard {
     border-radius: 16px 16px 0px 0px;
+    border-top: 2px solid var(--primary-100);
   }
   &:last-child .lessonCard {
     border-radius: 0px 0px 16px 16px;
+    border-bottom: 2px solid var(--primary-100);
   }
 }
 
@@ -174,7 +176,7 @@
   align-items: stretch;
   gap: 14px;
   padding: 14px 0 14px 16px;
-  border: 2px solid var(--button-secondary-border);
+  border: 2px solid var(--primary-100);
   background: var(--foreground);
   cursor: pointer;
   transition:
@@ -183,8 +185,9 @@
   user-select: none;
   border-radius: 0;
   border-bottom: 0px;
+
   &.lessonCurrent {
-    border-color: var(--selected);
+    border-top: 2px solid var(--primary-100);
   }
 
   &.lessonCompleted {
@@ -331,7 +334,7 @@
 }
 
 .lessonTitle {
-  font-size: 0.92rem;
+  font-size: 1.2rem;
   font-weight: 800;
   color: var(--text-primary);
   flex: 1;

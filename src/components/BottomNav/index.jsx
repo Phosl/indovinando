@@ -2,14 +2,15 @@
 
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
-import {useMemo} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import Icon from '@/components/Icon'
 import {useT} from '@/lib/i18n/useT'
+import {supabaseClient} from '@/lib/supabaseClient'
 import styles from './BottomNav.module.scss'
 
 function isActive(pathname, href, key) {
   if (!pathname) return false
-  if (key === 'home') return pathname === '/dashboard'
+  if (key === 'home') return pathname === '/dashboard' || pathname === '/'
   if (key === 'tastings') return pathname.startsWith('/miei-giochi') || pathname.startsWith('/game')
   if (key === 'course') return pathname.startsWith('/corso-vino')
   if (key === 'profile') return pathname.startsWith('/profilo')
@@ -38,18 +39,50 @@ function shouldRender(pathname) {
 export default function BottomNav({forceVisible = false}) {
   const pathname = usePathname()
   const t = useT('bottomNav')
+  const [authChecked, setAuthChecked] = useState(false)
+  const [userId, setUserId] = useState(null)
   const initialLocation = useMemo(() => {
     if (typeof window === 'undefined') return {pathname: ''}
     return {pathname: window.location.pathname}
   }, [])
   const effectivePathname = pathname || initialLocation.pathname
+
+  useEffect(() => {
+    let active = true
+
+    async function resolveUser() {
+      const {
+        data: {user},
+      } = await supabaseClient.auth.getUser()
+      if (!active) return
+      setUserId(user?.id ?? null)
+      setAuthChecked(true)
+    }
+
+    resolveUser()
+
+    const {
+      data: {subscription},
+    } = supabaseClient.auth.onAuthStateChange((_event, session) => {
+      if (!active) return
+      setUserId(session?.user?.id ?? null)
+      setAuthChecked(true)
+    })
+
+    return () => {
+      active = false
+      subscription.unsubscribe()
+    }
+  }, [])
+
+  const isGuest = authChecked && !userId
   if (!forceVisible && !shouldRender(effectivePathname)) return null
 
   const items = [
-    {key: 'home', href: '/dashboard', label: t('home'), icon: 'home'},
-    {key: 'tastings', href: '/miei-giochi', label: t('tastings'), icon: 'testing'},
+    {key: 'home', href: isGuest ? '/' : '/dashboard', label: t('home'), icon: 'home'},
+    {key: 'tastings', href: isGuest ? '/' : '/miei-giochi', label: t('tastings'), icon: 'testing'},
     {key: 'course', href: '/corso-vino', label: t('course'), icon: 'course'},
-    {key: 'profile', href: '/profilo', label: t('profile'), icon: 'profile'},
+    {key: 'profile', href: isGuest ? '/' : '/profilo', label: t('profile'), icon: 'profile'},
   ]
 
   return (
@@ -59,11 +92,22 @@ export default function BottomNav({forceVisible = false}) {
         <div className={styles.inner}>
           {items.map((item) => {
             const active = isActive(effectivePathname, item.href, item.key)
+            const disabled = isGuest && (item.key === 'tastings' || item.key === 'profile')
             return (
               <Link
                 key={item.key}
                 href={item.href}
-                className={`${styles.item} ${active ? styles.active : ''}`}>
+                aria-disabled={disabled || undefined}
+                onClick={
+                  disabled
+                    ? (event) => {
+                        event.preventDefault()
+                      }
+                    : undefined
+                }
+                className={`${styles.item} ${active ? styles.active : ''} ${
+                  disabled ? styles.disabled : ''
+                }`}>
                 <Icon name={item.icon} size={24} className={styles.icon} />
                 <span className={styles.label}>{item.label}</span>
               </Link>

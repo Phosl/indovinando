@@ -1,0 +1,121 @@
+.page {
+  min-height: 100dvh;
+  padding: 16px 12px 40px;
+}
+
+.container {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.card {
+  max-width: 520px;
+  margin: 0 auto;
+
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.brandBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.errorMessage {
+  padding: 12px;
+  border-radius: 10px;
+  background: #ffecec;
+  border: 1px solid #f2b6b6;
+  color: #8a1515;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.infoMessage {
+  padding: 12px;
+  border-radius: 10px;
+  background: #eefaf1;
+  border: 1px solid #bfe8c9;
+  color: #1f6d37;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.form {
+  display: grid;
+  gap: 12px;
+}
+
+.fieldBlock {
+  display: grid;
+  gap: 4px;
+}
+
+.fieldHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.fieldLabel {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.forgotInlineBtn {
+  font-size: 0.76rem;
+  font-weight: 700;
+  width: auto;
+  padding: 0;
+  height: auto;
+  min-height: auto;
+}
+
+.input {
+  width: 100%;
+  min-height: 48px;
+  border: 2px solid var(--gray-light);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 1.02rem;
+  font-weight: 700;
+  background: var(--foreground);
+  color: var(--text-primary);
+}
+
+.input:focus {
+  outline: 2px solid var(--selected-light);
+  outline-offset: 1px;
+}
+
+.actions {
+  display: grid;
+  gap: 8px;
+
+  padding-top: 24px;
+  border-top: 1px solid var(--gray-light);
+}

@@ -1,11 +1,13 @@
 import {notFound} from 'next/navigation'
-import {getRawCourseJson} from '@/lib/courseAdmin'
+import {getRawCourseJson, requireSuperAdmin} from '@/lib/courseAdmin'
 import TopBarBack from '@/components/TopBarBack'
 import Link from 'next/link'
 import LessonEditorClient from './LessonEditorClient'
 import styles from '../../admin.module.scss'
 
 export default async function AdminLessonEditorPage({params, searchParams}) {
+  await requireSuperAdmin()
+
   const {levelId, lessonId} = await params
   const sp = await searchParams
   const lang = sp?.lang === 'en' ? 'en' : 'it'

@@ -1,4 +1,5 @@
 import 'server-only'
+import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 
 /**
@@ -15,6 +16,12 @@ export async function isSuperAdmin() {
   const {data} = await supabase.from('profiles').select('super_admin').eq('id', user.id).single()
 
   return data?.super_admin === true
+}
+
+export async function requireSuperAdmin(redirectTo = '/dashboard') {
+  const allowed = await isSuperAdmin()
+  if (!allowed) redirect(redirectTo)
+  return true
 }
 
 /**

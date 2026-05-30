@@ -1,4 +1,5 @@
 import {getWineCourseData} from '@/lib/wineCourseContent'
+import {requireSuperAdmin} from '@/lib/courseAdmin'
 import TopBarBack from '@/components/TopBarBack'
 import Link from 'next/link'
 import styles from './admin.module.scss'
@@ -17,6 +18,8 @@ const LEVEL_EMOJIS = {
 }
 
 export default async function AdminCorsiPage() {
+  await requireSuperAdmin()
+
   const {levels} = await getWineCourseData('it')
 
   return (

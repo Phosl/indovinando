@@ -10,6 +10,9 @@
 }
 .topBarContainer {
   padding: 0px 20px;
+  @media (max-width: 768px) {
+    padding: 0px 12px;
+  }
 }
 
 // ── Content area ─────────────────────────────────────────────
@@ -19,79 +22,15 @@
   width: 100%;
   margin: 0 auto;
   padding: 20px 20px 0;
+  @media (max-width: 768px) {
+    padding: 0px 12px;
+  }
 }
 
 .gamesHeaderActions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   margin-bottom: 20px;
-}
-.createGameLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 24px;
-  background: var(--primary);
-  color: var(--primary-text);
-  border-radius: 8px;
-  text-decoration: none;
-  transition: background-color 0.12s ease;
-  position: relative;
-  overflow: hidden;
-  .createGameCard {
-    position: relative;
-    z-index: 1;
-    .createGameContent {
-      max-width: 70%;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      h2 {
-        color: var(--white);
-        line-height: 1.2;
-        font-size: 24px;
-      }
-      p {
-        color: var(--white);
-        font-weight: 600;
-        font-size: 18px;
-        line-height: 1.2;
-      }
-    }
-    .createGameContainer {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-    }
-    .createGameBtn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      min-height: 42px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: var(--white);
-      color: var(--primary-text);
-      font-size: 15px;
-      font-weight: 900;
-      box-shadow: 0px 10px 15px -4px var(--primary-text);
-    }
-  }
-  .createGameIllustration {
-    object-fit: contain;
-    width: auto;
-    height: 120%;
-    position: absolute;
-    top: -10%;
-    right: -10%;
-    z-index: -1;
-    opacity: 0.3;
-  }
-}
-
-.createGameBtnIcon {
-  color: currentColor;
 }
 // ── Games tab ────────────────────────────────────────────────
 .gamesSectionTitle {
@@ -123,7 +62,9 @@
   transition:
     transform 0.12s ease,
     box-shadow 0.12s ease;
-
+  @media (max-width: 768px) {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
   // &:hover {
   //   transform: translateY(-1px);
   //   box-shadow: 0px 5px 0px 0px var(--gray-light);
@@ -131,8 +72,8 @@
 }
 
 .gameAvatar {
-  width: 92px;
-  height: 92px;
+  width: 100%;
+  height: auto;
   object-fit: cover;
   border-radius: 20px;
 }
@@ -149,6 +90,12 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    justify-content: flex-start;
+  }
 
   h3 {
     margin: 0;
@@ -158,6 +105,14 @@
     line-height: 1.2;
     display: flex;
     align-items: center;
+    @media (max-width: 768px) {
+      align-items: flex-start;
+      flex-direction: column;
+      .statusLabel {
+        margin-left: 0;
+        margin-top: 4px;
+      }
+    }
   }
   .statusLabel {
     font-size: 11px;
@@ -208,6 +163,9 @@
   padding: 0 2px;
   color: var(--text-secondary);
   font-weight: 700 !important;
+  @media (max-width: 768px) {
+    display: none !important;
+  }
 }
 
 .bottleLabels {

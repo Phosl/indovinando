@@ -2,6 +2,7 @@ import CourseClient from './CourseClient'
 import {getWineCourseData} from '@/lib/wineCourseContent'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {getCourseViewerState} from '@/lib/courseAccess'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -24,14 +25,18 @@ export default async function CorsoVino() {
   const [{levels}, {data: authData}] = await Promise.all([getWineCourseData(lang), authResult])
 
   let isAdmin = false
+  let isPremium = false
   if (authData?.user) {
     const {data: profile} = await supabase
       .from('profiles')
-      .select('super_admin')
+      .select('*')
       .eq('id', authData.user.id)
       .single()
     isAdmin = profile?.super_admin === true
+    isPremium = profile?.is_premium === true
   }
 
-  return <CourseClient levels={levels} isAdmin={isAdmin} />
+  const viewer = getCourseViewerState({userId: authData?.user?.id, isPremium})
+
+  return <CourseClient levels={levels} isAdmin={isAdmin} viewer={viewer} lang={lang} />
 }

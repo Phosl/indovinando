@@ -1,6 +1,6 @@
 .modePickerGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 16px;
   margin-top: 8px;
 }
@@ -106,6 +106,399 @@
     border-color: #cf2c61;
     color: #cf2c61;
   }
+  :global(.btn-automatic-game) {
+    background: #d5f1ff;
+    border-color: #2e88b5;
+    color: #1d6e93;
+  }
+}
+
+.autoModePage {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
+}
+
+.autoModeTitle {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.autoModeDescription {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.autoModeTitleCentered {
+  margin: 8px 0 0;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.autoModeDescriptionCentered {
+  margin: 0;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 720px;
+  align-self: center;
+}
+
+.autoModeSteps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.autoModeStep {
+  border: 1px solid var(--button-secondary-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: var(--foreground);
+  font-weight: 600;
+  text-align: left;
+}
+
+.autoModeStepActive {
+  border-color: var(--selected);
+  background: color-mix(in srgb, var(--primary-100) 55%, white 45%);
+}
+
+.autoModeEmptyState {
+  border: 1px dashed var(--button-secondary-border);
+  border-radius: 8px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--foreground) 92%, #eff9ff 8%);
+}
+
+.autoModeEmptyState p {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+}
+
+.autoModeFileInput {
+  display: none;
+}
+
+.autoModeUploadProgress {
+  margin: -4px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.autoModeUploadProgressWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.autoModeUploadProgressBar {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: #dfe6ee;
+  overflow: hidden;
+}
+
+.autoModeUploadProgressBar span {
+  display: block;
+  height: 100%;
+  background: #2e88b5;
+  transition: width 0.2s linear;
+}
+
+.autoStepFixedRow {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  background: var(--dark);
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+
+  :global(.btn) {
+    width: 100%;
+    min-width: 170px;
+  }
+
+  :global(.btn.success) {
+    background-color: var(--success);
+    color: var(--white);
+    border-color: var(--success);
+
+    &:hover {
+      background: var(--success-700);
+      border-color: var(--success-700);
+    }
+  }
+}
+
+.autoModeTopActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.autoModeQuizPreview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.autoModeQuizPreviewName {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.autoModeQuizPreviewMeta {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.autoModeQuizPreviewCard {
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  background: var(--foreground);
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.autoModeQuizQuestion {
+  border: 1px solid var(--button-secondary-border);
+  border-radius: 8px;
+  padding: 8px;
+  background: var(--background);
+
+  p {
+    margin: 0 0 4px;
+    font-weight: 800;
+  }
+
+  span {
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+}
+
+.autoPreviewModalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.autoPreviewModalContent {
+  background: var(--foreground);
+  width: min(100%, 960px);
+  min-height: 100dvh;
+  max-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid var(--button-secondary-border);
+  border-right: 2px solid var(--button-secondary-border);
+}
+
+.autoPreviewModalHeader {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--foreground);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 2px solid var(--button-secondary-border);
+
+  h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 900;
+  }
+}
+
+.autoPreviewModalClose {
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  font-size: 1.6rem;
+  line-height: 1;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+}
+
+.autoPreviewModalBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px 110px;
+  :global(.prova) {
+    padding: 0px;
+    border: 0px;
+  }
+}
+
+.autoPreviewModalFooter {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: min(100%, 960px);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  background: var(--dark);
+  z-index: 3;
+
+  :global(.btn) {
+    width: 100%;
+    min-width: 170px;
+  }
+
+  :global(.btn.success) {
+    background-color: var(--success);
+    color: var(--white);
+    border-color: var(--success);
+
+    &:hover {
+      background: var(--success-700);
+      border-color: var(--success-700);
+    }
+  }
+}
+
+.autoModeUploadedList {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.autoModeUploadedItem {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px;
+  border: 1px solid var(--button-secondary-border);
+  border-radius: 8px;
+  padding: 10px;
+  background: var(--foreground);
+}
+
+.autoModeUploadedPreviewWrap {
+  width: 60px;
+  min-width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--button-secondary-border);
+  background: #f2f4f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.autoModeUploadedPreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.autoModeUploadedPreviewFallback {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.autoModeUploadedMeta {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.autoModeUploadedBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.autoModeFeatureBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  border: 1px solid var(--button-secondary-border);
+  background: #eef5fb;
+  color: #37424c;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.autoModeFeatureIcon {
+  color: #2e88b5;
+}
+
+.autoModeUploadedActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: center;
+}
+
+.autoModeUploadedActions :global(.btn.icon-circle) {
+  width: 36px;
+  min-width: 36px;
+}
+
+.autoModeUploadedName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.autoModeUploadedExtracted {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2c3b45;
+  line-height: 1.3;
+}
+
+.autoModeUploadedConfidence {
+  font-size: 11px;
+  color: #65707a;
+}
+
+.autoModeUploadedExtractor {
+  font-size: 11px;
+  color: #55616b;
+  text-transform: lowercase;
+}
+
+.autoModeUploadedError {
+  font-size: 11px;
+  color: #9d2d2d;
 }
 
 @media (max-width: 520px) {
@@ -115,6 +508,38 @@
 
   .modeCardContent {
     width: 100%;
+  }
+
+  .autoModeUploadedItem {
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .autoModeUploadedPreviewWrap {
+    width: 52px;
+    min-width: 52px;
+    height: 52px;
+  }
+
+  .autoModeUploadedMeta {
+    min-width: 0;
+  }
+
+  .autoModeUploadedName {
+    font-size: 13px;
+  }
+
+  .autoModeUploadedActions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+
+  .autoModeUploadedActions :global(.btn.btn-small) {
+    min-width: 0;
+  }
+
+  .autoModeTopActions {
+    grid-template-columns: 1fr;
   }
 
   // .modeCardBgImage {

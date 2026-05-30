@@ -247,7 +247,7 @@
   }
 
   .hero {
-    padding: 18px 12px 16px;
+    padding: 18px 0px;
     gap: 10px;
   }
 }
@@ -257,7 +257,40 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 0 16px;
+}
+
+.accessPanel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  background: var(--foreground);
+  margin-bottom: 12px;
+}
+
+.accessPanelText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  @media (max-width: 768px) {
+    text-align: center;
+  }
+  strong {
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--text-primary);
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.35;
+    color: var(--text-secondary);
+  }
 }
 
 .levelCard {
@@ -280,9 +313,13 @@
   }
 
   &.locked {
-    opacity: 0.55;
-    cursor: default;
+    cursor: pointer;
+    border-color: #e9ddc0;
+    background: #fffaf0;
   }
+}
+
+.locked {
 }
 
 .cardArrowRail {
@@ -318,6 +355,28 @@
   align-items: center;
   gap: 8px;
   justify-content: space-between;
+}
+
+.levelBadgeLocked {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--danger-surface);
+  border: 1px solid var(--danger-border);
+  color: var(--danger-text);
+  font-size: 0.66rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 640px) {
+  .accessPanel {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 .levelOrder {
