@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.27.0',
+    date: '30 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'align live and table result icons, tune topbar exit button, and reduce audio start delay',
+    ],
+  },
+
+  {
     version: '1.26.9',
     date: '30 maggio 2026',
     label: 'Auto',
