@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.27.2',
+    date: '31 maggio 2026',
+    label: 'Auto',
+    changes: [
+      'design: dashboard card',
+    ],
+  },
+
+  {
     version: '1.27.1',
     date: '31 maggio 2026',
     label: 'Auto',
