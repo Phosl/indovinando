@@ -121,3 +121,76 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 - Sessioni/eventi tavoli + join code → `TableLiveSessionClient` / `table-live/*`
 - API tavoli (`/api/table-live/*`)
 - DB separato tavoli (`table_live_*`)
+
+---
+
+## 🎯 UI System Contract (prossimo step)
+
+### 1) Motion Contract
+
+Obiettivo: stessa “fisica” in tutta l’app (live, tavolo, dashboard, modali).
+
+- [ ] **Preset globali motion** (massimo 3):
+  - `snappy` → per CTA, toggle, feedback veloci
+  - `smooth` → per transizioni tra viste/cards
+  - `playful` → per momenti celebrativi (combo/completion)
+- [ ] **Regola unica tempi**:
+  - micro feedback: `120–180ms`
+  - transizioni principali: `200–280ms`
+  - evitare animazioni > `320ms` su flussi frequenti
+- [ ] **Regola easing/spring**:
+  - niente easing random locale
+  - usare solo preset centralizzati
+- [ ] **Reduced motion**:
+  - fallback automatico se `prefers-reduced-motion`
+
+---
+
+### 2) Micro-interaction Refine (con spring, leggero)
+
+Nota: sì, possiamo usare spring; impatto prestazioni basso se limitiamo le aree animate e usiamo transform/opacity.
+
+- [ ] **Checklist per ogni interazione core**:
+  - Anticipation (hint interazione)
+  - Preview (feedback mentre interagisci)
+  - Commit (conferma azione)
+  - Resolution (stato finale pulito)
+- [ ] **Flussi prioritari**:
+  1. join/create live
+  2. check risposta → risultato round
+  3. ultima bottiglia → classifica finale
+- [ ] **No animazioni decorative isolate**:
+  - ogni animazione deve comunicare stato/azione
+
+---
+
+### 3) Visual Polish Uniforme
+
+- [ ] **Audit componenti ricorrenti**:
+  - card, topbar, CTA, chips, overlay, modali
+- [ ] **Allineare stile cross-sezione**:
+  - dashboard / miei-giochi / game / live / table-live
+- [ ] **Regola UI**:
+  - stesso componente = stessa grammatica visiva
+  - niente varianti ad-hoc se non necessarie
+
+---
+
+### 4) Spacing / Typography Scale
+
+Obiettivo: eliminare valori sparsi e “quasi uguali”.
+
+- [ ] **Spacing scale unica**: `4, 8, 12, 16, 24, 32, 48`
+- [ ] **Typography scale unica**:
+  - Hero: `32/900`
+  - H1: `28/900`
+  - H2: `24/900`
+  - H3: `20/800-900`
+  - Body: `16/500-600`
+  - Small: `14/600`
+  - Caption: `12/700`
+- [ ] **Line-height guidance**:
+  - heading: `1.15–1.25`
+  - body: `1.35–1.5`
+- [ ] **Tokenizzazione**:
+  - spostare gradualmente i valori in token shared

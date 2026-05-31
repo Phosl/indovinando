@@ -58,6 +58,7 @@ export default async function Dashboard() {
             <h1>
               {dashboardDict.welcome}, {profile?.username || data.user.email}!
             </h1>
+            <h3 className={styles.subtitle}>{dashboardDict.subtitle}</h3>
           </div>
         </section>
 
@@ -100,7 +101,7 @@ export default async function Dashboard() {
 
           <Link
             href="/corso-vino"
-            className={`${styles.sectionCard} ${styles.sectionCardTertiary} ${styles.sectionCardBottomArrow}`}>
+            className={`${styles.sectionCard} ${styles.sectionCardFifteenthary} ${styles.sectionCardBottomArrow}`}>
             <div className={styles.sectionCardInfo}>
               <span className={styles.sectionCardEyebrow}>{dashboardDict.yourProgress}</span>
               <h3>{dashboardDict.wineCourse}</h3>
@@ -134,7 +135,7 @@ export default async function Dashboard() {
           {isSuperAdmin && (
             <Link
               href="/admin"
-              className={`${styles.sectionCard} ${styles.sectionCardPrimary} ${styles.sectionCardBottomArrow}`}>
+              className={`${styles.sectionCard} ${styles.sectionCardNeutral} ${styles.sectionCardBottomArrow}`}>
               <div className={styles.sectionCardInfo}>
                 <h3>{dashboardDict.admin || 'Admin'}</h3>
                 <p>

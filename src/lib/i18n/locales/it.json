@@ -25,6 +25,7 @@
   },
   "dashboard": {
     "welcome": "Benvenuto",
+    "subtitle": "Cosa vuoi fare oggi?",
     "versionLabel": "Versione Beta",
     "createQuickGame": "⚡ Crea gioco rapido",
     "createGame": "Crea Degustazione",
