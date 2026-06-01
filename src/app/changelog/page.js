@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.27.5',
+    date: '1 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'progress upload reale su mobile e fallback per referer vuoto',
+    ],
+  },
+
+  {
     version: '1.27.4',
     date: '1 giugno 2026',
     label: 'Auto',
