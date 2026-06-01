@@ -73,8 +73,8 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
       prendendo i primi 3/5 risultati di google, aprire pagina e prendere valori
 
 - [ ] **Partita con codice** - Admin crea QR code utenti vanno su QR code, utente vede schermata con
-      Numero 1545, altri utenti partecipano a 1545. Parte partita Live
-      Specifica step 1: `LIVE_TABLE_GROUPS_STEP1.md`
+      Numero 1545, altri utenti partecipano a 1545. Parte partita Live Specifica step 1:
+      `LIVE_TABLE_GROUPS_STEP1.md`
 
 ---
 
@@ -82,22 +82,28 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 
 ### P0 — Stabilità flusso di gioco (iniziamo da qui)
 
-- [x] **Fix ultima domanda (tavoli)** — applicato fix anti-skip; **da validare** con test host+guest endgame
-- [x] **Classifica Tavoli robusta** — applicato fix redirect/fallback; **da validare** su sessioni reali
-- [ ] **Allineamento completo Live Tavoli vs Live classico** — stessa UX su fine round, classifica, prossimo step
+- [x] **Fix ultima domanda (tavoli)** — applicato fix anti-skip; **da validare** con test host+guest
+      endgame
+- [x] **Classifica Tavoli robusta** — applicato fix redirect/fallback; **da validare** su sessioni
+      reali
+- [ ] **Allineamento completo Live Tavoli vs Live classico** — stessa UX su fine round, classifica,
+      prossimo step
 - [ ] **Stabilità realtime multi-device** — test host + 2 guest su round finali e cambio bottiglia
 
 ### P1 — Qualità UX percepita
 
 - [ ] **Riduzione latenza percepita risposte** — ottimizzare check answer + refresh stato round
 - [ ] **Audio UX Tavoli** — ridurre delay e allineare timing feedback con Live originale
-- [x] **Flusso uscita partita** — introdotta modale uscita; **da rifinire** allineamento completo con Live
+- [x] **Flusso uscita partita** — introdotta modale uscita; **da rifinire** allineamento completo
+      con Live
 
 ### P2 — UI polish e hardening
 
-- [x] **UI consistency pagine Tavoli** — fatto grosso lavoro su spacing/topbar/CTA; **resta polish finale**
+- [x] **UI consistency pagine Tavoli** — fatto grosso lavoro su spacing/topbar/CTA; **resta polish
+      finale**
 - [ ] **Safe area mobile** — evitare overlap navbar/bottom actions nei quiz
-- [ ] **Checklist QA pre-release** — script test manuale rapido per create/join/play/leaderboard/endgame
+- [ ] **Checklist QA pre-release** — script test manuale rapido per
+      create/join/play/leaderboard/endgame
 
 ---
 
@@ -148,7 +154,8 @@ Obiettivo: stessa “fisica” in tutta l’app (live, tavolo, dashboard, modali
 
 ### 2) Micro-interaction Refine (con spring, leggero)
 
-Nota: sì, possiamo usare spring; impatto prestazioni basso se limitiamo le aree animate e usiamo transform/opacity.
+Nota: sì, possiamo usare spring; impatto prestazioni basso se limitiamo le aree animate e usiamo
+transform/opacity.
 
 - [ ] **Checklist per ogni interazione core**:
   - Anticipation (hint interazione)
@@ -194,3 +201,9 @@ Obiettivo: eliminare valori sparsi e “quasi uguali”.
   - body: `1.35–1.5`
 - [ ] **Tokenizzazione**:
   - spostare gradualmente i valori in token shared
+
+- [ ] **importazione nuovo file staging aggiunte colonne alter table public.wine_import_staging** -
+      add column if not exists quiz_region text, add column if not exists quiz_appellation text, add
+      column if not exists quiz_price_band text; alter table public.wine_labels add column if not
+      exists quiz_region text, add column if not exists quiz_appellation text, add column if not
+      exists quiz_price_band text;

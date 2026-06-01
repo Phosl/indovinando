@@ -55,7 +55,9 @@ export async function POST(request) {
     }
 
     if (imageError || !imageRow) {
-      return NextResponse.json({error: 'Image not found'}, {status: 404})
+      // Idempotent delete: when a row is already gone (e.g. another tab cleaned it),
+      // treat it as a successful cleanup to avoid noisy cross-tab errors.
+      return NextResponse.json({ok: true, imageId: trimmedImageId || null, alreadyDeleted: true})
     }
 
     const {error: storageError} = await withTimeout(

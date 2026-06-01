@@ -68,6 +68,12 @@ function withTimeout(promise, ms, label) {
   return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeoutId))
 }
 
+function isUuid(value) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    String(value || ''),
+  )
+}
+
 function normalizeToken(token) {
   return String(token || '')
     .replace(/\.[a-z0-9]+$/i, '')
@@ -574,6 +580,15 @@ export async function POST(request) {
     const body = await request.json().catch(() => ({}))
     const imageId = String(body?.imageId ?? '').trim()
     const analyzeAll = Boolean(body?.analyzeAll)
+    const imageIds = Array.isArray(body?.imageIds)
+        ? [
+            ...new Set(
+              body.imageIds
+                .map((id) => String(id || '').trim())
+                .filter((id) => isUuid(id)),
+            ),
+          ]
+      : []
 
     let query = supabase
       .from('tasting_bottle_images')
@@ -588,6 +603,9 @@ export async function POST(request) {
       query = query.eq('id', imageId)
     } else if (analyzeAll) {
       query = query.in('status', ['processing', 'uploaded', 'failed'])
+      if (imageIds.length > 0) {
+        query = query.in('id', imageIds)
+      }
     } else {
       return NextResponse.json({error: 'Missing imageId or analyzeAll'}, {status: 400})
     }

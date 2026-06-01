@@ -386,56 +386,76 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 14px;
 }
 
-.autoModeUploadedItem {
-  display: grid;
-  grid-template-columns: 60px minmax(0, 1fr) auto;
-  align-items: start;
-  gap: 10px;
-  border: 1px solid var(--button-secondary-border);
-  border-radius: 8px;
-  padding: 10px;
-  background: var(--foreground);
-}
-
-.autoModeUploadedPreviewWrap {
-  width: 60px;
-  min-width: 60px;
-  height: 60px;
-  border-radius: 8px;
+.autoBottleCard {
+  position: relative;
   overflow: hidden;
-  border: 1px solid var(--button-secondary-border);
-  background: #f2f4f7;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid #e9e7e2;
+  border-radius: 22px;
+  padding: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #fdfcf8 100%);
+  box-shadow:
+    0 2px 8px rgba(26, 34, 44, 0.04),
+    0 12px 30px rgba(26, 34, 44, 0.07);
+}
+
+.autoBottleCardAnalyzing {
+  border-color: #d8dfe9;
+}
+
+.autoBottleCardBody {
+  display: grid;
+  grid-template-columns: minmax(140px, 220px) minmax(0, 1fr);
+  gap: 18px;
+  position: relative;
+  z-index: 2;
+}
+
+.autoBottleCardBodyPending {
+  grid-template-columns: minmax(160px, 280px);
+}
+
+.autoBottleCardMediaCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.autoBottleCardPreviewWrap {
+  position: relative;
+  width: 100%;
+  min-height: 210px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid #ebe7df;
+  background: #f5f1ea;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.autoModeUploadedPreview {
+.autoBottleCardPreview {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-height: 290px;
+  object-fit: contain;
 }
 
-.autoModeUploadedPreviewFallback {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-secondary);
-}
-
-.autoModeUploadedMeta {
+.autoBottleCardInfoCol {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 12px;
 }
 
 .autoModeUploadedBadges {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
 }
 
 .autoModeFeatureBadge {
@@ -443,23 +463,174 @@
   align-items: center;
   gap: 4px;
   border-radius: 999px;
-  border: 1px solid var(--button-secondary-border);
-  background: #eef5fb;
-  color: #37424c;
-  padding: 2px 8px;
-  font-size: 11px;
-  font-weight: 700;
+  border: none;
+  background: #dce9f7;
+  color: #294560;
+  padding: 5px 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
 }
 
 .autoModeFeatureIcon {
   color: #2e88b5;
 }
 
+.autoBottleCardSubtitle {
+  margin: -2px 0 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #405066;
+}
+
+.autoBottleFoundName {
+  margin: 0;
+  font-size: 1.06rem;
+  font-weight: 900;
+  color: #111d2f;
+  line-height: 1.25;
+}
+
+.autoBottleCardFacts {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: #263447;
+  font-size: 0.96rem;
+  font-weight: 600;
+}
+
+.autoBottleCountryBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
+  min-width: 34px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #d7deea;
+  background: #eef3fb;
+  color: #244260;
+  font-weight: 800;
+  font-size: 0.75rem;
+}
+
+.autoBottleFactDot {
+  color: #78859a;
+}
+
+.autoBottleCardDataBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 16px;
+  border: 1px solid #ebe7df;
+  background: #f6f4f0;
+  padding: 14px;
+}
+
+.autoBottleCardDataRow {
+  margin: 0;
+  color: #283647;
+  font-size: 0.92rem;
+  line-height: 1.45;
+
+  strong {
+    color: #111d2f;
+    font-weight: 900;
+  }
+}
+
+.autoBottleDataLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 6px;
+}
+
+.autoBottleConfidencePill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: #efe6f7;
+  color: #5d3f82;
+  padding: 5px 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
 .autoModeUploadedActions {
   display: flex;
   align-items: center;
   gap: 8px;
-  align-self: center;
+  align-self: flex-start;
+}
+
+.autoAnalyzeMagicCanvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 220ms ease;
+  height: 100%;
+  width: 100%;
+}
+
+.autoBottleCardMagicCanvas {
+  border-radius: 22px;
+}
+
+.autoBottleCardAnalyzing .autoBottleCardMagicCanvas {
+  opacity: 0.97;
+}
+
+.autoBottleProgressRing {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.autoBottleProgressRingTrack {
+  fill: none;
+  stroke-width: 20px;
+  stroke-linecap: round;
+  stroke-dasharray: 28 72;
+  stroke-dashoffset: 200;
+  filter: blur(10px);
+  animation: autoBottleRingProgress 1s linear infinite;
+}
+
+@keyframes autoBottleRingProgress {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.autoBottleCardFooterActionBar {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.autoBottleCardFooterActionBar :global(.btn.icon-circle) {
+  width: 38px;
+  min-width: 38px;
+}
+
+.autoBottleCardFooterActionBar :global(.btn.btn-small) {
+  flex: 1;
+  min-width: 0;
 }
 
 .autoModeUploadedActions :global(.btn.icon-circle) {
@@ -467,38 +638,23 @@
   min-width: 36px;
 }
 
-.autoModeUploadedName {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-  line-height: 1.35;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.autoModeUploadedExtracted {
-  font-size: 12px;
-  font-weight: 600;
-  color: #2c3b45;
-  line-height: 1.3;
-}
-
-.autoModeUploadedConfidence {
-  font-size: 11px;
-  color: #65707a;
-}
-
-.autoModeUploadedExtractor {
-  font-size: 11px;
-  color: #55616b;
-  text-transform: lowercase;
-}
-
 .autoModeUploadedError {
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 700;
   color: #9d2d2d;
+}
+
+.autoDeleteState {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #ffe7d2;
+  border: 1px solid #f3c08d;
+  color: #8a4b07;
+  font-size: 0.74rem;
+  font-weight: 800;
+  padding: 5px 10px;
 }
 
 @media (max-width: 520px) {
@@ -510,32 +666,53 @@
     width: 100%;
   }
 
-  .autoModeUploadedItem {
-    grid-template-columns: 52px minmax(0, 1fr);
-    gap: 8px;
+  .autoBottleCard {
+    border-radius: 18px;
+    padding: 14px;
   }
 
-  .autoModeUploadedPreviewWrap {
-    width: 52px;
-    min-width: 52px;
-    height: 52px;
+  .autoBottleCardBody {
+    grid-template-columns: minmax(108px, 140px) minmax(0, 1fr);
+    gap: 12px;
   }
 
-  .autoModeUploadedMeta {
-    min-width: 0;
+  .autoBottleCardBodyPending {
+    grid-template-columns: 1fr;
   }
 
-  .autoModeUploadedName {
-    font-size: 13px;
+  .autoBottleCardHeaderTitle {
+    font-size: 0.96rem;
+  }
+
+  .autoBottleCardPreviewWrap {
+    min-height: 140px;
+  }
+
+  .autoBottleCardFacts {
+    font-size: 0.84rem;
+    gap: 6px;
+  }
+
+  .autoBottleFoundName {
+    font-size: 0.95rem;
+  }
+
+  .autoBottleCardDataRow {
+    font-size: 0.8rem;
   }
 
   .autoModeUploadedActions {
-    grid-column: 1 / -1;
-    justify-content: flex-end;
+    width: 100%;
   }
 
   .autoModeUploadedActions :global(.btn.btn-small) {
+    width: 100%;
     min-width: 0;
+  }
+
+  .autoBottleCardFooterActionBar :global(.btn.icon-circle) {
+    width: 36px;
+    min-width: 36px;
   }
 
   .autoModeTopActions {
