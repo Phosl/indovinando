@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.28.2',
+    date: '1 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'fix  tasting icon and illustration',
+    ],
+  },
+
+  {
     version: '1.28.1',
     date: '1 giugno 2026',
     label: 'Auto',
