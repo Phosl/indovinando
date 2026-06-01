@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.28.3',
+    date: '1 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'fix login and logout problem and style dashboard page',
+    ],
+  },
+
+  {
     version: '1.28.2',
     date: '1 giugno 2026',
     label: 'Auto',
