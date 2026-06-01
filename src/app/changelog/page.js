@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.28.5',
+    date: '1 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'I18N Inline Text Audit',
+    ],
+  },
+
+  {
     version: '1.28.4',
     date: '1 giugno 2026',
     label: 'Auto',
