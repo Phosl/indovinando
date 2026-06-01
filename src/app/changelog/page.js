@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.28.0',
+    date: '1 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'added loading in login page',
+    ],
+  },
+
+  {
     version: '1.27.8',
     date: '1 giugno 2026',
     label: 'Auto',
