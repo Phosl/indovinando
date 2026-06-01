@@ -228,6 +228,7 @@
 .sectionCardFifteenthary {
   background: var(--fifteenthary);
   border-color: var(--fifteenthary);
+  position: relative;
   &::after {
     content: '';
     width: 100%;
@@ -248,6 +249,23 @@
   }
   p {
     color: var(--white);
+  }
+  .sectionCardArrowRail {
+    z-index: 1;
+  }
+}
+
+.courseIllustration {
+  object-fit: contain;
+  z-index: 0;
+  opacity: 0.3;
+  width: auto;
+  height: 120%;
+  position: absolute;
+  top: -10%;
+  right: -10%;
+  @media (max-width: 768px) {
+    right: -45%;
   }
 }
 

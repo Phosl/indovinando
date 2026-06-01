@@ -130,6 +130,12 @@ export default async function Dashboard() {
                 <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
               </span>
             </div>
+            <img
+              src="/img-card-course.svg"
+              alt=""
+              aria-hidden="true"
+              className={styles.courseIllustration}
+            />
           </Link>
 
           {isSuperAdmin && (

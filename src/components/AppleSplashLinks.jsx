@@ -45,6 +45,11 @@ export default function AppleSplashLinks() {
       />
       <link
         rel="apple-touch-startup-image"
+        media="screen and (device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+        href="/splash/splash_screens/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_landscape.png"
+      />
+      <link
+        rel="apple-touch-startup-image"
         media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
         href="/splash/splash_screens/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_landscape.png"
       />
@@ -154,6 +159,11 @@ export default function AppleSplashLinks() {
         rel="apple-touch-startup-image"
         media="screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
         href="/splash/splash_screens/iPhone_17e__iPhone_16e__iPhone_14__iPhone_13_Pro__iPhone_13__iPhone_12_Pro__iPhone_12_portrait.png"
+      />
+      <link
+        rel="apple-touch-startup-image"
+        media="screen and (device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+        href="/splash/splash_screens/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_portrait.png"
       />
       <link
         rel="apple-touch-startup-image"
