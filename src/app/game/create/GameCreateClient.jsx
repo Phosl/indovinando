@@ -1228,7 +1228,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                   {countryFlag ? (
                                     <span aria-hidden="true">{countryFlag}</span>
                                   ) : null}
-                                  {countryCode ? <span>{countryCode}</span> : null}
+                                  {/* {countryCode ? <span>{countryCode}</span> : null} */}
                                 </span>
                               ) : null}
                               {country ? <span>{country}</span> : null}
