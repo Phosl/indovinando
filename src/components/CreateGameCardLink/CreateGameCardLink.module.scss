@@ -55,6 +55,8 @@
   align-items: center;
   justify-content: flex-end;
   margin-top: 16px;
+  z-index: 1;
+  position: relative;
 }
 
 .createGameBtn {
