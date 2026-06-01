@@ -26,7 +26,7 @@ export default function CreateGameCardLink({
           src="/img-card-create.svg"
           alt=""
           aria-hidden="true"
-          className={styles.createGameIllustration}
+          className="card-illustration-absolute"
         />
       </div>
     </Link>

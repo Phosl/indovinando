@@ -84,7 +84,7 @@ export default function BottomNav({forceVisible = false}) {
 
   const items = [
     {key: 'home', href: isGuest ? '/' : '/dashboard', label: t('home'), icon: 'home'},
-    {key: 'tastings', href: isGuest ? '/' : '/miei-giochi', label: t('tastings'), icon: 'testing'},
+    {key: 'tastings', href: isGuest ? '/' : '/miei-giochi', label: t('tastings'), icon: 'tasting'},
     {key: 'course', href: '/corso-vino', label: t('course'), icon: 'course'},
     {key: 'profile', href: isGuest ? '/' : '/profilo', label: t('profile'), icon: 'profile'},
   ]

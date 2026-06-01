@@ -315,3 +315,17 @@ main.flex-container {
     animation: none;
   }
 }
+
+.card-illustration-absolute {
+  object-fit: contain;
+  z-index: 0;
+  opacity: 0.3;
+  width: auto;
+  height: 200px;
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+  @media (max-width: 768px) {
+    right: -50px;
+  }
+}

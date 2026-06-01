@@ -65,18 +65,3 @@
 .createGameBtnIcon {
   color: currentColor;
 }
-
-.createGameIllustration {
-  object-fit: contain;
-  width: auto;
-  height: 120%;
-  position: absolute;
-  top: -10%;
-  right: -10%;
-  z-index: -1;
-  opacity: 0.3;
-
-  @media (max-width: 768px) {
-    right: -40%;
-  }
-}

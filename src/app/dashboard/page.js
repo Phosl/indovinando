@@ -75,7 +75,12 @@ export default async function Dashboard() {
                 <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
               </span>
             </div>
-            <Icon name="tasting" size={64} className={styles.sectionCardIcon} />
+            <img
+              src="/img-card-tasting.svg"
+              alt=""
+              aria-hidden="true"
+              className="card-illustration-absolute"
+            />
           </Link>
           <CreateGameCardLink
             title={dashboardDict.createGameCardTitle}
@@ -135,7 +140,7 @@ export default async function Dashboard() {
               src="/img-card-course.svg"
               alt=""
               aria-hidden="true"
-              className={styles.courseIllustration}
+              className="card-illustration-absolute"
             />
           </Link>
 
