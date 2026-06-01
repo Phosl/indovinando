@@ -9,6 +9,58 @@ function withTimeout(promise, ms, label) {
   return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeoutId))
 }
 
+function isRefererBlockedError(message) {
+  return /referer\s*<empty>.*blocked|requests from referer/i.test(String(message || ''))
+}
+
+function resolveRefererHeader(request) {
+  const origin = request.headers.get('origin') || request.nextUrl?.origin || ''
+  return origin ? `${origin.replace(/\/$/, '')}/` : null
+}
+
+async function downloadStorageObjectWithFallback({supabase, bucket, path, request}) {
+  const {data: blob, error: downloadError} = await withTimeout(
+    supabase.storage.from(bucket).download(path),
+    30000,
+    'storage download',
+  )
+
+  if (!downloadError && blob) return blob
+
+  const firstError = downloadError?.message || 'storage download failed'
+  if (!isRefererBlockedError(firstError)) {
+    throw new Error(firstError)
+  }
+
+  const {data: signed, error: signedError} = await withTimeout(
+    supabase.storage.from(bucket).createSignedUrl(path, 60),
+    12000,
+    'create signed url',
+  )
+  if (signedError || !signed?.signedUrl) {
+    throw new Error(signedError?.message || 'create signed url failed')
+  }
+
+  const referer = resolveRefererHeader(request)
+  const response = await withTimeout(
+    fetch(signed.signedUrl, {
+      cache: 'no-store',
+      headers: referer ? {Referer: referer} : undefined,
+    }),
+    30000,
+    'signed url download',
+  )
+
+  if (!response.ok) {
+    const responseText = await response.text().catch(() => '')
+    throw new Error(
+      `Signed download failed: ${response.status}${responseText ? ` ${responseText.slice(0, 140)}` : ''}`,
+    )
+  }
+
+  return response.blob()
+}
+
 export async function GET(request) {
   try {
     const {searchParams} = new URL(request.url)
@@ -41,15 +93,12 @@ export async function GET(request) {
       return NextResponse.json({error: 'Image not found'}, {status: 404})
     }
 
-    const {data: blob, error: downloadError} = await withTimeout(
-      supabase.storage.from(imageRow.storage_bucket).download(imageRow.storage_path),
-      30000,
-      'storage download',
-    )
-
-    if (downloadError || !blob) {
-      return NextResponse.json({error: downloadError?.message || 'Download failed'}, {status: 500})
-    }
+    const blob = await downloadStorageObjectWithFallback({
+      supabase,
+      bucket: imageRow.storage_bucket,
+      path: imageRow.storage_path,
+      request,
+    })
 
     const bytes = await blob.arrayBuffer()
     return new Response(bytes, {

@@ -118,6 +118,16 @@ function toConfidencePercent(value) {
   return Math.max(0, Math.min(100, raw))
 }
 
+function formatBytes(value) {
+  const bytes = Number(value)
+  if (!Number.isFinite(bytes) || bytes <= 0) return '0 B'
+  const units = ['B', 'KB', 'MB', 'GB']
+  const index = Math.min(units.length - 1, Math.floor(Math.log(bytes) / Math.log(1024)))
+  const scaled = bytes / 1024 ** index
+  const digits = index === 0 ? 0 : scaled < 10 ? 1 : 0
+  return `${scaled.toFixed(digits)} ${units[index]}`
+}
+
 function uniqueIds(values) {
   return Array.from(
     new Set((values || []).map((value) => String(value || '').trim()).filter(Boolean)),
@@ -354,6 +364,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
   const supabase = useMemo(() => createClient(), [])
   const fileInputRef = useRef(null)
   const sessionImageIdsRef = useRef([])
+  const loadedPreviewIdsRef = useRef(new Set())
+  const queuedLoadRef = useRef(false)
+  const imagesLoadChainRef = useRef(Promise.resolve())
+  const loadRetryTimeoutRef = useRef(null)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState({
     current: 0,
@@ -361,6 +375,9 @@ function AutomaticModePlaceholder({onBack, userId}) {
     fileName: '',
     phase: '',
     percent: 0,
+    overallPercent: 0,
+    loadedBytes: 0,
+    totalBytes: 0,
   })
   const [deletingImageId, setDeletingImageId] = useState('')
   const [analyzingImageId, setAnalyzingImageId] = useState('')
@@ -370,6 +387,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
   const [isLeavingSession, setIsLeavingSession] = useState(false)
   const [uploadError, setUploadError] = useState('')
   const [uploadedImages, setUploadedImages] = useState([])
+  const [previewLoadProgress, setPreviewLoadProgress] = useState({loaded: 0, total: 0})
   const [sessionImageIds, setSessionImageIds] = useState([])
 
   const sessionIdsStorageKey = useMemo(
@@ -450,6 +468,25 @@ function AutomaticModePlaceholder({onBack, userId}) {
     return hit ? hit.replace(/\b\w/g, (c) => c.toUpperCase()) : null
   }
 
+  const markPreviewLoaded = useCallback((imageId) => {
+    const id = String(imageId || '').trim()
+    if (!id) return
+    if (loadedPreviewIdsRef.current.has(id)) return
+    loadedPreviewIdsRef.current.add(id)
+    setPreviewLoadProgress((prev) => {
+      if (!prev.total) return prev
+      const nextLoaded = Math.min(prev.total, prev.loaded + 1)
+      if (nextLoaded === prev.loaded) return prev
+      return {...prev, loaded: nextLoaded}
+    })
+  }, [])
+
+  function isTransientLockError(error) {
+    const errorName = String(error?.name || '').toLowerCase()
+    const errorMessage = String(error?.message || '').toLowerCase()
+    return errorName === 'aborterror' || errorMessage.includes('lock was stolen by another request')
+  }
+
   function uploadFileWithProgress(formData, onProgress) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()
@@ -459,7 +496,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
       xhr.upload.onprogress = (event) => {
         if (!event.lengthComputable) return
         const percent = Math.min(100, Math.round((event.loaded / event.total) * 100))
-        onProgress(percent)
+        onProgress({percent, loaded: event.loaded, total: event.total})
       }
 
       xhr.onload = () => {
@@ -508,31 +545,84 @@ function AutomaticModePlaceholder({onBack, userId}) {
   const loadUploadedImages = useCallback(async () => {
     if (!userId) return
 
-    const {data, error} = await supabase
-      .from('tasting_bottle_images')
-      .select(
-        'id, original_filename, storage_bucket, storage_path, status, recognized_name, recognized_producer, recognized_vintage, recognition_confidence, recognized_payload, error_message, created_at',
-      )
-      .eq('uploaded_by', userId)
-      .order('created_at', {ascending: false})
+    async function runLoad() {
+      let data = null
+      let error = null
 
-    if (error) {
-      setUploadError(`${t('automaticLoadError')} (${error.message || 'unknown'})`)
-      return
-    }
-    const ids = sessionImageIdsRef.current
-    if (!ids.length) {
-      setUploadedImages([])
-      return
+      for (let attempt = 1; attempt <= 2; attempt += 1) {
+        const query = await supabase
+          .from('tasting_bottle_images')
+          .select(
+            'id, original_filename, storage_bucket, storage_path, status, recognized_name, recognized_producer, recognized_vintage, recognition_confidence, recognized_payload, error_message, created_at',
+          )
+          .eq('uploaded_by', userId)
+          .order('created_at', {ascending: false})
+
+        data = query.data
+        error = query.error
+
+        if (!error) break
+
+        const isTransientAbort = isTransientLockError(error)
+        if (!isTransientAbort || attempt === 2) break
+        await new Promise((resolve) => setTimeout(resolve, attempt * 250))
+      }
+
+      if (error) {
+        if (isTransientLockError(error)) {
+          if (loadRetryTimeoutRef.current) {
+            clearTimeout(loadRetryTimeoutRef.current)
+          }
+          loadRetryTimeoutRef.current = setTimeout(() => {
+            loadUploadedImages().catch(() => null)
+          }, 900)
+          return
+        }
+        setUploadError(`${t('automaticLoadError')} (${error.message || 'unknown'})`)
+        return
+      }
+
+      const ids = sessionImageIdsRef.current
+      if (!ids.length) {
+        loadedPreviewIdsRef.current = new Set()
+        setPreviewLoadProgress({loaded: 0, total: 0})
+        setUploadedImages([])
+        return
+      }
+
+      const idSet = new Set(ids)
+      const filteredRows = (data || []).filter((row) => idSet.has(row.id))
+      loadedPreviewIdsRef.current = new Set()
+      setPreviewLoadProgress({loaded: 0, total: filteredRows.length})
+      setUploadedImages(filteredRows)
     }
 
-    const idSet = new Set(ids)
-    setUploadedImages((data || []).filter((row) => idSet.has(row.id)))
+    if (queuedLoadRef.current) {
+      return imagesLoadChainRef.current
+    }
+
+    queuedLoadRef.current = true
+    imagesLoadChainRef.current = imagesLoadChainRef.current
+      .catch(() => null)
+      .then(async () => {
+        queuedLoadRef.current = false
+        await runLoad()
+      })
+
+    return imagesLoadChainRef.current
   }, [supabase, t, userId])
 
   useEffect(() => {
     sessionImageIdsRef.current = sessionImageIds
   }, [sessionImageIds])
+
+  useEffect(() => {
+    return () => {
+      if (loadRetryTimeoutRef.current) {
+        clearTimeout(loadRetryTimeoutRef.current)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (!userId || typeof window === 'undefined') return
@@ -609,11 +699,35 @@ function AutomaticModePlaceholder({onBack, userId}) {
     if (!userId || !fileList?.length) return
 
     setIsUploading(true)
-    setUploadProgress({current: 0, total: 0, fileName: '', phase: '', percent: 0})
+    setUploadProgress({
+      current: 0,
+      total: 0,
+      fileName: '',
+      phase: '',
+      percent: 0,
+      overallPercent: 0,
+      loadedBytes: 0,
+      totalBytes: 0,
+    })
     setUploadError('')
     try {
       const files = Array.from(fileList)
-      setUploadProgress({current: 0, total: files.length, fileName: '', phase: '', percent: 0})
+      const totalBytes = Math.max(
+        1,
+        files.reduce((sum, item) => sum + Math.max(1, Number(item.size) || 1), 0),
+      )
+      let uploadedBytes = 0
+
+      setUploadProgress({
+        current: 0,
+        total: files.length,
+        fileName: '',
+        phase: '',
+        percent: 0,
+        overallPercent: 0,
+        loadedBytes: 0,
+        totalBytes,
+      })
       const createdRows = []
 
       for (let index = 0; index < files.length; index += 1) {
@@ -625,19 +739,34 @@ function AutomaticModePlaceholder({onBack, userId}) {
           fileName: file.name,
           phase: t('automaticUploadPhaseFile'),
           percent: 0,
+          overallPercent: Math.round((uploadedBytes / totalBytes) * 100),
+          loadedBytes: uploadedBytes,
+          totalBytes,
         })
         const formData = new FormData()
         formData.append('file', uploadFile)
+        const currentFileBytes = Math.max(1, Number(file.size) || 1)
 
         let uploadResponse
         try {
-          uploadResponse = await uploadFileWithProgress(formData, (percent) => {
-            setUploadProgress((prev) => ({...prev, percent}))
+          uploadResponse = await uploadFileWithProgress(formData, ({percent, loaded}) => {
+            const loadedBytes = Math.max(0, Math.min(currentFileBytes, Number(loaded) || 0))
+            const realLoadedBytes = Math.max(0, Math.min(totalBytes, uploadedBytes + loadedBytes))
+            setUploadProgress((prev) => ({
+              ...prev,
+              percent,
+              loadedBytes: realLoadedBytes,
+              totalBytes,
+              overallPercent: Math.round((realLoadedBytes / totalBytes) * 100),
+            }))
           })
         } catch (networkError) {
           setUploadError(`${t('automaticUploadError')} (${networkError?.message || 'network'})`)
           continue
         }
+
+        uploadedBytes += currentFileBytes
+        const boundedUploadedBytes = Math.max(0, Math.min(totalBytes, uploadedBytes))
 
         if (uploadResponse.status < 200 || uploadResponse.status >= 300) {
           setUploadError(
@@ -657,6 +786,9 @@ function AutomaticModePlaceholder({onBack, userId}) {
           fileName: file.name,
           phase: t('automaticUploadPhaseMetadata'),
           percent: 100,
+          overallPercent: Math.round((boundedUploadedBytes / totalBytes) * 100),
+          loadedBytes: boundedUploadedBytes,
+          totalBytes,
         })
 
         const metadataPayload = {
@@ -716,7 +848,16 @@ function AutomaticModePlaceholder({onBack, userId}) {
       setUploadError(`${t('automaticUploadError')} (${error?.message || 'unknown'})`)
     } finally {
       setIsUploading(false)
-      setUploadProgress({current: 0, total: 0, fileName: '', phase: '', percent: 0})
+      setUploadProgress({
+        current: 0,
+        total: 0,
+        fileName: '',
+        phase: '',
+        percent: 0,
+        overallPercent: 0,
+        loadedBytes: 0,
+        totalBytes: 0,
+      })
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
       }
@@ -1006,10 +1147,30 @@ function AutomaticModePlaceholder({onBack, userId}) {
             <div className={styles.autoModeUploadProgressWrap}>
               <p className={styles.autoModeUploadProgress}>
                 {uploadProgress.current}/{uploadProgress.total} {uploadProgress.phase}{' '}
-                {uploadProgress.fileName} ({uploadProgress.percent}%)
+                {uploadProgress.fileName} ({uploadProgress.overallPercent}%)
+                {uploadProgress.totalBytes > 0
+                  ? ` · ${formatBytes(uploadProgress.loadedBytes)} / ${formatBytes(uploadProgress.totalBytes)}`
+                  : ''}
               </p>
               <div className={styles.autoModeUploadProgressBar}>
-                <span style={{width: `${uploadProgress.percent}%`}} />
+                <span style={{width: `${uploadProgress.overallPercent}%`}} />
+              </div>
+            </div>
+          ) : null}
+
+          {!isUploading &&
+          previewLoadProgress.total > 0 &&
+          previewLoadProgress.loaded < previewLoadProgress.total ? (
+            <div className={styles.autoModeUploadProgressWrap}>
+              <p className={styles.autoModeUploadProgress}>
+                Anteprime caricate: {previewLoadProgress.loaded}/{previewLoadProgress.total}
+              </p>
+              <div className={styles.autoModeUploadProgressBar}>
+                <span
+                  style={{
+                    width: `${Math.round((previewLoadProgress.loaded / previewLoadProgress.total) * 100)}%`,
+                  }}
+                />
               </div>
             </div>
           ) : null}
@@ -1154,6 +1315,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
                             src={`/api/auto-tasting/image?id=${image.id}`}
                             alt={image.original_filename || image.storage_path}
                             className={styles.autoBottleCardPreview}
+                            loading="lazy"
+                            decoding="async"
+                            onLoad={() => markPreviewLoaded(image.id)}
+                            onError={() => markPreviewLoaded(image.id)}
                           />
                         </div>
                       </div>

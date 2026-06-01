@@ -68,6 +68,57 @@ function withTimeout(promise, ms, label) {
   return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeoutId))
 }
 
+function isRefererBlockedError(message) {
+  return /referer\s*<empty>.*blocked|requests from referer/i.test(String(message || ''))
+}
+
+function resolveRefererHeader(request) {
+  const origin = request.headers.get('origin') || request.nextUrl?.origin || ''
+  return origin ? `${origin.replace(/\/$/, '')}/` : null
+}
+
+async function downloadStorageObjectWithFallback({supabase, bucket, path, request}) {
+  const {data: blob, error: blobError} = await withTimeout(
+    supabase.storage.from(bucket).download(path),
+    30000,
+    'storage download',
+  )
+  if (!blobError && blob) return blob
+
+  const firstError = blobError?.message || 'storage download failed'
+  if (!isRefererBlockedError(firstError)) {
+    throw new Error(firstError)
+  }
+
+  const {data: signed, error: signedError} = await withTimeout(
+    supabase.storage.from(bucket).createSignedUrl(path, 60),
+    12000,
+    'create signed url',
+  )
+  if (signedError || !signed?.signedUrl) {
+    throw new Error(signedError?.message || 'create signed url failed')
+  }
+
+  const referer = resolveRefererHeader(request)
+  const response = await withTimeout(
+    fetch(signed.signedUrl, {
+      cache: 'no-store',
+      headers: referer ? {Referer: referer} : undefined,
+    }),
+    30000,
+    'signed url download',
+  )
+
+  if (!response.ok) {
+    const responseText = await response.text().catch(() => '')
+    throw new Error(
+      `Signed download failed: ${response.status}${responseText ? ` ${responseText.slice(0, 140)}` : ''}`,
+    )
+  }
+
+  return response.blob()
+}
+
 function isUuid(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
     String(value || ''),
@@ -624,14 +675,12 @@ export async function POST(request) {
       let ocrError = null
 
       try {
-        const {data: blob, error: blobError} = await withTimeout(
-          supabase.storage.from(row.storage_bucket || 'tasting-bottles').download(row.storage_path),
-          30000,
-          'storage download',
-        )
-        if (blobError || !blob) {
-          throw new Error(blobError?.message || 'storage download failed')
-        }
+        const blob = await downloadStorageObjectWithFallback({
+          supabase,
+          bucket: row.storage_bucket || 'tasting-bottles',
+          path: row.storage_path,
+          request,
+        })
 
         const ocrText = await runGoogleVisionOcr(blob)
         extracted = extractFromOcrText(ocrText, row.original_filename, row.storage_path)
