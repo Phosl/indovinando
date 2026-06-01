@@ -207,3 +207,6 @@ Obiettivo: eliminare valori sparsi e “quasi uguali”.
       column if not exists quiz_price_band text; alter table public.wine_labels add column if not
       exists quiz_region text, add column if not exists quiz_appellation text, add column if not
       exists quiz_price_band text;
+
+- [ ] **NEXT FEAUTURE**: Testa le tue conoscenza sul vino! Quiz generico del vino con 3 livelli
+      amatore - appassionato - somellier
