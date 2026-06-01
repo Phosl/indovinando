@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.27.3',
+    date: '1 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'sessione per tab con cleanup sicuro e API idempotenti',
+    ],
+  },
+
+  {
     version: '1.27.2',
     date: '31 maggio 2026',
     label: 'Auto',
