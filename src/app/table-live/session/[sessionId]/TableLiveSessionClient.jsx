@@ -254,10 +254,20 @@ export default function TableLiveSessionClient({sessionId}) {
         }),
       })
       const payload = await response.json().catch(() => null)
-      if (!response.ok) setError(payload?.error || 'Avvio partita fallito')
+      if (!response.ok) {
+        setError(payload?.error || 'Avvio partita fallito')
+        setStarting(false)
+        return
+      }
+      // Update status immediately instead of waiting for polling
+      if (isMountedRef.current) {
+        setData((prevData) => ({
+          ...prevData,
+          session: {...prevData.session, status: 'playing'},
+        }))
+      }
     } catch {
       setError('Errore di rete')
-    } finally {
       setStarting(false)
     }
   }
@@ -447,6 +457,27 @@ export default function TableLiveSessionClient({sessionId}) {
   }
 
   if (data.session.status === 'lobby') {
+    // Show loading screen after host clicks "Inizia partita"
+    if (starting) {
+      return (
+        <div className={styles.fullPage}>
+          <TopBar
+            playerData={topBarPlayer}
+            liveQuestions={[]}
+            currentSlideIndex={0}
+            audioEnabled={audioEnabled}
+            onToggleAudio={toggleAudio}
+            onOpenLeaderboard={() => setLeaderboardOpen(true)}
+            onOpenExit={() => setExitModalOpen(true)}
+          />
+          <div className={styles.centeredCard}>
+            <Loader label="Partita in avvio..." />
+          </div>
+          {overlays}
+        </div>
+      )
+    }
+
     return (
       <div className={styles.fullPage}>
         <TopBar

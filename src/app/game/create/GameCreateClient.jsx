@@ -1123,10 +1123,9 @@ function AutomaticModePlaceholder({onBack, userId}) {
                   .filter(Boolean)
                   .join(' | ')
                 const confidencePercent = toConfidencePercent(image.recognition_confidence)
-                const countryCode = getCountryCode(country)
+                // const countryCode = getCountryCode(country)
                 const countryFlag = getCountryFlag(country)
                 const isAnalyzingThis = analyzingImageId === image.id
-                const progressRingId = `bottle-progress-ring-${image.id}`
                 const hasCatalogDetails = !!details
                 const hasRecognitionData =
                   hasCatalogDetails ||
@@ -1143,32 +1142,6 @@ function AutomaticModePlaceholder({onBack, userId}) {
                   <li
                     key={image.id}
                     className={`${styles.autoBottleCard} ${isAnalyzingThis ? styles.autoBottleCardAnalyzing : ''}`}>
-                    {isAnalyzingThis ? (
-                      <svg
-                        className={styles.autoBottleProgressRing}
-                        viewBox="0 0 100 100"
-                        preserveAspectRatio="none"
-                        aria-hidden="true">
-                        <defs>
-                          <linearGradient id={progressRingId} x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#6be7ff" />
-                            <stop offset="50%" stopColor="#9b78ff" />
-                            <stop offset="100%" stopColor="#78ffd3" />
-                          </linearGradient>
-                        </defs>
-                        <rect
-                          className={styles.autoBottleProgressRingTrack}
-                          x="1.5"
-                          y="1.5"
-                          width="97"
-                          height="97"
-                          rx="8"
-                          ry="8"
-                          pathLength="200"
-                          stroke={`url(#${progressRingId})`}
-                        />
-                      </svg>
-                    ) : null}
                     <AnalyzeMagicOverlay
                       active={isAnalyzingThis}
                       className={styles.autoBottleCardMagicCanvas}

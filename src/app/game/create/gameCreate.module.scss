@@ -587,34 +587,6 @@
   opacity: 0.97;
 }
 
-.autoBottleProgressRing {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 6;
-}
-
-.autoBottleProgressRingTrack {
-  fill: none;
-  stroke-width: 20px;
-  stroke-linecap: round;
-  stroke-dasharray: 28 72;
-  stroke-dashoffset: 200;
-  filter: blur(10px);
-  animation: autoBottleRingProgress 1s linear infinite;
-}
-
-@keyframes autoBottleRingProgress {
-  from {
-    stroke-dashoffset: 100;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
 .autoBottleCardFooterActionBar {
   position: relative;
 
