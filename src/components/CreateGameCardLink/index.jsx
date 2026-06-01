@@ -2,7 +2,13 @@ import Link from 'next/link'
 import Icon from '@/components/Icon'
 import styles from './CreateGameCardLink.module.scss'
 
-export default function CreateGameCardLink({href = '/game/create', title, description, action, className = ''}) {
+export default function CreateGameCardLink({
+  href = '/game/create',
+  title,
+  description,
+  action,
+  className = '',
+}) {
   return (
     <Link href={href} className={`${styles.createGameLink} ${className}`.trim()}>
       <div className={styles.createGameCard}>
@@ -12,11 +18,16 @@ export default function CreateGameCardLink({href = '/game/create', title, descri
         </div>
         <div className={styles.createGameContainer}>
           <div className={`btn card-cta btn-inline ${styles.createGameBtn}`}>
-            <span>{action}</span>
+            {/* <span>{action}</span> */}
             <Icon name="forward" size={24} className={styles.createGameBtnIcon} />
           </div>
         </div>
-        <img src="/img-card-create.svg" alt="" aria-hidden="true" className={styles.createGameIllustration} />
+        <img
+          src="/img-card-create.svg"
+          alt=""
+          aria-hidden="true"
+          className={styles.createGameIllustration}
+        />
       </div>
     </Link>
   )

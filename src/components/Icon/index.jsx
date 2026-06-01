@@ -23,7 +23,7 @@ const ICONS = {
   language: '/icons/language.svg',
   avatar: '/icons/avatar.svg',
   home: '/icons/home.svg',
-  testing: '/icons/testing.svg',
+  tasting: '/icons/tasting.svg',
   course: '/icons/course.svg',
   profile: '/icons/profile.svg',
 }

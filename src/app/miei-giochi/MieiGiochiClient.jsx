@@ -8,9 +8,11 @@ import Icon from '@/components/Icon'
 import CreateGameCardLink from '@/components/CreateGameCardLink'
 import {formatAppDate} from '@/lib/dateFormat'
 import styles from './miei-giochi.module.scss'
+import {useT} from '@/lib/i18n/useT'
 
 export default function MieiGiochiClient({games, avatarOptions = [], lang, dashboardDict}) {
   const router = useRouter()
+  const t = useT('profile')
 
   return (
     <div className={styles.page}>
@@ -21,6 +23,9 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
         />
       </div>
       <div className={styles.content}>
+        {games.length === 0 && (
+          <div className={styles.emptyState}>{dashboardDict.emptyStateFirstGame}</div>
+        )}
         <div className={styles.gamesHeaderActions}>
           <CreateGameCardLink
             title={dashboardDict.createGameCardTitle}
@@ -28,17 +33,7 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
             action={dashboardDict.createGameCardAction}
           />
         </div>
-        {games.length === 0 ? (
-          <div className={styles.emptyState}>
-            <span className={styles.emptyIcon}>🎮</span>
-            <p>
-              {dashboardDict.emptyStateFirstGame}
-            </p>
-            <ButtonLink href="/game/create" variant="success">
-              {dashboardDict.createFirstGame}
-            </ButtonLink>
-          </div>
-        ) : (
+        {games.length !== 0 ? (
           <div className={styles.gamesList}>
             <div className={styles.gamesSectionTitle}>{dashboardDict.yourGames}</div>
             {games.map((game) => {
@@ -75,7 +70,10 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
                       <div className={styles.statsRow}>
                         <span>
                           <Icon name="bottle" size={24} className={styles.statsIcon} />
-                          {dashboardDict.bottlesCountLabel.replace('{count}', String(bottles.length))}
+                          {dashboardDict.bottlesCountLabel.replace(
+                            '{count}',
+                            String(bottles.length),
+                          )}
                         </span>
                         <span className={styles.statsDivider} aria-hidden="true">
                           -
@@ -108,6 +106,13 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
                 </Link>
               )
             })}
+          </div>
+        ) : (
+          <div className={styles.guideContainer}>
+            <h3>oppure</h3>
+            <ButtonLink href="/guida" variant="neutral" size="small">
+              {t('openAppGuide')}
+            </ButtonLink>
           </div>
         )}
       </div>

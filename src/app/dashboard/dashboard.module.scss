@@ -92,6 +92,12 @@
 .welcomeTextContainer {
   text-align: left;
   margin-top: 24px;
+  text-align: center;
+  h1 {
+    font-size: 1.6rem;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
 }
 
 .legalLinks {
@@ -326,7 +332,7 @@
 
 .sectionCardBottomArrow {
   padding-bottom: 56px;
-
+  color: var(--primary-text);
   .sectionCardArrowRail {
     position: absolute;
     right: 12px;
@@ -335,5 +341,17 @@
     height: 36px;
     margin-left: 0;
     border-left: 0;
+    z-index: 1;
   }
+}
+.sectionCardIcon {
+  color: var(--primary);
+  position: absolute;
+  width: 100%;
+  height: 120%;
+
+  top: -25%;
+  right: -40%;
+  opacity: 0.15;
+  z-index: 0;
 }

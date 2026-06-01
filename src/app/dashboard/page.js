@@ -75,6 +75,7 @@ export default async function Dashboard() {
                 <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
               </span>
             </div>
+            <Icon name="tasting" size={64} className={styles.sectionCardIcon} />
           </Link>
           <CreateGameCardLink
             title={dashboardDict.createGameCardTitle}

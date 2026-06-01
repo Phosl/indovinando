@@ -2,7 +2,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 24px;
+  padding: 16px;
   background: var(--primary);
   color: var(--primary-text);
   border-radius: 8px;
@@ -53,7 +53,7 @@
 .createGameContainer {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;
   margin-top: 16px;
 }
 
