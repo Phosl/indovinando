@@ -1,7 +1,7 @@
 'use client'
 
-import {useState, Suspense} from 'react'
-import {createClient} from '@/lib/supabaseClient'
+import {useEffect, useState, Suspense} from 'react'
+import {createClient, resetBrowserClient} from '@/lib/supabaseClient'
 import {useRouter, useSearchParams} from 'next/navigation'
 import {useT} from '@/lib/i18n/useT'
 import TopBar from '@/components/TopBar'
@@ -11,9 +11,15 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const MIN_PASSWORD_LENGTH = 6
 const USERNAME_REGEX = /^[a-zA-Z0-9_]+$/
 const MIN_USERNAME_LENGTH = 3
+const LOGIN_TIMEOUT_MS = 12000
+const TIMEOUT_RECOVERY_ATTEMPTS = 4
+const TIMEOUT_RECOVERY_DELAY_MS = 400
+
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 function AuthForm() {
-  const supabase = createClient()
   const router = useRouter()
   const t = useT('auth')
   const tHome = useT('home')
@@ -32,6 +38,10 @@ function AuthForm() {
   const [info, setInfo] = useState('')
   const isLogin = mode === 'login'
   const isForgot = mode === 'forgot'
+
+  useEffect(() => {
+    router.prefetch(safeNextPath)
+  }, [router, safeNextPath])
 
   const validateEmail = (value) => {
     if (!value) return t('emailRequired')
@@ -64,6 +74,7 @@ function AuthForm() {
   }
 
   async function handleAuth() {
+    const supabase = createClient()
     setError('')
     setInfo('')
 
@@ -89,7 +100,12 @@ function AuthForm() {
       }
 
       if (isLogin) {
-        const {error: loginError} = await supabase.auth.signInWithPassword({email, password})
+        const {error: loginError} = await Promise.race([
+          supabase.auth.signInWithPassword({email, password}),
+          new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('LOGIN_TIMEOUT')), LOGIN_TIMEOUT_MS)
+          }),
+        ])
         if (loginError) {
           setError(loginError.message)
           return
@@ -127,6 +143,30 @@ function AuthForm() {
         }
         router.push(safeNextPath)
       }
+    } catch (err) {
+      if (err?.message === 'LOGIN_TIMEOUT') {
+        // The login request can complete shortly after the timeout race.
+        // Probe session state a few times before surfacing an error.
+        for (let attempt = 0; attempt < TIMEOUT_RECOVERY_ATTEMPTS; attempt += 1) {
+          const recoveryClient = createClient()
+          const {
+            data: {session},
+          } = await recoveryClient.auth.getSession()
+
+          if (session) {
+            router.replace(safeNextPath)
+            router.refresh()
+            return
+          }
+
+          await wait(TIMEOUT_RECOVERY_DELAY_MS)
+        }
+
+        resetBrowserClient()
+        setError(t('loginTimeout'))
+        return
+      }
+      setError(err?.message || t('loginGenericError'))
     } finally {
       setLoading(false)
     }
@@ -158,6 +198,11 @@ function AuthForm() {
     setPassword('')
   }
 
+  function handleSubmit(event) {
+    event.preventDefault()
+    handleAuth()
+  }
+
   return (
     <main className={styles.page}>
       <div className={styles.container}>
@@ -174,7 +219,7 @@ function AuthForm() {
           {error && <div className={styles.errorMessage}>{error}</div>}
           {info && <div className={styles.infoMessage}>{info}</div>}
 
-          <div className={styles.form}>
+          <form className={styles.form} onSubmit={handleSubmit}>
             {!isLogin && !isForgot && (
               <div className={styles.fieldBlock}>
                 <label className={styles.fieldLabel} htmlFor="auth-username">
@@ -182,9 +227,11 @@ function AuthForm() {
                 </label>
                 <input
                   id="auth-username"
+                  name="username"
                   type="text"
                   className={styles.input}
                   placeholder={t('usernamePlaceholder')}
+                  autoComplete="username"
                   value={username}
                   onChange={(e) => {
                     setUsername(e.target.value)
@@ -201,9 +248,11 @@ function AuthForm() {
               </label>
               <input
                 id="auth-email"
+                name="email"
                 type="email"
                 className={styles.input}
                 placeholder={t('emailPlaceholder')}
+                autoComplete="email"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value)
@@ -231,9 +280,11 @@ function AuthForm() {
                 </div>
                 <input
                   id="auth-password"
+                  name="password"
                   type="password"
                   className={styles.input}
                   placeholder={t('passwordPlaceholder')}
+                  autoComplete={isLogin ? 'current-password' : 'new-password'}
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value)
@@ -246,10 +297,9 @@ function AuthForm() {
 
             <div className={styles.actions}>
               <button
-                onClick={handleAuth}
                 disabled={loading}
                 className="btn success-filled"
-                type="button">
+                type="submit">
                 {loading
                   ? t('loading')
                   : isForgot
@@ -279,7 +329,7 @@ function AuthForm() {
                 </button>
               )}
             </div>
-          </div>
+          </form>
         </section>
       </div>
     </main>

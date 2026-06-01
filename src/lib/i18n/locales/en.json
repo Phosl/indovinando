@@ -666,7 +666,9 @@
     "backToLogin": "← Back to login",
     "newPasswordPlaceholder": "New password",
     "updatePassword": "Update password",
-    "passwordUpdated": "Password updated successfully!"
+    "passwordUpdated": "Password updated successfully!",
+    "loginTimeout": "Login timeout. Please try again in a few seconds.",
+    "loginGenericError": "Error during login. Please try again."
   },
   "profile": {
     "title": "Profile",

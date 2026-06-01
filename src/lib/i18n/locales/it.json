@@ -197,17 +197,17 @@
         "icon": "🎮"
       },
       {
-        "title": "Passo 1: Crea il Questionario",
+        "title": "Crea il Questionario",
         "description": "Aggiungi domande e opzioni di risposta. Ad esempio: \"Quale vino è questo?\" con diverse opzioni.",
         "icon": "❓"
       },
       {
-        "title": "Passo 2: Aggiungi le Bottiglie",
+        "title": "Aggiungi le Bottiglie",
         "description": "Per ogni domanda, seleziona la risposta corretta e aggiungi i dettagli della bottiglia (nome, produttore, anno).",
         "icon": "🍷"
       },
       {
-        "title": "Passo 3: Invita gli Amici",
+        "title": "Invita gli Amici",
         "description": "Una volta finito, pubblica il gioco e invita i tuoi amici a partecipare. Loro cercheranno di indovinare le risposte corrette.",
         "icon": "👥"
       },
@@ -666,7 +666,9 @@
     "backToLogin": "← Torna al login",
     "newPasswordPlaceholder": "Nuova password",
     "updatePassword": "Aggiorna password",
-    "passwordUpdated": "Password aggiornata con successo!"
+    "passwordUpdated": "Password aggiornata con successo!",
+    "loginTimeout": "Accesso in timeout. Riprova tra qualche secondo.",
+    "loginGenericError": "Errore durante l'accesso. Riprova."
   },
   "profile": {
     "title": "Profilo",

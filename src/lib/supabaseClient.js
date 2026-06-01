@@ -13,6 +13,10 @@ export function createClient() {
   return browserClientSingleton
 }
 
+export function resetBrowserClient() {
+  browserClientSingleton = null
+}
+
 export const supabaseClient = createClient()
 
 /**

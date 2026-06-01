@@ -56,54 +56,19 @@ export default async function Dashboard() {
           <img src="/logo.svg" alt="Indovinando Logo" className={styles.logo} />
           <div className={styles.welcomeTextContainer}>
             <h1>
-              {dashboardDict.welcome}, {profile?.username || data.user.email}!
+              {dashboardDict.welcome}, {isSuperAdmin ? 'Supremo' : ''}{' '}
+              {profile?.username || data.user.email}!
             </h1>
             <h3 className={styles.subtitle}>{dashboardDict.subtitle}</h3>
           </div>
         </section>
 
         <nav className={styles.menuGrid}>
-          <Link
-            href="/miei-giochi"
-            className={`${styles.sectionCard} ${styles.sectionCardPrimary} ${styles.sectionCardBottomArrow}`}>
-            <div className={styles.sectionCardInfo}>
-              <h3>{dashboardDict.myGames}</h3>
-              <p>{dashboardDict.myGamesCardDescription}</p>
-            </div>
-            <div className={styles.sectionCardArrowRail} aria-hidden="true">
-              <span className={`btn icon-circle ${styles.sectionCardArrowBtn}`}>
-                <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
-              </span>
-            </div>
-            <img
-              src="/img-card-tasting.svg"
-              alt=""
-              aria-hidden="true"
-              className="card-illustration-absolute"
-            />
-          </Link>
           <CreateGameCardLink
             title={dashboardDict.createGameCardTitle}
             description={dashboardDict.createGameCardDescription}
             action={dashboardDict.createGameCardAction}
           />
-          {/* <Link
-            href="/corso-vino"
-            className={`${styles.sectionCard} ${styles.sectionCardTertiary} ${styles.sectionCardBottomArrow}`}>
-            <div className={styles.sectionCardInfo}>
-              <h3>{dashboardDict.wineCourse || 'Corso Vino'}</h3>
-              <p>
-                {lang === 'en'
-                  ? 'Learn, discover and become a true expert.'
-                  : 'Impara, scopri e diventa un esperto.'}
-              </p>
-            </div>
-            <div className={styles.sectionCardArrowRail} aria-hidden="true">
-              <span className={`btn icon-circle ${styles.sectionCardArrowBtn}`}>
-                <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
-              </span>
-            </div>
-          </Link> */}
 
           <Link
             href="/corso-vino"
@@ -163,18 +128,6 @@ export default async function Dashboard() {
               </div>
             </Link>
           )}
-
-          {/* <Link href="/miei-giochi" className="btn primary">
-            <span className={styles.menuCardLabel}>{dashboardDict.myGames || 'I miei giochi'}</span>
-          </Link>
-
-          <Link href="/corso-vino" className="btn tertiary">
-            <span className={styles.menuCardLabel}>{dashboardDict.wineCourse || 'Corso Vino'}</span>
-          </Link>
-
-          <Link href="/profilo" className="btn secondary">
-            <span className={styles.menuCardLabel}>{dashboardDict.profile || 'Profilo'}</span>
-          </Link> */}
         </nav>
       </div>
 

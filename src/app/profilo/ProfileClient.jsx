@@ -9,7 +9,7 @@ import InfoModal from '@/components/InfoModal'
 import Icon from '@/components/Icon'
 import ProgressBar from '@/components/ui/ProgressBar'
 import {useWineCourseProgress} from '@/app/corso-vino/hooks/useWineCourseProgress'
-import {supabaseClient} from '@/lib/supabaseClient'
+import {supabaseClient, resetBrowserClient} from '@/lib/supabaseClient'
 import {useT} from '@/lib/i18n/useT'
 import styles from './profilo.module.scss'
 // ── Player rank levels ────────────────────────────────────────────────────────
@@ -273,6 +273,7 @@ export default function ProfileClient({
       console.error('[profile] sign out error:', error)
     } finally {
       await clearClientMemory()
+      resetBrowserClient()
       router.replace('/')
       router.refresh()
       setIsLoggingOut(false)
