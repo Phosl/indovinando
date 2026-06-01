@@ -46,12 +46,17 @@ export default function AppleSplashLinks() {
       <link
         rel="apple-touch-startup-image"
         media="screen and (device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
-        href="/splash/splash_screens/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_landscape.png"
+        href="/splash/splash_screens/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_landscape.png?v=20260601"
+      />
+      <link
+        rel="apple-touch-startup-image"
+        media="screen and (device-width: 320px) and (device-height: 693px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+        href="/splash/splash_screens/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_landscape.png?v=20260601"
       />
       <link
         rel="apple-touch-startup-image"
         media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
-        href="/splash/splash_screens/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_landscape.png"
+        href="/splash/splash_screens/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_landscape.png?v=20260601"
       />
       <link
         rel="apple-touch-startup-image"
@@ -163,12 +168,17 @@ export default function AppleSplashLinks() {
       <link
         rel="apple-touch-startup-image"
         media="screen and (device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
-        href="/splash/splash_screens/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_portrait.png"
+        href="/splash/splash_screens/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_portrait.png?v=20260601"
+      />
+      <link
+        rel="apple-touch-startup-image"
+        media="screen and (device-width: 320px) and (device-height: 693px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+        href="/splash/splash_screens/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_portrait.png?v=20260601"
       />
       <link
         rel="apple-touch-startup-image"
         media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
-        href="/splash/splash_screens/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_portrait.png"
+        href="/splash/splash_screens/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_portrait.png?v=20260601"
       />
       <link
         rel="apple-touch-startup-image"
