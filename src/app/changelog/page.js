@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.27.4',
+    date: '1 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'fix TableLiveSessionClient start game',
+    ],
+  },
+
+  {
     version: '1.27.3',
     date: '1 giugno 2026',
     label: 'Auto',
