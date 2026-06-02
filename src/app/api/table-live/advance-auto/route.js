@@ -14,6 +14,47 @@ function createWriteClient(fallback) {
   return fallback
 }
 
+async function persistFinalResults(db, sessionId, eventId) {
+  if (!eventId) return
+
+  const {data: players, error: playersError} = await db
+    .from('table_live_players')
+    .select('id, total_score, joined_at')
+    .eq('session_id', sessionId)
+    .order('total_score', {ascending: false})
+    .order('joined_at', {ascending: true})
+
+  if (playersError) {
+    throw new Error(playersError.message)
+  }
+
+  const orderedPlayers = players || []
+
+  const {error: clearError} = await db
+    .from('table_live_event_results')
+    .delete()
+    .eq('session_id', sessionId)
+  if (clearError) {
+    throw new Error(clearError.message)
+  }
+
+  if (!orderedPlayers.length) return
+
+  const rows = orderedPlayers.map((player, index) => ({
+    event_id: eventId,
+    session_id: sessionId,
+    player_id: player.id,
+    score: player.total_score || 0,
+    rank_in_session: index + 1,
+    captured_at: new Date().toISOString(),
+  }))
+
+  const {error: insertError} = await db.from('table_live_event_results').insert(rows)
+  if (insertError) {
+    throw new Error(insertError.message)
+  }
+}
+
 export async function POST(request) {
   try {
     const body = await request.json()
@@ -27,7 +68,7 @@ export async function POST(request) {
 
     const {data: session, error: sessionError} = await db
       .from('table_live_sessions')
-      .select('id, game_id, status, current_bottle_index, round_status')
+      .select('id, event_id, game_id, status, current_bottle_index, round_status')
       .eq('id', sessionId)
       .maybeSingle()
 
@@ -36,6 +77,10 @@ export async function POST(request) {
     }
 
     if (session.status !== 'playing') {
+      if (session.status === 'finished') {
+        await persistFinalResults(db, sessionId, session.event_id)
+        return NextResponse.json({ok: true, advanced: false, reason: 'already_finished'})
+      }
       return NextResponse.json({ok: true, advanced: false, reason: 'not_playing'})
     }
 
@@ -60,7 +105,10 @@ export async function POST(request) {
       .eq('is_active', true)
 
     if (playersError) {
-      await db.from('table_live_sessions').update({round_status: 'waiting_answers'}).eq('id', sessionId)
+      await db
+        .from('table_live_sessions')
+        .update({round_status: 'waiting_answers'})
+        .eq('id', sessionId)
       return NextResponse.json({error: playersError.message}, {status: 500})
     }
 
@@ -70,13 +118,22 @@ export async function POST(request) {
       .eq('game_id', session.game_id)
 
     if (questionsCountError || !questionsCount) {
-      await db.from('table_live_sessions').update({round_status: 'waiting_answers'}).eq('id', sessionId)
-      return NextResponse.json({error: questionsCountError?.message || 'No questions configured'}, {status: 400})
+      await db
+        .from('table_live_sessions')
+        .update({round_status: 'waiting_answers'})
+        .eq('id', sessionId)
+      return NextResponse.json(
+        {error: questionsCountError?.message || 'No questions configured'},
+        {status: 400},
+      )
     }
 
     const playerIds = (activePlayers || []).map((p) => p.id)
     if (!playerIds.length) {
-      await db.from('table_live_sessions').update({round_status: 'waiting_answers'}).eq('id', sessionId)
+      await db
+        .from('table_live_sessions')
+        .update({round_status: 'waiting_answers'})
+        .eq('id', sessionId)
       return NextResponse.json({ok: true, advanced: false, reason: 'no_active_players'})
     }
 
@@ -87,7 +144,10 @@ export async function POST(request) {
       .eq('bottle_index', session.current_bottle_index)
 
     if (answersError) {
-      await db.from('table_live_sessions').update({round_status: 'waiting_answers'}).eq('id', sessionId)
+      await db
+        .from('table_live_sessions')
+        .update({round_status: 'waiting_answers'})
+        .eq('id', sessionId)
       return NextResponse.json({error: answersError.message}, {status: 500})
     }
 
@@ -95,12 +155,18 @@ export async function POST(request) {
     const scoreByPlayer = new Map()
     for (const answer of answers || []) {
       answersByPlayer.set(answer.player_id, (answersByPlayer.get(answer.player_id) || 0) + 1)
-      scoreByPlayer.set(answer.player_id, (scoreByPlayer.get(answer.player_id) || 0) + (answer.points || 0))
+      scoreByPlayer.set(
+        answer.player_id,
+        (scoreByPlayer.get(answer.player_id) || 0) + (answer.points || 0),
+      )
     }
 
     const allCompleted = playerIds.every((id) => (answersByPlayer.get(id) || 0) >= questionsCount)
     if (!allCompleted) {
-      await db.from('table_live_sessions').update({round_status: 'waiting_answers'}).eq('id', sessionId)
+      await db
+        .from('table_live_sessions')
+        .update({round_status: 'waiting_answers'})
+        .eq('id', sessionId)
       return NextResponse.json({ok: true, advanced: false, reason: 'waiting_players'})
     }
 
@@ -140,9 +206,12 @@ export async function POST(request) {
       })
       .eq('id', sessionId)
 
+    if (finished) {
+      await persistFinalResults(db, sessionId, session.event_id)
+    }
+
     return NextResponse.json({ok: true, advanced: true, finished, nextBottleIndex: nextIndex})
   } catch (error) {
     return NextResponse.json({error: error?.message || 'Unexpected error'}, {status: 500})
   }
 }
-

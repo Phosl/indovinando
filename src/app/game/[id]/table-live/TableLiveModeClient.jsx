@@ -22,9 +22,12 @@ export default function TableLiveModeClient({gameId, gameName}) {
 
     const loadExisting = async () => {
       try {
-        const response = await fetch(`/api/table-live/event/create?gameId=${encodeURIComponent(gameId)}`, {
-          cache: 'no-store',
-        })
+        const response = await fetch(
+          `/api/table-live/event/create?gameId=${encodeURIComponent(gameId)}`,
+          {
+            cache: 'no-store',
+          },
+        )
         const payload = await response.json().catch(() => null)
         if (!cancelled && response.ok && payload?.event?.url) {
           const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
@@ -174,6 +177,7 @@ export default function TableLiveModeClient({gameId, gameName}) {
         {eventLink ? (
           <section className={styles.card}>
             <h2>Link e QR evento</h2>
+            <p>Accedi a questo link per giocare o stampa il QR per condividerlo.</p>
             <input type="text" readOnly value={eventLink} className={styles.linkInput} />
             <div className={styles.actions}>
               <button className="btn neutral small" onClick={handleCopy}>
@@ -203,7 +207,9 @@ export default function TableLiveModeClient({gameId, gameName}) {
           <div className={styles.qrModal} onClick={(e) => e.stopPropagation()}>
             <img src="/logo.svg" alt="Indovinando" className={styles.qrLogo} />
             <h3>{eventTitle}</h3>
-            {qrDataUrl ? <img src={qrDataUrl} alt="QR evento tavoli" className={styles.qrImage} /> : null}
+            {qrDataUrl ? (
+              <img src={qrDataUrl} alt="QR evento tavoli" className={styles.qrImage} />
+            ) : null}
             <div className={styles.actions}>
               <button className="btn success small" onClick={handlePrint}>
                 Stampa

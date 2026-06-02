@@ -33,6 +33,14 @@ export default async function ProfileMatchesPage() {
   const profileName = String(profile?.username || '').trim()
   const myAvatarId = profileAvatarToGameId(profile?.avatar_emoji || '')
 
+  const avatarFromNickname = (nickname = '') => {
+    let hash = 0
+    for (let i = 0; i < nickname.length; i += 1) {
+      hash = (hash * 31 + nickname.charCodeAt(i)) >>> 0
+    }
+    return (hash % 10) + 1
+  }
+
   const loadEnotecaSessions = async () => {
     const byUser = await supabase
       .from('enoteca_tasting_sessions')
@@ -58,15 +66,25 @@ export default async function ProfileMatchesPage() {
     return []
   }
 
-  const [liveMineResult, allLiveScoresResult, enotecaRows] = await Promise.all([
+  const [liveMineResult, allLiveScoresResult, enotecaRows, tableMineResult] = await Promise.all([
     supabase
       .from('live_players')
       .select('id, session_id, user_id, nickname, avatar_id, total_score, updated_at')
       .eq('user_id', user.id)
       .order('updated_at', {ascending: false})
       .limit(250),
-    supabase.from('live_players').select('user_id, total_score').not('user_id', 'is', null).limit(50000),
+    supabase
+      .from('live_players')
+      .select('user_id, total_score')
+      .not('user_id', 'is', null)
+      .limit(50000),
     loadEnotecaSessions(),
+    supabase
+      .from('table_live_players')
+      .select('id, session_id, user_id, nickname, total_score, joined_at, last_seen_at')
+      .eq('user_id', user.id)
+      .order('last_seen_at', {ascending: false})
+      .limit(250),
   ])
 
   const myLiveRows = liveMineResult.data || []
@@ -88,11 +106,38 @@ export default async function ProfileMatchesPage() {
   const livePlayers = liveSessionPlayersResult.data || []
   const sessionsById = new Map(liveSessions.map((row) => [row.id, row]))
 
+  const myTableRows = tableMineResult.data || []
+  const tableSessionIds = Array.from(
+    new Set(myTableRows.map((row) => row.session_id).filter(Boolean)),
+  )
+
+  const [tableSessionsResult, tableSessionPlayersResult] = await Promise.all([
+    tableSessionIds.length
+      ? supabase
+          .from('table_live_sessions')
+          .select('id, game_id, event_id, status, created_at, updated_at')
+          .in('id', tableSessionIds)
+      : Promise.resolve({data: []}),
+    tableSessionIds.length
+      ? supabase
+          .from('table_live_players')
+          .select('id, session_id, user_id, nickname, total_score, joined_at, last_seen_at')
+          .in('session_id', tableSessionIds)
+      : Promise.resolve({data: []}),
+  ])
+
+  const tableSessions = (tableSessionsResult.data || []).filter(
+    (session) => session.status === 'finished',
+  )
+  const tablePlayers = tableSessionPlayersResult.data || []
+  const tableSessionsById = new Map(tableSessions.map((row) => [row.id, row]))
+
   const gameIdsLive = Array.from(new Set(liveSessions.map((row) => row.game_id).filter(Boolean)))
+  const gameIdsTable = Array.from(new Set(tableSessions.map((row) => row.game_id).filter(Boolean)))
   const gameIdsEnoteca = Array.from(
     new Set((enotecaRows || []).map((row) => row.game_id).filter(Boolean)),
   )
-  const allGameIds = Array.from(new Set([...gameIdsLive, ...gameIdsEnoteca]))
+  const allGameIds = Array.from(new Set([...gameIdsLive, ...gameIdsTable, ...gameIdsEnoteca]))
   const gamesResult = allGameIds.length
     ? await supabase.from('games').select('id, name, cover_index').in('id', allGameIds)
     : {data: []}
@@ -102,6 +147,13 @@ export default async function ProfileMatchesPage() {
   for (const player of livePlayers) {
     if (!playersBySession.has(player.session_id)) playersBySession.set(player.session_id, [])
     playersBySession.get(player.session_id).push(player)
+  }
+
+  const tablePlayersBySession = new Map()
+  for (const player of tablePlayers) {
+    if (!tablePlayersBySession.has(player.session_id))
+      tablePlayersBySession.set(player.session_id, [])
+    tablePlayersBySession.get(player.session_id).push(player)
   }
 
   const liveMatches = myLiveRows.map((myRow) => {
@@ -125,7 +177,8 @@ export default async function ProfileMatchesPage() {
     return {
       id: `live-${myRow.session_id}`,
       mode: 'live',
-      gameName: gamesById.get(session?.game_id)?.name || (lang === 'en' ? 'Live Match' : 'Partita Live'),
+      gameName:
+        gamesById.get(session?.game_id)?.name || (lang === 'en' ? 'Live Match' : 'Partita Live'),
       gameAvatar:
         Number.isInteger(gamesById.get(session?.game_id)?.cover_index) &&
         gamesById.get(session?.game_id)?.cover_index >= 0
@@ -144,7 +197,8 @@ export default async function ProfileMatchesPage() {
     id: `enoteca-${row.id}`,
     mode: 'enoteca',
     gameName:
-      gamesById.get(row.game_id)?.name || (lang === 'en' ? 'Enoteca Tasting' : 'Degustazione Enoteca'),
+      gamesById.get(row.game_id)?.name ||
+      (lang === 'en' ? 'Enoteca Tasting' : 'Degustazione Enoteca'),
     gameAvatar:
       Number.isInteger(gamesById.get(row.game_id)?.cover_index) &&
       gamesById.get(row.game_id)?.cover_index >= 0
@@ -158,12 +212,53 @@ export default async function ProfileMatchesPage() {
     opponents: [],
   }))
 
-  const matches = [...liveMatches, ...enotecaMatches].sort(
+  const tableMatches = myTableRows
+    .filter((myRow) => tableSessionsById.has(myRow.session_id))
+    .map((myRow) => {
+      const allPlayers = [...(tablePlayersBySession.get(myRow.session_id) || [])].sort(
+        (a, b) => Number(b.total_score || 0) - Number(a.total_score || 0),
+      )
+      const session = tableSessionsById.get(myRow.session_id)
+      const maxScore = allPlayers.length
+        ? Math.max(...allPlayers.map((p) => Number(p.total_score || 0)))
+        : Number(myRow.total_score || 0)
+
+      const opponents = allPlayers
+        .filter((p) => p.id !== myRow.id)
+        .map((p) => ({
+          id: p.id,
+          nickname: p.nickname || (lang === 'en' ? 'Player' : 'Giocatore'),
+          avatarId: avatarFromNickname(p.nickname || ''),
+          score: Number(p.total_score || 0),
+        }))
+
+      const nickname = myRow.nickname || (lang === 'en' ? 'You' : 'Tu')
+      return {
+        id: `table-live-${myRow.session_id}`,
+        mode: 'table-live',
+        gameName:
+          gamesById.get(session?.game_id)?.name ||
+          (lang === 'en' ? 'Table Match' : 'Partita Tavolo'),
+        gameAvatar:
+          Number.isInteger(gamesById.get(session?.game_id)?.cover_index) &&
+          gamesById.get(session?.game_id)?.cover_index >= 0
+            ? gameAvatarOptions[gamesById.get(session?.game_id)?.cover_index] || ''
+            : '',
+        playedAt: myRow.last_seen_at || session?.updated_at || session?.created_at || null,
+        score: Number(myRow.total_score || 0),
+        myNickname: nickname,
+        isWin: Number(myRow.total_score || 0) >= maxScore && maxScore > 0,
+        myAvatarId: avatarFromNickname(nickname),
+        opponents,
+      }
+    })
+
+  const matches = [...liveMatches, ...tableMatches, ...enotecaMatches].sort(
     (a, b) => new Date(b.playedAt || 0).getTime() - new Date(a.playedAt || 0).getTime(),
   )
 
   const totalMatches = matches.length
-  const totalWins = liveMatches.filter((match) => match.isWin).length
+  const totalWins = [...liveMatches, ...tableMatches].filter((match) => match.isWin).length
   const totalScore = matches.reduce((sum, match) => sum + Number(match.score || 0), 0)
 
   const scoreByUser = new Map()

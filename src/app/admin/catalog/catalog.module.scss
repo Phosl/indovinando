@@ -74,6 +74,90 @@
 .actions {
   display: flex;
   gap: 8px;
+  align-items: flex-end;
+  justify-content: flex-end;
+  :global(.btn) {
+    align-items: flex-end;
+  }
+}
+
+.searchStatus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  min-width: 96px;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.searchRing {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 2px solid color-mix(in srgb, var(--text-secondary) 30%, transparent);
+  border-top-color: var(--selected);
+  animation: ringSpin 0.7s linear infinite;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.loadingWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeletonItemCard {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeletonLine {
+  height: 12px;
+}
+
+.skeletonLineWide {
+  width: 78%;
+}
+
+.skeletonLineMid {
+  width: 52%;
+}
+
+.skeletonPills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.skeletonPillChip {
+  width: 98px;
+  height: 24px;
+}
+
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.skeletonGridItem {
+  height: 40px;
+}
+
+@keyframes ringSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .list {
@@ -183,6 +267,41 @@
   font-size: 0.9rem;
   color: var(--text-secondary);
   font-weight: 700;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pageButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 2px solid var(--button-secondary-border);
+  background: var(--foreground);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 2px 0 0 var(--gray-light);
+}
+
+.pageButtonDisabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.pageInfo {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-secondary);
 }
 
 @media (max-width: 860px) {

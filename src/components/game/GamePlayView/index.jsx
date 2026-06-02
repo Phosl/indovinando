@@ -72,16 +72,18 @@ export default function GamePlayView({
                 <Icon name="question" size={24} className={styles.infoQuestionIcon} />
                 {t('questionsCount', {count: questions.length})}
               </p>
+              <span className={styles.infoDivider + ' ' + styles.removeOnMobile} aria-hidden="true">
+                -
+              </span>
+              <Button
+                size="small"
+                className={styles.historyToggle}
+                onClick={() => setHistoryOpen(true)}
+                aria-expanded={historyOpen}
+                aria-controls="game-history-panel">
+                {t('history')}
+              </Button>
             </div>
-
-            <Button
-              size="small"
-              className={styles.historyToggle}
-              onClick={() => setHistoryOpen(true)}
-              aria-expanded={historyOpen}
-              aria-controls="game-history-panel">
-              {t('history')}
-            </Button>
           </div>
         </div>
         <div className={styles.actionsBar}>

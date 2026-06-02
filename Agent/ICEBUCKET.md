@@ -210,3 +210,13 @@ Obiettivo: eliminare valori sparsi e “quasi uguali”.
 
 - [ ] **NEXT FEAUTURE**: Testa le tue conoscenza sul vino! Quiz generico del vino con 3 livelli
       amatore - appassionato - somellier
+
+- [] **Indici tabella per ottimizzazione**
+- create extension if not exists pg_trgm;
+- create index if not exists idx_wine_labels_normalized_name_trgm
+- on public.wine_labels using gin (normalized_name gin_trgm_ops);
+- create index if not exists idx_wine_labels_name_trgm
+- on public.wine_labels using gin (name gin_trgm_ops);
+- create index if not exists idx_wine_labels_data_source
+- on public.wine_labels(data_source);
+- create index if not exists idx_wine_labels_producer_id – on public.wine_labels(producer_id);

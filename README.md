@@ -159,9 +159,8 @@ SQL sources (apply in order for a fresh setup):
 - Compatibility views:
   - `wine_catalog` (main list/query view used by admin pages)
   - `wine_catalog_producer_stats` (producer aggregates)
-- Grape relations are imported in **sync mode** for impacted labels:
-  existing `wine_label_grapes` rows are replaced by current CSV values to avoid stale/wrong
-  associations accumulating over time.
+- Grape relations are imported in **sync mode** for impacted labels: existing `wine_label_grapes`
+  rows are replaced by current CSV values to avoid stale/wrong associations accumulating over time.
 
 ### Automatic Photo Mode (Optional / Decoupled)
 
@@ -230,3 +229,9 @@ SUPABASE_SERVICE_ROLE_KEY=     # required for admin routes (finish, standings, h
 
 - [SPLASHSCREEN] https://progressier.com/pwa-icons-and-ios-splash-screen-generator -[FAVICON]
   https://favicon.io/favicon-converter/
+
+## Wine Catalogo Resources
+
+https://drive.google.com/drive/folders/1vfkfa5deOSsNf3dN2R7xrWWgVXUqD1-k
+
+https://wineapi.io/dashboard https://fastcork.com/

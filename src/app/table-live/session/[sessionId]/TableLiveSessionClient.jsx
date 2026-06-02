@@ -348,13 +348,17 @@ export default function TableLiveSessionClient({sessionId}) {
       return
     }
     playSound('bottleCompleted')
-    router.push(`/table-live/session/${sessionId}/leaderboard`)
-    // Best-effort: close/advance server-side state in background.
-    fetch('/api/table-live/advance-auto', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({sessionId}),
-    }).catch(() => {})
+    try {
+      await fetch('/api/table-live/advance-auto', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({sessionId}),
+      })
+    } catch {
+      // Fallback to leaderboard anyway so players can continue.
+    } finally {
+      router.push(`/table-live/session/${sessionId}/leaderboard`)
+    }
   }
 
   useEffect(() => {

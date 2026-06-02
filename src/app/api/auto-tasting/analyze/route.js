@@ -125,6 +125,11 @@ function isUuid(value) {
   )
 }
 
+function isMissingColumnError(error) {
+  const message = String(error?.message || '').toLowerCase()
+  return message.includes('column') && message.includes('does not exist')
+}
+
 function normalizeToken(token) {
   return String(token || '')
     .replace(/\.[a-z0-9]+$/i, '')
@@ -137,14 +142,14 @@ function capitalizeWords(value) {
   return String(value || '')
     .split(' ')
     .filter(Boolean)
-    .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
     .join(' ')
 }
 
 function cleanWineName(value) {
   const tokens = String(value || '')
     .split(/\s+/)
-    .map(part => part.trim())
+    .map((part) => part.trim())
     .filter(Boolean)
 
   const blocked = new Set([
@@ -159,7 +164,7 @@ function cleanWineName(value) {
     'copy',
   ])
 
-  const filtered = tokens.filter(token => {
+  const filtered = tokens.filter((token) => {
     const norm = normalizeForCheck(token)
     if (!norm) return false
     if (blocked.has(norm)) return false
@@ -209,7 +214,7 @@ function looksLikeNoiseLine(value) {
   if (/\b\d{1,4}\s?(ml|cl|vol)\b/.test(normalized)) return true
   const words = normalized.split(' ').filter(Boolean)
   if (words.length === 0) return true
-  const noiseHits = words.filter(word => WINE_NOISE_TERMS.has(word)).length
+  const noiseHits = words.filter((word) => WINE_NOISE_TERMS.has(word)).length
   return noiseHits >= Math.max(2, Math.floor(words.length * 0.6))
 }
 
@@ -218,7 +223,7 @@ function looksLikeRegionOnly(value) {
   if (!normalized) return false
   const words = normalized.split(' ').filter(Boolean)
   if (!words.length || words.length > 3) return false
-  return words.every(word => WINE_NOISE_TERMS.has(word))
+  return words.every((word) => WINE_NOISE_TERMS.has(word))
 }
 
 function looksLikeInstitutionalLine(value) {
@@ -261,7 +266,7 @@ function parseFilenameParts(originalFilename, storagePath) {
   // Keep separators meaningful before full normalization.
   const parts = raw
     .split(/[_|,-]+/)
-    .map(part => normalizeToken(part))
+    .map((part) => normalizeToken(part))
     .filter(Boolean)
 
   // Remove trailing numeric sequence-like token (e.g. _7, -12) when not a vintage.
@@ -304,7 +309,7 @@ function extractFromFilename(originalFilename, storagePath) {
   const fallbackTokens = source
     .replace(/\b(19|20)\d{2}\b/g, '')
     .split(/\s+/)
-    .map(part => normalizeToken(part))
+    .map((part) => normalizeToken(part))
     .filter(Boolean)
 
   const producer = parsedParts[0] || fallbackTokens[0] || null
@@ -340,24 +345,28 @@ function extractFromFilename(originalFilename, storagePath) {
 }
 
 function extractFromOcrText(rawText, originalFilename, storagePath) {
-  const sourceText = String(rawText || '').replace(/\s+/g, ' ').trim()
+  const sourceText = String(rawText || '')
+    .replace(/\s+/g, ' ')
+    .trim()
   if (!sourceText) {
     return {ok: false, error: 'OCR empty text'}
   }
 
   const lines = String(rawText || '')
     .split('\n')
-    .map(line => line.trim())
+    .map((line) => line.trim())
     .filter(Boolean)
     .slice(0, 20)
 
-  const rankedLines = lines.filter(line => !looksLikeNoiseLine(line))
-  const nonYearLines = rankedLines.filter(line => !/\b(19|20)\d{2}\b/.test(line))
+  const rankedLines = lines.filter((line) => !looksLikeNoiseLine(line))
+  const nonYearLines = rankedLines.filter((line) => !/\b(19|20)\d{2}\b/.test(line))
   const candidateProducer =
-    nonYearLines.find(line => {
+    nonYearLines.find((line) => {
       const words = normalizeForCheck(line).split(' ').filter(Boolean)
       return words.length >= 1 && words.length <= 5 && !/\d/.test(line)
-    }) || nonYearLines[0] || ''
+    }) ||
+    nonYearLines[0] ||
+    ''
   const producer =
     candidateProducer.split(' ').length <= 6 && candidateProducer.length <= 60
       ? capitalizeWords(candidateProducer)
@@ -367,7 +376,7 @@ function extractFromOcrText(rawText, originalFilename, storagePath) {
 
   let name = null
   const nameCandidates = nonYearLines.filter(
-    line =>
+    (line) =>
       normalizeForCheck(line) !== normalizeForCheck(producer) &&
       !looksLikeRegionOnly(line) &&
       !looksLikeInstitutionalLine(line) &&
@@ -497,7 +506,9 @@ async function enrichWithWineCatalog(supabase, extracted) {
 
   let labelsQuery = supabase
     .from('wine_labels')
-    .select('id, name, normalized_name, producer_id, appellation, country, region, type')
+    .select(
+      'id, name, normalized_name, producer_id, appellation, country, region, quiz_region, quiz_appellation, type, quiz_price_band, body, acidity, elaborate, harmonize',
+    )
     .limit(120)
 
   if (firstNameToken) {
@@ -506,21 +517,32 @@ async function enrichWithWineCatalog(supabase, extracted) {
     )
   }
 
-  const {data: labels, error: labelsError} = await withTimeout(labelsQuery, 10000, 'catalog labels')
+  let {data: labels, error: labelsError} = await withTimeout(labelsQuery, 10000, 'catalog labels')
+  if (labelsError && isMissingColumnError(labelsError)) {
+    let fallbackQuery = supabase
+      .from('wine_labels')
+      .select('id, name, normalized_name, producer_id, appellation, country, region, type')
+      .limit(120)
+    if (firstNameToken) {
+      fallbackQuery = fallbackQuery.or(
+        `normalized_name.ilike.%${firstNameToken}%,name.ilike.%${firstNameToken}%`,
+      )
+    }
+    const fallbackResult = await withTimeout(fallbackQuery, 10000, 'catalog labels fallback')
+    labels = fallbackResult.data
+    labelsError = fallbackResult.error
+  }
   if (labelsError || !labels?.length) return extracted
 
-  const producerIds = [...new Set(labels.map(l => l.producer_id).filter(Boolean))]
+  const producerIds = [...new Set(labels.map((l) => l.producer_id).filter(Boolean))]
   let producersMap = new Map()
   if (producerIds.length) {
     const {data: producers} = await withTimeout(
-      supabase
-        .from('wine_producers')
-        .select('id, name, normalized_name')
-        .in('id', producerIds),
+      supabase.from('wine_producers').select('id, name, normalized_name').in('id', producerIds),
       10000,
       'catalog producers',
     )
-    producersMap = new Map((producers || []).map(p => [p.id, p]))
+    producersMap = new Map((producers || []).map((p) => [p.id, p]))
   }
 
   let best = null
@@ -531,16 +553,17 @@ async function enrichWithWineCatalog(supabase, extracted) {
       overlapScore(guessedName, label.normalized_name),
     )
     const producerScore = producer
-      ? Math.max(overlapScore(guessedProducer, producer.name), overlapScore(guessedProducer, producer.normalized_name))
+      ? Math.max(
+          overlapScore(guessedProducer, producer.name),
+          overlapScore(guessedProducer, producer.normalized_name),
+        )
       : 0
-    const labelRegionContext = [label.region, label.appellation, label.name].filter(Boolean).join(' ')
+    const labelRegionContext = [label.region, label.appellation, label.name]
+      .filter(Boolean)
+      .join(' ')
     const labelRegionHint = detectRegionHint(labelRegionContext)
     const regionScore =
-      regionHint && labelRegionHint
-        ? labelRegionHint === regionHint
-          ? 0.1
-          : -0.1
-        : 0
+      regionHint && labelRegionHint ? (labelRegionHint === regionHint ? 0.1 : -0.1) : 0
     const score = labelNameScore * 0.72 + producerScore * 0.28 + regionScore
     if (!best || score > best.score) {
       best = {label, producer, score, labelNameScore, producerScore}
@@ -558,23 +581,35 @@ async function enrichWithWineCatalog(supabase, extracted) {
     'catalog grapes',
   ).catch(() => ({data: []}))
 
-  const grapes = (labelGrapes || [])
-    .map(row => row?.wine_grapes?.name)
-    .filter(Boolean)
+  const grapes = (labelGrapes || []).map((row) => row?.wine_grapes?.name).filter(Boolean)
 
-  const {data: vintages} = await withTimeout(
+  let {data: vintages, error: vintagesError} = await withTimeout(
     supabase
       .from('wine_vintages')
-      .select('vintage, price, currency, last_seen_at')
+      .select('vintage, price, currency, price_band, last_seen_at')
       .eq('wine_label_id', best.label.id)
       .order('last_seen_at', {ascending: false})
       .limit(8),
     10000,
     'catalog vintages',
-  ).catch(() => ({data: []}))
+  ).catch(() => ({data: [], error: null}))
 
-  const knownVintages = [...new Set((vintages || []).map(v => v?.vintage).filter(Boolean))]
-  const latestWithPrice = (vintages || []).find(v => v?.price != null) || null
+  if (vintagesError && isMissingColumnError(vintagesError)) {
+    const fallbackVintagesResult = await withTimeout(
+      supabase
+        .from('wine_vintages')
+        .select('vintage, price, currency, last_seen_at')
+        .eq('wine_label_id', best.label.id)
+        .order('last_seen_at', {ascending: false})
+        .limit(8),
+      10000,
+      'catalog vintages fallback',
+    ).catch(() => ({data: []}))
+    vintages = fallbackVintagesResult.data
+  }
+
+  const knownVintages = [...new Set((vintages || []).map((v) => v?.vintage).filter(Boolean))]
+  const latestWithPrice = (vintages || []).find((v) => v?.price != null) || null
 
   const resolvedVintage =
     extracted?.recognized_vintage && knownVintages.includes(extracted.recognized_vintage)
@@ -586,7 +621,7 @@ async function enrichWithWineCatalog(supabase, extracted) {
     Math.max(Number(extracted.recognition_confidence || 0), 0.68 + best.score * 0.2),
   )
 
-  const resolvedRegion = regionHint || best.label?.region || null
+  const resolvedRegion = regionHint || best.label?.quiz_region || best.label?.region || null
 
   return {
     ...extracted,
@@ -604,14 +639,22 @@ async function enrichWithWineCatalog(supabase, extracted) {
         label_id: best.label?.id || null,
       },
       catalog_details: {
-        appellation: best.label?.appellation || null,
+        appellation: best.label?.quiz_appellation || best.label?.appellation || null,
+        quiz_appellation: best.label?.quiz_appellation || null,
         country: best.label?.country || null,
         region: resolvedRegion,
+        quiz_region: best.label?.quiz_region || null,
         type: best.label?.type || null,
+        quiz_price_band: best.label?.quiz_price_band || null,
         grapes,
         known_vintages: knownVintages,
         price: latestWithPrice?.price ?? null,
         currency: latestWithPrice?.currency ?? null,
+        price_band: latestWithPrice?.price_band || null,
+        body: best.label?.body || null,
+        acidity: best.label?.acidity || null,
+        elaborate: best.label?.elaborate || null,
+        harmonize: best.label?.harmonize || null,
       },
     },
   }
@@ -632,13 +675,7 @@ export async function POST(request) {
     const imageId = String(body?.imageId ?? '').trim()
     const analyzeAll = Boolean(body?.analyzeAll)
     const imageIds = Array.isArray(body?.imageIds)
-        ? [
-            ...new Set(
-              body.imageIds
-                .map((id) => String(id || '').trim())
-                .filter((id) => isUuid(id)),
-            ),
-          ]
+      ? [...new Set(body.imageIds.map((id) => String(id || '').trim()).filter((id) => isUuid(id)))]
       : []
 
     let query = supabase

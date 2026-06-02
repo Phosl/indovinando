@@ -428,6 +428,9 @@ function AutomaticModePlaceholder({onBack, userId}) {
   }
 
   function inferRegion(details, image) {
+    const quizRegion = String(details?.quiz_region || '').trim()
+    if (quizRegion) return quizRegion
+
     const direct = String(details?.region || '').trim()
     if (direct) return direct
 
@@ -1024,9 +1027,11 @@ function AutomaticModePlaceholder({onBack, userId}) {
       const mainGrape = grapes[0] || null
       const vintageValue = image.recognized_vintage ? String(image.recognized_vintage) : null
       const priceValue =
-        details.price != null
-          ? `${details.price}${details.currency ? ` ${details.currency}` : ''}`.trim()
-          : null
+        details.quiz_price_band || details.price_band
+          ? String(details.quiz_price_band || details.price_band).trim()
+          : details.price != null
+            ? `${details.price}${details.currency ? ` ${details.currency}` : ''}`.trim()
+            : null
       return {
         name: image.recognized_name,
         producer: image.recognized_producer,
@@ -1274,11 +1279,13 @@ function AutomaticModePlaceholder({onBack, userId}) {
                 const region = details
                   ? inferRegion(details, image) || details?.region || null
                   : null
+                const appellation = details?.quiz_appellation || details?.appellation || null
                 const wineType = mapWineTypeLabel(details?.type)
                 const primaryGrape =
                   (Array.isArray(details?.grapes) && details.grapes.length > 0
                     ? details.grapes[0]
                     : null) || null
+                const priceBand = details?.quiz_price_band || details?.price_band || null
                 const recognizedTitle = image.recognized_name || image.original_filename || '-'
                 const recognizedSubtitle = [image.recognized_producer, image.recognized_vintage]
                   .filter(Boolean)
@@ -1372,6 +1379,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
                               {country ? <span>{country}</span> : null}
                               {region ? <span className={styles.autoBottleFactDot}>•</span> : null}
                               {region ? <span>{region}</span> : null}
+                              {appellation ? (
+                                <span className={styles.autoBottleFactDot}>•</span>
+                              ) : null}
+                              {appellation ? <span>{appellation}</span> : null}
                               {wineType ? (
                                 <span className={styles.autoBottleFactDot}>•</span>
                               ) : null}
@@ -1403,6 +1414,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                   : ''}
                                 {details.price != null
                                   ? ` · ${t('automaticPriceLabel')}: ${details.price}${details.currency ? ` ${details.currency}` : ''}`
+                                  : ''}
+                                {priceBand ? ` · ${t('automaticQuestionPrice')}: ${priceBand}` : ''}
+                                {details.body || details.acidity
+                                  ? ` · ${[details.body, details.acidity].filter(Boolean).join(' / ')}`
                                   : ''}
                               </p>
                               <p className={styles.autoBottleCardDataRow}>

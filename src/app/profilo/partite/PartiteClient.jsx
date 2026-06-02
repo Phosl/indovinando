@@ -30,10 +30,25 @@ export default function PartiteClient({lang, t, summary, matches}) {
     )
   }, [matches, activeGame, lang])
 
+  const getModeLabel = (mode) => {
+    if (mode === 'live') return 'Live'
+    if (mode === 'table-live') return lang === 'en' ? 'Table' : 'Tavolo'
+    return 'Enoteca'
+  }
+
+  const getModeClass = (mode) => {
+    if (mode === 'live') return styles.live
+    if (mode === 'table-live') return styles.tableLive
+    return styles.enoteca
+  }
+
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <TopBar title={t.matchesTitle || (lang === 'en' ? 'Your matches' : 'Le tue partite')} onBack={() => router.push('/profilo')} />
+        <TopBar
+          title={t.matchesTitle || (lang === 'en' ? 'Your matches' : 'Le tue partite')}
+          onBack={() => router.push('/profilo')}
+        />
 
         <section className={styles.card}>
           <div className={styles.summaryGrid}>
@@ -90,7 +105,12 @@ export default function PartiteClient({lang, t, summary, matches}) {
                 <div className={styles.matchHead}>
                   <div className={styles.matchIdentity}>
                     {match.gameAvatar ? (
-                      <img src={match.gameAvatar} alt="" aria-hidden="true" className={styles.matchGameAvatar} />
+                      <img
+                        src={match.gameAvatar}
+                        alt=""
+                        aria-hidden="true"
+                        className={styles.matchGameAvatar}
+                      />
                     ) : (
                       <span className={styles.matchAvatar}>
                         <AvatarDisplay avatarId={match.myAvatarId} size={24} />
@@ -102,8 +122,8 @@ export default function PartiteClient({lang, t, summary, matches}) {
                     </div>
                   </div>
                   <div className={styles.matchHeadRight}>
-                    <span className={`${styles.modeBadge} ${match.mode === 'live' ? styles.live : styles.enoteca}`}>
-                      {match.mode === 'live' ? 'Live' : 'Enoteca'}
+                    <span className={`${styles.modeBadge} ${getModeClass(match.mode)}`}>
+                      {getModeLabel(match.mode)}
                     </span>
                   </div>
                 </div>

@@ -5,9 +5,29 @@ Questa guida serve per fare un import del catalogo vini da zero, in modo pulito.
 ## Flusso consigliato
 
 1. Pulisci catalogo + staging
-2. Importa il nuovo CSV in `public.wine_import_staging`
-3. Esegui `WINE_CATALOG_IMPORT.sql`
-4. Verifica i risultati
+2. Aggiorna lo schema DB con `WINE_CATALOG_DB_UPDATE_FOR_NEW_CSV.sql`
+3. Importa il nuovo CSV in `public.wine_import_staging`
+4. Esegui `WINE_CATALOG_IMPORT_NEW_CSV.sql`
+5. Verifica i risultati
+
+> **Script di riferimento (formato CSV aggiornato)**
+>
+> - `WINE_CATALOG_DB_UPDATE_FOR_NEW_CSV.sql` — patch idempotente al DB
+> - `WINE_CATALOG_IMPORT_NEW_CSV.sql` — pipeline import aggiornata
+
+## Colonne CSV supportate (formato corrente)
+
+```
+external_id  ean  name  normalized_name  name_normalized
+producer  normalized_producer  producer_normalized
+country  region  quiz_region  appellation  quiz_appellation
+type  wine_type  grapes  grapes_normalized
+vintage  abv  price  currency  price_band  quiz_price_band
+image_url  source  source_url  data_source  external_source_id
+elaborate  harmonize  body  acidity
+website  vintages  scraped_at  last_updated  updated_at
+confidence  search_text  search_tokens  notes  processed
+```
 
 ## 1) Pulizia completa (reset totale)
 
@@ -29,7 +49,21 @@ restart identity cascade;
 commit;
 ```
 
-## 2) Import CSV in staging
+## 2) Aggiorna lo schema DB
+
+Esegui `WINE_CATALOG_DB_UPDATE_FOR_NEW_CSV.sql` nel SQL Editor di Supabase.
+
+Questo script (idempotente) aggiunge le nuove colonne dove necessario:
+
+- `wine_import_staging`: normalized_name, normalized_producer, quiz_region, quiz_appellation,
+  wine_type, quiz_price_band, data_source, external_source_id, elaborate, harmonize, body, acidity,
+  website, vintages, updated_at, search_tokens
+- `wine_labels`: quiz_region, quiz_appellation, quiz_price_band, body, acidity, elaborate,
+  harmonize, search_tokens
+- `wine_vintages`: external_id, price_band
+- `wine_sources`: data_source, external_source_id
+
+## 3) Import CSV in staging
 
 In Supabase:
 
@@ -37,39 +71,12 @@ In Supabase:
 - `Import data` (CSV)
 - Carica il nuovo file
 
-### Se il CSV ha colonne nuove (header incompatibili)
+### Troubleshooting rapido
 
-Se vedi errori tipo:
+**Errore `column X does not exist`** Lo schema non è ancora aggiornato. Esegui prima il punto 2.
 
-- `reference_price`
-- `price_band`
-- `ocr_search_text`
-- `quiz_tags`
-- `data_quality_score`
-- `import_ready`
-- `is_active`
-
-allinea prima lo staging con questa query:
-
-```sql
-alter table public.wine_import_staging
-  add column if not exists reference_price numeric(10,2),
-  add column if not exists price_band text,
-  add column if not exists ocr_search_text text,
-  add column if not exists quiz_tags text,
-  add column if not exists data_quality_score numeric(5,2),
-  add column if not exists import_ready boolean,
-  add column if not exists is_active boolean;
-```
-
-Poi rifai l'import CSV.
-
-## Troubleshooting rapido
-
-### Errore `invalid input syntax for type numeric: "medium"`
-
-Significa che nel CSV c'è un valore testuale in una colonna numerica.
-Per lo staging, usa tipi testuali per questi campi misti:
+**Errore `invalid input syntax for type numeric: "medium"` o simile** Nel CSV c'è un valore testuale
+in una colonna numerica. Correggi con:
 
 ```sql
 alter table public.wine_import_staging
@@ -79,7 +86,7 @@ alter table public.wine_import_staging
 
 Poi riesegui l'import CSV.
 
-## 3) Verifica staging prima dell'import
+## 4) Verifica staging prima dell'import
 
 ```sql
 select count(*) as staging_rows from public.wine_import_staging;
@@ -88,11 +95,11 @@ from public.wine_import_staging
 where processed = false;
 ```
 
-## 4) Esegui lo script di import
+## 5) Esegui lo script di import
 
-Esegui interamente `WINE_CATALOG_IMPORT.sql` nel SQL Editor di Supabase.
+Esegui interamente `WINE_CATALOG_IMPORT_NEW_CSV.sql` nel SQL Editor di Supabase.
 
-## 5) Verifica finale
+## 6) Verifica finale
 
 ```sql
 select count(*) as producers from public.wine_producers;
@@ -115,5 +122,6 @@ truncate table public.wine_import_staging restart identity;
 
 Poi:
 
-1. Reimport CSV in staging
-2. Riesegui `WINE_CATALOG_IMPORT.sql`
+1. Aggiorna schema DB se non ancora fatto (punto 2)
+2. Reimport CSV in staging
+3. Riesegui `WINE_CATALOG_IMPORT_NEW_CSV.sql`

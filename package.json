@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "install:hooks": "node scripts/install-git-hooks.mjs",
-    "changelog:auto": "node scripts/update-changelog-from-commits.mjs"
+    "changelog:auto": "node scripts/update-changelog-from-commits.mjs",
+    "wine:import:storage": "node scripts/import-wine-chunks-from-storage.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.9.0",
