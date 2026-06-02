@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.29.0',
+    date: '2 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'harden import pipeline and add legacy schema fallbacks',
+    ],
+  },
+
+  {
     version: '1.28.5',
     date: '1 giugno 2026',
     label: 'Auto',
