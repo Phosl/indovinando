@@ -10,6 +10,7 @@ CREATE TABLE games (
   created_by UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   name VARCHAR(255) NOT NULL,
   status VARCHAR(20) DEFAULT 'draft',
+  cover_index INTEGER,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -39,6 +40,7 @@ CREATE TABLE game_bottles (
   name VARCHAR(255) NOT NULL,
   producer VARCHAR(255),
   year VARCHAR(4),
+  wine_type TEXT,
   bottle_order INTEGER NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );

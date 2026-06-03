@@ -60,11 +60,21 @@ ON CONFLICT (id) DO NOTHING;
 -- 3) Storage RLS policies for bucket 'corsi'
 -- ---------------------------------------------------------------------------
 
--- Anyone can read course JSON files (public bucket)
+-- Do NOT expose a broad SELECT policy on storage.objects for this bucket.
+-- The bucket is public, so files remain retrievable via public URLs,
+-- but clients cannot list all objects through storage.objects queries.
 DROP POLICY IF EXISTS "Public read corsi" ON storage.objects;
-CREATE POLICY "Public read corsi"
+
+-- Optional tighter select policy (admin-only metadata reads)
+DROP POLICY IF EXISTS "Super admin read corsi metadata" ON storage.objects;
+CREATE POLICY "Super admin read corsi metadata"
   ON storage.objects FOR SELECT
-  USING (bucket_id = 'corsi');
+  USING (
+    bucket_id = 'corsi'
+    AND (
+      SELECT super_admin FROM public.profiles WHERE id = auth.uid()
+    ) = true
+  );
 
 -- Only super_admins can upload/update/delete course files
 DROP POLICY IF EXISTS "Super admin write corsi" ON storage.objects;

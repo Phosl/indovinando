@@ -110,9 +110,13 @@ create table if not exists games (
   created_by uuid not null references auth.users(id) on delete cascade,
   name varchar(255) not null,
   status varchar(20) default 'draft',
+  cover_index integer,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
+
+alter table games
+  add column if not exists cover_index integer;
 
 create table if not exists game_questions (
   id uuid primary key default gen_random_uuid(),
@@ -136,9 +140,13 @@ create table if not exists game_bottles (
   name varchar(255) not null,
   producer varchar(255),
   year varchar(4),
+  wine_type text,
   bottle_order integer not null,
   created_at timestamptz default now()
 );
+
+alter table game_bottles
+  add column if not exists wine_type text;
 
 create table if not exists game_bottle_answers (
   id uuid primary key default gen_random_uuid(),

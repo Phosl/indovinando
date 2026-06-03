@@ -101,4 +101,96 @@ create index if not exists idx_table_live_event_results_event
 create index if not exists idx_table_live_event_results_session
   on public.table_live_event_results(session_id);
 
+-- ---------------------------------------------------------------------------
+-- RLS baseline policies (step 1)
+-- NOTE: kept permissive to support guest/table flows and server routes.
+-- ---------------------------------------------------------------------------
+alter table public.table_live_events enable row level security;
+alter table public.table_live_sessions enable row level security;
+alter table public.table_live_players enable row level security;
+alter table public.table_live_round_answers enable row level security;
+alter table public.table_live_event_results enable row level security;
+
+drop policy if exists "Public read active table live events" on public.table_live_events;
+create policy "Public read active table live events"
+  on public.table_live_events for select
+  using (status = 'active');
+
+drop policy if exists "Authenticated create own table live events" on public.table_live_events;
+create policy "Authenticated create own table live events"
+  on public.table_live_events for insert
+  to authenticated
+  with check (created_by = auth.uid());
+
+drop policy if exists "Owner manage own table live events" on public.table_live_events;
+create policy "Owner manage own table live events"
+  on public.table_live_events for update
+  to authenticated
+  using (created_by = auth.uid())
+  with check (created_by = auth.uid());
+
+drop policy if exists "Public read table live sessions" on public.table_live_sessions;
+create policy "Public read table live sessions"
+  on public.table_live_sessions for select
+  using (true);
+
+drop policy if exists "Public insert table live sessions" on public.table_live_sessions;
+create policy "Public insert table live sessions"
+  on public.table_live_sessions for insert
+  with check (true);
+
+drop policy if exists "Public update table live sessions" on public.table_live_sessions;
+create policy "Public update table live sessions"
+  on public.table_live_sessions for update
+  using (true)
+  with check (true);
+
+drop policy if exists "Public read table live players" on public.table_live_players;
+create policy "Public read table live players"
+  on public.table_live_players for select
+  using (true);
+
+drop policy if exists "Public insert table live players" on public.table_live_players;
+create policy "Public insert table live players"
+  on public.table_live_players for insert
+  with check (true);
+
+drop policy if exists "Public update table live players" on public.table_live_players;
+create policy "Public update table live players"
+  on public.table_live_players for update
+  using (true)
+  with check (true);
+
+drop policy if exists "Public read table live answers" on public.table_live_round_answers;
+create policy "Public read table live answers"
+  on public.table_live_round_answers for select
+  using (true);
+
+drop policy if exists "Public insert table live answers" on public.table_live_round_answers;
+create policy "Public insert table live answers"
+  on public.table_live_round_answers for insert
+  with check (true);
+
+drop policy if exists "Public update table live answers" on public.table_live_round_answers;
+create policy "Public update table live answers"
+  on public.table_live_round_answers for update
+  using (true)
+  with check (true);
+
+drop policy if exists "Public delete table live answers" on public.table_live_round_answers;
+create policy "Public delete table live answers"
+  on public.table_live_round_answers for delete
+  using (true);
+
+drop policy if exists "Public read table live event results" on public.table_live_event_results;
+create policy "Public read table live event results"
+  on public.table_live_event_results for select
+  using (true);
+
+drop policy if exists "Public write table live event results" on public.table_live_event_results;
+create policy "Public write table live event results"
+  on public.table_live_event_results for all
+  using (true)
+  with check (true);
+
 commit;

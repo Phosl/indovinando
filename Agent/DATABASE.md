@@ -103,14 +103,15 @@ Migration: `AUTO_TASTING_MEDIA_SCHEMA.sql`
 
 Gioco creato dall'utente.
 
-| Colonna      | Tipo                    | Note                        |
-| ------------ | ----------------------- | --------------------------- |
-| `id`         | `UUID PK`               | default `gen_random_uuid()` |
-| `created_by` | `UUID FK -> auth.users` | creatore                    |
-| `name`       | `VARCHAR(255)`          | nome gioco                  |
-| `status`     | `VARCHAR(20)`           | `draft` o `published`       |
-| `created_at` | `TIMESTAMPTZ`           | default `now()`             |
-| `updated_at` | `TIMESTAMPTZ`           | default `now()`             |
+| Colonna       | Tipo                    | Note                        |
+| ------------- | ----------------------- | --------------------------- |
+| `id`          | `UUID PK`               | default `gen_random_uuid()` |
+| `created_by`  | `UUID FK -> auth.users` | creatore                    |
+| `name`        | `VARCHAR(255)`          | nome gioco                  |
+| `status`      | `VARCHAR(20)`           | `draft` o `published`       |
+| `cover_index` | `INTEGER`               | indice avatar/copertina     |
+| `created_at`  | `TIMESTAMPTZ`           | default `now()`             |
+| `updated_at`  | `TIMESTAMPTZ`           | default `now()`             |
 
 RLS principali:
 
@@ -150,15 +151,16 @@ Indice: `idx_game_question_options_question_id`
 
 Bottiglie da indovinare in un gioco.
 
-| Colonna        | Tipo               | Note      |
-| -------------- | ------------------ | --------- |
-| `id`           | `UUID PK`          |           |
-| `game_id`      | `UUID FK -> games` |           |
-| `name`         | `VARCHAR(255)`     | nome vino |
-| `producer`     | `VARCHAR(255)`     | opzionale |
-| `year`         | `VARCHAR(4)`       | opzionale |
-| `bottle_order` | `INTEGER`          | ordine    |
-| `created_at`   | `TIMESTAMPTZ`      |           |
+| Colonna        | Tipo               | Note                      |
+| -------------- | ------------------ | ------------------------- |
+| `id`           | `UUID PK`          |                           |
+| `game_id`      | `UUID FK -> games` |                           |
+| `name`         | `VARCHAR(255)`     | nome vino                 |
+| `producer`     | `VARCHAR(255)`     | opzionale                 |
+| `year`         | `VARCHAR(4)`       | opzionale                 |
+| `wine_type`    | `TEXT`             | opzionale (red/white/...) |
+| `bottle_order` | `INTEGER`          | ordine                    |
+| `created_at`   | `TIMESTAMPTZ`      |                           |
 
 Indice: `idx_game_bottles_game_id`
 
@@ -181,11 +183,10 @@ Indici:
 
 ## Catalogo Vini (Auto Degustazione)
 
-Nota aggiornamento schema:
-dal file `WINE_CATALOG_SCHEMA.sql` il modello e normalizzato (`wine_producers`, `wine_labels`,
-`wine_vintages`, `wine_grapes`, `wine_label_grapes`, `wine_sources`) con tabella
-`wine_import_staging` per import CSV. La view `wine_catalog` resta disponibile per compatibilita
-con pagine/admin query esistenti.
+Nota aggiornamento schema: dal file `WINE_CATALOG_SCHEMA.sql` il modello e normalizzato
+(`wine_producers`, `wine_labels`, `wine_vintages`, `wine_grapes`, `wine_label_grapes`,
+`wine_sources`) con tabella `wine_import_staging` per import CSV. La view `wine_catalog` resta
+disponibile per compatibilita con pagine/admin query esistenti.
 
 ### Modello Normalizzato (principale)
 
@@ -207,37 +208,37 @@ Vista catalogo vini usata per:
 - precompilazione bottiglie
 - generazione quiz rapido (paese, regione, annata, tipologia, vitigni, prezzo)
 
-| Colonna              | Tipo          | Note |
-| -------------------- | ------------- | ---- |
-| `id`                 | `UUID`        | id vintage |
-| `external_id`        | `TEXT`        | id sorgente scraper |
-| `ean`                | `TEXT`        | barcode/ean |
-| `name`               | `TEXT`        | nome vino completo |
-| `name_normalized`    | `TEXT`        | nome normalizzato |
-| `producer`           | `TEXT`        | produttore |
-| `producer_normalized`| `TEXT`        | produttore normalizzato |
-| `country`            | `TEXT`        | paese |
-| `region`             | `TEXT`        | regione |
-| `appellation`        | `TEXT`        | doc/docg/igt |
-| `type`               | `TEXT`        | red/white/rose/sparkling |
-| `grapes`             | `TEXT[]`      | lista vitigni |
-| `grapes_normalized`  | `TEXT[]`      | lista vitigni normalizzati |
-| `vintage`            | `INT`         | annata |
-| `abv`                | `NUMERIC(5,2)`| gradazione |
-| `price`              | `NUMERIC(10,2)` | prezzo |
-| `currency`           | `TEXT`        | valuta |
-| `image_url`          | `TEXT`        | url immagine |
-| `source`             | `TEXT`        | fonte (tannico, open food facts, ecc.) |
-| `source_url`         | `TEXT`        | url prodotto |
-| `scraped_at`         | `TIMESTAMPTZ` | data scraping |
-| `last_updated`       | `TIMESTAMPTZ` | aggiornamento record |
-| `confidence`         | `NUMERIC(4,3)`| affidabilita estrazione |
-| `search_text`        | `TEXT`        | testo indicizzato per match fuzzy |
-| `dedupe_key`         | `TEXT`        | chiave deduplica |
-| `notes`              | `TEXT`        | note tecniche |
-| `is_active`          | `BOOLEAN`     | attivo a livello label |
-| `created_at`         | `TIMESTAMPTZ` | default `now()` |
-| `updated_at`         | `TIMESTAMPTZ` | default `now()` |
+| Colonna               | Tipo            | Note                                   |
+| --------------------- | --------------- | -------------------------------------- |
+| `id`                  | `UUID`          | id vintage                             |
+| `external_id`         | `TEXT`          | id sorgente scraper                    |
+| `ean`                 | `TEXT`          | barcode/ean                            |
+| `name`                | `TEXT`          | nome vino completo                     |
+| `name_normalized`     | `TEXT`          | nome normalizzato                      |
+| `producer`            | `TEXT`          | produttore                             |
+| `producer_normalized` | `TEXT`          | produttore normalizzato                |
+| `country`             | `TEXT`          | paese                                  |
+| `region`              | `TEXT`          | regione                                |
+| `appellation`         | `TEXT`          | doc/docg/igt                           |
+| `type`                | `TEXT`          | red/white/rose/sparkling               |
+| `grapes`              | `TEXT[]`        | lista vitigni                          |
+| `grapes_normalized`   | `TEXT[]`        | lista vitigni normalizzati             |
+| `vintage`             | `INT`           | annata                                 |
+| `abv`                 | `NUMERIC(5,2)`  | gradazione                             |
+| `price`               | `NUMERIC(10,2)` | prezzo                                 |
+| `currency`            | `TEXT`          | valuta                                 |
+| `image_url`           | `TEXT`          | url immagine                           |
+| `source`              | `TEXT`          | fonte (tannico, open food facts, ecc.) |
+| `source_url`          | `TEXT`          | url prodotto                           |
+| `scraped_at`          | `TIMESTAMPTZ`   | data scraping                          |
+| `last_updated`        | `TIMESTAMPTZ`   | aggiornamento record                   |
+| `confidence`          | `NUMERIC(4,3)`  | affidabilita estrazione                |
+| `search_text`         | `TEXT`          | testo indicizzato per match fuzzy      |
+| `dedupe_key`          | `TEXT`          | chiave deduplica                       |
+| `notes`               | `TEXT`          | note tecniche                          |
+| `is_active`           | `BOOLEAN`       | attivo a livello label                 |
+| `created_at`          | `TIMESTAMPTZ`   | default `now()`                        |
+| `updated_at`          | `TIMESTAMPTZ`   | default `now()`                        |
 
 Indici principali:
 
@@ -252,7 +253,7 @@ Vista supporto admin:
 
 - `wine_catalog_producer_stats` (aggregazione produttori)
 
-### RLS (tabelle wine_*)
+### RLS (tabelle wine\_\*)
 
 - `SELECT`: utenti autenticati
 - `INSERT/UPDATE/DELETE`: solo `profiles.super_admin = true`
@@ -266,7 +267,9 @@ Vista supporto admin:
    `Table Editor -> wine_import_staging -> Insert -> Import data via CSV`.
 4. Mappa le colonne CSV su:
    `external_id, ean, name, name_normalized, producer, producer_normalized, country, region, appellation, type, grapes, grapes_normalized, vintage, abv, price, currency, image_url, source, source_url, scraped_at, last_updated, confidence, search_text, dedupe_key, notes`.
-5. Esegui `WINE_CATALOG_IMPORT.sql` per popolare tabelle normalizzate (`wine_producers`, `wine_labels`, `wine_vintages`, `wine_grapes`, `wine_label_grapes`, `wine_sources`) e marcare `processed = true` in staging.
+5. Esegui `WINE_CATALOG_IMPORT.sql` per popolare tabelle normalizzate (`wine_producers`,
+   `wine_labels`, `wine_vintages`, `wine_grapes`, `wine_label_grapes`, `wine_sources`) e marcare
+   `processed = true` in staging.
 6. Controlli rapidi:
    - count record su `wine_catalog`
    - count record su `wine_catalog_producer_stats`
@@ -281,25 +284,25 @@ Vista supporto admin:
 Metadati immagini caricati per riconoscimento etichetta. Tabella separata dal core game flow
 (quick/custom restano invariati anche se questa tabella non e presente).
 
-| Colonna                  | Tipo            | Note |
-| ------------------------ | --------------- | ---- |
-| `id`                     | `UUID PK`       | default `gen_random_uuid()` |
-| `uploaded_by`            | `UUID FK`       | owner (`auth.users.id`) |
-| `game_id`                | `UUID FK`       | opzionale, `on delete set null` |
-| `storage_bucket`         | `TEXT`          | default `tasting-bottles` |
-| `storage_path`           | `TEXT`          | path file nel bucket |
-| `original_filename`      | `TEXT`          | opzionale |
-| `mime_type`              | `TEXT`          | opzionale |
-| `size_bytes`             | `BIGINT`        | opzionale |
-| `status`                 | `TEXT`          | `uploaded` / `processing` / `recognized` / `failed` |
-| `recognized_payload`     | `JSONB`         | payload OCR/vision raw |
-| `recognized_name`        | `TEXT`          | valore estratto |
-| `recognized_producer`    | `TEXT`          | valore estratto |
-| `recognized_vintage`     | `INT`           | valore estratto |
-| `recognition_confidence` | `NUMERIC(5,4)`  | confidenza |
-| `error_message`          | `TEXT`          | dettaglio errore pipeline |
-| `created_at`             | `TIMESTAMPTZ`   | default `now()` |
-| `updated_at`             | `TIMESTAMPTZ`   | trigger `set_updated_at()` |
+| Colonna                  | Tipo           | Note                                                |
+| ------------------------ | -------------- | --------------------------------------------------- |
+| `id`                     | `UUID PK`      | default `gen_random_uuid()`                         |
+| `uploaded_by`            | `UUID FK`      | owner (`auth.users.id`)                             |
+| `game_id`                | `UUID FK`      | opzionale, `on delete set null`                     |
+| `storage_bucket`         | `TEXT`         | default `tasting-bottles`                           |
+| `storage_path`           | `TEXT`         | path file nel bucket                                |
+| `original_filename`      | `TEXT`         | opzionale                                           |
+| `mime_type`              | `TEXT`         | opzionale                                           |
+| `size_bytes`             | `BIGINT`       | opzionale                                           |
+| `status`                 | `TEXT`         | `uploaded` / `processing` / `recognized` / `failed` |
+| `recognized_payload`     | `JSONB`        | payload OCR/vision raw                              |
+| `recognized_name`        | `TEXT`         | valore estratto                                     |
+| `recognized_producer`    | `TEXT`         | valore estratto                                     |
+| `recognized_vintage`     | `INT`          | valore estratto                                     |
+| `recognition_confidence` | `NUMERIC(5,4)` | confidenza                                          |
+| `error_message`          | `TEXT`         | dettaglio errore pipeline                           |
+| `created_at`             | `TIMESTAMPTZ`  | default `now()`                                     |
+| `updated_at`             | `TIMESTAMPTZ`  | trigger `set_updated_at()`                          |
 
 - `wine_label_grapes` e gestita in modalita **replace** per i `wine_label` impattati dal batch:
   - delete relazioni esistenti dei label nel batch
@@ -416,6 +419,28 @@ Indice:
 
 - `idx_live_round_status_session`
 - `idx_live_round_status_question`
+
+## Tabelle Live Tavoli e Gruppi
+
+Schema dedicato usato da `/table-live/*` e API `/api/table-live/*`.
+
+Tabelle principali:
+
+- `table_live_events`
+- `table_live_sessions`
+- `table_live_players`
+- `table_live_round_answers`
+- `table_live_event_results`
+
+Migration: `TABLE_LIVE_GROUPS_SCHEMA.sql`
+
+RLS (step 1):
+
+- RLS abilitato su tutte le `table_live_*`
+- policy baseline intenzionalmente permissive per supportare flusso guest/table
+- eventi leggibili pubblicamente solo se `status = 'active'`
+- write gestite dalle API server-side; se `SUPABASE_SERVICE_ROLE_KEY` e assente, le policy baseline
+  permettono fallback funzionale
 
 ## Tabelle Corso Vino
 
