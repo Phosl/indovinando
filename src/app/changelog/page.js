@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.29.1',
+    date: '3 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'icebucket update + import-wine-chunks-from-storage.mjs',
+    ],
+  },
+
+  {
     version: '1.29.0',
     date: '2 giugno 2026',
     label: 'Auto',
