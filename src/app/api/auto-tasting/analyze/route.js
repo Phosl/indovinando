@@ -1,7 +1,11 @@
 import {NextResponse} from 'next/server'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {createClient} from '@supabase/supabase-js'
 
 const GOOGLE_CLOUD_VISION_API_KEY = process.env.GOOGLE_CLOUD_VISION_API_KEY
+const WINE_API_KEY = process.env.WINE_API_KEY
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 const WINE_NOISE_TERMS = new Set([
   'doc',
   'docg',
@@ -59,6 +63,577 @@ const REGION_HINTS = [
   {canonical: 'Borgogna', aliases: ['borgogna', 'bourgogne', 'burgundy']},
   {canonical: 'Champagne', aliases: ['champagne']},
 ]
+
+const COUNTRY_HINTS = [
+  {canonical: 'Italy', aliases: ['italia', 'italy', 'italian', 'italiano', 'italiana']},
+  {canonical: 'Spain', aliases: ['spagna', 'spain', 'spanish', 'espanol', 'español']},
+  {canonical: 'France', aliases: ['francia', 'france', 'french', 'francese']},
+]
+
+const TASTING_IMAGE_LOAD_FIELDS =
+  'id, uploaded_by, storage_bucket, storage_path, original_filename, mime_type, status, recognized_name, recognized_producer, recognized_vintage, recognition_confidence'
+
+const TASTING_IMAGE_RETURN_FIELDS =
+  'id, original_filename, storage_bucket, storage_path, status, recognized_name, recognized_producer, recognized_vintage, recognition_confidence, recognized_payload, error_message, created_at'
+
+const ALLOWED_WINE_TYPES = new Set([
+  'red',
+  'white',
+  'rose',
+  'sparkling',
+  'orange',
+  'dessert',
+  'fortified',
+])
+
+function createCatalogWriteClient(fallback) {
+  if (SUPABASE_URL && SERVICE_ROLE_KEY) {
+    return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
+      auth: {persistSession: false, autoRefreshToken: false},
+    })
+  }
+  return fallback
+}
+
+function toNullableTrimmed(value) {
+  const normalized = String(value ?? '').trim()
+  return normalized ? normalized : null
+}
+
+function mapWineType(value) {
+  const normalized = normalizeForCheck(value)
+  if (!normalized) return null
+  if (normalized === 'rose' || normalized === 'rosee') return 'rose'
+  if (ALLOWED_WINE_TYPES.has(normalized)) return normalized
+  return null
+}
+
+function buildWineApiQuery(extracted) {
+  const parts = [
+    toNullableTrimmed(extracted?.recognized_name),
+    toNullableTrimmed(extracted?.recognized_producer),
+  ].filter(Boolean)
+  return parts.join(' ').trim()
+}
+
+function toNumericOrNull(value) {
+  if (value == null) return null
+  if (typeof value === 'number' && Number.isFinite(value)) return value
+  const normalized = String(value).replace(',', '.').trim()
+  if (!normalized) return null
+  const parsed = Number(normalized)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
+function extractWineApiGrapes(details) {
+  const candidates = []
+  const pushValue = (value) => {
+    const normalized = toNullableTrimmed(value)
+    if (normalized) candidates.push(normalized)
+  }
+
+  const fromList = (list) => {
+    if (!Array.isArray(list)) return
+    for (const item of list) {
+      if (typeof item === 'string') {
+        pushValue(item)
+        continue
+      }
+      if (item && typeof item === 'object') {
+        pushValue(item.name)
+        pushValue(item.grape)
+        pushValue(item.variety)
+      }
+    }
+  }
+
+  fromList(details?.grapes)
+  fromList(details?.varieties)
+
+  const unique = [...new Set(candidates.map((v) => v.toLowerCase()))]
+  return unique
+    .map((lower) => {
+      const original = candidates.find((v) => v.toLowerCase() === lower)
+      return original || null
+    })
+    .filter(Boolean)
+}
+
+function extractWineApiPrice(details, searchTop) {
+  const price =
+    toNumericOrNull(details?.averagePrice) ||
+    toNumericOrNull(details?.avgPrice) ||
+    toNumericOrNull(details?.price?.amount) ||
+    toNumericOrNull(details?.price) ||
+    toNumericOrNull(searchTop?.averagePrice) ||
+    toNumericOrNull(searchTop?.avgPrice)
+
+  const currency =
+    toNullableTrimmed(details?.currency) ||
+    toNullableTrimmed(details?.price?.currency) ||
+    toNullableTrimmed(searchTop?.currency)
+
+  return {price, currency}
+}
+
+async function fetchWineApiDetails(wineId) {
+  if (!wineId || !WINE_API_KEY) return null
+  const endpoint = `https://api.wineapi.io/wines/${encodeURIComponent(wineId)}`
+  const response = await withTimeout(
+    fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        'X-API-Key': WINE_API_KEY,
+      },
+      cache: 'no-store',
+    }),
+    12000,
+    'wineapi details',
+  )
+
+  const json = await response.json().catch(() => null)
+  if (!response.ok) {
+    throw new Error(json?.message || `wineapi details http ${response.status}`)
+  }
+  return json || null
+}
+
+async function searchWineApi(extracted) {
+  if (!WINE_API_KEY) {
+    console.log('[auto-tasting] ricerca wine api: skip (missing WINE_API_KEY)')
+    return null
+  }
+
+  const q = buildWineApiQuery(extracted)
+  const searchContext = getWineApiSearchContext(extracted)
+  const regionHint = detectRegionHint(searchContext)
+  const countryHint = detectCountryHint(searchContext)
+  console.log('[auto-tasting] ricerca wine api', {query: q || null, countryHint})
+  if (!q) {
+    console.log('[auto-tasting] risultato wine api', {matched: false, reason: 'empty query'})
+    return null
+  }
+
+  const endpoint = `https://api.wineapi.io/wines/search?q=${encodeURIComponent(q)}&limit=5&offset=0`
+  const response = await withTimeout(
+    fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        'X-API-Key': WINE_API_KEY,
+      },
+      cache: 'no-store',
+    }),
+    12000,
+    'wineapi search',
+  )
+
+  const json = await response.json().catch(() => null)
+  if (!response.ok) {
+    throw new Error(json?.message || `wineapi http ${response.status}`)
+  }
+
+  const results = Array.isArray(json?.results) ? json.results : []
+  if (!results.length) {
+    console.log('[auto-tasting] risultato wine api', {
+      matched: false,
+      reason: 'no results',
+      query: q,
+    })
+    return null
+  }
+
+  const rankedResults = results
+    .map((result, index) => ({
+      result,
+      index,
+      score: scoreWineApiResult(result, extracted, countryHint, regionHint),
+    }))
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+
+  const top = rankedResults[0]?.result || results[0]
+  console.log('[auto-tasting] risultato wine api', {
+    query: q,
+    top,
+    ranking: rankedResults.slice(0, 3).map(({result, score}) => ({
+      id: result?.id || null,
+      name: result?.name || null,
+      winery: result?.winery || null,
+      country: result?.country || null,
+      region: result?.region || null,
+      score: Number(score.toFixed(3)),
+    })),
+  })
+
+  let details = null
+  try {
+    details = await fetchWineApiDetails(top?.id)
+  } catch {
+    details = null
+  }
+
+  const {price, currency} = extractWineApiPrice(details, top)
+  const grapes = extractWineApiGrapes(details)
+  const country = toNullableTrimmed(top?.country)
+  const region = toNullableTrimmed(top?.region)
+  return {
+    id: toNullableTrimmed(top?.id),
+    name: toNullableTrimmed(top?.name),
+    winery: toNullableTrimmed(top?.winery),
+    region,
+    country,
+    type: mapWineType(top?.type),
+    vintage:
+      Number.isInteger(top?.vintage) && top.vintage >= 1800 && top.vintage <= 2100
+        ? top.vintage
+        : null,
+    grapes,
+    price,
+    currency,
+    confidence: Number(top?.confidence || 0) > 0 ? Number(top.confidence) : null,
+    recognized_country: country,
+    recognized_region: region,
+    raw: top,
+    raw_details: details,
+  }
+}
+
+async function upsertWineApiMatchIntoCatalog(db, wineApiMatch) {
+  if (!wineApiMatch?.name) return null
+
+  const producerName = wineApiMatch.winery || 'Unknown'
+  const producerNormalized = toNormalizedKey(producerName)
+  const labelName = wineApiMatch.name
+  const labelNormalized = toNormalizedKey(labelName)
+  const labelAppellation = null
+  const labelAppellationKey = ''
+
+  if (!producerNormalized || !labelNormalized) return null
+
+  let producerId = null
+  const {data: existingProducer} = await withTimeout(
+    db.from('wine_producers').select('id').eq('normalized_name', producerNormalized).maybeSingle(),
+    10000,
+    'catalog producer lookup',
+  )
+
+  if (existingProducer?.id) {
+    producerId = existingProducer.id
+  } else {
+    const {data: insertedProducer, error: producerInsertError} = await withTimeout(
+      db
+        .from('wine_producers')
+        .insert({
+          name: producerName,
+          normalized_name: producerNormalized,
+          country: wineApiMatch.country,
+          region: wineApiMatch.region,
+        })
+        .select('id')
+        .maybeSingle(),
+      10000,
+      'catalog producer insert',
+    )
+    if (producerInsertError) {
+      throw new Error(`producer upsert failed: ${producerInsertError.message}`)
+    }
+    producerId = insertedProducer?.id || null
+  }
+
+  if (!producerId) return null
+
+  const {data: labels} = await withTimeout(
+    db
+      .from('wine_labels')
+      .select('id, appellation')
+      .eq('normalized_name', labelNormalized)
+      .eq('producer_id', producerId)
+      .limit(20),
+    10000,
+    'catalog label lookup',
+  )
+
+  const matchedLabel = (labels || []).find(
+    (row) => (row?.appellation || '') === labelAppellationKey,
+  )
+
+  let labelId = matchedLabel?.id || null
+  if (!labelId) {
+    const {data: insertedLabel, error: labelInsertError} = await withTimeout(
+      db
+        .from('wine_labels')
+        .insert({
+          producer_id: producerId,
+          name: labelName,
+          normalized_name: labelNormalized,
+          appellation: labelAppellation,
+          country: wineApiMatch.country,
+          region: wineApiMatch.region,
+          type: wineApiMatch.type,
+          search_text: [labelName, producerName, wineApiMatch.region, wineApiMatch.country]
+            .filter(Boolean)
+            .join(' '),
+        })
+        .select('id')
+        .maybeSingle(),
+      10000,
+      'catalog label insert',
+    )
+    if (labelInsertError) {
+      throw new Error(`label upsert failed: ${labelInsertError.message}`)
+    }
+    labelId = insertedLabel?.id || null
+  }
+
+  if (!labelId) return null
+
+  let vintageId = null
+  if (wineApiMatch.vintage) {
+    const {data: existingVintage} = await withTimeout(
+      db
+        .from('wine_vintages')
+        .select('id')
+        .eq('wine_label_id', labelId)
+        .eq('vintage', wineApiMatch.vintage)
+        .maybeSingle(),
+      10000,
+      'catalog vintage lookup',
+    )
+
+    if (existingVintage?.id) {
+      vintageId = existingVintage.id
+    } else {
+      const {data: insertedVintage, error: vintageInsertError} = await withTimeout(
+        db
+          .from('wine_vintages')
+          .insert({
+            wine_label_id: labelId,
+            vintage: wineApiMatch.vintage,
+            price: wineApiMatch.price,
+            currency: wineApiMatch.currency,
+            confidence: wineApiMatch.confidence,
+            last_seen_at: new Date().toISOString(),
+          })
+          .select('id')
+          .maybeSingle(),
+        10000,
+        'catalog vintage insert',
+      )
+      if (vintageInsertError) {
+        throw new Error(`vintage upsert failed: ${vintageInsertError.message}`)
+      }
+      vintageId = insertedVintage?.id || null
+    }
+
+    if (vintageId) {
+      await withTimeout(
+        db
+          .from('wine_vintages')
+          .update({
+            price: wineApiMatch.price,
+            currency: wineApiMatch.currency,
+            last_seen_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', vintageId),
+        10000,
+        'catalog vintage refresh',
+      ).catch(() => null)
+    }
+  }
+
+  if (labelId && Array.isArray(wineApiMatch.grapes) && wineApiMatch.grapes.length > 0) {
+    const normalizedGrapes = [
+      ...new Set(wineApiMatch.grapes.map((g) => toNormalizedKey(g)).filter(Boolean)),
+    ]
+    for (const normalizedName of normalizedGrapes) {
+      let grapeId = null
+      const {data: existingGrape} = await withTimeout(
+        db.from('wine_grapes').select('id').eq('normalized_name', normalizedName).maybeSingle(),
+        10000,
+        'catalog grape lookup',
+      )
+      if (existingGrape?.id) {
+        grapeId = existingGrape.id
+      } else {
+        const displayName =
+          wineApiMatch.grapes.find((g) => toNormalizedKey(g) === normalizedName) || normalizedName
+        const {data: insertedGrape} = await withTimeout(
+          db
+            .from('wine_grapes')
+            .insert({
+              name: capitalizeWords(displayName),
+              normalized_name: normalizedName,
+            })
+            .select('id')
+            .maybeSingle(),
+          10000,
+          'catalog grape insert',
+        ).catch(() => ({data: null}))
+        grapeId = insertedGrape?.id || null
+      }
+
+      if (grapeId) {
+        await withTimeout(
+          db.from('wine_label_grapes').insert({
+            wine_label_id: labelId,
+            grape_id: grapeId,
+          }),
+          10000,
+          'catalog label-grape insert',
+        ).catch(() => null)
+      }
+    }
+  }
+
+  if (vintageId) {
+    await withTimeout(
+      db.from('wine_sources').insert({
+        wine_vintage_id: vintageId,
+        source: 'wineapi.io',
+        source_url: wineApiMatch.id ? `https://wineapi.io/wines/${wineApiMatch.id}` : null,
+        price: wineApiMatch.price,
+        currency: wineApiMatch.currency,
+        scraped_at: new Date().toISOString(),
+        confidence: wineApiMatch.confidence,
+        raw_payload:
+          wineApiMatch.raw_details || wineApiMatch.raw
+            ? {
+                search: wineApiMatch.raw || null,
+                details: wineApiMatch.raw_details || null,
+                grapes: wineApiMatch.grapes || [],
+              }
+            : null,
+      }),
+      10000,
+      'catalog source insert',
+    ).catch(() => null)
+  }
+
+  return {
+    producerId,
+    labelId,
+    vintageId,
+  }
+}
+
+async function enrichWithWineApiAndPersist({supabase, catalogDb, extracted}) {
+  if (!extracted?.ok) return extracted
+
+  console.log('[auto-tasting] ricerca wine api: start enrich', {
+    recognized_name: extracted.recognized_name || null,
+    recognized_producer: extracted.recognized_producer || null,
+  })
+
+  let match = null
+  try {
+    match = await searchWineApi(extracted)
+  } catch (error) {
+    return {
+      ...extracted,
+      warning_message: extracted.warning_message || `wineapi search failed: ${error.message}`,
+      recognized_payload: {
+        ...(extracted.recognized_payload || {}),
+        wineapi: {
+          ok: false,
+          error: error.message,
+        },
+      },
+    }
+  }
+
+  if (!match) {
+    console.log('[auto-tasting] risultato wine api', {
+      matched: false,
+      reason: 'search returned null',
+    })
+    return {
+      ...extracted,
+      recognized_payload: {
+        ...(extracted.recognized_payload || {}),
+        wineapi: {
+          ok: true,
+          matched: false,
+        },
+      },
+    }
+  }
+
+  let persisted = null
+  try {
+    persisted = await upsertWineApiMatchIntoCatalog(catalogDb || supabase, match)
+  } catch (error) {
+    persisted = {
+      error: error.message,
+    }
+  }
+
+  console.log('[auto-tasting] risultato wine api', {
+    matched: true,
+    id: match.id,
+    name: match.name,
+    winery: match.winery,
+    region: match.region,
+    country: match.country,
+    vintage: match.vintage,
+    grapes: match.grapes || [],
+    price: match.price,
+    currency: match.currency,
+    persisted,
+  })
+
+  const wineApiResult = extracted.recognized_payload?.wineapi?.result || null
+
+  return {
+    ...extracted,
+    recognized_name: extracted.recognized_name || match.name,
+    recognized_producer: extracted.recognized_producer || match.winery,
+    recognized_vintage: extracted.recognized_vintage || match.vintage,
+    recognized_country: extracted.recognized_country || wineApiResult?.country || match.country || null,
+    recognized_region: extracted.recognized_region || wineApiResult?.region || match.region || null,
+    recognition_confidence: Math.max(
+      Number(extracted.recognition_confidence || 0),
+      Math.min(0.92, Math.max(Number(match.confidence || 0.55), 0.55)),
+    ),
+    recognized_payload: {
+      ...(extracted.recognized_payload || {}),
+      catalog_details: {
+        ...(extracted.recognized_payload?.catalog_details || {}),
+        grapes:
+          Array.isArray(extracted.recognized_payload?.catalog_details?.grapes) &&
+          extracted.recognized_payload.catalog_details.grapes.length
+            ? extracted.recognized_payload.catalog_details.grapes
+            : match.grapes || [],
+        price:
+          extracted.recognized_payload?.catalog_details?.price != null
+            ? extracted.recognized_payload.catalog_details.price
+            : match.price,
+        currency: extracted.recognized_payload?.catalog_details?.currency || match.currency || null,
+        country:
+          extracted.recognized_payload?.catalog_details?.country || wineApiResult?.country || match.country || null,
+        region:
+          extracted.recognized_payload?.catalog_details?.region || wineApiResult?.region || match.region || null,
+      },
+      wineapi: {
+        ok: true,
+        matched: true,
+        id: match.id,
+        confidence: match.confidence,
+        result: {
+          name: match.name,
+          winery: match.winery,
+          region: wineApiResult?.region || match.region || null,
+          country: wineApiResult?.country || match.country || null,
+          type: match.type,
+          vintage: match.vintage,
+          grapes: match.grapes || [],
+          price: match.price,
+          currency: match.currency,
+        },
+        persisted,
+      },
+    },
+  }
+}
 
 function withTimeout(promise, ms, label) {
   let timeoutId
@@ -291,6 +866,91 @@ function detectRegionHint(value) {
     }
   }
   return null
+}
+
+function detectCountryHint(value) {
+  const normalized = normalizeForCheck(value)
+  if (!normalized) return null
+  for (const country of COUNTRY_HINTS) {
+    for (const alias of country.aliases) {
+      if (normalized.includes(alias)) return country.canonical
+    }
+  }
+  return null
+}
+
+function getWineApiSearchContext(extracted) {
+  return [
+    extracted?.recognized_payload?.text_preview,
+    ...(Array.isArray(extracted?.recognized_payload?.ranked_lines)
+      ? extracted.recognized_payload.ranked_lines.slice(0, 8)
+      : []),
+    extracted?.recognized_name,
+    extracted?.recognized_producer,
+  ]
+    .filter(Boolean)
+    .join(' ')
+}
+
+function normalizeCountryName(value) {
+  const normalized = normalizeForCheck(value)
+  if (!normalized) return null
+  if (
+    normalized.includes('italy') ||
+    normalized.includes('italia') ||
+    normalized.includes('italian')
+  ) {
+    return 'Italy'
+  }
+  if (
+    normalized.includes('spain') ||
+    normalized.includes('spagna') ||
+    normalized.includes('spanish')
+  ) {
+    return 'Spain'
+  }
+  if (
+    normalized.includes('france') ||
+    normalized.includes('francia') ||
+    normalized.includes('french')
+  ) {
+    return 'France'
+  }
+  return capitalizeWords(value)
+}
+
+function scoreWineApiResult(result, extracted, countryHint, regionHint) {
+  const guessedName = extracted?.recognized_name || ''
+  const guessedProducer = extracted?.recognized_producer || ''
+  const nameScore = Math.max(
+    overlapScore(guessedName, result?.name),
+    overlapScore(guessedName, result?.label),
+    overlapScore(guessedName, result?.wine),
+  )
+  const producerScore = Math.max(
+    overlapScore(guessedProducer, result?.winery),
+    overlapScore(guessedProducer, result?.producer),
+    overlapScore(guessedProducer, result?.maker),
+  )
+  const resultRegion = detectRegionHint(
+    [result?.region, result?.appellation].filter(Boolean).join(' '),
+  )
+  const resultCountry = normalizeCountryName(result?.country)
+
+  let countryScore = 0
+  if (countryHint) {
+    if (resultCountry === countryHint) countryScore += 0.22
+    else if (resultCountry) countryScore -= 0.16
+  }
+  if (regionHint && resultRegion) {
+    countryScore += resultRegion === regionHint ? 0.1 : -0.08
+  }
+  if (countryHint === 'Italy' && resultCountry === 'Italy') {
+    countryScore += 0.08
+  }
+
+  const apiConfidence = Number(result?.confidence || 0)
+  return nameScore * 0.56 + producerScore * 0.22 + countryScore + apiConfidence * 0.12
 }
 
 function extractVintage(text) {
@@ -663,6 +1323,7 @@ async function enrichWithWineCatalog(supabase, extracted) {
 export async function POST(request) {
   try {
     const supabase = await createServerSupabase()
+    const catalogDb = createCatalogWriteClient(supabase)
     const {
       data: {user},
     } = await withTimeout(supabase.auth.getUser(), 8000, 'auth getUser')
@@ -680,9 +1341,7 @@ export async function POST(request) {
 
     let query = supabase
       .from('tasting_bottle_images')
-      .select(
-        'id, uploaded_by, storage_bucket, storage_path, original_filename, mime_type, status, recognized_name, recognized_producer, recognized_vintage, recognition_confidence',
-      )
+      .select(TASTING_IMAGE_LOAD_FIELDS)
       .eq('uploaded_by', user.id)
       .order('created_at', {ascending: false})
       .limit(50)
@@ -723,6 +1382,22 @@ export async function POST(request) {
         extracted = extractFromOcrText(ocrText, row.original_filename, row.storage_path)
         if (extracted?.ok) {
           extracted = await enrichWithWineCatalog(supabase, extracted)
+          const hasCatalogMatch = Boolean(extracted?.recognized_payload?.catalog_match?.matched)
+          console.log('[auto-tasting] wine api gate', {
+            hasCatalogMatch,
+            hasWineApiKey: Boolean(WINE_API_KEY),
+          })
+          if (!hasCatalogMatch && WINE_API_KEY) {
+            extracted = await enrichWithWineApiAndPersist({
+              supabase,
+              catalogDb,
+              extracted,
+            })
+          } else {
+            console.log('[auto-tasting] ricerca wine api: skip', {
+              reason: hasCatalogMatch ? 'catalog_match_found' : 'missing_wine_api_key',
+            })
+          }
         }
       } catch (error) {
         ocrError = error?.message || 'ocr failed'
@@ -748,9 +1423,7 @@ export async function POST(request) {
             })
             .eq('id', row.id)
             .eq('uploaded_by', user.id)
-            .select(
-              'id, original_filename, storage_bucket, storage_path, status, recognized_name, recognized_producer, recognized_vintage, recognition_confidence, recognized_payload, error_message, created_at',
-            )
+            .select(TASTING_IMAGE_RETURN_FIELDS)
             .single(),
           12000,
           'update failed row',
@@ -776,9 +1449,7 @@ export async function POST(request) {
           })
           .eq('id', row.id)
           .eq('uploaded_by', user.id)
-          .select(
-            'id, original_filename, storage_bucket, storage_path, status, recognized_name, recognized_producer, recognized_vintage, recognition_confidence, recognized_payload, error_message, created_at',
-          )
+          .select(TASTING_IMAGE_RETURN_FIELDS)
           .single(),
         12000,
         'update recognized row',
