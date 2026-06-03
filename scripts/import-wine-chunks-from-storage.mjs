@@ -23,10 +23,7 @@ import {fileURLToPath} from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 function loadEnvFromFiles() {
-  const candidates = [
-    path.join(__dirname, '../.env.local'),
-    path.join(__dirname, '../.env'),
-  ]
+  const candidates = [path.join(__dirname, '../.env.local'), path.join(__dirname, '../.env')]
 
   for (const filePath of candidates) {
     if (!existsSync(filePath)) continue
@@ -39,7 +36,10 @@ function loadEnvFromFiles() {
 
       const key = trimmed.slice(0, eqPos).trim()
       let value = trimmed.slice(eqPos + 1).trim()
-      if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
         value = value.slice(1, -1)
       }
 
@@ -106,8 +106,10 @@ async function withRetry(fn, label, attempts = 6) {
     } catch (err) {
       lastError = err
       if (i < attempts) {
-        const backoffMs = Math.min(5000, 500 * (2 ** (i - 1)))
-        console.warn(`Retry ${i}/${attempts - 1} for ${label} in ${backoffMs}ms: ${err.message || err}`)
+        const backoffMs = Math.min(5000, 500 * 2 ** (i - 1))
+        console.warn(
+          `Retry ${i}/${attempts - 1} for ${label} in ${backoffMs}ms: ${err.message || err}`,
+        )
         await new Promise((resolve) => setTimeout(resolve, backoffMs))
       }
     }
@@ -224,7 +226,7 @@ async function importFile(storagePath) {
   const csvText = await data.text()
   const rows = parseCsv(csvText)
   if (!rows.length) {
-    console.log(`SKIP ${storagePath}: empty csv`) 
+    console.log(`SKIP ${storagePath}: empty csv`)
     return 0
   }
 
@@ -274,10 +276,10 @@ async function main() {
   for (const file of files) {
     const inserted = await importFile(file)
     totalRows += inserted
-    console.log(`OK ${file}: ${inserted} rows`) 
+    console.log(`OK ${file}: ${inserted} rows`)
   }
 
-  console.log(`Done. Inserted ${totalRows} rows into ${table}.`) 
+  console.log(`Done. Inserted ${totalRows} rows into ${table}.`)
   console.log('Next: run Agent/WINE_CATALOG_IMPORT.sql repeatedly until unprocessed_rows = 0.')
 }
 

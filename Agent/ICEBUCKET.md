@@ -220,3 +220,75 @@ Obiettivo: eliminare valori sparsi e “quasi uguali”.
 - create index if not exists idx_wine_labels_data_source
 - on public.wine_labels(data_source);
 - create index if not exists idx_wine_labels_producer_id – on public.wine_labels(producer_id);
+
+-[] **domani**
+
+Certo. Ti lascio un runbook sintetico per domani, in ordine pratico, senza rifare tutto da zero.
+
+Obiettivo
+
+Finire import chunk in staging. Completare merge nel catalogo senza timeout. Popolare i campi
+mancanti quiz_region, quiz_appellation, external_id. Verificare frontend/admin. Passi operativi
+
+Verifica stato DB prima di tutto
+
+Esegui una query minima: select now();
+
+Se cade anche questa, non lanciare import/merge: aspetta stabilizzazione progetto Supabase.
+
+Aggiorna schema/view (una volta sola)
+
+Esegui WINE_CATALOG_DB_UPDATE_FOR_NEW_CSV.sql.
+
+Questo riallinea colonne nuove e la view wine_catalog.
+
+Continua import dei chunk mancanti verso staging
+
+Usa lo script già pronto: import-wine-chunks-from-storage.mjs.
+
+Se rete fragile, usa run brevi: npm run wine:import:storage -- --prefix=root --row-batch=100
+--max-files=1
+
+Per riprendere da file successivo: npm run wine:import:storage -- --prefix=root --row-batch=100
+--max-files=1 --start-after=nome_file.csv
+
+Esegui merge staging -> catalogo a micro-batch
+
+Usa WINE_CATALOG_IMPORT.sql.
+
+Mantieni limit basso (250-500) finché il DB è instabile.
+
+Ripeti più volte finché: select count(\*) as unprocessed_rows from public.wine_import_staging where
+processed = false; arriva a 0.
+
+Popola solo i campi mancanti (senza full reimport)
+
+Esegui WINE_CATALOG_BACKFILL_QUIZ_EXTERNAL.sql.
+
+Questo backfilla: quiz_region, quiz_appellation, external_id dai dati già presenti in staging (anche
+processed=true).
+
+Indice utile per accelerare il merge
+
+Lancialo fuori da transaction: create index concurrently if not exists
+wine_import_staging_unprocessed_batch_id_idx on public.wine_import_staging (batch_id, id) where
+processed = false;
+
+Se il DB è sotto stress, fallo in pausa tra un ciclo e l’altro.
+
+Verifiche finali
+
+Residuo staging: select count(\*) from public.wine_import_staging where processed = false;
+
+Quiz fields: select count(\*) from public.wine_labels where quiz_region is not null or
+quiz_appellation is not null;
+
+External id: select count(\*) from public.wine_vintages where external_id is not null;
+
+UI: /admin/vini?q=remole deve aprirsi senza errori colonna mancante.
+
+Note importanti
+
+Non serve rifare full import dei chunk già caricati. Se ritorna connection timeout, riduci
+parallelismo e fai una sola operazione per volta. Il fallback frontend è già stato reso resiliente
+su schema legacy in page.js.
