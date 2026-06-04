@@ -114,10 +114,12 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 - fonti web puo essere in una modale
 - [] **Ordine Bottiglie**
 - [x] **Valutare deeplink** — share/open diretto su create quiz / sessioni / eventi
-- [ ] **effetto glow analizza tutte**
+- [x] **effetto glow analizza tutte**
 - [ ] **quante bottiglie si caricano e anlizzano alla volta? Forse una alla volta e quando finito si
       genera qui?**
 - [ ] **se non troviamo l'anno possiamo sempre mettere delle fasce ( magari ipotizzando l'anno )**
+
+- [] **schede vino complete con desc etx**
 
 ### P0 — Stabilità flusso di gioco (iniziamo da qui)
 

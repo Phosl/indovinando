@@ -1,11 +1,6 @@
 @use '../styles/reset';
 @use '../styles/buttons';
 
-html {
-  color-scheme: light;
-  background-color: #fafafa;
-}
-
 body {
   --background: #fcf9ef;
   --foreground: #fff;
@@ -98,6 +93,11 @@ body {
   --dark: #333;
   --dark-100: #f5f5f5;
   --dark-200: #e0e0e0;
+}
+
+html {
+  color-scheme: light;
+  background-color: #var(--background);
 }
 
 input {
