@@ -391,6 +391,18 @@
     }
   },
   "gameEditor": {
+    "questionnaireIntroTitle": "Crea il questionario",
+    "questionnaireIntroQuickTitle": "Questionario precompilato",
+    "questionnaireIntroDescription": "Adesso creiamo il questionario: aggiungi le domande e le risposte.",
+    "questionnaireIntroQuickDescription": "Abbiamo preparato già il questionario con 5 domande. Puoi modificare le risposte a piacere.",
+    "questionnaireIntroQuestionsLabel": "Domande predefinite:",
+    "bottlesIntroTitle": "Aggiungi bottiglia",
+    "bottlesIntroDescription": "Inserisci i dettagli della bottiglia, poi scegli il tipo vino e completa le risposte corrette per ogni domanda.",
+    "avatarPickerTitle": "Scegli immagine degustazione",
+    "questionnaireGuideAriaLabel": "Guida questionario",
+    "bottlesGuideAriaLabel": "Guida bottiglie",
+    "step4Title": "Aggiungi bottiglia",
+    "dontShowAgain": "Non mostrare più",
     "steps": [
       {"id": 1, "label": "Nome gioco"},
       {"id": 2, "label": "Questionario"},

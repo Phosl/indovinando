@@ -1,6 +1,6 @@
 'use client'
 
-import {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {createContext, useCallback, useContext, useEffect, useRef, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import {DEFAULT_LANGUAGE, LANGUAGE_COOKIE, normalizeLanguage} from '@/lib/i18n/config'
 import {supabaseClient} from '@/lib/supabaseClient'
@@ -10,6 +10,7 @@ const STORAGE_KEY = 'app_lang'
 const LanguageContext = createContext({
   lang: DEFAULT_LANGUAGE,
   setLang: () => {},
+  isSwitching: false,
 })
 
 function setLanguageCookie(lang) {
@@ -20,7 +21,9 @@ export default function LanguageProvider({initialLang = DEFAULT_LANGUAGE, childr
   const router = useRouter()
   const [lang, setLangState] = useState(normalizeLanguage(initialLang))
   const [userId, setUserId] = useState(null)
+  const [isSwitching, setIsSwitching] = useState(false)
   const langRef = useRef(lang)
+  const switchingTimerRef = useRef(null)
 
   useEffect(() => {
     langRef.current = lang
@@ -49,6 +52,11 @@ export default function LanguageProvider({initialLang = DEFAULT_LANGUAGE, childr
       const normalized = normalizeLanguage(nextLang)
       if (normalized === lang) return
 
+      setIsSwitching(true)
+      if (switchingTimerRef.current) {
+        clearTimeout(switchingTimerRef.current)
+      }
+
       setLangState(normalized)
       localStorage.setItem(STORAGE_KEY, normalized)
       setLanguageCookie(normalized)
@@ -60,6 +68,11 @@ export default function LanguageProvider({initialLang = DEFAULT_LANGUAGE, childr
 
       // Refresh server-rendered text immediately when language changes.
       router.refresh()
+
+      switchingTimerRef.current = setTimeout(() => {
+        setIsSwitching(false)
+        switchingTimerRef.current = null
+      }, 350)
     },
     [lang, persistLanguagePreference, router, userId],
   )
@@ -146,6 +159,9 @@ export default function LanguageProvider({initialLang = DEFAULT_LANGUAGE, childr
 
     return () => {
       cancelled = true
+      if (switchingTimerRef.current) {
+        clearTimeout(switchingTimerRef.current)
+      }
       subscription.unsubscribe()
     }
   }, [initialLang, persistLanguagePreference])
@@ -157,15 +173,11 @@ export default function LanguageProvider({initialLang = DEFAULT_LANGUAGE, childr
     setLanguageCookie(normalized)
   }, [lang])
 
-  const value = useMemo(
-    () => ({
-      lang,
-      setLang,
-    }),
-    [lang],
+  return (
+    <LanguageContext.Provider value={{lang, setLang, isSwitching}}>
+      {children}
+    </LanguageContext.Provider>
   )
-
-  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
 }
 
 export function useLanguage() {

@@ -391,6 +391,18 @@
     }
   },
   "gameEditor": {
+    "questionnaireIntroTitle": "Build the questionnaire",
+    "questionnaireIntroQuickTitle": "Pre-filled questionnaire",
+    "questionnaireIntroDescription": "Now let's build the questionnaire: add the questions and answers.",
+    "questionnaireIntroQuickDescription": "We already prepared the questionnaire with 5 questions. You can edit the answers as you like.",
+    "questionnaireIntroQuestionsLabel": "Predefined questions:",
+    "bottlesIntroTitle": "Add bottle",
+    "bottlesIntroDescription": "Enter the bottle details, then choose the wine type and complete the correct answers for each question.",
+    "avatarPickerTitle": "Choose tasting image",
+    "questionnaireGuideAriaLabel": "Questionnaire guide",
+    "bottlesGuideAriaLabel": "Bottles guide",
+    "step4Title": "Add bottle",
+    "dontShowAgain": "Don't show again",
     "steps": [
       {"id": 1, "label": "Game name"},
       {"id": 2, "label": "Questionnaire"},

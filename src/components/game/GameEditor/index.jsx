@@ -6,22 +6,29 @@
 import modalStyles from './QuestionnaireIntroModal.module.scss'
 import {Button} from '@/components/ui/Button'
 import Icon from '@/components/Icon'
-function QuestionnaireIntroModal({isOpen, onClose, onDisable, isQuickCreate, questions}) {
+import {useT} from '@/lib/i18n/useT'
+
+function QuestionnaireIntroModal({
+  isOpen,
+  onClose,
+  onDisable,
+  isQuickCreate,
+  questions,
+  title,
+  description,
+  questionsLabel,
+  closeLabel,
+  disableLabel,
+}) {
   if (!isOpen) return null
   return (
     <div className={modalStyles.modalOverlay}>
       <div className={modalStyles.modalContent}>
-        <h2 className={modalStyles.modalTitle}>
-          {isQuickCreate ? 'Questionario precompilato' : 'Crea il questionario'}
-        </h2>
-        <p className={modalStyles.modalDescription}>
-          {isQuickCreate
-            ? 'Abbiamo preparato già il questionario con 5 domande. Puoi modificare le risposte a piacere.'
-            : 'Adesso creiamo il questionario: aggiungi le domande e le risposte.'}
-        </p>
+        <h2 className={modalStyles.modalTitle}>{title}</h2>
+        <p className={modalStyles.modalDescription}>{description}</p>
         {isQuickCreate && questions?.length > 0 && (
           <div className={modalStyles.quickListBox}>
-            <b>Domande predefinite:</b>
+            <b>{questionsLabel}</b>
             <ul className={modalStyles.quickList}>
               {questions.map((q, i) => (
                 <li key={i} className={modalStyles.quickListItem}>
@@ -33,11 +40,11 @@ function QuestionnaireIntroModal({isOpen, onClose, onDisable, isQuickCreate, que
         )}
         <div className={modalStyles.buttonContainer}>
           <Button variant="success" onClick={onClose}>
-            Ho capito
+            {closeLabel}
           </Button>
 
           <Button variant="neutral" size="small" textOnly onClick={onDisable}>
-            Non mostrare più
+            {disableLabel}
           </Button>
         </div>
       </div>
@@ -45,23 +52,28 @@ function QuestionnaireIntroModal({isOpen, onClose, onDisable, isQuickCreate, que
   )
 }
 
-function BottlesIntroModal({isOpen, onClose, onDisable}) {
+function BottlesIntroModal({
+  isOpen,
+  onClose,
+  onDisable,
+  title,
+  description,
+  closeLabel,
+  disableLabel,
+}) {
   if (!isOpen) return null
 
   return (
     <div className={modalStyles.modalOverlay}>
       <div className={modalStyles.modalContent}>
-        <h2 className={modalStyles.modalTitle}>Aggiungi bottiglia</h2>
-        <p className={modalStyles.modalDescription}>
-          Inserisci i dettagli della bottiglia, poi scegli il tipo vino e completa le risposte
-          corrette per ogni domanda.
-        </p>
+        <h2 className={modalStyles.modalTitle}>{title}</h2>
+        <p className={modalStyles.modalDescription}>{description}</p>
         <div className={modalStyles.buttonContainer}>
           <Button variant="success" onClick={onClose}>
-            Ho capito
+            {closeLabel}
           </Button>
           <Button variant="neutral" size="small" textOnly onClick={onDisable}>
-            Non mostrare più
+            {disableLabel}
           </Button>
         </div>
       </div>
@@ -120,6 +132,7 @@ const StepOneSection = memo(function StepOneSection({
   selectedAvatarIndex,
   onAvatarChange,
   onContinue,
+  avatarPickerTitle,
 }) {
   return (
     <div className={styles.section}>
@@ -133,7 +146,7 @@ const StepOneSection = memo(function StepOneSection({
         />
         {avatarOptions.length > 0 && (
           <div className={styles.avatarPicker}>
-            <p className={styles.avatarPickerTitle}>Scegli immagine degustazione</p>
+            <p className={styles.avatarPickerTitle}>{avatarPickerTitle}</p>
             <div className={styles.avatarGrid}>
               {avatarOptions.map((avatarPath, avatarIndex) => (
                 <button
@@ -170,6 +183,7 @@ const StepTwoSection = memo(function StepTwoSection({
   onSaveQuestionnaire,
   onBack,
   onShowIntro,
+  introAriaLabel,
 }) {
   return (
     <div className={styles.section}>
@@ -178,7 +192,7 @@ const StepTwoSection = memo(function StepTwoSection({
           <h3 className={styles.sectionTitle}>{editorText.step2Title}</h3>
           <button
             type="button"
-            aria-label="Guida questionario"
+            aria-label={introAriaLabel}
             onClick={onShowIntro}
             className="btn info-circle">
             ?
@@ -256,15 +270,17 @@ const StepFourSection = memo(function StepFourSection({
   onPublish,
   isSaving,
   isEditMode,
+  introAriaLabel,
+  step4Title,
 }) {
   return (
     <div className={styles.section}>
       <div className={styles.stepBody}>
         <div className={styles.sectionHeader}>
-          <h3 className={styles.sectionTitle}>{editorText.step4Title || 'Aggiungi bottiglia'}</h3>
+          <h3 className={styles.sectionTitle}>{step4Title}</h3>
           <button
             type="button"
-            aria-label="Guida bottiglie"
+            aria-label={introAriaLabel}
             onClick={onShowInfo}
             className="btn info-circle">
             ?
@@ -313,6 +329,8 @@ export default function GameEditor({
   onBack,
 }) {
   const {lang} = useLanguage()
+  const t = useT('gameEditor')
+  const tCommon = useT('common')
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -385,6 +403,15 @@ export default function GameEditor({
     lang === 'en'
       ? 'Saving is taking too long. Please try again.'
       : 'Il salvataggio sta impiegando troppo tempo. Riprova.'
+
+  const questionnaireIntroTitle = isQuickCreate
+    ? t('questionnaireIntroQuickTitle')
+    : t('questionnaireIntroTitle')
+  const questionnaireIntroDescription = isQuickCreate
+    ? t('questionnaireIntroQuickDescription')
+    : t('questionnaireIntroDescription')
+  const bottlesIntroTitle = t('bottlesIntroTitle')
+  const bottlesIntroDescription = t('bottlesIntroDescription')
 
   async function withSaveTimeout(run, contextLabel, retries = 0, timeoutMs = SAVE_TIMEOUT_MS) {
     let attempt = 0
@@ -851,6 +878,7 @@ export default function GameEditor({
         selectedAvatarIndex={selectedAvatarIndex}
         onAvatarChange={setSelectedAvatarIndex}
         onContinue={() => goToStep(2)}
+        avatarPickerTitle={t('avatarPickerTitle')}
       />
     )
   } else if (step === 2) {
@@ -864,6 +892,7 @@ export default function GameEditor({
         onSaveQuestionnaire={saveQuestionnaire}
         onBack={() => goToStep(1)}
         onShowIntro={() => setShowQuestionnaireIntro(true)}
+        introAriaLabel={t('questionnaireGuideAriaLabel')}
       />
     )
   } else if (step === 3) {
@@ -890,6 +919,8 @@ export default function GameEditor({
         onPublish={publishGame}
         isSaving={isSaving}
         isEditMode={isEditMode}
+        introAriaLabel={t('bottlesGuideAriaLabel')}
+        step4Title={t('step4Title')}
       />
     )
   }
@@ -1009,11 +1040,20 @@ export default function GameEditor({
         onDisable={handleDisableIntro}
         isQuickCreate={isQuickCreate}
         questions={questionDraft}
+        title={questionnaireIntroTitle}
+        description={questionnaireIntroDescription}
+        questionsLabel={t('questionnaireIntroQuestionsLabel')}
+        closeLabel={tCommon('done')}
+        disableLabel={t('dontShowAgain')}
       />
       <BottlesIntroModal
         isOpen={showBottlesIntro}
         onClose={() => setShowBottlesIntro(false)}
         onDisable={handleDisableBottlesIntro}
+        title={bottlesIntroTitle}
+        description={bottlesIntroDescription}
+        closeLabel={tCommon('done')}
+        disableLabel={t('dontShowAgain')}
       />
 
       <BottleModal
