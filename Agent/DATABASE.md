@@ -206,7 +206,7 @@ Tabelle principali:
 
 Vista catalogo vini usata per:
 
-- match da etichetta (OCR/vision)
+- match da etichetta (OpenAI Vision)
 - precompilazione bottiglie
 - generazione quiz rapido (paese, regione, annata, tipologia, vitigni, prezzo)
 
@@ -241,6 +241,17 @@ Vista catalogo vini usata per:
 | `is_active`           | `BOOLEAN`       | attivo a livello label                 |
 | `created_at`          | `TIMESTAMPTZ`   | default `now()`                        |
 | `updated_at`          | `TIMESTAMPTZ`   | default `now()`                        |
+| `quiz_region`         | `TEXT`          | etichetta regione per quiz/UI          |
+| `quiz_appellation`    | `TEXT`          | etichetta appellazione per quiz/UI     |
+| `price_band`          | `TEXT`          | fascia prezzo vintage                  |
+| `quiz_price_band`     | `TEXT`          | fascia prezzo quiz/UI                  |
+| `search_tokens`       | `TEXT`          | token ricerca/catalog match            |
+| `body`                | `TEXT`          | corpo vino                             |
+| `acidity`             | `TEXT`          | acidita vino                           |
+| `elaborate`           | `TEXT`          | campo extra import legacy              |
+| `harmonize`           | `TEXT`          | armonia/equilibrio                     |
+| `price_min`           | `NUMERIC(10,2)` | limite inferiore range prezzo          |
+| `price_max`           | `NUMERIC(10,2)` | limite superiore range prezzo          |
 
 Indici principali:
 
@@ -264,15 +275,16 @@ Vista supporto admin:
 ### Import CSV in Supabase
 
 1. Esegui `WINE_CATALOG_SCHEMA.sql` in SQL Editor (una volta sola).
-2. Converti il file Excel in CSV UTF-8 (foglio principale).
-3. Importa il CSV in `wine_import_staging`:
+2. Esegui anche `WINE_CATALOG_DB_UPDATE_FOR_NEW_CSV.sql` per allineare colonne/view moderne.
+3. Converti il file Excel in CSV UTF-8 (foglio principale).
+4. Importa il CSV in `wine_import_staging`:
    `Table Editor -> wine_import_staging -> Insert -> Import data via CSV`.
-4. Mappa le colonne CSV su:
+5. Mappa le colonne CSV su:
    `external_id, ean, name, name_normalized, producer, producer_normalized, country, region, appellation, type, grapes, grapes_normalized, vintage, abv, price, currency, image_url, source, source_url, scraped_at, last_updated, confidence, search_text, dedupe_key, notes`.
-5. Esegui `WINE_CATALOG_IMPORT.sql` per popolare tabelle normalizzate (`wine_producers`,
+6. Esegui `WINE_CATALOG_IMPORT.sql` per popolare tabelle normalizzate (`wine_producers`,
    `wine_labels`, `wine_vintages`, `wine_grapes`, `wine_label_grapes`, `wine_sources`) e marcare
    `processed = true` in staging.
-6. Controlli rapidi:
+7. Controlli rapidi:
    - count record su `wine_catalog`
    - count record su `wine_catalog_producer_stats`
    - `wine_import_staging where processed = false` deve essere 0
@@ -297,7 +309,7 @@ Metadati immagini caricati per riconoscimento etichetta. Tabella separata dal co
 | `mime_type`              | `TEXT`         | opzionale                                           |
 | `size_bytes`             | `BIGINT`       | opzionale                                           |
 | `status`                 | `TEXT`         | `uploaded` / `processing` / `recognized` / `failed` |
-| `recognized_payload`     | `JSONB`        | payload OCR/vision raw                              |
+| `recognized_payload`     | `JSONB`        | payload OpenAI Vision + catalog/web enrichment      |
 | `recognized_name`        | `TEXT`         | valore estratto                                     |
 | `recognized_producer`    | `TEXT`         | valore estratto                                     |
 | `recognized_vintage`     | `INT`          | valore estratto                                     |
@@ -305,6 +317,96 @@ Metadati immagini caricati per riconoscimento etichetta. Tabella separata dal co
 | `error_message`          | `TEXT`         | dettaglio errore pipeline                           |
 | `created_at`             | `TIMESTAMPTZ`  | default `now()`                                     |
 | `updated_at`             | `TIMESTAMPTZ`  | trigger `set_updated_at()`                          |
+
+Chiavi importanti dentro `recognized_payload`:
+
+- `provider` / `extractor`
+- `catalog_match`
+- `catalog_details`
+- `web_enrichment`
+- `review`
+- `verification`
+- `catalog_sync`
+- `openai_payload.usage`
+
+Campi tipici di `catalog_details`:
+
+- `country`
+- `region`
+- `quiz_region`
+- `appellation`
+- `quiz_appellation`
+- `type`
+- `grapes`
+- `price`
+- `average_price`
+- `price_min`
+- `price_max`
+- `price_band`
+- `body`
+- `acidity`
+- `harmony`
+- `why_notable`
+- `short_description`
+
+### Flusso runtime auto tasting
+
+Route principali:
+
+- `POST /api/auto-tasting/upload`
+- `POST /api/auto-tasting/metadata`
+- `POST /api/auto-tasting/analyze`
+- `POST /api/auto-tasting/verify-catalog`
+- `POST /api/auto-tasting/delete`
+- `GET /api/auto-tasting/image`
+
+Pipeline runtime attuale:
+
+1. upload file in bucket `tasting-bottles`
+2. creazione record `tasting_bottle_images`
+3. `analyze` esegue:
+   - OpenAI Vision
+   - estrazione dati strutturati
+   - match catalogo
+4. opzionalmente `web enrichment` solo se richiesto
+5. `verify-catalog` promuove la bottiglia nel catalogo canonico
+
+### Web enrichment
+
+Il web enrichment e opzionale e disattivabile via env:
+
+- `OPENAI_WEB_ENRICHMENT_ENABLED=true|false`
+
+Non parte piu automaticamente nel normale flusso `Analizza`.
+Parte solo se:
+
+- la request passa `useWebEnrichment: true`
+- e il server ha il flag env attivo
+
+Il risultato puo arricchire:
+
+- vitigni
+- note narrative (`why_notable`, `short_description`)
+- profilo degustativo (`body`, `acidity`, `harmony`)
+- prezzo medio e range (`average_price`, `price_min`, `price_max`)
+
+### Salvataggio catalogo dopo conferma
+
+`verify-catalog` crea o aggiorna:
+
+- `wine_producers`
+- `wine_labels`
+- `wine_vintages`
+- `wine_grapes`
+- `wine_label_grapes`
+- `wine_sources`
+
+Le note testuali non sono ancora su colonne dedicate multilingua. Oggi vengono salvate in:
+
+- `wine_labels.notes`
+- `wine_sources.raw_payload`
+
+Questo permette di recuperarle in analisi successive senza rifare per forza la web search.
 
 - `wine_label_grapes` e gestita in modalita **replace** per i `wine_label` impattati dal batch:
   - delete relazioni esistenti dei label nel batch

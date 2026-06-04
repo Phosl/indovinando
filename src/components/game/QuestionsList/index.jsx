@@ -55,9 +55,9 @@ export default function QuestionsList({
                   <div className={styles.cardHeader}>
                     <h4 className={styles.questionText}>{question.text}</h4>
                     {isLockedInQuickCreate ? (
-                      <span className={styles.lockedBadge}>Player</span>
+                      <span className={styles.lockedBadge}>{text.lockedPlayer}</span>
                     ) : isNeutral ? (
-                      <span className={styles.lockedBadge}>Neutra</span>
+                      <span className={styles.lockedBadge}>{text.lockedNeutral}</span>
                     ) : (
                       <button
                         className="btn btn-mini danger btn-only-text"
@@ -73,16 +73,16 @@ export default function QuestionsList({
                   </div>
                   <p className={styles.optionsCount}>
                     {isPlayerRating
-                      ? 'Risposta libera del giocatore'
+                      ? text.playerAnswerFree
                       : isNeutral
-                        ? 'Nessuna risposta corretta richiesta'
+                        ? text.neutralNoCorrectAnswer
                       : (question.options?.length || 0) + ' ' + text.options}
                   </p>
                   <div className={styles.optionsText}>
                     {isPlayerRating ? (
-                      <p>1-10 slider</p>
+                      <p>{text.sliderPreview}</p>
                     ) : isNeutral ? (
-                      <p>Opzioni visibili al giocatore</p>
+                      <p>{text.playerVisibleOptions}</p>
                     ) : (
                       optionsPreview.map((o, i) => <p key={i}>{typeof o === 'string' ? o : o.text}</p>)
                     )}

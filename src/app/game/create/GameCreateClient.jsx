@@ -9,6 +9,7 @@ import OnboardingModal from '@/components/game/OnboardingModal'
 import {AutoTastingGamePreview} from '@/components/game'
 import PageLayout from '@/components/PageLayout'
 import Icon from '@/components/Icon'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useT} from '@/lib/i18n/useT'
 import styles from './gameCreate.module.scss'
 
@@ -26,43 +27,14 @@ const WEB_OUTPUT_COST_PER_1K_TOKENS = Number(
   process.env.NEXT_PUBLIC_OPENAI_WEB_OUTPUT_COST_PER_1K_TOKENS || 0,
 )
 
-const TEMPLATE_QUESTIONS = [
-  {
-    text: 'Stato',
-    options: ['Italia', 'Francia', 'Usa', 'Australia', 'Grecia', 'Svezia', 'Spagna'],
-  },
-  {
-    text: 'Regione',
-    options: ['Toscana', 'Borgogna', 'Marche', 'Piemonte', 'Campania', 'Napa Valley', 'Umbria'],
-  },
-  {
-    text: 'Uvaggio',
-    options: [
-      'Blend',
-      'Sangiovese',
-      'Pinot Nero',
-      'Aglianico',
-      'Nebbiolo',
-      'Merlot',
-      'Syrah',
-      'Verdicchio',
-    ],
-  },
-  {
-    text: 'Anno',
-    options: ['2017', '2018', '2019', '2020', '2021', '2022', '2023'],
-  },
-  {
-    text: 'Che voto daresti a questo vino?',
-    kind: 'rating',
-    isNeutral: true,
-    options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-  },
-  {
-    text: 'Prezzo',
-    options: ['5€', '10€', '20€', '30€', '40€', '60€', '80€'],
-  },
-]
+const TEMPLATE_QUESTION_OPTIONS = {
+  country: ['Italy', 'France', 'United States', 'Australia', 'Greece', 'Sweden', 'Spain'],
+  region: ['Tuscany', 'Burgundy', 'Marche', 'Piedmont', 'Campania', 'Napa Valley', 'Umbria'],
+  grape: ['Blend', 'Sangiovese', 'Pinot Noir', 'Aglianico', 'Nebbiolo', 'Merlot', 'Syrah', 'Verdicchio'],
+  vintage: ['2017', '2018', '2019', '2020', '2021', '2022', '2023'],
+  rating: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+  price: ['5€', '10€', '20€', '30€', '40€', '60€', '80€'],
+}
 
 function normalizePriceAnswer(price, min = 5) {
   const numeric = Number(price)
@@ -70,17 +42,17 @@ function normalizePriceAnswer(price, min = 5) {
   return `${Math.max(min, Math.round(numeric / 5) * 5)}€`
 }
 
-function getVintageBandLabel(year) {
+function getVintageBandLabel(year, lang = 'it') {
   const numeric = Number(year)
   if (!Number.isFinite(numeric)) return null
   if (numeric >= 2022) return '2022-2024'
   if (numeric >= 2019) return '2019-2021'
   if (numeric >= 2016) return '2016-2018'
   if (numeric >= 2012) return '2012-2015'
-  return '2011 o prima'
+  return lang === 'en' ? '2011 or earlier' : '2011 o prima'
 }
 
-function inferVintageQuizValue(recognizedVintage, knownVintages = []) {
+function inferVintageQuizValue(recognizedVintage, knownVintages = [], lang = 'it') {
   if (recognizedVintage) return String(recognizedVintage)
 
   const normalizedKnownVintages = (Array.isArray(knownVintages) ? knownVintages : [])
@@ -91,7 +63,7 @@ function inferVintageQuizValue(recognizedVintage, knownVintages = []) {
   if (!normalizedKnownVintages.length) return null
 
   const latestKnownVintage = normalizedKnownVintages[0]
-  return getVintageBandLabel(latestKnownVintage)
+  return getVintageBandLabel(latestKnownVintage, lang)
 }
 function normalizePriceRangeAnswer(priceMin, priceMax, fallbackPrice, min = 5) {
   const low = Number(priceMin)
@@ -128,10 +100,10 @@ function createPriceOptionsFromPrices(prices, min = 5) {
   return [...new Set(options)]
 }
 
-const OPENAI_TEMPLATE_OPTIONS = {
-  body: ['Leggero', 'Medio-leggero', 'Medio', 'Medio-pieno', 'Pieno'],
-  acidity: ['Morbida', 'Fresca', 'Media', 'Vivace', 'Alta'],
-  harmony: ['Diretto', 'Equilibrato', 'Elegante', 'Strutturato', 'Complesso'],
+const OPENAI_TEMPLATE_OPTION_KEYS = {
+  body: ['light', 'medium-light', 'medium', 'medium-full', 'full'],
+  acidity: ['soft', 'fresh', 'medium', 'lively', 'high'],
+  harmony: ['direct', 'balanced', 'elegant', 'structured', 'complex'],
 }
 
 const MIN_AUTO_QUIZ_OPTIONS = 5
@@ -177,7 +149,7 @@ function normalizeToken(value) {
     .replace(/[\u0300-\u036f]/g, '')
 }
 
-function mapWineTypeLabel(value) {
+function mapWineTypeLabel(value, lang = 'it') {
   const normalized = normalizeToken(value)
   if (!normalized) return null
 
@@ -185,7 +157,18 @@ function mapWineTypeLabel(value) {
     aliases.some((alias) => normalizeToken(alias) === normalized),
   )
 
-  if (mapped) return mapped[0]
+  if (mapped) {
+    const canonical = mapped[0]
+    if (lang === 'en') {
+      if (canonical === 'Bianco') return 'White'
+      if (canonical === 'Rosso') return 'Red'
+      if (canonical === 'Rose') return 'Rosé'
+      if (canonical === 'Champagne') return 'Sparkling'
+    }
+    if (canonical === 'Rose') return lang === 'it' ? 'Rosato' : 'Rosé'
+    if (canonical === 'Champagne') return lang === 'it' ? 'Spumante' : 'Sparkling'
+    return canonical
+  }
   return String(value).trim()
 }
 
@@ -203,31 +186,177 @@ function getCountryFlag(value) {
   return COUNTRY_FLAG_BY_CODE[code] || null
 }
 
-function normalizeBodyForQuiz(value) {
+function localizeBodyLabel(canonical, lang = 'it') {
+  const labels = {
+    it: {
+      light: 'Leggero',
+      'medium-light': 'Medio-leggero',
+      medium: 'Medio',
+      'medium-full': 'Medio-pieno',
+      full: 'Pieno',
+    },
+    en: {
+      light: 'Light',
+      'medium-light': 'Medium-light',
+      medium: 'Medium',
+      'medium-full': 'Medium-full',
+      full: 'Full',
+    },
+  }
+  return labels[lang]?.[canonical] || labels.it[canonical] || null
+}
+
+function localizeAcidityLabel(canonical, lang = 'it') {
+  const labels = {
+    it: {soft: 'Morbida', fresh: 'Fresca', medium: 'Media', lively: 'Vivace', high: 'Alta'},
+    en: {soft: 'Soft', fresh: 'Fresh', medium: 'Medium', lively: 'Lively', high: 'High'},
+  }
+  return labels[lang]?.[canonical] || labels.it[canonical] || null
+}
+
+function localizeHarmonyLabel(canonical, lang = 'it') {
+  const labels = {
+    it: {
+      direct: 'Diretto',
+      balanced: 'Equilibrato',
+      elegant: 'Elegante',
+      structured: 'Strutturato',
+      complex: 'Complesso',
+    },
+    en: {
+      direct: 'Direct',
+      balanced: 'Balanced',
+      elegant: 'Elegant',
+      structured: 'Structured',
+      complex: 'Complex',
+    },
+  }
+  return labels[lang]?.[canonical] || labels.it[canonical] || null
+}
+
+function normalizeBodyForQuiz(value, lang = 'it') {
   const normalized = normalizeToken(value)
   if (!normalized) return null
-  if (normalized === 'light' || normalized === 'light-bodied') return 'Leggero'
-  if (normalized === 'medium' || normalized === 'medium-bodied') return 'Medio'
-  if (normalized === 'full' || normalized === 'full-bodied') return 'Pieno'
+  if (normalized === 'light' || normalized === 'light-bodied') return localizeBodyLabel('light', lang)
+  if (normalized === 'medium-light') return localizeBodyLabel('medium-light', lang)
+  if (normalized === 'medium' || normalized === 'medium-bodied') return localizeBodyLabel('medium', lang)
+  if (normalized === 'medium-full') return localizeBodyLabel('medium-full', lang)
+  if (normalized === 'full' || normalized === 'full-bodied') return localizeBodyLabel('full', lang)
   return String(value).trim()
 }
 
-function normalizeAcidityForQuiz(value) {
+function normalizeAcidityForQuiz(value, lang = 'it') {
   const normalized = normalizeToken(value)
   if (!normalized) return null
-  if (normalized === 'fresh' || normalized === 'low') return 'Fresca'
-  if (normalized === 'medium') return 'Media'
-  if (normalized === 'high') return 'Alta'
+  if (normalized === 'soft' || normalized === 'morbida') return localizeAcidityLabel('soft', lang)
+  if (normalized === 'fresh' || normalized === 'low') return localizeAcidityLabel('fresh', lang)
+  if (normalized === 'medium') return localizeAcidityLabel('medium', lang)
+  if (normalized === 'lively' || normalized === 'vivace') return localizeAcidityLabel('lively', lang)
+  if (normalized === 'high') return localizeAcidityLabel('high', lang)
   return String(value).trim()
 }
 
-function normalizeHarmonyForQuiz(value) {
+function normalizeHarmonyForQuiz(value, lang = 'it') {
   const normalized = normalizeToken(value)
   if (!normalized) return null
-  if (normalized === 'balanced') return 'Equilibrato'
-  if (normalized === 'elegant') return 'Elegante'
-  if (normalized === 'structured') return 'Strutturato'
+  if (normalized === 'direct' || normalized === 'diretto') return localizeHarmonyLabel('direct', lang)
+  if (normalized === 'balanced') return localizeHarmonyLabel('balanced', lang)
+  if (normalized === 'elegant') return localizeHarmonyLabel('elegant', lang)
+  if (normalized === 'structured') return localizeHarmonyLabel('structured', lang)
+  if (normalized === 'complex' || normalized === 'complesso') return localizeHarmonyLabel('complex', lang)
   return String(value).trim()
+}
+
+function localizeCountryLabel(value, lang = 'it') {
+  const normalized = normalizeToken(value)
+  if (!normalized) return null
+  const map = {
+    italy: {it: 'Italia', en: 'Italy'},
+    italia: {it: 'Italia', en: 'Italy'},
+    france: {it: 'Francia', en: 'France'},
+    francia: {it: 'Francia', en: 'France'},
+    spain: {it: 'Spagna', en: 'Spain'},
+    spagna: {it: 'Spagna', en: 'Spain'},
+    germany: {it: 'Germania', en: 'Germany'},
+    germania: {it: 'Germania', en: 'Germany'},
+    portugal: {it: 'Portogallo', en: 'Portugal'},
+    portogallo: {it: 'Portogallo', en: 'Portugal'},
+    'united states': {it: 'Stati Uniti', en: 'United States'},
+    usa: {it: 'USA', en: 'USA'},
+    us: {it: 'USA', en: 'USA'},
+    australia: {it: 'Australia', en: 'Australia'},
+    greece: {it: 'Grecia', en: 'Greece'},
+    grecia: {it: 'Grecia', en: 'Greece'},
+    sweden: {it: 'Svezia', en: 'Sweden'},
+    svezia: {it: 'Svezia', en: 'Sweden'},
+  }
+  return map[normalized]?.[lang] || String(value).trim()
+}
+
+function localizeRegionLabel(value, lang = 'it') {
+  const normalized = normalizeToken(value)
+  if (!normalized) return null
+  const map = {
+    sicily: {it: 'Sicilia', en: 'Sicily'},
+    sicilia: {it: 'Sicilia', en: 'Sicily'},
+    tuscany: {it: 'Toscana', en: 'Tuscany'},
+    toscana: {it: 'Toscana', en: 'Tuscany'},
+    piedmont: {it: 'Piemonte', en: 'Piedmont'},
+    piemonte: {it: 'Piemonte', en: 'Piedmont'},
+    burgundy: {it: 'Borgogna', en: 'Burgundy'},
+    borgogna: {it: 'Borgogna', en: 'Burgundy'},
+    marche: {it: 'Marche', en: 'Marche'},
+    campania: {it: 'Campania', en: 'Campania'},
+    umbria: {it: 'Umbria', en: 'Umbria'},
+  }
+  return map[normalized]?.[lang] || String(value).trim()
+}
+
+function localizeAppellationLabel(value, lang = 'it') {
+  const normalized = normalizeToken(value)
+  if (!normalized) return null
+  if (normalized === 'denominazione di origine protetta') {
+    return lang === 'en' ? 'Protected Designation of Origin' : 'Denominazione di Origine Protetta'
+  }
+  return String(value).trim()
+}
+
+function localizeNarrativeText(value, lang = 'it') {
+  const text = String(value || '').trim()
+  if (!text) return null
+
+  const replacements =
+    lang === 'it'
+      ? [
+          [/A collaboration between renowned (producers|winemakers)/gi, 'Una collaborazione tra produttori rinomati'],
+          [/highlighting Etna'?s unique terroir/gi, "che valorizza l'unicità del terroir dell'Etna"],
+          [/highlighting Sicily'?s volcanic terroir/gi, 'che valorizza il terroir vulcanico della Sicilia'],
+          [/focusing on Etna'?s unique terroir/gi, "incentrata sull'unicità del terroir dell'Etna"],
+          [/A refined white wine/gi, 'Un raffinato vino bianco'],
+          [/A Sicilian white wine/gi, 'Un vino bianco siciliano'],
+          [/A crisp, mineral-driven white wine/gi, 'Un vino bianco teso e minerale'],
+          [/white wine/gi, 'vino bianco'],
+          [/showcasing the Carricante grape/gi, 'che esprime il vitigno Carricante'],
+          [/made entirely from Carricante grapes/gi, 'ottenuto interamente da uve Carricante'],
+          [/from Sicily'?s Etna region/gi, "della zona etnea in Sicilia"],
+          [/from the Etna region/gi, "della zona dell'Etna"],
+          [/volcanic terroir/gi, 'terroir vulcanico'],
+          [/with floral and citrus notes/gi, 'con note floreali e agrumate'],
+          [/with mineral notes/gi, 'con note minerali'],
+        ]
+      : [
+          [/Una collaborazione tra produttori rinomati/gi, 'A collaboration between renowned producers'],
+          [/Un raffinato vino bianco/gi, 'A refined white wine'],
+          [/Un vino bianco siciliano/gi, 'A Sicilian white wine'],
+          [/Un vino bianco teso e minerale/gi, 'A crisp, mineral-driven white wine'],
+          [/che esprime il vitigno Carricante/gi, 'showcasing the Carricante grape'],
+          [/ottenuto interamente da uve Carricante/gi, 'made entirely from Carricante grapes'],
+          [/terroir vulcanico/gi, 'volcanic terroir'],
+          [/con note floreali e agrumate/gi, 'with floral and citrus notes'],
+          [/con note minerali/gi, 'with mineral notes'],
+        ]
+
+  return replacements.reduce((acc, [pattern, replacement]) => acc.replace(pattern, replacement), text)
 }
 
 function normalizeNotableForQuiz(value, notableOptions) {
@@ -635,6 +764,7 @@ function ModePickerScreen({onPick, onOpenGuide}) {
 function AutomaticModePlaceholder({onBack, userId}) {
   const router = useRouter()
   const t = useT('gameCreate')
+  const {lang} = useLanguage()
   const supabase = useMemo(() => createClient(), [])
   const fileInputRef = useRef(null)
   const sessionImageIdsRef = useRef([])
@@ -692,19 +822,6 @@ function AutomaticModePlaceholder({onBack, userId}) {
     if (pendingDeleteStorageKey) window.localStorage.removeItem(pendingDeleteStorageKey)
   }, [pendingDeleteStorageKey, sessionIdsStorageKey])
 
-  function normalizeCountryForQuiz(value) {
-    const raw = String(value || '').trim()
-    if (!raw) return null
-    const lower = raw.toLowerCase()
-    if (lower === 'italy') return 'Italia'
-    if (lower === 'france') return 'Francia'
-    if (lower === 'spain') return 'Spagna'
-    if (lower === 'germany') return 'Germania'
-    if (lower === 'portugal') return 'Portogallo'
-    if (lower === 'united states' || lower === 'usa' || lower === 'us') return 'Stati Uniti'
-    return raw
-  }
-
   function inferRegion(details, image) {
     const quizRegion = String(details?.quiz_region || '').trim()
     if (quizRegion) return quizRegion
@@ -748,6 +865,21 @@ function AutomaticModePlaceholder({onBack, userId}) {
     const hit = regionHints.find((region) => source.includes(region))
     return hit ? hit.replace(/\b\w/g, (c) => c.toUpperCase()) : null
   }
+
+  const localizedTemplateOptions = useMemo(
+    () => ({
+      country: TEMPLATE_QUESTION_OPTIONS.country.map((value) => localizeCountryLabel(value, lang)),
+      region: TEMPLATE_QUESTION_OPTIONS.region.map((value) => localizeRegionLabel(value, lang)),
+      grape: TEMPLATE_QUESTION_OPTIONS.grape,
+      vintage: TEMPLATE_QUESTION_OPTIONS.vintage.map((value) => String(value)),
+      rating: TEMPLATE_QUESTION_OPTIONS.rating,
+      price: TEMPLATE_QUESTION_OPTIONS.price,
+      body: OPENAI_TEMPLATE_OPTION_KEYS.body.map((value) => localizeBodyLabel(value, lang)),
+      acidity: OPENAI_TEMPLATE_OPTION_KEYS.acidity.map((value) => localizeAcidityLabel(value, lang)),
+      harmony: OPENAI_TEMPLATE_OPTION_KEYS.harmony.map((value) => localizeHarmonyLabel(value, lang)),
+    }),
+    [lang],
+  )
 
   const markPreviewLoaded = useCallback((imageId) => {
     const id = String(imageId || '').trim()
@@ -1518,6 +1650,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
       const vintageValue = inferVintageQuizValue(
         image.recognized_vintage,
         details.known_vintages,
+        lang,
       )
       const whyNotableValue = normalizeNotableForQuiz(
         String(details.why_notable || details.short_description || '')
@@ -1533,16 +1666,16 @@ function AutomaticModePlaceholder({onBack, userId}) {
         year: vintageValue || '',
         wineType: details.type || '',
         _values: {
-          country: normalizeCountryForQuiz(details.country),
-          region: inferredRegion || null,
+          country: localizeCountryLabel(details.country, lang),
+          region: localizeRegionLabel(inferredRegion || details.region, lang),
           grape: mainGrape,
           vintage: vintageValue,
           notable: whyNotableValue,
           price: priceValue,
           rawPrice: averagePrice,
-          body: normalizeBodyForQuiz(details.body),
-          acidity: normalizeAcidityForQuiz(details.acidity),
-          harmony: normalizeHarmonyForQuiz(details.harmony || details.harmonize),
+          body: normalizeBodyForQuiz(details.body, lang),
+          acidity: normalizeAcidityForQuiz(details.acidity, lang),
+          harmony: normalizeHarmonyForQuiz(details.harmony || details.harmonize, lang),
         },
       }
     })
@@ -1581,15 +1714,15 @@ function AutomaticModePlaceholder({onBack, userId}) {
     )
 
     const templateByKey = {
-      country: TEMPLATE_QUESTIONS[0]?.options || [],
-      region: TEMPLATE_QUESTIONS[1]?.options || [],
-      grape: TEMPLATE_QUESTIONS[2]?.options || [],
-      vintage: TEMPLATE_QUESTIONS[3]?.options || [],
+      country: localizedTemplateOptions.country,
+      region: localizedTemplateOptions.region,
+      grape: localizedTemplateOptions.grape,
+      vintage: localizedTemplateOptions.vintage,
       notable: Object.values(notableOptions),
       price: quizPriceOptions,
-      body: OPENAI_TEMPLATE_OPTIONS.body,
-      acidity: OPENAI_TEMPLATE_OPTIONS.acidity,
-      harmony: OPENAI_TEMPLATE_OPTIONS.harmony,
+      body: localizedTemplateOptions.body,
+      acidity: localizedTemplateOptions.acidity,
+      harmony: localizedTemplateOptions.harmony,
     }
     const effectiveQuestions = questionDefs.map((def) => {
       const extractedValues = [...new Set(bottles.map((b) => b._values[def.key]).filter(Boolean))]
@@ -1622,7 +1755,9 @@ function AutomaticModePlaceholder({onBack, userId}) {
     })
 
     return {
-      name: `${t('automaticGameNamePrefix')} ${new Date().toLocaleDateString()}`,
+      name: `${t('automaticGameNamePrefix')} ${new Date().toLocaleDateString(
+        lang === 'en' ? 'en-US' : 'it-IT',
+      )}`,
       mode: 'create',
       status: 'draft',
       coverIndex: 0,
@@ -1877,13 +2012,16 @@ function AutomaticModePlaceholder({onBack, userId}) {
           ) : (
             <ul className={styles.autoModeUploadedList}>
               {uploadedImages.map((image) => {
-                const details = image.recognized_payload?.catalog_details || null
-                const country = details?.country || null
+                const details = image.recognized_payload?.catalog_details || {}
+                const country = localizeCountryLabel(details?.country, lang)
                 const region = details
-                  ? inferRegion(details, image) || details?.region || null
+                  ? localizeRegionLabel(inferRegion(details, image) || details?.region, lang) || null
                   : null
-                const appellation = details?.quiz_appellation || details?.appellation || null
-                const wineType = mapWineTypeLabel(details?.type)
+                const appellation = localizeAppellationLabel(
+                  details?.quiz_appellation || details?.appellation,
+                  lang,
+                )
+                const wineType = mapWineTypeLabel(details?.type, lang)
                 const primaryGrape =
                   (Array.isArray(details?.grapes) && details.grapes.length > 0
                     ? details.grapes[0]
@@ -1897,7 +2035,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                 // const countryCode = getCountryCode(country)
                 const countryFlag = getCountryFlag(country)
                 const isAnalyzingThis = analyzingImageId === image.id
-                const hasCatalogDetails = !!details
+                const hasCatalogDetails = Object.keys(details).length > 0
                 const hasRecognitionData =
                   hasCatalogDetails ||
                   !!image.recognized_name ||
@@ -1920,6 +2058,11 @@ function AutomaticModePlaceholder({onBack, userId}) {
                 const webSources = Array.isArray(image.recognized_payload?.web_enrichment?.sources)
                   ? image.recognized_payload.web_enrichment.sources.filter(Boolean)
                   : []
+                const localizedWhyNotable = localizeNarrativeText(details?.why_notable, lang)
+                const localizedShortDescription = localizeNarrativeText(
+                  details?.short_description,
+                  lang,
+                )
                 const bottleSpecItems = [
                   primaryGrape
                     ? {label: t('automaticQuestionGrape'), value: primaryGrape}
@@ -1942,14 +2085,22 @@ function AutomaticModePlaceholder({onBack, userId}) {
                       }
                     : null,
                   priceBand ? {label: t('automaticQuestionPrice'), value: priceBand} : null,
-                  details.body ? {label: t('automaticQuestionBody'), value: details.body} : null,
+                  details.body
+                    ? {
+                        label: t('automaticQuestionBody'),
+                        value: normalizeBodyForQuiz(details.body, lang),
+                      }
+                    : null,
                   details.acidity
-                    ? {label: t('automaticQuestionAcidity'), value: details.acidity}
+                    ? {
+                        label: t('automaticQuestionAcidity'),
+                        value: normalizeAcidityForQuiz(details.acidity, lang),
+                      }
                     : null,
                   details.harmony || details.harmonize
                     ? {
                         label: t('automaticQuestionHarmony'),
-                        value: details.harmony || details.harmonize,
+                        value: normalizeHarmonyForQuiz(details.harmony || details.harmonize, lang),
                       }
                     : null,
                 ].filter(Boolean)
@@ -2107,9 +2258,9 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                   <strong>{t('automaticQuizDataLabel')}:</strong>
                                 </span>{' '}
                                 {[
-                                  details.country,
-                                  details.region,
-                                  details.type,
+                                  country,
+                                  region,
+                                  wineType,
                                   image.recognized_vintage,
                                 ]
                                   .filter(Boolean)
@@ -2130,10 +2281,13 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                 details.acidity ||
                                 details.harmony ||
                                 details.harmonize
-                                  ? ` · ${[
-                                      details.body,
-                                      details.acidity,
-                                      details.harmony || details.harmonize,
+                                    ? ` · ${[
+                                      normalizeBodyForQuiz(details.body, lang),
+                                      normalizeAcidityForQuiz(details.acidity, lang),
+                                      normalizeHarmonyForQuiz(
+                                        details.harmony || details.harmonize,
+                                        lang,
+                                      ),
                                     ]
                                       .filter(Boolean)
                                       .join(' / ')}`
@@ -2175,7 +2329,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                     ]
                                 ).join(' | ')}
                               </p>
-                              {details.why_notable ? (
+                              {localizedWhyNotable ? (
                                 <div className={styles.autoBottleNarrativeCard}>
                                   <p className={styles.autoBottleCardDataRow}>
                                     <span className={styles.autoBottleDataLabel}>
@@ -2184,11 +2338,11 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                     </span>
                                   </p>
                                   <p className={styles.autoBottleNarrativeText}>
-                                    {details.why_notable}
+                                    {localizedWhyNotable}
                                   </p>
                                 </div>
                               ) : null}
-                              {details.short_description ? (
+                              {localizedShortDescription ? (
                                 <div className={styles.autoBottleNarrativeCard}>
                                   <p className={styles.autoBottleCardDataRow}>
                                     <span className={styles.autoBottleDataLabel}>
@@ -2197,7 +2351,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                     </span>
                                   </p>
                                   <p className={styles.autoBottleNarrativeText}>
-                                    {details.short_description}
+                                    {localizedShortDescription}
                                   </p>
                                 </div>
                               ) : null}

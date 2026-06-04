@@ -63,6 +63,13 @@
 
 - Estensione progressiva dizionario i18n alle aree con stringhe ancora inline (es. game editor,
   enoteca details).
+- Audit mirato hardcoded UI ancora aperti:
+  - `src/components/game/BottleModal/index.jsx`
+  - `src/components/game/utils/validations.js`
+  - `src/app/admin/vini/page.js`
+  - `src/app/admin/produttori/dettaglio/page.js`
+  - `src/components/landing/*`
+  - metadata/title server pages non ancora uniformati IT/EN
 - Timeout automatico round (host non avanza → round avanza da solo dopo N secondi).
 - Notifica in-game quando un giocatore si disconnette / risulta inattivo.
 - Possibilità di rigiocare una partita dallo storico (usa stesso game, crea nuova sessione).

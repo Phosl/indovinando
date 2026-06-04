@@ -1,12 +1,12 @@
-# AutoVision: logica semplice (OpenAI Vision -> Match catalogo -> Creazione quiz)
+# AutoVision: logica semplice (OpenAI Vision -> Match catalogo -> Quiz automatico)
 
 Questa guida spiega in modo semplice come funziona la pipeline automatica sulle etichette vino, cosi
 possiamo capire bene anche come ridurre il file di import catalogo.
 
 ## 1) Obiettivo in una frase
 
-Carichiamo una foto etichetta, estraiamo testo, troviamo il vino piu probabile nel catalogo, e
-usiamo quei dati per precompilare la creazione del gioco/quiz.
+Carichiamo una foto etichetta, OpenAI Vision estrae dati strutturati, proviamo il match sul
+catalogo, e usiamo quei dati per precompilare la creazione del gioco/quiz.
 
 ## 2) Flusso completo (semplice)
 
@@ -19,9 +19,22 @@ usiamo quei dati per precompilare la creazione del gioco/quiz.
 4. Match con catalogo (`wine_labels` + `wine_producers` + `wine_vintages`).
 5. Se match buono:
    - aumenta confidenza
-   - arricchisce con regione, appellazione, tipo, vitigni, fascia prezzo.
-6. Scrive il risultato in `tasting_bottle_images` (status `recognized` o `failed`).
-7. UI usa questi dati per precompilare bottiglia e suggerire domande.
+   - arricchisce con regione, appellazione, tipo, vitigni, fascia prezzo, range prezzo, note.
+6. Se l’utente lo chiede, parte anche il web enrichment:
+   - `grapes`
+   - `why_notable`
+   - `short_description`
+   - `body`
+   - `acidity`
+   - `harmony`
+   - `average_price`
+   - `price_min`
+   - `price_max`
+7. Scrive il risultato in `tasting_bottle_images` (status `recognized` o `failed`).
+8. UI usa questi dati per precompilare bottiglia e suggerire domande.
+9. Se l’utente conferma, il vino viene creato o aggiornato nel catalogo.
+
+Importante: il web enrichment non e piu “sempre acceso”. E opt-in.
 
 ## 3) Come viene fatto il match (senza tecnicismi)
 
@@ -30,6 +43,9 @@ Il sistema non cerca solo "uguale identico". Fa uno score su piu segnali:
 - somiglianza nome etichetta
 - somiglianza produttore
 - coerenza geografica (hint regione nel testo riconosciuto)
+- coerenza tipo/colore (`Bianco`, `Rosso`, ecc.)
+- exact label match se il nome corrisponde gia a una label canonica
+- uso del `label_id` sincronizzato se la stessa bottiglia e gia stata salvata nel catalogo
 
 Poi sceglie il candidato migliore. Se il punteggio e basso, non forza il match.
 
@@ -47,6 +63,16 @@ Se OpenAI non riesce a leggere bene l'etichetta:
 - mette confidenza piu bassa
 
 Quindi il flusso non si blocca: degradazione controllata, non errore totale.
+
+## 4.1) Casi speciali tipo Idda
+
+Per vini “brand-first” o collaborazioni ambigue, tipo `Idda`:
+
+- il nome riconosciuto viene canonicalizzato
+- suffix tipo `Sicilia DOP` possono essere rimossi prima del match
+- se il vino e gia sincronizzato nel catalogo, si preferisce il `label_id` gia noto
+
+Questo evita di ricreare varianti quasi duplicate e riduce il rischio di ricadere nel web search.
 
 ## 5) Cosa serve davvero nel catalogo per farlo funzionare bene
 
@@ -68,8 +94,13 @@ Per arricchimento quiz (nice-to-have):
 - `wine_labels.quiz_appellation`
 - `wine_labels.type`
 - `wine_labels.quiz_price_band`
+- `wine_labels.body`
+- `wine_labels.acidity`
+- `wine_labels.harmonize`
 - `wine_label_grapes` + `wine_grapes`
-- `wine_vintages.price`, `currency`, `price_band`
+- `wine_vintages.price`, `price_min`, `price_max`, `currency`, `price_band`
+- `wine_labels.notes` (per `why_notable` / `short_description`)
+- `wine_sources.raw_payload` (per sorgenti e dettagli enrichment)
 
 ## 6) Come ridurre il file di import (strategia pratica)
 
@@ -133,6 +164,7 @@ Meglio un catalogo piccolo ma pulito che un catalogo enorme rumoroso.
 ## 10) Dove si appoggia nel progetto
 
 - API analisi: `src/app/api/auto-tasting/analyze/route.js`
+- API salvataggio catalogo: `src/app/api/auto-tasting/verify-catalog/route.js`
 - tabella risultati riconoscimento: `tasting_bottle_images`
 - catalogo: `wine_labels`, `wine_producers`, `wine_vintages`, `wine_label_grapes`, `wine_grapes`
 
@@ -181,6 +213,20 @@ Le domande restano uguali per tutte le bottiglie. Cambiano solo le risposte corr
 - Editing piu veloce: cambi una domanda una sola volta.
 - AutoVision piu semplice: il riconoscimento riempie dati bottiglia, poi il sistema collega la
   risposta corretta alle domande globali.
+
+## 12) Regole quiz introdotte
+
+- Le domande entrano solo se il dato esiste davvero.
+- Il template `OpenAI` puo usare anche:
+  - corpo
+  - acidita
+  - armonia
+  - motivo di notorieta
+- Le risposte narrative vengono normalizzate in categorie brevi, non in frasi lunghe.
+- Esiste una domanda finale `neutra`:
+  - `Che voto daresti a questo vino?`
+  - senza risposta corretta
+  - senza punteggio
 
 ---
 

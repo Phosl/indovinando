@@ -50,11 +50,11 @@ export default function BottleModal({
   const isNewBottle = bottleIndex === null
   const [wizardStep, setWizardStep] = useState(0)
   const WINE_TYPES = [
-    {value: 'rosso', label: 'Rosso'},
-    {value: 'bianco', label: 'Bianco'},
+    {value: 'rosso', label: lang === 'en' ? 'Red' : 'Rosso'},
+    {value: 'bianco', label: lang === 'en' ? 'White' : 'Bianco'},
     {value: 'rose', label: 'Rosé'},
-    {value: 'champagne', label: 'Champagne'},
-    {value: 'altro', label: 'Altro'},
+    {value: 'champagne', label: lang === 'en' ? 'Sparkling' : 'Champagne'},
+    {value: 'altro', label: lang === 'en' ? 'Other' : 'Altro'},
   ]
 
   const questionCount = questions.length
@@ -125,7 +125,7 @@ export default function BottleModal({
     }
 
     if (isInfoStep && !wineType?.trim()) {
-      alert(lang === 'en' ? 'Select wine type.' : 'Seleziona il tipo di vino.')
+      alert(text.selectWineType)
       return
     }
 
@@ -148,14 +148,10 @@ export default function BottleModal({
     setWizardStep((prev) => Math.max(prev - 1, 0))
   }
 
-  const nextLabel = lang === 'en' ? 'Next' : 'Avanti'
-  const backLabel = lang === 'en' ? 'Back' : 'Indietro'
-  // const addAnotherLabel = lang === 'en' ? 'Save and add another' : 'Salva e aggiungi altra' // rimosso
-  const finalTitle = lang === 'en' ? 'Done' : 'Fine'
-  const finalHint =
-    lang === 'en'
-      ? 'Review and save this bottle, then continue with another if needed.'
-      : "Controlla e salva questa bottiglia, poi aggiungine un'altra se serve."
+  const nextLabel = text.next
+  const backLabel = text.back
+  const finalTitle = text.done
+  const finalHint = text.finalHint
 
   return (
     <div className={styles.modalOverlay}>
@@ -164,7 +160,9 @@ export default function BottleModal({
           <h3>
             {isNewBottle ? text.newTitle : `${text.editTitlePrefix} ${bottleIndex + 1}`}{' '}
             <span className={styles.stepNumber}>
-              Step {wizardStep + 1} di {totalSteps}
+              {text.stepLabel
+                ?.replace('{current}', String(wizardStep + 1))
+                ?.replace('{total}', String(totalSteps))}
             </span>
           </h3>
           <ModalCloseButton className={styles.closeBtn} onClick={onCancel} />
@@ -198,8 +196,8 @@ export default function BottleModal({
 
           {isInfoStep && (
             <div className={styles.bottleInfoSection}>
-              <h4>{lang === 'en' ? 'Wine info' : 'Info vino'}</h4>
-              <div className={styles.typePills} role="radiogroup" aria-label="wine type">
+              <h4>{text.wineInfoTitle}</h4>
+              <div className={styles.typePills} role="radiogroup" aria-label={text.wineTypeAriaLabel}>
                 {WINE_TYPES.map((item) => (
                   <button
                     key={item.value}
@@ -218,7 +216,8 @@ export default function BottleModal({
           {isQuestionStep && currentQuestion && (
             <div className={styles.questionStep}>
               <h4 className={styles.questionStepTitle}>
-                {lang === 'en' ? 'Question' : 'Domanda'} {currentQuestionIndex + 1}
+                {text.questionTitle
+                  ?.replace('{index}', String(currentQuestionIndex + 1))}
               </h4>
               <p className={styles.questionStepText}>{currentQuestion.text}</p>
 
@@ -226,21 +225,13 @@ export default function BottleModal({
                 <div className={styles.ratingSliderBlock}>
                   <div className={styles.ratingInfoTitle}>
                     {currentQuestionIsRating
-                      ? lang === 'en'
-                        ? 'This answer is given by the player during the tasting.'
-                        : 'Questa risposta la darà il giocatore durante la degustazione.'
-                      : lang === 'en'
-                        ? 'This question is marked as neutral.'
-                        : 'Questa domanda è contrassegnata come neutra.'}
+                      ? text.neutralRatingTitle
+                      : text.neutralQuestionTitle}
                   </div>
                   <p className={styles.ratingInfoText}>
                     {currentQuestionIsRating
-                      ? lang === 'en'
-                        ? 'It remains visible in the questionnaire, but it has no correct answer and is not configured bottle by bottle.'
-                        : 'Resta visibile nel questionario, ma non ha una risposta corretta e non si compila per singola bottiglia.'
-                      : lang === 'en'
-                        ? 'Players will still see the options during the game, but this bottle does not need a correct answer.'
-                        : 'I giocatori vedranno comunque le opzioni durante il gioco, ma questa bottiglia non richiede una risposta corretta.'}
+                      ? text.neutralRatingText
+                      : text.neutralQuestionText}
                   </p>
                 </div>
               ) : (
@@ -281,11 +272,11 @@ export default function BottleModal({
                       isNeutralQuestion(q)
                         ? lang === 'en'
                           ? isPlayerRatingQuestion(q)
-                            ? 'Player rating'
-                            : 'Neutral question'
+                            ? text.summaryPlayerRating
+                            : text.summaryNeutralQuestion
                           : isPlayerRatingQuestion(q)
-                            ? 'Voto del giocatore'
-                            : 'Domanda neutra'
+                            ? text.summaryPlayerRating
+                            : text.summaryNeutralQuestion
                         : answerIndex !== null &&
                             answerIndex !== undefined &&
                             options[answerIndex]
