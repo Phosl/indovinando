@@ -8,7 +8,7 @@ Controllo rapido su:
 
 - route API in `src/app/api`
 - pagine admin in `src/app/admin`
-- uso di `SUPABASE_SERVICE_ROLE_KEY` e `GOOGLE_CLOUD_VISION_API_KEY`
+- uso di `SUPABASE_SERVICE_ROLE_KEY` e `OPENAI_API_KEY`
 - presenza accidentale di secret nel repository
 - flussi live anonimi e upload immagini degustazione
 
@@ -18,7 +18,7 @@ Non ho trovato secret reali committati nel repository. Le chiavi sensibili risul
 
 Ho applicato tre hardening:
 
-- `/api/auto-tasting/vision-health` ora richiede `super_admin`, quindi non espone piu un endpoint pubblico che chiama Google Vision.
+- `/api/auto-tasting/vision-health` ora richiede `super_admin`, quindi non espone piu un endpoint pubblico che chiama OpenAI Vision.
 - `/api/game/save` ora verifica che l'update del gioco abbia davvero trovato un gioco dell'utente prima di cancellare e reinserire bottiglie/domande.
 - le pagine `/admin/*` usano `requireSuperAdmin()` oltre al controllo gia presente nel layout admin.
 
@@ -26,7 +26,7 @@ Ho applicato tre hardening:
 
 - `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` sono pubbliche per natura.
 - `SUPABASE_SERVICE_ROLE_KEY` viene usata solo in route server-side. Va tenuta solo in `.env.local` / env di deploy, mai nel client.
-- `GOOGLE_CLOUD_VISION_API_KEY` viene usata solo server-side nelle route auto tasting.
+- `OPENAI_API_KEY` viene usata solo server-side nelle route auto tasting.
 - La scansione non ha trovato pattern evidenti di chiavi API reali o JWT committati.
 
 ## Rischi rimasti da decidere
@@ -65,7 +65,7 @@ Mitigazione consigliata:
 ## Checklist operativa
 
 - Tenere `.env.local` fuori da git.
-- Limitare la Google API key a Cloud Vision e, se possibile, a backend/origin consentiti.
+- Limitare la OpenAI API key all'ambiente server e a permessi coerenti col deployment.
 - Verificare in Supabase che le policy RLS blocchino letture/scritture non previste sulle tabelle admin e wine catalog.
 - Se una route usa `SUPABASE_SERVICE_ROLE_KEY`, fare sempre prima un controllo esplicito su utente, owner o host.
 - Per i live game pubblici, trattare `sessionId` e `playerId` come bearer token finche non introduciamo `player_token`.

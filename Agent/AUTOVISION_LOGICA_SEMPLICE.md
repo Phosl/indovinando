@@ -1,4 +1,4 @@
-# AutoVision: logica semplice (OCR -> Match catalogo -> Creazione quiz)
+# AutoVision: logica semplice (OpenAI Vision -> Match catalogo -> Creazione quiz)
 
 Questa guida spiega in modo semplice come funziona la pipeline automatica sulle etichette vino, cosi
 possiamo capire bene anche come ridurre il file di import catalogo.
@@ -11,8 +11,8 @@ usiamo quei dati per precompilare la creazione del gioco/quiz.
 ## 2) Flusso completo (semplice)
 
 1. Upload immagine bottiglia.
-2. OCR (Google Vision) prova a leggere testo da etichetta.
-3. Estrazione campi base dal testo:
+2. OpenAI Vision analizza l'etichetta e restituisce dati strutturati.
+3. Estrazione campi base dal risultato:
    - nome vino
    - produttore
    - annata (se trovata)
@@ -29,7 +29,7 @@ Il sistema non cerca solo "uguale identico". Fa uno score su piu segnali:
 
 - somiglianza nome etichetta
 - somiglianza produttore
-- coerenza geografica (hint regione nel testo OCR)
+- coerenza geografica (hint regione nel testo riconosciuto)
 
 Poi sceglie il candidato migliore. Se il punteggio e basso, non forza il match.
 
@@ -38,9 +38,9 @@ In pratica:
 - score alto -> match accettato e arricchimento forte
 - score basso -> resta il riconoscimento base (o fallback)
 
-## 4) Fallback quando OCR non e perfetto
+## 4) Fallback quando il riconoscimento non e perfetto
 
-Se OCR fallisce o e sporco:
+Se OpenAI non riesce a leggere bene l'etichetta:
 
 - prova a leggere indizi da filename/path immagine
 - salva warning in payload

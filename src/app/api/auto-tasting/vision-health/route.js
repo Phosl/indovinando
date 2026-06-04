@@ -1,7 +1,8 @@
 import {NextResponse} from 'next/server'
 import {isSuperAdmin} from '@/lib/courseAdmin'
 
-const GOOGLE_CLOUD_VISION_API_KEY = process.env.GOOGLE_CLOUD_VISION_API_KEY
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+const OPENAI_VISION_MODEL = process.env.OPENAI_VISION_MODEL || 'gpt-4o-mini'
 
 function withTimeout(promise, ms, label) {
   let timeoutId
@@ -18,28 +19,39 @@ export async function GET() {
       return NextResponse.json({ok: false, error: 'Not authorized'}, {status: 403})
     }
 
-    if (!GOOGLE_CLOUD_VISION_API_KEY) {
-      return NextResponse.json({ok: false, error: 'GOOGLE_CLOUD_VISION_API_KEY missing'}, {status: 500})
+    if (!OPENAI_API_KEY) {
+      return NextResponse.json({ok: false, error: 'OPENAI_API_KEY missing'}, {status: 500})
     }
 
-    // 1x1 transparent PNG
-    const pngBase64 =
-      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y6xR+gAAAAASUVORK5CYII='
-
-    const endpoint = `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_CLOUD_VISION_API_KEY}`
+    const endpoint = 'https://api.openai.com/v1/responses'
     const body = {
-      requests: [
-        {
-          image: {content: pngBase64},
-          features: [{type: 'TEXT_DETECTION'}],
+      model: OPENAI_VISION_MODEL,
+      input: 'Reply with JSON {"ok":true}.',
+      text: {
+        format: {
+          type: 'json_schema',
+          name: 'healthcheck',
+          strict: true,
+          schema: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['ok'],
+            properties: {
+              ok: {type: 'boolean'},
+            },
+          },
         },
-      ],
+      },
+      max_output_tokens: 50,
     }
 
     const response = await withTimeout(
       fetch(endpoint, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${OPENAI_API_KEY}`,
+        },
         body: JSON.stringify(body),
       }),
       20000,
@@ -53,20 +65,21 @@ export async function GET() {
         {
           ok: false,
           status: response.status,
-          error: json?.error?.message || `Vision HTTP ${response.status}`,
+          error: json?.error?.message || `OpenAI HTTP ${response.status}`,
         },
         {status: 500},
       )
     }
 
-    const first = json?.responses?.[0]
-    if (first?.error?.message) {
-      return NextResponse.json({ok: false, error: first.error.message}, {status: 500})
+    const outputText = String(json?.output_text || '').trim()
+    if (!outputText.includes('"ok"')) {
+      return NextResponse.json({ok: false, error: 'Unexpected OpenAI health response'}, {status: 500})
     }
 
     return NextResponse.json({
       ok: true,
-      message: 'Vision API reachable',
+      message: 'OpenAI Vision reachable',
+      model: OPENAI_VISION_MODEL,
     })
   } catch (error) {
     return NextResponse.json({ok: false, error: error?.message || 'Unexpected error'}, {status: 500})

@@ -167,6 +167,7 @@ export default function GamePlayView({
           <div className={styles.questionsList}>
             {questions.map((q, idx) => {
               const correctOptionId = answerMap.get(q.id)
+              const hasCorrectOption = Boolean(correctOptionId)
               return (
                 <div key={q.id} className={styles.questionBlock}>
                   <div className={styles.questionHeader}>
@@ -178,16 +179,24 @@ export default function GamePlayView({
 
                   <div className={styles.options}>
                     {q.options.map((opt) => {
-                      const isCorrect = opt.id === correctOptionId
+                      const isCorrect = hasCorrectOption && opt.id === correctOptionId
                       return (
                         <div
                           key={opt.id}
-                          className={`${styles.option} ${isCorrect ? styles.correct : styles.wrong}`}>
-                          <Icon
-                            className={styles.optionIcon}
-                            name={isCorrect ? 'checkCorrect' : 'checkWrong'}
-                            size={24}
-                          />
+                          className={`${styles.option} ${
+                            hasCorrectOption
+                              ? isCorrect
+                                ? styles.correct
+                                : styles.wrong
+                              : ''
+                          }`}>
+                          {hasCorrectOption ? (
+                            <Icon
+                              className={styles.optionIcon}
+                              name={isCorrect ? 'checkCorrect' : 'checkWrong'}
+                              size={24}
+                            />
+                          ) : null}
                           <span>{opt.text}</span>
                         </div>
                       )

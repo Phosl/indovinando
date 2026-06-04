@@ -13,6 +13,9 @@ import Loader from '@/components/Loader'
 import styles from '@/app/live/session/[sessionId]/play/playerLive.module.scss'
 import joinStyles from '@/app/live/session/[sessionId]/playerJoin.module.scss'
 
+const isNeutralQuestion = (question) =>
+  question?.isNeutral === true || String(question?.kind || '').trim().toLowerCase() === 'neutral'
+
 function getStoredPlayer(sessionId) {
   try {
     const raw = localStorage.getItem(`table_live_player_${sessionId}`)
@@ -274,11 +277,14 @@ export default function TableLiveSessionClient({sessionId}) {
 
   const handleCheck = async (questionId, optionId) => {
     if (!playerAuth || !questionId || !optionId || checkedQuestions[questionId] || checking) return
+    const currentQuestion = questions.find((question) => question.id === questionId)
+    const isNeutral = isNeutralQuestion(currentQuestion)
     setChecking(true)
     const correctOptionId = data?.correctOptionByQuestion?.[questionId]
-    const isCorrect = correctOptionId === optionId
-    const points = isCorrect ? 10 : 0
-    playSound(isCorrect ? 'correct' : 'wrong')
+    const isCorrect = isNeutral ? null : correctOptionId === optionId
+    const points = isCorrect === true ? 10 : 0
+    if (isCorrect === true) playSound('correct')
+    else if (isCorrect === false) playSound('wrong')
     setCheckedQuestions((prev) => ({...prev, [questionId]: true}))
     setRoundAnswers((prev) => ({
       ...prev,
@@ -306,7 +312,7 @@ export default function TableLiveSessionClient({sessionId}) {
         ...prev,
         [questionId]: {
           optionId,
-          isCorrect: !!payload?.isCorrect,
+          isCorrect: payload?.isCorrect ?? null,
           points: payload?.points || points,
         },
       }))
@@ -493,9 +499,12 @@ export default function TableLiveSessionClient({sessionId}) {
           onOpenLeaderboard={() => setLeaderboardOpen(true)}
           onOpenExit={() => setExitModalOpen(true)}
         />
-        <div className={styles.centeredCard}>
-          <h2>Codice partita: {data.session.joinCode}</h2>
-          <p>Giocatori presenti: {data.players.length}</p>
+        <div className={`${styles.centeredCard} ${styles.lobbyCard}`}>
+          <div className={styles.lobbyCodeBlock}>
+            <span className={styles.lobbyCodeLabel}>Codice partita</span>
+            <strong className={styles.lobbyCodeValue}>{data.session.joinCode}</strong>
+          </div>
+
           {data.me.isHost ? (
             <button className="btn success" onClick={handleStart} disabled={starting}>
               {starting ? 'Avvio...' : 'Inizia partita'}
@@ -512,17 +521,21 @@ export default function TableLiveSessionClient({sessionId}) {
             </button>
           </div>
           {data.players.length ? (
-            <div className={joinStyles.playersList} style={{marginTop: 14}}>
-              <div className={joinStyles.playersGrid}>
+            <div className={styles.lobbyPlayersSection}>
+              <div className={styles.lobbyPlayersHeader}>
+                <h2>Giocatori presenti</h2>
+                <span className={styles.lobbyPlayersCount}>{data.players.length}</span>
+              </div>
+              <div className={styles.lobbyPlayersGrid}>
                 {data.players.map((player) => (
-                  <div key={player.id} className={joinStyles.playerCard}>
-                    <span className={joinStyles.emoji}>
+                  <div key={player.id} className={styles.lobbyPlayerCard}>
+                    <span className={styles.lobbyPlayerAvatar}>
                       <AvatarDisplay avatarId={avatarFromNickname(player.nickname)} size={28} />
                     </span>
-                    <p>
-                      {player.nickname}
-                      {player.is_host ? ' (host)' : ''}
-                    </p>
+                    <div className={styles.lobbyPlayerMeta}>
+                      <p className={styles.lobbyPlayerName}>{player.nickname}</p>
+                      {player.is_host ? <span className={styles.lobbyPlayerHost}>Host</span> : null}
+                    </div>
                   </div>
                 ))}
               </div>

@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS game_questions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   game_id UUID NOT NULL REFERENCES games(id) ON DELETE CASCADE,
   text TEXT NOT NULL,
+  kind TEXT,
+  is_neutral BOOLEAN NOT NULL DEFAULT FALSE,
   display_order INTEGER NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );

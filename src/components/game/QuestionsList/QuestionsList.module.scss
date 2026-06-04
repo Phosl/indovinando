@@ -99,6 +99,20 @@
   overflow: hidden;
 }
 
+.lockedBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #eef3fb;
+  color: #244260;
+  font-size: 0.76rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
 .optionsCount {
   margin: 4px 0 0;
   font-size: 0.9rem;

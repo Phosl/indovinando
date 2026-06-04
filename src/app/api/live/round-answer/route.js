@@ -1,6 +1,10 @@
 import {NextResponse} from 'next/server'
 import {createClient} from '@supabase/supabase-js'
 
+function isNeutralQuestion(question) {
+  return question?.is_neutral === true || String(question?.kind || '').trim().toLowerCase() === 'neutral'
+}
+
 function createWriteClient(fallback) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -90,21 +94,9 @@ export async function POST(request) {
       return NextResponse.json({error: 'No bottles available for this game'}, {status: 400})
     }
 
-    const currentBottleId = currentBottleRows[0]?.id
-    const {data: correctRow, error: correctError} = await db
-      .from('game_bottle_answers')
-      .select('option_id')
-      .eq('bottle_id', currentBottleId)
-      .eq('question_id', questionId)
-      .maybeSingle()
-
-    if (correctError || !correctRow?.option_id) {
-      return NextResponse.json({error: 'Correct option not found for question'}, {status: 400})
-    }
-
     const {data: questions, error: questionsError} = await db
       .from('game_questions')
-      .select('id, display_order')
+      .select('id, display_order, kind, is_neutral')
       .eq('game_id', session.game_id)
       .order('display_order')
 
@@ -115,6 +107,26 @@ export async function POST(request) {
     const currentQuestionIndex = questions.findIndex((question) => question.id === questionId)
     if (currentQuestionIndex < 0) {
       return NextResponse.json({error: 'Question not found for game'}, {status: 400})
+    }
+
+    const currentQuestion = questions[currentQuestionIndex]
+    const isNeutral = isNeutralQuestion(currentQuestion)
+
+    const currentBottleId = currentBottleRows[0]?.id
+    let correctOptionId = null
+    if (!isNeutral) {
+      const {data: correctRow, error: correctError} = await db
+        .from('game_bottle_answers')
+        .select('option_id')
+        .eq('bottle_id', currentBottleId)
+        .eq('question_id', questionId)
+        .maybeSingle()
+
+      if (correctError || !correctRow?.option_id) {
+        return NextResponse.json({error: 'Correct option not found for question'}, {status: 400})
+      }
+
+      correctOptionId = correctRow.option_id
     }
 
     const priorQuestionIds = questions.slice(0, currentQuestionIndex).map((question) => question.id)
@@ -145,15 +157,15 @@ export async function POST(request) {
 
       priorQuestionIds.forEach((priorQuestionId) => {
         const answer = priorAnswerByQuestion.get(priorQuestionId)
-        currentCombo = answer?.is_correct ? currentCombo + 1 : 0
+        if (answer?.is_correct === true) currentCombo += 1
+        else if (answer?.is_correct === false) currentCombo = 0
       })
     }
 
-    const correctOptionId = correctRow.option_id
-    const isCorrect = correctOptionId === selectedOptionId
-    const newCombo = isCorrect ? currentCombo + 1 : 0
-    const comboBonus = isCorrect && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
-    const points = isCorrect ? 10 + comboBonus : 0
+    const isCorrect = isNeutral ? null : correctOptionId === selectedOptionId
+    const newCombo = isCorrect === true ? currentCombo + 1 : isCorrect === false ? 0 : currentCombo
+    const comboBonus = isCorrect === true && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
+    const points = isCorrect === true ? 10 + comboBonus : 0
 
     const {error} = await db.from('live_round_answers').insert({
       session_id: sessionId,
@@ -173,7 +185,15 @@ export async function POST(request) {
       return NextResponse.json({error: error.message}, {status: 500})
     }
 
-    return NextResponse.json({ok: true, isCorrect, points, comboBonus, newCombo, correctOptionId})
+    return NextResponse.json({
+      ok: true,
+      isCorrect,
+      points,
+      comboBonus,
+      newCombo,
+      correctOptionId,
+      isNeutral,
+    })
   } catch (err) {
     return NextResponse.json({error: err.message}, {status: 500})
   }

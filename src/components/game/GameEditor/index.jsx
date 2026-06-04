@@ -184,6 +184,7 @@ const StepTwoSection = memo(function StepTwoSection({
   onBack,
   onShowIntro,
   introAriaLabel,
+  isQuickCreate,
 }) {
   return (
     <div className={styles.section}>
@@ -203,6 +204,7 @@ const StepTwoSection = memo(function StepTwoSection({
           onEditQuestion={onEditQuestion}
           onNewQuestion={onNewQuestion}
           onDeleteQuestion={onDeleteQuestion}
+          isQuickCreate={isQuickCreate}
         />
       </div>
 
@@ -467,6 +469,8 @@ export default function GameEditor({
           .map((q) => ({
             id: q.id,
             text: q.text,
+            kind: q.kind || null,
+            isNeutral: q.is_neutral === true || q.isNeutral === true,
             options: (q.game_question_options || [])
               .sort((opt) => opt.option_order)
               .map((opt) => opt.text),
@@ -513,6 +517,8 @@ export default function GameEditor({
         const normalizedQuestions = initialQuestions.map((q) => ({
           id: q.id || `q-${Date.now()}-${Math.random()}`,
           text: q.text,
+          kind: q.kind || null,
+          isNeutral: q.is_neutral === true || q.isNeutral === true,
           options: q.options || [],
         }))
         setQuestionDraft(normalizedQuestions)
@@ -792,7 +798,7 @@ export default function GameEditor({
         year,
         wineType,
         currentAnswers,
-        templateQuestions.length,
+        templateQuestions,
         alertMessages,
       )
     } catch (error) {
@@ -1057,6 +1063,7 @@ export default function GameEditor({
       />
 
       <BottleModal
+        key={`bottle-${isModalOpen ? 'open' : 'closed'}-${activeBottleIndex ?? 'new'}-${templateQuestions.length}-${bottleModalResetToken}`}
         isOpen={isModalOpen}
         resetToken={bottleModalResetToken}
         bottleIndex={activeBottleIndex}
@@ -1077,6 +1084,7 @@ export default function GameEditor({
       />
 
       <QuestionModal
+        key={`question-${isQuestionModalOpen ? 'open' : 'closed'}-${editingQuestionIndex ?? 'new'}-${editingQuestionIndex !== null ? questionDraft[editingQuestionIndex]?.id || 'draft' : 'draft'}`}
         isOpen={isQuestionModalOpen}
         questionIndex={editingQuestionIndex}
         question={editingQuestionIndex !== null ? questionDraft[editingQuestionIndex] : null}

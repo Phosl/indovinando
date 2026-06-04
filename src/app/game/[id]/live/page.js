@@ -42,6 +42,8 @@ export default async function LiveSessionPage({params}) {
       id,
       display_order,
       text,
+      kind,
+      is_neutral,
       game_question_options (
         id,
         text,

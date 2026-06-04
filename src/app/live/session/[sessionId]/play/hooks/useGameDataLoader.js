@@ -74,7 +74,7 @@ export function useGameDataLoader({
               await Promise.all([
                 supabaseClient
                   .from('game_questions')
-                  .select('id, text, display_order, game_question_options (id, text, option_order)')
+                  .select('id, text, kind, is_neutral, display_order, game_question_options (id, text, option_order)')
                   .eq('game_id', session.game_id)
                   .order('display_order'),
                 supabaseClient

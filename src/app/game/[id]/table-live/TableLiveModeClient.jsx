@@ -139,6 +139,11 @@ export default function TableLiveModeClient({gameId, gameName}) {
     printWindow.print()
   }
 
+  const handleOpenLink = () => {
+    if (!eventLink) return
+    window.open(eventLink, '_blank', 'noopener,noreferrer')
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.topBarWrap}>
@@ -175,16 +180,26 @@ export default function TableLiveModeClient({gameId, gameName}) {
         ) : null}
 
         {eventLink ? (
-          <section className={styles.card}>
-            <h2>Link e QR evento</h2>
-            <p>Accedi a questo link per giocare o stampa il QR per condividerlo.</p>
-            <input type="text" readOnly value={eventLink} className={styles.linkInput} />
+          <section className={`${styles.card} ${styles.shareCard}`}>
+            <div className={styles.shareCardBody}>
+              <h2>Link e QR evento</h2>
+              <p>Accedi a questo link per giocare o stampa il QR per condividerlo.</p>
+            </div>
+
+            <div className={styles.linkBlock}>
+              <span className={styles.linkLabel}>Link</span>
+              <input type="text" readOnly value={eventLink} className={styles.linkInput} />
+            </div>
+
             <div className={styles.actions}>
-              <button className="btn neutral small" onClick={handleCopy}>
-                {copyFeedback ? 'Copiato' : 'Copia link'}
+              <button className="btn secondary small" onClick={handleOpenLink}>
+                Vai al link
               </button>
-              <button className="btn neutral small" onClick={() => setQrOpen(true)}>
-                Apri QR
+              <button className="btn neutral small" onClick={handleCopy}>
+                {copyFeedback ? 'Copiato' : 'Copia'}
+              </button>
+              <button className="btn success small" onClick={() => setQrOpen(true)}>
+                Stampa QR
               </button>
             </div>
             {error ? <p className={styles.error}>{error}</p> : null}
@@ -211,11 +226,11 @@ export default function TableLiveModeClient({gameId, gameName}) {
               <img src={qrDataUrl} alt="QR evento tavoli" className={styles.qrImage} />
             ) : null}
             <div className={styles.actions}>
-              <button className="btn success small" onClick={handlePrint}>
-                Stampa
-              </button>
               <button className="btn neutral small" onClick={() => setQrOpen(false)}>
                 Chiudi
+              </button>
+              <button className="btn success small" onClick={handlePrint}>
+                Stampa
               </button>
             </div>
           </div>

@@ -12,6 +12,8 @@ import {useGameAudio} from '../../../live/session/[sessionId]/play/hooks/useGame
 
 const POINTS_CORRECT = 25
 const SLIDE_TRANSITION_MS = 220
+const isNeutralQuestion = (question) =>
+  question?.isNeutral === true || String(question?.kind || '').trim().toLowerCase() === 'neutral'
 
 const getComboMsg = (n) => {
   if (n < 2) return null
@@ -198,21 +200,23 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
 
   const handleCheck = useCallback(async () => {
     if (!currentQuestion || !currentBottle || isCurrentChecked || !curSelectedId) return
+    const isNeutral = isNeutralQuestion(currentQuestion)
     const correctOptionId = currentBottle.correctAnswers?.[currentQuestion.id]
-    const isCorrect = curSelectedId === correctOptionId
-    const points = isCorrect ? POINTS_CORRECT : 0
-    const newCombo = isCorrect ? comboCount + 1 : 0
+    const isCorrect = isNeutral ? null : curSelectedId === correctOptionId
+    const points = isCorrect === true ? POINTS_CORRECT : 0
+    const newCombo = isCorrect === true ? comboCount + 1 : isCorrect === false ? 0 : comboCount
 
     const k = stateKey(currentBottle.id, currentQuestion.id)
     setComboCount(newCombo)
     setChecked((prev) => ({...prev, [k]: {isCorrect, points, comboCount: newCombo}}))
-    playSound(isCorrect ? 'correct' : 'wrong')
+    if (isCorrect === true) playSound('correct')
+    else if (isCorrect === false) playSound('wrong')
 
     if (comboToastTimerRef.current) {
       clearTimeout(comboToastTimerRef.current)
       comboToastTimerRef.current = null
     }
-    if (newCombo >= 2) {
+    if (isCorrect === true && newCombo >= 2) {
       const msg = getComboMsg(newCombo)
       if (msg) {
         setVisibleCombo({...msg, key: Date.now()})
@@ -406,17 +410,18 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
 
   // ── REVEAL SCREEN ─────────────────────────────────────────────────────────
   if (screen === 'reveal' && currentBottle) {
+    const scorableQuestions = questions.filter((q) => !isNeutralQuestion(q))
     const bottleScore = questions.reduce(
       (sum, q) => sum + (checked[stateKey(currentBottle.id, q.id)]?.points ?? 0),
       0,
     )
-    const correctCount = questions.filter(
+    const correctCount = scorableQuestions.filter(
       (q) => checked[stateKey(currentBottle.id, q.id)]?.isCorrect,
     ).length
     const revealTitle =
-      correctCount === questions.length
+      correctCount === scorableQuestions.length
         ? `🎉 ${t('perfect')}`
-        : correctCount > questions.length / 2
+        : correctCount > scorableQuestions.length / 2
           ? `👍 ${t('wellDone')}`
           : `💪 ${t('keepGoing')}`
 
@@ -442,16 +447,28 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
           {questions.map((q) => {
             const k = stateKey(currentBottle.id, q.id)
             const isCorrect = checked[k]?.isCorrect
+            const isNeutral = isNeutralQuestion(q)
             const selectedOpt = q.options.find((o) => o.id === selected[k])
             const correctOpt = q.options.find((o) => o.id === currentBottle.correctAnswers?.[q.id])
             return (
               <div
                 key={q.id}
-                className={`${styles.summaryRow} ${isCorrect ? styles.summaryRowCorrect : styles.summaryRowWrong}`}>
+                className={`${styles.summaryRow} ${
+                  isNeutral
+                    ? ''
+                    : isCorrect
+                      ? styles.summaryRowCorrect
+                      : styles.summaryRowWrong
+                }`}>
                 <div className={styles.summaryBody}>
                   <span className={styles.summaryText}>{q.text}</span>
                   <div className={styles.summaryAnswer}>
-                    {isCorrect ? (
+                    {isNeutral ? (
+                      <span className={styles.summaryCorrect}>
+                        {selectedOpt?.text ?? t('notAnswered')}
+                        <span className={styles.summaryPoints}>+0</span>
+                      </span>
+                    ) : isCorrect ? (
                       <span className={styles.summaryCorrect}>
                         ✅ {correctOpt?.text}
                         <span className={styles.summaryPoints}>+{checked[k]?.points ?? 0}</span>
@@ -475,7 +492,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
 
         <div className={styles.bottomPanel}>
           <p className={styles.readyHint}>
-            {correctCount}/{questions.length} {t('correct')} · +{bottleScore} {t('points')}
+            {correctCount}/{scorableQuestions.length} {t('correct')} · +{bottleScore} {t('points')}
           </p>
           <button className={styles.continueButton} onClick={handleGoNextBottle}>
             {isLastBottle ? `🏆 ${t('finalResults')}` : t('nextBottle')}
@@ -488,6 +505,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
   // ── QUESTION SCREEN ───────────────────────────────────────────────────────
   const correctOptId = currentBottle?.correctAnswers?.[currentQuestion?.id]
   const correctOptText = currentQuestion?.options?.find((o) => o.id === correctOptId)?.text
+  const currentQuestionIsNeutral = isNeutralQuestion(currentQuestion)
   const slideMotionClass =
     slideMotion === 'exiting'
       ? styles.slideExitLeft
@@ -519,10 +537,11 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
         <div className={styles.optionsList}>
           {currentOptions.map((opt) => {
             const isSelected = curSelectedId === opt.id
-            const isCorrect = opt.id === correctOptId
+            const isCorrect = !currentQuestionIsNeutral && opt.id === correctOptId
             let cls = styles.optionButton
             if (isCurrentChecked) {
-              if (isCorrect) cls = `${styles.optionButton} ${styles.optCorrect}`
+              if (currentQuestionIsNeutral) cls = isSelected ? `${styles.optionButton} ${styles.optSelected}` : `${styles.optionButton} ${styles.optDimmed}`
+              else if (isCorrect) cls = `${styles.optionButton} ${styles.optCorrect}`
               else if (isSelected) cls = `${styles.optionButton} ${styles.optWrong}`
               else cls = `${styles.optionButton} ${styles.optDimmed}`
             } else if (isSelected) {
@@ -544,14 +563,18 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
       <div
         className={`${styles.bottomPanel} ${!isCurrentChecked ? styles.mobileCheckFixed : ''} ${
           isCurrentChecked
-            ? curCheckedResult?.isCorrect
+            ? curCheckedResult?.isCorrect === true
               ? styles.bottomCorrect
-              : styles.bottomWrong
+              : curCheckedResult?.isCorrect === false
+                ? styles.bottomWrong
+                : ''
             : ''
         }`}>
         {isCurrentChecked && (
           <div className={styles.resultFeedback}>
-            {curCheckedResult?.isCorrect ? (
+            {currentQuestionIsNeutral ? (
+              <span className={styles.feedbackLabel}>+0 {t('points')}</span>
+            ) : curCheckedResult?.isCorrect ? (
               <>
                 <Icon name="checkCorrect" size={24} className={styles.feedbackIconImg} />
                 <span className={styles.feedbackLabel}>

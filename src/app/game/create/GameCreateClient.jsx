@@ -12,6 +12,20 @@ import Icon from '@/components/Icon'
 import {useT} from '@/lib/i18n/useT'
 import styles from './gameCreate.module.scss'
 
+const COST_CURRENCY = process.env.NEXT_PUBLIC_OPENAI_COST_CURRENCY || 'EUR'
+const VISION_INPUT_COST_PER_1K_TOKENS = Number(
+  process.env.NEXT_PUBLIC_OPENAI_VISION_INPUT_COST_PER_1K_TOKENS || 0,
+)
+const VISION_OUTPUT_COST_PER_1K_TOKENS = Number(
+  process.env.NEXT_PUBLIC_OPENAI_VISION_OUTPUT_COST_PER_1K_TOKENS || 0,
+)
+const WEB_INPUT_COST_PER_1K_TOKENS = Number(
+  process.env.NEXT_PUBLIC_OPENAI_WEB_INPUT_COST_PER_1K_TOKENS || 0,
+)
+const WEB_OUTPUT_COST_PER_1K_TOKENS = Number(
+  process.env.NEXT_PUBLIC_OPENAI_WEB_OUTPUT_COST_PER_1K_TOKENS || 0,
+)
+
 const TEMPLATE_QUESTIONS = [
   {
     text: 'Stato',
@@ -39,10 +53,89 @@ const TEMPLATE_QUESTIONS = [
     options: ['2017', '2018', '2019', '2020', '2021', '2022', '2023'],
   },
   {
+    text: 'Che voto daresti a questo vino?',
+    kind: 'rating',
+    isNeutral: true,
+    options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+  },
+  {
     text: 'Prezzo',
     options: ['5€', '10€', '20€', '30€', '40€', '60€', '80€'],
   },
 ]
+
+function normalizePriceAnswer(price, min = 5) {
+  const numeric = Number(price)
+  if (!Number.isFinite(numeric)) return null
+  return `${Math.max(min, Math.round(numeric / 5) * 5)}€`
+}
+
+function getVintageBandLabel(year) {
+  const numeric = Number(year)
+  if (!Number.isFinite(numeric)) return null
+  if (numeric >= 2022) return '2022-2024'
+  if (numeric >= 2019) return '2019-2021'
+  if (numeric >= 2016) return '2016-2018'
+  if (numeric >= 2012) return '2012-2015'
+  return '2011 o prima'
+}
+
+function inferVintageQuizValue(recognizedVintage, knownVintages = []) {
+  if (recognizedVintage) return String(recognizedVintage)
+
+  const normalizedKnownVintages = (Array.isArray(knownVintages) ? knownVintages : [])
+    .map((value) => Number(value))
+    .filter((value) => Number.isFinite(value))
+    .sort((a, b) => b - a)
+
+  if (!normalizedKnownVintages.length) return null
+
+  const latestKnownVintage = normalizedKnownVintages[0]
+  return getVintageBandLabel(latestKnownVintage)
+}
+function normalizePriceRangeAnswer(priceMin, priceMax, fallbackPrice, min = 5) {
+  const low = Number(priceMin)
+  const high = Number(priceMax)
+
+  if (Number.isFinite(low) && Number.isFinite(high) && high > low) {
+    const roundedLow = Math.max(min, Math.round(low / 5) * 5)
+    const roundedHigh = Math.max(roundedLow + 5, Math.round(high / 5) * 5)
+    return `${roundedLow}-${roundedHigh}€`
+  }
+
+  return normalizePriceAnswer(fallbackPrice, min)
+}
+
+function createPriceOptionsFromPrices(prices, min = 5) {
+  const normalizedPrices = prices.map((price) => Number(price)).filter(Number.isFinite)
+
+  if (!normalizedPrices.length) {
+    return ['5€', '10€', '20€', '30€', '40€']
+  }
+
+  const roundedPrices = normalizedPrices.map((price) => Math.max(min, Math.round(price / 5) * 5))
+
+  const minPrice = Math.min(...roundedPrices)
+  const maxPrice = Math.max(...roundedPrices)
+
+  const center =
+    roundedPrices.length === 1 ? roundedPrices[0] : Math.round((minPrice + maxPrice) / 2 / 5) * 5
+
+  const options = [center - 10, center - 5, center, center + 5, center + 10]
+    .filter((value) => value >= min)
+    .map((value) => `${value}€`)
+
+  return [...new Set(options)]
+}
+
+const OPENAI_TEMPLATE_OPTIONS = {
+  body: ['Leggero', 'Medio-leggero', 'Medio', 'Medio-pieno', 'Pieno'],
+  acidity: ['Morbida', 'Fresca', 'Media', 'Vivace', 'Alta'],
+  harmony: ['Diretto', 'Equilibrato', 'Elegante', 'Strutturato', 'Complesso'],
+}
+
+const MIN_AUTO_QUIZ_OPTIONS = 5
+const AUTO_TASTING_LIST_TIMEOUT_MS = 12000
 
 const COUNTRY_CODE_BY_NAME = {
   italia: 'IT',
@@ -110,6 +203,94 @@ function getCountryFlag(value) {
   return COUNTRY_FLAG_BY_CODE[code] || null
 }
 
+function normalizeBodyForQuiz(value) {
+  const normalized = normalizeToken(value)
+  if (!normalized) return null
+  if (normalized === 'light' || normalized === 'light-bodied') return 'Leggero'
+  if (normalized === 'medium' || normalized === 'medium-bodied') return 'Medio'
+  if (normalized === 'full' || normalized === 'full-bodied') return 'Pieno'
+  return String(value).trim()
+}
+
+function normalizeAcidityForQuiz(value) {
+  const normalized = normalizeToken(value)
+  if (!normalized) return null
+  if (normalized === 'fresh' || normalized === 'low') return 'Fresca'
+  if (normalized === 'medium') return 'Media'
+  if (normalized === 'high') return 'Alta'
+  return String(value).trim()
+}
+
+function normalizeHarmonyForQuiz(value) {
+  const normalized = normalizeToken(value)
+  if (!normalized) return null
+  if (normalized === 'balanced') return 'Equilibrato'
+  if (normalized === 'elegant') return 'Elegante'
+  if (normalized === 'structured') return 'Strutturato'
+  return String(value).trim()
+}
+
+function normalizeNotableForQuiz(value, notableOptions) {
+  const normalized = normalizeToken(value)
+  if (!normalized) return null
+
+  if (
+    normalized.includes('collaboration') ||
+    normalized.includes('collaborazione') ||
+    normalized.includes('renowned producers') ||
+    normalized.includes('renowned winemakers') ||
+    normalized.includes('gaja') ||
+    normalized.includes('graci')
+  ) {
+    return notableOptions.collaboration
+  }
+
+  if (
+    normalized.includes('etna') ||
+    normalized.includes('territory') ||
+    normalized.includes('terroir') ||
+    normalized.includes('volcanic') ||
+    normalized.includes('territorio') ||
+    normalized.includes('vulcan')
+  ) {
+    return notableOptions.territory
+  }
+
+  if (
+    normalized.includes('grape') ||
+    normalized.includes('grapes') ||
+    normalized.includes('vitigno') ||
+    normalized.includes('uvaggio') ||
+    normalized.includes('carricante') ||
+    normalized.includes('nebbiolo') ||
+    normalized.includes('sangiovese')
+  ) {
+    return notableOptions.grape
+  }
+
+  if (
+    normalized.includes('producer') ||
+    normalized.includes('cantina') ||
+    normalized.includes('winemaking') ||
+    normalized.includes('style') ||
+    normalized.includes('stile')
+  ) {
+    return notableOptions.producer
+  }
+
+  if (
+    normalized.includes('appellation') ||
+    normalized.includes('denominazione') ||
+    normalized.includes('dop') ||
+    normalized.includes('doc') ||
+    normalized.includes('docg')
+  ) {
+    return notableOptions.appellation
+  }
+
+  return notableOptions.profile
+}
+
 function toConfidencePercent(value) {
   if (value == null) return null
   const numeric = Number(value)
@@ -126,6 +307,99 @@ function formatBytes(value) {
   const scaled = bytes / 1024 ** index
   const digits = index === 0 ? 0 : scaled < 10 ? 1 : 0
   return `${scaled.toFixed(digits)} ${units[index]}`
+}
+
+function getTokenUsageFromImage(image) {
+  const visionUsage = image?.recognized_payload?.openai_payload?.usage || null
+  const webUsage = image?.recognized_payload?.web_enrichment?.usage || null
+
+  const visionTotal = Number(visionUsage?.total_tokens || 0)
+  const webTotal = Number(webUsage?.total_tokens || 0)
+  const visionInput = Number(visionUsage?.input_tokens || 0)
+  const visionOutput = Number(visionUsage?.output_tokens || 0)
+  const webInput = Number(webUsage?.input_tokens || 0)
+  const webOutput = Number(webUsage?.output_tokens || 0)
+  const estimatedCost =
+    ((Number.isFinite(visionInput) ? visionInput : 0) / 1000) * VISION_INPUT_COST_PER_1K_TOKENS +
+    ((Number.isFinite(visionOutput) ? visionOutput : 0) / 1000) *
+      VISION_OUTPUT_COST_PER_1K_TOKENS +
+    ((Number.isFinite(webInput) ? webInput : 0) / 1000) * WEB_INPUT_COST_PER_1K_TOKENS +
+    ((Number.isFinite(webOutput) ? webOutput : 0) / 1000) * WEB_OUTPUT_COST_PER_1K_TOKENS
+
+  return {
+    vision: Number.isFinite(visionTotal) ? visionTotal : 0,
+    web: Number.isFinite(webTotal) ? webTotal : 0,
+    total:
+      (Number.isFinite(visionTotal) ? visionTotal : 0) + (Number.isFinite(webTotal) ? webTotal : 0),
+    cost: Number.isFinite(estimatedCost) ? estimatedCost : 0,
+  }
+}
+
+function formatEstimatedCost(value) {
+  const numeric = Number(value)
+  if (!Number.isFinite(numeric) || numeric <= 0) return null
+  return new Intl.NumberFormat('it-IT', {
+    style: 'currency',
+    currency: COST_CURRENCY,
+    minimumFractionDigits: numeric < 1 ? 3 : 2,
+    maximumFractionDigits: numeric < 1 ? 3 : 2,
+  }).format(numeric)
+}
+
+function getResolvedQuizValuesForImage(image, preview) {
+  const bottles = Array.isArray(preview?.bottles) ? preview.bottles : []
+  const questions = Array.isArray(preview?.questions) ? preview.questions : []
+  if (!bottles.length || !questions.length) return []
+
+  const imageName = normalizeToken(image?.recognized_name || '')
+  const imageProducer = normalizeToken(image?.recognized_producer || '')
+  const imageYear = String(image?.recognized_vintage || '').trim()
+
+  const matchedBottle =
+    bottles.find((bottle) => {
+      const sameName = normalizeToken(bottle?.name || '') === imageName
+      const sameProducer = normalizeToken(bottle?.producer || '') === imageProducer
+      const sameYear = String(bottle?.year || '').trim() === imageYear
+      return sameName && sameProducer && (sameYear || (!bottle?.year && !imageYear))
+    }) ||
+    bottles.find((bottle) => normalizeToken(bottle?.name || '') === imageName) ||
+    null
+
+  if (!matchedBottle) return []
+
+  return questions.map((question, idx) => {
+    const answerIndex = Number.isInteger(matchedBottle?.answers?.[idx]) ? matchedBottle.answers[idx] : null
+    if (answerIndex == null) return '-'
+    return question?.options?.[answerIndex] ?? '-'
+  })
+}
+
+function withClientTimeout(promise, ms, label) {
+  let timeoutId
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(
+      () => reject(new Error(`${label} timeout after ${Math.floor(ms / 1000)}s`)),
+      ms,
+    )
+  })
+
+  return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeoutId))
+}
+
+function isTransientLockError(error) {
+  const errorName = String(error?.name || '').toLowerCase()
+  const errorMessage = String(error?.message || '').toLowerCase()
+  return errorName === 'aborterror' || errorMessage.includes('lock was stolen by another request')
+}
+
+function isTransientLoadError(error) {
+  const errorMessage = String(error?.message || '').toLowerCase()
+  return (
+    isTransientLockError(error) ||
+    errorMessage.includes('timeout') ||
+    errorMessage.includes('network') ||
+    errorMessage.includes('failed to fetch')
+  )
 }
 
 function uniqueIds(values) {
@@ -381,14 +655,18 @@ function AutomaticModePlaceholder({onBack, userId}) {
   })
   const [deletingImageId, setDeletingImageId] = useState('')
   const [analyzingImageId, setAnalyzingImageId] = useState('')
+  const [verifyingImageId, setVerifyingImageId] = useState('')
+  const [webSearchingImageId, setWebSearchingImageId] = useState('')
   const [isAnalyzingAll, setIsAnalyzingAll] = useState(false)
   const [isCreatingQuiz, setIsCreatingQuiz] = useState(false)
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
+  const [quizTemplateMode, setQuizTemplateMode] = useState('standard')
   const [isLeavingSession, setIsLeavingSession] = useState(false)
   const [uploadError, setUploadError] = useState('')
   const [uploadedImages, setUploadedImages] = useState([])
   const [previewLoadProgress, setPreviewLoadProgress] = useState({loaded: 0, total: 0})
   const [sessionImageIds, setSessionImageIds] = useState([])
+  const lastLoggedImagesRef = useRef('')
 
   const sessionIdsStorageKey = useMemo(
     () => (userId ? `auto_tasting_session_image_ids:${userId}` : ''),
@@ -484,11 +762,15 @@ function AutomaticModePlaceholder({onBack, userId}) {
     })
   }, [])
 
-  function isTransientLockError(error) {
-    const errorName = String(error?.name || '').toLowerCase()
-    const errorMessage = String(error?.message || '').toLowerCase()
-    return errorName === 'aborterror' || errorMessage.includes('lock was stolen by another request')
-  }
+  const bindPreviewImageNode = useCallback(
+    (node, imageId) => {
+      if (!node) return
+      if (node.complete) {
+        markPreviewLoaded(imageId)
+      }
+    },
+    [markPreviewLoaded],
+  )
 
   function uploadFileWithProgress(formData, onProgress) {
     return new Promise((resolve, reject) => {
@@ -552,8 +834,8 @@ function AutomaticModePlaceholder({onBack, userId}) {
       let data = null
       let error = null
 
-      for (let attempt = 1; attempt <= 2; attempt += 1) {
-        const query = await supabase
+      for (let attempt = 1; attempt <= 3; attempt += 1) {
+        const queryPromise = supabase
           .from('tasting_bottle_images')
           .select(
             'id, original_filename, storage_bucket, storage_path, status, recognized_name, recognized_producer, recognized_vintage, recognition_confidence, recognized_payload, error_message, created_at',
@@ -561,24 +843,33 @@ function AutomaticModePlaceholder({onBack, userId}) {
           .eq('uploaded_by', userId)
           .order('created_at', {ascending: false})
 
+        const query = await withClientTimeout(
+          queryPromise,
+          AUTO_TASTING_LIST_TIMEOUT_MS,
+          'auto tasting list',
+        ).catch((caughtError) => ({
+          data: null,
+          error: caughtError,
+        }))
+
         data = query.data
         error = query.error
 
         if (!error) break
 
-        const isTransientAbort = isTransientLockError(error)
-        if (!isTransientAbort || attempt === 2) break
-        await new Promise((resolve) => setTimeout(resolve, attempt * 250))
+        const isTransientAbort = isTransientLoadError(error)
+        if (!isTransientAbort || attempt === 3) break
+        await new Promise((resolve) => setTimeout(resolve, attempt * 350))
       }
 
       if (error) {
-        if (isTransientLockError(error)) {
+        if (isTransientLoadError(error)) {
           if (loadRetryTimeoutRef.current) {
             clearTimeout(loadRetryTimeoutRef.current)
           }
           loadRetryTimeoutRef.current = setTimeout(() => {
             loadUploadedImages().catch(() => null)
-          }, 900)
+          }, 1200)
           return
         }
         setUploadError(`${t('automaticLoadError')} (${error.message || 'unknown'})`)
@@ -595,8 +886,13 @@ function AutomaticModePlaceholder({onBack, userId}) {
 
       const idSet = new Set(ids)
       const filteredRows = (data || []).filter((row) => idSet.has(row.id))
-      loadedPreviewIdsRef.current = new Set()
-      setPreviewLoadProgress({loaded: 0, total: filteredRows.length})
+      const nextRowIds = new Set(filteredRows.map((row) => row.id))
+      const retainedLoadedIds = new Set(
+        [...loadedPreviewIdsRef.current].filter((loadedId) => nextRowIds.has(loadedId)),
+      )
+
+      loadedPreviewIdsRef.current = retainedLoadedIds
+      setPreviewLoadProgress({loaded: retainedLoadedIds.size, total: filteredRows.length})
       setUploadedImages(filteredRows)
     }
 
@@ -680,6 +976,126 @@ function AutomaticModePlaceholder({onBack, userId}) {
 
     loadUploadedImages()
   }, [loadUploadedImages, userId])
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || uploadedImages.length === 0) return
+
+    const snapshot = JSON.stringify(
+      uploadedImages.map((image) => ({
+        id: image.id,
+        status: image.status,
+        recognized_name: image.recognized_name || null,
+        recognized_producer: image.recognized_producer || null,
+        recognized_vintage: image.recognized_vintage || null,
+        recognition_confidence: image.recognition_confidence || null,
+        review_required: !!image.recognized_payload?.review?.required,
+        catalog_match: !!image.recognized_payload?.catalog_match?.matched,
+        country: image.recognized_payload?.catalog_details?.country || null,
+        region:
+          image.recognized_payload?.catalog_details?.quiz_region ||
+          image.recognized_payload?.catalog_details?.region ||
+          null,
+        appellation:
+          image.recognized_payload?.catalog_details?.quiz_appellation ||
+          image.recognized_payload?.catalog_details?.appellation ||
+          null,
+        grapes: Array.isArray(image.recognized_payload?.catalog_details?.grapes)
+          ? image.recognized_payload.catalog_details.grapes
+          : [],
+        short_description: image.recognized_payload?.catalog_details?.short_description || null,
+        why_notable: image.recognized_payload?.catalog_details?.why_notable || null,
+        body: image.recognized_payload?.catalog_details?.body || null,
+        acidity: image.recognized_payload?.catalog_details?.acidity || null,
+        harmony:
+          image.recognized_payload?.catalog_details?.harmony ||
+          image.recognized_payload?.catalog_details?.harmonize ||
+          null,
+        web_enrichment_applied: !!image.recognized_payload?.web_enrichment?.applied,
+        web_enrichment_sources: Array.isArray(image.recognized_payload?.web_enrichment?.sources)
+          ? image.recognized_payload.web_enrichment.sources
+          : [],
+      })),
+    )
+
+    if (lastLoggedImagesRef.current === snapshot) return
+    lastLoggedImagesRef.current = snapshot
+
+    const rows = uploadedImages.map((image) => {
+      const details = image.recognized_payload?.catalog_details || {}
+      return {
+        id: image.id,
+        status: image.status,
+        name: image.recognized_name || null,
+        producer: image.recognized_producer || null,
+        vintage: image.recognized_vintage || null,
+        country: details.country || null,
+        region: details.quiz_region || details.region || null,
+        appellation: details.quiz_appellation || details.appellation || null,
+        grapes: Array.isArray(details.grapes) ? details.grapes.join(', ') : '',
+        shortDescription: details.short_description || null,
+        whyNotable: details.why_notable || null,
+        body: details.body || null,
+        acidity: details.acidity || null,
+        harmony: details.harmony || details.harmonize || null,
+        webEnrichmentApplied: !!image.recognized_payload?.web_enrichment?.applied,
+        webSources: Array.isArray(image.recognized_payload?.web_enrichment?.sources)
+          ? image.recognized_payload.web_enrichment.sources.join('\n')
+          : '',
+        confidence: image.recognition_confidence || null,
+        reviewRequired: !!image.recognized_payload?.review?.required,
+        matchedInCatalog: !!image.recognized_payload?.catalog_match?.matched,
+      }
+    })
+
+    console.groupCollapsed(`[auto-tasting] recognized bottles (${rows.length})`)
+    console.table(rows)
+    const webRows = uploadedImages
+      .map((image) => ({
+        id: image.id,
+        name: image.recognized_name || null,
+        producer: image.recognized_producer || null,
+        applied: !!image.recognized_payload?.web_enrichment?.applied,
+        confidence: image.recognized_payload?.web_enrichment?.confidence ?? null,
+        shortDescription: image.recognized_payload?.catalog_details?.short_description || null,
+        whyNotable: image.recognized_payload?.catalog_details?.why_notable || null,
+        sources: Array.isArray(image.recognized_payload?.web_enrichment?.sources)
+          ? image.recognized_payload.web_enrichment.sources
+          : [],
+        error: image.recognized_payload?.web_enrichment?.error || null,
+      }))
+      .filter(
+        (row) =>
+          row.applied ||
+          row.shortDescription ||
+          row.whyNotable ||
+          row.sources.length > 0 ||
+          row.error,
+      )
+    if (webRows.length > 0) {
+      console.log('[auto-tasting] web enrichment', webRows)
+    }
+    console.log('[auto-tasting] raw images', uploadedImages)
+    console.groupEnd()
+  }, [uploadedImages])
+
+  const autoTastingTokenTotals = useMemo(() => {
+    return uploadedImages.reduce(
+      (acc, image) => {
+        const usage = getTokenUsageFromImage(image)
+        acc.vision += usage.vision
+        acc.web += usage.web
+        acc.total += usage.total
+        acc.cost += usage.cost
+        return acc
+      },
+      {vision: 0, web: 0, total: 0, cost: 0},
+    )
+  }, [uploadedImages])
+
+  const analyzedImagesCount = useMemo(
+    () => uploadedImages.filter((image) => image.status === 'recognized').length,
+    [uploadedImages],
+  )
 
   useEffect(() => {
     if (!userId) return undefined
@@ -913,7 +1329,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
 
   async function handleAnalyzeImage(imageId) {
     if (!imageId) return
-    if (analyzingImageId || isAnalyzingAll) return
+    if (analyzingImageId || isAnalyzingAll || webSearchingImageId) return
     setAnalyzingImageId(imageId)
     setUploadError('')
     try {
@@ -941,8 +1357,43 @@ function AutomaticModePlaceholder({onBack, userId}) {
     }
   }
 
+  async function handleWebSearchImage(imageId) {
+    if (!imageId) return
+    if (webSearchingImageId || analyzingImageId || isAnalyzingAll) return
+    setWebSearchingImageId(imageId)
+    setUploadError('')
+    try {
+      const response = await fetch('/api/auto-tasting/analyze', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          imageId,
+          useWebEnrichment: true,
+          forceWebEnrichment: true,
+          webEnrichmentOnly: true,
+        }),
+      })
+      const result = await response.json().catch(() => null)
+      if (!response.ok) {
+        setUploadError(`${t('automaticWebSearchError')} (${result?.error || 'web search'})`)
+        return
+      }
+
+      const updatedRows = Array.isArray(result?.updated) ? result.updated : []
+      if (updatedRows.length > 0) {
+        const map = Object.fromEntries(updatedRows.map((row) => [row.id, row]))
+        setUploadedImages((prev) => prev.map((row) => map[row.id] || row))
+      }
+      loadUploadedImages().catch(() => null)
+    } catch (error) {
+      setUploadError(`${t('automaticWebSearchError')} (${error?.message || 'unknown'})`)
+    } finally {
+      setWebSearchingImageId('')
+    }
+  }
+
   async function handleAnalyzeAll() {
-    if (isAnalyzingAll || analyzingImageId) return
+    if (isAnalyzingAll || analyzingImageId || webSearchingImageId) return
     const ids = sessionImageIdsRef.current
     if (!ids.length) return
     setIsAnalyzingAll(true)
@@ -968,6 +1419,36 @@ function AutomaticModePlaceholder({onBack, userId}) {
       setUploadError(`${t('automaticAnalyzeError')} (${error?.message || 'unknown'})`)
     } finally {
       setIsAnalyzingAll(false)
+    }
+  }
+
+  async function handleVerifyImage(imageId) {
+    if (!imageId) return
+    if (verifyingImageId || analyzingImageId || isAnalyzingAll || deletingImageId) return
+    setVerifyingImageId(imageId)
+    setUploadError('')
+    try {
+      const response = await fetch('/api/auto-tasting/verify-catalog', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({imageId}),
+      })
+      const result = await response.json().catch(() => null)
+      if (!response.ok) {
+        setUploadError(`${t('automaticVerifyError')} (${result?.error || 'verify'})`)
+        return
+      }
+
+      if (result?.image) {
+        setUploadedImages((prev) =>
+          prev.map((row) => (row.id === result.image.id ? result.image : row)),
+        )
+      }
+      loadUploadedImages().catch(() => null)
+    } catch (error) {
+      setUploadError(`${t('automaticVerifyError')} (${error?.message || 'unknown'})`)
+    } finally {
+      setVerifyingImageId('')
     }
   }
 
@@ -1011,7 +1492,16 @@ function AutomaticModePlaceholder({onBack, userId}) {
     }
   }
 
-  function buildAutoQuizPayload(images) {
+  function buildAutoQuizPayload(images, mode = 'standard') {
+    const notableOptions = {
+      collaboration: t('automaticNotableOptionCollaboration'),
+      grape: t('automaticNotableOptionGrape'),
+      territory: t('automaticNotableOptionTerritory'),
+      producer: t('automaticNotableOptionProducer'),
+      appellation: t('automaticNotableOptionAppellation'),
+      profile: t('automaticNotableOptionProfile'),
+    }
+
     const recognized = (images || []).filter(
       (image) =>
         image?.status === 'recognized' && image?.recognized_name && image?.recognized_producer,
@@ -1025,13 +1515,18 @@ function AutomaticModePlaceholder({onBack, userId}) {
       const inferredRegion = inferRegion(details, image)
       const grapes = Array.isArray(details.grapes) ? details.grapes.filter(Boolean) : []
       const mainGrape = grapes[0] || null
-      const vintageValue = image.recognized_vintage ? String(image.recognized_vintage) : null
-      const priceValue =
-        details.quiz_price_band || details.price_band
-          ? String(details.quiz_price_band || details.price_band).trim()
-          : details.price != null
-            ? `${details.price}${details.currency ? ` ${details.currency}` : ''}`.trim()
-            : null
+      const vintageValue = inferVintageQuizValue(
+        image.recognized_vintage,
+        details.known_vintages,
+      )
+      const whyNotableValue = normalizeNotableForQuiz(
+        String(details.why_notable || details.short_description || '')
+          .trim()
+          .replace(/\s+/g, ' '),
+        notableOptions,
+      )
+      const averagePrice = details.average_price ?? details.price ?? null
+      const priceValue = normalizePriceAnswer(averagePrice)
       return {
         name: image.recognized_name,
         producer: image.recognized_producer,
@@ -1042,34 +1537,70 @@ function AutomaticModePlaceholder({onBack, userId}) {
           region: inferredRegion || null,
           grape: mainGrape,
           vintage: vintageValue,
+          notable: whyNotableValue,
           price: priceValue,
+          rawPrice: averagePrice,
+          body: normalizeBodyForQuiz(details.body),
+          acidity: normalizeAcidityForQuiz(details.acidity),
+          harmony: normalizeHarmonyForQuiz(details.harmony || details.harmonize),
         },
       }
     })
 
-    const questionDefs = [
+    const quizPriceOptions = createPriceOptionsFromPrices(
+      bottles.map((bottle) => bottle._values.rawPrice),
+    )
+
+    const standardQuestionDefs = [
       {key: 'country', text: t('automaticQuestionCountry')},
       {key: 'region', text: t('automaticQuestionRegion')},
       {key: 'grape', text: t('automaticQuestionGrape')},
       {key: 'vintage', text: t('automaticQuestionVintage')},
       {key: 'price', text: t('automaticQuestionPrice')},
     ]
+    const openAiQuestionDefs = [
+      ...standardQuestionDefs,
+      {key: 'body', text: t('automaticQuestionBody')},
+      {key: 'acidity', text: t('automaticQuestionAcidity')},
+      {key: 'harmony', text: t('automaticQuestionHarmony')},
+      {key: 'notable', text: t('automaticQuestionNotable')},
+    ]
+
+    const isSingleBottleQuiz = bottles.length === 1
+    const questionDefs = (mode === 'openai' ? openAiQuestionDefs : standardQuestionDefs).filter(
+      (question) => {
+        const values = bottles.map((bottle) => bottle._values[question.key]).filter(Boolean)
+        if (values.length !== bottles.length) return false
+
+        const uniqueValuesCount = new Set(values).size
+        if (uniqueValuesCount >= 2) return true
+        if (isSingleBottleQuiz) return true
+
+        return mode === 'standard' && ['country', 'price'].includes(question.key)
+      },
+    )
 
     const templateByKey = {
       country: TEMPLATE_QUESTIONS[0]?.options || [],
       region: TEMPLATE_QUESTIONS[1]?.options || [],
       grape: TEMPLATE_QUESTIONS[2]?.options || [],
       vintage: TEMPLATE_QUESTIONS[3]?.options || [],
-      price: TEMPLATE_QUESTIONS[4]?.options || [],
+      notable: Object.values(notableOptions),
+      price: quizPriceOptions,
+      body: OPENAI_TEMPLATE_OPTIONS.body,
+      acidity: OPENAI_TEMPLATE_OPTIONS.acidity,
+      harmony: OPENAI_TEMPLATE_OPTIONS.harmony,
     }
     const effectiveQuestions = questionDefs.map((def) => {
       const extractedValues = [...new Set(bottles.map((b) => b._values[def.key]).filter(Boolean))]
       const templateOptions = templateByKey[def.key] || []
-      const maxOptions = Math.max(1, templateOptions.length || 7)
       const options = [
         ...extractedValues,
         ...templateOptions.filter((option) => !extractedValues.includes(option)),
-      ].slice(0, maxOptions)
+      ].slice(
+        0,
+        Math.max(MIN_AUTO_QUIZ_OPTIONS, templateOptions.length || 0, extractedValues.length),
+      )
       return {_key: def.key, text: def.text, options}
     })
 
@@ -1106,7 +1637,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
     setIsCreatingQuiz(true)
     setUploadError('')
     try {
-      const payload = buildAutoQuizPayload(uploadedImages)
+      const payload = buildAutoQuizPayload(uploadedImages, quizTemplateMode)
       const response = await fetch('/api/game/save', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -1126,7 +1657,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
 
   let quizPreview = null
   try {
-    quizPreview = buildAutoQuizPayload(uploadedImages)
+    quizPreview = buildAutoQuizPayload(uploadedImages, quizTemplateMode)
   } catch {
     quizPreview = null
   }
@@ -1222,7 +1753,36 @@ function AutomaticModePlaceholder({onBack, userId}) {
               className={styles.autoPreviewModalContent}
               onClick={(event) => event.stopPropagation()}>
               <div className={styles.autoPreviewModalHeader}>
-                <h3>{t('automaticPreviewTitle')}</h3>
+                <div className={styles.autoPreviewModalHeaderMain}>
+                  <h3>{t('automaticPreviewTitle')}</h3>
+                  <div className={styles.autoPreviewModalTemplateRow}>
+                    <span className={styles.autoModeQuizTemplateLabel}>
+                      {t('automaticQuizTemplateLabel')}
+                    </span>
+                    <div className={styles.autoModeQuizTemplateSegmented}>
+                      <button
+                        type="button"
+                        className={`${styles.autoModeQuizTemplateButton} ${
+                          quizTemplateMode === 'standard'
+                            ? styles.autoModeQuizTemplateButtonActive
+                            : ''
+                        }`}
+                        onClick={() => setQuizTemplateMode('standard')}>
+                        {t('automaticQuizTemplateStandard')}
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.autoModeQuizTemplateButton} ${
+                          quizTemplateMode === 'openai'
+                            ? styles.autoModeQuizTemplateButtonActive
+                            : ''
+                        }`}
+                        onClick={() => setQuizTemplateMode('openai')}>
+                        {t('automaticQuizTemplateOpenAi')}
+                      </button>
+                    </div>
+                  </div>
+                </div>
                 <button
                   type="button"
                   className={styles.autoPreviewModalClose}
@@ -1268,6 +1828,49 @@ function AutomaticModePlaceholder({onBack, userId}) {
 
         <section className={styles.autoModeEmptyState}>
           <strong>{t('automaticBottlesTitle')}</strong>
+          <div className={styles.autoModeMetricsGrid}>
+            <div className={styles.autoModeMetricCard}>
+              <span className={styles.autoModeMetricLabel}>
+                {t('automaticMetricBottlesLabel')}
+              </span>
+              <strong className={styles.autoModeMetricValue}>{uploadedImages.length}</strong>
+              <span className={styles.autoModeMetricMeta}>
+                {t('automaticMetricBottlesMeta', {
+                  analyzed: analyzedImagesCount,
+                  total: uploadedImages.length,
+                })}
+              </span>
+            </div>
+            <div className={styles.autoModeMetricCard}>
+              <span className={styles.autoModeMetricLabel}>
+                {t('automaticMetricTokensLabel')}
+              </span>
+              <strong className={styles.autoModeMetricValue}>{autoTastingTokenTotals.total}</strong>
+              <span className={styles.autoModeMetricMeta}>
+                {t('automaticMetricTokensMeta', {
+                  vision: autoTastingTokenTotals.vision,
+                  web: autoTastingTokenTotals.web,
+                })}
+              </span>
+            </div>
+            <div className={styles.autoModeMetricCard}>
+              <span className={styles.autoModeMetricLabel}>
+                {t('automaticMetricCostLabel')}
+              </span>
+              <strong className={styles.autoModeMetricValue}>
+                {formatEstimatedCost(autoTastingTokenTotals.cost) || '—'}
+              </strong>
+              <span className={styles.autoModeMetricMeta}>
+                {uploadedImages.length > 0
+                  ? t('automaticMetricCostMeta', {
+                      average:
+                        formatEstimatedCost(autoTastingTokenTotals.cost / uploadedImages.length) ||
+                        '—',
+                    })
+                  : t('automaticMetricCostMetaEmpty')}
+              </span>
+            </div>
+          </div>
           {uploadError ? <p>{uploadError}</p> : null}
           {uploadedImages.length === 0 ? (
             <p>{t('automaticBottlesEmpty')}</p>
@@ -1302,9 +1905,54 @@ function AutomaticModePlaceholder({onBack, userId}) {
                   !!image.recognized_vintage ||
                   image.status === 'recognized'
                 const hasVision =
-                  image.recognized_payload?.provider === 'google_vision_api' ||
-                  String(image.recognized_payload?.extractor || '').startsWith('google-vision')
+                  image.recognized_payload?.provider === 'openai_vision' ||
+                  String(image.recognized_payload?.extractor || '').startsWith('openai-vision')
                 const hasMatch = !!image.recognized_payload?.catalog_match?.matched
+                const hasCatalogSync = !!image.recognized_payload?.catalog_sync?.synced
+                const hasCatalogPresence = hasMatch || hasCatalogSync
+                const hasWebEnrichment = !!image.recognized_payload?.web_enrichment?.applied
+                const requiresReview = !!image.recognized_payload?.review?.required
+                const isVerified = !!image.recognized_payload?.verification?.verified
+                const tokenUsage = getTokenUsageFromImage(image)
+                const isVerifyingThis = verifyingImageId === image.id
+                const isWebSearchingThis = webSearchingImageId === image.id
+                const resolvedQuizValues = getResolvedQuizValuesForImage(image, quizPreview)
+                const webSources = Array.isArray(image.recognized_payload?.web_enrichment?.sources)
+                  ? image.recognized_payload.web_enrichment.sources.filter(Boolean)
+                  : []
+                const bottleSpecItems = [
+                  primaryGrape
+                    ? {label: t('automaticQuestionGrape'), value: primaryGrape}
+                    : null,
+                  details.price_min != null && details.price_max != null
+                    ? {
+                        label: t('automaticPriceLabel'),
+                        value: `${details.price_min}${t('automaticMinPriceLabel')} - ${details.price_max}${t('automaticMaxPriceLabel')}${details.currency ? ` ${details.currency}` : ' EUR'}`,
+                      }
+                    : details.average_price != null || details.price != null
+                      ? {
+                          label: t('automaticPriceLabel'),
+                          value: `${details.average_price ?? details.price}${details.currency ? ` ${details.currency}` : ' EUR'}`,
+                        }
+                      : null,
+                  details.average_price != null || details.price != null
+                    ? {
+                        label: t('automaticMediumPriceLabel'),
+                        value: normalizePriceAnswer(details.average_price ?? details.price),
+                      }
+                    : null,
+                  priceBand ? {label: t('automaticQuestionPrice'), value: priceBand} : null,
+                  details.body ? {label: t('automaticQuestionBody'), value: details.body} : null,
+                  details.acidity
+                    ? {label: t('automaticQuestionAcidity'), value: details.acidity}
+                    : null,
+                  details.harmony || details.harmonize
+                    ? {
+                        label: t('automaticQuestionHarmony'),
+                        value: details.harmony || details.harmonize,
+                      }
+                    : null,
+                ].filter(Boolean)
 
                 return (
                   <li
@@ -1319,6 +1967,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                       <div className={styles.autoBottleCardMediaCol}>
                         <div className={styles.autoBottleCardPreviewWrap}>
                           <img
+                            ref={(node) => bindPreviewImageNode(node, image.id)}
                             src={`/api/auto-tasting/image?id=${image.id}`}
                             alt={image.original_filename || image.storage_path}
                             className={styles.autoBottleCardPreview}
@@ -1343,19 +1992,75 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                 {t('automaticVisionBadge')}
                               </span>
                             )}
-                            {hasMatch && (
+                            {hasCatalogPresence && (
                               <span className={styles.autoModeFeatureBadge}>
                                 <Icon
                                   src="/icons/match.svg"
                                   size={16}
                                   className={styles.autoModeFeatureIcon}
                                 />
-                                {t('automaticMatchBadge')}
+                                {t('automaticCatalogBadge')}
+                              </span>
+                            )}
+                            {hasWebEnrichment && !hasCatalogPresence && (
+                              <span className={styles.autoModeFeatureBadge}>
+                                <Icon
+                                  src="/icons/vision.svg"
+                                  size={16}
+                                  className={styles.autoModeFeatureIcon}
+                                />
+                                {t('automaticWebBadge')}
+                              </span>
+                            )}
+                            {requiresReview && (
+                              <span className={styles.autoModeFeatureBadge}>
+                                <Icon
+                                  name="checkWarning"
+                                  size={16}
+                                  className={styles.autoModeFeatureIcon}
+                                />
+                                {t('automaticReviewBadge')}
+                              </span>
+                            )}
+                            {isVerified && (
+                              <span className={styles.autoModeFeatureBadge}>
+                                <Icon
+                                  src="/icons/match.svg"
+                                  size={16}
+                                  className={styles.autoModeFeatureIcon}
+                                />
+                                {t('automaticVerifiedBadge')}
+                              </span>
+                            )}
+                            {hasCatalogSync && (
+                              <span className={styles.autoModeFeatureBadge}>
+                                <Icon
+                                  src="/icons/bottles.svg"
+                                  size={16}
+                                  className={styles.autoModeFeatureIcon}
+                                />
+                                {t('automaticCatalogSyncedBadge')}
                               </span>
                             )}
                             {confidencePercent != null && (
                               <span className={styles.autoBottleConfidencePill}>
                                 {confidencePercent}%
+                              </span>
+                            )}
+                            {tokenUsage.total > 0 && (
+                              <span className={styles.autoBottleMetaPill}>
+                                {t('automaticTokenUsageValue', {
+                                  total: tokenUsage.total,
+                                  vision: tokenUsage.vision,
+                                  web: tokenUsage.web,
+                                })}
+                              </span>
+                            )}
+                            {tokenUsage.cost > 0 && (
+                              <span className={styles.autoBottleMetaPill}>
+                                {t('automaticEstimatedCostValue', {
+                                  cost: formatEstimatedCost(tokenUsage.cost),
+                                })}
                               </span>
                             )}
                           </div>
@@ -1412,26 +2117,110 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                 {Array.isArray(details.grapes) && details.grapes.length > 0
                                   ? ` · ${details.grapes.join(', ')}`
                                   : ''}
-                                {details.price != null
-                                  ? ` · ${t('automaticPriceLabel')}: ${details.price}${details.currency ? ` ${details.currency}` : ''}`
+                                {details.price_min != null && details.price_max != null
+                                  ? ` · ${t('automaticPriceLabel')}: ${details.price_min}${t('automaticMinPriceLabel')} -${details.price_max}${t('automaticMaxPriceLabel')}${details.currency ? ` ${details.currency}` : ' EUR'}`
+                                  : details.average_price != null || details.price != null
+                                    ? ` · ${t('automaticPriceLabel')}: ${details.average_price ?? details.price}${details.currency ? ` ${details.currency}` : ' EUR'}`
+                                    : ''}
+                                {details.average_price != null || details.price != null
+                                  ? ` · ${t('automaticMediumPriceLabel')}: ${normalizePriceAnswer(details.average_price ?? details.price)}${details.currency ? `` : ''}`
                                   : ''}
                                 {priceBand ? ` · ${t('automaticQuestionPrice')}: ${priceBand}` : ''}
-                                {details.body || details.acidity
-                                  ? ` · ${[details.body, details.acidity].filter(Boolean).join(' / ')}`
+                                {details.body ||
+                                details.acidity ||
+                                details.harmony ||
+                                details.harmonize
+                                  ? ` · ${[
+                                      details.body,
+                                      details.acidity,
+                                      details.harmony || details.harmonize,
+                                    ]
+                                      .filter(Boolean)
+                                      .join(' / ')}`
                                   : ''}
                               </p>
+                              {bottleSpecItems.length > 0 ? (
+                                <div className={styles.autoBottleSectionBlock}>
+                                  <p className={styles.autoBottleSectionTitle}>
+                                    {t('automaticBottleSpecsLabel')}
+                                  </p>
+                                  <div className={styles.autoBottleSpecGrid}>
+                                    {bottleSpecItems.map((item) => (
+                                      <div
+                                        key={`${image.id}-${item.label}`}
+                                        className={styles.autoBottleSpecCard}>
+                                        <span className={styles.autoBottleSpecLabel}>
+                                          {item.label}
+                                        </span>
+                                        <strong className={styles.autoBottleSpecValue}>
+                                          {item.value}
+                                        </strong>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              ) : null}
                               <p className={styles.autoBottleCardDataRow}>
                                 <span className={styles.autoBottleDataLabel}>
                                   <Icon src="/icons/match.svg" size={16} />
                                   <strong>{t('automaticQuizResolvedLabel')}:</strong>
                                 </span>{' '}
-                                {[
-                                  details.country || '-',
-                                  inferRegion(details, image) || '-',
-                                  primaryGrape,
-                                  image.recognized_vintage || '-',
-                                ].join(' | ')}
+                                {(resolvedQuizValues.length > 0
+                                  ? resolvedQuizValues
+                                  : [
+                                      details.country || '-',
+                                      inferRegion(details, image) || '-',
+                                      primaryGrape,
+                                      image.recognized_vintage || '-',
+                                    ]
+                                ).join(' | ')}
                               </p>
+                              {details.why_notable ? (
+                                <div className={styles.autoBottleNarrativeCard}>
+                                  <p className={styles.autoBottleCardDataRow}>
+                                    <span className={styles.autoBottleDataLabel}>
+                                      <Icon src="/icons/match.svg" size={16} />
+                                      <strong>{t('automaticQuestionNotable')}:</strong>
+                                    </span>
+                                  </p>
+                                  <p className={styles.autoBottleNarrativeText}>
+                                    {details.why_notable}
+                                  </p>
+                                </div>
+                              ) : null}
+                              {details.short_description ? (
+                                <div className={styles.autoBottleNarrativeCard}>
+                                  <p className={styles.autoBottleCardDataRow}>
+                                    <span className={styles.autoBottleDataLabel}>
+                                      <Icon src="/icons/vision.svg" size={16} />
+                                      <strong>{t('automaticWebSummaryLabel')}:</strong>
+                                    </span>
+                                  </p>
+                                  <p className={styles.autoBottleNarrativeText}>
+                                    {details.short_description}
+                                  </p>
+                                </div>
+                              ) : null}
+                              {webSources.length > 0 ? (
+                                <details className={styles.autoBottleAccordion}>
+                                  <summary className={styles.autoBottleAccordionSummary}>
+                                    <Icon src="/icons/vision.svg" size={16} />
+                                    <strong>{t('automaticWebSourcesLabel')}:</strong>
+                                  </summary>
+                                  <div className={styles.autoBottleAccordionBody}>
+                                    {webSources.map((source) => (
+                                      <a
+                                        key={`${image.id}-${source}`}
+                                        href={source}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className={styles.autoBottleSourceLink}>
+                                        {source}
+                                      </a>
+                                    ))}
+                                  </div>
+                                </details>
+                              ) : null}
                             </div>
                           )}
 
@@ -1461,7 +2250,13 @@ function AutomaticModePlaceholder({onBack, userId}) {
                       <button
                         type="button"
                         className="btn btn-small ai btn-with-icon-end"
-                        disabled={isAnalyzingAll || !!analyzingImageId || !!deletingImageId}
+                        disabled={
+                          isAnalyzingAll ||
+                          !!analyzingImageId ||
+                          !!deletingImageId ||
+                          !!verifyingImageId ||
+                          !!webSearchingImageId
+                        }
                         onClick={() => handleAnalyzeImage(image.id)}>
                         <Icon src="/icons/vision.svg" size={18} className="btn-icon" />
                         {isAnalyzingThis
@@ -1470,6 +2265,42 @@ function AutomaticModePlaceholder({onBack, userId}) {
                             ? t('automaticAnalyzeAgainAction')
                             : t('automaticAnalyzeAction')}
                       </button>
+                      {hasRecognitionData ? (
+                        <button
+                          type="button"
+                          className="btn btn-small neutral"
+                          disabled={
+                            !!deletingImageId ||
+                            !!analyzingImageId ||
+                            isAnalyzingAll ||
+                            !!verifyingImageId ||
+                            !!webSearchingImageId
+                          }
+                          onClick={() => handleWebSearchImage(image.id)}>
+                          {isWebSearchingThis
+                            ? t('automaticWebSearchingAction')
+                            : t('automaticWebSearchAction')}
+                        </button>
+                      ) : null}
+                      {hasRecognitionData ? (
+                        <button
+                          type="button"
+                          className="btn btn-small neutral"
+                          disabled={
+                            !!deletingImageId ||
+                            !!analyzingImageId ||
+                            isAnalyzingAll ||
+                            !!verifyingImageId ||
+                            !!webSearchingImageId
+                          }
+                          onClick={() => handleVerifyImage(image.id)}>
+                          {isVerifyingThis
+                            ? t('automaticSavingCatalogAction')
+                            : isVerified
+                              ? t('automaticUpdateCatalogAction')
+                              : t('automaticSaveCatalogAction')}
+                        </button>
+                      ) : null}
                     </div>
                   </li>
                 )

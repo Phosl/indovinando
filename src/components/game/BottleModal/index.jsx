@@ -1,7 +1,8 @@
 'use client'
 
-import {useEffect, useMemo, useState} from 'react'
+import {useMemo, useState} from 'react'
 import {validateBottleForm} from '../utils/validations'
+import {isNeutralQuestion, isPlayerRatingQuestion} from '../utils/validations'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {getAlertMessages, getBottleModalText} from '../utils/constants'
 import Icon from '@/components/Icon'
@@ -75,13 +76,10 @@ export default function BottleModal({
 
     return []
   }, [currentQuestion])
+  const currentQuestionIsRating = isQuestionStep ? isPlayerRatingQuestion(currentQuestion) : false
+  const currentQuestionIsNeutral = isQuestionStep ? isNeutralQuestion(currentQuestion) : false
 
   const selectedAnswer = isQuestionStep ? currentAnswers[currentQuestionIndex] : null
-
-  useEffect(() => {
-    if (!isOpen) return
-    setWizardStep(0)
-  }, [isOpen, bottleIndex, questionCount, resetToken])
 
   if (!isOpen) return null
 
@@ -93,7 +91,7 @@ export default function BottleModal({
         year,
         wineType,
         currentAnswers,
-        questions.length,
+        questions,
         alertMessages,
       )
       onSave()
@@ -131,7 +129,11 @@ export default function BottleModal({
       return
     }
 
-    if (isQuestionStep && (selectedAnswer === null || selectedAnswer === undefined)) {
+    if (
+      isQuestionStep &&
+      !currentQuestionIsNeutral &&
+      (selectedAnswer === null || selectedAnswer === undefined)
+    ) {
       alert(
         alertMessages?.BOTTLE_ANSWERS_INCOMPLETE ||
           'Seleziona la risposta corretta per ogni domanda.',
@@ -220,23 +222,46 @@ export default function BottleModal({
               </h4>
               <p className={styles.questionStepText}>{currentQuestion.text}</p>
 
-              <div className={styles.optionsList}>
-                {currentQuestionOptions.map((option, optionIndex) => {
-                  const isSelected = selectedAnswer === optionIndex
-                  return (
-                    <button
-                      key={`${currentQuestionIndex}-${optionIndex}`}
-                      type="button"
-                      className={`${styles.optionButton} ${isSelected ? styles.optionSelected : ''}`}
-                      onClick={() => onAnswerChange(currentQuestionIndex, optionIndex)}>
-                      <span className={styles.optionBadge}>
-                        {String.fromCharCode(65 + optionIndex)}
-                      </span>
-                      <span>{option}</span>
-                    </button>
-                  )
-                })}
-              </div>
+              {currentQuestionIsNeutral ? (
+                <div className={styles.ratingSliderBlock}>
+                  <div className={styles.ratingInfoTitle}>
+                    {currentQuestionIsRating
+                      ? lang === 'en'
+                        ? 'This answer is given by the player during the tasting.'
+                        : 'Questa risposta la darà il giocatore durante la degustazione.'
+                      : lang === 'en'
+                        ? 'This question is marked as neutral.'
+                        : 'Questa domanda è contrassegnata come neutra.'}
+                  </div>
+                  <p className={styles.ratingInfoText}>
+                    {currentQuestionIsRating
+                      ? lang === 'en'
+                        ? 'It remains visible in the questionnaire, but it has no correct answer and is not configured bottle by bottle.'
+                        : 'Resta visibile nel questionario, ma non ha una risposta corretta e non si compila per singola bottiglia.'
+                      : lang === 'en'
+                        ? 'Players will still see the options during the game, but this bottle does not need a correct answer.'
+                        : 'I giocatori vedranno comunque le opzioni durante il gioco, ma questa bottiglia non richiede una risposta corretta.'}
+                  </p>
+                </div>
+              ) : (
+                <div className={styles.optionsList}>
+                  {currentQuestionOptions.map((option, optionIndex) => {
+                    const isSelected = selectedAnswer === optionIndex
+                    return (
+                      <button
+                        key={`${currentQuestionIndex}-${optionIndex}`}
+                        type="button"
+                        className={`${styles.optionButton} ${isSelected ? styles.optionSelected : ''}`}
+                        onClick={() => onAnswerChange(currentQuestionIndex, optionIndex)}>
+                        <span className={styles.optionBadge}>
+                          {String.fromCharCode(65 + optionIndex)}
+                        </span>
+                        <span>{option}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
             </div>
           )}
 
@@ -253,7 +278,17 @@ export default function BottleModal({
                     else if (Array.isArray(q.game_question_options))
                       options = q.game_question_options.map((o) => o.text)
                     const answerText =
-                      answerIndex !== null && answerIndex !== undefined && options[answerIndex]
+                      isNeutralQuestion(q)
+                        ? lang === 'en'
+                          ? isPlayerRatingQuestion(q)
+                            ? 'Player rating'
+                            : 'Neutral question'
+                          : isPlayerRatingQuestion(q)
+                            ? 'Voto del giocatore'
+                            : 'Domanda neutra'
+                        : answerIndex !== null &&
+                            answerIndex !== undefined &&
+                            options[answerIndex]
                         ? options[answerIndex]
                         : '-'
                     return (

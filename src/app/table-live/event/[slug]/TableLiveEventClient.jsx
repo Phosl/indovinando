@@ -1,11 +1,12 @@
 'use client'
 
-import {useMemo, useState} from 'react'
+import {useMemo, useRef, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import AvatarDisplay from '@/components/AvatarDisplay'
 import styles from './tableLiveEvent.module.scss'
-
+import {Button} from '@/components/ui/Button'
+import Icon from '@/components/Icon'
 function persistPlayer(sessionId, payload, avatarId) {
   try {
     localStorage.setItem(
@@ -28,8 +29,54 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
   const [selectedAvatarId, setSelectedAvatarId] = useState(1)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const joinCodeInputRefs = useRef([])
 
   const title = useMemo(() => `${eventTitle} · ${gameName}`, [eventTitle, gameName])
+  const joinCodeDigits = Array.from({length: 4}, (_, index) => joinCode[index] || '')
+
+  const focusJoinDigit = (index) => {
+    const nextNode = joinCodeInputRefs.current[index]
+    if (nextNode) nextNode.focus()
+  }
+
+  const updateJoinCodeDigit = (index, rawValue) => {
+    const digits = String(rawValue || '').replace(/\D+/g, '')
+    if (!digits) {
+      const next = joinCode.padEnd(4, ' ').split('')
+      next[index] = ''
+      setJoinCode(next.join('').replace(/\s+/g, ''))
+      return
+    }
+
+    const next = joinCode.padEnd(4, ' ').split('')
+    digits
+      .slice(0, 4 - index)
+      .split('')
+      .forEach((digit, offset) => {
+        next[index + offset] = digit
+      })
+
+    const normalized = next.join('').replace(/\s+/g, '').slice(0, 4)
+    setJoinCode(normalized)
+
+    const nextIndex = Math.min(index + digits.length, 3)
+    window.requestAnimationFrame(() => focusJoinDigit(nextIndex))
+  }
+
+  const handleJoinCodeKeyDown = (index, event) => {
+    if (event.key === 'Backspace' && !joinCodeDigits[index] && index > 0) {
+      event.preventDefault()
+      focusJoinDigit(index - 1)
+    }
+    if (event.key === 'ArrowLeft' && index > 0) {
+      event.preventDefault()
+      focusJoinDigit(index - 1)
+    }
+    if (event.key === 'ArrowRight' && index < 3) {
+      event.preventDefault()
+      focusJoinDigit(index + 1)
+    }
+  }
 
   const handleCreate = async (e) => {
     e.preventDefault()
@@ -103,20 +150,37 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
         <header className={styles.header}>
           <img src="/logo.svg" alt="Indovinando Logo" className={styles.logo} />
           <h1>{eventTitle}</h1>
-          <p>{gameName}</p>
+          {/* <p>{gameName}</p> */}
         </header>
 
         {step === 'home' ? (
           <section className={styles.card}>
-            <label>Inserisci il codice partita</label>
-            <input
-              value={joinCode}
-              onChange={(e) => setJoinCode(e.target.value.replace(/\D+/g, '').slice(0, 4))}
-              inputMode="numeric"
-              placeholder="0000"
-            />
-            <button
-              className="btn primary"
+            <label>Inserisci il Codice Partita</label>
+            <div className={styles.codeInputGroup} aria-label="Codice partita a 4 cifre">
+              {joinCodeDigits.map((digit, index) => (
+                <input
+                  key={index}
+                  ref={(node) => {
+                    joinCodeInputRefs.current[index] = node
+                  }}
+                  value={digit}
+                  onChange={(e) => updateJoinCodeDigit(index, e.target.value)}
+                  onKeyDown={(e) => handleJoinCodeKeyDown(index, e)}
+                  onPaste={(e) => {
+                    e.preventDefault()
+                    updateJoinCodeDigit(index, e.clipboardData.getData('text'))
+                  }}
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  placeholder={index === 0 ? '4' : ''}
+                  maxLength={1}
+                  className={styles.codeDigitInput}
+                />
+              ))}
+            </div>
+            <p className={styles.codeHint}>Es. 4821</p>
+            <Button
+              variant="primary-filled"
               type="button"
               onClick={() => {
                 if (!joinCode.trim()) {
@@ -126,9 +190,13 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
                 setError('')
                 setStep('join')
               }}>
-              Partecipa
-            </button>
-            <hr className={styles.orSeparator} />
+              <Icon name="enter" size={36} />
+              Entra nella partita
+            </Button>
+
+            <div className={styles.orSeparator}>
+              <span>Oppure</span>
+            </div>
             <button
               className="btn secondary"
               type="button"
@@ -136,7 +204,8 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
                 setError('')
                 setStep('create')
               }}>
-              Crea partita
+              <Icon name="plus" size={36} />
+              Crea una partita
             </button>
             {error ? <p className={styles.error}>{error}</p> : null}
           </section>

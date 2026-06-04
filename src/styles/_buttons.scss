@@ -58,6 +58,15 @@
     background: var(--primary-200);
   }
 }
+.btn.primary-filled {
+  background-color: var(--primary-text);
+  color: var(--white);
+  border-color: var(--primary-text);
+  &:hover {
+    background: var(--primary-900);
+    border-color: var(--primary-900);
+  }
+}
 
 .btn.secondary {
   background-color: var(--secondary-100);

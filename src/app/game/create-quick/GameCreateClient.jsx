@@ -32,6 +32,12 @@ const TEMPLATE_QUESTIONS = [
     options: ['2017', '2018', '2019', '2020', '2021', '2022', '2023'],
   },
   {
+    text: 'Che voto daresti a questo vino?',
+    kind: 'rating',
+    isNeutral: true,
+    options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+  },
+  {
     text: 'Prezzo',
     options: ['5€', '10€', '20€', '30€', '40€', '60€', '80€'],
   },

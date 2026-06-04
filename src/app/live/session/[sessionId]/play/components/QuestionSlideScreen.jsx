@@ -1,4 +1,4 @@
-import {useState, useEffect, useCallback, memo} from 'react'
+import {useMemo, useEffect, useCallback, memo} from 'react'
 import styles from '../playerLive.module.scss'
 import {useT} from '@/lib/i18n/useT'
 import Icon from '@/components/Icon'
@@ -8,6 +8,11 @@ const getComboMsg = (n, t) => {
   const idx = String(Math.min(n - 1, 6)).padStart(2, '0')
   return {svg: `/combo/combo-${idx}.svg`, label: t('comboStreak', {count: n})}
 }
+
+const isNeutralQuestion = (question) =>
+  question?.is_neutral === true ||
+  question?.isNeutral === true ||
+  String(question?.kind || '').trim().toLowerCase() === 'neutral'
 
 export const QuestionSlideScreen = memo(function QuestionSlideScreen({
   currentQuestion,
@@ -32,15 +37,10 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
   overlays,
 }) {
   const t = useT('live.questionSlide')
-  const [visibleCombo, setVisibleCombo] = useState(null)
-
-  useEffect(() => {
-    if (!comboCount || comboCount < 2) return
+  const visibleCombo = useMemo(() => {
+    if (!comboCount || comboCount < 2) return null
     const msg = getComboMsg(comboCount, t)
-    if (!msg) return
-    setVisibleCombo({...msg, key: Date.now()})
-    const timer = setTimeout(() => setVisibleCombo(null), 1600)
-    return () => clearTimeout(timer)
+    return msg ? {...msg, key: comboCount} : null
   }, [comboCount, t])
 
   // Enter key: triggers Check then Continue
@@ -63,6 +63,7 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
   const correctText = currentQuestion?.game_question_options?.find(
     (o) => o.id === correctOptionByQuestion[currentQuestion?.id],
   )?.text
+  const currentQuestionIsNeutral = isNeutralQuestion(currentQuestion)
 
   return (
     <div className={styles.fullPage}>
@@ -90,10 +91,15 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
             ?.sort((a, b) => a.option_order - b.option_order)
             .map((option) => {
               const isSelected = selectedOption === option.id
-              const isCorrectOption = correctOptionByQuestion[currentQuestion?.id] === option.id
+              const isCorrectOption =
+                !currentQuestionIsNeutral && correctOptionByQuestion[currentQuestion?.id] === option.id
               let optClass = styles.optionButton
               if (isChecked) {
-                if (isCorrectOption) optClass = `${styles.optionButton} ${styles.optCorrect}`
+                if (currentQuestionIsNeutral)
+                  optClass = isSelected
+                    ? `${styles.optionButton} ${styles.optSelected}`
+                    : `${styles.optionButton} ${styles.optDimmed}`
+                else if (isCorrectOption) optClass = `${styles.optionButton} ${styles.optCorrect}`
                 else if (isSelected) optClass = `${styles.optionButton} ${styles.optWrong}`
                 else optClass = `${styles.optionButton} ${styles.optDimmed}`
               } else if (isSelected) {
@@ -114,11 +120,21 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
 
       <div
         className={`${styles.bottomPanel} ${!isChecked ? styles.mobileCheckFixed : ''} ${
-          isChecked ? (checkResult?.isCorrect ? styles.bottomCorrect : styles.bottomWrong) : ''
+          isChecked
+            ? currentQuestionIsNeutral
+              ? ''
+              : checkResult?.isCorrect === true
+              ? styles.bottomCorrect
+              : checkResult?.isCorrect === false
+                ? styles.bottomWrong
+                : ''
+            : ''
         }`}>
         {isChecked && (
           <div className={styles.resultFeedback}>
-            {checkResult?.isCorrect ? (
+            {currentQuestionIsNeutral ? (
+              <span className={styles.feedbackLabel}>+0</span>
+            ) : checkResult?.isCorrect ? (
               <>
                 <Icon name="checkCorrect" size={24} className={styles.feedbackIconImg} />
                 <span className={styles.feedbackLabel}>

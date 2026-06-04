@@ -2,6 +2,10 @@ import {NextResponse} from 'next/server'
 import {createClient} from '@supabase/supabase-js'
 import {createServerSupabase} from '@/lib/supabaseServer'
 
+function isNeutralQuestion(question) {
+  return question?.is_neutral === true || String(question?.kind || '').trim().toLowerCase() === 'neutral'
+}
+
 function createWriteClient(fallback) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -81,22 +85,37 @@ export async function POST(request) {
       return NextResponse.json({error: 'Invalid current bottle index'}, {status: 400})
     }
 
-    const {data: correctRow, error: correctError} = await db
-      .from('game_bottle_answers')
-      .select('option_id')
-      .eq('bottle_id', currentBottle.id)
-      .eq('question_id', questionId)
+    const {data: currentQuestion, error: questionError} = await db
+      .from('game_questions')
+      .select('id, kind, is_neutral')
+      .eq('id', questionId)
       .maybeSingle()
 
-    if (correctError || !correctRow?.option_id) {
-      return NextResponse.json({error: 'Correct option not found for question'}, {status: 400})
+    if (questionError || !currentQuestion) {
+      return NextResponse.json({error: 'Question not found'}, {status: 404})
     }
 
-    const correctOptionId = correctRow.option_id
-    const isCorrect = correctOptionId === selectedOptionId
-    const newCombo = isCorrect ? comboCount + 1 : 0
-    const comboBonus = isCorrect && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
-    const points = isCorrect ? 10 + comboBonus : 0
+    const isNeutral = isNeutralQuestion(currentQuestion)
+    let correctOptionId = null
+    if (!isNeutral) {
+      const {data: correctRow, error: correctError} = await db
+        .from('game_bottle_answers')
+        .select('option_id')
+        .eq('bottle_id', currentBottle.id)
+        .eq('question_id', questionId)
+        .maybeSingle()
+
+      if (correctError || !correctRow?.option_id) {
+        return NextResponse.json({error: 'Correct option not found for question'}, {status: 400})
+      }
+
+      correctOptionId = correctRow.option_id
+    }
+
+    const isCorrect = isNeutral ? null : correctOptionId === selectedOptionId
+    const newCombo = isCorrect === true ? comboCount + 1 : isCorrect === false ? 0 : comboCount
+    const comboBonus = isCorrect === true && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
+    const points = isCorrect === true ? 10 + comboBonus : 0
 
     const {error: answerError} = await db.from('live_round_answers').upsert(
       {
@@ -121,6 +140,7 @@ export async function POST(request) {
       comboBonus,
       newCombo,
       correctOptionId,
+      isNeutral,
     })
   } catch (error) {
     return NextResponse.json({error: error?.message || 'Unexpected error'}, {status: 500})

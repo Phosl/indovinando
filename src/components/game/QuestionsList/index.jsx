@@ -1,4 +1,4 @@
-import {isQuestionComplete} from '../utils/validations'
+import {isNeutralQuestion, isPlayerRatingQuestion, isQuestionComplete} from '../utils/validations'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {getQuestionsListText} from '../utils/constants'
 import Icon from '@/components/Icon'
@@ -16,6 +16,7 @@ export default function QuestionsList({
   onEditQuestion,
   onNewQuestion,
   onDeleteQuestion,
+  isQuickCreate = false,
 }) {
   const {lang} = useLanguage()
   const text = getQuestionsListText(lang)
@@ -37,34 +38,54 @@ export default function QuestionsList({
         <div className={styles.grid}>
           {questions.map((question, index) => {
             const isComplete = isQuestionComplete(question)
+            const isPlayerRating = isPlayerRatingQuestion(question)
+            const isNeutral = isNeutralQuestion(question)
+            const isLockedInQuickCreate = isQuickCreate && isPlayerRating
             const optionsPreview = (question.options || []).slice(0, 4)
             return (
               <div
                 key={question.id}
                 className={`${styles.card} ${isComplete ? styles.complete : styles.incomplete}`}
-                onClick={() => onEditQuestion(index)}>
+                onClick={() => {
+                  if (isLockedInQuickCreate) return
+                  onEditQuestion(index)
+                }}>
                 <div className={styles.questionIndex}>{index + 1}</div>
                 <div className={styles.cardInfo}>
                   <div className={styles.cardHeader}>
                     <h4 className={styles.questionText}>{question.text}</h4>
-                    <button
-                      className="btn btn-mini danger btn-only-text"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        if (confirm(text.confirmDelete)) {
-                          onDeleteQuestion(index)
-                        }
-                      }}>
-                      {text.delete}
-                    </button>
+                    {isLockedInQuickCreate ? (
+                      <span className={styles.lockedBadge}>Player</span>
+                    ) : isNeutral ? (
+                      <span className={styles.lockedBadge}>Neutra</span>
+                    ) : (
+                      <button
+                        className="btn btn-mini danger btn-only-text"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          if (confirm(text.confirmDelete)) {
+                            onDeleteQuestion(index)
+                          }
+                        }}>
+                        {text.delete}
+                      </button>
+                    )}
                   </div>
                   <p className={styles.optionsCount}>
-                    {(question.options?.length || 0) + ' ' + text.options}
+                    {isPlayerRating
+                      ? 'Risposta libera del giocatore'
+                      : isNeutral
+                        ? 'Nessuna risposta corretta richiesta'
+                      : (question.options?.length || 0) + ' ' + text.options}
                   </p>
                   <div className={styles.optionsText}>
-                    {optionsPreview.map((o, i) => (
-                      <p key={i}>{typeof o === 'string' ? o : o.text}</p>
-                    ))}
+                    {isPlayerRating ? (
+                      <p>1-10 slider</p>
+                    ) : isNeutral ? (
+                      <p>Opzioni visibili al giocatore</p>
+                    ) : (
+                      optionsPreview.map((o, i) => <p key={i}>{typeof o === 'string' ? o : o.text}</p>)
+                    )}
                   </div>
                 </div>
               </div>

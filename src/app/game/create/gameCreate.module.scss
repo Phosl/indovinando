@@ -176,6 +176,51 @@
   color: var(--text-secondary);
 }
 
+.autoModeTokenSummary {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.autoModeMetricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.autoModeMetricCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 92px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #d9e2ec;
+  background: #fff;
+}
+
+.autoModeMetricLabel {
+  color: #617085;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.autoModeMetricValue {
+  color: #111d2f;
+  font-size: 1.35rem;
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.autoModeMetricMeta {
+  color: #58677b;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
 .autoModeFileInput {
   display: none;
 }
@@ -242,6 +287,48 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
+}
+
+.autoModeQuizTemplatePicker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.autoModeQuizTemplateLabel {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+}
+
+.autoModeQuizTemplateSegmented {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+}
+
+.autoModeQuizTemplateButton {
+  appearance: none;
+  border: 1px solid var(--button-secondary-border);
+  background: var(--foreground);
+  color: var(--text-secondary);
+  border-radius: 999px;
+  min-height: 40px;
+  padding: 0 14px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.autoModeQuizTemplateButtonActive {
+  background: #111d2f;
+  border-color: #111d2f;
+  color: #fff;
 }
 
 .autoModeQuizPreview {
@@ -327,6 +414,20 @@
     font-size: 1.2rem;
     font-weight: 900;
   }
+}
+
+.autoPreviewModalHeaderMain {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.autoPreviewModalTemplateRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 420px;
 }
 
 .autoPreviewModalClose {
@@ -542,6 +643,52 @@
   }
 }
 
+.autoBottleSpecGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 10px;
+}
+
+.autoBottleSpecCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-radius: 12px;
+  border: 1px solid #e3ddd3;
+  background: #fffdfa;
+  padding: 10px 12px;
+}
+
+.autoBottleSpecLabel {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #6a7688;
+}
+
+.autoBottleSpecValue {
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: #111d2f;
+}
+
+.autoBottleNarrativeCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-radius: 12px;
+  border: 1px solid #e3ddd3;
+  background: #fffdfa;
+  padding: 12px;
+}
+
+.autoBottleNarrativeText {
+  margin: 0;
+  color: #283647;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
 .autoBottleDataLabel {
   display: inline-flex;
   align-items: center;
@@ -558,6 +705,73 @@
   padding: 5px 10px;
   font-size: 0.78rem;
   font-weight: 800;
+}
+
+.autoBottleMetaPill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: #eef3fb;
+  color: #35506e;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.autoBottleSectionBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.autoBottleSectionTitle {
+  margin: 0;
+  color: #5a6678;
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.autoBottleAccordion {
+  border-radius: 12px;
+  border: 1px solid #e3ddd3;
+  background: #fffdfa;
+  padding: 0;
+  overflow: hidden;
+}
+
+.autoBottleAccordionSummary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+  cursor: pointer;
+  padding: 12px;
+  color: #111d2f;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+}
+
+.autoBottleAccordionBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+
+.autoBottleSourceLink {
+  color: #295d92;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  text-decoration: none;
+  word-break: break-word;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .autoModeUploadedActions {

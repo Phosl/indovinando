@@ -5,6 +5,11 @@ import {useT} from '@/lib/i18n/useT'
 import AvatarDisplay from '@/components/AvatarDisplay'
 import Icon from '@/components/Icon'
 
+const isNeutralQuestion = (question) =>
+  question?.is_neutral === true ||
+  question?.isNeutral === true ||
+  String(question?.kind || '').trim().toLowerCase() === 'neutral'
+
 export const ResultsScreen = memo(function ResultsScreen({
   sessionId,
   title,
@@ -117,21 +122,29 @@ export const ResultsScreen = memo(function ResultsScreen({
 
         {questions.map((question, index) => {
           const ans = roundAnswers[question.id]
+          const isNeutral = isNeutralQuestion(question)
           const selectedOptionText = question.game_question_options?.find(
             (o) => o.id === ans?.optionId,
           )?.text
           const correctOptionText = question.game_question_options?.find(
             (o) => o.id === correctOptionByQuestion[question.id],
           )?.text
-          const rowClass = ans?.isCorrect
-            ? `${styles.summaryRow} ${styles.summaryRowCorrect}`
-            : `${styles.summaryRow} ${styles.summaryRowWrong}`
+          const rowClass = isNeutral
+            ? `${styles.summaryRow}`
+            : ans?.isCorrect
+              ? `${styles.summaryRow} ${styles.summaryRowCorrect}`
+              : `${styles.summaryRow} ${styles.summaryRowWrong}`
           return (
             <div key={question.id} className={rowClass}>
               <div className={styles.summaryBody}>
                 <span className={styles.summaryText}>{question.text}</span>
                 <div className={styles.summaryAnswer}>
-                  {ans?.isCorrect ? (
+                  {isNeutral ? (
+                    <span className={styles.summaryCorrect}>
+                      {selectedOptionText || t('notAnswered')}
+                      <span className={styles.summaryPoints}>+0</span>
+                    </span>
+                  ) : ans?.isCorrect ? (
                     <span className={styles.summaryCorrect}>
                       <Icon name="checkCorrect" size={18} className={styles.feedbackIconImg} />
                       {selectedOptionText}

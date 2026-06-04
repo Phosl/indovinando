@@ -2,6 +2,10 @@ import {NextResponse} from 'next/server'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {createClient} from '@supabase/supabase-js'
 
+function isNeutralQuestion(question) {
+  return question?.is_neutral === true || String(question?.kind || '').trim().toLowerCase() === 'neutral'
+}
+
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 
@@ -67,19 +71,35 @@ export async function POST(request) {
       return NextResponse.json({error: 'Bottle not found for current round'}, {status: 400})
     }
 
-    const {data: correctRow, error: correctError} = await db
-      .from('game_bottle_answers')
-      .select('option_id')
-      .eq('bottle_id', bottleId)
-      .eq('question_id', questionId)
+    const {data: currentQuestion, error: questionError} = await db
+      .from('game_questions')
+      .select('id, kind, is_neutral')
+      .eq('id', questionId)
       .maybeSingle()
 
-    if (correctError || !correctRow?.option_id) {
-      return NextResponse.json({error: 'Correct answer not configured'}, {status: 400})
+    if (questionError || !currentQuestion) {
+      return NextResponse.json({error: 'Question not found'}, {status: 404})
     }
 
-    const isCorrect = correctRow.option_id === selectedOptionId
-    const points = isCorrect ? 10 : 0
+    const isNeutral = isNeutralQuestion(currentQuestion)
+    let correctOptionId = null
+    if (!isNeutral) {
+      const {data: correctRow, error: correctError} = await db
+        .from('game_bottle_answers')
+        .select('option_id')
+        .eq('bottle_id', bottleId)
+        .eq('question_id', questionId)
+        .maybeSingle()
+
+      if (correctError || !correctRow?.option_id) {
+        return NextResponse.json({error: 'Correct answer not configured'}, {status: 400})
+      }
+
+      correctOptionId = correctRow.option_id
+    }
+
+    const isCorrect = isNeutral ? null : correctOptionId === selectedOptionId
+    const points = isCorrect === true ? 10 : 0
 
     const {error: insertError} = await db.from('table_live_round_answers').upsert(
       {
@@ -88,7 +108,7 @@ export async function POST(request) {
         bottle_index: session.current_bottle_index,
         question_id: questionId,
         selected_option_id: selectedOptionId,
-        is_correct: isCorrect,
+        is_correct: isCorrect === true,
         points,
       },
       {
@@ -100,9 +120,8 @@ export async function POST(request) {
       return NextResponse.json({error: insertError.message}, {status: 500})
     }
 
-    return NextResponse.json({ok: true, isCorrect, points})
+    return NextResponse.json({ok: true, isCorrect, points, correctOptionId, isNeutral})
   } catch (error) {
     return NextResponse.json({error: error?.message || 'Unexpected error'}, {status: 500})
   }
 }
-

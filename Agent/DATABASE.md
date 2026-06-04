@@ -128,6 +128,8 @@ Domande condivise per tutte le bottiglie del gioco.
 | `id`            | `UUID PK`          |               |
 | `game_id`       | `UUID FK -> games` |               |
 | `text`          | `TEXT`             | testo domanda |
+| `kind`          | `TEXT`             | `rating`, `neutral`, o `NULL` |
+| `is_neutral`    | `BOOLEAN`          | se `true`, la domanda non richiede risposta corretta |
 | `display_order` | `INTEGER`          | ordine        |
 | `created_at`    | `TIMESTAMPTZ`      |               |
 

@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 import {validateQuestionForm} from '../utils/validations'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {getAlertMessages, getQuestionModalText} from '../utils/constants'
@@ -21,18 +21,9 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
   const text = getQuestionModalText(lang)
   const alertMessages = getAlertMessages(lang)
 
-  const [questionText, setQuestionText] = useState('')
-  const [options, setOptions] = useState(['', ''])
-
-  useEffect(() => {
-    if (isOpen && question) {
-      setQuestionText(question.text || '')
-      setOptions([...(question.options || ['', ''])])
-    } else {
-      setQuestionText('')
-      setOptions(['', ''])
-    }
-  }, [isOpen, question])
+  const [questionText, setQuestionText] = useState(() => question?.text || '')
+  const [options, setOptions] = useState(() => [...(question?.options || ['', ''])])
+  const [isNeutral, setIsNeutral] = useState(() => question?.isNeutral === true)
 
   function updateOption(index, value) {
     const newOptions = [...options]
@@ -54,10 +45,14 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
       validateQuestionForm(questionText, options, alertMessages)
 
       const questionId = question?.id || crypto.randomUUID()
+      const existingKind = String(question?.kind || '').trim().toLowerCase()
+      const nextKind = existingKind === 'rating' ? 'rating' : isNeutral ? 'neutral' : null
 
       onSave(
         {
           id: questionId,
+          kind: nextKind,
+          isNeutral,
           text: questionText.trim(),
           options: options.map((o) => o.trim()),
         },
@@ -90,6 +85,21 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
               onChange={(e) => setQuestionText(e.target.value)}
               rows={3}
             />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.checkboxRow}>
+              <input
+                type="checkbox"
+                checked={isNeutral}
+                onChange={(event) => setIsNeutral(event.target.checked)}
+              />
+              <span>
+                {lang === 'en'
+                  ? 'Neutral question: no correct answer'
+                  : 'Domanda neutra: nessuna risposta corretta'}
+              </span>
+            </label>
           </div>
 
           <div className={styles.formGroup}>

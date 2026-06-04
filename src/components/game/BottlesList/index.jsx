@@ -21,7 +21,6 @@ export default function BottlesList({
 }) {
   const {lang} = useLanguage()
   const text = getBottlesListText(lang)
-  const questionsLength = questions?.length || 0
 
   return (
     <div className={styles.container}>
@@ -41,7 +40,7 @@ export default function BottlesList({
       ) : (
         <div className={styles.grid}>
           {bottles.map((bottle, index) => {
-            const isComplete = isBottleComplete(bottle, questionsLength)
+            const isComplete = isBottleComplete(bottle, questions)
             return (
               <div
                 key={index}

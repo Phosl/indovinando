@@ -95,7 +95,7 @@ export async function GET(request) {
 
     const blob = await downloadStorageObjectWithFallback({
       supabase,
-      bucket: imageRow.storage_bucket,
+      bucket: imageRow.storage_bucket || 'tasting-bottles',
       path: imageRow.storage_path,
       request,
     })
@@ -112,4 +112,3 @@ export async function GET(request) {
     return NextResponse.json({error: error?.message || 'Unexpected error'}, {status: 500})
   }
 }
-

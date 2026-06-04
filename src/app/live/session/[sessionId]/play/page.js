@@ -37,6 +37,8 @@ export default async function PlayerPlayPage({params}) {
         `
         id,
         text,
+        kind,
+        is_neutral,
         display_order,
         game_question_options (
           id,

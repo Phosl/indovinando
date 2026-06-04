@@ -44,6 +44,8 @@ alter table public.wine_labels
 
 alter table public.wine_vintages
   add column if not exists external_id text,
+  add column if not exists price_min numeric(10,2),
+  add column if not exists price_max numeric(10,2),
   add column if not exists price_band text;
 
 alter table public.wine_sources
@@ -78,9 +80,7 @@ select
   wp.normalized_name as producer_normalized,
   wl.country,
   wl.region,
-  wl.quiz_region,
   wl.appellation,
-  wl.quiz_appellation,
   wl.type,
   (
     select array_agg(g.name order by g.name)
@@ -98,8 +98,6 @@ select
   v.abv,
   v.price,
   v.currency,
-  v.price_band,
-  wl.quiz_price_band,
   v.image_url,
   null::text as source,
   null::text as source_url,
@@ -107,16 +105,22 @@ select
   v.last_seen_at as last_updated,
   v.confidence,
   wl.search_text,
-  wl.search_tokens,
   null::text as dedupe_key,
+  coalesce(v.notes, wl.notes) as notes,
+  wl.is_active,
+  v.created_at,
+  v.updated_at,
+  wl.quiz_region,
+  wl.quiz_appellation,
+  v.price_band,
+  wl.quiz_price_band,
+  wl.search_tokens,
   wl.body,
   wl.acidity,
   wl.elaborate,
   wl.harmonize,
-  coalesce(v.notes, wl.notes) as notes,
-  wl.is_active,
-  v.created_at,
-  v.updated_at
+  v.price_min,
+  v.price_max
 from public.wine_vintages v
 join public.wine_labels wl on wl.id = v.wine_label_id
 left join public.wine_producers wp on wp.id = wl.producer_id;

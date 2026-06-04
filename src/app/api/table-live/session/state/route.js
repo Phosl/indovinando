@@ -79,7 +79,7 @@ export async function GET(request) {
 
     const {data: questions} = await db
       .from('game_questions')
-      .select('id, text, display_order, game_question_options(id, text, option_order)')
+      .select('id, text, kind, is_neutral, display_order, game_question_options(id, text, option_order)')
       .eq('game_id', session.game_id)
       .order('display_order')
 
@@ -153,6 +153,8 @@ export async function GET(request) {
         (questions || []).map((q) => ({
           id: q.id,
           text: q.text,
+          kind: q.kind || null,
+          isNeutral: q.is_neutral === true,
           displayOrder: q.display_order,
           options: [...(q.game_question_options || [])].sort((a, b) => a.option_order - b.option_order),
         })) || [],

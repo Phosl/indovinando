@@ -1,9 +1,9 @@
 Torniamo alla creazione automatica della degustazione.
 
-Il flusso attuale usa Google Vision per analizzare la foto della bottiglia, fare match sul catalogo
+Il flusso deve usare OpenAI Vision per analizzare la foto della bottiglia, fare match sul catalogo
 e recuperare i dati utili per il quiz.
 
-Ora dobbiamo rimuovere Google Vision e sostituirlo con OpenAI Vision.
+Google Vision non deve piu comparire nella pipeline runtime.
 
 Il catalogo al momento è vuoto, quindi la feature deve funzionare in modo progressivo: prima estrae
 i dati dalla foto, poi prova il match sul catalogo / OpenAi, poi permette conferma/correzione
@@ -22,7 +22,7 @@ esclusivamente in JSON valido secondo lo schema richiesto.
 
 Dopo la risposta OpenAI:
 
-- usare i dati per arricchire i catalogo
+- usare i dati per arricchire il catalogo
 - se la confidence di OpenAI o la confidence del match è bassa, mostrare conferma manuale
 - non pubblicare automaticamente se il match è incerto
 

@@ -27,13 +27,15 @@ export default async function EnotecaPlayPage({params}) {
   // Domande + opzioni (per gioco, non per bottiglia)
   const {data: rawQuestions} = await supabase
     .from('game_questions')
-    .select('id, text, display_order, game_question_options(id, text, option_order)')
+    .select('id, text, kind, is_neutral, display_order, game_question_options(id, text, option_order)')
     .eq('game_id', gameId)
     .order('display_order')
 
   const questions = (rawQuestions ?? []).map((q) => ({
     id: q.id,
     text: q.text,
+    kind: q.kind || null,
+    isNeutral: q.is_neutral === true,
     options: [...(q.game_question_options ?? [])].sort((a, b) => a.option_order - b.option_order),
   }))
 

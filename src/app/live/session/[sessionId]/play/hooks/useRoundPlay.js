@@ -2,6 +2,11 @@ import {useState, useEffect, useCallback, useMemo, useRef} from 'react'
 import {runVisiblePoll} from './_polling'
 
 const SLIDE_TRANSITION_MS = 220
+
+const isNeutralQuestion = (question) =>
+  question?.is_neutral === true ||
+  question?.isNeutral === true ||
+  String(question?.kind || '').trim().toLowerCase() === 'neutral'
 /**
  * Owns all per-round state (answers, slides, combo, results visibility)
  * plus every action handler that mutates it.
@@ -324,26 +329,30 @@ export function useRoundPlay({
           return updated
         })
         setCheckedQuestions((prev) => ({...prev, [questionId]: true}))
-        playSound(isCorrect ? 'correct' : 'wrong')
+        if (isCorrect === true) playSound('correct')
+        else if (isCorrect === false) playSound('wrong')
       }
 
       try {
         setIsCheckingAnswer(true)
+        const currentQuestion = liveQuestions.find((question) => question.id === questionId)
+        const isNeutral = isNeutralQuestion(currentQuestion)
 
         // ── 1. Resolve correct option from server-preloaded cache ─────────────
         const resolvedCorrectOptionId = correctOptionByQuestion[questionId]
 
         // Answers not loaded yet (should be rare since page.js preloads them)
-        if (!resolvedCorrectOptionId) {
+        if (!isNeutral && !resolvedCorrectOptionId) {
           console.warn('Correct option not in cache for question', questionId)
           return
         }
 
         // ── 2. Compute result locally ──────────────────────────────────────────
-        const isCorrect = resolvedCorrectOptionId === optionId
-        const newCombo = isCorrect ? comboRef.current + 1 : 0
-        const comboBonus = isCorrect && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
-        const points = isCorrect ? 10 + comboBonus : 0
+        const isCorrect = isNeutral ? null : resolvedCorrectOptionId === optionId
+        const newCombo =
+          isCorrect === true ? comboRef.current + 1 : isCorrect === false ? 0 : comboRef.current
+        const comboBonus = isCorrect === true && newCombo >= 2 ? Math.min(newCombo - 1, 3) * 5 : 0
+        const points = isCorrect === true ? 10 + comboBonus : 0
 
         // ── 3. Apply UI feedback immediately (before any DB write) ─────────────
         applyLocalAnswerResult({isCorrect, points, comboBonus, newCombo})
@@ -366,6 +375,7 @@ export function useRoundPlay({
       checkedQuestions,
       isCheckingAnswer,
       correctOptionByQuestion,
+      liveQuestions,
       playSound,
       persistAnswerWithRetry,
     ],

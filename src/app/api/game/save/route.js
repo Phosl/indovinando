@@ -99,6 +99,8 @@ export async function POST(request) {
     const questionsToInsert = questions.map((question, index) => ({
       game_id: currentGameId,
       text: String(question.text ?? '').trim(),
+      kind: String(question.kind ?? '').trim() || null,
+      is_neutral: question.isNeutral === true,
       display_order: index,
     }))
 

@@ -804,6 +804,131 @@
   }
 }
 
+.lobbyCard {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  align-items: stretch;
+  text-align: left;
+  gap: 16px;
+  overflow-y: auto;
+  padding-bottom: 32px;
+}
+
+.lobbyCodeBlock {
+  border: 2px solid var(--selected);
+  background: var(--selected-extra-light);
+  border-radius: 20px;
+  padding: 16px 18px;
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  text-align: center;
+}
+
+.lobbyCodeLabel {
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--selected-dark);
+}
+
+.lobbyCodeValue {
+  font-size: clamp(2rem, 8vw, 3rem);
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--selected-dark);
+}
+
+.lobbyPlayersSection {
+  display: grid;
+  gap: 12px;
+}
+
+.lobbyPlayersHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  h2 {
+    font-size: 1rem;
+  }
+}
+
+.lobbyPlayersCount {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 2px solid var(--button-secondary-border);
+  background: var(--foreground);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+.lobbyPlayersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.lobbyPlayerCard {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: center;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  background: var(--foreground);
+  padding: 12px 14px;
+}
+
+.lobbyPlayerAvatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background);
+  flex-shrink: 0;
+}
+
+.lobbyPlayerMeta {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.lobbyPlayerName {
+  margin: 0;
+  color: var(--text-primary) !important;
+  font-size: 0.92rem;
+  font-weight: 800 !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lobbyPlayerHost {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #effff2;
+  color: var(--accept-dark);
+  border: 1px solid color-mix(in srgb, var(--accept-dark) 22%, white 78%);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
 // ── Leaderboard bottom sheet ──────────────────────────────────
 .sheetBackdrop {
   position: fixed;

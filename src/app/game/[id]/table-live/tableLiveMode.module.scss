@@ -63,6 +63,26 @@
   width: 100%;
 }
 
+.shareCard {
+  gap: 14px;
+}
+
+.shareCardBody {
+  display: grid;
+  gap: 4px;
+}
+
+.linkBlock {
+  display: grid;
+  gap: 8px;
+}
+
+.linkLabel {
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+}
+
 .infoStack {
   display: grid;
   gap: 10px;

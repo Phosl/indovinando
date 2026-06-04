@@ -80,6 +80,45 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 
 ## 🚀 TODO — Miglioramenti stato attuale (focus breve termine)
 
+### Auto Tasting / Quiz Builder — micro task raccolti
+
+- [x] **Fix preview loader bloccato** — caso sporadico `Anteprime caricate: 0/2`
+- [x] **Template standard: non escludere Stato se uguale** — mantenerlo comunque nel quiz standard
+- [x] **Almeno 5 opzioni per domanda nel quiz** — aumentare i distrattori quando i dati sono pochi
+- [x] **Quick create step 4: risposte neutre non devono risultare incomplete**
+- [x] **Rivedere load bottiglie auto-tasting** — timeout sporadici su fetch/refresh lista
+- [x] **Tab in preview quiz** — switch tra `Quiz AI` e `Quiz standard` dentro la preview
+- [x] **Card evento tavoli da rivedere**
+  - logo Indovinando piccolo
+  - QR code in alto
+  - blocco `Link e QR evento`
+  - testo: `Accedi a questo link per giocare o stampa il QR per condividerlo.`
+  - Link: `Apri Link, Copia link, Stampa QR, apre modale come ora e li,`
+  - invertire pulsanti nella modale QR: `Chiudi`, `Stampa`
+- [x] ** Inserisci il Codice Partita -> Migliora il campo codice**
+  - Usa 4 caselle separate oppure un placeholder tipo “Es. 4821”.
+  - Evita “0000”.
+- [x] **Migliorare la ricerca, prima mi trovava il vino Idda**
+
+- [x] **Uniformare playersList come la partita Live e fare attenzione che la pagina non scrolla.**
+- [x] **codice partita, piu evidente**
+- [x] **Check ora Idda bianco ce l ho nel catalogo..solo se faccio scatta foto mi da sempre ricerca
+      Web..invece che catalogo giusto?**
+- [ ] **Audit hardcoded / traduzioni mancanti** — usare il file recap già esistente come checklist
+- [ ] **Aggiornare documentazione** — schema `game_questions`, domande neutre, flow quiz auto
+
+- [] **Rigenera link evento, manderei all inserimento del nome del evento**
+- [] **Su carica bottiglia sarebbe bello avere effetto Card**
+- scrolling alla tinder.magari foto di fondo con gradiente scuro
+- sopra e le informazioni, tipo carta magic,
+- fonti web puo essere in una modale
+- [] **Ordine Bottiglie**
+- [x] **Valutare deeplink** — share/open diretto su create quiz / sessioni / eventi
+- [ ] **effetto glow analizza tutte**
+- [ ] **quante bottiglie si caricano e anlizzano alla volta? Forse una alla volta e quando finito si
+      genera qui?**
+- [ ] **se non troviamo l'anno possiamo sempre mettere delle fasce ( magari ipotizzando l'anno )**
+
 ### P0 — Stabilità flusso di gioco (iniziamo da qui)
 
 - [x] **Fix ultima domanda (tavoli)** — applicato fix anti-skip; **da validare** con test host+guest
@@ -89,6 +128,9 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 - [ ] **Allineamento completo Live Tavoli vs Live classico** — stessa UX su fine round, classifica,
       prossimo step
 - [ ] **Stabilità realtime multi-device** — test host + 2 guest su round finali e cambio bottiglia
+- [ ] **Sulle domande che fa l'Ai, dovrebbe mettere delle risposte della stessa lunghezza o
+      intensità**
+- [ ] **Tradurre i dati a seconda della lingua impostata**
 
 ### P1 — Qualità UX percepita
 

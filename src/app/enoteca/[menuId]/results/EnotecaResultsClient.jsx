@@ -10,6 +10,8 @@ import styles from '../../../live/session/[sessionId]/play/playerLive.module.scs
 import xStyles from './enotecaResults.module.scss'
 
 const stateKey = (bottleId, questionId) => `${bottleId}:${questionId}`
+const isNeutralQuestion = (question) =>
+  question?.isNeutral === true || String(question?.kind || '').trim().toLowerCase() === 'neutral'
 
 export default function EnotecaResultsClient({menuId, menuName, bottles, questions}) {
   const t = useT('enoteca.results')
@@ -65,12 +67,13 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
   }
 
   const totalScore = answers.reduce((sum, a) => sum + (a.points ?? 0), 0)
+  const scorableQuestions = questions.filter((q) => !isNeutralQuestion(q))
   const totalCorrect = answers.filter((a) => a.is_correct).length
-  const totalQuestions = bottles.length * questions.length
+  const totalQuestions = bottles.length * scorableQuestions.length
   const pct = totalQuestions ? Math.round((totalCorrect / totalQuestions) * 100) : 0
 
   const activeBottle = bottles[activeBIdx]
-  const bCorrect = questions.filter(
+  const bCorrect = scorableQuestions.filter(
     (q) => answersByKey[stateKey(activeBottle.id, q.id)]?.is_correct,
   ).length
   const bScore = questions.reduce(
@@ -113,7 +116,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
         {/* Bottle slider */}
         <div className={xStyles.sliderTrack}>
           {bottles.map((bottle, i) => {
-            const bc = questions.filter(
+            const bc = scorableQuestions.filter(
               (q) => answersByKey[stateKey(bottle.id, q.id)]?.is_correct,
             ).length
             const bs = questions.reduce(
@@ -152,7 +155,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
               </span>
             )}
             <span className={xStyles.bottleRevealScore}>
-              {bCorrect}/{questions.length} {t('correct')} · +{bScore} {t('points')}
+              {bCorrect}/{scorableQuestions.length} {t('correct')} · +{bScore} {t('points')}
             </span>
           </div>
 
@@ -160,16 +163,22 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
             const answer = answersByKey[stateKey(activeBottle.id, q.id)]
             const selectedOpt = q.options.find((o) => o.id === answer?.selected_option_id)
             const correctOpt = q.options.find((o) => o.id === activeBottle.correctAnswers?.[q.id])
+            const isNeutral = isNeutralQuestion(q)
             return (
               <div
                 key={q.id}
                 className={`${styles.summaryRow} ${
-                  answer?.is_correct ? styles.summaryRowCorrect : styles.summaryRowWrong
+                  isNeutral ? '' : answer?.is_correct ? styles.summaryRowCorrect : styles.summaryRowWrong
                 }`}>
                 <div className={styles.summaryBody}>
                   <span className={styles.summaryText}>{q.text}</span>
                   <div className={styles.summaryAnswer}>
-                    {answer?.is_correct ? (
+                    {isNeutral ? (
+                      <span className={styles.summaryCorrect}>
+                        {selectedOpt?.text ?? t('notAnswered')}
+                        <span className={styles.summaryPoints}>+0</span>
+                      </span>
+                    ) : answer?.is_correct ? (
                       <span className={styles.summaryCorrect}>
                         <Icon name="checkCorrect" size={24} className={xStyles.answerIcon} />
                         {correctOpt?.text}
