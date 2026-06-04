@@ -116,6 +116,14 @@
   gap: 10px;
 }
 
+.description {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.94rem;
+  line-height: 1.55;
+  max-width: 72ch;
+}
+
 .label {
   display: inline-block;
   padding: 3px 12px;

@@ -32,6 +32,10 @@ const CHANGELOG = [
     version: '1.30.0',
     date: '4 giugno 2026',
     label: 'Auto',
+    description: {
+      it: 'Grande passaggio di consolidamento su auto tasting, catalogo vini, generazione quiz e traduzioni, con più stabilità nel riconoscimento e più chiarezza nella UI.',
+      en: 'Major consolidation pass across automatic tasting, wine catalog sync, quiz generation, and translations, with more stable recognition and clearer UI.',
+    },
     changes: [
       'stabilize auto tasting, catalog sync, i18n, and product UX polish',
     ],
@@ -1278,6 +1282,12 @@ function formatEntryLabel(label, lang) {
   return LABEL_TRANSLATIONS[label] ?? label
 }
 
+function formatEntryDescription(description, lang) {
+  if (!description) return null
+  if (typeof description === 'string') return description
+  return description[lang] ?? description.it ?? description.en ?? null
+}
+
 export default async function ChangelogPage() {
   const lang = await getServerLanguage()
   const text = lang === 'en' ? UI_TEXT.en : UI_TEXT.it
@@ -1307,6 +1317,11 @@ export default async function ChangelogPage() {
                     {formatEntryLabel(entry.label, lang)}
                   </span>
                 </div>
+                {formatEntryDescription(entry.description, lang) ? (
+                  <p className={styles.description}>
+                    {formatEntryDescription(entry.description, lang)}
+                  </p>
+                ) : null}
                 <ul className={styles.changeList}>
                   {entry.changes.map((change, i) => (
                     <li key={i} className={styles.changeItem}>
