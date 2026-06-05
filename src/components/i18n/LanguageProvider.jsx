@@ -18,16 +18,26 @@ function setLanguageCookie(lang) {
 }
 
 export default function LanguageProvider({initialLang = DEFAULT_LANGUAGE, children}) {
+  const MIN_SWITCH_OVERLAY_MS = 2000
   const router = useRouter()
   const [lang, setLangState] = useState(normalizeLanguage(initialLang))
   const [userId, setUserId] = useState(null)
   const [isSwitching, setIsSwitching] = useState(false)
   const langRef = useRef(lang)
   const switchingTimerRef = useRef(null)
+  const switchingStartedAtRef = useRef(0)
 
   useEffect(() => {
     langRef.current = lang
   }, [lang])
+
+  useEffect(() => {
+    return () => {
+      if (switchingTimerRef.current) {
+        clearTimeout(switchingTimerRef.current)
+      }
+    }
+  }, [])
 
   const persistLanguagePreference = useCallback(async (uid, nextLang) => {
     if (!uid) return
@@ -53,6 +63,7 @@ export default function LanguageProvider({initialLang = DEFAULT_LANGUAGE, childr
       if (normalized === lang) return
 
       setIsSwitching(true)
+      switchingStartedAtRef.current = Date.now()
       if (switchingTimerRef.current) {
         clearTimeout(switchingTimerRef.current)
       }
@@ -69,10 +80,13 @@ export default function LanguageProvider({initialLang = DEFAULT_LANGUAGE, childr
       // Refresh server-rendered text immediately when language changes.
       router.refresh()
 
+      const elapsed = Date.now() - switchingStartedAtRef.current
+      const remaining = Math.max(MIN_SWITCH_OVERLAY_MS - elapsed, 0)
+
       switchingTimerRef.current = setTimeout(() => {
         setIsSwitching(false)
         switchingTimerRef.current = null
-      }, 350)
+      }, remaining)
     },
     [lang, persistLanguagePreference, router, userId],
   )
@@ -159,9 +173,6 @@ export default function LanguageProvider({initialLang = DEFAULT_LANGUAGE, childr
 
     return () => {
       cancelled = true
-      if (switchingTimerRef.current) {
-        clearTimeout(switchingTimerRef.current)
-      }
       subscription.unsubscribe()
     }
   }, [initialLang, persistLanguagePreference])

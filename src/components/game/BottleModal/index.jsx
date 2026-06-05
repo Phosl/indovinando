@@ -41,6 +41,7 @@ export default function BottleModal({
   onWineTypeChange,
   onAnswerChange,
   onSave,
+  onNotify,
   // onSaveAndAddAnother, // rimosso: non più usato
   onCancel,
 }) {
@@ -96,18 +97,18 @@ export default function BottleModal({
       )
       onSave()
     } catch (error) {
-      alert(error.message)
+      onNotify?.(error.message, 'error')
     }
   }
 
   function validateDetails() {
-    if (!bottleName?.trim() || !producer?.trim() || !year?.trim() || !wineType?.trim()) {
-      alert(alertMessages?.BOTTLE_FORM_INCOMPLETE)
+    if (!bottleName?.trim() || !producer?.trim() || !year?.trim()) {
+      onNotify?.(alertMessages?.BOTTLE_FORM_INCOMPLETE, 'error')
       return false
     }
 
     if ((year || '').trim().length > 4) {
-      alert(alertMessages?.BOTTLE_YEAR_TOO_LONG)
+      onNotify?.(alertMessages?.BOTTLE_YEAR_TOO_LONG, 'error')
       return false
     }
 
@@ -122,7 +123,7 @@ export default function BottleModal({
     }
 
     if (isInfoStep && !wineType?.trim()) {
-      alert(text.selectWineType)
+      onNotify?.(text.selectWineType, 'error')
       return
     }
 
@@ -131,7 +132,7 @@ export default function BottleModal({
       !currentQuestionIsNeutral &&
       (selectedAnswer === null || selectedAnswer === undefined)
     ) {
-      alert(alertMessages?.BOTTLE_ANSWERS_INCOMPLETE)
+      onNotify?.(alertMessages?.BOTTLE_ANSWERS_INCOMPLETE, 'error')
       return
     }
 

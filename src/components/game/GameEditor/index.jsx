@@ -1,12 +1,29 @@
 'use client'
 
-// (rimosso: import duplicato)
-// ...existing code...
-// Modale introduttiva per lo step questionario
+import {memo, useCallback, useEffect, useState, useRef} from 'react'
+import {usePathname, useRouter, useSearchParams} from 'next/navigation'
 import modalStyles from './QuestionnaireIntroModal.module.scss'
 import {Button} from '@/components/ui/Button'
 import Icon from '@/components/Icon'
 import {useT} from '@/lib/i18n/useT'
+import {createClient} from '@/lib/supabaseClient'
+import QuestionsList from '../QuestionsList'
+import QuestionModal from '../QuestionModal'
+import GameStepsBreadcrumbs from '../GameStepsBreadcrumbs'
+import BottlesList from '../BottlesList'
+import BottleModal from '../BottleModal'
+import TopBar from '@/components/TopBar'
+import {validateGameName, validateQuestionnaire, validateBottleForm} from '../utils/validations'
+import {
+  MIN_STEP,
+  MAX_STEP,
+  DEFAULT_GAME_NAME,
+  getAlertMessages,
+  getGameEditorText,
+  getSteps,
+} from '../utils/constants'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
+import styles from './GameEditor.module.scss'
 
 function QuestionnaireIntroModal({
   isOpen,
@@ -82,26 +99,39 @@ function BottlesIntroModal({
   )
 }
 
-import {memo, useEffect, useState, useRef} from 'react'
-import {usePathname, useRouter, useSearchParams} from 'next/navigation'
-import {createClient} from '@/lib/supabaseClient'
-import QuestionsList from '../QuestionsList'
-import QuestionModal from '../QuestionModal'
-import GameStepsBreadcrumbs from '../GameStepsBreadcrumbs'
-import BottlesList from '../BottlesList'
-import BottleModal from '../BottleModal'
-import TopBar from '@/components/TopBar'
-import {validateGameName, validateQuestionnaire, validateBottleForm} from '../utils/validations'
-import {
-  MIN_STEP,
-  MAX_STEP,
-  DEFAULT_GAME_NAME,
-  getAlertMessages,
-  getGameEditorText,
-  getSteps,
-} from '../utils/constants'
-import {useLanguage} from '@/components/i18n/LanguageProvider'
-import styles from './GameEditor.module.scss'
+function EditorToast({toast, onClose, closeLabel}) {
+  useEffect(() => {
+    if (!toast) return undefined
+    const timer = window.setTimeout(() => {
+      onClose()
+    }, toast.duration || 3200)
+    return () => window.clearTimeout(timer)
+  }, [onClose, toast])
+
+  if (!toast) return null
+
+  return (
+    <div className={styles.toastViewport} aria-live="polite">
+      <div
+        className={`${styles.toast} ${
+          toast.tone === 'success'
+            ? styles.toastSuccess
+            : toast.tone === 'error'
+              ? styles.toastError
+              : styles.toastInfo
+        }`}>
+        <span className={styles.toastMessage}>{toast.message}</span>
+        <button
+          type="button"
+          className={styles.toastClose}
+          onClick={onClose}
+          aria-label={closeLabel}>
+          <Icon name="removeSmall" size={16} />
+        </button>
+      </div>
+    </div>
+  )
+}
 
 const SAVE_TIMEOUT_MS = 20000
 const HARD_WATCHDOG_MS = 240000
@@ -394,6 +424,7 @@ export default function GameEditor({
   const [resolvedUserId, setResolvedUserId] = useState(userId)
   const [stepDirection, setStepDirection] = useState('forward')
   const [animateStep, setAnimateStep] = useState(false)
+  const [toast, setToast] = useState(null)
   const savePhaseRef = useRef('idle')
   const initialStepOverrideRef = useRef(startsAtStep2 ? 2 : null)
   const pendingStepRef = useRef(null)
@@ -415,6 +446,16 @@ export default function GameEditor({
     : t('questionnaireIntroDescription')
   const bottlesIntroTitle = t('bottlesIntroTitle')
   const bottlesIntroDescription = t('bottlesIntroDescription')
+
+  const showToast = useCallback((message, tone = 'info', duration = 3200) => {
+    if (!message) return
+    setToast({
+      message,
+      tone,
+      duration,
+      id: `${Date.now()}-${Math.random()}`,
+    })
+  }, [])
 
   async function withSaveTimeout(run, contextLabel, retries = 0, timeoutMs = SAVE_TIMEOUT_MS) {
     let attempt = 0
@@ -643,7 +684,7 @@ export default function GameEditor({
     try {
       validateQuestionnaire(questionDraft, alertMessages)
     } catch (error) {
-      alert(error.message)
+      showToast(error.message, 'error')
       return
     }
 
@@ -691,7 +732,7 @@ export default function GameEditor({
     })
 
     if (bottles.length > 0) {
-      alert(alertMessages.QUESTIONNAIRE_UPDATED)
+      showToast(alertMessages.QUESTIONNAIRE_UPDATED, 'success')
     }
 
     goToStep(3)
@@ -708,7 +749,7 @@ export default function GameEditor({
         throw new Error(alertMessages.USER_NOT_AUTHENTICATED)
       }
     } catch (error) {
-      alert(error.message)
+      showToast(error.message, 'error')
       return
     }
 
@@ -747,7 +788,7 @@ export default function GameEditor({
 
       router.push(`/game/${savedGameId || generatedGameId}/print`)
     } catch (error) {
-      alert(error.message || alertMessages.GAME_SAVE_ERROR)
+      showToast(error.message || alertMessages.GAME_SAVE_ERROR, 'error', 4200)
     } finally {
       setIsSaving(false)
     }
@@ -803,7 +844,7 @@ export default function GameEditor({
         alertMessages,
       )
     } catch (error) {
-      alert(error.message)
+      showToast(error.message, 'error')
       return
     }
 
@@ -943,7 +984,7 @@ export default function GameEditor({
         throw new Error(alertMessages.USER_NOT_AUTHENTICATED)
       }
     } catch (error) {
-      alert(error.message)
+      showToast(error.message, 'error')
       return
     }
 
@@ -952,7 +993,7 @@ export default function GameEditor({
 
     const hardWatchdog = setTimeout(() => {
       setIsSaving(false)
-      alert(`${saveTimeoutMessage} (${savePhaseRef.current || 'unknown-step'})`)
+      showToast(`${saveTimeoutMessage} (${savePhaseRef.current || 'unknown-step'})`, 'error', 5000)
     }, HARD_WATCHDOG_MS)
 
     try {
@@ -990,7 +1031,10 @@ export default function GameEditor({
         1,
       )
 
-      alert(isEditMode ? alertMessages.GAME_UPDATED_SUCCESS : alertMessages.GAME_SAVED_SUCCESS)
+      showToast(
+        isEditMode ? alertMessages.GAME_UPDATED_SUCCESS : alertMessages.GAME_SAVED_SUCCESS,
+        'success',
+      )
 
       if (isEditMode) {
         setSavePhase('redirect-edit')
@@ -1004,7 +1048,7 @@ export default function GameEditor({
       }
     } catch (error) {
       const baseError = error.message || alertMessages.GAME_SAVE_ERROR
-      alert(`${baseError} (${savePhaseRef.current || 'unknown-step'})`)
+      showToast(`${baseError} (${savePhaseRef.current || 'unknown-step'})`, 'error', 5000)
     } finally {
       clearTimeout(hardWatchdog)
       setSavePhase('idle')
@@ -1014,6 +1058,7 @@ export default function GameEditor({
 
   return (
     <div className={styles.editor}>
+      <EditorToast toast={toast} onClose={() => setToast(null)} closeLabel={tCommon('close')} />
       <TopBar
         title={isEditMode ? editorText.topBarEdit : editorText.topBarCreate}
         onBack={() => {
@@ -1081,6 +1126,7 @@ export default function GameEditor({
         onWineTypeChange={setWineType}
         onAnswerChange={handleAnswerChange}
         onSave={concludeBottle}
+        onNotify={showToast}
         onSaveAndAddAnother={() => concludeBottle(true)}
         onCancel={closeModal}
       />
@@ -1091,6 +1137,7 @@ export default function GameEditor({
         questionIndex={editingQuestionIndex}
         question={editingQuestionIndex !== null ? questionDraft[editingQuestionIndex] : null}
         onSave={handleAddQuestion}
+        onNotify={showToast}
         onCancel={closeQuestionModal}
       />
     </div>

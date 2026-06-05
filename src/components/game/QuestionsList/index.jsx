@@ -54,22 +54,24 @@ export default function QuestionsList({
                 <div className={styles.cardInfo}>
                   <div className={styles.cardHeader}>
                     <h4 className={styles.questionText}>{question.text}</h4>
-                    {isLockedInQuickCreate ? (
-                      <span className={styles.lockedBadge}>{text.lockedPlayer}</span>
-                    ) : isNeutral ? (
-                      <span className={styles.lockedBadge}>{text.lockedNeutral}</span>
-                    ) : (
-                      <button
-                        className="btn btn-mini danger btn-only-text"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          if (confirm(text.confirmDelete)) {
-                            onDeleteQuestion(index)
-                          }
-                        }}>
-                        {text.delete}
-                      </button>
-                    )}
+                    <div className={styles.cardActions}>
+                      {isLockedInQuickCreate ? (
+                        <span className={styles.lockedBadge}>{text.lockedPlayer}</span>
+                      ) : null}
+                      {isNeutral ? <span className={styles.lockedBadge}>{text.lockedNeutral}</span> : null}
+                      {!isLockedInQuickCreate ? (
+                        <button
+                          className="btn btn-mini danger btn-only-text"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            if (confirm(text.confirmDelete)) {
+                              onDeleteQuestion(index)
+                            }
+                          }}>
+                          {text.delete}
+                        </button>
+                      ) : null}
+                    </div>
                   </div>
                   <p className={styles.optionsCount}>
                     {isPlayerRating

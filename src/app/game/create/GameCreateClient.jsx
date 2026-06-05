@@ -45,6 +45,43 @@ const TEMPLATE_QUESTION_OPTIONS = {
   price: ['5€', '10€', '20€', '30€', '40€', '60€', '80€'],
 }
 
+function getQuickTemplateQuestions(t, lang = 'it') {
+  return [
+    {
+      id: 'quick-country',
+      text: t('automaticQuestionCountry'),
+      options: TEMPLATE_QUESTION_OPTIONS.country.map((value) => localizeCountryLabel(value, lang)),
+    },
+    {
+      id: 'quick-region',
+      text: t('automaticQuestionRegion'),
+      options: TEMPLATE_QUESTION_OPTIONS.region.map((value) => localizeRegionLabel(value, lang)),
+    },
+    {
+      id: 'quick-grape',
+      text: t('automaticQuestionGrape'),
+      options: TEMPLATE_QUESTION_OPTIONS.grape,
+    },
+    {
+      id: 'quick-vintage',
+      text: t('automaticQuestionVintage'),
+      options: TEMPLATE_QUESTION_OPTIONS.vintage,
+    },
+    {
+      id: 'quick-rating',
+      text: t('automaticQuestionRating'),
+      kind: 'rating',
+      isNeutral: true,
+      options: TEMPLATE_QUESTION_OPTIONS.rating,
+    },
+    {
+      id: 'quick-price',
+      text: t('automaticQuestionPrice'),
+      options: TEMPLATE_QUESTION_OPTIONS.price,
+    },
+  ]
+}
+
 function normalizePriceAnswer(price, min = 5) {
   const numeric = Number(price)
   if (!Number.isFinite(numeric)) return null
@@ -3015,8 +3052,10 @@ export default function GameCreateClient({
 }) {
   const router = useRouter()
   const t = useT('gameCreate')
+  const {lang} = useLanguage()
   const supabase = useMemo(() => createClient(), [])
   const [showOnboarding, setShowOnboarding] = useState(initialShowOnboarding)
+  const quickTemplateQuestions = useMemo(() => getQuickTemplateQuestions(t, lang), [lang, t])
 
   function handlePickMode(nextMode) {
     if (nextMode === 'quick') {
@@ -3081,7 +3120,7 @@ export default function GameCreateClient({
         <Suspense fallback={<Loader label={t('loadingEditor')} />}>
           {mode === 'quick' ? (
             <GameEditor
-              initialQuestions={TEMPLATE_QUESTIONS}
+              initialQuestions={quickTemplateQuestions}
               initialGameName="Indovinando"
               userId={userId}
               avatarOptions={avatarOptions}

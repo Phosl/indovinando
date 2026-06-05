@@ -86,6 +86,15 @@
   }
 }
 
+.cardActions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
 .questionText {
   margin: 0;
   font-size: 1.1rem;

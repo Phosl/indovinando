@@ -271,6 +271,7 @@
     "automaticQuestionRegion": "Region",
     "automaticQuestionGrape": "Grape",
     "automaticQuestionVintage": "Year",
+    "automaticQuestionRating": "What rating would you give this wine?",
     "automaticQuestionBody": "What body does it have?",
     "automaticQuestionAcidity": "What acidity does it have?",
     "automaticQuestionHarmony": "What harmony does it have?",
@@ -924,6 +925,8 @@
   "profile": {
     "title": "Profile",
     "language": "Language",
+    "languageSwitching": "Updating language",
+    "languageSwitchingHint": "One moment while we refresh the profile text.",
     "optionsSection": "Options",
     "howTheAppWorks": "How the app works",
     "howTheAppWorksDesc": "Open the onboarding guide with slides for Create Game, Quick Game, Enoteca, Live and Wine Course.",

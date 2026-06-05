@@ -16,7 +16,7 @@ import styles from './QuestionModal.module.scss'
  * @param {Function} onSave - Callback when saving
  * @param {Function} onCancel - Callback when canceling
  */
-export default function QuestionModal({isOpen, questionIndex, question, onSave, onCancel}) {
+export default function QuestionModal({isOpen, questionIndex, question, onSave, onCancel, onNotify}) {
   const {lang} = useLanguage()
   const text = getQuestionModalText(lang)
   const alertMessages = getAlertMessages(lang)
@@ -59,7 +59,7 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
         questionIndex,
       )
     } catch (error) {
-      alert(error.message)
+      onNotify?.(error.message, 'error')
     }
   }
 

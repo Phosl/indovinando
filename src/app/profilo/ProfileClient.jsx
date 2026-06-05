@@ -11,6 +11,7 @@ import ProgressBar from '@/components/ui/ProgressBar'
 import {useWineCourseProgress} from '@/app/corso-vino/hooks/useWineCourseProgress'
 import {supabaseClient, resetBrowserClient} from '@/lib/supabaseClient'
 import {useT} from '@/lib/i18n/useT'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
 import styles from './profilo.module.scss'
 // ── Player rank levels ────────────────────────────────────────────────────────
 const PLAYER_LEVELS = [
@@ -124,6 +125,7 @@ export default function ProfileClient({
   const router = useRouter()
   const t = useT('profile')
   const tc = useT('common')
+  const {isSwitching} = useLanguage()
   const {progress, loaded} = useWineCourseProgress()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
@@ -346,6 +348,13 @@ export default function ProfileClient({
 
   return (
     <main className={styles.page}>
+      {isSwitching ? (
+        <div className={styles.languageLoadingOverlay} aria-live="polite" aria-busy="true">
+          <p className={styles.languageLoadingTitle}>{t('languageSwitching')}</p>
+          <span className={styles.languageLoadingSpinner} aria-hidden="true" />
+          <p className={styles.languageLoadingHint}>{t('languageSwitchingHint')}</p>
+        </div>
+      ) : null}
       <div className={styles.container}>
         <TopBar title={t('title')} onBack={() => router.push('/dashboard')}></TopBar>
 

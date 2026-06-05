@@ -27,7 +27,6 @@ export default function LanguageSwitcher({inline = false, className = ''}) {
         disabled={isSwitching}>
         ENG
       </button>
-      {isSwitching ? <span className={styles.loader} aria-hidden="true" /> : null}
     </div>
   )
 }
