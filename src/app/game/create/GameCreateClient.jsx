@@ -535,11 +535,12 @@ function formatBytes(value) {
   return `${scaled.toFixed(digits)} ${units[index]}`
 }
 
-function getTokenUsageFromImage(image) {
+function getTokenUsageFromImage(image, previewWebUsage = null) {
   const visionUsage = image?.recognized_payload?.openai_payload?.usage || null
   const webMeta = image?.recognized_payload?.web_enrichment || null
-  const webUsage =
+  const persistedWebUsage =
     webMeta?.restored_from_catalog && !webMeta?.applied ? null : webMeta?.usage || null
+  const webUsage = previewWebUsage || persistedWebUsage
 
   const visionTotal = Number(visionUsage?.total_tokens || 0)
   const webTotal = Number(webUsage?.total_tokens || 0)
@@ -992,6 +993,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [webSearchReview, setWebSearchReview] = useState(null)
   const [isApplyingWebDiff, setIsApplyingWebDiff] = useState(false)
+  const [webPreviewUsageByImageId, setWebPreviewUsageByImageId] = useState({})
   const [quizTemplateMode, setQuizTemplateMode] = useState('standard')
   const [isLeavingSession, setIsLeavingSession] = useState(false)
   const [uploadError, setUploadError] = useState('')
@@ -1516,7 +1518,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
   const autoTastingTokenTotals = useMemo(() => {
     return uploadedImages.reduce(
       (acc, image) => {
-        const usage = getTokenUsageFromImage(image)
+        const usage = getTokenUsageFromImage(image, webPreviewUsageByImageId[image.id] || null)
         acc.vision += usage.vision
         acc.web += usage.web
         acc.total += usage.total
@@ -1525,7 +1527,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
       },
       {vision: 0, web: 0, total: 0, cost: 0},
     )
-  }, [uploadedImages])
+  }, [uploadedImages, webPreviewUsageByImageId])
 
   const analyzedImagesCount = useMemo(
     () => uploadedImages.filter((image) => image.status === 'recognized').length,
@@ -1791,6 +1793,12 @@ function AutomaticModePlaceholder({onBack, userId}) {
     if (analyzingImageId || isAnalyzingAll || webSearchingImageId) return
     setAnalyzingImageId(imageId)
     setUploadError('')
+    setWebPreviewUsageByImageId((prev) => {
+      if (!(imageId in prev)) return prev
+      const next = {...prev}
+      delete next[imageId]
+      return next
+    })
     try {
       const {response, result} = await postJsonWithRetry(
         '/api/auto-tasting/analyze',
@@ -1842,6 +1850,11 @@ function AutomaticModePlaceholder({onBack, userId}) {
       if (previewItems.length > 0) {
         const previewItem = previewItems.find((item) => item.id === imageId) || previewItems[0]
         const proposedRow = previewItem?.proposed || null
+        const previewUsage = proposedRow?.recognized_payload?.web_enrichment?.usage || null
+        setWebPreviewUsageByImageId((prev) => ({
+          ...prev,
+          [imageId]: previewUsage,
+        }))
         const diffs = buildWebSearchDiffs(currentImage || previewItem?.current || null, proposedRow)
 
         if (!diffs.length) {
@@ -1861,6 +1874,12 @@ function AutomaticModePlaceholder({onBack, userId}) {
       const updatedRows = Array.isArray(result?.updated) ? result.updated : []
       if (updatedRows.length === 0) {
         setUploadError(t('automaticWebSearchNoData'))
+        setWebPreviewUsageByImageId((prev) => {
+          if (!(imageId in prev)) return prev
+          const next = {...prev}
+          delete next[imageId]
+          return next
+        })
       }
     } catch (error) {
       setUploadError(`${t('automaticWebSearchError')} (${error?.message || 'unknown'})`)
@@ -1893,6 +1912,12 @@ function AutomaticModePlaceholder({onBack, userId}) {
       setUploadedImages((prev) =>
         prev.map((row) => (row.id === result.updated.id ? result.updated : row)),
       )
+      setWebPreviewUsageByImageId((prev) => {
+        if (!(result.updated.id in prev)) return prev
+        const next = {...prev}
+        delete next[result.updated.id]
+        return next
+      })
       setWebSearchReview(null)
       loadUploadedImages().catch(() => null)
     } catch (error) {
@@ -2513,7 +2538,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
                   image.recognized_payload?.web_enrichment?.reason
                     ? image.recognized_payload.web_enrichment.reason
                     : null
-                const tokenUsage = getTokenUsageFromImage(image)
+                const tokenUsage = getTokenUsageFromImage(
+                  image,
+                  webPreviewUsageByImageId[image.id] || null,
+                )
                 const isVerifyingThis = verifyingImageId === image.id
                 const isWebSearchingThis = webSearchingImageId === image.id
                 const resolvedQuizValues = getResolvedQuizValuesForImage(image, quizPreview, lang)
