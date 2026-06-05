@@ -29,6 +29,16 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.31.0',
+    date: '5 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'polish auto tasting, live flows, and i18n coverage',
+      'fix translation',
+    ],
+  },
+
+  {
     version: '1.30.7',
     date: '5 giugno 2026',
     label: 'Auto',
