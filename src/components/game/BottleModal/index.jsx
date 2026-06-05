@@ -102,12 +102,12 @@ export default function BottleModal({
 
   function validateDetails() {
     if (!bottleName?.trim() || !producer?.trim() || !year?.trim() || !wineType?.trim()) {
-      alert(alertMessages?.BOTTLE_FORM_INCOMPLETE || 'Fill in bottle name, producer, year, and wine type.')
+      alert(alertMessages?.BOTTLE_FORM_INCOMPLETE)
       return false
     }
 
     if ((year || '').trim().length > 4) {
-      alert(alertMessages?.BOTTLE_YEAR_TOO_LONG || 'Bottle year must be at most 4 characters.')
+      alert(alertMessages?.BOTTLE_YEAR_TOO_LONG)
       return false
     }
 
@@ -131,7 +131,7 @@ export default function BottleModal({
       !currentQuestionIsNeutral &&
       (selectedAnswer === null || selectedAnswer === undefined)
     ) {
-      alert(alertMessages?.BOTTLE_ANSWERS_INCOMPLETE || 'Select the correct answer for each question.')
+      alert(alertMessages?.BOTTLE_ANSWERS_INCOMPLETE)
       return
     }
 

@@ -13,7 +13,7 @@ import styles from './liveSessions.module.scss'
 const withSaveTimeout = async (taskOrPromise, contextLabel, timeoutMs = 20000) => {
   const timeoutPromise = new Promise((_, reject) => {
     setTimeout(() => {
-      reject(new Error(`Salvataggio lento. (${contextLabel}). Riprova.`))
+      reject(new Error(`Slow request. (${contextLabel}). Please try again.`))
     }, timeoutMs)
   })
 
@@ -481,7 +481,7 @@ export default function LiveSessionClient({
             {qrDataUrl ? (
               <img src={qrDataUrl} alt="QR sessione" className={styles.qrImage} />
             ) : (
-              <p className={styles.qrHint}>Loading...</p>
+              <p className={styles.qrHint}>{t('qrLoading')}</p>
             )}
             <div className={styles.qrActions}>
               <button className={styles.startButton} onClick={handlePrintQr}>

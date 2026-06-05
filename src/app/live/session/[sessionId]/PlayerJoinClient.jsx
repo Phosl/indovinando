@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, useEffect, useMemo} from 'react'
+import {useState, useEffect, useMemo, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
 import {supabaseClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
@@ -8,6 +8,7 @@ import AvatarDisplay from '@/components/AvatarDisplay'
 import {GAME_AVATARS, profileAvatarToGameId} from '@/lib/avatarUtils'
 import styles from './playerJoin.module.scss'
 import {useT} from '@/lib/i18n/useT'
+import Loader from '@/components/Loader'
 
 const AVATAR_SVG_LIST = GAME_AVATARS.filter((a) => a.type === 'img')
 const AVATAR_EMOJI_LIST = GAME_AVATARS.filter((a) => a.type === 'emoji')
@@ -19,6 +20,7 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
   const [selectedAvatar, setSelectedAvatar] = useState(11) // default to first SVG
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [restoring, setRestoring] = useState(true)
   const [gameStarted, setGameStarted] = useState(false)
   const [players, setPlayers] = useState(existingPlayers)
   const [joinedPlayer, setJoinedPlayer] = useState(null)
@@ -30,6 +32,29 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
   const sessionLink = useMemo(() => {
     if (typeof window === 'undefined') return `/live/session/${sessionId}`
     return `${window.location.origin}/live/session/${sessionId}`
+  }, [sessionId])
+
+  const refreshLobbyState = useCallback(async () => {
+    const [sessionResult, playersResult] = await Promise.all([
+      supabaseClient.from('live_sessions').select('status').eq('id', sessionId).maybeSingle(),
+      supabaseClient
+        .from('live_players')
+        .select('id, nickname, avatar_id, user_id')
+        .eq('session_id', sessionId)
+        .order('joined_at'),
+    ])
+
+    const nextPlayers = Array.isArray(playersResult.data) ? playersResult.data : []
+    setPlayers(nextPlayers)
+
+    if (sessionResult.data?.status === 'playing') {
+      setGameStarted(true)
+    }
+
+    return {
+      session: sessionResult.data,
+      players: nextPlayers,
+    }
   }, [sessionId])
 
   const handleCopyLink = async () => {
@@ -64,94 +89,77 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
 
   useEffect(() => {
     const restorePlayer = async () => {
-      const storedPlayerId = localStorage.getItem(playerStorageKey)
-      const storedNickname = localStorage.getItem(nicknameStorageKey)
+      try {
+        setRestoring(true)
+        const storedPlayerId = localStorage.getItem(playerStorageKey)
+        const storedNickname = localStorage.getItem(nicknameStorageKey)
+        const {session} = await refreshLobbyState()
+        const alreadyPlaying = session?.status === 'playing'
 
-      // Check session status alongside player lookup so we can redirect immediately
-      const {data: session} = await supabaseClient
-        .from('live_sessions')
-        .select('status')
-        .eq('id', sessionId)
-        .maybeSingle()
-      const alreadyPlaying = session?.status === 'playing'
+        const adoptPlayer = async (player) => {
+          if (!player) return false
 
-      if (storedPlayerId) {
-        const {data: byId} = await supabaseClient
-          .from('live_players')
-          .select('id, nickname, avatar_id, user_id')
-          .eq('id', storedPlayerId)
-          .eq('session_id', sessionId)
-          .maybeSingle()
-
-        if (byId) {
-          if (userId && !byId.user_id) {
-            await supabaseClient.from('live_players').update({user_id: userId}).eq('id', byId.id)
-            byId.user_id = userId
+          if (userId && !player.user_id) {
+            await supabaseClient.from('live_players').update({user_id: userId}).eq('id', player.id)
+            player.user_id = userId
           }
+
+          localStorage.setItem(playerStorageKey, player.id)
+          localStorage.setItem(nicknameStorageKey, player.nickname)
 
           if (alreadyPlaying) {
             router.replace(`/live/session/${sessionId}/play`)
-            return
-          }
-          setJoinedPlayer(byId)
-          setNickname(byId.nickname)
-          setSelectedAvatar(byId.avatar_id)
-          return
-        }
-      }
-
-      if (userId) {
-        const {data: byUser} = await supabaseClient
-          .from('live_players')
-          .select('id, nickname, avatar_id, user_id')
-          .eq('session_id', sessionId)
-          .eq('user_id', userId)
-          .limit(1)
-          .maybeSingle()
-
-        if (byUser) {
-          localStorage.setItem(playerStorageKey, byUser.id)
-          localStorage.setItem(nicknameStorageKey, byUser.nickname)
-          if (alreadyPlaying) {
-            router.replace(`/live/session/${sessionId}/play`)
-            return
-          }
-          setJoinedPlayer(byUser)
-          setNickname(byUser.nickname)
-          setSelectedAvatar(byUser.avatar_id)
-          return
-        }
-      }
-
-      if (storedNickname) {
-        const {data: byNickname} = await supabaseClient
-          .from('live_players')
-          .select('id, nickname, avatar_id, user_id')
-          .eq('session_id', sessionId)
-          .eq('nickname', storedNickname)
-          .order('joined_at', {ascending: false})
-          .limit(1)
-          .maybeSingle()
-
-        if (byNickname) {
-          if (userId && !byNickname.user_id) {
-            await supabaseClient
-              .from('live_players')
-              .update({user_id: userId})
-              .eq('id', byNickname.id)
-            byNickname.user_id = userId
+            return true
           }
 
-          localStorage.setItem(playerStorageKey, byNickname.id)
-          setJoinedPlayer(byNickname)
-          setNickname(byNickname.nickname)
-          setSelectedAvatar(byNickname.avatar_id)
+          setJoinedPlayer(player)
+          setNickname(player.nickname)
+          setSelectedAvatar(player.avatar_id)
+          return true
         }
+
+        if (storedPlayerId) {
+          const {data: byId} = await supabaseClient
+            .from('live_players')
+            .select('id, nickname, avatar_id, user_id')
+            .eq('id', storedPlayerId)
+            .eq('session_id', sessionId)
+            .maybeSingle()
+
+          if (await adoptPlayer(byId)) return
+        }
+
+        if (userId) {
+          const {data: byUser} = await supabaseClient
+            .from('live_players')
+            .select('id, nickname, avatar_id, user_id')
+            .eq('session_id', sessionId)
+            .eq('user_id', userId)
+            .limit(1)
+            .maybeSingle()
+
+          if (await adoptPlayer(byUser)) return
+        }
+
+        if (storedNickname) {
+          const {data: byNickname} = await supabaseClient
+            .from('live_players')
+            .select('id, nickname, avatar_id, user_id')
+            .eq('session_id', sessionId)
+            .eq('nickname', storedNickname)
+            .order('joined_at', {ascending: false})
+            .limit(1)
+            .maybeSingle()
+
+          await adoptPlayer(byNickname)
+        }
+      } finally {
+        setRestoring(false)
       }
     }
 
     restorePlayer()
-  }, [nicknameStorageKey, playerStorageKey, sessionId, userId])
+  }, [nicknameStorageKey, playerStorageKey, refreshLobbyState, router, sessionId, userId])
 
   // Preselect profile avatar for logged-in users (only if not already restored from session)
   useEffect(() => {
@@ -172,27 +180,17 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
   // Polling combinato - controlla stato gioco e aggiorna lista giocatori
   useEffect(() => {
     const pollCombined = setInterval(async () => {
-      // Carica session status e giocatori in parallelo
-      const [sessionResult, playersResult] = await Promise.all([
-        supabaseClient.from('live_sessions').select('status').eq('id', sessionId).single(),
-        supabaseClient
-          .from('live_players')
-          .select('nickname, avatar_id')
-          .eq('session_id', sessionId)
-          .order('joined_at'),
-      ])
-
-      if (sessionResult.data?.status === 'playing') {
-        setGameStarted(true)
-      }
-
-      if (playersResult.data) {
-        setPlayers(playersResult.data)
+      try {
+        await refreshLobbyState()
+      } catch {
+        // Keep current UI state and try again on the next tick.
       }
     }, 2000) // Aumentato a 2000ms per ridurre carico DB
 
+    refreshLobbyState().catch(() => {})
+
     return () => clearInterval(pollCombined)
-  }, [sessionId])
+  }, [refreshLobbyState])
 
   // Se il gioco è iniziato, reindirizza alla pagina di gioco
   useEffect(() => {
@@ -227,7 +225,7 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
         .select('id')
         .eq('session_id', sessionId)
         .eq('nickname', nickname.trim())
-        .single()
+        .maybeSingle()
 
       if (existing) {
         setError(t('nicknameTaken'))
@@ -253,6 +251,10 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
       localStorage.setItem(nicknameStorageKey, data.nickname)
       setJoinedPlayer(data)
       setNickname(data.nickname)
+      setPlayers((prev) => {
+        const nextPlayers = Array.isArray(prev) ? prev : []
+        return nextPlayers.some((player) => player.id === data.id) ? nextPlayers : [...nextPlayers, data]
+      })
 
       // Reindirizza a waiting room (stessa pagina ma in attesa)
       setLoading(false)
@@ -270,12 +272,17 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
 
       {tableJoinCode ? (
         <div className={styles.tableCodeBanner}>
-          <span className={styles.tableCodeLabel}>Codice partita</span>
+          <span className={styles.tableCodeLabel}>{t('sessionCodeLabel')}</span>
           <strong className={styles.tableCodeValue}>{tableJoinCode}</strong>
         </div>
       ) : null}
 
-      {gameStarted ? (
+      {restoring ? (
+        <div className={styles.waitingCard}>
+          <Loader label={t('restoringAccess')} />
+          <p>{t('restoringAccessHint')}</p>
+        </div>
+      ) : gameStarted ? (
         <div className={styles.waitingCard}>
           <h2>{t('gameStartingTitle')}</h2>
           <p>{t('gameStartingDesc')}</p>
@@ -368,7 +375,7 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
           </div>
           <div className={styles.inviteCard}>
             <h3>{t('shareTitle')}</h3>
-            {/* <p>{t('shareHint')}</p> */}
+            <p>{t('shareHint')}</p>
 
             <div className={styles.linkRow}>
               <button type="button" className={styles.shareButton} onClick={handleCopyLink}>
