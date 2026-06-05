@@ -2074,6 +2074,11 @@ function AutomaticModePlaceholder({onBack, userId}) {
                 const requiresReview = !!image.recognized_payload?.review?.required
                 const isVerified = !!image.recognized_payload?.verification?.verified
                 const webSearchError = image.recognized_payload?.web_enrichment?.error || null
+                const webSearchSkippedReason =
+                  image.recognized_payload?.web_enrichment?.skipped &&
+                  image.recognized_payload?.web_enrichment?.reason
+                    ? image.recognized_payload.web_enrichment.reason
+                    : null
                 const tokenUsage = getTokenUsageFromImage(image)
                 const isVerifyingThis = verifyingImageId === image.id
                 const isWebSearchingThis = webSearchingImageId === image.id
@@ -2086,6 +2091,19 @@ function AutomaticModePlaceholder({onBack, userId}) {
                   details?.short_description,
                   lang,
                 )
+                const webStatusMessage = isWebSearchingThis
+                  ? t('automaticWebSearchingAction')
+                  : webSearchError
+                    ? webSearchError
+                    : hasWebEvidence
+                      ? t('automaticWebSearchSuccess')
+                      : webSearchSkippedReason === 'catalog_sync_found'
+                        ? t('automaticWebSearchSkippedCatalogSynced')
+                        : webSearchSkippedReason === 'already_enriched'
+                          ? t('automaticWebSearchSkippedAlreadyEnriched')
+                          : webSearchSkippedReason === 'catalog_match_found'
+                            ? t('automaticWebSearchSkippedCatalogMatch')
+                            : null
                 const bottleSpecItems = [
                   primaryGrape
                     ? {label: t('automaticQuestionGrape'), value: primaryGrape}
@@ -2406,6 +2424,11 @@ function AutomaticModePlaceholder({onBack, userId}) {
                               {webSearchError || image.error_message}
                             </span>
                           )}
+                          {webStatusMessage && !webSearchError ? (
+                            <span className={styles.autoModeUploadedError}>
+                              {webStatusMessage}
+                            </span>
+                          ) : null}
                         </div>
                       ) : null}
                     </div>
