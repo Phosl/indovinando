@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.30.6',
+    date: '5 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'fix websearch token',
+    ],
+  },
+
+  {
     version: '1.30.5',
     date: '5 giugno 2026',
     label: 'Auto',
