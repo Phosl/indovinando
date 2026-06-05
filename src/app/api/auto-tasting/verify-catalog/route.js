@@ -95,6 +95,39 @@ function isMissingColumnError(error) {
   )
 }
 
+function chooseBestVintageValue(existingValue, incomingValue, {preferIncoming = false} = {}) {
+  if (preferIncoming && incomingValue != null) return incomingValue
+  return existingValue ?? incomingValue ?? null
+}
+
+function resolveMergedVintageFields(existing, payload) {
+  const hasIncomingRange = payload.price_min != null || payload.price_max != null
+  const hasExistingRange = existing.price_min != null || existing.price_max != null
+  const preferIncomingPrice = hasIncomingRange && !hasExistingRange
+
+  return {
+    price: chooseBestVintageValue(existing.price, payload.price, {
+      preferIncoming: preferIncomingPrice,
+    }),
+    price_min: chooseBestVintageValue(existing.price_min, payload.price_min, {
+      preferIncoming: preferIncomingPrice,
+    }),
+    price_max: chooseBestVintageValue(existing.price_max, payload.price_max, {
+      preferIncoming: preferIncomingPrice,
+    }),
+    currency: chooseBestVintageValue(existing.currency, payload.currency, {
+      preferIncoming: preferIncomingPrice,
+    }),
+    confidence:
+      existing.confidence != null && payload.confidence != null
+        ? Math.max(existing.confidence, payload.confidence)
+        : existing.confidence ?? payload.confidence ?? null,
+    notes: existing.notes || payload.notes,
+    external_id: existing.external_id || payload.external_id,
+    price_band: existing.price_band || payload.price_band,
+  }
+}
+
 async function ensureProducer(db, producerInput) {
   const normalizedName = normalizeCanonicalName(producerInput?.name)
   if (!normalizedName) return null
@@ -427,18 +460,19 @@ async function ensureVintage(db, vintageInput) {
   if (existing?.id) {
     let updated = null
     let updateError = null
+    const merged = resolveMergedVintageFields(existing, payload)
     ;({data: updated, error: updateError} = await withTimeout(
       db
         .from('wine_vintages')
         .update({
-          price: existing.price ?? payload.price,
-          price_min: existing.price_min ?? payload.price_min,
-          price_max: existing.price_max ?? payload.price_max,
-          currency: existing.currency || payload.currency,
-          confidence: existing.confidence ?? payload.confidence,
-          notes: existing.notes || payload.notes,
-          external_id: existing.external_id || payload.external_id,
-          price_band: existing.price_band || payload.price_band,
+          price: merged.price,
+          price_min: merged.price_min,
+          price_max: merged.price_max,
+          currency: merged.currency,
+          confidence: merged.confidence,
+          notes: merged.notes,
+          external_id: merged.external_id,
+          price_band: merged.price_band,
           last_seen_at: payload.last_seen_at,
         })
         .eq('id', existing.id)
@@ -452,10 +486,10 @@ async function ensureVintage(db, vintageInput) {
         db
           .from('wine_vintages')
           .update({
-            price: existing.price ?? payload.price,
-            currency: existing.currency || payload.currency,
-            confidence: existing.confidence ?? payload.confidence,
-            notes: existing.notes || payload.notes,
+            price: merged.price,
+            currency: merged.currency,
+            confidence: merged.confidence,
+            notes: merged.notes,
             last_seen_at: payload.last_seen_at,
           })
           .eq('id', existing.id)

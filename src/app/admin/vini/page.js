@@ -12,7 +12,7 @@ export const metadata = {
 
 const PAGE_SIZE = 100
 const SELECT_WITH_QUIZ_REGION =
-  'id, name, producer, country, region, quiz_region, appellation, quiz_appellation, type, grapes, vintage, abv, price, currency, price_band, quiz_price_band, body, acidity, last_updated'
+  'id, name, producer, country, region, quiz_region, appellation, quiz_appellation, type, grapes, vintage, abv, price, price_min, price_max, currency, price_band, quiz_price_band, body, acidity, last_updated'
 const SELECT_LEGACY_COMPAT =
   'id, name, producer, country, region, appellation, type, grapes, vintage, abv, price, currency, last_updated'
 
@@ -21,8 +21,13 @@ function formatRowMeta(row) {
 }
 
 function formatPrice(row) {
-  if (row.price == null) return 'N/A'
-  return `${row.price}${row.currency ? ` ${row.currency}` : ''}`
+  const currency = row.currency ? ` ${row.currency}` : ''
+  if (row.price_min != null && row.price_max != null) {
+    if (row.price_min === row.price_max) return `${row.price_min}${currency}`
+    return `${row.price_min}-${row.price_max}${currency}`
+  }
+  if (row.price != null) return `${row.price}${currency}`
+  return 'N/A'
 }
 
 function formatGrapes(grapes) {
