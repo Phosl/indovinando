@@ -120,6 +120,7 @@
     "automaticAnalyzeError": "Errore durante l'analisi immagine. Riprova.",
     "automaticVerifyError": "Errore durante la verifica catalogo. Riprova.",
     "automaticWebSearchError": "Errore durante la ricerca web. Riprova.",
+    "automaticWebSearchNoData": "La ricerca web è terminata, ma non ha aggiunto nuovi dati visibili.",
     "automaticAnalyzeAction": "Analizza",
     "automaticAnalyzeAgainAction": "Analizza di nuovo",
     "automaticAnalyzingSingle": "Analisi...",

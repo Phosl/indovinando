@@ -120,6 +120,9 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 - [ ] **se non troviamo l'anno possiamo sempre mettere delle fasce ( magari ipotizzando l'anno )**
 
 - [] **schede vino complete con desc etx**
+- [] **check fai web fa mobile**
+- [] **come fa a trovare il prezzo alla prima analisi** -[] **Migliorare risposte su domande
+  generate**
 
 ### P0 — Stabilità flusso di gioco (iniziamo da qui)
 

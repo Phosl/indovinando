@@ -120,6 +120,7 @@
     "automaticAnalyzeError": "Error while analyzing image. Please try again.",
     "automaticVerifyError": "Error while verifying the catalog entry. Please try again.",
     "automaticWebSearchError": "Error while running web search. Please try again.",
+    "automaticWebSearchNoData": "Web search finished, but it did not add any visible new data.",
     "automaticAnalyzeAction": "Analyze",
     "automaticAnalyzeAgainAction": "Analyze again",
     "automaticAnalyzingSingle": "Analyzing...",

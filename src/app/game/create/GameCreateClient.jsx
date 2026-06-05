@@ -1480,6 +1480,20 @@ function AutomaticModePlaceholder({onBack, userId}) {
       if (updatedRows.length > 0) {
         const map = Object.fromEntries(updatedRows.map((row) => [row.id, row]))
         setUploadedImages((prev) => prev.map((row) => map[row.id] || row))
+        const updatedRow = updatedRows.find((row) => row.id === imageId) || null
+        const hasVisibleWebResult =
+          !!updatedRow?.recognized_payload?.web_enrichment?.applied ||
+          !!updatedRow?.recognized_payload?.web_enrichment?.restored_from_catalog ||
+          (Array.isArray(updatedRow?.recognized_payload?.web_enrichment?.sources) &&
+            updatedRow.recognized_payload.web_enrichment.sources.length > 0) ||
+          !!updatedRow?.recognized_payload?.catalog_details?.why_notable ||
+          !!updatedRow?.recognized_payload?.catalog_details?.short_description
+
+        if (!hasVisibleWebResult) {
+          setUploadError(t('automaticWebSearchNoData'))
+        }
+      } else {
+        setUploadError(t('automaticWebSearchNoData'))
       }
       loadUploadedImages().catch(() => null)
     } catch (error) {
@@ -2049,13 +2063,22 @@ function AutomaticModePlaceholder({onBack, userId}) {
                 const hasCatalogSync = !!image.recognized_payload?.catalog_sync?.synced
                 const hasCatalogPresence = hasMatch || hasCatalogSync
                 const hasWebEnrichment = !!image.recognized_payload?.web_enrichment?.applied
+                const hasWebSources =
+                  Array.isArray(image.recognized_payload?.web_enrichment?.sources) &&
+                  image.recognized_payload.web_enrichment.sources.length > 0
+                const hasWebNarrative =
+                  !!details?.why_notable || !!details?.short_description
+                const hasWebRestored = !!image.recognized_payload?.web_enrichment?.restored_from_catalog
+                const hasWebEvidence =
+                  hasWebEnrichment || hasWebSources || hasWebNarrative || hasWebRestored
                 const requiresReview = !!image.recognized_payload?.review?.required
                 const isVerified = !!image.recognized_payload?.verification?.verified
+                const webSearchError = image.recognized_payload?.web_enrichment?.error || null
                 const tokenUsage = getTokenUsageFromImage(image)
                 const isVerifyingThis = verifyingImageId === image.id
                 const isWebSearchingThis = webSearchingImageId === image.id
                 const resolvedQuizValues = getResolvedQuizValuesForImage(image, quizPreview)
-                const webSources = Array.isArray(image.recognized_payload?.web_enrichment?.sources)
+                const webSources = hasWebSources
                   ? image.recognized_payload.web_enrichment.sources.filter(Boolean)
                   : []
                 const localizedWhyNotable = localizeNarrativeText(details?.why_notable, lang)
@@ -2153,7 +2176,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                 {t('automaticCatalogBadge')}
                               </span>
                             )}
-                            {hasWebEnrichment && !hasCatalogPresence && (
+                            {hasWebEvidence && (
                               <span className={styles.autoModeFeatureBadge}>
                                 <Icon
                                   src="/icons/vision.svg"
@@ -2378,9 +2401,9 @@ function AutomaticModePlaceholder({onBack, userId}) {
                             </div>
                           )}
 
-                          {image.error_message && (
+                          {(image.error_message || webSearchError) && (
                             <span className={styles.autoModeUploadedError}>
-                              {image.error_message}
+                              {webSearchError || image.error_message}
                             </span>
                           )}
                         </div>
