@@ -1,9 +1,13 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {getServerLanguage} from '@/lib/i18n/server'
 import LiveSessionClient from './LiveSessionClient'
 
-export const metadata = {
-  title: 'Sessione Live',
+export async function generateMetadata() {
+  const lang = await getServerLanguage()
+  return {
+    title: lang === 'en' ? 'Live Session' : 'Sessione Live',
+  }
 }
 
 export default async function LiveSessionPage({params}) {

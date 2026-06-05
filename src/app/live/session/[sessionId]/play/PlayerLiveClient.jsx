@@ -1,6 +1,6 @@
 'use client'
 
-import {useCallback, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import Loader from '@/components/Loader'
 import styles from './playerLive.module.scss'
@@ -17,6 +17,7 @@ import {BottleTransitionScreen} from './components/BottleTransitionScreen'
 import {ResultsScreen} from './components/ResultsScreen'
 import {QuestionSlideScreen} from './components/QuestionSlideScreen'
 import {useT} from '@/lib/i18n/useT'
+import {scrollPageTop} from '@/lib/scrollPageTop'
 
 export default function PlayerLiveClient({
   sessionId,
@@ -188,6 +189,10 @@ export default function PlayerLiveClient({
     },
     onAnswerInsert: handleAnswerInsert,
   })
+
+  useEffect(() => {
+    scrollPageTop()
+  }, [currentBottleIndex, currentSlideIndex, roundStatus, showBottleTransition, sessionFinished])
 
   // ── Shared UI atoms ────────────────────────────────────────────────────────
   const topBarProps = playerData

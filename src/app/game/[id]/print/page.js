@@ -1,10 +1,14 @@
 import {notFound, redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {getLocaleText} from '@/lib/i18n/getLocaleText'
+import {getServerLanguage} from '@/lib/i18n/server'
 import styles from './print.module.scss'
 import PrintSheetClient from './PrintSheetClient'
 
 export default async function GamePrintPage({params}) {
   const supabase = await createServerSupabase()
+  const lang = await getServerLanguage()
+  const printText = getLocaleText(lang, 'printSheet', {})
   const resolvedParams = typeof params?.then === 'function' ? await params : params
   const gameId = resolvedParams?.id
 
@@ -37,7 +41,7 @@ export default async function GamePrintPage({params}) {
   if (questionsError) {
     return (
       <main className={styles.page}>
-        <p>Errore caricamento scheda: {questionsError.message}</p>
+        <p>{`${printText.loadError}: ${questionsError.message}`}</p>
       </main>
     )
   }
@@ -71,14 +75,16 @@ export default async function GamePrintPage({params}) {
         <header className={styles.header}>
           <h1>{game.name}</h1>
           <div className={styles.playerRow}>
-            <span>Nome:</span>
+            <span>{`${printText.nameLabel}:`}</span>
             <div className={styles.line} />
           </div>
         </header>
 
         <div className={styles.questionsHeaderCard}>
           <div className={styles.questionsHeaderGrid}>
-            <div className={styles.questionsHeaderLabel}>Domande</div>
+            <div className={styles.questionsHeaderLabel}>
+              {printText.questionsLabel}
+            </div>
             {Array.from({length: 5}).map((_, questionIndex) => {
               const question = questions[questionIndex]
               return (
@@ -115,7 +121,7 @@ export default async function GamePrintPage({params}) {
                           <li key={`opt-${bottleIndex}-${questionIndex}-${optionIndex}`}>
                             <input
                               type="checkbox"
-                              aria-label={`${option} bottiglia ${bottleIndex + 1}`}
+                              aria-label={`${option} ${printText.bottleLabel} ${bottleIndex + 1}`}
                             />
                             <span>{option}</span>
                           </li>

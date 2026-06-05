@@ -1,9 +1,14 @@
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {createClient} from '@supabase/supabase-js'
+import {getLocaleText} from '@/lib/i18n/getLocaleText'
+import {getServerLanguage} from '@/lib/i18n/server'
 import TableLiveLeaderboardClient from './TableLiveLeaderboardClient'
 
-export const metadata = {
-  title: 'Classifica Tavolo',
+export async function generateMetadata() {
+  const lang = await getServerLanguage()
+  return {
+    title: lang === 'en' ? 'Table Leaderboard' : 'Classifica Tavolo',
+  }
 }
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -21,6 +26,8 @@ function createReadClient(fallback) {
 export default async function TableLiveLeaderboardPage({params}) {
   const supabase = await createServerSupabase()
   const db = createReadClient(supabase)
+  const lang = await getServerLanguage()
+  const pageText = getLocaleText(lang, 'gamePlayPage', {})
   const resolvedParams = await Promise.resolve(params)
   const sessionId = resolvedParams.sessionId
 
@@ -38,7 +45,7 @@ export default async function TableLiveLeaderboardPage({params}) {
     return (
       <TableLiveLeaderboardClient
         sessionId={sessionId}
-        gameName="Partita non trovata"
+        gameName={pageText.gameFallback}
         players={[]}
         isAuthenticated={Boolean(user)}
         isHostUser={false}
@@ -73,7 +80,7 @@ export default async function TableLiveLeaderboardPage({params}) {
   return (
     <TableLiveLeaderboardClient
       sessionId={sessionId}
-      gameName={session.games?.name || 'Gioco'}
+      gameName={session.games?.name || pageText.gameFallback}
       players={players || []}
       isAuthenticated={Boolean(user)}
       isHostUser={isHostUser}

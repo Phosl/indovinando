@@ -2,6 +2,23 @@
  * Validation utilities for game editor
  */
 
+const DEFAULT_ALERTS = {
+  GAME_NAME_REQUIRED: 'Enter a game name.',
+  QUESTIONS_REQUIRED: 'Add at least one question to the questionnaire.',
+  BOTTLES_REQUIRED: 'Save at least one bottle.',
+  INCOMPLETE_BOTTLES:
+    'Some bottles have missing answers. Open them and complete all answers before saving.',
+  BOTTLE_FORM_INCOMPLETE: 'Fill in bottle name, producer, year, and wine type.',
+  BOTTLE_YEAR_TOO_LONG: 'Bottle year must be at most 4 characters.',
+  BOTTLE_ANSWERS_INCOMPLETE: 'Select the correct answer for each question.',
+  QUESTION_TEXT_REQUIRED: 'Enter the question text.',
+  OPTIONS_REQUIRED: 'All options must be filled in.',
+}
+
+function getAlertMessage(messages, key) {
+  return messages?.[key] || DEFAULT_ALERTS[key] || 'Validation error.'
+}
+
 function normalizeQuestionLabel(value) {
   return String(value || '')
     .trim()
@@ -60,26 +77,24 @@ export const isBottleComplete = (bottle, questionsOrLength) => {
 
 export const validateGameName = (name, messages) => {
   if (!name.trim()) {
-    throw new Error(messages?.GAME_NAME_REQUIRED || 'Inserisci il nome del gioco.')
+    throw new Error(getAlertMessage(messages, 'GAME_NAME_REQUIRED'))
   }
 }
 
 export const validateQuestionnaire = (questions, messages) => {
   if (questions.length === 0) {
-    throw new Error(messages?.QUESTIONS_REQUIRED || 'Aggiungi almeno una domanda al questionario.')
+    throw new Error(getAlertMessage(messages, 'QUESTIONS_REQUIRED'))
   }
 }
 
 export const validateBottles = (bottles, questions, messages) => {
   if (bottles.length === 0) {
-    throw new Error(messages?.BOTTLES_REQUIRED || 'Devi aggiungere almeno una bottiglia.')
+    throw new Error(getAlertMessage(messages, 'BOTTLES_REQUIRED'))
   }
 
   const hasTooLongYear = bottles.some((bottle) => (bottle?.year || '').trim().length > 4)
   if (hasTooLongYear) {
-    throw new Error(
-      messages?.BOTTLE_YEAR_TOO_LONG || "L'anno della bottiglia deve avere massimo 4 caratteri.",
-    )
+    throw new Error(getAlertMessage(messages, 'BOTTLE_YEAR_TOO_LONG'))
   }
 
   const hasIncompleteBottle = bottles.some(
@@ -93,10 +108,7 @@ export const validateBottles = (bottles, questions, messages) => {
   )
 
   if (hasIncompleteBottle) {
-    throw new Error(
-      messages?.INCOMPLETE_BOTTLES ||
-        'Ci sono bottiglie con risposte mancanti. Aprile e completa tutte le risposte prima di salvare.',
-    )
+    throw new Error(getAlertMessage(messages, 'INCOMPLETE_BOTTLES'))
   }
 }
 
@@ -113,15 +125,11 @@ export const validateBottleForm = (
     !bottleName?.trim() || !producer?.trim() || !year?.trim() || !wineType?.trim()
 
   if (isBottleMetaMissing) {
-    throw new Error(
-      messages?.BOTTLE_FORM_INCOMPLETE || 'Compila nome bottiglia, produttore e anno.',
-    )
+    throw new Error(getAlertMessage(messages, 'BOTTLE_FORM_INCOMPLETE'))
   }
 
   if ((year || '').trim().length > 4) {
-    throw new Error(
-      messages?.BOTTLE_YEAR_TOO_LONG || "L'anno della bottiglia deve avere massimo 4 caratteri.",
-    )
+    throw new Error(getAlertMessage(messages, 'BOTTLE_YEAR_TOO_LONG'))
   }
 
   if (
@@ -131,18 +139,16 @@ export const validateBottleForm = (
       return answer === null || answer === undefined
     })
   ) {
-    throw new Error(
-      messages?.BOTTLE_ANSWERS_INCOMPLETE || 'Seleziona la risposta corretta per ogni domanda.',
-    )
+    throw new Error(getAlertMessage(messages, 'BOTTLE_ANSWERS_INCOMPLETE'))
   }
 }
 
 export const validateQuestionForm = (questionText, options, messages) => {
   if (!questionText.trim()) {
-    throw new Error(messages?.QUESTION_TEXT_REQUIRED || 'Inserisci il testo della domanda.')
+    throw new Error(getAlertMessage(messages, 'QUESTION_TEXT_REQUIRED'))
   }
 
   if (options.some((o) => !o.trim())) {
-    throw new Error(messages?.OPTIONS_REQUIRED || 'Tutte le opzioni devono essere compilate.')
+    throw new Error(getAlertMessage(messages, 'OPTIONS_REQUIRED'))
   }
 }

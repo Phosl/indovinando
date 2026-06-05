@@ -9,6 +9,7 @@ import Icon from '@/components/Icon'
 // Reuse live-game stylesheet directly – no duplicate CSS
 import styles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
 import {useGameAudio} from '../../../live/session/[sessionId]/play/hooks/useGameAudio'
+import {scrollPageTop} from '@/lib/scrollPageTop'
 
 const POINTS_CORRECT = 25
 const SLIDE_TRANSITION_MS = 220
@@ -329,6 +330,10 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
     handleGoNextBottle,
     handleAdvanceFromTransition,
   ])
+
+  useEffect(() => {
+    scrollPageTop()
+  }, [bottleIndex, questionIndex, screen])
 
   if (loading) {
     return (

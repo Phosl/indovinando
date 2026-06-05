@@ -43,7 +43,7 @@ export const TopBar = memo(function TopBar({
 
       <div className={styles.topActions}>
         <button className={styles.audioButton} onClick={onToggleAudio}>
-          {audioEnabled ? '🔊 ON' : '🔇 OFF'}
+          {audioEnabled ? `🔊 ${t('audioOn')}` : `🔇 ${t('audioOff')}`}
         </button>
         <button className={styles.leaderboardButton} onClick={onOpenLeaderboard}>
           {t('leaderboard')}

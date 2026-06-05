@@ -17,6 +17,7 @@ function QuestionnaireIntroModal({
   title,
   description,
   questionsLabel,
+  questionFallbackLabel,
   closeLabel,
   disableLabel,
 }) {
@@ -32,7 +33,7 @@ function QuestionnaireIntroModal({
             <ul className={modalStyles.quickList}>
               {questions.map((q, i) => (
                 <li key={i} className={modalStyles.quickListItem}>
-                  {q.text || `Domanda ${i + 1}`}
+                  {q.text || `${questionFallbackLabel} ${i + 1}`}
                 </li>
               ))}
             </ul>
@@ -1049,6 +1050,7 @@ export default function GameEditor({
         title={questionnaireIntroTitle}
         description={questionnaireIntroDescription}
         questionsLabel={t('questionnaireIntroQuestionsLabel')}
+        questionFallbackLabel={t('questionFallbackLabel')}
         closeLabel={tCommon('done')}
         disableLabel={t('dontShowAgain')}
       />

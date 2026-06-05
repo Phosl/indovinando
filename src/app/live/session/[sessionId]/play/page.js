@@ -1,8 +1,12 @@
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {getServerLanguage} from '@/lib/i18n/server'
 import PlayerLiveClient from './PlayerLiveClient'
 
-export const metadata = {
-  title: 'Play',
+export async function generateMetadata() {
+  const lang = await getServerLanguage()
+  return {
+    title: lang === 'en' ? 'Play Live' : 'Gioca Live',
+  }
 }
 
 export default async function PlayerPlayPage({params}) {

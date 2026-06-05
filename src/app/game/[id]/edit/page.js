@@ -3,11 +3,15 @@ import {revalidatePath} from 'next/cache'
 import {Suspense} from 'react'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getGameAvatarOptions} from '@/lib/gameAvatarOptions'
+import {getServerLanguage} from '@/lib/i18n/server'
 import GameEditClient from './GameEditClient'
 import GameEditLoading from './loading'
 
-export const metadata = {
-  title: 'Modifica Gioco',
+export async function generateMetadata() {
+  const lang = await getServerLanguage()
+  return {
+    title: lang === 'en' ? 'Edit Game' : 'Modifica Gioco',
+  }
 }
 
 async function revalidateGamePage(gameId) {

@@ -1,12 +1,19 @@
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {getLocaleText} from '@/lib/i18n/getLocaleText'
+import {getServerLanguage} from '@/lib/i18n/server'
 import PlayerJoinClient from './PlayerJoinClient'
 
-export const metadata = {
-  title: 'Entra nella partita',
+export async function generateMetadata() {
+  const lang = await getServerLanguage()
+  return {
+    title: lang === 'en' ? 'Join the Game' : 'Entra nella partita',
+  }
 }
 
 export default async function PlayerJoinPage({params}) {
   const supabase = await createServerSupabase()
+  const lang = await getServerLanguage()
+  const pageText = getLocaleText(lang, 'gamePlayPage', {})
   const resolvedParams = await Promise.resolve(params)
   const sessionId = resolvedParams.sessionId
 
@@ -44,7 +51,7 @@ export default async function PlayerJoinPage({params}) {
   return (
     <PlayerJoinClient
       sessionId={sessionId}
-      gameName={session?.games?.name || 'Gioco'}
+      gameName={session?.games?.name || pageText.gameFallback}
       existingPlayers={players || []}
       userId={user?.id || null}
       tableJoinCode={tableLiveSession?.join_code || ''}

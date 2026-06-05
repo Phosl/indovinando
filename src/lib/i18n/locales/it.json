@@ -351,7 +351,10 @@
   "gamePlayPage": {
     "title": "Dettaglio Degustazione",
     "deleteConfirm": "Sei sicuro di voler eliminare questo gioco? Non sara recuperabile.",
-    "delete": "Elimina"
+    "delete": "Elimina",
+    "gameFallback": "Gioco",
+    "loadErrorTitle": "Errore caricamento partita",
+    "backToGames": "Torna indietro"
   },
   "gamePlayViewActions": {
     "history": "Storico degustazioni",
@@ -412,7 +415,15 @@
   "printSheet": {
     "title": "Stampa",
     "addResults": "Inserisci risultati",
-    "print": "Stampa"
+    "print": "Stampa",
+    "loadError": "Errore caricamento scheda",
+    "downloadPdf": "Scarica scheda PDF",
+    "pdfError": "Errore durante la generazione del PDF",
+    "dateLabel": "Data",
+    "nameLabel": "Nome",
+    "questionsLabel": "Domande",
+    "bottleLabel": "bottiglia",
+    "bottleTitle": "Bottiglia"
   },
   "lesson": {
     "exitLesson": "Esci dalla lezione",
@@ -587,6 +598,7 @@
     "questionnaireIntroDescription": "Adesso creiamo il questionario: aggiungi le domande e le risposte.",
     "questionnaireIntroQuickDescription": "Abbiamo preparato già il questionario con 5 domande. Puoi modificare le risposte a piacere.",
     "questionnaireIntroQuestionsLabel": "Domande predefinite:",
+    "questionFallbackLabel": "Domanda",
     "bottlesIntroTitle": "Aggiungi bottiglia",
     "bottlesIntroDescription": "Inserisci i dettagli della bottiglia, poi scegli il tipo vino e completa le risposte corrette per ogni domanda.",
     "avatarPickerTitle": "Scegli immagine degustazione",
@@ -795,11 +807,19 @@
       "bottleWord": "bottiglia!"
     },
     "topBar": {
+      "audioOn": "ON",
+      "audioOff": "OFF",
       "leaderboard": "Classifica",
       "exitGame": "Esci dal gioco"
     },
     "playerJoin": {
       "enterNickname": "Inserisci un nickname",
+      "hostFallback": "Host",
+      "sessionNotFound": "Sessione non trovata",
+      "networkError": "Errore di rete",
+      "startFailed": "Errore nell'avvio del gioco. Riprova.",
+      "answerFailed": "Invio risposta fallito",
+      "shareFallbackTitle": "Partita tavolo",
       "shareTitle": "Invita giocatori",
       "shareHint": "Condividi questo link per far entrare altri giocatori nella sessione.",
       "sessionCodeLabel": "Codice partita",

@@ -348,7 +348,10 @@
   "gamePlayPage": {
     "title": "Tasting Details",
     "deleteConfirm": "Are you sure you want to delete this game? It cannot be recovered.",
-    "delete": "Delete"
+    "delete": "Delete",
+    "gameFallback": "Game",
+    "loadErrorTitle": "Error loading game",
+    "backToGames": "Go back"
   },
   "gamePlayViewActions": {
     "history": "Tasting history",
@@ -409,7 +412,15 @@
   "printSheet": {
     "title": "Print Card",
     "addResults": "Add results",
-    "print": "Print"
+    "print": "Print",
+    "loadError": "Error loading print sheet",
+    "downloadPdf": "Download PDF sheet",
+    "pdfError": "Error while generating the PDF",
+    "dateLabel": "Date",
+    "nameLabel": "Name",
+    "questionsLabel": "Questions",
+    "bottleLabel": "bottle",
+    "bottleTitle": "Bottle"
   },
   "lesson": {
     "exitLesson": "Exit lesson",
@@ -584,6 +595,7 @@
     "questionnaireIntroDescription": "Now let's build the questionnaire: add the questions and answers.",
     "questionnaireIntroQuickDescription": "We already prepared the questionnaire with 5 questions. You can edit the answers as you like.",
     "questionnaireIntroQuestionsLabel": "Predefined questions:",
+    "questionFallbackLabel": "Question",
     "bottlesIntroTitle": "Add bottle",
     "bottlesIntroDescription": "Enter the bottle details, then choose the wine type and complete the correct answers for each question.",
     "avatarPickerTitle": "Choose tasting image",
@@ -792,11 +804,19 @@
       "bottleWord": "bottle!"
     },
     "topBar": {
+      "audioOn": "ON",
+      "audioOff": "OFF",
       "leaderboard": "Leaderboard",
       "exitGame": "Exit game"
     },
     "playerJoin": {
       "enterNickname": "Enter a nickname",
+      "hostFallback": "Host",
+      "sessionNotFound": "Session not found",
+      "networkError": "Network error",
+      "startFailed": "Failed to start the game. Please try again.",
+      "answerFailed": "Failed to submit answer",
+      "shareFallbackTitle": "Table game",
       "shareTitle": "Invite players",
       "shareHint": "Share this link to let other players join this session.",
       "sessionCodeLabel": "Game code",

@@ -1,13 +1,20 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {getLocaleText} from '@/lib/i18n/getLocaleText'
+import {getServerLanguage} from '@/lib/i18n/server'
 import LeaderboardClient from './LeaderboardClient'
 
-export const metadata = {
-  title: 'Classifica finale',
+export async function generateMetadata() {
+  const lang = await getServerLanguage()
+  return {
+    title: lang === 'en' ? 'Final Leaderboard' : 'Classifica finale',
+  }
 }
 
 export default async function LeaderboardPage({params}) {
   const supabase = await createServerSupabase()
+  const lang = await getServerLanguage()
+  const pageText = getLocaleText(lang, 'gamePlayPage', {})
   const resolvedParams = await Promise.resolve(params)
   const sessionId = resolvedParams.sessionId
   const {
@@ -50,7 +57,7 @@ export default async function LeaderboardPage({params}) {
   return (
     <LeaderboardClient
       sessionId={sessionId}
-      gameName={session.games?.name || 'Gioco'}
+      gameName={session.games?.name || pageText.gameFallback}
       players={players || []}
       isAuthenticated={Boolean(user)}
       isHostUser={isHostUser}

@@ -1,11 +1,13 @@
 import {useState, useCallback, useEffect} from 'react'
 import {supabaseClient} from '@/lib/supabaseClient'
+import {useT} from '@/lib/i18n/useT'
 
 /**
  * Resolves the current player record from localStorage / Supabase.
  * Auto-creates a host record when isHostUser=true and no record is found.
  */
 export function usePlayerResolver({sessionId, userId, isHostUser, initialPlayerData = null}) {
+  const tJoin = useT('live.playerJoin')
   const playerStorageKey = `live_player_id_${sessionId}`
   const nicknameStorageKey = `live_player_nickname_${sessionId}`
 
@@ -94,7 +96,7 @@ export function usePlayerResolver({sessionId, userId, isHostUser, initialPlayerD
           .from('live_players')
           .insert({
             session_id: sessionId,
-            nickname: 'Host',
+            nickname: tJoin('hostFallback'),
             avatar_id: 1,
             user_id: userId,
             is_host: true,
@@ -114,7 +116,7 @@ export function usePlayerResolver({sessionId, userId, isHostUser, initialPlayerD
     } finally {
       setResolvingPlayer(false)
     }
-  }, [isHostUser, nicknameStorageKey, playerStorageKey, sessionId, userId])
+  }, [isHostUser, nicknameStorageKey, playerStorageKey, sessionId, userId, tJoin])
 
   useEffect(() => {
     resolvePlayer()

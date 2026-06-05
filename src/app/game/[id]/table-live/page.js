@@ -1,9 +1,13 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {getServerLanguage} from '@/lib/i18n/server'
 import TableLiveModeClient from './TableLiveModeClient'
 
-export const metadata = {
-  title: 'Live Tavoli',
+export async function generateMetadata() {
+  const lang = await getServerLanguage()
+  return {
+    title: lang === 'en' ? 'Table Live' : 'Live Tavoli',
+  }
 }
 
 export default async function TableLiveModePage({params}) {
@@ -31,4 +35,3 @@ export default async function TableLiveModePage({params}) {
 
   return <TableLiveModeClient gameId={game.id} gameName={game.name} />
 }
-

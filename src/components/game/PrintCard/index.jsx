@@ -3,10 +3,12 @@
 import {useRef} from 'react'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
+import {useT} from '@/lib/i18n/useT'
 import styles from './PrintCard.module.scss'
 
 export default function PrintCard({game, questions, bottles}) {
   const printRef = useRef(null)
+  const t = useT('printSheet')
 
   const handlePrint = async () => {
     if (!printRef.current) return
@@ -45,17 +47,17 @@ export default function PrintCard({game, questions, bottles}) {
         heightLeft -= pdfHeight
       }
 
-      pdf.save(`${game.name || 'scheda'}.pdf`)
+      pdf.save(`${game.name || 'sheet'}.pdf`)
     } catch (error) {
-      console.error('Errore durante la generazione del PDF:', error)
-      alert('Errore durante la generazione del PDF')
+      console.error(`${t('pdfError')}:`, error)
+      alert(t('pdfError'))
     }
   }
 
   return (
     <>
       <button onClick={handlePrint} className={styles.printButton}>
-        📄 Scarica Scheda PDF
+        {`📄 ${t('downloadPdf')}`}
       </button>
 
       <div className={styles.printContainer} ref={printRef}>
@@ -63,11 +65,11 @@ export default function PrintCard({game, questions, bottles}) {
           <h1>Indovinando</h1>
           <div className={styles.infoSection}>
             <div className={styles.infoField}>
-              <label>Data:</label>
+              <label>{`${t('dateLabel')}:`}</label>
               <div className={styles.underline}></div>
             </div>
             <div className={styles.infoField}>
-              <label>Nome:</label>
+              <label>{`${t('nameLabel')}:`}</label>
               <div className={styles.underline}></div>
             </div>
           </div>
@@ -81,7 +83,7 @@ export default function PrintCard({game, questions, bottles}) {
                   <div className={styles.bottleIcon}>🍷</div>
                   <div className={styles.bottleInfo}>
                     <div className={styles.bottleLabel}>
-                      {bottle.name || `Bottiglia ${bottleIndex + 1}`}
+                      {bottle.name || `${t('bottleTitle')} ${bottleIndex + 1}`}
                     </div>
                     {bottle.producer && (
                       <div className={styles.bottleProducer}>{bottle.producer}</div>

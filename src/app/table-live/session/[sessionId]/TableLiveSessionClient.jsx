@@ -11,6 +11,7 @@ import {GameOverlays} from '@/app/live/session/[sessionId]/play/components/GameO
 import {useT} from '@/lib/i18n/useT'
 import AvatarDisplay from '@/components/AvatarDisplay'
 import Loader from '@/components/Loader'
+import {scrollPageTop} from '@/lib/scrollPageTop'
 import styles from '@/app/live/session/[sessionId]/play/playerLive.module.scss'
 import joinStyles from '@/app/live/session/[sessionId]/playerJoin.module.scss'
 
@@ -86,7 +87,7 @@ export default function TableLiveSessionClient({sessionId}) {
       })
       const payload = await response.json().catch(() => null)
       if (!response.ok || !payload?.session) {
-        if (isMountedRef.current) setError(payload?.error || 'Sessione non trovata')
+        if (isMountedRef.current) setError(payload?.error || tJoin('sessionNotFound'))
         return
       }
 
@@ -105,12 +106,12 @@ export default function TableLiveSessionClient({sessionId}) {
         }
       }
     } catch {
-      if (isMountedRef.current) setError('Errore di rete')
+      if (isMountedRef.current) setError(tJoin('networkError'))
     } finally {
       if (isMountedRef.current) setLoading(false)
       inFlightRef.current = false
     }
-  }, [sessionId, playerAuth?.playerId, playerAuth?.playerToken, lastBottleIndexSeen])
+  }, [sessionId, playerAuth?.playerId, playerAuth?.playerToken, lastBottleIndexSeen, tJoin])
 
   useEffect(() => {
     isMountedRef.current = true
@@ -252,6 +253,10 @@ export default function TableLiveSessionClient({sessionId}) {
     return () => clearInterval(id)
   }, [leaderboardOpen, fetchStandings])
 
+  useEffect(() => {
+    scrollPageTop()
+  }, [currentBottleIndex, slideIndex, data?.session?.status, starting, clickedReady])
+
   const handleStart = async () => {
     if (!data?.me?.isHost || starting || !playerAuth) return
     setStarting(true)
@@ -267,7 +272,7 @@ export default function TableLiveSessionClient({sessionId}) {
       })
       const payload = await response.json().catch(() => null)
       if (!response.ok) {
-        setError(payload?.error || 'Avvio partita fallito')
+        setError(payload?.error || tJoin('startFailed'))
         setStarting(false)
         return
       }
@@ -279,7 +284,7 @@ export default function TableLiveSessionClient({sessionId}) {
         }))
       }
     } catch {
-      setError('Errore di rete')
+      setError(tJoin('networkError'))
       setStarting(false)
     }
   }
@@ -313,7 +318,7 @@ export default function TableLiveSessionClient({sessionId}) {
       })
       const payload = await response.json().catch(() => null)
       if (!response.ok) {
-        setError(payload?.error || 'Invio risposta fallito')
+        setError(payload?.error || tJoin('answerFailed'))
         playSound('wrong')
         return
       }
@@ -327,7 +332,7 @@ export default function TableLiveSessionClient({sessionId}) {
       }))
       loadSession()
     } catch {
-      setError('Errore di rete')
+      setError(tJoin('networkError'))
     } finally {
       setChecking(false)
     }
@@ -405,8 +410,8 @@ export default function TableLiveSessionClient({sessionId}) {
     try {
       if (navigator.share) {
         await navigator.share({
-          title: data?.event?.title || 'Partita Tavolo',
-          text: `Codice partita ${data?.session?.joinCode || ''}`,
+          title: data?.event?.title || tJoin('shareFallbackTitle'),
+          text: `${tJoin('sessionCodeLabel')} ${data?.session?.joinCode || ''}`,
           url: sessionLink,
         })
         return
@@ -416,7 +421,7 @@ export default function TableLiveSessionClient({sessionId}) {
     }
     window.open(
       `https://wa.me/?text=${encodeURIComponent(
-        `${data?.event?.title || 'Partita Tavolo'} · ${sessionLink}`,
+        `${data?.event?.title || tJoin('shareFallbackTitle')} · ${sessionLink}`,
       )}`,
       '_blank',
       'noopener,noreferrer',
@@ -457,7 +462,7 @@ export default function TableLiveSessionClient({sessionId}) {
         <div className={styles.centeredCard}>
           <h2>{tPlayerLive('participantNotFound')}</h2>
           <button className={styles.checkButton} onClick={() => router.push('/')}>
-            Home
+            {tResults('home')}
           </button>
         </div>
       </div>
