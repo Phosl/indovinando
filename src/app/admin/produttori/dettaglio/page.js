@@ -2,6 +2,8 @@ import TopBarBack from '@/components/TopBarBack'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {requireSuperAdmin} from '@/lib/courseAdmin'
 import {formatAppDate} from '@/lib/dateFormat'
+import {getLocaleText} from '@/lib/i18n/getLocaleText'
+import {getServerLanguage} from '@/lib/i18n/server'
 import Link from 'next/link'
 import ProduttoreDettaglioFiltersClient from '../../catalog/ProduttoreDettaglioFiltersClient'
 import styles from '../../catalog/catalog.module.scss'
@@ -25,6 +27,8 @@ function formatGrapes(grapes) {
 export default async function AdminProduttoreDettaglioPage({searchParams}) {
   await requireSuperAdmin()
 
+  const lang = await getServerLanguage()
+  const t = getLocaleText(lang, 'admin.catalog', {})
   const params = await searchParams
   const producerId = params?.producerId ? String(params.producerId).trim() : ''
   const producerFromQuery = params?.producer ? String(params.producer).trim() : ''
@@ -76,24 +80,31 @@ export default async function AdminProduttoreDettaglioPage({searchParams}) {
   return (
     <main className={styles.page}>
       <TopBarBack
-        title={producer ? `Produttore: ${producer}` : 'Produttore'}
+        title={
+          producer
+            ? (t.producerTitleWithName || 'Produttore: {name}').replace('{name}', producer)
+            : t.producerTitle || 'Produttore'
+        }
         href="/admin/produttori"
       />
 
       <div className={styles.container}>
         <div className={styles.header}>
-          <h2 className={styles.sectionTitle}>Lista bottiglie</h2>
+          <h2 className={styles.sectionTitle}>{t.bottlesListTitle || 'Lista bottiglie'}</h2>
           <p className={styles.hint}>
             {totalRows
-              ? `Mostrate ${pageStart}-${pageEnd} di ${totalRows} bottiglie.`
-              : 'Nessuna bottiglia trovata.'}
+              ? (t.bottlesRange || 'Mostrate {start}-{end} di {total} bottiglie.')
+                  .replace('{start}', String(pageStart))
+                  .replace('{end}', String(pageEnd))
+                  .replace('{total}', String(totalRows))
+              : t.noBottlesFound || 'Nessuna bottiglia trovata.'}
           </p>
         </div>
         <ProduttoreDettaglioFiltersClient producerId={producerId} q={q} type={type} />
 
-        {error ? <p className={styles.empty}>Errore: {error.message}</p> : null}
+        {error ? <p className={styles.empty}>{`${t.errorLabel || 'Errore'}: ${error.message}`}</p> : null}
         {!error && !(rows || []).length ? (
-          <p className={styles.empty}>Nessuna bottiglia trovata.</p>
+          <p className={styles.empty}>{t.noBottlesFound || 'Nessuna bottiglia trovata.'}</p>
         ) : null}
 
         {!error && !!(rows || []).length ? (
@@ -103,30 +114,30 @@ export default async function AdminProduttoreDettaglioPage({searchParams}) {
                 <div className={styles.cardHead}>
                   <div>
                     <p className={styles.title}>{row.name}</p>
-                    <p className={styles.subtitle}>{row.appellation || 'Appellation N/A'}</p>
+                    <p className={styles.subtitle}>{row.appellation || t.appellationEmpty || 'Appellation N/A'}</p>
                   </div>
                   <p className={styles.metaText}>
-                    {formatAppDate(row.last_updated, 'it') || 'Data N/A'}
+                    {formatAppDate(row.last_updated, lang) || t.dateEmpty || 'Data N/A'}
                   </p>
                 </div>
 
                 <div className={styles.pillRow}>
                   <span className={`${styles.pill} ${styles.pillStrong}`}>
-                    Tipo: {row.type || 'N/A'}
+                    {(t.typeLabel || 'Tipo') + ': '} {row.type || 'N/A'}
                   </span>
-                  <span className={styles.pill}>Annata: {row.vintage || 'N/A'}</span>
-                  <span className={styles.pill}>Prezzo: {formatPrice(row)}</span>
+                  <span className={styles.pill}>{(t.vintageLabel || 'Annata') + ': '} {row.vintage || 'N/A'}</span>
+                  <span className={styles.pill}>{(t.priceLabel || 'Prezzo') + ': '} {formatPrice(row)}</span>
                 </div>
 
                 <div className={styles.grid}>
                   <div className={styles.gridItem}>
-                    <span className={styles.label}>Paese / Regione</span>
+                    <span className={styles.label}>{t.countryRegionLabel || 'Paese / Regione'}</span>
                     <span className={styles.value}>
                       {[row.country, row.region].filter(Boolean).join(' - ') || 'N/A'}
                     </span>
                   </div>
                   <div className={styles.gridItem}>
-                    <span className={styles.label}>Vitigni</span>
+                    <span className={styles.label}>{t.grapesLabel || 'Vitigni'}</span>
                     <span className={styles.value}>{formatGrapes(row.grapes)}</span>
                   </div>
                   <div className={styles.gridItem}>
@@ -134,7 +145,7 @@ export default async function AdminProduttoreDettaglioPage({searchParams}) {
                     <span className={styles.value}>{row.abv != null ? `${row.abv}%` : 'N/A'}</span>
                   </div>
                   <div className={styles.gridItem}>
-                    <span className={styles.label}>Produttore</span>
+                    <span className={styles.label}>{t.producerLabel || 'Produttore'}</span>
                     <span className={styles.value}>{row.producer || 'N/A'}</span>
                   </div>
                 </div>
@@ -150,10 +161,12 @@ export default async function AdminProduttoreDettaglioPage({searchParams}) {
               tabIndex={currentPage <= 1 ? -1 : 0}
               href={currentPage <= 1 ? makePageHref(1) : makePageHref(currentPage - 1)}
               className={`${styles.pageButton} ${currentPage <= 1 ? styles.pageButtonDisabled : ''}`}>
-              Indietro
+              {t.backPagination || 'Indietro'}
             </Link>
             <span className={styles.pageInfo}>
-              Pagina {currentPage} di {totalPages}
+              {(t.pageInfo || 'Pagina {current} di {total}')
+                .replace('{current}', String(currentPage))
+                .replace('{total}', String(totalPages))}
             </span>
             <Link
               aria-disabled={currentPage >= totalPages}
@@ -162,7 +175,7 @@ export default async function AdminProduttoreDettaglioPage({searchParams}) {
                 currentPage >= totalPages ? makePageHref(totalPages) : makePageHref(currentPage + 1)
               }
               className={`${styles.pageButton} ${currentPage >= totalPages ? styles.pageButtonDisabled : ''}`}>
-              Avanti
+              {t.nextPagination || 'Avanti'}
             </Link>
           </div>
         ) : null}

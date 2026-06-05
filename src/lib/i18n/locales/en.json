@@ -2,6 +2,7 @@
   "common": {
     "back": "Back",
     "cancel": "Cancel",
+    "close": "Close",
     "exit": "Exit",
     "loading": "Loading...",
     "saving": "Saving...",
@@ -74,6 +75,102 @@
       "points": "pt",
       "showAll": "Show all",
       "allGames": "All"
+    }
+  },
+  "landing": {
+    "hero": {
+      "badge": "🍷 Wine Tasting Game",
+      "title": "Turn a wine tasting into a game.",
+      "subtitle": "Create blind tastings, challenge friends and customers, discover wines with AI, and learn while having fun.",
+      "primaryCta": "Start free",
+      "secondaryCta": "See how it works"
+    },
+    "features": {
+      "eyebrow": "How it works",
+      "title": "From table to tasting game in under a minute",
+      "items": [
+        {
+          "icon": "🍷",
+          "title": "Scan the bottles",
+          "description": "AI recognizes the label, producer, vintage, and key wine characteristics."
+        },
+        {
+          "icon": "🎮",
+          "title": "Generate the quiz",
+          "description": "Create an interactive tasting quiz automatically in seconds."
+        },
+        {
+          "icon": "🏆",
+          "title": "Play and compare results",
+          "description": "Challenge friends, customers, or event guests and see who really knows wine."
+        }
+      ]
+    },
+    "audiences": {
+      "eyebrow": "Who it’s for",
+      "title": "A platform for every tasting experience",
+      "items": [
+        {
+          "icon": "🍷",
+          "title": "For wine lovers",
+          "description": "Turn a simple tasting with friends into a fun and engaging challenge."
+        },
+        {
+          "icon": "🏪",
+          "title": "For wine shops",
+          "description": "Run guided tastings, events, and themed evenings without manually preparing quizzes and sheets."
+        },
+        {
+          "icon": "📦",
+          "title": "For wine boxes and brands",
+          "description": "Add an interactive layer to your tasting boxes and increase customer engagement."
+        }
+      ]
+    },
+    "partners": {
+      "eyebrow": "Partners",
+      "title": "Wine shops and experiences that believe in Indovinando",
+      "items": ["Partner Wine Shop", "Wine Club", "Partner Winery", "Wine Experience", "Milan Tastings", "Wine Hub"],
+      "counter": "20+ wine shops and wine professionals are already using Indovinando",
+      "mapTitle": "Partner map",
+      "mapDescription": "Here you will be able to explore all partner wine shops, wineries, and wine experiences."
+    },
+    "cta": {
+      "eyebrow": "Start now",
+      "title": "Ready to create your first tasting?",
+      "description": "Create wine quizzes, run interactive tastings, and discover how much your friends or customers really know.",
+      "primaryCta": "Start free",
+      "secondaryCta": "See how it works"
+    }
+  },
+  "admin": {
+    "catalog": {
+      "backLabel": "Admin",
+      "winesTitle": "Admin - Wines",
+      "winesListTitle": "Wine list",
+      "resultsRange": "Showing {start}-{end} of {total} results.",
+      "noCatalogResults": "No results in the catalog.",
+      "errorLabel": "Error",
+      "noWinesFound": "No wines found.",
+      "appellationEmpty": "Appellation N/A",
+      "dateEmpty": "Date N/A",
+      "typeLabel": "Type",
+      "vintageLabel": "Vintage",
+      "priceLabel": "Price",
+      "bandLabel": "Band",
+      "countryRegionLabel": "Country / Region",
+      "quizAreaLabel": "Quiz area",
+      "grapesLabel": "Grapes",
+      "bodyAcidityLabel": "Body / Acidity",
+      "backPagination": "Back",
+      "nextPagination": "Next",
+      "pageInfo": "Page {current} of {total}",
+      "producerTitle": "Producer",
+      "producerTitleWithName": "Producer: {name}",
+      "bottlesListTitle": "Bottle list",
+      "bottlesRange": "Showing {start}-{end} of {total} bottles.",
+      "noBottlesFound": "No bottles found.",
+      "producerLabel": "Producer"
     }
   },
   "bottomNav": {
@@ -219,6 +316,34 @@
     "automaticLoadError": "Error while loading saved images.",
     "openGuide": "Open guide",
     "loadingEditor": "Loading editor"
+  },
+  "tableLiveEvent": {
+    "topBarTitle": "Table Live",
+    "joinCodeLabel": "Enter the game code",
+    "joinCodeAria": "4-digit game code",
+    "joinCodeHint": "Ex. 4821",
+    "joinCodeRequired": "Enter the game code",
+    "joinSessionAction": "Join the game",
+    "orLabel": "Or",
+    "createSessionAction": "Create a game",
+    "createTitle": "Create game",
+    "joinTitle": "Join",
+    "nicknameLabel": "Nickname",
+    "nicknameRequired": "Enter a nickname",
+    "nicknamePlaceholderCreate": "Ex. Alex",
+    "nicknamePlaceholderJoin": "Ex. Emma",
+    "avatarLabel": "Avatar",
+    "createError": "Unable to create the game",
+    "joinError": "Unable to join the game",
+    "networkError": "Network error",
+    "creatingAction": "Creating...",
+    "createAndStartAction": "Create and start",
+    "joiningAction": "Joining...",
+    "joinAction": "Join",
+    "backAction": "Back",
+    "joinCodeValueLabel": "Game code",
+    "eventLabel": "Event: {title}",
+    "discoverAppAction": "Discover the app"
   },
   "gamePlayPage": {
     "title": "Tasting Details",
@@ -572,6 +697,8 @@
       "optionsLabel": "Options",
       "optionPlaceholder": "Option",
       "addOption": "Add option",
+      "neutralToggleLabel": "Neutral question: no correct answer",
+      "removeOptionAriaLabel": "Remove option",
       "cancel": "Cancel",
       "saveNew": "Create question",
       "saveEdit": "Save question"
@@ -672,6 +799,7 @@
       "enterNickname": "Enter a nickname",
       "shareTitle": "Invite players",
       "shareHint": "Share this link to let other players join this session.",
+      "sessionCodeLabel": "Game code",
       "sessionLinkLabel": "Session link",
       "copyLink": "Copy link",
       "copied": "Copied",
@@ -685,6 +813,8 @@
       "chooseAvatar": "Choose your avatar",
       "nicknamePlaceholder": "Ex: Alex, Emma...",
       "joining": "Joining...",
+      "startingGameAction": "Starting...",
+      "startGameAction": "Start game",
       "joinGame": "Join Game",
       "loginOptional": "Register / Login (optional)",
       "waitHostCreate": "The host is creating the game...",
@@ -753,6 +883,8 @@
     "usernameInvalid": "Username can contain only letters, numbers and _",
     "registrationComplete": "Registration completed. Check your email to confirm your account.",
     "forgotPassword": "Forgot password?",
+    "infoButton": "Info",
+    "infoTitle": "Information",
     "forgotPasswordTitle": "Recover Password",
     "forgotTitle": "Reset password",
     "forgotDesc": "Enter your email and we'll send you a link to reset your password.",

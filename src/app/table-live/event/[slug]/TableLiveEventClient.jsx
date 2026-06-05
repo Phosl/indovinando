@@ -4,6 +4,7 @@ import {useMemo, useRef, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import AvatarDisplay from '@/components/AvatarDisplay'
+import {useT} from '@/lib/i18n/useT'
 import styles from './tableLiveEvent.module.scss'
 import {Button} from '@/components/ui/Button'
 import Icon from '@/components/Icon'
@@ -23,6 +24,7 @@ function persistPlayer(sessionId, payload, avatarId) {
 
 export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) {
   const router = useRouter()
+  const t = useT('tableLiveEvent')
   const [step, setStep] = useState('home') // home | create | join
   const [nickname, setNickname] = useState('')
   const [joinCode, setJoinCode] = useState('')
@@ -81,7 +83,7 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
   const handleCreate = async (e) => {
     e.preventDefault()
     if (!nickname.trim()) {
-      setError('Inserisci un nickname')
+      setError(t('nicknameRequired'))
       return
     }
     setError('')
@@ -97,13 +99,13 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
       })
       const payload = await response.json().catch(() => null)
       if (!response.ok || !payload?.sessionId) {
-        setError(payload?.error || 'Impossibile creare la partita')
+        setError(payload?.error || t('createError'))
         return
       }
       persistPlayer(payload.sessionId, payload, selectedAvatarId)
       router.push(`/table-live/session/${payload.sessionId}`)
     } catch {
-      setError('Errore di rete')
+      setError(t('networkError'))
     } finally {
       setLoading(false)
     }
@@ -112,7 +114,7 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
   const handleJoin = async (e) => {
     e.preventDefault()
     if (!nickname.trim()) {
-      setError('Inserisci un nickname')
+      setError(t('nicknameRequired'))
       return
     }
     setError('')
@@ -129,13 +131,13 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
       })
       const payload = await response.json().catch(() => null)
       if (!response.ok || !payload?.sessionId) {
-        setError(payload?.error || 'Impossibile entrare nella partita')
+        setError(payload?.error || t('joinError'))
         return
       }
       persistPlayer(payload.sessionId, payload, selectedAvatarId)
       router.push(`/table-live/session/${payload.sessionId}`)
     } catch {
-      setError('Errore di rete')
+      setError(t('networkError'))
     } finally {
       setLoading(false)
     }
@@ -144,7 +146,7 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
   return (
     <div className={styles.page}>
       <div className={styles.topBarWrap}>
-        <TopBar title="Live Tavoli" onBack={() => router.push('/')} />
+        <TopBar title={t('topBarTitle')} onBack={() => router.push('/')} />
       </div>
       <main className={styles.container}>
         <header className={styles.header}>
@@ -155,8 +157,8 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
 
         {step === 'home' ? (
           <section className={styles.card}>
-            <label>Inserisci il Codice Partita</label>
-            <div className={styles.codeInputGroup} aria-label="Codice partita a 4 cifre">
+            <label>{t('joinCodeLabel')}</label>
+            <div className={styles.codeInputGroup} aria-label={t('joinCodeAria')}>
               {joinCodeDigits.map((digit, index) => (
                 <input
                   key={index}
@@ -178,24 +180,24 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
                 />
               ))}
             </div>
-            <p className={styles.codeHint}>Es. 4821</p>
+            <p className={styles.codeHint}>{t('joinCodeHint')}</p>
             <Button
               variant="primary-filled"
               type="button"
               onClick={() => {
                 if (!joinCode.trim()) {
-                  setError('Inserisci il codice partita')
+                  setError(t('joinCodeRequired'))
                   return
                 }
                 setError('')
                 setStep('join')
               }}>
               <Icon name="enter" size={36} />
-              Entra nella partita
+              {t('joinSessionAction')}
             </Button>
 
             <div className={styles.orSeparator}>
-              <span>Oppure</span>
+              <span>{t('orLabel')}</span>
             </div>
             <button
               className="btn secondary"
@@ -205,7 +207,7 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
                 setStep('create')
               }}>
               <Icon name="plus" size={36} />
-              Crea una partita
+              {t('createSessionAction')}
             </button>
             {error ? <p className={styles.error}>{error}</p> : null}
           </section>
@@ -213,15 +215,15 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
 
         {step === 'create' ? (
           <form className={styles.card} onSubmit={handleCreate}>
-            <h2>Crea partita</h2>
-            <label>Nickname</label>
+            <h2>{t('createTitle')}</h2>
+            <label>{t('nicknameLabel')}</label>
             <input
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               maxLength={40}
-              placeholder="Es. Marco"
+              placeholder={t('nicknamePlaceholderCreate')}
             />
-            <label>Avatar</label>
+            <label>{t('avatarLabel')}</label>
             <div className={styles.avatarGrid}>
               {Array.from({length: 10}).map((_, idx) => {
                 const avatarId = idx + 1
@@ -240,27 +242,27 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
             </div>
             {error ? <p className={styles.error}>{error}</p> : null}
             <button className="btn success" type="submit" disabled={loading}>
-              {loading ? 'Creazione...' : 'Crea e inizia'}
+              {loading ? t('creatingAction') : t('createAndStartAction')}
             </button>
             <button className="btn secondary" type="button" onClick={() => setStep('home')}>
-              Indietro
+              {t('backAction')}
             </button>
           </form>
         ) : null}
 
         {step === 'join' ? (
           <form className={styles.card} onSubmit={handleJoin}>
-            <h2>Partecipa</h2>
-            <label>Codice partita</label>
+            <h2>{t('joinTitle')}</h2>
+            <label>{t('joinCodeValueLabel')}</label>
             <div className={styles.codeValue}>{joinCode}</div>
-            <label>Nickname</label>
+            <label>{t('nicknameLabel')}</label>
             <input
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               maxLength={40}
-              placeholder="Es. Giulia"
+              placeholder={t('nicknamePlaceholderJoin')}
             />
-            <label>Avatar</label>
+            <label>{t('avatarLabel')}</label>
             <div className={styles.avatarGrid}>
               {Array.from({length: 10}).map((_, idx) => {
                 const avatarId = idx + 1
@@ -279,18 +281,18 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
             </div>
             {error ? <p className={styles.error}>{error}</p> : null}
             <button className="btn success" type="submit" disabled={loading}>
-              {loading ? 'Ingresso...' : 'Partecipa'}
+              {loading ? t('joiningAction') : t('joinAction')}
             </button>
             <button className="btn secondary" type="button" onClick={() => setStep('home')}>
-              Indietro
+              {t('backAction')}
             </button>
           </form>
         ) : null}
 
-        <p className={styles.hint}>Evento: {title}</p>
+        <p className={styles.hint}>{t('eventLabel', {title})}</p>
       </main>
       <button className={styles.discoverAppBtn} type="button" onClick={() => router.push('/auth')}>
-        Scopri l&apos;app
+        {t('discoverAppAction')}
       </button>
     </div>
   )

@@ -1,7 +1,7 @@
 import styles from './LandingPage.module.scss'
 
-export default function LandingFeatures() {
-  const items = [
+export default function LandingFeatures({text = {}}) {
+  const items = text.items || [
     {
       icon: '🍷',
       title: 'Scansiona le bottiglie',
@@ -22,8 +22,8 @@ export default function LandingFeatures() {
   return (
     <section id="come-funziona" className={styles.section}>
       <div className={styles.sectionHeader}>
-        <span className={styles.eyebrow}>Come funziona</span>
-        <h2>Dal tavolo alla degustazione in meno di un minuto</h2>
+        <span className={styles.eyebrow}>{text.eyebrow || 'Come funziona'}</span>
+        <h2>{text.title || 'Dal tavolo alla degustazione in meno di un minuto'}</h2>
       </div>
 
       <div className={styles.featureGrid}>

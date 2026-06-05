@@ -95,9 +95,7 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
                 onChange={(event) => setIsNeutral(event.target.checked)}
               />
               <span>
-                {lang === 'en'
-                  ? 'Neutral question: no correct answer'
-                  : 'Domanda neutra: nessuna risposta corretta'}
+                {text.neutralToggleLabel}
               </span>
             </label>
           </div>
@@ -115,7 +113,7 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
                   />
                   <button
                     type="button"
-                    aria-label="Elimina opzione"
+                    aria-label={text.removeOptionAriaLabel}
                     onClick={() => removeOption(i)}
                     disabled={options.length <= 2}
                     className={styles.removeOptionBtn}

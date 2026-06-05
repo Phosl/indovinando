@@ -2,6 +2,8 @@ import TopBar from '@/components/TopBar'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {requireSuperAdmin} from '@/lib/courseAdmin'
 import {formatAppDate} from '@/lib/dateFormat'
+import {getLocaleText} from '@/lib/i18n/getLocaleText'
+import {getServerLanguage} from '@/lib/i18n/server'
 import Link from 'next/link'
 import ViniFiltersClient from '../catalog/ViniFiltersClient'
 import styles from '../catalog/catalog.module.scss'
@@ -38,6 +40,8 @@ function formatGrapes(grapes) {
 export default async function AdminViniPage({searchParams}) {
   await requireSuperAdmin()
 
+  const lang = await getServerLanguage()
+  const t = getLocaleText(lang, 'admin.catalog', {})
   const params = await searchParams
   const supabase = await createServerSupabase()
   const q = String(params?.q || '').trim()
@@ -105,22 +109,25 @@ export default async function AdminViniPage({searchParams}) {
 
   return (
     <main className={styles.page}>
-      <TopBar title="Admin - Vini" back="/admin" backLabel="← Admin" />
+      <TopBar title={t.winesTitle || 'Admin - Vini'} back="/admin" backLabel={t.backLabel || 'Admin'} />
 
       <div className={styles.container}>
         <div className={styles.header}>
-          <h2 className={styles.sectionTitle}>Lista vini</h2>
+          <h2 className={styles.sectionTitle}>{t.winesListTitle || 'Lista vini'}</h2>
           <p className={styles.hint}>
             {totalRows
-              ? `Mostrati ${pageStart}-${pageEnd} di ${totalRows} risultati.`
-              : 'Nessun risultato nel catalogo.'}
+              ? (t.resultsRange || 'Mostrati {start}-{end} di {total} risultati.')
+                  .replace('{start}', String(pageStart))
+                  .replace('{end}', String(pageEnd))
+                  .replace('{total}', String(totalRows))
+              : t.noCatalogResults || 'Nessun risultato nel catalogo.'}
           </p>
         </div>
         <ViniFiltersClient q={q} producer={producer} type={type} country={country} />
 
-        {error ? <p className={styles.empty}>Errore: {error.message}</p> : null}
+        {error ? <p className={styles.empty}>{`${t.errorLabel || 'Errore'}: ${error.message}`}</p> : null}
         {!error && !(rows || []).length ? (
-          <p className={styles.empty}>Nessun vino trovato.</p>
+          <p className={styles.empty}>{t.noWinesFound || 'Nessun vino trovato.'}</p>
         ) : null}
 
         {!error && !!(rows || []).length ? (
@@ -133,41 +140,41 @@ export default async function AdminViniPage({searchParams}) {
                       {row.name}
                       {row.producer ? ` - ${row.producer}` : ''}
                     </p>
-                    <p className={styles.subtitle}>{row.appellation || 'Appellation N/A'}</p>
+                    <p className={styles.subtitle}>{row.appellation || t.appellationEmpty || 'Appellation N/A'}</p>
                   </div>
                   <p className={styles.metaText}>
-                    {formatAppDate(row.last_updated, 'it') || 'Data N/A'}
+                    {formatAppDate(row.last_updated, lang) || t.dateEmpty || 'Data N/A'}
                   </p>
                 </div>
 
                 <div className={styles.pillRow}>
                   <span className={`${styles.pill} ${styles.pillStrong}`}>
-                    Tipo: {row.type || 'N/A'}
+                    {(t.typeLabel || 'Tipo') + ': '} {row.type || 'N/A'}
                   </span>
-                  <span className={styles.pill}>Annata: {row.vintage || 'N/A'}</span>
-                  <span className={styles.pill}>Prezzo: {formatPrice(row)}</span>
+                  <span className={styles.pill}>{(t.vintageLabel || 'Annata') + ': '} {row.vintage || 'N/A'}</span>
+                  <span className={styles.pill}>{(t.priceLabel || 'Prezzo') + ': '} {formatPrice(row)}</span>
                   {row.price_band || row.quiz_price_band ? (
                     <span className={styles.pill}>
-                      Fascia: {row.price_band || row.quiz_price_band}
+                      {(t.bandLabel || 'Fascia') + ': '} {row.price_band || row.quiz_price_band}
                     </span>
                   ) : null}
                 </div>
 
                 <div className={styles.grid}>
                   <div className={styles.gridItem}>
-                    <span className={styles.label}>Paese / Regione</span>
+                    <span className={styles.label}>{t.countryRegionLabel || 'Paese / Regione'}</span>
                     <span className={styles.value}>{formatRowMeta(row)}</span>
                   </div>
                   {row.quiz_region || row.quiz_appellation ? (
                     <div className={styles.gridItem}>
-                      <span className={styles.label}>Quiz zona</span>
+                      <span className={styles.label}>{t.quizAreaLabel || 'Quiz zona'}</span>
                       <span className={styles.value}>
                         {[row.quiz_region, row.quiz_appellation].filter(Boolean).join(' / ')}
                       </span>
                     </div>
                   ) : null}
                   <div className={styles.gridItem}>
-                    <span className={styles.label}>Vitigni</span>
+                    <span className={styles.label}>{t.grapesLabel || 'Vitigni'}</span>
                     <span className={styles.value}>{formatGrapes(row.grapes)}</span>
                   </div>
                   <div className={styles.gridItem}>
@@ -176,7 +183,7 @@ export default async function AdminViniPage({searchParams}) {
                   </div>
                   {row.body || row.acidity ? (
                     <div className={styles.gridItem}>
-                      <span className={styles.label}>Corpo / Acidità</span>
+                      <span className={styles.label}>{t.bodyAcidityLabel || 'Corpo / Acidità'}</span>
                       <span className={styles.value}>
                         {[row.body, row.acidity].filter(Boolean).join(' · ')}
                       </span>
@@ -196,10 +203,12 @@ export default async function AdminViniPage({searchParams}) {
               scroll={true}
               href={currentPage <= 1 ? '/admin/vini' : makePageHref(currentPage - 1)}
               className={`${styles.pageButton} ${currentPage <= 1 ? styles.pageButtonDisabled : ''}`}>
-              Indietro
+              {t.backPagination || 'Indietro'}
             </Link>
             <span className={styles.pageInfo}>
-              Pagina {currentPage} di {totalPages}
+              {(t.pageInfo || 'Pagina {current} di {total}')
+                .replace('{current}', String(currentPage))
+                .replace('{total}', String(totalPages))}
             </span>
             <Link
               aria-disabled={currentPage >= totalPages}
@@ -209,7 +218,7 @@ export default async function AdminViniPage({searchParams}) {
                 currentPage >= totalPages ? makePageHref(totalPages) : makePageHref(currentPage + 1)
               }
               className={`${styles.pageButton} ${currentPage >= totalPages ? styles.pageButtonDisabled : ''}`}>
-              Avanti
+              {t.nextPagination || 'Avanti'}
             </Link>
           </div>
         ) : null}

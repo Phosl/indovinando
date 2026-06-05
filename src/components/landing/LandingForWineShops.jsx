@@ -1,7 +1,7 @@
 import styles from './LandingPage.module.scss'
 
-export default function LandingForWineShops() {
-  const audiences = [
+export default function LandingForWineShops({text = {}}) {
+  const audiences = text.items || [
     {
       icon: '🍷',
       title: 'Per appassionati',
@@ -25,8 +25,8 @@ export default function LandingForWineShops() {
   return (
     <section className={styles.sectionAlt}>
       <div className={styles.sectionHeader}>
-        <span className={styles.eyebrow}>A chi si rivolge</span>
-        <h2>Una piattaforma per ogni esperienza di degustazione</h2>
+        <span className={styles.eyebrow}>{text.eyebrow || 'A chi si rivolge'}</span>
+        <h2>{text.title || 'Una piattaforma per ogni esperienza di degustazione'}</h2>
       </div>
 
       <div className={styles.featureGrid}>

@@ -842,9 +842,36 @@
   color: var(--selected-dark);
 }
 
+.lobbyWaitingNotice {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--selected) 10%, var(--foreground));
+  border: 1.5px solid color-mix(in srgb, var(--selected-dark) 20%, white 80%);
+  color: var(--selected-dark);
+  font-size: 0.98rem;
+  font-weight: 800;
+  line-height: 1.45;
+  text-align: center;
+  animation: lobbyNoticePulse 2.2s ease-in-out infinite;
+}
+
 .lobbyPlayersSection {
   display: grid;
   gap: 12px;
+}
+
+@keyframes lobbyNoticePulse {
+  0%,
+  100% {
+    transform: translateY(0);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+
+  50% {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--selected-dark) 10%, transparent 90%);
+  }
 }
 
 .lobbyPlayersHeader {

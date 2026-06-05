@@ -1,7 +1,7 @@
 import styles from './LandingPage.module.scss'
 
-export default function LandingPartnersMap() {
-  const partners = [
+export default function LandingPartnersMap({text = {}}) {
+  const partners = text.items || [
     'Enoteca Partner',
     'Wine Club',
     'Cantina Partner',
@@ -13,8 +13,8 @@ export default function LandingPartnersMap() {
   return (
     <section className={styles.section}>
       <div className={styles.sectionHeader}>
-        <span className={styles.eyebrow}>Partner</span>
-        <h2>Enoteche e realtà che credono in Indovinando</h2>
+        <span className={styles.eyebrow}>{text.eyebrow || 'Partner'}</span>
+        <h2>{text.title || 'Enoteche e realtà che credono in Indovinando'}</h2>
       </div>
 
       <div className={styles.partnerGrid}>
@@ -26,12 +26,15 @@ export default function LandingPartnersMap() {
       </div>
 
       <p className={styles.partnerCounter}>
-        +20 enoteche e professionisti del vino stanno già utilizzando Indovinando
+        {text.counter || '+20 enoteche e professionisti del vino stanno già utilizzando Indovinando'}
       </p>
 
       <div className={styles.mapPlaceholder}>
-        <h3>Mappa partner</h3>
-        <p>Qui potrai visualizzare tutte le enoteche, cantine e wine experience aderenti.</p>
+        <h3>{text.mapTitle || 'Mappa partner'}</h3>
+        <p>
+          {text.mapDescription ||
+            'Qui potrai visualizzare tutte le enoteche, cantine e wine experience aderenti.'}
+        </p>
       </div>
     </section>
   )

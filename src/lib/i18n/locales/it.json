@@ -2,6 +2,7 @@
   "common": {
     "back": "Indietro",
     "cancel": "Annulla",
+    "close": "Chiudi",
     "exit": "Esci",
     "loading": "Caricamento...",
     "saving": "Salvataggio...",
@@ -74,6 +75,102 @@
       "points": "pt",
       "showAll": "Vedi tutti",
       "allGames": "Tutti"
+    }
+  },
+  "landing": {
+    "hero": {
+      "badge": "🍷 Wine Tasting Game",
+      "title": "Trasforma una degustazione di vino in un gioco.",
+      "subtitle": "Crea degustazioni alla cieca, sfida amici e clienti, scopri i vini con l'intelligenza artificiale e impara divertendoti.",
+      "primaryCta": "Inizia gratis",
+      "secondaryCta": "Scopri come funziona"
+    },
+    "features": {
+      "eyebrow": "Come funziona",
+      "title": "Dal tavolo alla degustazione in meno di un minuto",
+      "items": [
+        {
+          "icon": "🍷",
+          "title": "Scansiona le bottiglie",
+          "description": "L'AI riconosce etichetta, produttore, annata e caratteristiche del vino."
+        },
+        {
+          "icon": "🎮",
+          "title": "Genera il quiz",
+          "description": "Crea automaticamente una degustazione interattiva in pochi secondi."
+        },
+        {
+          "icon": "🏆",
+          "title": "Gioca e confronta i risultati",
+          "description": "Sfida amici, clienti o partecipanti e scopri chi conosce davvero il vino."
+        }
+      ]
+    },
+    "audiences": {
+      "eyebrow": "A chi si rivolge",
+      "title": "Una piattaforma per ogni esperienza di degustazione",
+      "items": [
+        {
+          "icon": "🍷",
+          "title": "Per appassionati",
+          "description": "Trasforma una semplice degustazione tra amici in una sfida divertente e coinvolgente."
+        },
+        {
+          "icon": "🏪",
+          "title": "Per enoteche",
+          "description": "Organizza degustazioni guidate, eventi e serate a tema senza preparare manualmente quiz e schede."
+        },
+        {
+          "icon": "📦",
+          "title": "Per wine box e aziende",
+          "description": "Aggiungi un’esperienza interattiva alle tue box degustazione e aumenta il coinvolgimento dei clienti."
+        }
+      ]
+    },
+    "partners": {
+      "eyebrow": "Partner",
+      "title": "Enoteche e realtà che credono in Indovinando",
+      "items": ["Enoteca Partner", "Wine Club", "Cantina Partner", "Wine Experience", "Degustazioni Milano", "Wine Hub"],
+      "counter": "+20 enoteche e professionisti del vino stanno già utilizzando Indovinando",
+      "mapTitle": "Mappa partner",
+      "mapDescription": "Qui potrai visualizzare tutte le enoteche, cantine e wine experience aderenti."
+    },
+    "cta": {
+      "eyebrow": "Inizia ora",
+      "title": "Pronto a creare la tua prima degustazione?",
+      "description": "Crea quiz sul vino, organizza degustazioni interattive e scopri quanto ne sanno davvero i tuoi amici o i tuoi clienti.",
+      "primaryCta": "Inizia gratis",
+      "secondaryCta": "Guarda come funziona"
+    }
+  },
+  "admin": {
+    "catalog": {
+      "backLabel": "Admin",
+      "winesTitle": "Admin - Vini",
+      "winesListTitle": "Lista vini",
+      "resultsRange": "Mostrati {start}-{end} di {total} risultati.",
+      "noCatalogResults": "Nessun risultato nel catalogo.",
+      "errorLabel": "Errore",
+      "noWinesFound": "Nessun vino trovato.",
+      "appellationEmpty": "Appellation N/A",
+      "dateEmpty": "Data N/A",
+      "typeLabel": "Tipo",
+      "vintageLabel": "Annata",
+      "priceLabel": "Prezzo",
+      "bandLabel": "Fascia",
+      "countryRegionLabel": "Paese / Regione",
+      "quizAreaLabel": "Quiz zona",
+      "grapesLabel": "Vitigni",
+      "bodyAcidityLabel": "Corpo / Acidità",
+      "backPagination": "Indietro",
+      "nextPagination": "Avanti",
+      "pageInfo": "Pagina {current} di {total}",
+      "producerTitle": "Produttore",
+      "producerTitleWithName": "Produttore: {name}",
+      "bottlesListTitle": "Lista bottiglie",
+      "bottlesRange": "Mostrate {start}-{end} di {total} bottiglie.",
+      "noBottlesFound": "Nessuna bottiglia trovata.",
+      "producerLabel": "Produttore"
     }
   },
   "bottomNav": {
@@ -222,6 +319,34 @@
     "automaticLoadError": "Errore nel caricamento delle immagini salvate.",
     "openGuide": "Riapri guida",
     "loadingEditor": "Caricamento editor"
+  },
+  "tableLiveEvent": {
+    "topBarTitle": "Live Tavoli",
+    "joinCodeLabel": "Inserisci il Codice Partita",
+    "joinCodeAria": "Codice partita a 4 cifre",
+    "joinCodeHint": "Es. 4821",
+    "joinCodeRequired": "Inserisci il codice partita",
+    "joinSessionAction": "Entra nella partita",
+    "orLabel": "Oppure",
+    "createSessionAction": "Crea una partita",
+    "createTitle": "Crea partita",
+    "joinTitle": "Partecipa",
+    "nicknameLabel": "Nickname",
+    "nicknameRequired": "Inserisci un nickname",
+    "nicknamePlaceholderCreate": "Es. Marco",
+    "nicknamePlaceholderJoin": "Es. Giulia",
+    "avatarLabel": "Avatar",
+    "createError": "Impossibile creare la partita",
+    "joinError": "Impossibile entrare nella partita",
+    "networkError": "Errore di rete",
+    "creatingAction": "Creazione...",
+    "createAndStartAction": "Crea e inizia",
+    "joiningAction": "Ingresso...",
+    "joinAction": "Partecipa",
+    "backAction": "Indietro",
+    "joinCodeValueLabel": "Codice partita",
+    "eventLabel": "Evento: {title}",
+    "discoverAppAction": "Scopri l'app"
   },
   "gamePlayPage": {
     "title": "Dettaglio Degustazione",
@@ -575,6 +700,8 @@
       "optionsLabel": "Opzioni",
       "optionPlaceholder": "Opzione",
       "addOption": "Aggiungi opzione",
+      "neutralToggleLabel": "Domanda neutra: nessuna risposta corretta",
+      "removeOptionAriaLabel": "Elimina opzione",
       "cancel": "Annulla",
       "saveNew": "Crea domanda",
       "saveEdit": "Salva domanda"
@@ -675,6 +802,7 @@
       "enterNickname": "Inserisci un nickname",
       "shareTitle": "Invita giocatori",
       "shareHint": "Condividi questo link per far entrare altri giocatori nella sessione.",
+      "sessionCodeLabel": "Codice partita",
       "sessionLinkLabel": "Link sessione",
       "copyLink": "Copia link",
       "copied": "Copiato",
@@ -688,6 +816,8 @@
       "chooseAvatar": "Scegli il tuo avatar",
       "nicknamePlaceholder": "Es: Marco, Anna...",
       "joining": "Accesso...",
+      "startingGameAction": "Avvio...",
+      "startGameAction": "Inizia partita",
       "joinGame": "Entra nel gioco",
       "loginOptional": "Registrati / Accedi (opzionale)",
       "waitHostCreate": "L'host sta creando la partita...",
@@ -756,6 +886,8 @@
     "usernameInvalid": "Lo username può contenere solo lettere, numeri e _",
     "registrationComplete": "Registrazione completata. Controlla l'email per confermare l'account.",
     "forgotPassword": "Password dimenticata?",
+    "infoButton": "Info",
+    "infoTitle": "Informazioni",
     "forgotPasswordTitle": "Recupera Password",
     "forgotTitle": "Reimposta password",
     "forgotDesc": "Inserisci la tua email e ti mandiamo il link per reimpostare la password.",

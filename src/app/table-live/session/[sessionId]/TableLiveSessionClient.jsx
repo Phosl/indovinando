@@ -8,13 +8,17 @@ import {TopBar} from '@/app/live/session/[sessionId]/play/components/TopBar'
 import {QuestionSlideScreen} from '@/app/live/session/[sessionId]/play/components/QuestionSlideScreen'
 import {ResultsScreen} from '@/app/live/session/[sessionId]/play/components/ResultsScreen'
 import {GameOverlays} from '@/app/live/session/[sessionId]/play/components/GameOverlays'
+import {useT} from '@/lib/i18n/useT'
 import AvatarDisplay from '@/components/AvatarDisplay'
 import Loader from '@/components/Loader'
 import styles from '@/app/live/session/[sessionId]/play/playerLive.module.scss'
 import joinStyles from '@/app/live/session/[sessionId]/playerJoin.module.scss'
 
 const isNeutralQuestion = (question) =>
-  question?.isNeutral === true || String(question?.kind || '').trim().toLowerCase() === 'neutral'
+  question?.isNeutral === true ||
+  String(question?.kind || '')
+    .trim()
+    .toLowerCase() === 'neutral'
 
 function getStoredPlayer(sessionId) {
   try {
@@ -38,6 +42,10 @@ function avatarFromNickname(nickname = '') {
 
 export default function TableLiveSessionClient({sessionId}) {
   const router = useRouter()
+  const tJoin = useT('live.playerJoin')
+  const tResults = useT('live.results')
+  const tPlayerLive = useT('live.playerLive')
+  const tLeaderboard = useT('live.leaderboard')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [data, setData] = useState(null)
@@ -210,14 +218,15 @@ export default function TableLiveSessionClient({sessionId}) {
   const topBarPlayer = data?.me
     ? {
         nickname: data.me.nickname,
-        avatar_id: playerAuth?.avatarId || avatarFromNickname(data.me.nickname),
+        avatar_id:
+          data.me.avatar_id || playerAuth?.avatarId || avatarFromNickname(data.me.nickname),
       }
     : null
   const sortedLeaderboard = overlayStandings.length
     ? overlayStandings
     : (data?.players || []).map((p) => ({
         ...p,
-        avatar_id: avatarFromNickname(p.nickname),
+        avatar_id: p.avatar_id || avatarFromNickname(p.nickname),
         liveTotalScore: p.total_score || 0,
         roundPoints: 0,
       }))
@@ -437,7 +446,7 @@ export default function TableLiveSessionClient({sessionId}) {
   if (loading) {
     return (
       <div className={styles.fullPage}>
-        <div className={styles.centeredCard}>Caricamento...</div>
+        <div className={styles.centeredCard}>{tPlayerLive('loadingGame')}</div>
       </div>
     )
   }
@@ -446,7 +455,7 @@ export default function TableLiveSessionClient({sessionId}) {
     return (
       <div className={styles.fullPage}>
         <div className={styles.centeredCard}>
-          <h2>Sessione non trovata</h2>
+          <h2>{tPlayerLive('participantNotFound')}</h2>
           <button className={styles.checkButton} onClick={() => router.push('/')}>
             Home
           </button>
@@ -459,8 +468,8 @@ export default function TableLiveSessionClient({sessionId}) {
     return (
       <div className={styles.fullPage}>
         <div className={styles.centeredCard}>
-          <Loader label="Entrando nella partita..." />
-          <p style={{marginTop: 10}}>Attendi un attimo, stiamo sincronizzando il tuo ingresso.</p>
+          <Loader label={tJoin('joining')} />
+          <p style={{marginTop: 10}}>{tJoin('gameStartingDesc')}</p>
         </div>
       </div>
     )
@@ -481,7 +490,7 @@ export default function TableLiveSessionClient({sessionId}) {
             onOpenExit={() => setExitModalOpen(true)}
           />
           <div className={styles.centeredCard}>
-            <Loader label="Partita in avvio..." />
+            <Loader label={tJoin('gameStartingTitle')} />
           </div>
           {overlays}
         </div>
@@ -501,40 +510,45 @@ export default function TableLiveSessionClient({sessionId}) {
         />
         <div className={`${styles.centeredCard} ${styles.lobbyCard}`}>
           <div className={styles.lobbyCodeBlock}>
-            <span className={styles.lobbyCodeLabel}>Codice partita</span>
+            <span className={styles.lobbyCodeLabel}>{tJoin('sessionCodeLabel')}</span>
             <strong className={styles.lobbyCodeValue}>{data.session.joinCode}</strong>
           </div>
 
           {data.me.isHost ? (
             <button className="btn success" onClick={handleStart} disabled={starting}>
-              {starting ? 'Avvio...' : 'Inizia partita'}
+              {starting ? tJoin('startingGameAction') : tJoin('startGameAction')}
             </button>
           ) : (
-            <p>Attendi che l&apos;host avvii la partita.</p>
+            <p className={styles.lobbyWaitingNotice}>{tJoin('waitHostStart')}</p>
           )}
           <div className={joinStyles.shareButtons}>
             <button className="btn neutral small" onClick={handleCopyLink}>
-              {copied ? 'Link copiato' : 'Copia link'}
+              {copied ? tJoin('copied') : tJoin('copyLink')}
             </button>
             <button className="btn neutral small" onClick={handleShareLink}>
-              Condividi
+              {tJoin('shareLink')}
             </button>
           </div>
           {data.players.length ? (
             <div className={styles.lobbyPlayersSection}>
               <div className={styles.lobbyPlayersHeader}>
-                <h2>Giocatori presenti</h2>
+                <h2>{tJoin('connectedPlayers')}</h2>
                 <span className={styles.lobbyPlayersCount}>{data.players.length}</span>
               </div>
               <div className={styles.lobbyPlayersGrid}>
                 {data.players.map((player) => (
                   <div key={player.id} className={styles.lobbyPlayerCard}>
                     <span className={styles.lobbyPlayerAvatar}>
-                      <AvatarDisplay avatarId={avatarFromNickname(player.nickname)} size={28} />
+                      <AvatarDisplay
+                        avatarId={player.avatar_id || avatarFromNickname(player.nickname)}
+                        size={28}
+                      />
                     </span>
                     <div className={styles.lobbyPlayerMeta}>
                       <p className={styles.lobbyPlayerName}>{player.nickname}</p>
-                      {player.is_host ? <span className={styles.lobbyPlayerHost}>Host</span> : null}
+                      {player.is_host ? (
+                        <span className={styles.lobbyPlayerHost}>Host</span>
+                      ) : null}
                     </div>
                   </div>
                 ))}
@@ -552,8 +566,8 @@ export default function TableLiveSessionClient({sessionId}) {
     return (
       <ResultsScreen
         sessionId={sessionId}
-        title="Partita conclusa"
-        subtitle="Classifica del tavolo"
+        title={tPlayerLive('gameOverTitle').replace('🎉 ', '')}
+        subtitle={tLeaderboard('title').replace('🎉 ', '')}
         currentBottle={currentBottle || {}}
         currentBottleIndex={currentBottleIndex}
         totalBottles={data.bottles?.length || 0}
@@ -566,7 +580,7 @@ export default function TableLiveSessionClient({sessionId}) {
         playerMarkedNext={playerMarkedNext}
         allPlayers={(data.players || []).map((p) => ({
           ...p,
-          avatar_id: avatarFromNickname(p.nickname),
+          avatar_id: p.avatar_id || avatarFromNickname(p.nickname),
         }))}
         roundAnswersByPlayer={roundAnswersByPlayer}
         playersReadyCount={playersReadyCount}
@@ -594,9 +608,11 @@ export default function TableLiveSessionClient({sessionId}) {
     return (
       <ResultsScreen
         sessionId={sessionId}
-        title="Bottiglia completata"
+        title={tPlayerLive('bottleComplete')}
         subtitle={
-          isLastBottle ? 'Ultima bottiglia' : `Prossima bottiglia #${currentBottleIndex + 2}`
+          isLastBottle
+            ? tPlayerLive('finalLeaderboardSoon')
+            : tPlayerLive('movingToBottle', {index: currentBottleIndex + 2})
         }
         currentBottle={currentBottle || {}}
         currentBottleIndex={currentBottleIndex}
@@ -610,7 +626,7 @@ export default function TableLiveSessionClient({sessionId}) {
         playerMarkedNext={playerMarkedNext}
         allPlayers={(data.players || []).map((p) => ({
           ...p,
-          avatar_id: avatarFromNickname(p.nickname),
+          avatar_id: p.avatar_id || avatarFromNickname(p.nickname),
         }))}
         roundAnswersByPlayer={roundAnswersByPlayer}
         playersReadyCount={playersReadyCount}

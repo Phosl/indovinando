@@ -28,5 +28,23 @@ export default function AvatarDisplay({avatarId, size = 28, className = ''}) {
     )
   }
 
-  return <span className={className}>{avatar.value}</span>
+  return (
+    <span
+      className={className}
+      style={{
+        width: size,
+        height: size,
+        minWidth: size,
+        minHeight: size,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: Math.round(size * 0.82),
+        lineHeight: 1,
+        verticalAlign: 'middle',
+        flexShrink: 0,
+      }}>
+      {avatar.value}
+    </span>
+  )
 }
