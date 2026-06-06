@@ -31,6 +31,16 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.34.0',
+    date: '6 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'polish automatic tasting UX, fix catalog verify flow, and align docs',
+      'add icon',
+    ],
+  },
+
+  {
     version: '1.33.0',
     date: '6 giugno 2026',
     label: 'Auto',
