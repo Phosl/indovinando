@@ -573,6 +573,118 @@ function formatBytes(value) {
   return `${scaled.toFixed(digits)} ${units[index]}`
 }
 
+const AUTO_UPLOAD_COMPRESS_THRESHOLD_BYTES = 3.5 * 1024 * 1024
+
+function getAutoUploadCompressionPolicy(fileSize) {
+  if (fileSize >= 12 * 1024 * 1024) {
+    return {
+      maxDimension: 1500,
+      qualitySteps: [0.72, 0.64],
+      targetBytes: 1.6 * 1024 * 1024,
+    }
+  }
+
+  if (fileSize >= 8 * 1024 * 1024) {
+    return {
+      maxDimension: 1700,
+      qualitySteps: [0.78, 0.7],
+      targetBytes: 2.1 * 1024 * 1024,
+    }
+  }
+
+  if (fileSize >= 5 * 1024 * 1024) {
+    return {
+      maxDimension: 1900,
+      qualitySteps: [0.82, 0.74],
+      targetBytes: 2.5 * 1024 * 1024,
+    }
+  }
+
+  return {
+    maxDimension: 2200,
+    qualitySteps: [0.84, 0.78],
+    targetBytes: 3 * 1024 * 1024,
+  }
+}
+
+async function loadImageElementFromFile(file) {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file)
+    const image = new window.Image()
+    image.onload = () => {
+      URL.revokeObjectURL(objectUrl)
+      resolve(image)
+    }
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl)
+      reject(new Error('image decode failed'))
+    }
+    image.src = objectUrl
+  })
+}
+
+async function renderCompressedImageBlob(image, {maxDimension, quality}) {
+  const width = Number(image.naturalWidth || image.width || 0)
+  const height = Number(image.naturalHeight || image.height || 0)
+  if (!width || !height) return null
+
+  const longestSide = Math.max(width, height)
+  const scale = longestSide > maxDimension ? maxDimension / longestSide : 1
+  const targetWidth = Math.max(1, Math.round(width * scale))
+  const targetHeight = Math.max(1, Math.round(height * scale))
+
+  const canvas = document.createElement('canvas')
+  canvas.width = targetWidth
+  canvas.height = targetHeight
+  const ctx = canvas.getContext('2d', {alpha: false})
+  if (!ctx) return null
+
+  ctx.drawImage(image, 0, 0, targetWidth, targetHeight)
+
+  return new Promise((resolve) => {
+    canvas.toBlob(resolve, 'image/jpeg', quality)
+  })
+}
+
+async function optimizeAutoTastingUploadFile(file) {
+  if (!(file instanceof File)) return file
+
+  const mimeType = String(file.type || '').toLowerCase()
+  const isRasterConvertible =
+    mimeType === 'image/jpeg' || mimeType === 'image/png' || mimeType === 'image/webp'
+
+  if (!isRasterConvertible || file.size <= AUTO_UPLOAD_COMPRESS_THRESHOLD_BYTES) {
+    return file
+  }
+
+  try {
+    const policy = getAutoUploadCompressionPolicy(file.size)
+    const image = await loadImageElementFromFile(file)
+    let optimizedBlob = null
+
+    for (const quality of policy.qualitySteps) {
+      const candidate = await renderCompressedImageBlob(image, {
+        maxDimension: policy.maxDimension,
+        quality,
+      })
+      if (!candidate) continue
+      optimizedBlob = candidate
+      if (candidate.size <= policy.targetBytes) break
+    }
+
+    if (!optimizedBlob) return file
+    if (optimizedBlob.size >= file.size * 0.92) return file
+
+    const baseName = file.name.replace(/\.[^.]+$/, '') || 'bottle'
+    return new File([optimizedBlob], `${baseName}.jpg`, {
+      type: 'image/jpeg',
+      lastModified: file.lastModified || Date.now(),
+    })
+  } catch {
+    return file
+  }
+}
+
 function getTokenUsageFromImage(image, previewWebUsage = null) {
   const visionUsage = image?.recognized_payload?.openai_payload?.usage || null
   const webMeta = image?.recognized_payload?.web_enrichment || null
@@ -1280,7 +1392,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()
       xhr.open('POST', '/api/auto-tasting/upload')
-      xhr.timeout = 45000
+      xhr.timeout = 90000
 
       xhr.upload.onprogress = (event) => {
         if (!event.lengthComputable) return
@@ -1688,7 +1800,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
 
       for (let index = 0; index < files.length; index += 1) {
         const file = files[index]
-        const uploadFile = file
+        const uploadFile = await optimizeAutoTastingUploadFile(file)
         setUploadProgress({
           current: index + 1,
           total: files.length,

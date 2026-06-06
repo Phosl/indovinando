@@ -3,7 +3,7 @@ import {createServerSupabase} from '@/lib/supabaseServer'
 
 export const runtime = 'nodejs'
 
-const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
+const MAX_FILE_SIZE_BYTES = 15 * 1024 * 1024
 const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/heic'])
 
 function withTimeout(promise, ms, label) {
@@ -44,7 +44,7 @@ export async function POST(request) {
     }
 
     if (file.size > MAX_FILE_SIZE_BYTES) {
-      return NextResponse.json({error: 'File too large (max 10MB)'}, {status: 400})
+      return NextResponse.json({error: 'File too large (max 15MB)'}, {status: 400})
     }
 
     const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
@@ -58,7 +58,7 @@ export async function POST(request) {
         upsert: false,
         contentType: file.type || 'application/octet-stream',
       }),
-      30000,
+      60000,
       'storage upload',
     )
 
