@@ -35,6 +35,8 @@ catalogo, e usiamo quei dati per precompilare la creazione del gioco/quiz.
 9. Se l’utente conferma, il vino viene creato o aggiornato nel catalogo.
 
 Importante: il web enrichment non e piu “sempre acceso”. E opt-in.
+Se la ricerca web non trova differenze utili, puo comunque consumare token: il risultato giusto in
+UI e “nessun nuovo dato visibile”, non “ricerca non eseguita”.
 
 ## 3) Come viene fatto il match (senza tecnicismi)
 
@@ -71,6 +73,10 @@ Per vini “brand-first” o collaborazioni ambigue, tipo `Idda`:
 - il nome riconosciuto viene canonicalizzato
 - suffix tipo `Sicilia DOP` possono essere rimossi prima del match
 - se il vino e gia sincronizzato nel catalogo, si preferisce il `label_id` gia noto
+- il pulsante `Fai web-search` resta comunque disponibile come azione manuale
+- se la ricerca trova dati migliori, la UI apre una preview differenze con applicazione selettiva
+  dei campi
+- se non trova nulla di nuovo, mostra un esito esplicito e non aggiorna il catalogo da sola
 
 Questo evita di ricreare varianti quasi duplicate e riduce il rischio di ricadere nel web search.
 
@@ -165,6 +171,7 @@ Meglio un catalogo piccolo ma pulito che un catalogo enorme rumoroso.
 
 - API analisi: `src/app/api/auto-tasting/analyze/route.js`
 - API salvataggio catalogo: `src/app/api/auto-tasting/verify-catalog/route.js`
+- API applicazione differenze web: `src/app/api/auto-tasting/apply-web-diff/route.js`
 - tabella risultati riconoscimento: `tasting_bottle_images`
 - catalogo: `wine_labels`, `wine_producers`, `wine_vintages`, `wine_label_grapes`, `wine_grapes`
 

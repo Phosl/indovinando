@@ -116,7 +116,7 @@
 .autoModePage {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
   padding-bottom: calc(96px + env(safe-area-inset-bottom));
 }
 
@@ -132,16 +132,94 @@
 
 .autoModeTitleCentered {
   margin: 8px 0 0;
-  line-height: 1.2;
-  text-align: center;
+  line-height: 1.05;
+  text-align: left;
+  font-size: clamp(1.8rem, 3vw, 3.2rem);
+  letter-spacing: -0.015em;
+  max-width: 14ch;
+  color: #17184f;
 }
 
 .autoModeDescriptionCentered {
   margin: 0;
-  color: var(--text-secondary);
-  text-align: center;
-  max-width: 720px;
-  align-self: center;
+  color: #47526c;
+  text-align: left;
+  max-width: 700px;
+  align-self: flex-start;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.autoToastViewport {
+  position: fixed;
+  top: max(18px, calc(env(safe-area-inset-top) + 10px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1300;
+  width: min(calc(100vw - 24px), 460px);
+  pointer-events: none;
+}
+
+.autoToast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  box-shadow: 0 16px 32px rgba(18, 26, 44, 0.16);
+  border: 1px solid transparent;
+  pointer-events: auto;
+  animation: autoToastIn 0.18s ease;
+}
+
+.autoToastInfo {
+  background: #f7fbff;
+  border-color: #c9dcf2;
+  color: #21405e;
+}
+
+.autoToastSuccess {
+  background: #f4fff1;
+  border-color: #cfe8c4;
+  color: #23422d;
+}
+
+.autoToastError {
+  background: #fff4f4;
+  border-color: #efc4c4;
+  color: #6a2323;
+}
+
+.autoToastMessage {
+  font-size: 0.94rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.autoToastClose {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+  color: currentColor;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+@keyframes autoToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .autoModeSteps {
@@ -165,15 +243,33 @@
 }
 
 .autoModeEmptyState {
-  border: 1px dashed var(--button-secondary-border);
-  border-radius: 8px;
-  padding: 12px;
-  background: color-mix(in srgb, var(--foreground) 92%, #eff9ff 8%);
+  border: 1px solid rgba(226, 223, 239, 0.9);
+  border-radius: 24px;
+  padding: 22px 22px 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(252, 250, 246, 0.98));
+  box-shadow:
+    0 12px 28px rgba(31, 38, 57, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.autoModeEmptyState strong {
+  display: block;
+  font-size: 1.2rem;
 }
 
 .autoModeEmptyState p {
-  margin: 6px 0 0;
-  color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+.autoModeEmptyCopy {
+  text-align: center;
+  margin: 16px 0px;
+  background: var(--gray-100);
+  padding: 12px;
+  p {
+    color: var(--text-secondary);
+  }
+  border-radius: 8px;
 }
 
 .autoModeTokenSummary {
@@ -185,46 +281,73 @@
 .autoModeMetricsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px;
-  margin-top: 10px;
+  gap: 14px;
+  margin-top: 14px;
 }
 
 .autoModeMetricCard {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  min-height: 92px;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #d9e2ec;
-  background: #fff;
+  gap: 6px;
+  min-height: 104px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: var(--white);
+}
+
+.autoModeMetricCard:nth-child(1) {
+  background: var(--primary-50);
+}
+
+.autoModeMetricCard:nth-child(2) {
+  background: var(--success-50);
+}
+
+.autoModeMetricCard:nth-child(3) {
+  background: var(--tertiary-50);
 }
 
 .autoModeMetricLabel {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   color: #617085;
-  font-size: 0.74rem;
+  font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
+.autoModeMetricLabelIconWrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  padding: 6px;
+}
 
-.autoModeMetricIcon {
-  color: #46617f;
+.metricCardBottle {
+  background-color: var(--primary-100);
+  color: var(--primary-text);
+}
+.metricCardToken {
+  background: var(--success-100);
+  color: var(--success-text);
+}
+.metricCardCost {
+  background: var(--tertiary-100);
+  color: var(--tertiary-text);
 }
 
 .autoModeMetricValue {
   color: #111d2f;
-  font-size: 1.35rem;
+  font-size: 1.7rem;
   line-height: 1.1;
   font-weight: 900;
 }
 
 .autoModeMetricMeta {
   color: #58677b;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   line-height: 1.35;
 }
 
@@ -293,7 +416,7 @@
 .autoModeTopActions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 16px;
 }
 
 .autoModeQuizTemplatePicker {
@@ -494,7 +617,7 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 20px;
 }
 
 .autoBottleCard {
@@ -502,14 +625,14 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
   border: 1px solid #e9e7e2;
-  border-radius: 22px;
-  padding: 18px;
+  border-radius: 28px;
+  padding: 22px;
   background: linear-gradient(180deg, #ffffff 0%, #fdfcf8 100%);
   box-shadow:
-    0 2px 8px rgba(26, 34, 44, 0.04),
-    0 12px 30px rgba(26, 34, 44, 0.07);
+    0 4px 14px rgba(26, 34, 44, 0.04),
+    0 22px 42px rgba(26, 34, 44, 0.07);
 }
 
 .autoBottleCardAnalyzing {
@@ -518,8 +641,8 @@
 
 .autoBottleCardBody {
   display: grid;
-  grid-template-columns: minmax(140px, 220px) minmax(0, 1fr);
-  gap: 18px;
+  grid-template-columns: minmax(240px, 360px) minmax(0, 1fr);
+  gap: 28px;
   position: relative;
   z-index: 2;
 }
@@ -537,8 +660,8 @@
 .autoBottleCardPreviewWrap {
   position: relative;
   width: 100%;
-  min-height: 210px;
-  border-radius: 18px;
+  min-height: 420px;
+  border-radius: 22px;
   overflow: hidden;
   border: 1px solid #ebe7df;
   background: #f5f1ea;
@@ -547,10 +670,31 @@
   justify-content: center;
 }
 
+.autoBottleDeleteButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  min-width: 46px !important;
+  width: 46px;
+  height: 46px;
+  padding: 0 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 10px 22px rgba(17, 29, 47, 0.18);
+}
+
+.autoBottleDeleteState {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+}
+
 .autoBottleCardPreview {
   width: 100%;
-  max-height: 290px;
-  object-fit: contain;
+  height: 100%;
+  max-height: 560px;
+  object-fit: cover;
 }
 
 .autoBottleCardInfoCol {
@@ -558,6 +702,12 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  .autoBottleFoundName {
+    margin-top: 16px;
+  }
+  .autoBottleCardSubtitle {
+    color: var(--text-secondary);
+  }
 }
 
 .autoModeUploadedBadges {
@@ -571,23 +721,23 @@
   align-items: center;
   gap: 4px;
   border-radius: 999px;
-  border: none;
-  background: #dce9f7;
-  color: #294560;
-  padding: 5px 10px;
-  font-size: 0.78rem;
+  border: 1px solid var(--tertiary-200);
+  background: var(--tertiary-50);
+  color: var(--tertiary-text);
+  padding: 7px 12px;
+  font-size: 0.82rem;
   font-weight: 800;
 }
 
 .autoModeFeatureIcon {
-  color: #2e88b5;
+  color: var(--tertiary-500);
 }
 
 .autoBottleCardSubtitle {
-  margin: -2px 0 0;
-  font-size: 0.92rem;
+  margin: -4px 0 2px;
+  font-size: 1.02rem;
   font-weight: 600;
-  color: #405066;
+  color: var(--text-primary);
 }
 
 .autoBottleWebSearchOverlay {
@@ -599,7 +749,7 @@
   align-items: center;
   justify-content: center;
   padding: 18px;
-  background: rgba(248, 251, 255, 0.7);
+  background: rgba(187, 118, 255, 0.7);
   backdrop-filter: blur(3px);
 }
 
@@ -610,8 +760,8 @@
   gap: 14px;
   width: min(100%, 360px);
   border-radius: 14px;
-  border: 1px solid #d8e5f5;
-  background: rgba(238, 245, 253, 0.96);
+  border: 1px solid var(--primary-200);
+  background: var(--primary-50);
   backdrop-filter: blur(10px);
   box-shadow: 0 10px 24px rgba(39, 82, 128, 0.12);
   padding: 20px 18px;
@@ -625,7 +775,7 @@
   gap: 10px;
 
   strong {
-    color: #173554;
+    color: var(--primary-text);
     font-size: 1rem;
     font-weight: 900;
   }
@@ -635,8 +785,8 @@
   width: 34px;
   height: 34px;
   border-radius: 999px;
-  border: 3px solid rgba(46, 136, 181, 0.22);
-  border-top-color: #2e88b5;
+  border: 3px solid var(--primary-text);
+  border-top-color: var(--primary-500);
   flex-shrink: 0;
   animation: ringSpin 0.7s linear infinite;
 }
@@ -647,7 +797,7 @@
   gap: 6px;
 
   span {
-    color: #48627f;
+    color: var(--primary-text);
     font-size: 0.84rem;
     line-height: 1.35;
   }
@@ -655,128 +805,131 @@
 
 .autoBottleFoundName {
   margin: 0;
-  font-size: 1.06rem;
+  font-size: clamp(1.7rem, 2.6vw, 2.4rem);
   font-weight: 900;
-  color: #111d2f;
-  line-height: 1.25;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
 }
 
 .autoBottleCardFacts {
-  margin: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  color: #263447;
-  font-size: 0.96rem;
-  font-weight: 600;
+  margin: 2px 0 0;
 }
 
 .autoBottleCountryBadge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
   justify-content: center;
-  min-width: 34px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  border: 1px solid #d7deea;
-  background: #eef3fb;
+  min-width: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
   color: #244260;
-  font-weight: 800;
-  font-size: 0.75rem;
+  font-size: 0.95rem;
 }
 
-.autoBottleFactDot {
-  color: #78859a;
+.autoBottleFactChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid #dbe4f0;
+  background: linear-gradient(180deg, #ffffff, #f7fafc);
+  color: #22364d;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .autoBottleCardDataBlock {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  border-radius: 16px;
-  border: 1px solid #ebe7df;
-  background: #f6f4f0;
-  padding: 14px;
+  gap: 14px;
+  border-radius: 8px;
+  background: var(--primary-25);
+  padding: 18px;
 }
 
 .autoBottleQuickFacts {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: -4px;
+  gap: 4px;
+  margin-top: -2px;
 }
 
 .autoBottleQuickFactChip {
   display: inline-flex;
   align-items: center;
-  border-radius: 999px;
-  border: 1px solid #ddd7ce;
-  background: #fffdfa;
-  color: #244260;
-  padding: 6px 10px;
-  font-size: 0.8rem;
+  border-radius: 6px;
+  border: 1px solid var(--primary-200);
+  background: var(--white);
+  color: var(--primary-text);
+  padding: 7px 11px;
+  font-size: 0.9rem;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1;
 }
 
 .autoBottleCardDataRow {
   margin: 0;
-  color: #283647;
+  color: var(--primary-text);
   font-size: 0.92rem;
   line-height: 1.45;
 
   strong {
-    color: #111d2f;
+    color: var(--primary-text);
     font-weight: 900;
   }
 }
 
 .autoBottleSpecGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
 }
 
 .autoBottleSpecCard {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  border-radius: 12px;
-  border: 1px solid #e3ddd3;
-  background: #fffdfa;
-  padding: 10px 12px;
+  gap: 6px;
+  border-radius: 14px;
+  border: 1px solid #ebe3f9;
+  background: #fff;
+  padding: 12px 14px;
 }
 
 .autoBottleSpecLabel {
-  font-size: 0.7rem;
+  font-size: 0.66rem;
   font-weight: 800;
   text-transform: uppercase;
   color: #6a7688;
 }
 
 .autoBottleSpecValue {
-  font-size: 0.9rem;
-  line-height: 1.35;
+  font-size: 0.84rem;
+  line-height: 1.3;
   color: #111d2f;
 }
 
 .autoBottleNarrativeCard {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  border-radius: 12px;
-  border: 1px solid #e3ddd3;
-  background: #fffdfa;
-  padding: 12px;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 .autoBottleNarrativeText {
   margin: 0;
   color: #283647;
-  font-size: 0.92rem;
-  line-height: 1.5;
+  font-size: 0.96rem;
+  line-height: 1.6;
 }
 
 .autoBottleDataLabel {
@@ -812,12 +965,38 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  .autoBottleSectionTitle {
+    color: var(--primary-text);
+  }
+  .autoBottleSpecLabel {
+    color: var(--primary);
+  }
+  .autoBottleSpecValue {
+    font-size: 1rem;
+  }
+}
+.autoBottleDataLabelIconWrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 4px;
+  background-color: var(--primary-50);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  :global(span) {
+    color: var(--primary-text);
+  }
 }
 
 .autoBottleSectionTitle {
   margin: 0;
-  font-size: 0.74rem;
-  font-weight: 800;
+  font-size: 0.68rem;
+  font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #6a7688;
@@ -834,10 +1013,10 @@
   align-items: center;
   border-radius: 999px;
   border: 1px solid #d7deea;
-  background: #fffdfa;
+  background: #fff;
   color: #244260;
-  padding: 6px 10px;
-  font-size: 0.8rem;
+  padding: 7px 11px;
+  font-size: 0.82rem;
   font-weight: 800;
   line-height: 1.2;
 }
@@ -974,9 +1153,9 @@
 }
 
 .autoBottleAccordion {
-  border-radius: 12px;
-  border: 1px solid #e3ddd3;
-  background: #fffdfa;
+  border-radius: 16px;
+  border: 1px solid #ebe3f9;
+  background: #fff;
   padding: 0;
   overflow: hidden;
 }
@@ -984,22 +1163,45 @@
 .autoBottleAccordionSummary {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   list-style: none;
   cursor: pointer;
-  padding: 12px;
+  padding: 14px 16px;
   color: #111d2f;
-
+  font-size: 0.96rem;
+  strong {
+    font-size: 0.96rem;
+  }
   &::-webkit-details-marker {
     display: none;
   }
+
+  &::after {
+    content: '›';
+    margin-left: auto;
+    color: #5a6678;
+    font-size: 1.2rem;
+    transition: transform 0.18s ease;
+  }
+}
+
+.autoBottleAccordionSummary :global(img),
+.autoBottleDataLabel :global(img),
+.autoModeMetricLabel :global(img),
+.autoModeFeatureBadge :global(img) {
+  width: 18px;
+  height: 18px;
+}
+
+.autoBottleAccordion[open] .autoBottleAccordionSummary::after {
+  transform: rotate(90deg);
 }
 
 .autoBottleAccordionBody {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 0 12px 12px;
+  padding: 0 16px 16px;
 }
 
 .autoBottleSourceLink {
@@ -1043,10 +1245,25 @@
 
 .autoBottleCardFooterActionBar {
   position: relative;
-
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  padding-top: 4px;
+
+  > :global(.btn) {
+    flex: 1;
+    min-width: 0;
+  }
+
+  @media (max-width: 768px) {
+    gap: 8px;
+    flex-direction: column;
+  }
+}
+
+.autoBottleCardFooterActionBar :global(.btn .btn-icon) {
+  width: 20px;
+  height: 20px;
 }
 
 .autoBottleCardFooterActionBar :global(.btn.icon-circle) {
@@ -1074,7 +1291,7 @@
   align-self: flex-end;
   text-align: right;
   font-size: 0.74rem;
-  color: #94a0b2;
+  color: #98a3b3;
 }
 
 .autoDeleteState {
@@ -1100,13 +1317,13 @@
   }
 
   .autoBottleCard {
-    border-radius: 18px;
+    border-radius: 20px;
     padding: 14px;
   }
 
   .autoBottleCardBody {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 14px;
   }
 
   .autoBottleCardBodyPending {
@@ -1124,6 +1341,26 @@
   .autoBottleCardPreviewWrap {
     min-height: 180px;
     max-height: 180px;
+    border-radius: 18px;
+    :global(.btn-circle.danger-negative) {
+      width: 48px;
+      height: 48px;
+      border-color: transparent;
+      border-radius: 100px !important;
+    }
+  }
+
+  .autoBottleDeleteButton,
+  .autoBottleDeleteState {
+    top: 10px;
+    right: 10px;
+  }
+
+  .autoBottleDeleteButton {
+    width: 40px;
+    height: 40px;
+    min-width: 40px !important;
+    border-radius: 12px !important;
   }
 
   .autoBottleCardPreview {
@@ -1137,8 +1374,13 @@
   }
 
   .autoBottleCardFacts {
-    font-size: 0.84rem;
     gap: 6px;
+  }
+
+  .autoBottleFactChip {
+    min-height: 30px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
   }
 
   .autoDiffColumns {
@@ -1146,7 +1388,7 @@
   }
 
   .autoBottleFoundName {
-    font-size: 0.95rem;
+    font-size: 1.45rem;
   }
 
   .autoBottleCardDataRow {
@@ -1154,7 +1396,7 @@
   }
 
   .autoBottleQuickFactChip {
-    font-size: 0.76rem;
+    font-size: 0.85rem;
   }
 
   .autoModeUploadedActions {
@@ -1173,6 +1415,15 @@
 
   .autoModeTopActions {
     grid-template-columns: 1fr;
+  }
+
+  .autoModeTitleCentered,
+  .autoModeDescriptionCentered {
+    text-align: left;
+  }
+
+  .autoModeMetricValue {
+    font-size: 1.5rem;
   }
 
   // .modeCardBgImage {

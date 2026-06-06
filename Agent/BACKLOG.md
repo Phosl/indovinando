@@ -14,11 +14,21 @@
   catalogo senza nuova ricerca web.
 - Flusso `Fai web-search` con preview differenze, applicazione selettiva degli aggiornamenti e
   badge/token/costo più leggibili.
+- UX auto-tasting rifinita:
+  - toast in alto
+  - facts bottiglia a chip
+  - metriche sessione più chiare
+  - tasto elimina spostato sopra la foto
+  - card mobile/desktop più pulite
 - Salvataggio catalogo esteso a dati utili per quiz e scheda vino (`price_min/max`, profilo gusto,
   note narrative, sorgenti).
 - Quiz automatico migliorato per bottiglia singola, fallback fasce annata, risposte AI più brevi e
   più coerenti con la UI.
 - Metriche auto-tasting separate tra sessione e singola bottiglia (token/costo).
+- Fix robustezza:
+  - fallback `verify-catalog` su lookup immagine
+  - conteggio token web coerente anche quando la ricerca non produce differenze visibili
+  - rimozione warning frontend nella schermata create automatica
 - Aggiornata documentazione tecnica:
   - `Agent/CREA_QUIZ_OPEN_AI.md`
   - `Agent/AUTOVISION_LOGICA_SEMPLICE.md`

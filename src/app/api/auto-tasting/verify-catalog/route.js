@@ -661,7 +661,7 @@ export async function POST(request) {
       return NextResponse.json({error: 'Not authenticated'}, {status: 401})
     }
 
-    const {data: imageRow, error: imageError} = await withTimeout(
+    let {data: imageRow, error: imageError} = await withTimeout(
       supabase
         .from('tasting_bottle_images')
         .select(
@@ -674,7 +674,26 @@ export async function POST(request) {
       'load image',
     )
 
+    const writeDb = createWriteClient(supabase)
+
     if (imageError || !imageRow) {
+      const fallback = await withTimeout(
+        writeDb
+          .from('tasting_bottle_images')
+          .select(
+            'id, uploaded_by, status, original_filename, recognized_name, recognized_producer, recognized_vintage, recognition_confidence, recognized_payload, error_message',
+          )
+          .eq('id', imageId)
+          .maybeSingle(),
+        12000,
+        'load image fallback',
+      ).catch(() => ({data: null, error: null}))
+
+      imageRow = fallback.data || null
+      imageError = fallback.error || imageError
+    }
+
+    if (imageError || !imageRow || imageRow.uploaded_by !== user.id) {
       return NextResponse.json({error: 'Image not found'}, {status: 404})
     }
 
@@ -683,7 +702,6 @@ export async function POST(request) {
     }
 
     const details = imageRow.recognized_payload?.catalog_details || {}
-    const writeDb = createWriteClient(supabase)
     const resolvedPrice =
       details.price ?? details.average_price ?? null
     const resolvedCurrency = details.currency || null
@@ -785,7 +803,7 @@ export async function POST(request) {
       },
     }
 
-    const {data: updatedRow, error: updateError} = await withTimeout(
+    let {data: updatedRow, error: updateError} = await withTimeout(
       supabase
         .from('tasting_bottle_images')
         .update({
@@ -801,6 +819,25 @@ export async function POST(request) {
       12000,
       'update verified image',
     )
+
+    if (updateError && isMissingColumnError(updateError)) {
+      ;({data: updatedRow, error: updateError} = await withTimeout(
+        writeDb
+          .from('tasting_bottle_images')
+          .update({
+            recognized_payload: nextPayload,
+            error_message: null,
+          })
+          .eq('id', imageRow.id)
+          .eq('uploaded_by', user.id)
+          .select(
+            'id, original_filename, storage_bucket, storage_path, status, recognized_name, recognized_producer, recognized_vintage, recognition_confidence, recognized_payload, error_message, created_at',
+          )
+          .single(),
+        12000,
+        'update verified image fallback',
+      ))
+    }
 
     if (updateError) {
       return NextResponse.json({error: updateError.message}, {status: 500})

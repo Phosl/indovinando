@@ -51,6 +51,15 @@ Il web enrichment e disponibile solo se:
 
 Tipicamente succede con il pulsante UI `Fai web-search`.
 
+Nota pratica:
+
+- `Fai web-search` e una azione manuale esplicita
+- se trova differenze utili, apre una preview con confronto `attuale vs proposto`
+- l’utente sceglie quali campi aggiornare
+- se non trova differenze visibili, la UI mostra un esito chiaro invece di aggiornare in modo
+  opaco
+- anche una ricerca senza differenze puo comunque consumare token `web`
+
 Serve a recuperare o completare:
 
 - `grapes`
@@ -141,11 +150,20 @@ Per generare quiz buoni, il catalogo dovrebbe contenere il piu possibile:
    - caratteristiche
    - narrative web/catalogo
    - fonti web
+   - token/costo stimato per bottiglia
 6. L’utente puo fare `Salva nel catalogo`.
 7. Quando ha confermato le bottiglie, apre l’anteprima quiz e sceglie:
    - `Template standard`
    - `Template OpenAI`
 8. Salva il gioco generato.
+
+## UX note aggiornate
+
+- Errori e conferme principali del flusso create/auto-tasting usano toast in-app, non alert
+  browser.
+- I toast ora appaiono in alto, cosi si leggono subito anche su mobile.
+- La scheda bottiglia e stata rifinita come “wine sheet”: facts in chip, box sezione piu chiari,
+  badge/token/costo piu leggibili, e azione elimina spostata sopra la foto.
 
 ## Nota i18n
 

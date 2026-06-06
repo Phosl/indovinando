@@ -13,6 +13,10 @@
   font-weight: 600;
   font-weight: 800;
   letter-spacing: 0.04em;
+  &.btn-medium {
+    padding: 12px 16px;
+    font-size: 18px;
+  }
   &.btn-small {
     padding: 8px 12px;
     font-size: 14px;
@@ -46,6 +50,12 @@
 .btn-icon {
   width: 24px;
   height: 24px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.btn-icon-big {
+  width: 36px;
+  height: 36px;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -176,6 +186,16 @@
   }
 }
 
+.btn.danger-negative {
+  background-color: var(--white);
+  color: var(--danger);
+  border-color: var(--danger);
+
+  &:hover {
+    background: var(--danger-);
+  }
+}
+
 .btn.ai {
   background-color: #d5f1ff;
   color: #1d6e93;
@@ -183,6 +203,14 @@
 
   &:hover {
     background: #c4eafc;
+  }
+}
+.btn.btn-ai {
+  background: linear-gradient(135deg, #5e2ee8, #2d0f93);
+  border-color: #3c18bd;
+  color: #fff;
+  &:hover {
+    background: linear-gradient(135deg, #5e2ee8, #2d0f93);
   }
 }
 

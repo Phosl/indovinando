@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import {Suspense, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import {createClient} from '@/lib/supabaseClient'
@@ -930,6 +931,40 @@ function AnalyzeMagicOverlay({active, className = ''}) {
   )
 }
 
+function AutoToast({toast, onClose, closeLabel}) {
+  useEffect(() => {
+    if (!toast) return undefined
+    const timer = window.setTimeout(() => {
+      onClose()
+    }, toast.duration || 3200)
+    return () => window.clearTimeout(timer)
+  }, [onClose, toast])
+
+  if (!toast) return null
+
+  return (
+    <div className={styles.autoToastViewport} aria-live="polite">
+      <div
+        className={`${styles.autoToast} ${
+          toast.tone === 'success'
+            ? styles.autoToastSuccess
+            : toast.tone === 'info'
+              ? styles.autoToastInfo
+              : styles.autoToastError
+        }`}>
+        <span className={styles.autoToastMessage}>{toast.message}</span>
+        <button
+          type="button"
+          className={styles.autoToastClose}
+          onClick={onClose}
+          aria-label={closeLabel}>
+          <Icon name="removeSmall" size={16} />
+        </button>
+      </div>
+    </div>
+  )
+}
+
 function ModePickerScreen({onPick, onOpenGuide}) {
   const router = useRouter()
   const t = useT('gameCreate')
@@ -941,11 +976,13 @@ function ModePickerScreen({onPick, onOpenGuide}) {
         <button
           className={`${styles.modeCard} ${styles.modeCardQuick}`}
           onClick={() => onPick('quick')}>
-          <img
+          <Image
             src="/game-options-quick.svg"
             alt=""
             aria-hidden="true"
             className={styles.modeCardBgImage}
+            width={260}
+            height={260}
           />
           <div className={styles.modeCardContent}>
             <strong className={styles.modeCardTitle}>{t('quickTitle')}</strong>
@@ -960,11 +997,13 @@ function ModePickerScreen({onPick, onOpenGuide}) {
         <button
           className={`${styles.modeCard} ${styles.modeCardCustom}`}
           onClick={() => onPick('custom')}>
-          <img
+          <Image
             src="/game-options-custom.svg"
             alt=""
             aria-hidden="true"
             className={styles.modeCardBgImage}
+            width={260}
+            height={260}
           />
           <div className={styles.modeCardContent}>
             <strong className={styles.modeCardTitle}>{t('customTitle')}</strong>
@@ -1034,6 +1073,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
   const [quizTemplateMode, setQuizTemplateMode] = useState('standard')
   const [isLeavingSession, setIsLeavingSession] = useState(false)
   const [uploadError, setUploadError] = useState('')
+  const [toast, setToast] = useState(null)
   const [uploadedImages, setUploadedImages] = useState([])
   const [previewLoadProgress, setPreviewLoadProgress] = useState({loaded: 0, total: 0})
   const [sessionImageIds, setSessionImageIds] = useState([])
@@ -1235,16 +1275,6 @@ function AutomaticModePlaceholder({onBack, userId}) {
       return {...prev, loaded: nextLoaded}
     })
   }, [])
-
-  const bindPreviewImageNode = useCallback(
-    (node, imageId) => {
-      if (!node) return
-      if (node.complete) {
-        markPreviewLoaded(imageId)
-      }
-    },
-    [markPreviewLoaded],
-  )
 
   function uploadFileWithProgress(formData, onProgress) {
     return new Promise((resolve, reject) => {
@@ -1450,6 +1480,15 @@ function AutomaticModePlaceholder({onBack, userId}) {
 
     loadUploadedImages()
   }, [loadUploadedImages, userId])
+
+  useEffect(() => {
+    if (!uploadError) return
+    setToast({
+      message: uploadError,
+      tone: 'error',
+      duration: 4200,
+    })
+  }, [uploadError])
 
   useEffect(() => {
     if (typeof window === 'undefined' || uploadedImages.length === 0) return
@@ -1887,7 +1926,8 @@ function AutomaticModePlaceholder({onBack, userId}) {
       if (previewItems.length > 0) {
         const previewItem = previewItems.find((item) => item.id === imageId) || previewItems[0]
         const proposedRow = previewItem?.proposed || null
-        const previewUsage = proposedRow?.recognized_payload?.web_enrichment?.usage || null
+        const previewUsage =
+          previewItem?.usage || proposedRow?.recognized_payload?.web_enrichment?.usage || null
         setWebPreviewUsageByImageId((prev) => ({
           ...prev,
           [imageId]: previewUsage,
@@ -2231,6 +2271,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
 
   return (
     <PageLayout title={t('title')} onBack={handleAttemptExit}>
+      <AutoToast toast={toast} onClose={() => setToast(null)} closeLabel={t('close')} />
       <main className={styles.autoModePage}>
         <h1 className={styles.autoModeTitleCentered}>{t('automaticFlowTitle')}</h1>
         <p className={styles.autoModeDescriptionCentered}>{t('automaticFlowDescription')}</p>
@@ -2279,17 +2320,17 @@ function AutomaticModePlaceholder({onBack, userId}) {
           ) : null}
           {!isUploading && uploadedImages.length > 0 ? (
             <div className={styles.autoModeTopActions}>
-              <button
+              {/* <button
                 type="button"
-                className="btn btn-small ai btn-with-icon-end"
+                className="btn  btn-ai btn-with-icon-end"
                 disabled={isUploading || isAnalyzingAll || !!analyzingImageId || isCreatingQuiz}
                 onClick={handleAnalyzeAll}>
-                <Icon src="/icons/vision.svg" size={20} className="btn-icon" />
+                <Icon src="/icons/vision.svg" size={36} className="btn-icon-big" />
                 {isAnalyzingAll ? t('automaticAnalyzingAll') : t('automaticAnalyzeAllAction')}
-              </button>
+              </button> */}
               <button
                 type="button"
-                className="btn btn-small tertiary"
+                className="btn  tertiary"
                 disabled={
                   isUploading ||
                   isAnalyzingAll ||
@@ -2298,7 +2339,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                   !quizPreview
                 }
                 onClick={() => setIsPreviewOpen(true)}>
-                <Icon src="/icons/quiz.svg" size={18} className="btn-icon" />
+                <Icon src="/icons/quiz.svg" size={36} className="btn-icon-big" />
                 {t('automaticPreviewQuizAction')}
               </button>
             </div>
@@ -2481,9 +2522,13 @@ function AutomaticModePlaceholder({onBack, userId}) {
           <div className={styles.autoModeMetricsGrid}>
             <div className={styles.autoModeMetricCard}>
               <span className={styles.autoModeMetricLabel}>
-                <Icon src="/icons/bottle.svg" size={16} className={styles.autoModeMetricIcon} />
+                <div
+                  className={styles.autoModeMetricLabelIconWrapper + ' ' + styles.metricCardBottle}>
+                  <Icon src="/icons/bottle.svg" size={36} className={styles.autoModeMetricIcon} />
+                </div>
                 {t('automaticMetricBottlesLabel')}
               </span>
+
               <strong className={styles.autoModeMetricValue}>{uploadedImages.length}</strong>
               <span className={styles.autoModeMetricMeta}>
                 {t('automaticMetricBottlesMeta', {
@@ -2494,7 +2539,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
             </div>
             <div className={styles.autoModeMetricCard}>
               <span className={styles.autoModeMetricLabel}>
-                <Icon src="/icons/token.svg" size={16} className={styles.autoModeMetricIcon} />
+                <div
+                  className={styles.autoModeMetricLabelIconWrapper + ' ' + styles.metricCardToken}>
+                  <Icon src="/icons/token.svg" size={36} className={styles.autoModeMetricIcon} />
+                </div>
                 {t('automaticMetricTokensLabel')}
               </span>
               <strong className={styles.autoModeMetricValue}>{autoTastingTokenTotals.total}</strong>
@@ -2507,7 +2555,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
             </div>
             <div className={styles.autoModeMetricCard}>
               <span className={styles.autoModeMetricLabel}>
-                <Icon src="/icons/dollar.svg" size={16} className={styles.autoModeMetricIcon} />
+                <div
+                  className={styles.autoModeMetricLabelIconWrapper + ' ' + styles.metricCardCost}>
+                  <Icon src="/icons/dollar.svg" size={36} className={styles.autoModeMetricIcon} />
+                </div>
                 {t('automaticMetricCostLabel')}
               </span>
               <strong className={styles.autoModeMetricValue}>
@@ -2524,9 +2575,8 @@ function AutomaticModePlaceholder({onBack, userId}) {
               </span>
             </div>
           </div>
-          {uploadError ? <p>{uploadError}</p> : null}
           {uploadedImages.length === 0 ? (
-            <p>{t('automaticBottlesEmpty')}</p>
+            <p className={styles.autoModeEmptyCopy}>{t('automaticBottlesEmpty')}</p>
           ) : (
             <ul className={styles.autoModeUploadedList}>
               {uploadedImages.map((image) => {
@@ -2626,8 +2676,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
                   primaryGrape ? {label: t('automaticQuestionGrape'), value: primaryGrape} : null,
                   details.price_min != null && details.price_max != null
                     ? {
-                        label: t('automaticPriceLabel'),
-                        value: `${details.price_min}${t('automaticMinPriceLabel')} - ${details.price_max}${t('automaticMaxPriceLabel')}${details.currency ? ` ${details.currency}` : ' EUR'}`,
+                        label:
+                          t('automaticPriceLabel') +
+                          (details.currency ? ` ${details.currency}` : ' EUR'),
+                        value: `${details.price_min} - ${details.price_max}`,
                       }
                     : details.average_price != null || details.price != null
                       ? {
@@ -2687,13 +2739,28 @@ function AutomaticModePlaceholder({onBack, userId}) {
                       className={`${styles.autoBottleCardBody} ${!hasRecognitionData ? styles.autoBottleCardBodyPending : ''}`}>
                       <div className={styles.autoBottleCardMediaCol}>
                         <div className={styles.autoBottleCardPreviewWrap}>
-                          <img
-                            ref={(node) => bindPreviewImageNode(node, image.id)}
+                          {deletingImageId === image.id ? (
+                            <span
+                              className={`${styles.autoDeleteState} ${styles.autoBottleDeleteState}`}>
+                              {t('automaticDeleting')}
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              className={`btn danger-negative btn-circle btn-with-icon-end ${styles.autoBottleDeleteButton}`}
+                              disabled={!!deletingImageId || !!analyzingImageId || isAnalyzingAll}
+                              aria-label={`${t('automaticDeleteAction')} ${image.original_filename || image.storage_path}`}
+                              onClick={() => handleDeleteImage(image.id)}>
+                              <Icon src="/icons/bucket.svg" size={24} className="btn-icon-big" />
+                            </button>
+                          )}
+                          <Image
                             src={`/api/auto-tasting/image?id=${image.id}`}
                             alt={image.original_filename || image.storage_path}
                             className={styles.autoBottleCardPreview}
-                            loading="lazy"
-                            decoding="async"
+                            fill
+                            unoptimized
+                            sizes="(max-width: 520px) 100vw, 360px"
                             onLoad={() => markPreviewLoaded(image.id)}
                             onError={() => markPreviewLoaded(image.id)}
                           />
@@ -2766,7 +2833,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                             {hasCatalogSync && (
                               <span className={styles.autoModeFeatureBadge}>
                                 <Icon
-                                  src="/icons/bottles.svg"
+                                  src="/icons/redo.svg"
                                   size={16}
                                   className={styles.autoModeFeatureIcon}
                                 />
@@ -2803,38 +2870,40 @@ function AutomaticModePlaceholder({onBack, userId}) {
                           ) : null}
 
                           {hasCatalogDetails ? (
-                            <p className={styles.autoBottleCardFacts}>
-                              {country ? (
-                                <span className={styles.autoBottleCountryBadge}>
-                                  {countryFlag ? (
-                                    <span aria-hidden="true">{countryFlag}</span>
-                                  ) : null}
-                                  {/* {countryCode ? <span>{countryCode}</span> : null} */}
-                                </span>
-                              ) : null}
-                              {country ? <span>{country}</span> : null}
-                              {region ? <span className={styles.autoBottleFactDot}>•</span> : null}
-                              {region ? <span>{region}</span> : null}
-                              {appellation ? (
-                                <span className={styles.autoBottleFactDot}>•</span>
-                              ) : null}
-                              {appellation ? <span>{appellation}</span> : null}
-                              {wineType ? (
-                                <span className={styles.autoBottleFactDot}>•</span>
-                              ) : null}
-                              {wineType ? <span>{wineType}</span> : null}
-                              {primaryGrape ? (
-                                <span className={styles.autoBottleFactDot}>•</span>
-                              ) : null}
-                              {primaryGrape ? <span>{primaryGrape}</span> : null}
-                            </p>
+                            <div className={styles.autoBottleCardFacts}>
+                              {[
+                                country
+                                  ? {
+                                      value: country,
+                                      withFlag: true,
+                                    }
+                                  : null,
+                                region ? {value: region} : null,
+                                appellation ? {value: appellation} : null,
+                                wineType ? {value: wineType} : null,
+                                primaryGrape ? {value: primaryGrape} : null,
+                              ]
+                                .filter(Boolean)
+                                .map((item, index) => (
+                                  <span
+                                    key={`${image.id}-fact-${index}`}
+                                    className={styles.autoBottleFactChip}>
+                                    {item.withFlag && countryFlag ? (
+                                      <span className={styles.autoBottleCountryBadge}>
+                                        <span aria-hidden="true">{countryFlag}</span>
+                                      </span>
+                                    ) : null}
+                                    <span>{item.value}</span>
+                                  </span>
+                                ))}
+                            </div>
                           ) : null}
 
                           {hasCatalogDetails && (
                             <div className={styles.autoBottleCardDataBlock}>
                               <p className={styles.autoBottleCardDataRow}>
                                 <span className={styles.autoBottleDataLabel}>
-                                  <Icon src="/icons/quiz.svg" size={16} />
+                                  <Icon src="/icons/quiz.svg" size={20} className={styles.icon} />
                                   <strong>{t('automaticQuizDataLabel')}:</strong>
                                 </span>{' '}
                               </p>
@@ -2905,7 +2974,13 @@ function AutomaticModePlaceholder({onBack, userId}) {
                               <div className={styles.autoBottleSectionBlock}>
                                 <p className={styles.autoBottleCardDataRow}>
                                   <span className={styles.autoBottleDataLabel}>
-                                    <Icon src="/icons/quiz.svg" size={16} />
+                                    <span className={styles.autoBottleDataLabelIconWrapper}>
+                                      <Icon
+                                        src="/icons/quiz.svg"
+                                        size={20}
+                                        className={styles.icon}
+                                      />
+                                    </span>
                                     <strong>{t('automaticQuizResolvedLabel')}:</strong>
                                   </span>
                                 </p>
@@ -2923,7 +2998,9 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                 <div className={styles.autoBottleNarrativeCard}>
                                   <p className={styles.autoBottleCardDataRow}>
                                     <span className={styles.autoBottleDataLabel}>
-                                      <Icon src="/icons/book.svg" size={16} />
+                                      <span className={styles.autoBottleDataLabelIconWrapper}>
+                                        <Icon src="/icons/book.svg" size={20} />
+                                      </span>
                                       <strong>{t('automaticQuestionNotable')}:</strong>
                                     </span>
                                   </p>
@@ -2936,7 +3013,9 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                 <div className={styles.autoBottleNarrativeCard}>
                                   <p className={styles.autoBottleCardDataRow}>
                                     <span className={styles.autoBottleDataLabel}>
-                                      <Icon src="/icons/vision.svg" size={16} />
+                                      <span className={styles.autoBottleDataLabelIconWrapper}>
+                                        <Icon src="/icons/web.svg" size={20} />
+                                      </span>
                                       <strong>{t('automaticWebSummaryLabel')}:</strong>
                                     </span>
                                   </p>
@@ -2984,22 +3063,9 @@ function AutomaticModePlaceholder({onBack, userId}) {
                     </div>
 
                     <div className={styles.autoBottleCardFooterActionBar}>
-                      {deletingImageId === image.id ? (
-                        <span className={styles.autoDeleteState}>{t('automaticDeleting')}</span>
-                      ) : (
-                        <button
-                          type="button"
-                          className="btn icon-circle"
-                          disabled={!!deletingImageId || !!analyzingImageId || isAnalyzingAll}
-                          aria-label={`${t('automaticDeleteAction')} ${image.original_filename || image.storage_path}`}
-                          onClick={() => handleDeleteImage(image.id)}>
-                          <Icon src="/icons/bucket.svg" size={18} />
-                        </button>
-                      )}
-
                       <button
                         type="button"
-                        className="btn btn-small ai btn-with-icon-end"
+                        className="btn btn-ai btn-medium btn-with-icon-end"
                         disabled={
                           isAnalyzingAll ||
                           !!analyzingImageId ||
@@ -3008,7 +3074,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                           !!webSearchingImageId
                         }
                         onClick={() => handleAnalyzeImage(image.id)}>
-                        <Icon src="/icons/bolt.svg" size={18} className="btn-icon" />
+                        <Icon src="/icons/bolt.svg" size={36} className="btn-icon-big" />
                         {isAnalyzingThis
                           ? t('automaticAnalyzingSingle')
                           : hasRecognitionData
@@ -3018,7 +3084,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                       {hasRecognitionData ? (
                         <button
                           type="button"
-                          className="btn btn-small neutral"
+                          className="btn quaternary btn-medium btn-with-icon-end"
                           disabled={
                             !!deletingImageId ||
                             !!analyzingImageId ||
@@ -3028,16 +3094,19 @@ function AutomaticModePlaceholder({onBack, userId}) {
                             isProcessingThis
                           }
                           onClick={() => handleWebSearchImage(image.id)}>
-                          <Icon src="/icons/web.svg" size={18} className="btn-icon" />
+                          <Icon src="/icons/web.svg" size={32} className="btn-icon-big" />
                           {isWebSearchingThis
                             ? t('automaticWebSearchingAction')
                             : t('automaticWebSearchAction')}
                         </button>
                       ) : null}
+                    </div>
+
+                    <div className={styles.autoBottleCardFooterActionBar}>
                       {hasRecognitionData ? (
                         <button
                           type="button"
-                          className="btn btn-small neutral"
+                          className="btn success btn-medium btn-with-icon-end"
                           disabled={
                             !!deletingImageId ||
                             !!analyzingImageId ||
@@ -3049,8 +3118,8 @@ function AutomaticModePlaceholder({onBack, userId}) {
                           onClick={() => handleVerifyImage(image.id)}>
                           <Icon
                             src={isVerified ? '/icons/redo.svg' : '/icons/save.svg'}
-                            size={18}
-                            className="btn-icon"
+                            size={36}
+                            className="btn-icon-big"
                           />
                           {isVerifyingThis
                             ? t('automaticSavingCatalogAction')

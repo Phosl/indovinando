@@ -2063,6 +2063,10 @@ export async function POST(request) {
             recognized_payload: mergedRecognizedPayload,
             error_message: extracted.warning_message || null,
           }),
+          usage:
+            extracted?.recognized_payload?.web_enrichment?.usage ||
+            mergedRecognizedPayload?.web_enrichment?.usage ||
+            null,
         })
         continue
       }
