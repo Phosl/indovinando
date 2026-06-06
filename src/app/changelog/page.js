@@ -31,6 +31,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.36.0',
+    date: '6 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'polish automatic tasting flow, web diff UX, and mobile upload resilience',
+    ],
+  },
+
+  {
     version: '1.35.0',
     date: '6 giugno 2026',
     label: 'Auto',
