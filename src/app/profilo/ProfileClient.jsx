@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import {useEffect, useMemo, useState, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
@@ -363,7 +364,13 @@ export default function ProfileClient({
           <div className={styles.userRow}>
             <div className={styles.avatar}>
               {isImgAvatar(avatar) ? (
-                <img src={normalizeSrc(avatar)} alt="avatar" className={styles.avatarImg} />
+                <Image
+                  src={normalizeSrc(avatar)}
+                  alt="avatar"
+                  className={styles.avatarImg}
+                  width={100}
+                  height={100}
+                />
               ) : (
                 avatar
               )}
@@ -416,10 +423,12 @@ export default function ProfileClient({
           {/* Player level */}
           <div className={styles.levelHeader}>
             {loaded ? (
-              <img
+              <Image
                 src={playerLevel.level.svg}
                 className={styles.levelBadgeImg}
                 alt={playerLevel.level.name}
+                width={72}
+                height={72}
               />
             ) : (
               <div className={`skeleton ${styles.levelBadgeImgPlaceholder}`} />
@@ -466,10 +475,12 @@ export default function ProfileClient({
                 <div
                   key={lvl.idx}
                   className={`${styles.levelStripItem} ${isActive ? styles.levelStripActive : ''}`}>
-                  <img
+                  <Image
                     src={lvl.svg}
                     className={styles.levelStripImg}
                     alt={lvl.name}
+                    width={52}
+                    height={52}
                     style={
                       !loaded || (!isActive && !isPast)
                         ? {filter: 'grayscale(1) opacity(0.35)'}
@@ -561,7 +572,7 @@ export default function ProfileClient({
                     onClick={() => handleAvatarSelect(src)}
                     type="button"
                     aria-label={`avatar ${src}`}>
-                    <img src={src} alt="" className={styles.avatarSvgThumb} />
+                    <Image src={src} alt="" className={styles.avatarSvgThumb} width={48} height={48} />
                   </button>
                 ))}
               </div>
@@ -657,9 +668,11 @@ export default function ProfileClient({
         <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
           {PLAYER_LEVELS.map((lvl) => (
             <div key={lvl.idx} style={{display: 'flex', alignItems: 'center', gap: 10}}>
-              <img
+              <Image
                 src={lvl.svg}
                 alt={lvl.name}
+                width={36}
+                height={36}
                 style={{width: 36, height: 36, objectFit: 'contain'}}
               />
               <span style={{fontWeight: 900}}>

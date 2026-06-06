@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import {useState} from 'react'
 import {validateQuestionForm} from '../utils/validations'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
@@ -118,7 +119,14 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
                     disabled={options.length <= 2}
                     className={styles.removeOptionBtn}
                     tabIndex={-1}>
-                    <img src="/icons/remove-small.svg" alt="" aria-hidden="true" className={styles.removeOptionIcon} />
+                    <Image
+                      src="/icons/remove-small.svg"
+                      alt=""
+                      aria-hidden="true"
+                      className={styles.removeOptionIcon}
+                      width={16}
+                      height={16}
+                    />
                   </button>
                 </div>
               ))}

@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import {isBottleComplete} from '../utils/validations'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {getBottlesListText} from '../utils/constants'
@@ -67,10 +68,12 @@ export default function BottlesList({
                     </button>
 
                     {!isComplete && (
-                      <img
+                      <Image
                         className={styles.status}
                         src="/check-warning.svg"
                         alt=""
+                        width={22}
+                        height={22}
                         aria-hidden="true"
                       />
                     )}

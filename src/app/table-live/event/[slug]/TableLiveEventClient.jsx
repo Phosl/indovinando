@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import {useMemo, useRef, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
@@ -176,7 +177,7 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
       </div>
       <main className={styles.container}>
         <header className={styles.header}>
-          <img src="/logo.svg" alt="Indovinando Logo" className={styles.logo} />
+          <Image src="/logo.svg" alt="Indovinando Logo" className={styles.logo} width={96} height={96} />
           <h1>{eventTitle}</h1>
           {/* <p>{gameName}</p> */}
         </header>

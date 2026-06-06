@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import {memo, useCallback, useEffect, useState, useRef} from 'react'
 import {usePathname, useRouter, useSearchParams} from 'next/navigation'
 import modalStyles from './QuestionnaireIntroModal.module.scss'
@@ -12,6 +13,7 @@ import QuestionModal from '../QuestionModal'
 import GameStepsBreadcrumbs from '../GameStepsBreadcrumbs'
 import BottlesList from '../BottlesList'
 import BottleModal from '../BottleModal'
+import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import TopBar from '@/components/TopBar'
 import {validateGameName, validateQuestionnaire, validateBottleForm} from '../utils/validations'
 import {
@@ -42,6 +44,7 @@ function QuestionnaireIntroModal({
   return (
     <div className={modalStyles.modalOverlay}>
       <div className={modalStyles.modalContent}>
+        <ModalCloseButton className={modalStyles.closeBtn} onClick={onClose} />
         <div className={modalStyles.modalBody}>
           <h2 className={modalStyles.modalTitle}>{title}</h2>
           <p className={modalStyles.modalDescription}>{description}</p>
@@ -88,6 +91,7 @@ function BottlesIntroModal({
   return (
     <div className={modalStyles.modalOverlay}>
       <div className={modalStyles.modalContent}>
+        <ModalCloseButton className={modalStyles.closeBtn} onClick={onClose} />
         <div className={modalStyles.modalBody}>
           <h2 className={modalStyles.modalTitle}>{title}</h2>
           <p className={modalStyles.modalDescription}>{description}</p>
@@ -225,7 +229,7 @@ const StepOneSection = memo(function StepOneSection({
                   }`}
                   onClick={() => onAvatarChange(avatarIndex)}
                   aria-pressed={selectedAvatarIndex === avatarIndex}>
-                  <img src={avatarPath} alt="" aria-hidden="true" />
+                  <Image src={avatarPath} alt="" aria-hidden="true" width={64} height={64} />
                 </button>
               ))}
             </div>
@@ -611,7 +615,7 @@ export default function GameEditor({
 
       // Step already initialized to 2 via useState — no override needed here
     }
-  }, [isEditMode, initialGame, isQuickCreate, initialQuestions, initialGameName])
+  }, [isEditMode, initialGame, isQuickCreate, initialQuestions, initialBottles, initialGameName])
 
   useEffect(() => {
     if (avatarInitializedRef.current) return
