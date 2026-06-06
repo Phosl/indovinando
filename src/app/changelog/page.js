@@ -29,6 +29,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.32.0',
+    date: '6 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'polish game creation UX, profile language switching, and table-live join flow',
+    ],
+  },
+
+  {
     version: '1.31.1',
     date: '5 giugno 2026',
     label: 'Auto',
