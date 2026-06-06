@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.37.0',
+    date: '6 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'refine changelog presentation and add development activity timeline',
+    ],
+  },
+
+  {
     version: '1.36.3',
     date: '6 giugno 2026',
     label: 'Auto',
