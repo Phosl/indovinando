@@ -16,6 +16,7 @@ export default function QuestionsList({
   onEditQuestion,
   onNewQuestion,
   onDeleteQuestion,
+  onRequestDeleteQuestion,
   isQuickCreate = false,
 }) {
   const {lang} = useLanguage()
@@ -64,9 +65,11 @@ export default function QuestionsList({
                           className="btn btn-mini danger btn-only-text"
                           onClick={(e) => {
                             e.stopPropagation()
-                            if (confirm(text.confirmDelete)) {
-                              onDeleteQuestion(index)
+                            if (onRequestDeleteQuestion) {
+                              onRequestDeleteQuestion(index)
+                              return
                             }
+                            onDeleteQuestion(index)
                           }}>
                           {text.delete}
                         </button>

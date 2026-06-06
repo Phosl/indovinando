@@ -18,6 +18,7 @@ export default function BottlesList({
   onEditBottle,
   onNewBottle,
   onDeleteBottle,
+  onRequestDeleteBottle,
 }) {
   const {lang} = useLanguage()
   const text = getBottlesListText(lang)
@@ -56,9 +57,11 @@ export default function BottlesList({
                       className="btn btn-mini danger btn-only-text"
                       onClick={(e) => {
                         e.stopPropagation()
-                        if (confirm(text.confirmDelete)) {
-                          onDeleteBottle(index)
+                        if (onRequestDeleteBottle) {
+                          onRequestDeleteBottle(index)
+                          return
                         }
+                        onDeleteBottle(index)
                       }}>
                       {text.delete}
                     </button>

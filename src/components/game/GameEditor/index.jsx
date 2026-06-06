@@ -42,28 +42,32 @@ function QuestionnaireIntroModal({
   return (
     <div className={modalStyles.modalOverlay}>
       <div className={modalStyles.modalContent}>
-        <h2 className={modalStyles.modalTitle}>{title}</h2>
-        <p className={modalStyles.modalDescription}>{description}</p>
-        {isQuickCreate && questions?.length > 0 && (
-          <div className={modalStyles.quickListBox}>
-            <b>{questionsLabel}</b>
-            <ul className={modalStyles.quickList}>
-              {questions.map((q, i) => (
-                <li key={i} className={modalStyles.quickListItem}>
-                  {q.text || `${questionFallbackLabel} ${i + 1}`}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        <div className={modalStyles.buttonContainer}>
-          <Button variant="success" onClick={onClose}>
-            {closeLabel}
-          </Button>
+        <div className={modalStyles.modalBody}>
+          <h2 className={modalStyles.modalTitle}>{title}</h2>
+          <p className={modalStyles.modalDescription}>{description}</p>
+          {isQuickCreate && questions?.length > 0 && (
+            <div className={modalStyles.quickListBox}>
+              <b>{questionsLabel}</b>
+              <ul className={modalStyles.quickList}>
+                {questions.map((q, i) => (
+                  <li key={i} className={modalStyles.quickListItem}>
+                    {q.text || `${questionFallbackLabel} ${i + 1}`}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+        <div className={modalStyles.bottomActionBar}>
+          <div className={modalStyles.buttonContainer}>
+            <Button variant="success" onClick={onClose}>
+              {closeLabel}
+            </Button>
 
-          <Button variant="neutral" size="small" textOnly onClick={onDisable}>
-            {disableLabel}
-          </Button>
+            <Button variant="neutral" size="small" textOnly onClick={onDisable}>
+              {disableLabel}
+            </Button>
+          </div>
         </div>
       </div>
     </div>
@@ -84,14 +88,47 @@ function BottlesIntroModal({
   return (
     <div className={modalStyles.modalOverlay}>
       <div className={modalStyles.modalContent}>
-        <h2 className={modalStyles.modalTitle}>{title}</h2>
-        <p className={modalStyles.modalDescription}>{description}</p>
-        <div className={modalStyles.buttonContainer}>
-          <Button variant="success" onClick={onClose}>
-            {closeLabel}
+        <div className={modalStyles.modalBody}>
+          <h2 className={modalStyles.modalTitle}>{title}</h2>
+          <p className={modalStyles.modalDescription}>{description}</p>
+        </div>
+        <div className={modalStyles.bottomActionBar}>
+          <div className={modalStyles.buttonContainer}>
+            <Button variant="success" onClick={onClose}>
+              {closeLabel}
+            </Button>
+            <Button variant="neutral" size="small" textOnly onClick={onDisable}>
+              {disableLabel}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function DeleteConfirmModal({
+  isOpen,
+  title,
+  description,
+  confirmLabel,
+  cancelLabel,
+  onConfirm,
+  onCancel,
+}) {
+  if (!isOpen) return null
+
+  return (
+    <div className={modalStyles.modalOverlay}>
+      <div className={modalStyles.confirmDialog}>
+        <h3 className={modalStyles.confirmTitle}>{title}</h3>
+        <p className={modalStyles.confirmDescription}>{description}</p>
+        <div className={modalStyles.confirmActions}>
+          <Button variant="neutral" onClick={onCancel}>
+            {cancelLabel}
           </Button>
-          <Button variant="neutral" size="small" textOnly onClick={onDisable}>
-            {disableLabel}
+          <Button variant="danger" onClick={onConfirm}>
+            {confirmLabel}
           </Button>
         </div>
       </div>
@@ -211,6 +248,7 @@ const StepTwoSection = memo(function StepTwoSection({
   onEditQuestion,
   onNewQuestion,
   onDeleteQuestion,
+  onRequestDeleteQuestion,
   onSaveQuestionnaire,
   onBack,
   onShowIntro,
@@ -235,6 +273,7 @@ const StepTwoSection = memo(function StepTwoSection({
           onEditQuestion={onEditQuestion}
           onNewQuestion={onNewQuestion}
           onDeleteQuestion={onDeleteQuestion}
+          onRequestDeleteQuestion={onRequestDeleteQuestion}
           isQuickCreate={isQuickCreate}
         />
       </div>
@@ -298,6 +337,7 @@ const StepFourSection = memo(function StepFourSection({
   onEditBottle,
   onNewBottle,
   onDeleteBottle,
+  onRequestDeleteBottle,
   onShowInfo,
   onBack,
   onPublish,
@@ -325,6 +365,7 @@ const StepFourSection = memo(function StepFourSection({
           onEditBottle={onEditBottle}
           onNewBottle={onNewBottle}
           onDeleteBottle={onDeleteBottle}
+          onRequestDeleteBottle={onRequestDeleteBottle}
         />
       </div>
 
@@ -425,6 +466,7 @@ export default function GameEditor({
   const [stepDirection, setStepDirection] = useState('forward')
   const [animateStep, setAnimateStep] = useState(false)
   const [toast, setToast] = useState(null)
+  const [pendingDelete, setPendingDelete] = useState(null)
   const savePhaseRef = useRef('idle')
   const initialStepOverrideRef = useRef(startsAtStep2 ? 2 : null)
   const pendingStepRef = useRef(null)
@@ -914,6 +956,29 @@ export default function GameEditor({
     setBottles((prev) => prev.filter((_, i) => i !== index))
   }
 
+  function requestDeleteQuestion(index) {
+    setPendingDelete({
+      type: 'question',
+      index,
+      title: t('questionsList.confirmDelete'),
+    })
+  }
+
+  function requestDeleteBottle(index) {
+    setPendingDelete({
+      type: 'bottle',
+      index,
+      title: t('bottlesList.confirmDelete'),
+    })
+  }
+
+  function confirmPendingDelete() {
+    if (!pendingDelete) return
+    if (pendingDelete.type === 'question') deleteQuestion(pendingDelete.index)
+    if (pendingDelete.type === 'bottle') deleteBottle(pendingDelete.index)
+    setPendingDelete(null)
+  }
+
   let stepContent = null
 
   if (step === 1) {
@@ -937,6 +1002,7 @@ export default function GameEditor({
         onEditQuestion={openQuestionModal}
         onNewQuestion={openNewQuestionModal}
         onDeleteQuestion={deleteQuestion}
+        onRequestDeleteQuestion={requestDeleteQuestion}
         onSaveQuestionnaire={saveQuestionnaire}
         onBack={() => goToStep(1)}
         onShowIntro={() => setShowQuestionnaireIntro(true)}
@@ -962,6 +1028,7 @@ export default function GameEditor({
         onEditBottle={selectBottle}
         onNewBottle={startNewBottle}
         onDeleteBottle={deleteBottle}
+        onRequestDeleteBottle={requestDeleteBottle}
         onShowInfo={() => setShowBottlesIntro(true)}
         onBack={() => goToStep(3)}
         onPublish={publishGame}
@@ -1139,6 +1206,16 @@ export default function GameEditor({
         onSave={handleAddQuestion}
         onNotify={showToast}
         onCancel={closeQuestionModal}
+      />
+
+      <DeleteConfirmModal
+        isOpen={!!pendingDelete}
+        title={pendingDelete?.title || ''}
+        description={pendingDelete?.description || ''}
+        confirmLabel={tCommon('delete')}
+        cancelLabel={tCommon('cancel')}
+        onConfirm={confirmPendingDelete}
+        onCancel={() => setPendingDelete(null)}
       />
     </div>
   )

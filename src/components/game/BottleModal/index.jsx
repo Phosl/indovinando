@@ -192,6 +192,10 @@ export default function BottleModal({
           {isInfoStep && (
             <div className={styles.bottleInfoSection}>
               <h4>{text.wineInfoTitle}</h4>
+              <ul className={styles.infoChecklist}>
+                <li>{text.wineInfoHintPrimary}</li>
+                <li>{text.wineInfoHintSecondary}</li>
+              </ul>
               <div className={styles.typePills} role="radiogroup" aria-label={text.wineTypeAriaLabel}>
                 {WINE_TYPES.map((item) => (
                   <button
@@ -218,6 +222,7 @@ export default function BottleModal({
 
               {currentQuestionIsNeutral ? (
                 <div className={styles.ratingSliderBlock}>
+                  <span className={styles.neutralTag}>{text.summaryNeutralQuestion}</span>
                   <div className={styles.ratingInfoTitle}>
                     {currentQuestionIsRating
                       ? text.neutralRatingTitle

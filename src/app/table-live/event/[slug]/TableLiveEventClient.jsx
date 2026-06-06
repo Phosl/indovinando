@@ -4,6 +4,7 @@ import {useMemo, useRef, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import AvatarDisplay from '@/components/AvatarDisplay'
+import Loader from '@/components/Loader'
 import {useT} from '@/lib/i18n/useT'
 import styles from './tableLiveEvent.module.scss'
 import {Button} from '@/components/ui/Button'
@@ -30,6 +31,7 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
   const [joinCode, setJoinCode] = useState('')
   const [selectedAvatarId, setSelectedAvatarId] = useState(1)
   const [loading, setLoading] = useState(false)
+  const [redirecting, setRedirecting] = useState(false)
   const [error, setError] = useState('')
   const joinCodeInputRefs = useRef([])
 
@@ -88,6 +90,7 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
     }
     setError('')
     setLoading(true)
+    let didRedirect = false
     try {
       const response = await fetch('/api/table-live/session/create', {
         method: 'POST',
@@ -103,11 +106,13 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
         return
       }
       persistPlayer(payload.sessionId, payload, selectedAvatarId)
+      didRedirect = true
+      setRedirecting(true)
       router.push(`/table-live/session/${payload.sessionId}`)
     } catch {
       setError(t('networkError'))
     } finally {
-      setLoading(false)
+      if (!didRedirect) setLoading(false)
     }
   }
 
@@ -119,6 +124,7 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
     }
     setError('')
     setLoading(true)
+    let didRedirect = false
     try {
       const response = await fetch('/api/table-live/session/join', {
         method: 'POST',
@@ -135,12 +141,32 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
         return
       }
       persistPlayer(payload.sessionId, payload, selectedAvatarId)
+      didRedirect = true
+      setRedirecting(true)
       router.push(`/table-live/session/${payload.sessionId}`)
     } catch {
       setError(t('networkError'))
     } finally {
-      setLoading(false)
+      if (!didRedirect) setLoading(false)
     }
+  }
+
+  if (redirecting) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.topBarWrap}>
+          <TopBar title={t('topBarTitle')} onBack={() => router.push('/')} />
+        </div>
+        <main className={styles.container}>
+          <section className={styles.card}>
+            <LoaderRow
+              label={step === 'create' ? t('creatingAction') : t('joiningAction')}
+              hint={t('eventLabel', {title})}
+            />
+          </section>
+        </main>
+      </div>
+    )
   }
 
   return (
@@ -294,6 +320,15 @@ export default function TableLiveEventClient({eventSlug, eventTitle, gameName}) 
       <button className={styles.discoverAppBtn} type="button" onClick={() => router.push('/auth')}>
         {t('discoverAppAction')}
       </button>
+    </div>
+  )
+}
+
+function LoaderRow({label, hint}) {
+  return (
+    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12}}>
+      <Loader label={label} />
+      {hint ? <p style={{margin: 0, opacity: 0.7, textAlign: 'center'}}>{hint}</p> : null}
     </div>
   )
 }

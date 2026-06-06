@@ -8,7 +8,8 @@
     "saving": "Salvataggio...",
     "logout": "Logout",
     "next": "Avanti",
-    "done": "Fine"
+    "done": "Fine",
+    "delete": "Elimina"
   },
   "home": {
     "versionLabel": "Versione Beta",
@@ -695,6 +696,8 @@
       "yearPlaceholder": "Anno",
       "wineInfoTitle": "Info vino",
       "wineTypeAriaLabel": "Tipo di vino",
+      "wineInfoHintPrimary": "Seleziona il tipo di vino per questa bottiglia.",
+      "wineInfoHintSecondary": "Questo dato aiuta a rendere più chiari quiz, scheda e catalogo.",
       "questionTitle": "Domanda {index}",
       "selectWineType": "Seleziona il tipo di vino.",
       "next": "Avanti",

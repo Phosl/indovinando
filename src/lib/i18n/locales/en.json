@@ -685,6 +685,8 @@
       "yearPlaceholder": "Year",
       "wineInfoTitle": "Wine info",
       "wineTypeAriaLabel": "Wine type",
+      "wineInfoHintPrimary": "Select the wine type for this bottle.",
+      "wineInfoHintSecondary": "This helps keep the quiz, bottle card, and catalog clearer.",
       "questionTitle": "Question {index}",
       "selectWineType": "Select wine type.",
       "next": "Next",
