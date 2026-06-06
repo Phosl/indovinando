@@ -1,10 +1,11 @@
 'use client'
 
-import {useEffect, useRef, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {usePathname, useRouter} from 'next/navigation'
 
 const LEAVE_MS = 0
 const ENTER_MS = 220
+const RECOVERY_MS = 1200
 
 function shouldIgnoreClick(event) {
   return (
@@ -37,48 +38,77 @@ export default function PageTransitionShell({children}) {
   const router = useRouter()
   const pathname = usePathname()
   const [isLeaving, setIsLeaving] = useState(false)
-  const [isEntering, setIsEntering] = useState(false)
   const [direction, setDirection] = useState('forward')
   const leaveTimeoutRef = useRef(null)
-  const enterTimeoutRef = useRef(null)
+  const recoveryTimeoutRef = useRef(null)
   const transitionLockRef = useRef(false)
   const nextDirectionRef = useRef('forward')
   const prefetchedHrefsRef = useRef(new Set())
 
-  const prefetchHref = (href) => {
+  const clearScheduledTransitions = useCallback(() => {
+    if (leaveTimeoutRef.current) {
+      clearTimeout(leaveTimeoutRef.current)
+      leaveTimeoutRef.current = null
+    }
+
+    if (recoveryTimeoutRef.current) {
+      clearTimeout(recoveryTimeoutRef.current)
+      recoveryTimeoutRef.current = null
+    }
+  }, [])
+
+  const resetTransitionState = useCallback(() => {
+    clearScheduledTransitions()
+    setIsLeaving(false)
+    transitionLockRef.current = false
+    nextDirectionRef.current = 'forward'
+    setDirection('forward')
+  }, [clearScheduledTransitions])
+
+  const prefetchHref = useCallback((href) => {
     if (!href || prefetchedHrefsRef.current.has(href)) return
     prefetchedHrefsRef.current.add(href)
     router.prefetch(href)
-  }
+  }, [router])
 
-  const queueDirection = (nextDirection) => {
+  const queueDirection = useCallback((nextDirection) => {
     const normalized = nextDirection === 'back' ? 'back' : 'forward'
     nextDirectionRef.current = normalized
     setDirection(normalized)
-  }
+  }, [])
 
   useEffect(() => {
-    setIsLeaving(false)
-    setIsEntering(true)
-    setDirection(nextDirectionRef.current)
+    clearScheduledTransitions()
 
-    if (enterTimeoutRef.current) {
-      clearTimeout(enterTimeoutRef.current)
-    }
-
-    enterTimeoutRef.current = window.setTimeout(() => {
-      setIsEntering(false)
+    const frameId = window.requestAnimationFrame(() => {
+      setIsLeaving(false)
       transitionLockRef.current = false
       nextDirectionRef.current = 'forward'
       setDirection('forward')
-    }, ENTER_MS)
+    })
 
     return () => {
-      if (enterTimeoutRef.current) {
-        clearTimeout(enterTimeoutRef.current)
-      }
+      window.cancelAnimationFrame(frameId)
     }
-  }, [pathname])
+  }, [clearScheduledTransitions, pathname])
+
+  useEffect(() => {
+    const recoverIfNeeded = () => {
+      if (document.hidden) return
+      if (!transitionLockRef.current && !isLeaving) return
+      resetTransitionState()
+    }
+
+    window.addEventListener('pageshow', recoverIfNeeded)
+    window.addEventListener('focus', recoverIfNeeded)
+    document.addEventListener('visibilitychange', recoverIfNeeded)
+
+    return () => {
+      window.removeEventListener('pageshow', recoverIfNeeded)
+      window.removeEventListener('focus', recoverIfNeeded)
+      document.removeEventListener('visibilitychange', recoverIfNeeded)
+    }
+  }, [isLeaving, resetTransitionState])
 
   useEffect(() => {
     const onNavigationIntent = (event) => {
@@ -116,9 +146,19 @@ export default function PageTransitionShell({children}) {
         clearTimeout(leaveTimeoutRef.current)
       }
 
+      if (recoveryTimeoutRef.current) {
+        clearTimeout(recoveryTimeoutRef.current)
+      }
+
       leaveTimeoutRef.current = window.setTimeout(() => {
         router.push(nextHref)
       }, LEAVE_MS)
+
+      recoveryTimeoutRef.current = window.setTimeout(() => {
+        if (transitionLockRef.current) {
+          resetTransitionState()
+        }
+      }, RECOVERY_MS)
     }
 
     const onPointerOver = (event) => {
@@ -149,13 +189,15 @@ export default function PageTransitionShell({children}) {
       document.removeEventListener('pointerover', onPointerOver, true)
       document.removeEventListener('focusin', onFocusIn, true)
       document.removeEventListener('click', onDocumentClick, true)
-      if (leaveTimeoutRef.current) {
-        clearTimeout(leaveTimeoutRef.current)
-      }
+      clearScheduledTransitions()
     }
-  }, [router])
+  }, [clearScheduledTransitions, prefetchHref, queueDirection, resetTransitionState, router])
 
-  const className = `route-shell route-${direction}${isLeaving ? ' is-leaving' : ''}${isEntering ? ' is-entering' : ''}`
+  const className = `route-shell route-${direction}${isLeaving ? ' is-leaving' : ' is-entering'}`
 
-  return <div className={className}>{children}</div>
+  return (
+    <div key={`${pathname || 'root'}-${direction}`} className={className}>
+      {children}
+    </div>
+  )
 }
