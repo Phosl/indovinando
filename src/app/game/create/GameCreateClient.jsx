@@ -2298,6 +2298,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                   !quizPreview
                 }
                 onClick={() => setIsPreviewOpen(true)}>
+                <Icon src="/icons/quiz.svg" size={18} className="btn-icon" />
                 {t('automaticPreviewQuizAction')}
               </button>
             </div>
@@ -2479,7 +2480,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
           <strong>{t('automaticBottlesTitle')}</strong>
           <div className={styles.autoModeMetricsGrid}>
             <div className={styles.autoModeMetricCard}>
-              <span className={styles.autoModeMetricLabel}>{t('automaticMetricBottlesLabel')}</span>
+              <span className={styles.autoModeMetricLabel}>
+                <Icon src="/icons/bottle.svg" size={16} className={styles.autoModeMetricIcon} />
+                {t('automaticMetricBottlesLabel')}
+              </span>
               <strong className={styles.autoModeMetricValue}>{uploadedImages.length}</strong>
               <span className={styles.autoModeMetricMeta}>
                 {t('automaticMetricBottlesMeta', {
@@ -2489,7 +2493,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
               </span>
             </div>
             <div className={styles.autoModeMetricCard}>
-              <span className={styles.autoModeMetricLabel}>{t('automaticMetricTokensLabel')}</span>
+              <span className={styles.autoModeMetricLabel}>
+                <Icon src="/icons/token.svg" size={16} className={styles.autoModeMetricIcon} />
+                {t('automaticMetricTokensLabel')}
+              </span>
               <strong className={styles.autoModeMetricValue}>{autoTastingTokenTotals.total}</strong>
               <span className={styles.autoModeMetricMeta}>
                 {t('automaticMetricTokensMeta', {
@@ -2499,7 +2506,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
               </span>
             </div>
             <div className={styles.autoModeMetricCard}>
-              <span className={styles.autoModeMetricLabel}>{t('automaticMetricCostLabel')}</span>
+              <span className={styles.autoModeMetricLabel}>
+                <Icon src="/icons/dollar.svg" size={16} className={styles.autoModeMetricIcon} />
+                {t('automaticMetricCostLabel')}
+              </span>
               <strong className={styles.autoModeMetricValue}>
                 {formatEstimatedCost(autoTastingTokenTotals.cost) || '—'}
               </strong>
@@ -2824,40 +2834,53 @@ function AutomaticModePlaceholder({onBack, userId}) {
                             <div className={styles.autoBottleCardDataBlock}>
                               <p className={styles.autoBottleCardDataRow}>
                                 <span className={styles.autoBottleDataLabel}>
-                                  <Icon src="/icons/vision.svg" size={16} />
+                                  <Icon src="/icons/quiz.svg" size={16} />
                                   <strong>{t('automaticQuizDataLabel')}:</strong>
                                 </span>{' '}
-                                {[country, region, wineType, image.recognized_vintage]
-                                  .filter(Boolean)
-                                  .join(' · ') || '-'}
-                                {Array.isArray(details.grapes) && details.grapes.length > 0
-                                  ? ` · ${details.grapes.join(', ')}`
-                                  : ''}
-                                {details.price_min != null && details.price_max != null
-                                  ? ` · ${t('automaticPriceLabel')}: ${details.price_min} -${details.price_max}${details.currency ? ` ${details.currency}` : ' EUR'}`
-                                  : details.average_price != null || details.price != null
-                                    ? ` · ${t('automaticPriceLabel')}: ${details.average_price ?? details.price}${details.currency ? ` ${details.currency}` : ' EUR'}`
-                                    : ''}
-                                {details.average_price != null || details.price != null
-                                  ? ` · ${t('automaticMediumPriceLabel')}: ${normalizePriceAnswer(details.average_price ?? details.price)}${details.currency ? `` : ''}`
-                                  : ''}
-                                {priceBand ? ` · ${t('automaticQuestionPrice')}: ${priceBand}` : ''}
-                                {details.body ||
-                                details.acidity ||
-                                details.harmony ||
-                                details.harmonize
-                                  ? ` · ${[
-                                      normalizeBodyForQuiz(details.body, lang),
-                                      normalizeAcidityForQuiz(details.acidity, lang),
-                                      normalizeHarmonyForQuiz(
-                                        details.harmony || details.harmonize,
-                                        lang,
-                                      ),
-                                    ]
-                                      .filter(Boolean)
-                                      .join(' / ')}`
-                                  : ''}
                               </p>
+                              <div className={styles.autoBottleQuickFacts}>
+                                {[
+                                  country,
+                                  region,
+                                  wineType,
+                                  image.recognized_vintage,
+                                  ...(Array.isArray(details.grapes) && details.grapes.length > 0
+                                    ? details.grapes
+                                    : []),
+                                  details.price_min != null && details.price_max != null
+                                    ? `${t('automaticPriceLabel')}: ${details.price_min}-${details.price_max}${details.currency ? ` ${details.currency}` : ' EUR'}`
+                                    : details.average_price != null || details.price != null
+                                      ? `${t('automaticPriceLabel')}: ${details.average_price ?? details.price}${details.currency ? ` ${details.currency}` : ' EUR'}`
+                                      : null,
+                                  details.average_price != null || details.price != null
+                                    ? `${t('automaticMediumPriceLabel')}: ${normalizePriceAnswer(details.average_price ?? details.price)}`
+                                    : null,
+                                  priceBand ? `${t('automaticQuestionPrice')}: ${priceBand}` : null,
+                                  details.body ||
+                                  details.acidity ||
+                                  details.harmony ||
+                                  details.harmonize
+                                    ? [
+                                        normalizeBodyForQuiz(details.body, lang),
+                                        normalizeAcidityForQuiz(details.acidity, lang),
+                                        normalizeHarmonyForQuiz(
+                                          details.harmony || details.harmonize,
+                                          lang,
+                                        ),
+                                      ]
+                                        .filter(Boolean)
+                                        .join(' / ')
+                                    : null,
+                                ]
+                                  .filter(Boolean)
+                                  .map((item, index) => (
+                                    <span
+                                      key={`${image.id}-quick-${index}`}
+                                      className={styles.autoBottleQuickFactChip}>
+                                      {item}
+                                    </span>
+                                  ))}
+                              </div>
                               {bottleSpecItems.length > 0 ? (
                                 <div className={styles.autoBottleSectionBlock}>
                                   <p className={styles.autoBottleSectionTitle}>
@@ -2882,7 +2905,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                               <div className={styles.autoBottleSectionBlock}>
                                 <p className={styles.autoBottleCardDataRow}>
                                   <span className={styles.autoBottleDataLabel}>
-                                    <Icon src="/icons/match.svg" size={16} />
+                                    <Icon src="/icons/quiz.svg" size={16} />
                                     <strong>{t('automaticQuizResolvedLabel')}:</strong>
                                   </span>
                                 </p>
@@ -2900,7 +2923,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                 <div className={styles.autoBottleNarrativeCard}>
                                   <p className={styles.autoBottleCardDataRow}>
                                     <span className={styles.autoBottleDataLabel}>
-                                      <Icon src="/icons/match.svg" size={16} />
+                                      <Icon src="/icons/book.svg" size={16} />
                                       <strong>{t('automaticQuestionNotable')}:</strong>
                                     </span>
                                   </p>
@@ -2925,7 +2948,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                               {webSources.length > 0 ? (
                                 <details className={styles.autoBottleAccordion}>
                                   <summary className={styles.autoBottleAccordionSummary}>
-                                    <Icon src="/icons/vision.svg" size={16} />
+                                    <Icon src="/icons/web.svg" size={16} />
                                     <strong>{t('automaticWebSourcesLabel')}:</strong>
                                   </summary>
                                   <div className={styles.autoBottleAccordionBody}>
@@ -2942,17 +2965,20 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                   </div>
                                 </details>
                               ) : null}
+                              {(image.error_message || webSearchError) && (
+                                <span
+                                  className={`${styles.autoModeUploadedError} ${styles.autoBottleInlineStatus}`}>
+                                  {webSearchError || image.error_message}
+                                </span>
+                              )}
+                              {webStatusMessage && !webSearchError ? (
+                                <span
+                                  className={`${styles.autoModeUploadedError} ${styles.autoBottleInlineStatus}`}>
+                                  {webStatusMessage}
+                                </span>
+                              ) : null}
                             </div>
                           )}
-
-                          {(image.error_message || webSearchError) && (
-                            <span className={styles.autoModeUploadedError}>
-                              {webSearchError || image.error_message}
-                            </span>
-                          )}
-                          {webStatusMessage && !webSearchError ? (
-                            <span className={styles.autoModeUploadedError}>{webStatusMessage}</span>
-                          ) : null}
                         </div>
                       ) : null}
                     </div>
@@ -2967,7 +2993,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                           disabled={!!deletingImageId || !!analyzingImageId || isAnalyzingAll}
                           aria-label={`${t('automaticDeleteAction')} ${image.original_filename || image.storage_path}`}
                           onClick={() => handleDeleteImage(image.id)}>
-                          <Icon name="removeSmall" size={20} />
+                          <Icon src="/icons/bucket.svg" size={18} />
                         </button>
                       )}
 
@@ -2982,7 +3008,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                           !!webSearchingImageId
                         }
                         onClick={() => handleAnalyzeImage(image.id)}>
-                        <Icon src="/icons/vision.svg" size={18} className="btn-icon" />
+                        <Icon src="/icons/bolt.svg" size={18} className="btn-icon" />
                         {isAnalyzingThis
                           ? t('automaticAnalyzingSingle')
                           : hasRecognitionData
@@ -3002,6 +3028,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                             isProcessingThis
                           }
                           onClick={() => handleWebSearchImage(image.id)}>
+                          <Icon src="/icons/web.svg" size={18} className="btn-icon" />
                           {isWebSearchingThis
                             ? t('automaticWebSearchingAction')
                             : t('automaticWebSearchAction')}
@@ -3020,6 +3047,11 @@ function AutomaticModePlaceholder({onBack, userId}) {
                             isProcessingThis
                           }
                           onClick={() => handleVerifyImage(image.id)}>
+                          <Icon
+                            src={isVerified ? '/icons/redo.svg' : '/icons/save.svg'}
+                            size={18}
+                            className="btn-icon"
+                          />
                           {isVerifyingThis
                             ? t('automaticSavingCatalogAction')
                             : isVerified

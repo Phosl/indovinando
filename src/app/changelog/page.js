@@ -19,11 +19,13 @@ const UI_TEXT = {
     title: '📋 Changelog',
     subtitle: 'Cronologia degli aggiornamenti di Indovinando',
     autoLabel: 'Auto',
+    descriptionToggle: 'Descrizione commit',
   },
   en: {
     title: '📋 Changelog',
     subtitle: 'History of Indovinando updates',
     autoLabel: 'Auto',
+    descriptionToggle: 'Commit description',
   },
 }
 
@@ -1410,6 +1412,10 @@ export default async function ChangelogPage() {
                 <span className={styles.date}>{formatEntryDate(entry.date, lang)}</span>
               </div>
               <div className={styles.entryBody}>
+                <div className={styles.entryMetaInline}>
+                  <span className={styles.version}>v{entry.version}</span>
+                  <span className={styles.date}>{formatEntryDate(entry.date, lang)}</span>
+                </div>
                 <div className={styles.entryHeader}>
                   <span
                     className={styles.label}
@@ -1418,9 +1424,14 @@ export default async function ChangelogPage() {
                   </span>
                 </div>
                 {formatEntryDescription(entry.description, lang) ? (
-                  <p className={styles.description}>
-                    {formatEntryDescription(entry.description, lang)}
-                  </p>
+                  <details className={styles.descriptionAccordion}>
+                    <summary className={styles.descriptionSummary}>
+                      {text.descriptionToggle}
+                    </summary>
+                    <p className={styles.description}>
+                      {formatEntryDescription(entry.description, lang)}
+                    </p>
+                  </details>
                 ) : null}
                 <ul className={styles.changeList}>
                   {entry.changes.map((change, i) => (
