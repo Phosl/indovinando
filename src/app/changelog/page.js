@@ -31,6 +31,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.36.3',
+    date: '6 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'recover safely from interrupted page transitions on mobile resume',
+    ],
+  },
+
+  {
     version: '1.36.2',
     date: '6 giugno 2026',
     label: 'Auto',
