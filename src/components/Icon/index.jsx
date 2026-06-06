@@ -27,6 +27,7 @@ const ICONS = {
   course: '/icons/course.svg',
   profile: '/icons/profile.svg',
   enter: '/icons/enter.svg',
+  plusFat: '/icons/plus-fat.svg',
 }
 
 const ICON_RENDER_MODE = {

@@ -191,14 +191,14 @@
   "gameCreate": {
     "title": "Crea Degustazione",
     "chooseModeTitle": "Scegli come vuoi preparare il gioco.",
-    "quickTitle": "Quiz rapido",
+    "quickTitle": "Veloce",
     "quickDescription": "Usa il nostro modello pronto per la degustazione: aggiungi le bottiglie e sei pronto.",
     "quickAction": "Usa modello",
-    "customTitle": "Quiz personalizzato",
+    "customTitle": "Personalizzato",
     "customDescription": "Crea le tue domande e risposta da zero, adatta ogni dettaglio al tuo stile.",
     "customAction": "Inizia",
     "automaticTitle": "Modalita automatica",
-    "automaticDescription": "Scatta le foto delle bottiglie e prepariamo noi il riconoscimento e i dati.",
+    "automaticDescription": "Scatta le foto delle bottiglie, analizzeremo i dati e prepareremo il quiz.",
     "automaticAction": "Scatta foto",
     "automaticFlowTitle": "Riconoscimento bottiglie",
     "automaticFlowDescription": "Carica o scatta le foto delle bottiglie. Ti aiuteremo a raccogliere le informazioni necessarie prima di generare il quiz.",
@@ -237,6 +237,7 @@
     "automaticWebSearchAction": "Fai web-search",
     "automaticWebSearchingAction": "Ricerca web...",
     "automaticWebSearchPanelHint": "Sto cercando prezzo, note e fonti utili per completare la bottiglia.",
+    "automaticWebDiffReopenAction": "Nuovi dati dal web",
     "automaticWebSearchLoadingStepPrice": "Cerco prezzo",
     "automaticWebSearchLoadingStepNotes": "Raccolgo informazioni",
     "automaticWebSearchLoadingStepSources": "Cerco fonti",
@@ -327,7 +328,8 @@
     "automaticEstimatedCostValue": "Costo {cost}",
     "automaticLoadError": "Errore nel caricamento delle immagini salvate.",
     "openGuide": "Riapri guida",
-    "loadingEditor": "Caricamento editor"
+    "loadingEditor": "Caricamento editor",
+    "skip": "Salta"
   },
   "tableLiveEvent": {
     "topBarTitle": "Live Tavoli",

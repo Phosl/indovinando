@@ -130,7 +130,14 @@
     "partners": {
       "eyebrow": "Partners",
       "title": "Wine shops and experiences that believe in Indovinando",
-      "items": ["Partner Wine Shop", "Wine Club", "Partner Winery", "Wine Experience", "Milan Tastings", "Wine Hub"],
+      "items": [
+        "Partner Wine Shop",
+        "Wine Club",
+        "Partner Winery",
+        "Wine Experience",
+        "Milan Tastings",
+        "Wine Hub"
+      ],
       "counter": "20+ wine shops and wine professionals are already using Indovinando",
       "mapTitle": "Partner map",
       "mapDescription": "Here you will be able to explore all partner wine shops, wineries, and wine experiences."
@@ -183,14 +190,14 @@
   "gameCreate": {
     "title": "Create Tasting",
     "chooseModeTitle": "Choose how you want to prepare the game.",
-    "quickTitle": "Quick quiz",
+    "quickTitle": "Quick",
     "quickDescription": "Use our ready-made tasting template: add bottles and you're ready.",
     "quickAction": "Use template",
     "customTitle": "Custom quiz",
     "customDescription": "Create your own questions and answers from scratch, and tailor every detail.",
     "customAction": "Start",
     "automaticTitle": "Automatic mode",
-    "automaticDescription": "Take bottle photos and we will handle recognition and data collection.",
+    "automaticDescription": "Take photos of the bottles, we'll analyze the data and create the quiz.",
     "automaticAction": "Take photo",
     "automaticFlowTitle": "Bottle recognition",
     "automaticFlowDescription": "Upload or take bottle photos. We will collect key information before generating the quiz.",
@@ -229,6 +236,7 @@
     "automaticWebSearchAction": "Run web search",
     "automaticWebSearchingAction": "Searching web...",
     "automaticWebSearchPanelHint": "Looking for price, notes, and useful sources to complete this bottle.",
+    "automaticWebDiffReopenAction": "New web data",
     "automaticWebSearchLoadingStepPrice": "Looking for price",
     "automaticWebSearchLoadingStepNotes": "Gathering details",
     "automaticWebSearchLoadingStepSources": "Finding sources",
@@ -316,7 +324,8 @@
     "automaticEstimatedCostValue": "Cost {cost}",
     "automaticLoadError": "Error while loading saved images.",
     "openGuide": "Open guide",
-    "loadingEditor": "Loading editor"
+    "loadingEditor": "Loading editor",
+    "skip": "Skip"
   },
   "tableLiveEvent": {
     "topBarTitle": "Table Live",

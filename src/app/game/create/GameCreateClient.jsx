@@ -1135,7 +1135,7 @@ function ModePickerScreen({onPick, onOpenGuide}) {
             <p className={styles.modeCardDesc}>{t('automaticDescription')}</p>
             <span className="btn btn-small quaternary btn-automatic-game btn-inline btn-with-icon-end">
               <span>{t('automaticAction')}</span>
-              <Icon name="plusSimple" size={24} className="btn-icon" />
+              <Icon name="plusFat" size={24} className="btn-icon" />
             </span>
           </div>
         </button>
@@ -1180,6 +1180,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
   const [isCreatingQuiz, setIsCreatingQuiz] = useState(false)
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [webSearchReview, setWebSearchReview] = useState(null)
+  const [lastWebSearchReview, setLastWebSearchReview] = useState(null)
   const [isApplyingWebDiff, setIsApplyingWebDiff] = useState(false)
   const [webPreviewUsageByImageId, setWebPreviewUsageByImageId] = useState({})
   const [quizTemplateMode, setQuizTemplateMode] = useState('standard')
@@ -2057,6 +2058,12 @@ function AutomaticModePlaceholder({onBack, userId}) {
           diffs,
           selectedFields: diffs.map((diff) => diff.key),
         })
+        setLastWebSearchReview({
+          imageId,
+          proposed: proposedRow,
+          diffs,
+          selectedFields: diffs.map((diff) => diff.key),
+        })
         return
       }
 
@@ -2107,6 +2114,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
         delete next[result.updated.id]
         return next
       })
+      setLastWebSearchReview((prev) => (prev?.imageId === result.updated.id ? null : prev))
       setWebSearchReview(null)
       loadUploadedImages().catch(() => null)
     } catch (error) {
@@ -2384,6 +2392,19 @@ function AutomaticModePlaceholder({onBack, userId}) {
   return (
     <PageLayout title={t('title')} onBack={handleAttemptExit}>
       <AutoToast toast={toast} onClose={() => setToast(null)} closeLabel={t('close')} />
+      {webSearchingImageId ? (
+        <div className={styles.autoPageWebSearchOverlay}>
+          <div className={styles.autoBottleWebSearchPanel}>
+            <div className={styles.autoBottleWebSearchTitleWrap}>
+              <div className={styles.autoBottleWebSearchSpinner} aria-hidden="true" />
+              <strong>{webSearchLoadingMessages[webSearchLoadingStep]}</strong>
+            </div>
+            <div className={styles.autoBottleWebSearchCopy}>
+              <span>{t('automaticWebSearchPanelHint')}</span>
+            </div>
+          </div>
+        </div>
+      ) : null}
       <main className={styles.autoModePage}>
         <h1 className={styles.autoModeTitleCentered}>{t('automaticFlowTitle')}</h1>
         <p className={styles.autoModeDescriptionCentered}>{t('automaticFlowDescription')}</p>
@@ -2551,7 +2572,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
           <div
             className={styles.autoDiffSheetOverlay}
             onClick={() => {
-              if (!isApplyingWebDiff) setWebSearchReview(null)
+              if (!isApplyingWebDiff) {
+                setLastWebSearchReview(webSearchReview)
+                setWebSearchReview(null)
+              }
             }}>
             <div className={styles.autoDiffSheet} onClick={(event) => event.stopPropagation()}>
               <div className={styles.autoDiffSheetHeader}>
@@ -2562,7 +2586,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
                 <button
                   type="button"
                   className={styles.autoPreviewModalClose}
-                  onClick={() => setWebSearchReview(null)}
+                  onClick={() => {
+                    setLastWebSearchReview(webSearchReview)
+                    setWebSearchReview(null)
+                  }}
                   aria-label={t('close')}
                   disabled={isApplyingWebDiff}>
                   ×
@@ -2610,10 +2637,13 @@ function AutomaticModePlaceholder({onBack, userId}) {
               <div className={styles.autoDiffSheetFooter}>
                 <button
                   type="button"
-                  className="btn btn-small neutral"
-                  onClick={() => setWebSearchReview(null)}
+                  className="btn  neutral"
+                  onClick={() => {
+                    setLastWebSearchReview(webSearchReview)
+                    setWebSearchReview(null)
+                  }}
                   disabled={isApplyingWebDiff}>
-                  {t('close')}
+                  {t('skip')}
                 </button>
                 <button
                   type="button"
@@ -2834,19 +2864,6 @@ function AutomaticModePlaceholder({onBack, userId}) {
                       active={isAnalyzingThis}
                       className={styles.autoBottleCardMagicCanvas}
                     />
-                    {isWebSearchingThis ? (
-                      <div className={styles.autoBottleWebSearchOverlay}>
-                        <div className={styles.autoBottleWebSearchPanel}>
-                          <div className={styles.autoBottleWebSearchTitleWrap}>
-                            <div className={styles.autoBottleWebSearchSpinner} aria-hidden="true" />
-                            <strong>{webSearchLoadingMessages[webSearchLoadingStep]}</strong>
-                          </div>
-                          <div className={styles.autoBottleWebSearchCopy}>
-                            <span>{t('automaticWebSearchPanelHint')}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ) : null}
                     <div
                       className={`${styles.autoBottleCardBody} ${!hasRecognitionData ? styles.autoBottleCardBodyPending : ''}`}>
                       <div className={styles.autoBottleCardMediaCol}>
@@ -3167,6 +3184,15 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                   className={`${styles.autoModeUploadedError} ${styles.autoBottleInlineStatus}`}>
                                   {webStatusMessage}
                                 </span>
+                              ) : null}
+                              {lastWebSearchReview?.imageId === image.id && !webSearchReview ? (
+                                <button
+                                  type="button"
+                                  className={styles.autoBottleInlineLinkButton}
+                                  onClick={() => setWebSearchReview(lastWebSearchReview)}>
+                                  <Icon src="/icons/web.svg" size={16} />
+                                  <span>{t('automaticWebDiffReopenAction')}</span>
+                                </button>
                               ) : null}
                             </div>
                           )}

@@ -740,17 +740,17 @@
   color: var(--text-primary);
 }
 
-.autoBottleWebSearchOverlay {
-  position: absolute;
+.autoPageWebSearchOverlay {
+  position: fixed;
   inset: 0;
-  z-index: 6;
-  pointer-events: none;
+  z-index: 1250;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 18px;
-  background: rgba(187, 118, 255, 0.7);
-  backdrop-filter: blur(3px);
+  padding: 24px;
+  // background: color-mix(in srgb, var(--primary-50) 58%, white 42%);
+  background: rgba(17, 29, 47, 0.38);
+  backdrop-filter: blur(4px);
 }
 
 .autoBottleWebSearchPanel {
@@ -805,7 +805,7 @@
 
 .autoBottleFoundName {
   margin: 0;
-  font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+  font-size: 1.5rem;
   font-weight: 900;
   line-height: 1.08;
   letter-spacing: -0.02em;
@@ -1036,8 +1036,8 @@
   width: min(100%, 760px);
   max-height: min(82vh, 760px);
   border-radius: 24px 24px 18px 18px;
-  background: #fffdfa;
-  border: 1px solid #e3ddd3;
+  background: var(--white);
+  border: 1px solid var(--button-secondary-border);
   box-shadow: 0 -8px 28px rgba(17, 29, 47, 0.16);
   display: flex;
   flex-direction: column;
@@ -1054,15 +1054,12 @@
 
   h3 {
     margin: 0;
-    color: #111d2f;
-    font-size: 1rem;
-    font-weight: 900;
   }
 
   p {
     margin: 4px 0 0;
-    color: #5c697c;
-    font-size: 0.84rem;
+    color: var(--gray-400);
+    font-size: 1rem;
     line-height: 1.4;
   }
 }
@@ -1087,8 +1084,8 @@
 }
 
 .autoDiffItemSelected {
-  border-color: #b9d3f0;
-  background: #f4f8fd;
+  border-color: var(--primary);
+  background: var(--primary-50);
   box-shadow: inset 0 0 0 1px rgba(46, 136, 181, 0.08);
 }
 
@@ -1100,8 +1097,8 @@
 
   strong {
     color: #111d2f;
-    font-size: 0.9rem;
-    font-weight: 900;
+    font-size: 1rem;
+    font-weight: 800;
   }
 }
 
@@ -1113,13 +1110,13 @@
 
 .autoDiffColumn {
   border-radius: 12px;
-  background: #f6f4f0;
+  background: var(--white);
   padding: 10px;
 
   span {
     display: block;
-    color: #667487;
-    font-size: 0.72rem;
+    color: var(--primary);
+    font-size: 0.8rem;
     font-weight: 800;
     text-transform: uppercase;
     margin-bottom: 4px;
@@ -1127,8 +1124,8 @@
 
   p {
     margin: 0;
-    color: #223346;
-    font-size: 0.86rem;
+    color: var(--gray-400);
+    font-size: 0.9rem;
     line-height: 1.4;
     word-break: break-word;
   }
@@ -1292,6 +1289,24 @@
   text-align: right;
   font-size: 0.74rem;
   color: #98a3b3;
+}
+
+.autoBottleInlineLinkButton {
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  color: var(--primary-text);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .autoDeleteState {
