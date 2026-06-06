@@ -281,14 +281,14 @@
 .autoModeMetricsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 14px;
+  gap: 8px;
   margin-top: 14px;
 }
 
 .autoModeMetricCard {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0px;
   min-height: 104px;
   padding: 16px 18px;
   border-radius: 18px;
@@ -297,14 +297,23 @@
 
 .autoModeMetricCard:nth-child(1) {
   background: var(--primary-50);
+  .autoModeMetricLabel {
+    color: var(--primary-text);
+  }
 }
 
 .autoModeMetricCard:nth-child(2) {
   background: var(--success-50);
+  .autoModeMetricLabel {
+    color: var(--success-text);
+  }
 }
 
 .autoModeMetricCard:nth-child(3) {
   background: var(--tertiary-50);
+  .autoModeMetricLabel {
+    color: var(--tertiary-text);
+  }
 }
 
 .autoModeMetricLabel {
@@ -343,12 +352,14 @@
   font-size: 1.7rem;
   line-height: 1.1;
   font-weight: 900;
+  text-align: right;
 }
 
 .autoModeMetricMeta {
   color: #58677b;
   font-size: 0.78rem;
   line-height: 1.35;
+  text-align: right;
 }
 
 .autoModeFileInput {
@@ -836,16 +847,14 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 34px;
   padding: 7px 12px;
   border-radius: 999px;
-  border: 1px solid #dbe4f0;
-  background: linear-gradient(180deg, #ffffff, #f7fafc);
-  color: #22364d;
-  font-size: 0.88rem;
+  border: 1px solid var(--gray-150);
+  background: var(--white);
+  color: var(--text-primary);
+  font-size: 0.9rem;
   font-weight: 700;
   line-height: 1;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .autoBottleCardDataBlock {
@@ -862,6 +871,7 @@
   flex-wrap: wrap;
   gap: 4px;
   margin-top: -2px;
+  padding-left: 39px;
 }
 
 .autoBottleQuickFactChip {
@@ -923,6 +933,8 @@
   flex-direction: column;
   gap: 8px;
   margin-top: 16px;
+  width: 100%;
+  padding-top: 8px;
 }
 
 .autoBottleNarrativeText {
@@ -930,6 +942,7 @@
   color: #283647;
   font-size: 0.96rem;
   line-height: 1.6;
+  padding-left: 39px;
 }
 
 .autoBottleDataLabel {
@@ -937,6 +950,9 @@
   align-items: center;
   gap: 6px;
   margin-right: 6px;
+  width: 100%;
+  border-top: 1px solid var(--primary-100);
+  padding-top: 8px;
 }
 
 .autoBottleConfidencePill {
@@ -1006,6 +1022,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  padding-left: 39px;
 }
 
 .autoBottleResolvedChip {
@@ -1439,6 +1456,28 @@
 
   .autoModeMetricValue {
     font-size: 1.5rem;
+  }
+
+  .autoModeMetricsGrid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(220px, 82vw);
+    grid-template-columns: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    padding-bottom: 4px;
+    margin-inline: -2px;
+    padding-inline: 2px;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .autoModeMetricCard {
+    scroll-snap-align: start;
   }
 
   // .modeCardBgImage {

@@ -3030,9 +3030,56 @@ function AutomaticModePlaceholder({onBack, userId}) {
 
                           {hasCatalogDetails && (
                             <div className={styles.autoBottleCardDataBlock}>
+                              {bottleSpecItems.length > 0 ? (
+                                <div className={styles.autoBottleSectionBlock}>
+                                  <p className={styles.autoBottleSectionTitle}>
+                                    {t('automaticBottleSpecsLabel')}
+                                  </p>
+                                  <div className={styles.autoBottleSpecGrid}>
+                                    {bottleSpecItems.map((item) => (
+                                      <div
+                                        key={`${image.id}-${item.label}`}
+                                        className={styles.autoBottleSpecCard}>
+                                        <span className={styles.autoBottleSpecLabel}>
+                                          {item.label}
+                                        </span>
+                                        <strong className={styles.autoBottleSpecValue}>
+                                          {item.value}
+                                        </strong>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              ) : null}
+                              <div className={styles.autoBottleSectionBlock}>
+                                <p className={styles.autoBottleCardDataRow}>
+                                  <span className={styles.autoBottleDataLabel}>
+                                    <span className={styles.autoBottleDataLabelIconWrapper}>
+                                      <Icon
+                                        src="/icons/bolt.svg"
+                                        size={20}
+                                        className={styles.icon}
+                                      />
+                                    </span>
+                                    <strong>{t('automaticQuizResolvedLabel')}:</strong>
+                                  </span>
+                                </p>
+                                <div className={styles.autoBottleResolvedGrid}>
+                                  {resolvedQuizDisplayValues.map((value, index) => (
+                                    <span
+                                      key={`${image.id}-resolved-${index}`}
+                                      className={styles.autoBottleResolvedChip}>
+                                      {value}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+
                               <p className={styles.autoBottleCardDataRow}>
                                 <span className={styles.autoBottleDataLabel}>
-                                  <Icon src="/icons/quiz.svg" size={20} className={styles.icon} />
+                                  <span className={styles.autoBottleDataLabelIconWrapper}>
+                                    <Icon src="/icons/quiz.svg" size={20} className={styles.icon} />
+                                  </span>
                                   <strong>{t('automaticQuizDataLabel')}:</strong>
                                 </span>{' '}
                               </p>
@@ -3079,50 +3126,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                                     </span>
                                   ))}
                               </div>
-                              {bottleSpecItems.length > 0 ? (
-                                <div className={styles.autoBottleSectionBlock}>
-                                  <p className={styles.autoBottleSectionTitle}>
-                                    {t('automaticBottleSpecsLabel')}
-                                  </p>
-                                  <div className={styles.autoBottleSpecGrid}>
-                                    {bottleSpecItems.map((item) => (
-                                      <div
-                                        key={`${image.id}-${item.label}`}
-                                        className={styles.autoBottleSpecCard}>
-                                        <span className={styles.autoBottleSpecLabel}>
-                                          {item.label}
-                                        </span>
-                                        <strong className={styles.autoBottleSpecValue}>
-                                          {item.value}
-                                        </strong>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              ) : null}
-                              <div className={styles.autoBottleSectionBlock}>
-                                <p className={styles.autoBottleCardDataRow}>
-                                  <span className={styles.autoBottleDataLabel}>
-                                    <span className={styles.autoBottleDataLabelIconWrapper}>
-                                      <Icon
-                                        src="/icons/quiz.svg"
-                                        size={20}
-                                        className={styles.icon}
-                                      />
-                                    </span>
-                                    <strong>{t('automaticQuizResolvedLabel')}:</strong>
-                                  </span>
-                                </p>
-                                <div className={styles.autoBottleResolvedGrid}>
-                                  {resolvedQuizDisplayValues.map((value, index) => (
-                                    <span
-                                      key={`${image.id}-resolved-${index}`}
-                                      className={styles.autoBottleResolvedChip}>
-                                      {value}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
+
                               {localizedWhyNotable ? (
                                 <div className={styles.autoBottleNarrativeCard}>
                                   <p className={styles.autoBottleCardDataRow}>
