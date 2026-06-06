@@ -39,6 +39,121 @@
   color: var(--text-secondary);
 }
 
+.activityCard {
+  border: 1px solid var(--gray-light);
+  border-radius: 18px;
+  background: var(--foreground);
+  padding: 18px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 14px 30px -26px rgba(31, 41, 55, 0.3);
+}
+
+.activityHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.activityTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+.activitySubtitle {
+  margin: 4px 0 0;
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+}
+
+.activityLegend {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.activityLegendScale {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.activityLegendCell {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--primary-25);
+  border: 1px solid rgba(146, 117, 226, 0.18);
+
+  &[data-level='1'] {
+    background: var(--primary-100);
+    border-color: rgba(146, 117, 226, 0.24);
+  }
+
+  &[data-level='2'] {
+    background: var(--primary-200);
+    border-color: rgba(146, 117, 226, 0.34);
+  }
+
+  &[data-level='3'] {
+    background: var(--primary);
+    border-color: rgba(77, 49, 155, 0.45);
+  }
+}
+
+.activityScroller {
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.activityDaysRow {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 100%;
+  padding: 2px 0;
+}
+
+.activityDayCard {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  min-width: 12px;
+  flex-shrink: 0;
+}
+
+.activityTicks {
+  display: grid;
+  grid-template-rows: repeat(5, 10px);
+  gap: 4px;
+}
+
+.activityTick {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--primary-25);
+  border: 1px solid rgba(146, 117, 226, 0.14);
+  transition: background-color 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+
+  &[data-filled='true'] {
+    background: var(--primary-200);
+    border-color: rgba(146, 117, 226, 0.3);
+  }
+}
+
 /* ── Timeline ── */
 
 .timeline {
@@ -122,50 +237,20 @@
   gap: 10px;
 }
 
+.entryTitle {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.35;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
 .description {
-  margin: 10px 0 0;
+  margin: 0;
   color: var(--text-secondary);
-  font-size: 0.94rem;
+  font-size: 0.92rem;
   line-height: 1.55;
   max-width: 72ch;
-}
-
-.descriptionAccordion {
-  width: 100%;
-}
-
-.descriptionSummary {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  list-style: none;
-  font-size: 0.84rem;
-  font-weight: 800;
-  color: var(--text-secondary);
-
-  &::-webkit-details-marker {
-    display: none;
-  }
-
-  &::before {
-    content: '+';
-    width: 18px;
-    height: 18px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 999px;
-    background: var(--gray-light);
-    color: var(--text-primary);
-    font-size: 0.8rem;
-    font-weight: 900;
-    flex-shrink: 0;
-  }
-}
-
-.descriptionAccordion[open] .descriptionSummary::before {
-  content: '−';
 }
 
 .label {
@@ -230,8 +315,8 @@
     }
   }
 
-  .version,
-  .date {
+  .entryMeta .version,
+  .entryMeta .date {
     display: none;
   }
 
@@ -249,6 +334,10 @@
     display: flex;
   }
 
+  .entryMetaInline .date {
+    display: inline;
+  }
+
   .entryHeader {
     flex-wrap: wrap;
     gap: 8px;
@@ -256,5 +345,24 @@
 
   .changeItem {
     font-size: 0.88rem;
+  }
+
+  .activityCard {
+    padding: 16px 14px 14px;
+    border-radius: 16px;
+  }
+
+  .activityHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .activityDaysRow {
+    gap: 6px;
+  }
+
+  .activityDayCard {
+    min-width: 10px;
   }
 }

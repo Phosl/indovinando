@@ -19,13 +19,19 @@ const UI_TEXT = {
     title: '📋 Changelog',
     subtitle: 'Cronologia degli aggiornamenti di Indovinando',
     autoLabel: 'Auto',
-    descriptionToggle: 'Descrizione commit',
+    activityTitle: 'Storico sviluppo',
+    activitySubtitle: 'Giorni più attivi del changelog',
+    lowActivity: 'Meno',
+    highActivity: 'Più',
   },
   en: {
     title: '📋 Changelog',
     subtitle: 'History of Indovinando updates',
     autoLabel: 'Auto',
-    descriptionToggle: 'Commit description',
+    activityTitle: 'Development history',
+    activitySubtitle: 'Most active changelog days',
+    lowActivity: 'Less',
+    highActivity: 'More',
   },
 }
 
@@ -43,6 +49,10 @@ const CHANGELOG = [
     version: '1.36.2',
     date: '6 giugno 2026',
     label: 'Auto',
+    description: {
+      it: 'Migliora il recupero quando l’app torna dal background o da una chiamata, evitando schermate vuote durante le transizioni pagina.',
+      en: 'Improves recovery when the app returns from background or a call, avoiding blank screens during page transitions.',
+    },
     changes: [
       'fix',
     ],
@@ -52,6 +62,10 @@ const CHANGELOG = [
     version: '1.36.1',
     date: '6 giugno 2026',
     label: 'Auto',
+    description: {
+      it: 'Aggiunge protezioni al flusso di riconoscimento automatico e continua a rifinire il comportamento dei resume su mobile.',
+      en: 'Adds safeguards to the automatic tasting flow and continues refining mobile resume behavior.',
+    },
     changes: [
       'fix',
     ],
@@ -61,6 +75,10 @@ const CHANGELOG = [
     version: '1.36.0',
     date: '6 giugno 2026',
     label: 'Auto',
+    description: {
+      it: 'Rifinitura ampia della schermata auto tasting: ricerca web più chiara, differenze riapribili, upload mobile più robusto e UI più pulita.',
+      en: 'Broad polish pass on automatic tasting: clearer web search, reopenable diffs, stronger mobile uploads, and cleaner UI.',
+    },
     changes: [
       'polish automatic tasting flow, web diff UX, and mobile upload resilience',
     ],
@@ -70,6 +88,10 @@ const CHANGELOG = [
     version: '1.35.0',
     date: '6 giugno 2026',
     label: 'Auto',
+    description: {
+      it: 'Rende più affidabile il caricamento da mobile e migliora la leggibilità generale della schermata di riconoscimento bottiglie.',
+      en: 'Makes mobile uploads more reliable and improves the overall readability of the bottle recognition screen.',
+    },
     changes: [
       'refine automatic tasting UX and harden mobile upload flow',
     ],
@@ -79,6 +101,10 @@ const CHANGELOG = [
     version: '1.34.0',
     date: '6 giugno 2026',
     label: 'Auto',
+    description: {
+      it: 'Sistema il salvataggio in catalogo, rafforza il flusso di verifica e riallinea anche la documentazione tecnica.',
+      en: 'Fixes catalog save behavior, hardens the verify flow, and brings the technical documentation back in sync.',
+    },
     changes: [
       'polish automatic tasting UX, fix catalog verify flow, and align docs',
       'add icon',
@@ -89,6 +115,10 @@ const CHANGELOG = [
     version: '1.33.0',
     date: '6 giugno 2026',
     label: 'Auto',
+    description: {
+      it: 'Rende più curata la creazione del gioco, il cambio lingua nel profilo e l’ingresso nelle sessioni table-live.',
+      en: 'Polishes game creation, profile language switching, and entry into table-live sessions.',
+    },
     changes: [
       'polish creation flow, profile language UX, and table-live join',
     ],
@@ -1423,6 +1453,21 @@ const IT_TO_EN_MONTH = {
   dicembre: 'December',
 }
 
+const IT_MONTH_TO_INDEX = {
+  gennaio: 0,
+  febbraio: 1,
+  marzo: 2,
+  aprile: 3,
+  maggio: 4,
+  giugno: 5,
+  luglio: 6,
+  agosto: 7,
+  settembre: 8,
+  ottobre: 9,
+  novembre: 10,
+  dicembre: 11,
+}
+
 function formatEntryDate(date, lang) {
   if (lang !== 'en') return date
   const parts = String(date).trim().split(' ')
@@ -1445,10 +1490,76 @@ function formatEntryDescription(description, lang) {
   return description[lang] ?? description.it ?? description.en ?? null
 }
 
+function parseItalianDate(dateString) {
+  const parts = String(dateString || '').trim().split(' ')
+  if (parts.length !== 3) return null
+  const day = Number(parts[0])
+  const month = IT_MONTH_TO_INDEX[parts[1]?.toLowerCase()]
+  const year = Number(parts[2])
+  if (!Number.isFinite(day) || month == null || !Number.isFinite(year)) return null
+  return new Date(year, month, day)
+}
+
+function formatDayKey(date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+function getActivityText(count, lang) {
+  if (lang === 'en') {
+    if (count === 0) return 'No updates'
+    if (count === 1) return '1 update'
+    return `${count} updates`
+  }
+
+  if (count === 0) return 'Nessun aggiornamento'
+  if (count === 1) return '1 aggiornamento'
+  return `${count} aggiornamenti`
+}
+
+function buildActivityDays(entries) {
+  const parsedDates = entries
+    .map((entry) => parseItalianDate(entry.date))
+    .filter(Boolean)
+    .sort((a, b) => a - b)
+
+  if (parsedDates.length === 0) return []
+
+  const counts = new Map()
+  entries.forEach((entry) => {
+    const parsed = parseItalianDate(entry.date)
+    if (!parsed) return
+    const key = formatDayKey(parsed)
+    counts.set(key, (counts.get(key) || 0) + 1)
+  })
+
+  const start = new Date(parsedDates[0])
+  const end = new Date(parsedDates[parsedDates.length - 1])
+  const days = []
+  const cursor = new Date(start)
+
+  while (cursor <= end) {
+    const day = new Date(cursor)
+    const key = formatDayKey(day)
+    days.push({
+      key,
+      count: counts.get(key) || 0,
+      date: day,
+    })
+    cursor.setDate(cursor.getDate() + 1)
+  }
+
+  return days
+}
+
 export default async function ChangelogPage() {
   const lang = await getServerLanguage()
   const text = lang === 'en' ? UI_TEXT.en : UI_TEXT.it
   const backHref = '/'
+  const activityDays = buildActivityDays(CHANGELOG)
+  const maxActivity = Math.max(1, ...activityDays.map((day) => day.count))
 
   return (
     <div className={styles.page}>
@@ -1459,45 +1570,93 @@ export default async function ChangelogPage() {
           <p className={styles.subtitle}>{text.subtitle}</p>
         </div>
 
-        <div className={styles.timeline}>
-          {CHANGELOG.map((entry) => (
-            <div key={entry.version} className={styles.entry}>
-              <div className={styles.entryMeta}>
-                <span className={styles.version}>v{entry.version}</span>
-                <span className={styles.date}>{formatEntryDate(entry.date, lang)}</span>
+        {activityDays.length > 0 ? (
+          <section className={styles.activityCard}>
+            <div className={styles.activityHeader}>
+              <div>
+                <h2 className={styles.activityTitle}>{text.activityTitle}</h2>
+                <p className={styles.activitySubtitle}>{text.activitySubtitle}</p>
               </div>
-              <div className={styles.entryBody}>
-                <div className={styles.entryMetaInline}>
+              <div className={styles.activityLegend}>
+                <span>{text.lowActivity}</span>
+                <div className={styles.activityLegendScale} aria-hidden="true">
+                  {[0, 1, 2, 3].map((level) => (
+                    <span
+                      key={level}
+                      className={styles.activityLegendCell}
+                      data-level={level}
+                    />
+                  ))}
+                </div>
+                <span>{text.highActivity}</span>
+              </div>
+            </div>
+
+            <div className={styles.activityScroller}>
+              <div className={styles.activityDaysRow} role="img" aria-label={text.activityTitle}>
+                {activityDays.map((day) => {
+                  const filledTicks =
+                    day.count === 0 ? 0 : Math.max(1, Math.round((day.count / maxActivity) * 5))
+                  return (
+                    <div
+                      key={day.key}
+                      className={styles.activityDayCard}
+                      title={`${day.key} — ${getActivityText(day.count, lang)}`}>
+                      <div className={styles.activityTicks} aria-hidden="true">
+                        {Array.from({length: 5}).map((_, tickIndex) => (
+                          <span
+                            key={tickIndex}
+                            className={styles.activityTick}
+                            data-filled={tickIndex >= 5 - filledTicks}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </section>
+        ) : null}
+
+        <div className={styles.timeline}>
+          {CHANGELOG.map((entry) => {
+            const description = formatEntryDescription(entry.description, lang)
+            const [primaryChange, ...secondaryChanges] = entry.changes
+
+            return (
+              <div key={entry.version} className={styles.entry}>
+                <div className={styles.entryMeta}>
                   <span className={styles.version}>v{entry.version}</span>
                   <span className={styles.date}>{formatEntryDate(entry.date, lang)}</span>
                 </div>
-                <div className={styles.entryHeader}>
-                  <span
-                    className={styles.label}
-                    style={{background: LABEL_COLORS[entry.label] ?? '#374151'}}>
-                    {formatEntryLabel(entry.label, lang)}
-                  </span>
+                <div className={styles.entryBody}>
+                  <div className={styles.entryMetaInline}>
+                    <span className={styles.version}>v{entry.version}</span>
+                    <span className={styles.date}>{formatEntryDate(entry.date, lang)}</span>
+                  </div>
+                  <div className={styles.entryHeader}>
+                    <span
+                      className={styles.label}
+                      style={{background: LABEL_COLORS[entry.label] ?? '#374151'}}>
+                      {formatEntryLabel(entry.label, lang)}
+                    </span>
+                  </div>
+                  {primaryChange ? <h3 className={styles.entryTitle}>{primaryChange}</h3> : null}
+                  {description ? <p className={styles.description}>{description}</p> : null}
+                  {secondaryChanges.length > 0 ? (
+                    <ul className={styles.changeList}>
+                      {secondaryChanges.map((change, i) => (
+                        <li key={i} className={styles.changeItem}>
+                          {change}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
                 </div>
-                {formatEntryDescription(entry.description, lang) ? (
-                  <details className={styles.descriptionAccordion}>
-                    <summary className={styles.descriptionSummary}>
-                      {text.descriptionToggle}
-                    </summary>
-                    <p className={styles.description}>
-                      {formatEntryDescription(entry.description, lang)}
-                    </p>
-                  </details>
-                ) : null}
-                <ul className={styles.changeList}>
-                  {entry.changes.map((change, i) => (
-                    <li key={i} className={styles.changeItem}>
-                      {change}
-                    </li>
-                  ))}
-                </ul>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </div>
