@@ -738,6 +738,7 @@
   padding: 7px 12px;
   font-size: 0.82rem;
   font-weight: 800;
+  line-height: 1rem;
 }
 
 .autoModeFeatureIcon {
@@ -816,8 +817,8 @@
 
 .autoBottleFoundName {
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 900;
+  font-size: 1.8rem;
+  font-weight: 800;
   line-height: 1.08;
   letter-spacing: -0.02em;
   color: var(--text-primary);
@@ -895,7 +896,7 @@
 
   strong {
     color: var(--primary-text);
-    font-weight: 900;
+    font-weight: 800;
   }
 }
 
@@ -932,9 +933,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 16px;
   width: 100%;
-  padding-top: 8px;
 }
 
 .autoBottleNarrativeText {
@@ -952,7 +951,8 @@
   margin-right: 6px;
   width: 100%;
   border-top: 1px solid var(--primary-100);
-  padding-top: 8px;
+  padding-top: 16px;
+  margin-top: 8px;
 }
 
 .autoBottleConfidencePill {
@@ -1035,7 +1035,7 @@
   padding: 7px 11px;
   font-size: 0.82rem;
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1;
 }
 
 .autoDiffSheetOverlay {
