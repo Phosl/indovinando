@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import styles from './TopBar.module.scss'
 
 /**
@@ -28,12 +29,12 @@ export default function TopBar({
   return (
     <div className={[styles.bar, className].filter(Boolean).join(' ')} style={{maxWidth}}>
       {back != null ? (
-        <a href={back} className={`btn type-text ${styles.back}`}>
+        <Link href={back} className={styles.back}>
           <span className={styles.backArrow} aria-hidden="true">
             {'<'}
           </span>
           <span>{backLabel.replace(/^←\s*/, '')}</span>
-        </a>
+        </Link>
       ) : (
         <div className={styles.placeholder} />
       )}

@@ -1,23 +1,20 @@
 import {redirect} from 'next/navigation'
+import TopBar from '@/components/TopBar'
+import ProfileSetupPanel from '@/components/profile/ProfileSetupPanel'
 import {createServerSupabase} from '@/lib/supabaseServer'
-import ProfileSetupWizardClient from '@/components/profile/ProfileSetupWizardClient'
+import styles from '../profilo.module.scss'
 
 export const metadata = {
-  title: 'Completa profilo',
+  title: 'Preferenze profilo',
 }
 
-export default async function ProfileSetupPage({searchParams}) {
+export default async function ProfilePreferencesPage() {
   const supabase = await createServerSupabase()
   const {
     data: {user},
   } = await supabase.auth.getUser()
 
-  if (!user) {
-    redirect('/auth?next=/profilo/completa')
-  }
-
-  const next = (await searchParams)?.next
-  const safeNextPath = typeof next === 'string' && next.startsWith('/') ? next : '/dashboard'
+  if (!user) redirect('/auth?next=/profilo/preferenze')
 
   const {data: profile} = await supabase
     .from('profiles')
@@ -27,5 +24,12 @@ export default async function ProfileSetupPage({searchParams}) {
     .eq('id', user.id)
     .single()
 
-  return <ProfileSetupWizardClient userId={user.id} profile={profile || {}} nextPath={safeNextPath} />
+  return (
+    <main className={styles.page}>
+      <div className={styles.container}>
+        <TopBar title="Preferenze" back="/profilo" backLabel="Profilo" />
+        <ProfileSetupPanel profile={profile || {}} mode="preferences" />
+      </div>
+    </main>
+  )
 }

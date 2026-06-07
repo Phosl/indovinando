@@ -15,6 +15,14 @@ alter table public.profiles
   add column if not exists city text,
   add column if not exists province text,
   add column if not exists newsletter_opt_in boolean not null default false,
+  add column if not exists business_name text,
+  add column if not exists business_type text,
+  add column if not exists business_description text,
+  add column if not exists business_website text,
+  add column if not exists business_phone text,
+  add column if not exists business_address text,
+  add column if not exists business_latitude double precision,
+  add column if not exists business_longitude double precision,
   add column if not exists profile_completed_at timestamptz,
   add column if not exists profile_prompt_dismissed_at timestamptz;
 

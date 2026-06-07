@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import styles from './TopBar.module.scss'
 import {useT} from '@/lib/i18n/useT'
 import ProgressBar from '@/components/ui/ProgressBar'
@@ -27,7 +28,7 @@ export default function TopBar({
 
   return (
     <div className={`${containerClassName} ${className}`} style={containerStyle}>
-      {onBack && (
+      {onBack ? (
         <button
           type="button"
           className={styles.backBtn}
@@ -35,7 +36,11 @@ export default function TopBar({
           aria-label={t('back')}>
           <img src="/icons/back-icon.svg" alt="" aria-hidden="true" className={styles.backBtnIcon} />
         </button>
-      )}
+      ) : back ? (
+        <Link href={back} className={styles.backBtn} aria-label={t('back')}>
+          <img src="/icons/back-icon.svg" alt="" aria-hidden="true" className={styles.backBtnIcon} />
+        </Link>
+      ) : null}
       {title && <h1 className={`${styles.title} ${titleClassName}`}>{title}</h1>}
       <div className={`${styles.actions} ${actionsClassName}`}>{children}</div>
       {progress !== null && (

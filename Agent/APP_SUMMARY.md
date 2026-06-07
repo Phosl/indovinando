@@ -15,11 +15,22 @@
   - `city`
   - `province`
   - `newsletter_opt_in`
+  - `business_name`
+  - `business_type`
+  - `business_description`
+  - `business_website`
+  - `business_phone`
+  - `business_address`
+  - `business_latitude`
+  - `business_longitude`
   - `profile_completed_at`
   - `profile_prompt_dismissed_at`
 - Dashboard shows a profile completion summary/reminder
-- Profile page shows the same summary block
+- Main profile page links to a dedicated preferences page
+- Profile preferences summary lives in `/profilo/preferenze`
 - Profile completion flow lives in `/profilo/completa`
+- Business profiles (`wine_shop`, `restaurant`, `other_business`) get one extra wizard step
+- Business location step uses Google Maps / Places when `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` is present
 - UI direction for this flow:
   - dedicated wizard page
   - text around `16px`

@@ -6,6 +6,7 @@ import {usePathname} from 'next/navigation'
 import {useT} from '@/lib/i18n/useT'
 import {
   getProfileCompletionCount,
+  isBusinessProfile,
   isProfileComplete,
   normalizeProfileSetup,
 } from '@/lib/profileSetup'
@@ -24,6 +25,7 @@ export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
     () => getProfileCompletionCount(normalizedProfile),
     [normalizedProfile],
   )
+  const totalFields = isBusinessProfile(normalizedProfile) ? 13 : 6
   const nextHref = pathname || (mode === 'dashboard' ? '/dashboard' : '/profilo')
   const setupHref = `/profilo/completa?next=${encodeURIComponent(nextHref)}`
 
@@ -39,15 +41,13 @@ export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
           <span className={styles.eyebrow}>
             {isComplete ? t('summaryEyebrow') : t('reminderEyebrow')}
           </span>
-          <h2 className={styles.title}>
-            {isComplete ? t('summaryTitle') : t('reminderTitle')}
-          </h2>
+          <h2 className={styles.title}>{isComplete ? t('summaryTitle') : t('reminderTitle')}</h2>
           <p className={styles.description}>
             {isComplete ? t('summaryDescription') : t('reminderDescription')}
           </p>
         </div>
         <div className={styles.progressBadge}>
-          {t('progressLabel', {current: completionCount, total: 6})}
+          {t('progressLabel', {current: completionCount, total: totalFields})}
         </div>
       </div>
 
@@ -83,6 +83,18 @@ export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
                 : t('newsletterDisabled')}
             </strong>
           </div>
+          {isBusinessProfile(normalizedProfile) ? (
+            <>
+              <div className={styles.summaryItem}>
+                <span className={styles.summaryLabel}>{t('fields.businessName')}</span>
+                <strong>{normalizedProfile.business_name}</strong>
+              </div>
+              <div className={styles.summaryItem}>
+                <span className={styles.summaryLabel}>{t('fields.businessType')}</span>
+                <strong>{normalizedProfile.business_type}</strong>
+              </div>
+            </>
+          ) : null}
         </div>
       ) : (
         <ul className={styles.checkList}>
@@ -90,6 +102,7 @@ export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
           <li>{t('checklist.experience')}</li>
           <li>{t('checklist.preferences')}</li>
           <li>{t('checklist.location')}</li>
+          {isBusinessProfile(normalizedProfile) ? <li>{t('checklist.business')}</li> : null}
         </ul>
       )}
 

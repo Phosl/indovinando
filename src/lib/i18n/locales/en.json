@@ -943,6 +943,8 @@
     "howTheAppWorksDesc": "Open the onboarding guide with slides for Create Game, Quick Game, Enoteca, Live and Wine Course.",
     "openAppGuide": "Open app guide",
     "chooseAvatar": "Choose your avatar",
+    "preferences": "Preferences",
+    "editPreferences": "Edit",
     "yourStats": "Your stats",
     "gamesCreated": "Games created",
     "lessonsCompleted": "Lessons completed",
@@ -1027,6 +1029,10 @@
       "newsletter": {
         "title": "Would you like updates?",
         "description": "You can enable consent now and decide later how to use those communications."
+      },
+      "business": {
+        "title": "Tell us about your business",
+        "description": "For business profiles we collect the minimum data needed for future partner cards, partner map and tasting branding."
       }
     },
     "sections": {
@@ -1035,6 +1041,7 @@
       "wineTypes": "Favorite wine types",
       "countries": "Favorite countries",
       "location": "Location",
+      "business": "Business details",
       "newsletter": "Newsletter and events"
     },
     "fields": {
@@ -1043,6 +1050,8 @@
       "wineTypes": "Wine preferences",
       "countries": "Countries",
       "location": "Area",
+      "businessName": "Business",
+      "businessType": "Business type",
       "newsletter": "Newsletter"
     },
     "placeholders": {
@@ -1050,11 +1059,36 @@
       "province": "State / Province"
     },
     "newsletterHint": "Receive updates about Indovinando, events, rankings and new features. For now we only store the consent.",
+    "businessFields": {
+      "name": "Business name",
+      "type": "Business type",
+      "description": "Short description",
+      "website": "Website",
+      "phone": "Phone",
+      "address": "Address",
+      "latitude": "Latitude",
+      "longitude": "Longitude"
+    },
+    "businessPlaceholders": {
+      "name": "e.g. Rossi Wine Shop",
+      "type": "e.g. Wine bar, restaurant, wine shop",
+      "description": "Describe your business in a few lines",
+      "website": "https://...",
+      "phone": "+1 ...",
+      "address": "Business address",
+      "latitude": "41.9028",
+      "longitude": "12.4964"
+    },
+    "businessHelper": "For now address and coordinates are entered manually. Google Places integration can come in the next step.",
+    "businessMapsReady": "Search the address with Google Maps: selecting a result updates the coordinates automatically.",
+    "businessMapsFallback": "If the Google Maps key is not configured, you can still enter address and coordinates manually.",
+    "businessMapPreviewTitle": "Business map preview",
     "checklist": {
       "profileType": "Choose the profile type that fits you best",
       "experience": "Tell us your experience level",
       "preferences": "Select your favorite wines and countries",
-      "location": "Add city and province for more local experiences"
+      "location": "Add city and province for more local experiences",
+      "business": "Complete the essential details of your business"
     },
     "profileTypes": {
       "enthusiast": "Enthusiast",
@@ -1105,6 +1139,14 @@
       "countries": "Choose at least one favorite country.",
       "city": "Enter your city.",
       "province": "Enter your state or province.",
+      "businessName": "Enter the business name.",
+      "businessType": "Enter the business type.",
+      "businessDescription": "Enter a short business description.",
+      "businessWebsite": "Enter the business website.",
+      "businessPhone": "Enter the business phone.",
+      "businessAddress": "Enter the business address.",
+      "businessCoordinates": "Enter the business latitude and longitude.",
+      "timeout": "Saving is taking too long. Please try again in a few seconds.",
       "generic": "We could not save your profile. Please try again."
     }
   },

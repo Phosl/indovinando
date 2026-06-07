@@ -947,6 +947,8 @@
     "howTheAppWorksDesc": "Apri la guida onboarding con slide su Crea Gioco, Gioco Veloce, Enoteca, Live e Corso Vino.",
     "openAppGuide": "Apri guida app",
     "chooseAvatar": "Scegli il tuo avatar",
+    "preferences": "Preferenze",
+    "editPreferences": "Modifica",
     "yourStats": "Le tue statistiche",
     "gamesCreated": "quiz creati",
     "lessonsCompleted": "Lezioni completate",
@@ -1031,6 +1033,10 @@
       "newsletter": {
         "title": "Vuoi ricevere aggiornamenti?",
         "description": "Puoi attivare subito il consenso e decidere dopo come usare le comunicazioni."
+      },
+      "business": {
+        "title": "Raccontaci la tua attività",
+        "description": "Per i profili business raccogliamo i dati minimi utili a future schede partner, mappa e branding degustazioni."
       }
     },
     "sections": {
@@ -1039,6 +1045,7 @@
       "wineTypes": "Tipi di vino preferiti",
       "countries": "Paesi preferiti",
       "location": "Localizzazione",
+      "business": "Informazioni attività",
       "newsletter": "Newsletter ed eventi"
     },
     "fields": {
@@ -1047,6 +1054,8 @@
       "wineTypes": "Preferenze vino",
       "countries": "Paesi",
       "location": "Zona",
+      "businessName": "Attività",
+      "businessType": "Tipologia",
       "newsletter": "Newsletter"
     },
     "placeholders": {
@@ -1054,11 +1063,36 @@
       "province": "Provincia"
     },
     "newsletterHint": "Ricevi novità su Indovinando, eventi, classifiche e nuove funzionalità. Per ora salviamo solo il consenso.",
+    "businessFields": {
+      "name": "Nome attività",
+      "type": "Tipologia attività",
+      "description": "Descrizione breve",
+      "website": "Sito web",
+      "phone": "Telefono",
+      "address": "Indirizzo",
+      "latitude": "Latitudine",
+      "longitude": "Longitudine"
+    },
+    "businessPlaceholders": {
+      "name": "Es. Enoteca Rossi",
+      "type": "Es. Enoteca, wine bar, ristorante",
+      "description": "Descrivi in poche righe la tua attività",
+      "website": "https://...",
+      "phone": "+39 ...",
+      "address": "Indirizzo attività",
+      "latitude": "41.9028",
+      "longitude": "12.4964"
+    },
+    "businessHelper": "Per ora indirizzo e coordinate si inseriscono manualmente. L'integrazione Google Places può arrivare nel passo successivo.",
+    "businessMapsReady": "Cerca l'indirizzo con Google Maps: selezionando un risultato, le coordinate si aggiornano automaticamente.",
+    "businessMapsFallback": "Se la chiave Google Maps non è configurata, puoi comunque inserire indirizzo e coordinate manualmente.",
+    "businessMapPreviewTitle": "Anteprima mappa attività",
     "checklist": {
       "profileType": "Scegli il tipo di profilo più adatto a te",
       "experience": "Indica il tuo livello di esperienza",
       "preferences": "Seleziona vini e paesi che preferisci",
-      "location": "Aggiungi città e provincia per esperienze più locali"
+      "location": "Aggiungi città e provincia per esperienze più locali",
+      "business": "Completa i dati essenziali della tua attività"
     },
     "profileTypes": {
       "enthusiast": "Appassionato",
@@ -1109,6 +1143,14 @@
       "countries": "Scegli almeno un paese preferito.",
       "city": "Inserisci la città.",
       "province": "Inserisci la provincia.",
+      "businessName": "Inserisci il nome dell'attività.",
+      "businessType": "Inserisci la tipologia dell'attività.",
+      "businessDescription": "Inserisci una breve descrizione dell'attività.",
+      "businessWebsite": "Inserisci il sito web dell'attività.",
+      "businessPhone": "Inserisci il telefono dell'attività.",
+      "businessAddress": "Inserisci l'indirizzo dell'attività.",
+      "businessCoordinates": "Inserisci latitudine e longitudine dell'attività.",
+      "timeout": "Il salvataggio sta impiegando troppo tempo. Riprova tra qualche secondo.",
       "generic": "Non sono riuscito a salvare il profilo. Riprova."
     }
   },

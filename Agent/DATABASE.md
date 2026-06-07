@@ -56,6 +56,14 @@ Profilo utente applicativo (username, onboarding e preferenze UI), legato a `aut
 | `city`               | `TEXT`        | citta utente                                                        |
 | `province`           | `TEXT`        | provincia utente                                                    |
 | `newsletter_opt_in`  | `BOOLEAN`     | consenso newsletter                                                 |
+| `business_name`      | `TEXT`        | nome attivita per profili business                                  |
+| `business_type`      | `TEXT`        | tipologia attivita business                                          |
+| `business_description` | `TEXT`      | descrizione breve attivita                                           |
+| `business_website`   | `TEXT`        | sito web attivita                                                    |
+| `business_phone`     | `TEXT`        | telefono attivita                                                    |
+| `business_address`   | `TEXT`        | indirizzo attivita                                                   |
+| `business_latitude`  | `DOUBLE`      | coordinata lat                                                       |
+| `business_longitude` | `DOUBLE`      | coordinata lng                                                       |
 | `profile_completed_at` | `TIMESTAMPTZ` | completamento wizard profilo                                      |
 | `profile_prompt_dismissed_at` | `TIMESTAMPTZ` | ultimo skip del reminder profilo                           |
 | `super_admin`        | `BOOLEAN`     | default `false` — gestito solo via Supabase dashboard dal developer |

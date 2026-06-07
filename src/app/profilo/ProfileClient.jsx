@@ -8,7 +8,6 @@ import TopBar from '@/components/TopBar'
 import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
 import InfoModal from '@/components/InfoModal'
 import Icon from '@/components/Icon'
-import ProfileSetupPanel from '@/components/profile/ProfileSetupPanel'
 import ProgressBar from '@/components/ui/ProgressBar'
 import {useWineCourseProgress} from '@/app/corso-vino/hooks/useWineCourseProgress'
 import {supabaseClient, resetBrowserClient} from '@/lib/supabaseClient'
@@ -420,12 +419,23 @@ export default function ProfileClient({
 
           <div className={styles.optionDivider} />
 
+          <div className={styles.avatarRow}>
+            <span className={styles.labelWithIcon}>
+              <Icon name="profile" size={22} />
+              <span className={styles.label}>{t('preferences')}</span>
+            </span>
+            <Link href="/profilo/preferenze" className={styles.avatarPickerBtn}>
+              <span className={styles.avatarPickerDivider} />
+              <span className={styles.avatarPickerLabel}>{t('editPreferences')}</span>
+            </Link>
+          </div>
+
+          <div className={styles.optionDivider} />
+
           <Link href="/profilo/partite" className={`btn btn-small ${styles.historyToggle}`}>
             {t('showMatches')}
           </Link>
         </section>
-
-        <ProfileSetupPanel userId={userId} profile={profileData} mode="profile" />
 
         {/* ── Livello + Statistiche ── */}
         <section className={styles.card}>

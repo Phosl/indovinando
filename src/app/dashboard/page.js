@@ -29,7 +29,7 @@ export default async function Dashboard() {
     supabase
       .from('profiles')
       .select(
-        'username, super_admin, profile_type, experience_level, favorite_wine_types, favorite_countries, city, province, newsletter_opt_in, profile_completed_at, profile_prompt_dismissed_at',
+        'username, super_admin, profile_type, experience_level, favorite_wine_types, favorite_countries, city, province, newsletter_opt_in, business_name, business_type, business_description, business_website, business_phone, business_address, business_latitude, business_longitude, profile_completed_at, profile_prompt_dismissed_at',
       )
       .eq('id', data.user.id)
       .single(),

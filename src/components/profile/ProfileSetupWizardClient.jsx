@@ -2,11 +2,12 @@
 
 import {useCallback, useMemo, useState} from 'react'
 import {useRouter} from 'next/navigation'
-import {supabaseClient} from '@/lib/supabaseClient'
 import {useT} from '@/lib/i18n/useT'
 import TopBar from '@/components/TopBar'
 import Icon from '@/components/Icon'
+import BusinessLocationPicker from '@/components/profile/BusinessLocationPicker'
 import {
+  isBusinessProfile,
   COUNTRY_OPTIONS,
   EXPERIENCE_LEVELS,
   PROFILE_TYPES,
@@ -15,8 +16,6 @@ import {
 } from '@/lib/profileSetup'
 import styles from './ProfileSetupWizardClient.module.scss'
 
-const TOTAL_STEPS = 6
-
 export default function ProfileSetupWizardClient({userId, profile, nextPath = '/dashboard'}) {
   const router = useRouter()
   const t = useT('profileSetup')
@@ -24,50 +23,75 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
   const [stepIndex, setStepIndex] = useState(0)
   const [error, setError] = useState('')
   const [isSaving, setIsSaving] = useState(false)
+  const businessFlow = isBusinessProfile(form)
 
   const steps = useMemo(
-    () => [
-      {
-        id: 1,
-        title: t('wizard.profileType.title'),
-        label: t('sections.profileType'),
-        description: t('wizard.profileType.description'),
-      },
-      {
-        id: 2,
-        title: t('wizard.experience.title'),
-        label: t('sections.experience'),
-        description: t('wizard.experience.description'),
-      },
-      {
-        id: 3,
-        title: t('wizard.wineTypes.title'),
-        label: t('sections.wineTypes'),
-        description: t('wizard.wineTypes.description'),
-      },
-      {
-        id: 4,
-        title: t('wizard.countries.title'),
-        label: t('sections.countries'),
-        description: t('wizard.countries.description'),
-      },
-      {
-        id: 5,
-        title: t('wizard.location.title'),
-        label: t('sections.location'),
-        description: t('wizard.location.description'),
-      },
-      {
-        id: 6,
-        title: t('wizard.newsletter.title'),
-        label: t('sections.newsletter'),
-        description: t('wizard.newsletter.description'),
-      },
-    ],
-    [t],
-  )
+    () => {
+      const baseSteps = [
+        {
+          id: 1,
+          title: t('wizard.profileType.title'),
+          label: t('sections.profileType'),
+          description: t('wizard.profileType.description'),
+        },
+        {
+          id: 2,
+          title: t('wizard.experience.title'),
+          label: t('sections.experience'),
+          description: t('wizard.experience.description'),
+        },
+        {
+          id: 3,
+          title: t('wizard.wineTypes.title'),
+          label: t('sections.wineTypes'),
+          description: t('wizard.wineTypes.description'),
+        },
+        {
+          id: 4,
+          title: t('wizard.countries.title'),
+          label: t('sections.countries'),
+          description: t('wizard.countries.description'),
+        },
+        {
+          id: 5,
+          title: t('wizard.location.title'),
+          label: t('sections.location'),
+          description: t('wizard.location.description'),
+        },
+      ]
 
-  const progress = Math.round(((stepIndex + 1) / TOTAL_STEPS) * 100)
+      if (!businessFlow) {
+        return [
+          ...baseSteps,
+          {
+            id: 6,
+            title: t('wizard.newsletter.title'),
+            label: t('sections.newsletter'),
+            description: t('wizard.newsletter.description'),
+          },
+        ]
+      }
+
+      return [
+        ...baseSteps,
+        {
+          id: 6,
+          title: t('wizard.business.title'),
+          label: t('sections.business'),
+          description: t('wizard.business.description'),
+        },
+        {
+          id: 7,
+          title: t('wizard.newsletter.title'),
+          label: t('sections.newsletter'),
+          description: t('wizard.newsletter.description'),
+        },
+      ]
+    },
+    [businessFlow, t],
+  )
+  const totalSteps = steps.length
+  const progress = Math.round(((stepIndex + 1) / totalSteps) * 100)
   const [stepDirection, setStepDirection] = useState('forward')
   const [animateStep, setAnimateStep] = useState(false)
 
@@ -87,20 +111,43 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
   }, [])
 
   const validateStep = useCallback(() => {
-    if (stepIndex === 0 && !form.profile_type) return t('errors.profileType')
-    if (stepIndex === 1 && !form.experience_level) return t('errors.experienceLevel')
-    if (stepIndex === 2 && form.favorite_wine_types.length === 0) return t('errors.wineTypes')
-    if (stepIndex === 3 && form.favorite_countries.length === 0) return t('errors.countries')
-    if (stepIndex === 4 && !form.city.trim()) return t('errors.city')
-    if (stepIndex === 4 && !form.province.trim()) return t('errors.province')
+    const currentStepId = steps[stepIndex]?.id
+    if (currentStepId === 1 && !form.profile_type) return t('errors.profileType')
+    if (currentStepId === 2 && !form.experience_level) return t('errors.experienceLevel')
+    if (currentStepId === 3 && form.favorite_wine_types.length === 0) return t('errors.wineTypes')
+    if (currentStepId === 4 && form.favorite_countries.length === 0) return t('errors.countries')
+    if (currentStepId === 5 && !form.city.trim()) return t('errors.city')
+    if (currentStepId === 5 && !form.province.trim()) return t('errors.province')
+    if (currentStepId === 6 && businessFlow) {
+      if (!form.business_name.trim()) return t('errors.businessName')
+      if (!form.business_type.trim()) return t('errors.businessType')
+      if (!form.business_description.trim()) return t('errors.businessDescription')
+      if (!form.business_website.trim()) return t('errors.businessWebsite')
+      if (!form.business_phone.trim()) return t('errors.businessPhone')
+      if (!form.business_address.trim()) return t('errors.businessAddress')
+      if (form.business_latitude === null || form.business_longitude === null) {
+        return t('errors.businessCoordinates')
+      }
+    }
     return ''
-  }, [form, stepIndex, t])
+  }, [businessFlow, form, stepIndex, steps, t])
 
   const persistProfile = useCallback(async (payload) => {
-    const {error: persistError} = await supabaseClient.from('profiles').upsert(payload, {
-      onConflict: 'id',
-    })
-    if (persistError) throw persistError
+    const response = await Promise.race([
+      fetch('/api/profile/setup', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload),
+      }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('PROFILE_SAVE_TIMEOUT')), 12000),
+      ),
+    ])
+
+    const result = await response.json()
+    if (!response.ok) {
+      throw new Error(result?.error || 'Profile save failed')
+    }
   }, [])
 
   const handleNext = useCallback(async () => {
@@ -110,7 +157,7 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
       return
     }
 
-    if (stepIndex < TOTAL_STEPS - 1) {
+    if (stepIndex < totalSteps - 1) {
       setStepDirection('forward')
       setAnimateStep(true)
       setStepIndex((current) => current + 1)
@@ -131,6 +178,14 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
         city: form.city.trim(),
         province: form.province.trim(),
         newsletter_opt_in: form.newsletter_opt_in,
+        business_name: form.business_name.trim(),
+        business_type: form.business_type.trim(),
+        business_description: form.business_description.trim(),
+        business_website: form.business_website.trim(),
+        business_phone: form.business_phone.trim(),
+        business_address: form.business_address.trim(),
+        business_latitude: form.business_latitude,
+        business_longitude: form.business_longitude,
         profile_completed_at: timestamp,
         profile_prompt_dismissed_at: null,
         updated_at: timestamp,
@@ -138,11 +193,15 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
       router.replace(nextPath)
       router.refresh()
     } catch (persistError) {
-      setError(persistError.message || t('errors.generic'))
+      setError(
+        persistError.message === 'PROFILE_SAVE_TIMEOUT'
+          ? t('errors.timeout')
+          : persistError.message || t('errors.generic'),
+      )
     } finally {
       setIsSaving(false)
     }
-  }, [form, nextPath, persistProfile, router, stepIndex, t, userId, validateStep])
+  }, [form, nextPath, persistProfile, router, stepIndex, t, totalSteps, userId, validateStep])
 
   const handleBack = useCallback(() => {
     if (stepIndex === 0) {
@@ -165,25 +224,6 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
     },
     [stepIndex],
   )
-
-  const handleSkip = useCallback(async () => {
-    setIsSaving(true)
-    setError('')
-    const timestamp = new Date().toISOString()
-    try {
-      await persistProfile({
-        id: userId,
-        profile_prompt_dismissed_at: timestamp,
-        updated_at: timestamp,
-      })
-      router.replace(nextPath)
-      router.refresh()
-    } catch (persistError) {
-      setError(persistError.message || t('errors.generic'))
-    } finally {
-      setIsSaving(false)
-    }
-  }, [nextPath, persistProfile, router, t, userId])
 
   const renderStep = () => {
     if (stepIndex === 0) {
@@ -259,7 +299,7 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
       )
     }
 
-    if (stepIndex === 4) {
+    if (steps[stepIndex]?.id === 5) {
       return (
         <div className={styles.inputGrid}>
           <label className={styles.field}>
@@ -280,6 +320,68 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
               placeholder={t('placeholders.province')}
             />
           </label>
+        </div>
+      )
+    }
+
+    if (steps[stepIndex]?.id === 6 && businessFlow) {
+      return (
+        <div className={styles.businessGrid}>
+          <label className={styles.field}>
+            <span>{t('businessFields.name')}</span>
+            <input
+              type="text"
+              value={form.business_name}
+              onChange={(event) => updateField('business_name', event.target.value)}
+              placeholder={t('businessPlaceholders.name')}
+            />
+          </label>
+          <label className={styles.field}>
+            <span>{t('businessFields.type')}</span>
+            <input
+              type="text"
+              value={form.business_type}
+              onChange={(event) => updateField('business_type', event.target.value)}
+              placeholder={t('businessPlaceholders.type')}
+            />
+          </label>
+          <label className={`${styles.field} ${styles.fieldFull}`}>
+            <span>{t('businessFields.description')}</span>
+            <textarea
+              rows={4}
+              value={form.business_description}
+              onChange={(event) => updateField('business_description', event.target.value)}
+              placeholder={t('businessPlaceholders.description')}
+            />
+          </label>
+          <label className={styles.field}>
+            <span>{t('businessFields.website')}</span>
+            <input
+              type="url"
+              value={form.business_website}
+              onChange={(event) => updateField('business_website', event.target.value)}
+              placeholder={t('businessPlaceholders.website')}
+            />
+          </label>
+          <label className={styles.field}>
+            <span>{t('businessFields.phone')}</span>
+            <input
+              type="tel"
+              value={form.business_phone}
+              onChange={(event) => updateField('business_phone', event.target.value)}
+              placeholder={t('businessPlaceholders.phone')}
+            />
+          </label>
+          <div className={`${styles.field} ${styles.fieldFull}`}>
+            <BusinessLocationPicker
+              address={form.business_address}
+              latitude={form.business_latitude}
+              longitude={form.business_longitude}
+              onAddressChange={(value) => updateField('business_address', value)}
+              onLatitudeChange={(value) => updateField('business_latitude', value)}
+              onLongitudeChange={(value) => updateField('business_longitude', value)}
+            />
+          </div>
         </div>
       )
     }
@@ -312,7 +414,7 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
 
         <div className={styles.progressWrap}>
           <div className={styles.progressMeta}>
-            <span>{t('wizard.stepLabel', {current: stepIndex + 1, total: TOTAL_STEPS})}</span>
+            <span>{t('wizard.stepLabel', {current: stepIndex + 1, total: totalSteps})}</span>
             <span>{progress}%</span>
           </div>
           <div className={styles.progressTrack}>
@@ -345,14 +447,7 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
               <Icon name="back" />
             </button>
           ) : (
-            <button
-              type="button"
-              className="btn neutral"
-              onClick={handleSkip}
-              disabled={isSaving}
-              aria-label={t('skipAction')}>
-              {t('skipAction')}
-            </button>
+            <div className={styles.buttonSpacer} aria-hidden="true" />
           )}
           <button
             type="button"
@@ -361,7 +456,7 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
             disabled={isSaving}>
             {isSaving
               ? t('savingAction')
-              : stepIndex === TOTAL_STEPS - 1
+              : stepIndex === totalSteps - 1
                 ? t('finishAction')
                 : t('nextAction')}
           </button>
