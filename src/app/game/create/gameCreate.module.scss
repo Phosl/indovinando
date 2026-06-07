@@ -295,24 +295,35 @@
   background: var(--white);
 }
 
-.autoModeMetricCard:nth-child(1) {
+.autoModeMetricCardCredits {
   background: var(--primary-50);
+
   .autoModeMetricLabel {
     color: var(--primary-text);
   }
 }
 
-.autoModeMetricCard:nth-child(2) {
+.autoModeMetricCardBottles {
   background: var(--success-50);
+
   .autoModeMetricLabel {
     color: var(--success-text);
   }
 }
 
-.autoModeMetricCard:nth-child(3) {
+.autoModeMetricCardTokens {
   background: var(--tertiary-50);
+
   .autoModeMetricLabel {
     color: var(--tertiary-text);
+  }
+}
+
+.autoModeMetricCardCost {
+  background: var(--secondary-50, var(--primary-50));
+
+  .autoModeMetricLabel {
+    color: var(--secondary-text, var(--primary-text));
   }
 }
 
@@ -392,6 +403,27 @@
   height: 100%;
   background: #2e88b5;
   transition: width 0.2s linear;
+}
+
+.autoCreditsInfoList {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-primary);
+  display: grid;
+  gap: 8px;
+}
+
+.autoBottleInlineInfoButton {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+  line-height: 1.4;
+  text-align: left;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .autoStepFixedRow {

@@ -10,8 +10,10 @@ import OnboardingModal from '@/components/game/OnboardingModal'
 import {AutoTastingGamePreview} from '@/components/game'
 import PageLayout from '@/components/PageLayout'
 import Icon from '@/components/Icon'
+import InfoModal from '@/components/InfoModal'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useT} from '@/lib/i18n/useT'
+import {normalizeAiScanCredits} from '@/lib/aiScanCredits'
 import styles from './gameCreate.module.scss'
 
 const COST_CURRENCY = process.env.NEXT_PUBLIC_OPENAI_COST_CURRENCY || 'EUR'
@@ -1150,7 +1152,7 @@ function ModePickerScreen({onPick, onOpenGuide}) {
   )
 }
 
-function AutomaticModePlaceholder({onBack, userId}) {
+function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   const router = useRouter()
   const t = useT('gameCreate')
   const {lang} = useLanguage()
@@ -1190,6 +1192,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
   const [uploadedImages, setUploadedImages] = useState([])
   const [previewLoadProgress, setPreviewLoadProgress] = useState({loaded: 0, total: 0})
   const [sessionImageIds, setSessionImageIds] = useState([])
+  const [aiScanCredits, setAiScanCredits] = useState(() =>
+    normalizeAiScanCredits(initialAiScanCredits || {}),
+  )
+  const [isCreditsInfoOpen, setIsCreditsInfoOpen] = useState(false)
   const lastLoggedImagesRef = useRef('')
 
   const sessionIdsStorageKey = useMemo(
@@ -1723,6 +1729,17 @@ function AutomaticModePlaceholder({onBack, userId}) {
     [uploadedImages],
   )
 
+  const pendingAnalyzeCount = useMemo(
+    () =>
+      uploadedImages.filter((image) => ['processing', 'uploaded', 'failed'].includes(image.status))
+        .length,
+    [uploadedImages],
+  )
+
+  const canAnalyzeSingle = aiScanCredits.remaining >= 1
+  const canAnalyzeAll = pendingAnalyzeCount > 0 && aiScanCredits.remaining >= pendingAnalyzeCount
+  const canRunWebSearch = aiScanCredits.remaining >= 1
+
   const webSearchLoadingMessages = useMemo(
     () => [
       t('automaticWebSearchingAction'),
@@ -1980,6 +1997,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
   async function handleAnalyzeImage(imageId) {
     if (!imageId) return
     if (analyzingImageId || isAnalyzingAll || webSearchingImageId) return
+    if (!canAnalyzeSingle) {
+      setUploadError(t('automaticCreditsInsufficient'))
+      return
+    }
     setAnalyzingImageId(imageId)
     setUploadError('')
     setWebPreviewUsageByImageId((prev) => {
@@ -1995,9 +2016,15 @@ function AutomaticModePlaceholder({onBack, userId}) {
         {timeoutMs: 35000, retries: 3},
       )
       if (!response.ok) {
+        if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))
+        if (response.status === 402) {
+          setUploadError(t('automaticCreditsInsufficient'))
+          return
+        }
         setUploadError(`${t('automaticAnalyzeError')} (${result?.error || 'analyze'})`)
         return
       }
+      if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))
 
       const updatedRows = Array.isArray(result?.updated) ? result.updated : []
       if (updatedRows.length > 0) {
@@ -2015,6 +2042,10 @@ function AutomaticModePlaceholder({onBack, userId}) {
   async function handleWebSearchImage(imageId) {
     if (!imageId) return
     if (webSearchingImageId || analyzingImageId || isAnalyzingAll) return
+    if (!canRunWebSearch) {
+      setUploadError(t('automaticCreditsInsufficient'))
+      return
+    }
     const currentImage = uploadedImages.find((image) => image.id === imageId) || null
     setWebSearchingImageId(imageId)
     setUploadError('')
@@ -2031,9 +2062,15 @@ function AutomaticModePlaceholder({onBack, userId}) {
         {timeoutMs: 45000, retries: 2},
       )
       if (!response.ok) {
+        if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))
+        if (response.status === 402) {
+          setUploadError(t('automaticCreditsInsufficient'))
+          return
+        }
         setUploadError(`${t('automaticWebSearchError')} (${result?.error || 'web search'})`)
         return
       }
+      if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))
 
       const previewItems = Array.isArray(result?.preview) ? result.preview : []
       if (previewItems.length > 0) {
@@ -2128,6 +2165,17 @@ function AutomaticModePlaceholder({onBack, userId}) {
     if (isAnalyzingAll || analyzingImageId || webSearchingImageId) return
     const ids = sessionImageIdsRef.current
     if (!ids.length) return
+    if (!canAnalyzeAll) {
+      setUploadError(
+        pendingAnalyzeCount > aiScanCredits.remaining
+          ? t('automaticAnalyzeAllCreditsNeeded', {
+              needed: String(pendingAnalyzeCount),
+              remaining: String(aiScanCredits.remaining),
+            })
+          : t('automaticCreditsInsufficient'),
+      )
+      return
+    }
     setIsAnalyzingAll(true)
     setUploadError('')
     try {
@@ -2137,9 +2185,20 @@ function AutomaticModePlaceholder({onBack, userId}) {
         {timeoutMs: 60000, retries: 2},
       )
       if (!response.ok) {
+        if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))
+        if (response.status === 402) {
+          setUploadError(
+            t('automaticAnalyzeAllCreditsNeeded', {
+              needed: String(pendingAnalyzeCount),
+              remaining: String(result?.credits?.remaining ?? aiScanCredits.remaining),
+            }),
+          )
+          return
+        }
         setUploadError(`${t('automaticAnalyzeError')} (${result?.error || 'analyze all'})`)
         return
       }
+      if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))
       const updatedRows = Array.isArray(result?.updated) ? result.updated : []
       if (updatedRows.length > 0) {
         const map = Object.fromEntries(updatedRows.map((row) => [row.id, row]))
@@ -2392,6 +2451,16 @@ function AutomaticModePlaceholder({onBack, userId}) {
   return (
     <PageLayout title={t('title')} onBack={handleAttemptExit}>
       <AutoToast toast={toast} onClose={() => setToast(null)} closeLabel={t('close')} />
+      <InfoModal
+        isOpen={isCreditsInfoOpen}
+        onClose={() => setIsCreditsInfoOpen(false)}
+        title={t('automaticCreditsInfoTitle')}>
+        <p>{t('automaticCreditsInfoBody')}</p>
+        <ul className={styles.autoCreditsInfoList}>
+          <li>{t('automaticCreditsInfoAnalyze')}</li>
+          <li>{t('automaticCreditsInfoWeb')}</li>
+        </ul>
+      </InfoModal>
       {webSearchingImageId ? (
         <div className={styles.autoPageWebSearchOverlay}>
           <div className={styles.autoBottleWebSearchPanel}>
@@ -2662,7 +2731,23 @@ function AutomaticModePlaceholder({onBack, userId}) {
         <section className={styles.autoModeEmptyState}>
           <strong>{t('automaticBottlesTitle')}</strong>
           <div className={styles.autoModeMetricsGrid}>
-            <div className={styles.autoModeMetricCard}>
+            <div className={`${styles.autoModeMetricCard} ${styles.autoModeMetricCardCredits}`}>
+              <span className={styles.autoModeMetricLabel}>
+                <div
+                  className={styles.autoModeMetricLabelIconWrapper + ' ' + styles.metricCardToken}>
+                  <Icon src="/icons/token.svg" size={36} className={styles.autoModeMetricIcon} />
+                </div>
+                {t('automaticMetricCreditsLabel')}
+              </span>
+              <strong className={styles.autoModeMetricValue}>{aiScanCredits.remaining}</strong>
+              <span className={styles.autoModeMetricMeta}>
+                {t('automaticMetricCreditsMeta', {
+                  used: String(aiScanCredits.used),
+                  total: String(aiScanCredits.available),
+                })}
+              </span>
+            </div>
+            <div className={`${styles.autoModeMetricCard} ${styles.autoModeMetricCardBottles}`}>
               <span className={styles.autoModeMetricLabel}>
                 <div
                   className={styles.autoModeMetricLabelIconWrapper + ' ' + styles.metricCardBottle}>
@@ -2679,7 +2764,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                 })}
               </span>
             </div>
-            <div className={styles.autoModeMetricCard}>
+            <div className={`${styles.autoModeMetricCard} ${styles.autoModeMetricCardTokens}`}>
               <span className={styles.autoModeMetricLabel}>
                 <div
                   className={styles.autoModeMetricLabelIconWrapper + ' ' + styles.metricCardToken}>
@@ -2695,7 +2780,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                 })}
               </span>
             </div>
-            <div className={styles.autoModeMetricCard}>
+            <div className={`${styles.autoModeMetricCard} ${styles.autoModeMetricCardCost}`}>
               <span className={styles.autoModeMetricLabel}>
                 <div
                   className={styles.autoModeMetricLabelIconWrapper + ' ' + styles.metricCardCost}>
@@ -3213,7 +3298,8 @@ function AutomaticModePlaceholder({onBack, userId}) {
                           !!analyzingImageId ||
                           !!deletingImageId ||
                           !!verifyingImageId ||
-                          !!webSearchingImageId
+                          !!webSearchingImageId ||
+                          !canAnalyzeSingle
                         }
                         onClick={() => handleAnalyzeImage(image.id)}>
                         <Icon src="/icons/bolt.svg" size={36} className="btn-icon-big" />
@@ -3222,6 +3308,12 @@ function AutomaticModePlaceholder({onBack, userId}) {
                           : hasRecognitionData
                             ? t('automaticAnalyzeAgainAction')
                             : t('automaticAnalyzeAction')}
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.autoBottleInlineInfoButton}
+                        onClick={() => setIsCreditsInfoOpen(true)}>
+                        {t('automaticCreditsInfoAction')}
                       </button>
                       {hasRecognitionData ? (
                         <button
@@ -3233,6 +3325,7 @@ function AutomaticModePlaceholder({onBack, userId}) {
                             isAnalyzingAll ||
                             !!verifyingImageId ||
                             !!webSearchingImageId ||
+                            !canRunWebSearch ||
                             isProcessingThis
                           }
                           onClick={() => handleWebSearchImage(image.id)}>
@@ -3291,6 +3384,7 @@ export default function GameCreateClient({
   initialShowOnboarding,
   userId,
   avatarOptions = [],
+  initialAiScanCredits = null,
   mode = 'choose',
 }) {
   const router = useRouter()
@@ -3349,7 +3443,11 @@ export default function GameCreateClient({
           onClose={() => setShowOnboarding(false)}
           onDisable={handleDisableOnboarding}
         />
-        <AutomaticModePlaceholder onBack={handleBackToModePicker} userId={userId} />
+        <AutomaticModePlaceholder
+          onBack={handleBackToModePicker}
+          userId={userId}
+          initialAiScanCredits={initialAiScanCredits}
+        />
       </>
     )
   }

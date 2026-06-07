@@ -1,6 +1,7 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getGameAvatarOptions} from '@/lib/gameAvatarOptions'
+import {normalizeAiScanCredits} from '@/lib/aiScanCredits'
 
 export async function getCreateGameData() {
   const supabase = await createServerSupabase()
@@ -14,7 +15,7 @@ export async function getCreateGameData() {
 
   const {data: profile} = await supabase
     .from('profiles')
-    .select('onboarding')
+    .select('onboarding, ai_scan_credits_total, ai_scan_credits_bonus, ai_scan_credits_used')
     .eq('id', user.id)
     .single()
 
@@ -30,5 +31,6 @@ export async function getCreateGameData() {
     userId: user.id,
     initialShowOnboarding: shouldShowOnboarding,
     avatarOptions,
+    initialAiScanCredits: normalizeAiScanCredits(profile || {}),
   }
 }

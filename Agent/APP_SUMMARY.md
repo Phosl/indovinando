@@ -43,3 +43,4 @@
   - colors based on CSS vars, preferring `--primary-text` and `--success`
 - Partner public pages now switch chrome by context: logged-out visitors see the landing header, while logged-in users keep the in-app top bar with back navigation.
 - Public landing navigation now uses a fixed header with logo + burger and a full-screen menu overlay.
+- Auto-tasting now supports scan credits v1: users start with 12 credits, bottle analysis costs 1 credit, web search costs 1 credit, the API blocks when credits run out, and the automatic create-game flow shows remaining credits plus an info panel in UI.

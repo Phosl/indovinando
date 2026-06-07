@@ -14,6 +14,7 @@ Panoramica aggiornata delle tabelle Supabase (PostgreSQL) usate dall'app.
 - `WINE_CATALOG_SCHEMA.sql` - catalogo vini per creazione degustazione automatica
 - `AUTO_TASTING_MEDIA_SCHEMA.sql` - bucket + tabella immagini bottiglie (opzionale, isolato)
 - `SUPABASE_BUSINESS_BRANDING.sql` - logo attivita + bucket pubblico branding
+- `SUPABASE_AI_SCAN_CREDITS.sql` - crediti analisi AI per auto-tasting
 
 ## Diagramma ER (semplificato)
 
@@ -69,6 +70,9 @@ Profilo utente applicativo (username, onboarding e preferenze UI), legato a `aut
 | `business_logo_url`  | `TEXT`        | URL pubblico del logo attivita                                       |
 | `is_partner_public`  | `BOOLEAN`     | se `true` il partner puo comparire nelle pagine pubbliche            |
 | `partner_slug`       | `TEXT`        | slug pubblico univoco della scheda partner                           |
+| `ai_scan_credits_total` | `INTEGER`  | crediti base disponibili per analisi automatica                      |
+| `ai_scan_credits_bonus` | `INTEGER`  | crediti extra manuali / promozionali                                 |
+| `ai_scan_credits_used`  | `INTEGER`  | crediti gia consumati                                                |
 | `profile_completed_at` | `TIMESTAMPTZ` | completamento wizard profilo                                      |
 | `profile_prompt_dismissed_at` | `TIMESTAMPTZ` | ultimo skip del reminder profilo                           |
 | `super_admin`        | `BOOLEAN`     | default `false` — gestito solo via Supabase dashboard dal developer |
@@ -85,6 +89,17 @@ Uso in app:
 - accesso admin editor corsi (`super_admin`)
 - directory partner pubblica (`is_partner_public`, `partner_slug`)
 - branding degustazioni (`business_logo_path`, `business_logo_url`)
+- blocco analisi AI automatiche (`ai_scan_credits_total`, `ai_scan_credits_bonus`, `ai_scan_credits_used`)
+
+### Funzione: `consume_ai_scan_credits(uuid, integer)`
+
+Consuma in modo atomico i crediti analisi di un utente autenticato.
+
+- input: `p_user_id`, `p_amount`
+- output: snapshot aggiornato di `ai_scan_credits_total`, `ai_scan_credits_bonus`, `ai_scan_credits_used`
+- uso: route `POST /api/auto-tasting/analyze`
+
+Patch SQL: `SUPABASE_AI_SCAN_CREDITS.sql`
 
 ## Storage Bucket
 

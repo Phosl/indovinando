@@ -1,5 +1,6 @@
 import {NextResponse} from 'next/server'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {normalizeAiScanCredits} from '@/lib/aiScanCredits'
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 const OPENAI_VISION_MODEL = process.env.OPENAI_VISION_MODEL || 'gpt-4o-mini'
@@ -279,6 +280,16 @@ function summarizeOpenAIUsage(responseJson) {
     output_tokens: Number.isFinite(outputTokens) ? outputTokens : 0,
     total_tokens: Number.isFinite(totalTokens) ? totalTokens : 0,
   }
+}
+
+async function loadAiScanCredits(supabase, userId) {
+  const {data: profile} = await supabase
+    .from('profiles')
+    .select('ai_scan_credits_total, ai_scan_credits_bonus, ai_scan_credits_used')
+    .eq('id', userId)
+    .single()
+
+  return normalizeAiScanCredits(profile || {})
 }
 
 function normalizeOpenAIGrapes(value) {
@@ -1815,7 +1826,37 @@ export async function POST(request) {
       return NextResponse.json({error: rowsError.message}, {status: 500})
     }
     if (!rows?.length) {
-      return NextResponse.json({ok: true, updated: []})
+      return NextResponse.json({ok: true, updated: [], credits: await loadAiScanCredits(supabase, user.id)})
+    }
+
+    const requestedCredits = rows.length
+    const {data: creditData, error: creditError} = await supabase.rpc('consume_ai_scan_credits', {
+      p_user_id: user.id,
+      p_amount: requestedCredits,
+    })
+
+    if (creditError) {
+      const credits = await loadAiScanCredits(supabase, user.id)
+      return NextResponse.json(
+        {
+          error:
+            credits.remaining < requestedCredits
+              ? `Insufficient scan credits (${credits.remaining}/${requestedCredits})`
+              : creditError.message,
+          credits,
+        },
+        {status: credits.remaining < requestedCredits ? 402 : 500},
+      )
+    }
+
+    const creditsSnapshot = normalizeAiScanCredits(
+      Array.isArray(creditData) ? creditData[0] || {} : creditData || {},
+    )
+    if (creditsSnapshot.remaining < 0) {
+      return NextResponse.json(
+        {error: 'Insufficient scan credits', credits: creditsSnapshot},
+        {status: 402},
+      )
     }
 
     const updated = []
@@ -2098,7 +2139,12 @@ export async function POST(request) {
       updated.push(recognizedRow)
     }
 
-    return NextResponse.json({ok: true, updated, preview})
+    return NextResponse.json({
+      ok: true,
+      updated,
+      preview,
+      credits: await loadAiScanCredits(supabase, user.id),
+    })
   } catch (error) {
     return NextResponse.json({error: error?.message || 'Unexpected error'}, {status: 500})
   }
