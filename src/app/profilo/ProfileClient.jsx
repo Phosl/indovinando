@@ -8,11 +8,13 @@ import TopBar from '@/components/TopBar'
 import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
 import InfoModal from '@/components/InfoModal'
 import Icon from '@/components/Icon'
+import ProfileSetupPanel from '@/components/profile/ProfileSetupPanel'
 import ProgressBar from '@/components/ui/ProgressBar'
 import {useWineCourseProgress} from '@/app/corso-vino/hooks/useWineCourseProgress'
 import {supabaseClient, resetBrowserClient} from '@/lib/supabaseClient'
 import {useT} from '@/lib/i18n/useT'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {isProfileComplete} from '@/lib/profileSetup'
 import styles from './profilo.module.scss'
 // ── Player rank levels ────────────────────────────────────────────────────────
 const PLAYER_LEVELS = [
@@ -120,6 +122,7 @@ export default function ProfileClient({
   userLabel,
   email,
   initialAvatar,
+  profileData,
   levels,
   gamesCount,
 }) {
@@ -319,6 +322,7 @@ export default function ProfileClient({
   )
 
   const stats = useMemo(() => computeCourseStats(levels, progress), [levels, progress])
+  const hasCompletedProfile = useMemo(() => isProfileComplete(profileData || {}), [profileData])
   const playerLevel = useMemo(
     () => computePlayerLevel(stats.completedLessons, stats.totalLessons),
     [stats],
@@ -378,6 +382,9 @@ export default function ProfileClient({
             <div>
               <h2 className={styles.name}>{userLabel}</h2>
               <p className={styles.email}>{email}</p>
+              {hasCompletedProfile ? (
+                <span className={styles.profileCompleteBadge}>{t('profileCompleteBadge')}</span>
+              ) : null}
             </div>
           </div>
 
@@ -417,6 +424,8 @@ export default function ProfileClient({
             {t('showMatches')}
           </Link>
         </section>
+
+        <ProfileSetupPanel userId={userId} profile={profileData} mode="profile" />
 
         {/* ── Livello + Statistiche ── */}
         <section className={styles.card}>

@@ -979,7 +979,138 @@
     "rankPending": "Posizione classifica non disponibile al momento.",
     "matchesEmpty": "Nessuna partita trovata per questo profilo.",
     "pointsUnit": "pt",
-    "won": "Vinta"
+    "won": "Vinta",
+    "profileCompleteBadge": "Profilo completo"
+  },
+  "profileSetup": {
+    "reminderEyebrow": "Completa profilo",
+    "summaryEyebrow": "Profilo pronto",
+    "reminderTitle": "Personalizza la tua esperienza",
+    "summaryTitle": "Le tue preferenze profilo",
+    "reminderDescription": "Bastano pochi tocchi per adattare dashboard, contenuti e comunicazioni ai tuoi gusti.",
+    "summaryDescription": "Queste preferenze ci aiutano a mostrarti un'esperienza più utile e più vicina al tuo mondo del vino.",
+    "progressLabel": "{current}/{total} campi completati",
+    "completeAction": "Completa profilo",
+    "editAction": "Modifica profilo",
+    "skipAction": "Salta",
+    "skipShortAction": "Salta",
+    "closeAction": "Chiudi",
+    "backAction": "Indietro",
+    "backToApp": "Torna all'app",
+    "nextAction": "Continua",
+    "finishAction": "Salva e continua",
+    "saveAction": "Salva profilo",
+    "savingAction": "Salvataggio...",
+    "newsletterEnabled": "Iscritto",
+    "newsletterDisabled": "Non iscritto",
+    "modalEyebrow": "Onboarding rapido",
+    "modalTitle": "Completa il tuo profilo",
+    "modalDescription": "Niente campi inutili: scegli le opzioni che ti rappresentano e salva in meno di un minuto.",
+    "wizard": {
+      "stepLabel": "Step {current} di {total}",
+      "profileType": {
+        "title": "Che profilo hai?",
+        "description": "Scegli la categoria che ti rappresenta meglio oggi. Ci servirà per personalizzare dashboard e funzionalità."
+      },
+      "experience": {
+        "title": "Qual è il tuo livello?",
+        "description": "Ci aiuta a proporti contenuti e percorsi più adatti alla tua esperienza."
+      },
+      "wineTypes": {
+        "title": "Che vini ami di più?",
+        "description": "Seleziona uno o più stili per orientare contenuti, suggerimenti e community."
+      },
+      "countries": {
+        "title": "Quali paesi preferisci?",
+        "description": "Segna le aree che ti incuriosiscono di più o che scegli più spesso."
+      },
+      "location": {
+        "title": "Dove ti trovi?",
+        "description": "Useremo città e provincia per partner vicini, eventi locali e comunicazioni più rilevanti."
+      },
+      "newsletter": {
+        "title": "Vuoi ricevere aggiornamenti?",
+        "description": "Puoi attivare subito il consenso e decidere dopo come usare le comunicazioni."
+      }
+    },
+    "sections": {
+      "profileType": "Tipo profilo",
+      "experience": "Livello di esperienza",
+      "wineTypes": "Tipi di vino preferiti",
+      "countries": "Paesi preferiti",
+      "location": "Localizzazione",
+      "newsletter": "Newsletter ed eventi"
+    },
+    "fields": {
+      "profileType": "Tipo profilo",
+      "experienceLevel": "Esperienza",
+      "wineTypes": "Preferenze vino",
+      "countries": "Paesi",
+      "location": "Zona",
+      "newsletter": "Newsletter"
+    },
+    "placeholders": {
+      "city": "Città",
+      "province": "Provincia"
+    },
+    "newsletterHint": "Ricevi novità su Indovinando, eventi, classifiche e nuove funzionalità. Per ora salviamo solo il consenso.",
+    "checklist": {
+      "profileType": "Scegli il tipo di profilo più adatto a te",
+      "experience": "Indica il tuo livello di esperienza",
+      "preferences": "Seleziona vini e paesi che preferisci",
+      "location": "Aggiungi città e provincia per esperienze più locali"
+    },
+    "profileTypes": {
+      "enthusiast": "Appassionato",
+      "wine_shop": "Enoteca",
+      "restaurant": "Ristorante",
+      "educator": "Sommelier / Formatore",
+      "other_business": "Altra attività"
+    },
+    "profileTypeDescriptions": {
+      "enthusiast": "Scopro, gioco e imparo per passione.",
+      "wine_shop": "Organizzo degustazioni e coinvolgo clienti.",
+      "restaurant": "Uso il vino come parte dell'esperienza a tavola.",
+      "educator": "Formo gruppi o accompagno percorsi didattici.",
+      "other_business": "Ho un'attività che ruota intorno al vino."
+    },
+    "experienceLevels": {
+      "beginner": "Principiante",
+      "amateur": "Amatore",
+      "enthusiast": "Appassionato",
+      "expert": "Esperto",
+      "sommelier": "Sommelier",
+      "professional": "Professionista"
+    },
+    "wineTypes": {
+      "reds": "Rossi",
+      "whites": "Bianchi",
+      "roses": "Rosati",
+      "sparkling": "Bollicine",
+      "champagne": "Champagne",
+      "sweet": "Vini dolci",
+      "orange": "Orange Wine",
+      "natural": "Naturali"
+    },
+    "countries": {
+      "italy": "Italia",
+      "france": "Francia",
+      "spain": "Spagna",
+      "usa": "Stati Uniti",
+      "argentina": "Argentina",
+      "portugal": "Portogallo",
+      "germany": "Germania",
+      "other": "Altro"
+    },
+    "errors": {
+      "profileType": "Seleziona un tipo di profilo.",
+      "experienceLevel": "Seleziona il tuo livello di esperienza.",
+      "wineTypes": "Scegli almeno un tipo di vino preferito.",
+      "countries": "Scegli almeno un paese preferito.",
+      "city": "Inserisci la città.",
+      "province": "Inserisci la provincia.",
+      "generic": "Non sono riuscito a salvare il profilo. Riprova."
+    }
   },
   "course": {
     "title": "Corso Vino",

@@ -8,6 +8,8 @@ import {getWineCourseData} from '@/lib/wineCourseContent'
 import ProgressBar from '@/components/ui/ProgressBar'
 import Icon from '@/components/Icon'
 import CreateGameCardLink from '@/components/CreateGameCardLink'
+import ProfileSetupPanel from '@/components/profile/ProfileSetupPanel'
+import {isProfileComplete} from '@/lib/profileSetup'
 import it from '@/lib/i18n/locales/it.json'
 import en from '@/lib/i18n/locales/en.json'
 import styles from './dashboard.module.scss'
@@ -24,7 +26,13 @@ export default async function Dashboard() {
   }
 
   const [profileResult, courseResult, completedLessonsResult, appVersion] = await Promise.all([
-    supabase.from('profiles').select('username, super_admin').eq('id', data.user.id).single(),
+    supabase
+      .from('profiles')
+      .select(
+        'username, super_admin, profile_type, experience_level, favorite_wine_types, favorite_countries, city, province, newsletter_opt_in, profile_completed_at, profile_prompt_dismissed_at',
+      )
+      .eq('id', data.user.id)
+      .single(),
     getWineCourseData(lang).catch(() => ({levels: []})),
     supabase
       .from('wine_course_progress')
@@ -48,6 +56,7 @@ export default async function Dashboard() {
   const progressPct =
     totalLessons > 0 ? Math.round(Math.min(100, (completedLessons / totalLessons) * 100)) : 0
   const hasStartedCourse = completedLessons > 0
+  const showProfileSetupPanel = !isProfileComplete(profile || {})
 
   return (
     <main className={styles.dashboard}>
@@ -62,6 +71,8 @@ export default async function Dashboard() {
             <h3 className={styles.subtitle}>{dashboardDict.subtitle}</h3>
           </div>
         </section>
+
+        {showProfileSetupPanel && <ProfileSetupPanel profile={profile || {}} mode="dashboard" />}
 
         <nav className={styles.menuGrid}>
           <CreateGameCardLink

@@ -20,6 +20,7 @@ function isActive(pathname, href, key) {
 function shouldRender(pathname) {
   if (!pathname) return false
   if (pathname.startsWith('/table-live/session/')) return false
+  if (pathname.startsWith('/profilo/completa')) return false
   if (pathname === '/dashboard') return true
   if (pathname.startsWith('/miei-giochi')) return true
   if (pathname.startsWith('/profilo')) return true

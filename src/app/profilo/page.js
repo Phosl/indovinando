@@ -19,7 +19,13 @@ export default async function ProfilePage() {
   if (!user) redirect('/auth?next=/profilo')
 
   const [profileResult, gamesResult, courseResult] = await Promise.all([
-    supabase.from('profiles').select('username, avatar_emoji').eq('id', user.id).single(),
+    supabase
+      .from('profiles')
+      .select(
+        'username, avatar_emoji, profile_type, experience_level, favorite_wine_types, favorite_countries, city, province, newsletter_opt_in, profile_completed_at, profile_prompt_dismissed_at',
+      )
+      .eq('id', user.id)
+      .single(),
     supabase.from('games').select('id', {count: 'exact', head: true}).eq('created_by', user.id),
     getWineCourseData(lang).catch(() => ({levels: []})),
   ])
@@ -34,6 +40,7 @@ export default async function ProfilePage() {
       userLabel={profile?.username || user.email}
       email={user.email || ''}
       initialAvatar={profile?.avatar_emoji || null}
+      profileData={profile || {}}
       levels={levels}
       gamesCount={gamesCount || 0}
     />

@@ -51,6 +51,15 @@ create table if not exists profiles (
   preferred_language text not null default 'it' check (preferred_language in ('it', 'en')),
   avatar_emoji text,
   onboarding boolean default true,
+  profile_type text check (profile_type in ('enthusiast', 'wine_shop', 'restaurant', 'educator', 'other_business')),
+  experience_level text check (experience_level in ('beginner', 'amateur', 'enthusiast', 'expert', 'sommelier', 'professional')),
+  favorite_wine_types text[] not null default '{}',
+  favorite_countries text[] not null default '{}',
+  city text,
+  province text,
+  newsletter_opt_in boolean not null default false,
+  profile_completed_at timestamptz,
+  profile_prompt_dismissed_at timestamptz,
   created_at timestamptz default now(),
   updated_at timestamptz not null default now()
 );

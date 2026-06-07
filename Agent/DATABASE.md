@@ -49,6 +49,15 @@ Profilo utente applicativo (username, onboarding e preferenze UI), legato a `aut
 | `preferred_language` | `TEXT`        | default `it`, valori ammessi `it`/`en`                              |
 | `avatar_emoji`       | `TEXT`        | opzionale                                                           |
 | `onboarding`         | `BOOLEAN`     | opzionale                                                           |
+| `profile_type`       | `TEXT`        | onboarding profilo fase 1                                           |
+| `experience_level`   | `TEXT`        | onboarding profilo fase 1                                           |
+| `favorite_wine_types`| `TEXT[]`      | preferenze vino multi-selezione                                     |
+| `favorite_countries` | `TEXT[]`      | paesi preferiti multi-selezione                                     |
+| `city`               | `TEXT`        | citta utente                                                        |
+| `province`           | `TEXT`        | provincia utente                                                    |
+| `newsletter_opt_in`  | `BOOLEAN`     | consenso newsletter                                                 |
+| `profile_completed_at` | `TIMESTAMPTZ` | completamento wizard profilo                                      |
+| `profile_prompt_dismissed_at` | `TIMESTAMPTZ` | ultimo skip del reminder profilo                           |
 | `super_admin`        | `BOOLEAN`     | default `false` — gestito solo via Supabase dashboard dal developer |
 | `created_at`         | `TIMESTAMPTZ` | opzionale                                                           |
 | `updated_at`         | `TIMESTAMPTZ` | aggiornato su salvataggi preferenze                                 |
