@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.39.0',
+    date: '7 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'improve course chapter covers with visual fallback',
+    ],
+  },
+
+  {
     version: '1.38.0',
     date: '7 giugno 2026',
     label: 'Auto',
