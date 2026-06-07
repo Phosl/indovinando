@@ -92,3 +92,17 @@
   align-items: center;
   flex-shrink: 0;
 }
+
+.titleWithProgress {
+  display: flex;
+  justify-content: left;
+  position: relative;
+  width: 100%;
+  .progressTrack {
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    height: 4px;
+  }
+}

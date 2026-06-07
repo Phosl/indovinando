@@ -1,7 +1,8 @@
-import {useMemo, useEffect, useCallback, memo} from 'react'
+import {useMemo, useEffect, useCallback, memo, useRef} from 'react'
 import styles from '../playerLive.module.scss'
 import {useT} from '@/lib/i18n/useT'
 import Icon from '@/components/Icon'
+import {scrollPageTop} from '@/lib/scrollPageTop'
 
 const getComboMsg = (n, t) => {
   if (!n || n < 2) return null
@@ -37,6 +38,7 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
   overlays,
 }) {
   const t = useT('live.questionSlide')
+  const slideContentRef = useRef(null)
   const visibleCombo = useMemo(() => {
     if (!comboCount || comboCount < 2) return null
     const msg = getComboMsg(comboCount, t)
@@ -60,6 +62,21 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [handleKeyDown])
+
+  useEffect(() => {
+    scrollPageTop()
+
+    const container = slideContentRef.current
+    if (!container) return
+
+    if (typeof container.scrollTo === 'function') {
+      container.scrollTo({top: 0, left: 0, behavior: 'auto'})
+      return
+    }
+
+    container.scrollTop = 0
+  }, [currentBottleIndex, currentSlideIndex])
+
   const correctText = currentQuestion?.game_question_options?.find(
     (o) => o.id === correctOptionByQuestion[currentQuestion?.id],
   )?.text
@@ -77,6 +94,7 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
       )}
 
       <div
+        ref={slideContentRef}
         className={`${styles.slideContent} ${slideMotionClass} ${!isChecked ? styles.mobileCheckSpacing : ''}`}>
         <div className={styles.bottleBadge}>
           {t('bottleCounter', {current: currentBottleIndex + 1, total: totalBottles})}

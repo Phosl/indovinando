@@ -41,3 +41,5 @@
   - dedicated wizard page
   - text around `16px`
   - colors based on CSS vars, preferring `--primary-text` and `--success`
+- Partner public pages now switch chrome by context: logged-out visitors see the landing header, while logged-in users keep the in-app top bar with back navigation.
+- Public landing navigation now uses a fixed header with logo + burger and a full-screen menu overlay.

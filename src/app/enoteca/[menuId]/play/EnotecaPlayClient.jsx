@@ -92,6 +92,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
   const [slideMotion, setSlideMotion] = useState('idle')
   const slideTimerRef = useRef(null)
   const comboToastTimerRef = useRef(null)
+  const slideContentRef = useRef(null)
 
   const currentBottle = bottles[bottleIndex]
   const currentQuestion = screen === 'question' ? (questions[questionIndex] ?? null) : null
@@ -333,6 +334,16 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
 
   useEffect(() => {
     scrollPageTop()
+
+    const container = slideContentRef.current
+    if (!container) return
+
+    if (typeof container.scrollTo === 'function') {
+      container.scrollTo({top: 0, left: 0, behavior: 'auto'})
+      return
+    }
+
+    container.scrollTop = 0
   }, [bottleIndex, questionIndex, screen])
 
   if (loading) {
@@ -530,6 +541,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
       )}
 
       <div
+        ref={slideContentRef}
         className={`${styles.slideContent} ${slideMotionClass} ${!isCurrentChecked ? styles.mobileCheckSpacing : ''}`}>
         <div className={styles.bottleBadge}>
           {t('bottle')} {bottleIndex + 1}/{bottles.length}

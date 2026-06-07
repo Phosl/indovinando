@@ -4,7 +4,7 @@ import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {getLocaleText} from '@/lib/i18n/getLocaleText'
 import {getPublicPartnerBySlug} from '@/lib/partners'
-import TopBarBack from '@/components/TopBarBack'
+import PartnerPageHeader from '@/components/partner/PartnerPageHeader'
 import styles from '../partner.module.scss'
 
 export async function generateMetadata({params}) {
@@ -18,7 +18,11 @@ export default async function PartnerDetailPage({params}) {
   const {slug} = await params
   const supabase = await createServerSupabase()
   const lang = await getServerLanguage()
+  const {
+    data: {user},
+  } = await supabase.auth.getUser()
   const text = getLocaleText(lang, 'partnerPublic', {})
+  const landingText = getLocaleText(lang, 'landing', {})
   const partner = await getPublicPartnerBySlug(supabase, slug, lang)
 
   if (!partner) notFound()
@@ -37,7 +41,12 @@ export default async function PartnerDetailPage({params}) {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <TopBarBack title={text.topBarTitle || 'Partner'} href="/partner" />
+        <PartnerPageHeader
+          isLoggedIn={Boolean(user)}
+          title={text.topBarTitle || 'Partner'}
+          backHref="/partner"
+          navText={landingText.nav || {}}
+        />
 
         <section className={styles.detailHero}>
           {partner.logoUrl ? (

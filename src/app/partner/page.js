@@ -2,7 +2,7 @@ import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {getLocaleText} from '@/lib/i18n/getLocaleText'
 import {listPublicPartners} from '@/lib/partners'
-import TopBarBack from '@/components/TopBarBack'
+import PartnerPageHeader from '@/components/partner/PartnerPageHeader'
 import PartnerPublicCard from '@/components/partner/PartnerPublicCard'
 import styles from './partner.module.scss'
 
@@ -13,13 +13,22 @@ export const metadata = {
 export default async function PartnersPage() {
   const supabase = await createServerSupabase()
   const lang = await getServerLanguage()
+  const {
+    data: {user},
+  } = await supabase.auth.getUser()
   const text = getLocaleText(lang, 'partnerDirectory', {})
+  const landingText = getLocaleText(lang, 'landing', {})
   const partners = await listPublicPartners(supabase, lang)
 
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <TopBarBack title={text.title || 'Partner'} href="/" />
+        <PartnerPageHeader
+          isLoggedIn={Boolean(user)}
+          title={text.title || 'Partner'}
+          backHref="/"
+          navText={landingText.nav || {}}
+        />
 
         <section className={styles.hero}>
           <span className={styles.eyebrow}>{text.eyebrow || 'Partner'}</span>

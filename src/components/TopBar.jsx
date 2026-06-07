@@ -34,23 +34,38 @@ export default function TopBar({
           className={styles.backBtn}
           onClick={handleBackClick}
           aria-label={t('back')}>
-          <img src="/icons/back-icon.svg" alt="" aria-hidden="true" className={styles.backBtnIcon} />
+          <img
+            src="/icons/back-icon.svg"
+            alt=""
+            aria-hidden="true"
+            className={styles.backBtnIcon}
+          />
         </button>
       ) : back ? (
         <Link href={back} className={styles.backBtn} aria-label={t('back')}>
-          <img src="/icons/back-icon.svg" alt="" aria-hidden="true" className={styles.backBtnIcon} />
+          <img
+            src="/icons/back-icon.svg"
+            alt=""
+            aria-hidden="true"
+            className={styles.backBtnIcon}
+          />
         </Link>
       ) : null}
-      {title && <h1 className={`${styles.title} ${titleClassName}`}>{title}</h1>}
-      <div className={`${styles.actions} ${actionsClassName}`}>{children}</div>
-      {progress !== null && (
-        <ProgressBar
-          value={progress}
-          className={styles.progressTrack}
-          fillClassName={styles.progressFill}
-          ariaLabel="Top bar progress"
-        />
+      {title && progress === null && (
+        <h1 className={`${styles.title} ${titleClassName}`}>{title}</h1>
       )}
+      {progress !== null && title && (
+        <div className={styles.titleWithProgress}>
+          <h1 className={`${styles.title} ${titleClassName}`}>{title}</h1>
+          <ProgressBar
+            value={progress}
+            className={styles.progressTrack}
+            fillClassName={styles.progressFill}
+            ariaLabel="Top bar progress"
+          />
+        </div>
+      )}
+      <div className={`${styles.actions} ${actionsClassName}`}>{children}</div>
     </div>
   )
 }
