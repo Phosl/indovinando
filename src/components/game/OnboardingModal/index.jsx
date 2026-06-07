@@ -1,9 +1,9 @@
 'use client'
 
 import {useState} from 'react'
+import {createPortal} from 'react-dom'
 import styles from './OnboardingModal.module.scss'
 import {useT} from '@/lib/i18n/useT'
-import ProgressBar from '@/components/ui/ProgressBar'
 import Icon from '@/components/Icon'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
 
@@ -11,8 +11,9 @@ import ModalCloseButton from '@/components/ui/ModalCloseButton'
  * OnboardingModal component - displays onboarding information for game creation
  * @param {Function} onClose - Callback when closing the modal
  * @param {Function} onDisable - Callback when user disables onboarding
+ * @param {'modal'|'page'} variant - Presentation variant
  */
-export default function OnboardingModal({onClose, onDisable}) {
+export default function OnboardingModal({onClose, onDisable, variant = 'modal'}) {
   const [step, setStep] = useState(1)
   const t = useT('onboarding')
   const steps = t('steps')
@@ -20,22 +21,23 @@ export default function OnboardingModal({onClose, onDisable}) {
   const currentStep = steps[step - 1]
   const isLastStep = step === steps.length
   const isFirstStep = step === 1
+  const isPage = variant === 'page'
+  const overlayClassName = `${styles.overlay} ${isPage ? styles.overlayPage : ''}`.trim()
+  const modalClassName = `${styles.modal} ${isPage ? styles.modalPage : ''}`.trim()
 
-  return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+  if (typeof document === 'undefined') return null
+
+  const content = (
+    <div className={overlayClassName} onClick={isPage ? undefined : onClose}>
+      <div
+        className={modalClassName}
+        onClick={isPage ? undefined : (e) => e.stopPropagation()}>
         <ModalCloseButton className={styles.closeBtn} onClick={onClose} />
 
         <div className={styles.topProgress}>
           <div className={styles.stepIndicator}>
             {t('step')} {step} {t('of')} {steps.length}
           </div>
-          {/* <ProgressBar
-            value={(step / steps.length) * 100}
-            variant="course"
-            className={styles.progress}
-            ariaLabel="Onboarding progress"
-          /> */}
         </div>
 
         <div className={styles.content}>
@@ -66,7 +68,8 @@ export default function OnboardingModal({onClose, onDisable}) {
           </div>
 
           {onDisable && (
-            <button className={`btn btn-only-text`} onClick={onDisable}>
+            <button className={styles.disableBtn} onClick={onDisable} type="button">
+              <Icon name="removeSmall" size={18} />
               {t('disable')}
             </button>
           )}
@@ -74,4 +77,6 @@ export default function OnboardingModal({onClose, onDisable}) {
       </div>
     </div>
   )
+
+  return createPortal(content, document.body)
 }

@@ -3282,9 +3282,9 @@ function AutomaticModePlaceholder({onBack, userId}) {
   )
 }
 
-function CreateOnboardingModal({showOnboarding, onClose, onDisable}) {
+function CreateOnboardingModal({showOnboarding, onClose, onDisable, variant = 'modal'}) {
   if (!showOnboarding) return null
-  return <OnboardingModal onClose={onClose} onDisable={onDisable} />
+  return <OnboardingModal onClose={onClose} onDisable={onDisable} variant={variant} />
 }
 
 export default function GameCreateClient({
@@ -3332,8 +3332,11 @@ export default function GameCreateClient({
           showOnboarding={showOnboarding}
           onClose={() => setShowOnboarding(false)}
           onDisable={handleDisableOnboarding}
+          variant="page"
         />
-        <ModePickerScreen onPick={handlePickMode} onOpenGuide={() => setShowOnboarding(true)} />
+        {!showOnboarding ? (
+          <ModePickerScreen onPick={handlePickMode} onOpenGuide={() => setShowOnboarding(true)} />
+        ) : null}
       </>
     )
   }

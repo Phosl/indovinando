@@ -572,7 +572,13 @@ export default function ProfileClient({
                     onClick={() => handleAvatarSelect(src)}
                     type="button"
                     aria-label={`avatar ${src}`}>
-                    <Image src={src} alt="" className={styles.avatarSvgThumb} width={48} height={48} />
+                    <Image
+                      src={src}
+                      alt=""
+                      className={styles.avatarSvgThumb}
+                      width={48}
+                      height={48}
+                    />
                   </button>
                 ))}
               </div>
@@ -657,7 +663,7 @@ export default function ProfileClient({
         isOpen={showLevelInfo}
         onClose={() => setShowLevelInfo(false)}
         title="Come si sale di livello"
-        icon="🏅">
+        icon="">
         <p>
           Il tuo <strong>livello</strong> riflette quante lezioni del Corso Vino hai completato.
         </p>
@@ -681,7 +687,7 @@ export default function ProfileClient({
             </div>
           ))}
         </div>
-        <p style={{marginTop: 4}}>Completa più lezioni per avanzare di livello! 🚀</p>
+        <p style={{marginTop: 4}}>Completa più lezioni per avanzare di livello!</p>
       </InfoModal>
     </main>
   )
