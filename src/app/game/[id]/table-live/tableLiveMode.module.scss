@@ -129,6 +129,14 @@
   height: auto;
 }
 
+.qrBrandName {
+  margin: 0;
+  text-align: center;
+  color: var(--primary-text);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
 .qrImage {
   width: min(300px, 100%);
   height: auto;

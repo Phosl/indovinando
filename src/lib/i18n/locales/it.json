@@ -1127,6 +1127,17 @@
     "businessMapsReady": "Cerca l'indirizzo con Google Maps: selezionando un risultato, le coordinate si aggiornano automaticamente.",
     "businessMapsFallback": "Se la chiave Google Maps non è configurata, puoi comunque inserire indirizzo e coordinate manualmente.",
     "businessMapPreviewTitle": "Anteprima mappa attività",
+    "branding": {
+      "eyebrow": "Branding degustazioni",
+      "title": "Logo attività",
+      "description": "Carica il logo della tua attività. Lo useremo nei QR di degustazione, live, singolo e nelle schede stampabili.",
+      "placeholder": "Logo",
+      "activityNameFallback": "La tua attività",
+      "usageHint": "Il logo verrà riusato automaticamente nei flussi brandizzati.",
+      "upload": "Carica logo",
+      "uploading": "Caricamento...",
+      "error": "Non sono riuscita a caricare il logo dell'attività."
+    },
     "partnerPublic": {
       "eyebrow": "Scheda pubblica",
       "title": "Scheda partner pubblica",

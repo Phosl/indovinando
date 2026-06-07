@@ -13,6 +13,7 @@ Panoramica aggiornata delle tabelle Supabase (PostgreSQL) usate dall'app.
 - `ENOTECA_SCHEMA.sql` - schema enoteca minimale
 - `WINE_CATALOG_SCHEMA.sql` - catalogo vini per creazione degustazione automatica
 - `AUTO_TASTING_MEDIA_SCHEMA.sql` - bucket + tabella immagini bottiglie (opzionale, isolato)
+- `SUPABASE_BUSINESS_BRANDING.sql` - logo attivita + bucket pubblico branding
 
 ## Diagramma ER (semplificato)
 
@@ -64,6 +65,8 @@ Profilo utente applicativo (username, onboarding e preferenze UI), legato a `aut
 | `business_address`   | `TEXT`        | indirizzo attivita                                                   |
 | `business_latitude`  | `DOUBLE`      | coordinata lat                                                       |
 | `business_longitude` | `DOUBLE`      | coordinata lng                                                       |
+| `business_logo_path` | `TEXT`        | path storage del logo attivita                                       |
+| `business_logo_url`  | `TEXT`        | URL pubblico del logo attivita                                       |
 | `is_partner_public`  | `BOOLEAN`     | se `true` il partner puo comparire nelle pagine pubbliche            |
 | `partner_slug`       | `TEXT`        | slug pubblico univoco della scheda partner                           |
 | `profile_completed_at` | `TIMESTAMPTZ` | completamento wizard profilo                                      |
@@ -81,6 +84,7 @@ Uso in app:
 - avatar profilo (`avatar_emoji`)
 - accesso admin editor corsi (`super_admin`)
 - directory partner pubblica (`is_partner_public`, `partner_slug`)
+- branding degustazioni (`business_logo_path`, `business_logo_url`)
 
 ## Storage Bucket
 

@@ -35,6 +35,8 @@
 - Landing now links to `/partner` and shows public business partners
 - Public partner pages live in `/partner` and `/partner/[slug]`
 - Next DB step for partners: `is_partner_public` + `partner_slug`
+- Business branding v1 adds logo upload on `/profilo/pubblico`
+- Branding is reused in tasting QR flows and printable tasting sheets
 - UI direction for this flow:
   - dedicated wizard page
   - text around `16px`

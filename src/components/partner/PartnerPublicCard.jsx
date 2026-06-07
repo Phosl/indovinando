@@ -6,6 +6,12 @@ export default function PartnerPublicCard({partner, ctaLabel}) {
 
   return (
     <article className={styles.card}>
+      {partner.logoUrl ? (
+        <div className={styles.logoWrap}>
+          <img src={partner.logoUrl} alt={partner.name} className={styles.logo} />
+        </div>
+      ) : null}
+
       <div className={styles.header}>
         <span className={styles.badge}>{partner.category}</span>
         {partner.location ? <span className={styles.location}>{partner.location}</span> : null}

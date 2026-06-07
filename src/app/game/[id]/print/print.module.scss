@@ -73,6 +73,27 @@
   }
 }
 
+.brandHeader {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.brandLogo {
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+}
+
+.brandName {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 800;
+  color: #4d319b;
+  text-align: center;
+}
+
 .playerRow {
   display: flex;
   align-items: center;
@@ -93,6 +114,41 @@
   grid-template-columns: 1fr;
   gap: 20px;
   overflow: hidden;
+}
+
+.footer {
+  margin-top: 16px;
+  padding-top: 10px;
+  border-top: 1px solid #d9d4df;
+}
+
+.footerBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footerLogo {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.footerMeta {
+  display: grid;
+  gap: 2px;
+
+  strong {
+    font-size: 11px;
+    color: #222;
+  }
+
+  span {
+    font-size: 10px;
+    color: #555;
+    line-height: 1.3;
+  }
 }
 
 .questionsHeaderCard {

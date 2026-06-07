@@ -1,6 +1,7 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
+import {getBusinessBranding} from '@/lib/businessBranding'
 import LiveSessionClient from './LiveSessionClient'
 
 export async function generateMetadata() {
@@ -65,6 +66,14 @@ export default async function LiveSessionPage({params}) {
     .eq('game_id', gameId)
     .order('bottle_order')
 
+  const {data: ownerProfile} = await supabase
+    .from('profiles')
+    .select(
+      'username, business_name, business_type, business_website, business_phone, business_address, business_logo_path, business_logo_url, city, province',
+    )
+    .eq('id', user.id)
+    .maybeSingle()
+
   return (
     <LiveSessionClient
       gameId={gameId}
@@ -72,6 +81,7 @@ export default async function LiveSessionPage({params}) {
       questions={questions || []}
       bottles={bottles || []}
       userId={user.id}
+      branding={getBusinessBranding(ownerProfile || {})}
     />
   )
 }

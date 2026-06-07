@@ -19,6 +19,7 @@ export default function EnotecaBridgeClient({
   questions = [],
   bottles = [],
   leaderboard = [],
+  branding = {},
 }) {
   const {lang} = useLanguage()
   const t = useT('enoteca.join')
@@ -96,14 +97,16 @@ export default function EnotecaBridgeClient({
           <title>${menuName} QR</title>
           <style>
             body { font-family: Arial, sans-serif; margin: 0; padding: 24px; text-align: center; }
-            .logo { width: 120px; height: auto; margin: 0 auto 12px; display: block; }
+            .logo { width: 120px; height: auto; margin: 0 auto 12px; display: block; object-fit: contain; }
             img { width: 280px; height: 280px; }
             h1 { font-size: 18px; margin: 0 0 12px; }
             p { font-size: 12px; color: #444; word-break: break-all; }
+            .brand { font-size: 13px; color: #222; margin-bottom: 8px; font-weight: 700; }
           </style>
         </head>
         <body>
-          <img class="logo" src="${window.location.origin}/logo.svg" alt="Indovinando" />
+          ${branding.logoUrl ? `<img class="logo" src="${branding.logoUrl}" alt="${branding.activityName || menuName}" />` : `<img class="logo" src="${window.location.origin}/logo.svg" alt="Indovinando" />`}
+          ${branding.activityName ? `<div class="brand">${branding.activityName}</div>` : ''}
           <h1>${menuName}</h1>
           <img src="${qrDataUrl}" alt="QR" />
           <p>${shareLink}</p>
@@ -285,7 +288,12 @@ export default function EnotecaBridgeClient({
       {qrOpen && (
         <div className={xStyles.qrOverlay} onClick={() => setQrOpen(false)}>
           <div className={xStyles.qrModal} onClick={(e) => e.stopPropagation()}>
-            <img src="/logo.svg" alt="Indovinando" className={xStyles.qrLogo} />
+            <img
+              src={branding.logoUrl || '/logo.svg'}
+              alt={branding.activityName || 'Indovinando'}
+              className={xStyles.qrLogo}
+            />
+            {branding.activityName ? <p className={xStyles.qrBrandName}>{branding.activityName}</p> : null}
             <h3>{t('qrTitle')}</h3>
             {qrDataUrl ? (
               <img src={qrDataUrl} alt="QR degustazione" className={xStyles.qrImage} />

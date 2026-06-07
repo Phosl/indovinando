@@ -4,6 +4,7 @@
 
 - `tc` = testo commit
 - I testi commit richiesti con `tc` vanno sempre scritti in inglese.
+- `ns` = prossimo step
 
 ## Note
 

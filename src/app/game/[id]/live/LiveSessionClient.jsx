@@ -29,6 +29,7 @@ export default function LiveSessionClient({
   questionsPreview = questions,
   bottles,
   userId,
+  branding = {},
 }) {
   const router = useRouter()
   const t = useT('liveSession')
@@ -221,14 +222,16 @@ export default function LiveSessionClient({
           <title>${gameName} QR</title>
           <style>
             body { font-family: Arial, sans-serif; margin: 0; padding: 24px; text-align: center; }
-            .logo { width: 120px; height: auto; margin: 0 auto 12px; display: block; }
+            .logo { width: 120px; height: auto; margin: 0 auto 12px; display: block; object-fit: contain; }
             img { width: 280px; height: 280px; }
             h1 { font-size: 18px; margin: 0 0 12px; }
             p { font-size: 12px; color: #444; word-break: break-all; }
+            .brand { font-size: 13px; color: #222; margin-bottom: 8px; font-weight: 700; }
           </style>
         </head>
         <body>
-          <img class="logo" src="${window.location.origin}/logo.svg" alt="Indovinando" />
+          ${branding.logoUrl ? `<img class="logo" src="${branding.logoUrl}" alt="${branding.activityName || gameName}" />` : `<img class="logo" src="${window.location.origin}/logo.svg" alt="Indovinando" />`}
+          ${branding.activityName ? `<div class="brand">${branding.activityName}</div>` : ''}
           <h1>${qrTitle || gameName}</h1>
           <img src="${qrDataUrl}" alt="QR" />
           <p>${qrLink}</p>
@@ -476,7 +479,12 @@ export default function LiveSessionClient({
       {qrOpen && (
         <div className={styles.qrOverlay} onClick={() => setQrOpen(false)}>
           <div className={styles.qrModal} onClick={(e) => e.stopPropagation()}>
-            <img src="/logo.svg" alt="Indovinando" className={styles.qrLogo} />
+            <img
+              src={branding.logoUrl || '/logo.svg'}
+              alt={branding.activityName || 'Indovinando'}
+              className={styles.qrLogo}
+            />
+            {branding.activityName ? <p className={styles.qrBrandName}>{branding.activityName}</p> : null}
             <h3>{qrTitle}</h3>
             {qrDataUrl ? (
               <img src={qrDataUrl} alt="QR sessione" className={styles.qrImage} />

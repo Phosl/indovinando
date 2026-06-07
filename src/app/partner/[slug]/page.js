@@ -40,6 +40,12 @@ export default async function PartnerDetailPage({params}) {
         <TopBarBack title={text.topBarTitle || 'Partner'} href="/partner" />
 
         <section className={styles.detailHero}>
+          {partner.logoUrl ? (
+            <div className={styles.detailLogoWrap}>
+              <img src={partner.logoUrl} alt={partner.name} className={styles.detailLogo} />
+            </div>
+          ) : null}
+
           <div className={styles.detailHeroMain}>
             <span className={styles.eyebrow}>{partner.category}</span>
             <h1>{partner.name}</h1>

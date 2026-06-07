@@ -66,6 +66,7 @@ export function mapProfileToPublicPartner(profile = {}, lang = 'it') {
     website: String(profile.business_website || '').trim(),
     phone: String(profile.business_phone || '').trim(),
     address: String(profile.business_address || '').trim(),
+    logoUrl: String(profile.business_logo_url || '').trim(),
     city,
     province,
     location,
@@ -80,7 +81,7 @@ export async function listPublicPartners(fallbackClient, lang = 'it') {
   const {data, error} = await supabase
     .from('profiles')
     .select(
-      'id, username, profile_type, business_name, business_type, business_description, business_website, business_phone, business_address, business_latitude, business_longitude, city, province, is_partner_public, partner_slug, profile_completed_at, experience_level, favorite_wine_types, favorite_countries',
+      'id, username, profile_type, business_name, business_type, business_description, business_website, business_phone, business_address, business_latitude, business_longitude, business_logo_url, city, province, is_partner_public, partner_slug, profile_completed_at, experience_level, favorite_wine_types, favorite_countries',
     )
     .in('profile_type', BUSINESS_PROFILE_TYPES)
     .order('profile_completed_at', {ascending: false, nullsFirst: false})

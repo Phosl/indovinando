@@ -1123,6 +1123,17 @@
     "businessMapsReady": "Search the address with Google Maps: selecting a result updates the coordinates automatically.",
     "businessMapsFallback": "If the Google Maps key is not configured, you can still enter address and coordinates manually.",
     "businessMapPreviewTitle": "Business map preview",
+    "branding": {
+      "eyebrow": "Tasting branding",
+      "title": "Business logo",
+      "description": "Upload your business logo. We use it in tasting QR flows, live mode, single mode, and printable tasting sheets.",
+      "placeholder": "Logo",
+      "activityNameFallback": "Your business",
+      "usageHint": "The logo is automatically reused in branded flows.",
+      "upload": "Upload logo",
+      "uploading": "Uploading...",
+      "error": "I couldn't upload the business logo."
+    },
     "partnerPublic": {
       "eyebrow": "Public page",
       "title": "Public partner page",
