@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.38.0',
+    date: '7 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'turn create-game onboarding into a full-screen experience',
+    ],
+  },
+
+  {
     version: '1.37.0',
     date: '6 giugno 2026',
     label: 'Auto',
