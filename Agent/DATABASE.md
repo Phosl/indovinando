@@ -64,6 +64,8 @@ Profilo utente applicativo (username, onboarding e preferenze UI), legato a `aut
 | `business_address`   | `TEXT`        | indirizzo attivita                                                   |
 | `business_latitude`  | `DOUBLE`      | coordinata lat                                                       |
 | `business_longitude` | `DOUBLE`      | coordinata lng                                                       |
+| `is_partner_public`  | `BOOLEAN`     | se `true` il partner puo comparire nelle pagine pubbliche            |
+| `partner_slug`       | `TEXT`        | slug pubblico univoco della scheda partner                           |
 | `profile_completed_at` | `TIMESTAMPTZ` | completamento wizard profilo                                      |
 | `profile_prompt_dismissed_at` | `TIMESTAMPTZ` | ultimo skip del reminder profilo                           |
 | `super_admin`        | `BOOLEAN`     | default `false` — gestito solo via Supabase dashboard dal developer |
@@ -78,6 +80,7 @@ Uso in app:
 - lingua UI (`preferred_language`)
 - avatar profilo (`avatar_emoji`)
 - accesso admin editor corsi (`super_admin`)
+- directory partner pubblica (`is_partner_public`, `partner_slug`)
 
 ## Storage Bucket
 

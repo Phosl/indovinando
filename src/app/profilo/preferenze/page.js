@@ -19,7 +19,7 @@ export default async function ProfilePreferencesPage() {
   const {data: profile} = await supabase
     .from('profiles')
     .select(
-      'profile_type, experience_level, favorite_wine_types, favorite_countries, city, province, newsletter_opt_in, business_name, business_type, business_description, business_website, business_phone, business_address, business_latitude, business_longitude, profile_completed_at, profile_prompt_dismissed_at',
+      'id, username, profile_type, experience_level, favorite_wine_types, favorite_countries, city, province, newsletter_opt_in, business_name, business_type, business_description, business_website, business_phone, business_address, business_latitude, business_longitude, is_partner_public, partner_slug, profile_completed_at, profile_prompt_dismissed_at',
     )
     .eq('id', user.id)
     .single()

@@ -31,6 +31,10 @@
 - Profile completion flow lives in `/profilo/completa`
 - Business profiles (`wine_shop`, `restaurant`, `other_business`) get one extra wizard step
 - Business location step uses Google Maps / Places when `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` is present
+- Public partner v1 now derives from completed business profiles
+- Landing now links to `/partner` and shows public business partners
+- Public partner pages live in `/partner` and `/partner/[slug]`
+- Next DB step for partners: `is_partner_public` + `partner_slug`
 - UI direction for this flow:
   - dedicated wizard page
   - text around `16px`

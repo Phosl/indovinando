@@ -5,8 +5,6 @@ export default function LandingHero({text = {}}) {
   return (
     <section className={styles.heroSection}>
       <div className={styles.heroContent}>
-        <img src="/logo.svg" alt="Indovinando" className={styles.heroLogo} />
-
         <span className={styles.heroBadge}>{text.badge || 'Wine Tasting Game'}</span>
 
         <h1 className={styles.heroTitle}>

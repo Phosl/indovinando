@@ -13,7 +13,7 @@ import {useWineCourseProgress} from '@/app/corso-vino/hooks/useWineCourseProgres
 import {supabaseClient, resetBrowserClient} from '@/lib/supabaseClient'
 import {useT} from '@/lib/i18n/useT'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
-import {isProfileComplete} from '@/lib/profileSetup'
+import {isBusinessProfile, isProfileComplete} from '@/lib/profileSetup'
 import styles from './profilo.module.scss'
 // ── Player rank levels ────────────────────────────────────────────────────────
 const PLAYER_LEVELS = [
@@ -142,6 +142,7 @@ export default function ProfileClient({
   const [avatar, setAvatar] = useState(
     initialAvatar && ALL_AVATARS.includes(initialAvatar) ? initialAvatar : '😎',
   )
+  const hasBusinessProfile = useMemo(() => isBusinessProfile(profileData || {}), [profileData])
 
   useEffect(() => {
     const saved = localStorage.getItem(AVATAR_STORAGE_KEY)
@@ -381,8 +382,15 @@ export default function ProfileClient({
             <div>
               <h2 className={styles.name}>{userLabel}</h2>
               <p className={styles.email}>{email}</p>
-              {hasCompletedProfile ? (
-                <span className={styles.profileCompleteBadge}>{t('profileCompleteBadge')}</span>
+              {hasCompletedProfile || hasBusinessProfile ? (
+                <div className={styles.profileBadges}>
+                  {hasCompletedProfile ? (
+                    <span className={styles.profileCompleteBadge}>{t('profileCompleteBadge')}</span>
+                  ) : null}
+                  {hasBusinessProfile ? (
+                    <span className={styles.businessBadge}>{t('businessBadge')}</span>
+                  ) : null}
+                </div>
               ) : null}
             </div>
           </div>
@@ -429,6 +437,32 @@ export default function ProfileClient({
               <span className={styles.avatarPickerLabel}>{t('editPreferences')}</span>
             </Link>
           </div>
+
+          {hasBusinessProfile ? (
+            <>
+              <div className={styles.optionDivider} />
+
+              <div className={styles.publicProfileRow}>
+                <div className={styles.publicProfileText}>
+                  <span className={styles.labelWithIcon}>
+                    <Icon name="home" size={20} />
+                    <span className={styles.label}>{t('publicProfile')}</span>
+                  </span>
+                  <p className={styles.publicProfileHint}>
+                    {profileData?.is_partner_public
+                      ? t('publicProfileHintPublic')
+                      : t('publicProfileHintPrivate')}
+                  </p>
+                </div>
+                <Link href="/profilo/pubblico" className={styles.avatarPickerBtn}>
+                  <span className={styles.avatarPickerDivider} />
+                  <span className={styles.avatarPickerLabel}>
+                    {profileData?.is_partner_public ? t('publicLabel') : t('privateLabel')}
+                  </span>
+                </Link>
+              </div>
+            </>
+          ) : null}
 
           <div className={styles.optionDivider} />
 

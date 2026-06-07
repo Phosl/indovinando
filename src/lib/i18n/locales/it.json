@@ -79,6 +79,12 @@
     }
   },
   "landing": {
+    "nav": {
+      "ariaLabel": "Menu landing",
+      "howItWorks": "Come funziona",
+      "partners": "Partner",
+      "login": "Accedi"
+    },
     "hero": {
       "badge": "🍷 Wine Tasting Game",
       "title": "Trasforma una degustazione di vino in un gioco.",
@@ -140,6 +146,10 @@
         "Wine Hub"
       ],
       "counter": "+20 enoteche e professionisti del vino stanno già utilizzando Indovinando",
+      "counterDynamic": "{count} partner business sono già visibili su Indovinando",
+      "cardCta": "Apri scheda",
+      "directoryCta": "Scopri tutti i partner",
+      "fallbackCategory": "Partner",
       "mapTitle": "Mappa partner",
       "mapDescription": "Qui potrai visualizzare tutte le enoteche, cantine e wine experience aderenti."
     },
@@ -150,6 +160,30 @@
       "primaryCta": "Inizia gratis",
       "secondaryCta": "Guarda come funziona"
     }
+  },
+  "partnerDirectory": {
+    "title": "Partner",
+    "eyebrow": "Partner pubblici",
+    "heading": "Scopri le attività che usano Indovinando",
+    "description": "Enoteche, ristoranti e realtà del vino che hanno scelto di portare il gioco nelle loro degustazioni.",
+    "cardCta": "Apri scheda",
+    "emptyTitle": "I primi partner stanno arrivando",
+    "emptyDescription": "Presto qui troverai le schede pubbliche delle attività business che usano Indovinando."
+  },
+  "partnerPublic": {
+    "topBarTitle": "Partner",
+    "visitWebsite": "Visita sito",
+    "callPartner": "Chiama",
+    "infoTitle": "Informazioni attività",
+    "categoryLabel": "Tipologia",
+    "addressLabel": "Indirizzo",
+    "areaLabel": "Zona",
+    "phoneLabel": "Telefono",
+    "websiteLabel": "Sito web",
+    "mapTitle": "Dove si trova",
+    "openMap": "Apri mappa",
+    "mapEmpty": "La mappa sarà disponibile appena il partner completerà la posizione.",
+    "backToDirectory": "Torna ai partner"
   },
   "admin": {
     "catalog": {
@@ -982,7 +1016,13 @@
     "matchesEmpty": "Nessuna partita trovata per questo profilo.",
     "pointsUnit": "pt",
     "won": "Vinta",
-    "profileCompleteBadge": "Profilo completo"
+    "profileCompleteBadge": "Profilo completo",
+    "businessBadge": "Business",
+    "publicProfile": "Profilo pubblico",
+    "publicProfileHintPublic": "La tua scheda partner è visibile nella directory pubblica.",
+    "publicProfileHintPrivate": "La tua scheda partner è privata e non compare ancora nella directory.",
+    "publicLabel": "Pubblico",
+    "privateLabel": "Privato"
   },
   "profileSetup": {
     "reminderEyebrow": "Completa profilo",
@@ -1087,6 +1127,18 @@
     "businessMapsReady": "Cerca l'indirizzo con Google Maps: selezionando un risultato, le coordinate si aggiornano automaticamente.",
     "businessMapsFallback": "Se la chiave Google Maps non è configurata, puoi comunque inserire indirizzo e coordinate manualmente.",
     "businessMapPreviewTitle": "Anteprima mappa attività",
+    "partnerPublic": {
+      "eyebrow": "Scheda pubblica",
+      "title": "Scheda partner pubblica",
+      "description": "Attiva la visibilità pubblica per comparire nella landing e nella directory partner.",
+      "helper": "Puoi attivare o disattivare la tua scheda partner pubblica in qualsiasi momento.",
+      "active": "Pubblica",
+      "inactive": "Privata",
+      "slugLabel": "URL pubblico",
+      "preview": "Anteprima scheda",
+      "directory": "Apri directory",
+      "error": "Non sono riuscita ad aggiornare la visibilità della scheda partner."
+    },
     "checklist": {
       "profileType": "Scegli il tipo di profilo più adatto a te",
       "experience": "Indica il tuo livello di esperienza",

@@ -4,6 +4,56 @@
   background: var(--background);
 }
 
+.navWrap {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 16px 24px 0;
+  background: linear-gradient(
+    180deg,
+    rgba(252, 249, 239, 0.98),
+    rgba(252, 249, 239, 0.82),
+    transparent
+  );
+  backdrop-filter: blur(8px);
+}
+
+.navInner {
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  padding: 12px 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 2px solid var(--button-secondary-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.navBrand {
+  display: inline-flex;
+  align-items: center;
+}
+
+.navLogo {
+  width: 140px;
+  height: auto;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.navLink {
+  color: var(--primary-text);
+  text-decoration: none;
+  font-weight: 800;
+}
+
 .heroSection,
 .section {
   width: min(1200px, calc(100% - 48px));
@@ -24,11 +74,6 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-}
-
-.heroLogo {
-  width: clamp(180px, 24vw, 240px);
-  height: auto;
 }
 
 .heroBadge,
@@ -248,6 +293,12 @@
   }
 }
 
+.mapActions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
 .ctaCard {
   padding: 72px 40px;
   border-radius: 28px;
@@ -278,6 +329,16 @@
 }
 
 @media (max-width: 900px) {
+  .navWrap {
+    padding: 12px 12px 0;
+  }
+
+  .navInner {
+    padding: 12px 14px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .heroSection {
     min-height: auto;
     padding-top: 32px;
@@ -321,6 +382,12 @@
   .heroSection,
   .section {
     width: min(1200px, calc(100% - 28px));
+  }
+
+  .navLinks {
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
   }
 
   .section {
