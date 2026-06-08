@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.40.1',
+    date: '8 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'stabilize navigation transitions and clear repo lint errors',
+    ],
+  },
+
+  {
     version: '1.40.0',
     date: '8 giugno 2026',
     label: 'Auto',
