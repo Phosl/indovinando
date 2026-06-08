@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.40.0',
+    date: '8 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'default first-time language selection from browser locale',
+    ],
+  },
+
+  {
     version: '1.39.1',
     date: '8 giugno 2026',
     label: 'Auto',
