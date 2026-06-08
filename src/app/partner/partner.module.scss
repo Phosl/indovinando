@@ -12,6 +12,29 @@
   gap: 18px;
 }
 
+.landingBackRow {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: -2px;
+}
+
+.landingBackLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  color: var(--primary-text);
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.landingBackIcon {
+  width: 18px;
+  height: 18px;
+  color: var(--primary-text);
+  flex: 0 0 auto;
+}
+
 .hero,
 .detailHero,
 .emptyCard,

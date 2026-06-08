@@ -23,6 +23,7 @@ export default async function PartnerDetailPage({params}) {
   } = await supabase.auth.getUser()
   const text = getLocaleText(lang, 'partnerPublic', {})
   const landingText = getLocaleText(lang, 'landing', {})
+  const commonText = getLocaleText(lang, 'common', {})
   const partner = await getPublicPartnerBySlug(supabase, slug, lang)
 
   if (!partner) notFound()
@@ -46,6 +47,8 @@ export default async function PartnerDetailPage({params}) {
           title={text.topBarTitle || 'Partner'}
           backHref="/partner"
           navText={landingText.nav || {}}
+          landingBackHref="/partner"
+          landingBackLabel={commonText.back || 'Indietro'}
         />
 
         <section className={styles.detailHero}>

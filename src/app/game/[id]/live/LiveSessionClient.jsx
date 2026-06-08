@@ -8,6 +8,7 @@ import ShareDetailsTabs from '@/components/ShareDetailsTabs/ShareDetailsTabs'
 import AvatarDisplay from '@/components/AvatarDisplay'
 import {useT} from '@/lib/i18n/useT'
 import {supabaseClient} from '@/lib/supabaseClient'
+import {buildPublicAppUrl, getPublicAppOrigin} from '@/lib/publicAppUrl'
 import styles from './liveSessions.module.scss'
 
 const withSaveTimeout = async (taskOrPromise, contextLabel, timeoutMs = 20000) => {
@@ -75,8 +76,7 @@ export default function LiveSessionClient({
         setSessionId(id)
 
         // Genera link
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
-        setSessionLink(`${baseUrl}/live/session/${id}`)
+        setSessionLink(buildPublicAppUrl(`/live/session/${id}`))
 
         setLoading(false)
       } catch (err) {
@@ -231,7 +231,7 @@ export default function LiveSessionClient({
           </style>
         </head>
         <body>
-          ${branding.logoUrl ? `<img class="logo" src="${branding.logoUrl}" alt="${branding.activityName || gameName}" />` : `<img class="logo" src="${window.location.origin}/logo.svg" alt="Indovinando" />`}
+          ${branding.logoUrl ? `<img class="logo" src="${branding.logoUrl}" alt="${branding.activityName || gameName}" />` : `<img class="logo" src="${getPublicAppOrigin()}/logo.svg" alt="Indovinando" />`}
           ${branding.activityName ? `<div class="brand">${branding.activityName}</div>` : ''}
           <h1>${qrTitle || gameName}</h1>
           <img src="${qrDataUrl}" alt="QR" />

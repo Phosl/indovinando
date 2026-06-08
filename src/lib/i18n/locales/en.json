@@ -154,7 +154,9 @@
       "directoryCta": "Explore all partners",
       "fallbackCategory": "Partner",
       "mapTitle": "Partner map",
-      "mapDescription": "Here you will be able to explore all partner wine shops, wineries, and wine experiences."
+      "mapDescription": "Here you will find wine shops, wineries, and wine experiences that are part of the Indovinando network.",
+      "scrollerLabel": "Featured public partners",
+      "mapEmpty": "The map will be available as soon as public partners complete their location."
     },
     "cta": {
       "eyebrow": "Start now",
@@ -1062,7 +1064,11 @@
       "surprising": "Most surprising wines",
       "divisive": "Most divisive wines"
     },
-    "realDataPills": ["Real ratings only", "Enoteca + Table", "Growing over time"],
+    "realDataPills": [
+      "Real ratings only",
+      "Enoteca + Table",
+      "Growing over time"
+    ],
     "realDataNote": "These rankings read real ratings from enoteca and table flows. If a section still has too little data, we temporarily show starter data.",
     "globalStats": {
       "eyebrow": "Community",
@@ -1489,6 +1495,32 @@
       "ratings": "ratings",
       "activeUsers": "active users",
       "analyzedWines": "wines analyzed by Indovinando AI"
+    }
+  },
+  "rankingsWinePage": {
+    "eyebrow": "Wine",
+    "summaryEyebrow": "Quick card",
+    "summaryTitle": "Community overview",
+    "rankingsEyebrow": "Rankings",
+    "rankingsTitle": "Where it stands",
+    "metricsTitle": "Wine metrics",
+    "sections": {
+      "blind": "Best blind tasting wines",
+      "qualityPrice": "Best quality/price ratio",
+      "surprising": "Most surprising wines",
+      "divisive": "Most divisive wines"
+    },
+    "stats": {
+      "ratingCount": "Real ratings",
+      "tastingCount": "Completed tastings",
+      "recognitionRate": "Recognition rate",
+      "averagePrice": "Average price"
+    },
+    "metrics": {
+      "blindLabel": "Average rating: {value}",
+      "qualityPriceLabel": "Quality/price: {value}",
+      "surprisingLabel": "Surprise score: {value}",
+      "divisiveLabel": "Divisive score: {value}"
     }
   }
 }

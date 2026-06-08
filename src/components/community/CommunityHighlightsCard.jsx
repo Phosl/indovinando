@@ -1,19 +1,24 @@
 import Link from 'next/link'
+import Icon from '@/components/Icon'
 import styles from './CommunityHighlightsCard.module.scss'
 
 function getTopItem(snapshot, sectionId) {
   return snapshot?.sections?.find((section) => section.id === sectionId)?.items?.[0] || null
 }
 
-function HighlightItem({emoji, title, item}) {
+const SECTION_ICON_BY_ID = {
+  blind: '/icons/match.svg',
+  qualityPrice: '/icons/dollar.svg',
+  surprising: '/icons/bottle.svg',
+}
+
+function HighlightItem({iconSrc, title, item}) {
   if (!item) return null
 
   return (
     <div className={styles.item}>
       <div className={styles.itemHeader}>
-        <span className={styles.itemEmoji} aria-hidden="true">
-          {emoji}
-        </span>
+        <Icon src={iconSrc} size={18} className={styles.itemIcon} />
         <span className={styles.itemTitle}>{title}</span>
       </div>
       <strong className={styles.itemName}>{item.name}</strong>
@@ -43,9 +48,21 @@ export default function CommunityHighlightsCard({snapshot, text = {}, className 
       </div>
 
       <div className={styles.list}>
-        <HighlightItem emoji="🏆" title={text.blindTitle || 'Miglior vino alla cieca'} item={blind} />
-        <HighlightItem emoji="🍷" title={text.surprisingTitle || 'Vino più sorprendente'} item={surprising} />
-        <HighlightItem emoji="💰" title={text.qualityPriceTitle || 'Miglior Q/P'} item={qualityPrice} />
+        <HighlightItem
+          iconSrc={SECTION_ICON_BY_ID.blind}
+          title={text.blindTitle || 'Miglior vino alla cieca'}
+          item={blind}
+        />
+        <HighlightItem
+          iconSrc={SECTION_ICON_BY_ID.surprising}
+          title={text.surprisingTitle || 'Vino più sorprendente'}
+          item={surprising}
+        />
+        <HighlightItem
+          iconSrc={SECTION_ICON_BY_ID.qualityPrice}
+          title={text.qualityPriceTitle || 'Miglior Q/P'}
+          item={qualityPrice}
+        />
       </div>
 
       <div className={styles.actions}>

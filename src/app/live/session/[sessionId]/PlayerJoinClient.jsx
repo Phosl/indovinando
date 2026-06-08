@@ -6,6 +6,7 @@ import {supabaseClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
 import AvatarDisplay from '@/components/AvatarDisplay'
 import {GAME_AVATARS, profileAvatarToGameId} from '@/lib/avatarUtils'
+import {buildPublicAppUrl} from '@/lib/publicAppUrl'
 import styles from './playerJoin.module.scss'
 import {useT} from '@/lib/i18n/useT'
 import Loader from '@/components/Loader'
@@ -29,10 +30,7 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
   const playerStorageKey = `live_player_id_${sessionId}`
   const nicknameStorageKey = `live_player_nickname_${sessionId}`
   const authReturnUrl = `/auth?next=${encodeURIComponent(`/live/session/${sessionId}`)}`
-  const sessionLink = useMemo(() => {
-    if (typeof window === 'undefined') return `/live/session/${sessionId}`
-    return `${window.location.origin}/live/session/${sessionId}`
-  }, [sessionId])
+  const sessionLink = useMemo(() => buildPublicAppUrl(`/live/session/${sessionId}`), [sessionId])
 
   const refreshLobbyState = useCallback(async () => {
     const [sessionResult, playersResult] = await Promise.all([

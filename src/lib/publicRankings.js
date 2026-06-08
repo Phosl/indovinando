@@ -1,3 +1,5 @@
+import {createClient} from '@supabase/supabase-js'
+
 const FALLBACK_GLOBAL_STATS = [
   {id: 'tastings', icon: '🍷', value: '12.458'},
   {id: 'analyzedWines', icon: '🍇', value: '8.921'},
@@ -12,6 +14,7 @@ const FALLBACK_SECTIONS = [
     items: [
       {
         id: 'blind-1',
+        wineGroupKey: 'blind-1',
         name: 'Barolo Riserva XYZ',
         producer: 'Cantina delle Colline',
         region: 'Piemonte',
@@ -19,6 +22,7 @@ const FALLBACK_SECTIONS = [
       },
       {
         id: 'blind-2',
+        wineGroupKey: 'blind-2',
         name: 'Etna Rosso ABC',
         producer: 'Tenuta del Vulcano',
         region: 'Sicilia',
@@ -26,6 +30,7 @@ const FALLBACK_SECTIONS = [
       },
       {
         id: 'blind-3',
+        wineGroupKey: 'blind-3',
         name: 'Verdicchio Classico GHI',
         producer: 'Podere Adriatico',
         region: 'Marche',
@@ -39,6 +44,7 @@ const FALLBACK_SECTIONS = [
     items: [
       {
         id: 'qp-1',
+        wineGroupKey: 'qp-1',
         name: 'Chianti Classico DEF',
         producer: 'Fattoria del Borgo',
         region: 'Toscana',
@@ -46,6 +52,7 @@ const FALLBACK_SECTIONS = [
       },
       {
         id: 'qp-2',
+        wineGroupKey: 'qp-2',
         name: 'Montepulciano JKL',
         producer: 'Cantina del Sole',
         region: 'Abruzzo',
@@ -53,6 +60,7 @@ const FALLBACK_SECTIONS = [
       },
       {
         id: 'qp-3',
+        wineGroupKey: 'qp-3',
         name: 'Soave MNO',
         producer: 'Villa del Vento',
         region: 'Veneto',
@@ -66,6 +74,7 @@ const FALLBACK_SECTIONS = [
     items: [
       {
         id: 'surprise-1',
+        wineGroupKey: 'surprise-1',
         name: 'Etna Rosso ABC',
         producer: 'Tenuta del Vulcano',
         region: 'Sicilia',
@@ -73,6 +82,7 @@ const FALLBACK_SECTIONS = [
       },
       {
         id: 'surprise-2',
+        wineGroupKey: 'surprise-2',
         name: 'Fiano PQR',
         producer: 'Colli del Sud',
         region: 'Campania',
@@ -80,6 +90,7 @@ const FALLBACK_SECTIONS = [
       },
       {
         id: 'surprise-3',
+        wineGroupKey: 'surprise-3',
         name: 'Franciacorta STU',
         producer: 'Metodo Vivo',
         region: 'Lombardia',
@@ -93,6 +104,7 @@ const FALLBACK_SECTIONS = [
     items: [
       {
         id: 'div-1',
+        wineGroupKey: 'div-1',
         name: 'Orange Wine VWX',
         producer: 'Terre Libere',
         region: 'Friuli-Venezia Giulia',
@@ -100,6 +112,7 @@ const FALLBACK_SECTIONS = [
       },
       {
         id: 'div-2',
+        wineGroupKey: 'div-2',
         name: 'Lambrusco YZA',
         producer: 'Casa Emilia',
         region: 'Emilia-Romagna',
@@ -107,6 +120,7 @@ const FALLBACK_SECTIONS = [
       },
       {
         id: 'div-3',
+        wineGroupKey: 'div-3',
         name: 'Aglianico BCD',
         producer: 'Radici Antiche',
         region: 'Basilicata',
@@ -117,6 +131,17 @@ const FALLBACK_SECTIONS = [
 ]
 
 const ACTIVE_USERS_DAYS = 30
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+function createRankingsClient(fallback) {
+  if (SUPABASE_URL && SERVICE_ROLE_KEY) {
+    return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
+      auth: {persistSession: false, autoRefreshToken: false},
+    })
+  }
+  return fallback
+}
 
 function formatCount(value) {
   const numeric = Number(value || 0)
@@ -128,6 +153,21 @@ function formatScore(value, digits = 2) {
   const numeric = Number(value)
   if (!Number.isFinite(numeric)) return null
   return numeric.toFixed(digits)
+}
+
+function formatCurrency(value, currency = 'EUR', locale = 'it-IT') {
+  const numeric = Number(value)
+  if (!Number.isFinite(numeric)) return null
+
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency,
+      maximumFractionDigits: 2,
+    }).format(numeric)
+  } catch {
+    return `${numeric.toFixed(2)} ${currency}`
+  }
 }
 
 function toRegionLabel(row) {
@@ -161,11 +201,12 @@ function buildFallbackGlobalStatsSnapshot() {
 }
 
 async function loadRealGlobalStatsSnapshot(supabase) {
+  const statsClient = createRankingsClient(supabase)
   const activeUsersSince = new Date(Date.now() - ACTIVE_USERS_DAYS * 24 * 60 * 60 * 1000).toISOString()
 
   const [eventsResult, analyzedWinesResult, ratingsResult, activeUsersResult] = await Promise.all([
     supabase.from('public_wine_rating_events').select('session_id, bottle_id'),
-    supabase
+    statsClient
       .from('tasting_bottle_images')
       .select('id', {count: 'exact', head: true})
       .eq('status', 'recognized'),
@@ -226,6 +267,7 @@ async function loadSectionRows(supabase, sectionId) {
 
   return (data || []).map((row) => ({
     id: `${sectionId}-${row.wine_group_key}`,
+    wineGroupKey: row.wine_group_key,
     name: row.display_name || '—',
     producer: row.producer || '—',
     region: toRegionLabel(row),
@@ -240,6 +282,43 @@ export function getFallbackPublicRankingsSnapshot() {
     globalStats: buildFallbackGlobalStatsSnapshot(),
     sections: FALLBACK_SECTIONS,
   }
+}
+
+function getFallbackPublicWineDetailSnapshot(wineGroupKey) {
+  if (!wineGroupKey) return null
+
+  for (const section of FALLBACK_SECTIONS) {
+    const itemIndex = section.items.findIndex(
+      (item) => item.wineGroupKey === wineGroupKey || item.id === wineGroupKey,
+    )
+
+    if (itemIndex === -1) continue
+
+    const item = section.items[itemIndex]
+    const placements = [{id: section.id, rank: itemIndex + 1}]
+
+    return {
+      wineGroupKey: item.wineGroupKey || item.id,
+      name: item.name || '—',
+      producer: item.producer || '—',
+      region: item.region || '—',
+      appellation: null,
+      averagePrice: null,
+      stats: {
+        blindScore: null,
+        qualityPriceScore: null,
+        surpriseScore: null,
+        divisiveScore: null,
+        ratingCount: 0,
+        tastingCount: 0,
+        recognitionRate: null,
+      },
+      placements,
+      isInitialData: true,
+    }
+  }
+
+  return null
 }
 
 export async function getPublicGlobalStatsSnapshot(supabase) {
@@ -286,5 +365,85 @@ export async function getPublicRankingsSnapshot(supabase) {
     }
   } catch {
     return getFallbackPublicRankingsSnapshot()
+  }
+}
+
+export async function getPublicWineDetailSnapshot(supabase, wineGroupKey, lang = 'it') {
+  if (!wineGroupKey) return null
+  if (!supabase) return getFallbackPublicWineDetailSnapshot(wineGroupKey)
+
+  const locale = lang === 'en' ? 'en-US' : 'it-IT'
+
+  try {
+    const {data, error} = await supabase
+      .from('public_wine_rankings')
+      .select(
+        [
+          'wine_group_key',
+          'display_name',
+          'producer',
+          'region_label',
+          'appellation_label',
+          'avg_price_value',
+          'blind_score',
+          'quality_price_score',
+          'surprise_score',
+          'divisive_score',
+          'rating_count',
+          'rating_session_count',
+          'correctness_ratio',
+          'eligible_blind',
+          'eligible_quality_price',
+          'eligible_surprising',
+          'eligible_divisive',
+          'blind_rank',
+          'quality_price_rank',
+          'surprise_rank',
+          'divisive_rank',
+        ].join(', '),
+      )
+      .eq('wine_group_key', wineGroupKey)
+      .maybeSingle()
+
+    if (error || !data) return getFallbackPublicWineDetailSnapshot(wineGroupKey)
+
+    const placements = [
+      data.eligible_blind && data.blind_rank
+        ? {id: 'blind', rank: data.blind_rank}
+        : null,
+      data.eligible_quality_price && data.quality_price_rank
+        ? {id: 'qualityPrice', rank: data.quality_price_rank}
+        : null,
+      data.eligible_surprising && data.surprise_rank
+        ? {id: 'surprising', rank: data.surprise_rank}
+        : null,
+      data.eligible_divisive && data.divisive_rank
+        ? {id: 'divisive', rank: data.divisive_rank}
+        : null,
+    ].filter(Boolean)
+
+    return {
+      wineGroupKey: data.wine_group_key,
+      name: data.display_name || '—',
+      producer: data.producer || '—',
+      region: data.region_label || '—',
+      appellation: data.appellation_label || null,
+      averagePrice: formatCurrency(data.avg_price_value, 'EUR', locale),
+      stats: {
+        blindScore: formatScore(data.blind_score),
+        qualityPriceScore: formatScore(data.quality_price_score, 3),
+        surpriseScore: formatScore(data.surprise_score, 2),
+        divisiveScore: formatScore(data.divisive_score, 3),
+        ratingCount: data.rating_count || 0,
+        tastingCount: data.rating_session_count || 0,
+        recognitionRate: Number.isFinite(Number(data.correctness_ratio))
+          ? `${Math.round(Number(data.correctness_ratio) * 100)}%`
+          : null,
+      },
+      placements,
+      isInitialData: false,
+    }
+  } catch {
+    return getFallbackPublicWineDetailSnapshot(wineGroupKey)
   }
 }

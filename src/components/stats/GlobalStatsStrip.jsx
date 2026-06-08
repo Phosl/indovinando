@@ -1,4 +1,12 @@
+import Icon from '@/components/Icon'
 import styles from './GlobalStatsStrip.module.scss'
+
+const STAT_ICON_BY_ID = {
+  tastings: '/icons/bottle.svg',
+  analyzedWines: '/icons/photo.svg',
+  ratings: '/icons/match.svg',
+  activeUsers: '/icons/profile.svg',
+}
 
 export default function GlobalStatsStrip({statsSnapshot, text = {}, className = ''}) {
   const items = statsSnapshot?.items || []
@@ -18,7 +26,7 @@ export default function GlobalStatsStrip({statsSnapshot, text = {}, className = 
       <div className={styles.grid}>
         {items.map((stat) => (
           <article key={stat.id} className={styles.card}>
-            <span className={styles.icon}>{stat.icon}</span>
+            <Icon src={STAT_ICON_BY_ID[stat.id]} size={22} className={styles.icon} />
             <strong className={styles.value}>{stat.value}</strong>
             <span className={styles.label}>{text.stats?.[stat.id] || stat.id}</span>
           </article>

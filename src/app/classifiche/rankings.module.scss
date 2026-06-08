@@ -11,6 +11,29 @@
   gap: 18px;
 }
 
+.landingBackRow {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: -2px;
+}
+
+.landingBackLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  color: var(--primary-text);
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.landingBackIcon {
+  width: 18px;
+  height: 18px;
+  color: var(--primary-text);
+  flex: 0 0 auto;
+}
+
 .hero,
 .sectionCard {
   background: var(--foreground);
@@ -34,15 +57,11 @@
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 900;
-}
-
-.eyebrow {
-  background: var(--primary-100);
   color: var(--primary-text);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .hero h1 {
@@ -129,6 +148,20 @@
   font-size: 1.25rem;
 }
 
+
+.sectionTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sectionTitleIcon {
+  width: 22px;
+  height: 22px;
+  color: var(--primary-text);
+  flex: 0 0 auto;
+}
+
 .sectionInfoBtn {
   width: 34px;
   height: 34px;
@@ -166,6 +199,20 @@
   background: var(--primary-50);
 }
 
+.rankingItemLink {
+  text-decoration: none;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+.rankingItemLink:hover {
+  transform: translateY(-1px);
+  border-color: var(--primary-300);
+  background: var(--foreground);
+}
+
 .rankIndex {
   width: 42px;
   height: 42px;
@@ -197,8 +244,95 @@
   padding-top: 4px;
 }
 
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.detailCard {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 24px;
+  box-shadow: 0 10px 28px rgba(26, 34, 44, 0.06);
+  padding: 22px;
+  display: grid;
+  gap: 16px;
+}
+
+.detailTitle {
+  margin: 6px 0 0;
+  color: var(--primary-text);
+  font-size: 1.2rem;
+}
+
+.detailStatsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.detailStat {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--primary-50);
+  border: 1px solid var(--primary-100);
+}
+
+.detailStatLabel {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.placementList {
+  display: grid;
+  gap: 12px;
+}
+
+.placementItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--primary-50);
+  border: 1px solid var(--primary-100);
+}
+
+.placementLabel {
+  color: var(--primary-text);
+  font-weight: 800;
+}
+
+.placementValue {
+  color: var(--primary-text);
+  font-size: 1.05rem;
+}
+
+.wineDetailPreviewFallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at top, var(--primary-100), transparent 58%),
+    linear-gradient(180deg, var(--primary-25), var(--foreground));
+}
+
+.wineDetailPreviewIcon {
+  color: var(--primary);
+}
+
 @media (max-width: 900px) {
   .sectionsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .detailGrid {
     grid-template-columns: 1fr;
   }
 }
@@ -214,5 +348,13 @@
 
   .rankingItem {
     padding: 12px;
+  }
+
+  .detailCard {
+    padding: 18px;
+  }
+
+  .detailStatsGrid {
+    grid-template-columns: 1fr;
   }
 }

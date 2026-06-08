@@ -5,6 +5,7 @@ import {useCallback, useEffect, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import QRCode from 'qrcode'
 import TopBar from '@/components/TopBar'
+import {buildPublicAppUrl, getPublicAppOrigin} from '@/lib/publicAppUrl'
 import styles from './tableLiveMode.module.scss'
 
 export default function TableLiveModeClient({gameId, gameName, backHref = `/game/${gameId}`, branding = {}}) {
@@ -35,9 +36,8 @@ export default function TableLiveModeClient({gameId, gameName, backHref = `/game
       throw new Error(payload?.error || 'Creazione evento fallita')
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
     setEventTitle(payload.event?.title || title)
-    setEventLink(`${baseUrl}${payload.url}`)
+    setEventLink(buildPublicAppUrl(payload.url))
   }, [gameId])
 
   useEffect(() => {
@@ -54,9 +54,8 @@ export default function TableLiveModeClient({gameId, gameName, backHref = `/game
         )
         const payload = await response.json().catch(() => null)
         if (!cancelled && response.ok && payload?.event?.url) {
-          const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
           setEventTitle(payload.event.title || gameName)
-          setEventLink(`${baseUrl}${payload.event.url}`)
+          setEventLink(buildPublicAppUrl(payload.event.url))
           return
         }
 
@@ -149,7 +148,7 @@ export default function TableLiveModeClient({gameId, gameName, backHref = `/game
           </style>
         </head>
         <body>
-          ${branding.logoUrl ? `<img class="logo" src="${branding.logoUrl}" alt="${branding.activityName || eventTitle}" />` : `<img class="logo" src="${window.location.origin}/logo.svg" alt="Indovinando" />`}
+          ${branding.logoUrl ? `<img class="logo" src="${branding.logoUrl}" alt="${branding.activityName || eventTitle}" />` : `<img class="logo" src="${getPublicAppOrigin()}/logo.svg" alt="Indovinando" />`}
           ${branding.activityName ? `<div class="brand">${branding.activityName}</div>` : ''}
           <h1>${eventTitle}</h1>
           <img src="${qrDataUrl}" alt="QR evento tavoli" />

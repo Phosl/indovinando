@@ -6,6 +6,7 @@ import LandingNav from '@/components/landing/LandingNav'
 import GlobalStatsStrip from '@/components/stats/GlobalStatsStrip'
 import RankingsSectionsClient from '@/components/rankings/RankingsSectionsClient'
 import TopBarBack from '@/components/TopBarBack'
+import Icon from '@/components/Icon'
 import it from '@/lib/i18n/locales/it.json'
 import en from '@/lib/i18n/locales/en.json'
 import styles from './rankings.module.scss'
@@ -20,6 +21,7 @@ export default async function RankingsPage() {
   const locale = lang === 'en' ? en : it
   const text = locale.rankingsPage || it.rankingsPage
   const landingText = locale.landing || it.landing || {}
+  const commonText = locale.common || it.common || {}
   const {
     data: {user},
   } = await supabase.auth.getUser()
@@ -31,7 +33,15 @@ export default async function RankingsPage() {
         {user ? (
           <TopBarBack title={text.title} href="/dashboard" />
         ) : (
-          <LandingNav text={landingText.nav || {}} />
+          <>
+            <LandingNav text={landingText.nav || {}} />
+            <div className={styles.landingBackRow}>
+              <Link href="/" className={styles.landingBackLink}>
+                <Icon src="/icons/back-icon.svg" size={18} className={styles.landingBackIcon} />
+                <span>{commonText.back || 'Indietro'}</span>
+              </Link>
+            </div>
+          </>
         )}
 
         <section className={styles.hero}>

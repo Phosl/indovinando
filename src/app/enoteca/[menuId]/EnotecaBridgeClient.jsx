@@ -8,6 +8,7 @@ import ShareDetailsTabs from '@/components/ShareDetailsTabs/ShareDetailsTabs'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useT} from '@/lib/i18n/useT'
 import {formatAppDate} from '@/lib/dateFormat'
+import {buildPublicAppUrl, getPublicAppOrigin} from '@/lib/publicAppUrl'
 import styles from '../../live/session/[sessionId]/play/playerLive.module.scss'
 import xStyles from './enotecaJoin.module.scss'
 
@@ -33,10 +34,7 @@ export default function EnotecaBridgeClient({
   const [qrDataUrl, setQrDataUrl] = useState('')
 
   const joinPath = `/enoteca/${menuId}/join`
-  const shareLink = useMemo(() => {
-    if (typeof window === 'undefined') return joinPath
-    return `${window.location.origin}${joinPath}`
-  }, [joinPath])
+  const shareLink = useMemo(() => buildPublicAppUrl(joinPath), [joinPath])
   useEffect(() => {
     if (!shareLink) return
     let cancelled = false
@@ -104,7 +102,7 @@ export default function EnotecaBridgeClient({
           </style>
         </head>
         <body>
-          ${branding.logoUrl ? `<img class="logo" src="${branding.logoUrl}" alt="${branding.activityName || menuName}" />` : `<img class="logo" src="${window.location.origin}/logo.svg" alt="Indovinando" />`}
+          ${branding.logoUrl ? `<img class="logo" src="${branding.logoUrl}" alt="${branding.activityName || menuName}" />` : `<img class="logo" src="${getPublicAppOrigin()}/logo.svg" alt="Indovinando" />`}
           ${branding.activityName ? `<div class="brand">${branding.activityName}</div>` : ''}
           <h1>${menuName}</h1>
           <img src="${qrDataUrl}" alt="QR" />

@@ -155,7 +155,9 @@
       "directoryCta": "Scopri tutti i partner",
       "fallbackCategory": "Partner",
       "mapTitle": "Mappa partner",
-      "mapDescription": "Qui potrai visualizzare tutte le enoteche, cantine e wine experience aderenti."
+      "mapDescription": "Qui troverai enoteche, cantine e wine experience che fanno parte del network Indovinando.",
+      "scrollerLabel": "Partner pubblici in evidenza",
+      "mapEmpty": "La mappa sarà disponibile appena i partner pubblici completeranno la posizione."
     },
     "cta": {
       "eyebrow": "Inizia ora",
@@ -1066,7 +1068,11 @@
       "surprising": "Vini più sorprendenti",
       "divisive": "Vini più divisivi"
     },
-    "realDataPills": ["Solo voti reali", "Enoteca + Tavolo", "Aggiornamento progressivo"],
+    "realDataPills": [
+      "Solo voti reali",
+      "Enoteca + Tavolo",
+      "Aggiornamento progressivo"
+    ],
     "realDataNote": "Queste classifiche leggono i voti reali di enoteca e tavolo. Se una sezione ha ancora pochi dati, mostriamo un set iniziale temporaneo.",
     "globalStats": {
       "eyebrow": "Community",
@@ -1493,6 +1499,32 @@
       "ratings": "valutazioni",
       "activeUsers": "utenti attivi",
       "analyzedWines": "vini analizzati da Indovinando AI"
+    }
+  },
+  "rankingsWinePage": {
+    "eyebrow": "Vino",
+    "summaryEyebrow": "Scheda rapida",
+    "summaryTitle": "Panoramica community",
+    "rankingsEyebrow": "Classifiche",
+    "rankingsTitle": "Dove si posiziona",
+    "metricsTitle": "Metriche del vino",
+    "sections": {
+      "blind": "Migliori vini alla cieca",
+      "qualityPrice": "Miglior rapporto qualità/prezzo",
+      "surprising": "Vini più sorprendenti",
+      "divisive": "Vini più divisivi"
+    },
+    "stats": {
+      "ratingCount": "Valutazioni reali",
+      "tastingCount": "Degustazioni completate",
+      "recognitionRate": "Riconoscibilità",
+      "averagePrice": "Prezzo medio"
+    },
+    "metrics": {
+      "blindLabel": "Voto medio: {value}",
+      "qualityPriceLabel": "Qualità/prezzo: {value}",
+      "surprisingLabel": "Indice sorpresa: {value}",
+      "divisiveLabel": "Indice divisivo: {value}"
     }
   }
 }

@@ -19,18 +19,19 @@
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 8px 14px;
-  border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 900;
 }
 
 .eyebrow {
-  background: var(--primary-100);
   color: var(--primary-text);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .badge {
+  padding: 8px 14px;
+  border-radius: 999px;
   background: var(--success-100);
   color: var(--success-text);
 }
@@ -52,19 +53,17 @@
 
 .list {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
 
 .item {
   display: grid;
-  gap: 4px;
-  padding-top: 14px;
-  border-top: 1px solid var(--primary-100);
-}
-
-.item:first-child {
-  padding-top: 0;
-  border-top: 0;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--primary-100);
+  border-radius: 18px;
+  background: var(--primary-50);
 }
 
 .itemHeader {
@@ -73,8 +72,11 @@
   gap: 8px;
 }
 
-.itemEmoji {
-  font-size: 1.05rem;
+.itemIcon {
+  width: 18px;
+  height: 18px;
+  color: var(--primary-text);
+  flex: 0 0 auto;
 }
 
 .itemTitle {
@@ -101,5 +103,9 @@
 
   .header {
     flex-direction: column;
+  }
+
+  .list {
+    grid-template-columns: 1fr;
   }
 }

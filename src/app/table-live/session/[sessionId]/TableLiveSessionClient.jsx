@@ -11,6 +11,7 @@ import {GameOverlays} from '@/app/live/session/[sessionId]/play/components/GameO
 import {useT} from '@/lib/i18n/useT'
 import AvatarDisplay from '@/components/AvatarDisplay'
 import Loader from '@/components/Loader'
+import {buildPublicAppUrl} from '@/lib/publicAppUrl'
 import {scrollPageTop} from '@/lib/scrollPageTop'
 import styles from '@/app/live/session/[sessionId]/play/playerLive.module.scss'
 import joinStyles from '@/app/live/session/[sessionId]/playerJoin.module.scss'
@@ -391,10 +392,10 @@ export default function TableLiveSessionClient({sessionId}) {
     const slug = data?.event?.slug
     router.push(slug ? `/table-live/event/${slug}` : '/')
   }
-  const sessionLink = useMemo(() => {
-    if (typeof window === 'undefined') return ''
-    return `${window.location.origin}/table-live/session/${sessionId}`
-  }, [sessionId])
+  const sessionLink = useMemo(
+    () => buildPublicAppUrl(`/table-live/session/${sessionId}`),
+    [sessionId],
+  )
 
   const handleCopyLink = async () => {
     try {
