@@ -8,27 +8,15 @@ import GameEditor from '@/components/game/GameEditor'
 import Loader from '@/components/Loader'
 import OnboardingModal from '@/components/game/OnboardingModal'
 import {AutoTastingGamePreview} from '@/components/game'
+import {GameStepsBreadcrumbs} from '@/components/game'
 import PageLayout from '@/components/PageLayout'
 import Icon from '@/components/Icon'
 import InfoModal from '@/components/InfoModal'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useT} from '@/lib/i18n/useT'
 import {normalizeAiScanCredits} from '@/lib/aiScanCredits'
+import {scrollPageTop} from '@/lib/scrollPageTop'
 import styles from './gameCreate.module.scss'
-
-const COST_CURRENCY = process.env.NEXT_PUBLIC_OPENAI_COST_CURRENCY || 'EUR'
-const VISION_INPUT_COST_PER_1K_TOKENS = Number(
-  process.env.NEXT_PUBLIC_OPENAI_VISION_INPUT_COST_PER_1K_TOKENS || 0,
-)
-const VISION_OUTPUT_COST_PER_1K_TOKENS = Number(
-  process.env.NEXT_PUBLIC_OPENAI_VISION_OUTPUT_COST_PER_1K_TOKENS || 0,
-)
-const WEB_INPUT_COST_PER_1K_TOKENS = Number(
-  process.env.NEXT_PUBLIC_OPENAI_WEB_INPUT_COST_PER_1K_TOKENS || 0,
-)
-const WEB_OUTPUT_COST_PER_1K_TOKENS = Number(
-  process.env.NEXT_PUBLIC_OPENAI_WEB_OUTPUT_COST_PER_1K_TOKENS || 0,
-)
 
 const TEMPLATE_QUESTION_OPTIONS = {
   country: ['Italy', 'France', 'United States', 'Australia', 'Greece', 'Sweden', 'Spain'],
@@ -114,19 +102,6 @@ function inferVintageQuizValue(recognizedVintage, knownVintages = [], lang = 'it
   const latestKnownVintage = normalizedKnownVintages[0]
   return getVintageBandLabel(latestKnownVintage, lang)
 }
-function normalizePriceRangeAnswer(priceMin, priceMax, fallbackPrice, min = 5) {
-  const low = Number(priceMin)
-  const high = Number(priceMax)
-
-  if (Number.isFinite(low) && Number.isFinite(high) && high > low) {
-    const roundedLow = Math.max(min, Math.round(low / 5) * 5)
-    const roundedHigh = Math.max(roundedLow + 5, Math.round(high / 5) * 5)
-    return `${roundedLow}-${roundedHigh}€`
-  }
-
-  return normalizePriceAnswer(fallbackPrice, min)
-}
-
 function createPriceOptionsFromPrices(prices, min = 5) {
   const normalizedPrices = prices.map((price) => Number(price)).filter(Number.isFinite)
 
@@ -157,31 +132,6 @@ const OPENAI_TEMPLATE_OPTION_KEYS = {
 
 const MIN_AUTO_QUIZ_OPTIONS = 5
 const AUTO_TASTING_LIST_TIMEOUT_MS = 12000
-
-const COUNTRY_CODE_BY_NAME = {
-  italia: 'IT',
-  italy: 'IT',
-  francia: 'FR',
-  france: 'FR',
-  spagna: 'ES',
-  spain: 'ES',
-  germania: 'DE',
-  germany: 'DE',
-  portogallo: 'PT',
-  portugal: 'PT',
-  'stati uniti': 'US',
-  'united states': 'US',
-  usa: 'US',
-}
-
-const COUNTRY_FLAG_BY_CODE = {
-  IT: '🇮🇹',
-  FR: '🇫🇷',
-  ES: '🇪🇸',
-  DE: '🇩🇪',
-  PT: '🇵🇹',
-  US: '🇺🇸',
-}
 
 const WINE_TYPE_ALIASES = {
   Bianco: ['white', 'bianco', 'blanc', 'blanco', 'weiss'],
@@ -219,20 +169,6 @@ function mapWineTypeLabel(value, lang = 'it') {
     return canonical
   }
   return String(value).trim()
-}
-
-function getCountryCode(value) {
-  const normalized = String(value || '')
-    .trim()
-    .toLowerCase()
-  if (!normalized) return null
-  return COUNTRY_CODE_BY_NAME[normalized] || null
-}
-
-function getCountryFlag(value) {
-  const code = getCountryCode(value)
-  if (!code) return null
-  return COUNTRY_FLAG_BY_CODE[code] || null
 }
 
 function localizeBodyLabel(canonical, lang = 'it') {
@@ -557,14 +493,6 @@ function normalizeNotableForQuiz(value, notableOptions) {
   return notableOptions.profile
 }
 
-function toConfidencePercent(value) {
-  if (value == null) return null
-  const numeric = Number(value)
-  if (!Number.isFinite(numeric)) return null
-  const raw = Math.round(numeric * 100)
-  return Math.max(0, Math.min(100, raw))
-}
-
 function formatBytes(value) {
   const bytes = Number(value)
   if (!Number.isFinite(bytes) || bytes <= 0) return '0 B'
@@ -677,12 +605,20 @@ async function optimizeAutoTastingUploadFile(file) {
     return file
   }
 
-  if (isRasterConvertible && file.size <= AUTO_UPLOAD_COMPRESS_THRESHOLD_BYTES) {
+  if (isHeicFamily) {
+    return file
+  }
+
+  if (file.size <= 8 * 1024 * 1024) {
     return file
   }
 
   try {
-    const policy = getAutoUploadCompressionPolicy(file.size)
+    const policy = {
+      maxDimension: 2400,
+      qualitySteps: [0.9, 0.86],
+      targetBytes: 7.5 * 1024 * 1024,
+    }
     const image = await loadRenderableImageFromFile(file)
     let optimizedBlob = null
 
@@ -697,7 +633,7 @@ async function optimizeAutoTastingUploadFile(file) {
     }
 
     if (!optimizedBlob) return file
-    if (isRasterConvertible && optimizedBlob.size >= file.size * 0.92) return file
+    if (optimizedBlob.size >= file.size * 0.98) return file
 
     const baseName = file.name.replace(/\.[^.]+$/, '') || 'bottle'
     return new File([optimizedBlob], `${baseName}.jpg`, {
@@ -709,207 +645,14 @@ async function optimizeAutoTastingUploadFile(file) {
   }
 }
 
-function getTokenUsageFromImage(image, previewWebUsage = null) {
-  const visionUsage = image?.recognized_payload?.openai_payload?.usage || null
-  const webMeta = image?.recognized_payload?.web_enrichment || null
-  const persistedWebUsage =
-    webMeta?.restored_from_catalog && !webMeta?.applied ? null : webMeta?.usage || null
-  const webUsage = previewWebUsage || persistedWebUsage
-
-  const visionTotal = Number(visionUsage?.total_tokens || 0)
-  const webTotal = Number(webUsage?.total_tokens || 0)
-  const visionInput = Number(visionUsage?.input_tokens || 0)
-  const visionOutput = Number(visionUsage?.output_tokens || 0)
-  const webInput = Number(webUsage?.input_tokens || 0)
-  const webOutput = Number(webUsage?.output_tokens || 0)
-  const estimatedCost =
-    ((Number.isFinite(visionInput) ? visionInput : 0) / 1000) * VISION_INPUT_COST_PER_1K_TOKENS +
-    ((Number.isFinite(visionOutput) ? visionOutput : 0) / 1000) * VISION_OUTPUT_COST_PER_1K_TOKENS +
-    ((Number.isFinite(webInput) ? webInput : 0) / 1000) * WEB_INPUT_COST_PER_1K_TOKENS +
-    ((Number.isFinite(webOutput) ? webOutput : 0) / 1000) * WEB_OUTPUT_COST_PER_1K_TOKENS
-
-  return {
-    vision: Number.isFinite(visionTotal) ? visionTotal : 0,
-    web: Number.isFinite(webTotal) ? webTotal : 0,
-    total:
-      (Number.isFinite(visionTotal) ? visionTotal : 0) + (Number.isFinite(webTotal) ? webTotal : 0),
-    cost: Number.isFinite(estimatedCost) ? estimatedCost : 0,
-  }
-}
-
-function formatEstimatedCost(value) {
-  const numeric = Number(value)
-  if (!Number.isFinite(numeric) || numeric <= 0) return null
-  return new Intl.NumberFormat('it-IT', {
-    style: 'currency',
-    currency: COST_CURRENCY,
-    minimumFractionDigits: numeric < 1 ? 3 : 2,
-    maximumFractionDigits: numeric < 1 ? 3 : 2,
-  }).format(numeric)
-}
-
-function getQuizValueForImageByKey(image, key, lang = 'it') {
-  const details = image?.recognized_payload?.catalog_details || {}
-  const inferredRegion = inferRegion(details, image)
-  const grapes = Array.isArray(details.grapes) ? details.grapes.filter(Boolean) : []
-  const mainGrape = grapes[0] || null
-  const vintageValue = inferVintageQuizValue(
-    image?.recognized_vintage,
-    details?.known_vintages,
-    lang,
-  )
-  const averagePrice = details?.average_price ?? details?.price ?? null
-
-  switch (key) {
-    case 'country':
-      return localizeCountryLabel(details.country, lang) || null
-    case 'region':
-      return localizeRegionLabel(inferredRegion || details.region, lang) || null
-    case 'grape':
-      return mainGrape
-    case 'vintage':
-      return vintageValue
-    case 'price':
-      return averagePrice != null ? normalizePriceAnswer(averagePrice) : null
-    case 'body':
-      return normalizeBodyForQuiz(details.body, lang)
-    case 'acidity':
-      return normalizeAcidityForQuiz(details.acidity, lang)
-    case 'harmony':
-      return normalizeHarmonyForQuiz(details.harmony || details.harmonize, lang)
-    case 'notable':
-      return normalizeNotableForQuiz(
-        String(details.why_notable || details.short_description || '')
-          .trim()
-          .replace(/\s+/g, ' '),
-        getLocalizedNotableOptions(lang),
-      )
-    default:
-      return null
-  }
-}
-
-function getResolvedQuizValuesForImage(image, preview, lang = 'it') {
-  const bottles = Array.isArray(preview?.bottles) ? preview.bottles : []
-  const questions = Array.isArray(preview?.questions) ? preview.questions : []
-  if (!bottles.length || !questions.length) return []
-
-  const directValues = questions
-    .map((question) => {
-      if (!question?._key) return null
-      return getQuizValueForImageByKey(image, question._key, lang)
-    })
-    .filter(Boolean)
-  if (directValues.length > 0) return directValues
-
-  const imageName = normalizeToken(image?.recognized_name || '')
-  const imageProducer = normalizeToken(image?.recognized_producer || '')
-  const imageYear = String(image?.recognized_vintage || '').trim()
-
-  const matchedBottle =
-    bottles.find((bottle) => {
-      const sameName = normalizeToken(bottle?.name || '') === imageName
-      const sameProducer = normalizeToken(bottle?.producer || '') === imageProducer
-      const sameYear = String(bottle?.year || '').trim() === imageYear
-      return sameName && sameProducer && (sameYear || (!bottle?.year && !imageYear))
-    }) ||
-    bottles.find((bottle) => normalizeToken(bottle?.name || '') === imageName) ||
-    null
-
-  if (!matchedBottle) return []
-
-  return questions.map((question, idx) => {
-    const answerIndex = Number.isInteger(matchedBottle?.answers?.[idx])
-      ? matchedBottle.answers[idx]
-      : null
-    if (answerIndex == null) return '-'
-    return question?.options?.[answerIndex] ?? '-'
-  })
-}
-
-function valuesEqualForDiff(a, b) {
-  if (Array.isArray(a) || Array.isArray(b)) {
-    const left = Array.isArray(a) ? a.filter(Boolean) : []
-    const right = Array.isArray(b) ? b.filter(Boolean) : []
-    return JSON.stringify(left) === JSON.stringify(right)
-  }
-  const left = a == null ? '' : String(a).trim()
-  const right = b == null ? '' : String(b).trim()
-  return left === right
-}
-
-function withClientTimeout(promise, ms, label) {
-  let timeoutId
-  const timeoutPromise = new Promise((_, reject) => {
-    timeoutId = setTimeout(
-      () => reject(new Error(`${label} timeout after ${Math.floor(ms / 1000)}s`)),
-      ms,
-    )
-  })
-
-  return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeoutId))
-}
-
-function isTransientLockError(error) {
-  const errorName = String(error?.name || '').toLowerCase()
-  const errorMessage = String(error?.message || '').toLowerCase()
-  return errorName === 'aborterror' || errorMessage.includes('lock was stolen by another request')
-}
-
-function isTransientLoadError(error) {
-  const errorMessage = String(error?.message || '').toLowerCase()
-  return (
-    isTransientLockError(error) ||
-    errorMessage.includes('timeout') ||
-    errorMessage.includes('network') ||
-    errorMessage.includes('failed to fetch')
-  )
-}
-
-function isTransientRequestError(error) {
-  const errorMessage = String(error?.message || '').toLowerCase()
-  return (
-    errorMessage.includes('failed to fetch') ||
-    errorMessage.includes('network') ||
-    errorMessage.includes('timeout') ||
-    errorMessage.includes('abort')
-  )
-}
-
-async function postJsonWithRetry(url, payload, {timeoutMs = 30000, retries = 2} = {}) {
-  let lastError = null
-
-  for (let attempt = 1; attempt <= retries; attempt += 1) {
-    const controller = new AbortController()
-    let timeoutId
-    try {
-      timeoutId = setTimeout(() => controller.abort(), timeoutMs)
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(payload),
-        signal: controller.signal,
-      })
-      const result = await response.json().catch(() => null)
-      return {response, result}
-    } catch (error) {
-      lastError = error
-      if (!isTransientRequestError(error) || attempt === retries) {
-        throw error
-      }
-      await new Promise((resolve) => setTimeout(resolve, attempt * 350))
-    } finally {
-      if (timeoutId) clearTimeout(timeoutId)
-    }
-  }
-
-  throw lastError || new Error('request failed')
-}
-
 function uniqueIds(values) {
-  return Array.from(
-    new Set((values || []).map((value) => String(value || '').trim()).filter(Boolean)),
-  )
+  return [
+    ...new Set(
+      (Array.isArray(values) ? values : [])
+        .map((value) => String(value || '').trim())
+        .filter(Boolean),
+    ),
+  ]
 }
 
 function readStoredIds(storage, key) {
@@ -929,142 +672,66 @@ function writeStoredIds(storage, key, ids) {
   storage.setItem(key, JSON.stringify(uniqueIds(ids)))
 }
 
-function AnalyzeMagicOverlay({active, className = ''}) {
-  const canvasRef = useRef(null)
+async function withClientTimeout(promise, timeoutMs, label = 'request') {
+  let timeoutId
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(
+      () => reject(new Error(`${label} timeout after ${timeoutMs}ms`)),
+      timeoutMs,
+    )
+  })
+  try {
+    return await Promise.race([promise, timeoutPromise])
+  } finally {
+    clearTimeout(timeoutId)
+  }
+}
 
-  useEffect(() => {
-    if (!active) return undefined
-    const canvas = canvasRef.current
-    if (!canvas) return undefined
-
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return undefined
-
-    let rafId = 0
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const particles = Array.from({length: 18}, () => ({
-      x: Math.random(),
-      y: Math.random(),
-      size: Math.random() * 2.2 + 1,
-      speed: Math.random() * 0.0024 + 0.0009,
-      drift: Math.random() * 0.002 - 0.001,
-      alpha: Math.random() * 0.6 + 0.2,
-    }))
-    const orbs = [
-      {
-        phase: Math.random() * Math.PI * 2,
-        radius: 0.42,
-        speed: 0.00034,
-        xAmp: 0.24,
-        yAmp: 0.18,
-        core: 'rgba(140, 255, 0, 0.8)',
-        mid: 'rgba(162, 0, 255, 0.9)',
-        edge: 'rgba(0, 255, 132, 0.685)',
-      },
-      {
-        phase: Math.random() * Math.PI * 2,
-        radius: 0.5,
-        speed: 0.00028,
-        xAmp: 0.2,
-        yAmp: 0.22,
-        core: 'rgb(255, 55, 0)',
-        mid: 'rgba(89, 0, 255, 0.7)',
-        edge: 'rgba(176,132,255,0)',
-      },
-      {
-        phase: Math.random() * Math.PI * 2,
-        radius: 0.46,
-        speed: 0.00041,
-        xAmp: 0.17,
-        yAmp: 0.15,
-        core: 'rgb(255, 0, 0)',
-        mid: 'rgb(191, 0, 255)',
-        edge: 'rgba(129,243,222,0)',
-      },
-    ]
-
-    function resize() {
-      const rect = canvas.getBoundingClientRect()
-      const dpr = window.devicePixelRatio || 1
-      canvas.width = Math.max(1, Math.floor(rect.width * dpr))
-      canvas.height = Math.max(1, Math.floor(rect.height * dpr))
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-    }
-
-    function render(time) {
-      const width = canvas.clientWidth
-      const height = canvas.clientHeight
-      if (!width || !height) {
-        rafId = requestAnimationFrame(render)
-        return
-      }
-
-      ctx.clearRect(0, 0, width, height)
-
-      // Full-card color wash so the glow is clearly visible across the entire card.
-      const wash = ctx.createLinearGradient(0, 0, width, height)
-      wash.addColorStop(0, 'rgba(255, 0, 128, 0.725)')
-      wash.addColorStop(0.45, 'rgba(106, 26, 255, 0.966)')
-      wash.addColorStop(1, 'rgba(7, 248, 192, 0.764)')
-      ctx.fillStyle = wash
-      ctx.fillRect(0, 0, width, height)
-
-      const backGlow = ctx.createRadialGradient(
-        width * 0.5,
-        height * 0.5,
-        0,
-        width * 0.5,
-        height * 0.5,
-        Math.max(width, height) * 0.9,
-      )
-      backGlow.addColorStop(0, 'rgba(160, 118, 255, 0.12)')
-      backGlow.addColorStop(1, 'rgba(160, 118, 255, 0)')
-      ctx.fillStyle = backGlow
-      ctx.fillRect(0, 0, width, height)
-
-      const t = prefersReducedMotion ? 0 : time
-
-      orbs.forEach((orb, idx) => {
-        const angle = t * orb.speed + orb.phase
-        const x = width * (0.5 + Math.cos(angle * (1.05 + idx * 0.15)) * orb.xAmp)
-        const y = height * (0.5 + Math.sin(angle * (1.2 + idx * 0.11)) * orb.yAmp)
-        const gradient = ctx.createRadialGradient(
-          x,
-          y,
-          0,
-          x,
-          y,
-          Math.min(width, height) * orb.radius,
-        )
-        gradient.addColorStop(0, orb.core)
-        gradient.addColorStop(0.32, orb.mid)
-        gradient.addColorStop(1, orb.edge)
-        ctx.fillStyle = gradient
-        ctx.fillRect(0, 0, width, height)
-      })
-
-      rafId = requestAnimationFrame(render)
-    }
-
-    resize()
-    const resizeObserver = new ResizeObserver(() => resize())
-    resizeObserver.observe(canvas)
-    rafId = requestAnimationFrame(render)
-
-    return () => {
-      cancelAnimationFrame(rafId)
-      resizeObserver.disconnect()
-    }
-  }, [active])
-
-  if (!active) return null
+function isTransientLoadError(error) {
+  const message = String(error?.message || '').toLowerCase()
   return (
-    <canvas
-      ref={canvasRef}
-      className={`${styles.autoAnalyzeMagicCanvas} ${className}`.trim()}
-      aria-hidden="true"
-    />
+    message.includes('abort') ||
+    message.includes('timeout') ||
+    message.includes('network') ||
+    message.includes('failed to fetch')
   )
+}
+
+function valuesEqualForDiff(left, right) {
+  if (left == null && right == null) return true
+  if (Array.isArray(left) || Array.isArray(right)) {
+    const leftArray = Array.isArray(left) ? left : [left]
+    const rightArray = Array.isArray(right) ? right : [right]
+    return JSON.stringify(leftArray) === JSON.stringify(rightArray)
+  }
+  if (typeof left === 'object' || typeof right === 'object') {
+    return JSON.stringify(left || null) === JSON.stringify(right || null)
+  }
+  return String(left ?? '').trim() === String(right ?? '').trim()
+}
+
+async function postJsonWithRetry(url, body, {timeoutMs = 15000, retries = 0} = {}) {
+  let lastError = null
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body),
+        signal: controller.signal,
+      })
+      const result = await response.json().catch(() => null)
+      clearTimeout(timeoutId)
+      return {response, result}
+    } catch (error) {
+      clearTimeout(timeoutId)
+      lastError = error
+      if (attempt === retries) throw error
+    }
+  }
+  throw lastError || new Error('request failed')
 }
 
 function AutoToast({toast, onClose, closeLabel}) {
@@ -1163,7 +830,6 @@ function ModePickerScreen({onPick, onOpenGuide}) {
             </span>
           </div>
         </button>
-
       </div>
       <button
         type="button"
@@ -1206,12 +872,16 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   const [webSearchingImageId, setWebSearchingImageId] = useState('')
   const [isAnalyzingAll, setIsAnalyzingAll] = useState(false)
   const [isCreatingQuiz, setIsCreatingQuiz] = useState(false)
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [webSearchReview, setWebSearchReview] = useState(null)
   const [lastWebSearchReview, setLastWebSearchReview] = useState(null)
   const [isApplyingWebDiff, setIsApplyingWebDiff] = useState(false)
-  const [webPreviewUsageByImageId, setWebPreviewUsageByImageId] = useState({})
+  const [, setWebPreviewUsageByImageId] = useState({})
   const [quizTemplateMode, setQuizTemplateMode] = useState('openai')
+  const [autoStep, setAutoStep] = useState(1)
+  const [selectedBottleId, setSelectedBottleId] = useState('')
+  const [detailEditMode, setDetailEditMode] = useState(false)
+  const [detailDraft, setDetailDraft] = useState(null)
+  const [isSavingDetail, setIsSavingDetail] = useState(false)
   const [isLeavingSession, setIsLeavingSession] = useState(false)
   const [uploadError, setUploadError] = useState('')
   const [toast, setToast] = useState(null)
@@ -1441,18 +1111,21 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     previewUrlByImageIdRef.current.delete(id)
   }, [])
 
-  const buildFallbackPreviewUrlFromOriginalFile = useCallback(async (imageId) => {
-    const id = String(imageId || '').trim()
-    if (!id) return null
-    const originalFile = originalPreviewFileByImageIdRef.current.get(id)
-    if (!(originalFile instanceof File)) return null
+  const buildFallbackPreviewUrlFromOriginalFile = useCallback(
+    async (imageId) => {
+      const id = String(imageId || '').trim()
+      if (!id) return null
+      const originalFile = originalPreviewFileByImageIdRef.current.get(id)
+      if (!(originalFile instanceof File)) return null
 
-    const convertedFile = await optimizeAutoTastingUploadFile(originalFile)
-    const nextPreviewUrl = URL.createObjectURL(convertedFile)
-    revokePreviewUrl(id)
-    previewUrlByImageIdRef.current.set(id, nextPreviewUrl)
-    return nextPreviewUrl
-  }, [revokePreviewUrl])
+      const convertedFile = await optimizeAutoTastingUploadFile(originalFile)
+      const nextPreviewUrl = URL.createObjectURL(convertedFile)
+      revokePreviewUrl(id)
+      previewUrlByImageIdRef.current.set(id, nextPreviewUrl)
+      return nextPreviewUrl
+    },
+    [revokePreviewUrl],
+  )
 
   const mergeImageRowWithPreview = useCallback((row, fallbackRow = null) => {
     const previewUrl =
@@ -1460,29 +1133,34 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       fallbackRow?.clientPreviewUrl ||
       row?.clientPreviewUrl ||
       null
-    return previewUrl ? {...fallbackRow, ...row, clientPreviewUrl: previewUrl} : {...fallbackRow, ...row}
+    return previewUrl
+      ? {...fallbackRow, ...row, clientPreviewUrl: previewUrl}
+      : {...fallbackRow, ...row}
   }, [])
 
-  const handlePreviewImageError = useCallback(async (imageId) => {
-    const id = String(imageId || '').trim()
-    if (!id) return
+  const handlePreviewImageError = useCallback(
+    async (imageId) => {
+      const id = String(imageId || '').trim()
+      if (!id) return
 
-    if (previewRecoveryAttemptedIdsRef.current.has(id)) {
+      if (previewRecoveryAttemptedIdsRef.current.has(id)) {
+        markPreviewError(id)
+        return
+      }
+
+      previewRecoveryAttemptedIdsRef.current.add(id)
+      const nextPreviewUrl = await buildFallbackPreviewUrlFromOriginalFile(id).catch(() => null)
+      if (nextPreviewUrl) {
+        setUploadedImages((prev) =>
+          prev.map((row) => (row.id === id ? {...row, clientPreviewUrl: nextPreviewUrl} : row)),
+        )
+        return
+      }
+
       markPreviewError(id)
-      return
-    }
-
-    previewRecoveryAttemptedIdsRef.current.add(id)
-    const nextPreviewUrl = await buildFallbackPreviewUrlFromOriginalFile(id).catch(() => null)
-    if (nextPreviewUrl) {
-      setUploadedImages((prev) =>
-        prev.map((row) => (row.id === id ? {...row, clientPreviewUrl: nextPreviewUrl} : row)),
-      )
-      return
-    }
-
-    markPreviewError(id)
-  }, [buildFallbackPreviewUrlFromOriginalFile, markPreviewError])
+    },
+    [buildFallbackPreviewUrlFromOriginalFile, markPreviewError],
+  )
 
   function uploadFileWithProgress(formData, onProgress) {
     return new Promise((resolve, reject) => {
@@ -1614,7 +1292,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       setPreviewLoadProgress({loaded: retainedLoadedIds.size, total: filteredRows.length})
       setUploadedImages((prev) => {
         const previousMap = new Map((prev || []).map((row) => [row.id, row]))
-        return filteredRows.map((row) => mergeImageRowWithPreview(row, previousMap.get(row.id) || null))
+        return filteredRows.map((row) =>
+          mergeImageRowWithPreview(row, previousMap.get(row.id) || null),
+        )
       })
     }
 
@@ -1814,31 +1494,13 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     console.groupEnd()
   }, [uploadedImages])
 
-  const autoTastingTokenTotals = useMemo(() => {
-    return uploadedImages.reduce(
-      (acc, image) => {
-        const usage = getTokenUsageFromImage(image, webPreviewUsageByImageId[image.id] || null)
-        acc.vision += usage.vision
-        acc.web += usage.web
-        acc.total += usage.total
-        acc.cost += usage.cost
-        return acc
-      },
-      {vision: 0, web: 0, total: 0, cost: 0},
-    )
-  }, [uploadedImages, webPreviewUsageByImageId])
-
-  const analyzedImagesCount = useMemo(
-    () => uploadedImages.filter((image) => image.status === 'recognized').length,
-    [uploadedImages],
-  )
-
-  const pendingAnalyzeCount = useMemo(
+  const pendingAnalyzeImages = useMemo(
     () =>
-      uploadedImages.filter((image) => ['processing', 'uploaded', 'failed'].includes(image.status))
-        .length,
+      uploadedImages.filter((image) => ['processing', 'uploaded', 'failed'].includes(image.status)),
     [uploadedImages],
   )
+
+  const pendingAnalyzeCount = useMemo(() => pendingAnalyzeImages.length, [pendingAnalyzeImages])
 
   const canAnalyzeSingle = aiScanCredits.remaining >= 1
   const canAnalyzeAll = pendingAnalyzeCount > 0 && aiScanCredits.remaining >= pendingAnalyzeCount
@@ -1884,6 +1546,147 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       document.removeEventListener('visibilitychange', refreshImages)
     }
   }, [loadUploadedImages, userId])
+
+  const automaticSteps = useMemo(
+    () => [
+      {id: 1, label: t('automaticStepPhotosLabel')},
+      {id: 2, label: t('automaticStepReviewLabel')},
+      {id: 3, label: t('automaticStepQuizLabel')},
+    ],
+    [t],
+  )
+
+  const topBarCredits = useMemo(
+    () => (
+      <button
+        type="button"
+        className={styles.autoTopBarCredits}
+        onClick={() => setIsCreditsInfoOpen(true)}
+        aria-label={t('automaticCreditsInfoAction')}>
+        <Icon src="/icons/token.svg" size={16} />
+        <span>{aiScanCredits.remaining}</span>
+      </button>
+    ),
+    [aiScanCredits.remaining, t],
+  )
+
+  const getBottleCoreData = useCallback(
+    (image) => {
+      const details = image?.recognized_payload?.catalog_details || {}
+      const grapes = Array.isArray(details.grapes) ? details.grapes.filter(Boolean) : []
+      const inferredRegion = inferRegion(details, image)
+      const region = details.quiz_region || inferredRegion || details.region || ''
+      const appellation = details.quiz_appellation || details.appellation || ''
+      const wineType = mapWineTypeLabel(details.type, lang) || ''
+      const priceBand = details.quiz_price_band || details.price_band || ''
+      const averagePrice = details.average_price ?? details.price ?? ''
+      const priceRange =
+        details.price_min != null && details.price_max != null
+          ? `${details.price_min}-${details.price_max}${details.currency ? ` ${details.currency}` : ''}`
+          : averagePrice
+            ? `${averagePrice}${details.currency ? ` ${details.currency}` : ''}`
+            : ''
+
+      return {
+        details,
+        grapes,
+        region,
+        appellation,
+        wineType,
+        priceBand,
+        averagePrice,
+        priceRange,
+      }
+    },
+    [lang],
+  )
+
+  const getBottleCompletionMeta = useCallback(
+    (image) => {
+      const {details, grapes, region, wineType} = getBottleCoreData(image)
+      const requiredChecks = [
+        image?.recognized_name,
+        image?.recognized_producer,
+        image?.recognized_vintage,
+        details.country,
+        region,
+        wineType,
+        grapes[0],
+      ]
+      const totalFields = requiredChecks.length
+      const missingCount = requiredChecks.filter((value) => !String(value || '').trim()).length
+      const completedCount = totalFields - missingCount
+      const percent = Math.max(0, Math.min(100, Math.round((completedCount / totalFields) * 100)))
+      return {
+        isComplete: missingCount === 0,
+        missingCount,
+        completedCount,
+        totalFields,
+        percent,
+      }
+    },
+    [getBottleCoreData],
+  )
+
+  const recognizedBottleCount = useMemo(
+    () => uploadedImages.filter((image) => image.status === 'recognized').length,
+    [uploadedImages],
+  )
+
+  const selectedBottle = useMemo(
+    () => uploadedImages.find((image) => image.id === selectedBottleId) || null,
+    [selectedBottleId, uploadedImages],
+  )
+
+  const syncDetailDraftFromImage = useCallback(
+    (image) => {
+      if (!image) {
+        setDetailDraft(null)
+        return
+      }
+      const {details, grapes} = getBottleCoreData(image)
+      setDetailDraft({
+        recognized_name: image.recognized_name || '',
+        recognized_producer: image.recognized_producer || '',
+        recognized_vintage: image.recognized_vintage ? String(image.recognized_vintage) : '',
+        country: details.country || '',
+        region: details.quiz_region || details.region || '',
+        appellation: details.quiz_appellation || details.appellation || '',
+        type: details.type || '',
+        grapes: grapes.join(', '),
+        average_price:
+          details.average_price != null || details.price != null
+            ? String(details.average_price ?? details.price)
+            : '',
+        price_min: details.price_min != null ? String(details.price_min) : '',
+        price_max: details.price_max != null ? String(details.price_max) : '',
+        currency: details.currency || '',
+        body: details.body || '',
+        acidity: details.acidity || '',
+        harmony: details.harmony || details.harmonize || '',
+        why_notable: details.why_notable || '',
+        short_description: details.short_description || '',
+      })
+    },
+    [getBottleCoreData],
+  )
+
+  const handleOpenBottleDetail = useCallback(
+    (image) => {
+      if (!image?.id) return
+      setSelectedBottleId(image.id)
+      setDetailEditMode(false)
+      syncDetailDraftFromImage(image)
+      setAutoStep(2)
+    },
+    [syncDetailDraftFromImage],
+  )
+
+  const handleCloseBottleDetail = useCallback(() => {
+    setSelectedBottleId('')
+    setDetailEditMode(false)
+    setDetailDraft(null)
+  }, [])
 
   async function handleFilesUpload(fileList) {
     if (!userId || !fileList?.length) return
@@ -2098,6 +1901,11 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
         }
         return next
       })
+      setToast({
+        message: t('automaticDeleteSuccess'),
+        tone: 'success',
+        duration: 2600,
+      })
     } catch (error) {
       setUploadError(`${t('automaticDeleteError')} (${error?.message || 'unknown'})`)
     } finally {
@@ -2144,6 +1952,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
           prev.map((row) => (map[row.id] ? mergeImageRowWithPreview(map[row.id], row) : row)),
         )
       }
+      setAutoStep(2)
       loadUploadedImages().catch(() => null)
     } catch (error) {
       setUploadError(`${t('automaticAnalyzeError')} (${error?.message || 'unknown'})`)
@@ -2276,6 +2085,46 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     }
   }
 
+  function handleDetailDraftChange(field, value) {
+    setDetailDraft((prev) => ({
+      ...(prev || {}),
+      [field]: value,
+    }))
+  }
+
+  async function handleSaveBottleDetail() {
+    if (!selectedBottle || !detailDraft || isSavingDetail) return
+    setIsSavingDetail(true)
+    setUploadError('')
+    try {
+      const response = await fetch('/api/auto-tasting/manual-details', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          imageId: selectedBottle.id,
+          draft: detailDraft,
+        }),
+      })
+      const result = await response.json().catch(() => null)
+      if (!response.ok || !result?.updated) {
+        throw new Error(result?.error || 'manual detail update failed')
+      }
+
+      setUploadedImages((prev) =>
+        prev.map((row) =>
+          row.id === result.updated.id ? mergeImageRowWithPreview(result.updated, row) : row,
+        ),
+      )
+      setDetailEditMode(false)
+      syncDetailDraftFromImage(result.updated)
+      loadUploadedImages().catch(() => null)
+    } catch (error) {
+      setUploadError(`${t('automaticUpdateDetailsError')} (${error?.message || 'unknown'})`)
+    } finally {
+      setIsSavingDetail(false)
+    }
+  }
+
   async function handleAnalyzeAll() {
     if (isAnalyzingAll || analyzingImageId || webSearchingImageId) return
     const ids = sessionImageIdsRef.current
@@ -2321,6 +2170,10 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
           prev.map((row) => (map[row.id] ? mergeImageRowWithPreview(map[row.id], row) : row)),
         )
       }
+      setSelectedBottleId('')
+      setDetailEditMode(false)
+      setDetailDraft(null)
+      setAutoStep(2)
       loadUploadedImages().catch(() => null)
     } catch (error) {
       setUploadError(`${t('automaticAnalyzeError')} (${error?.message || 'unknown'})`)
@@ -2328,6 +2181,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       setIsAnalyzingAll(false)
     }
   }
+
 
   async function handleVerifyImage(imageId) {
     if (!imageId) return
@@ -2473,23 +2327,35 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     )
 
     const standardQuestionDefs = [
-      {key: 'country', text: t('automaticQuestionCountry')},
+      {key: 'country', text: t('automaticQuestionCountry'), forceInclude: true},
       {key: 'region', text: t('automaticQuestionRegion')},
       {key: 'grape', text: t('automaticQuestionGrape')},
       {key: 'vintage', text: t('automaticQuestionVintage')},
       {key: 'price', text: t('automaticQuestionPrice')},
     ]
     const openAiQuestionDefs = [
-      ...standardQuestionDefs,
+      {key: 'country', text: t('automaticQuestionCountry')},
+      {key: 'region', text: t('automaticQuestionRegion')},
+      {key: 'grape', text: t('automaticQuestionGrape')},
+      {key: 'vintage', text: t('automaticQuestionVintage')},
       {key: 'body', text: t('automaticQuestionBody')},
       {key: 'acidity', text: t('automaticQuestionAcidity')},
       {key: 'harmony', text: t('automaticQuestionHarmony')},
       {key: 'notable', text: t('automaticQuestionNotable')},
+      {key: 'price', text: t('automaticQuestionPrice')},
+      {
+        key: 'rating',
+        text: t('automaticQuestionRating'),
+        kind: 'rating',
+        isNeutral: true,
+        forceInclude: true,
+      },
     ]
 
     const isSingleBottleQuiz = bottles.length === 1
     const questionDefs = (mode === 'openai' ? openAiQuestionDefs : standardQuestionDefs).filter(
       (question) => {
+        if (question.forceInclude) return true
         const values = bottles.map((bottle) => bottle._values[question.key]).filter(Boolean)
         if (values.length !== bottles.length) return false
 
@@ -2511,6 +2377,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       body: localizedTemplateOptions.body,
       acidity: localizedTemplateOptions.acidity,
       harmony: localizedTemplateOptions.harmony,
+      rating: TEMPLATE_QUESTION_OPTIONS.rating,
     }
     const effectiveQuestions = questionDefs.map((def) => {
       const extractedValues = [...new Set(bottles.map((b) => b._values[def.key]).filter(Boolean))]
@@ -2522,12 +2389,18 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
         0,
         Math.max(MIN_AUTO_QUIZ_OPTIONS, templateOptions.length || 0, extractedValues.length),
       )
-      return {_key: def.key, text: def.text, options}
+      return {
+        _key: def.key,
+        text: def.text,
+        options,
+        kind: def.kind || null,
+        isNeutral: def.isNeutral === true,
+      }
     })
 
     const readyBottles = bottles.map((bottle) => {
       const answers = effectiveQuestions.map((question) => {
-        if (!question._key) return null
+        if (!question._key || question.kind === 'rating' || question.isNeutral === true) return null
         const value = bottle._values[question._key]
         if (!value) return null
         const idx = question.options.findIndex((option) => option === value)
@@ -2557,7 +2430,13 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       mode: 'create',
       status: 'draft',
       coverIndex: 0,
-      questions: effectiveQuestions.map(({_key, text, options}) => ({_key, text, options})),
+      questions: effectiveQuestions.map(({_key, text, options, kind, isNeutral}) => ({
+        _key,
+        text,
+        options,
+        kind,
+        isNeutral,
+      })),
       bottles: readyBottles,
     }
   }
@@ -2593,80 +2472,72 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     quizPreview = null
   }
 
-  if (isPreviewOpen && quizPreview) {
-    return (
-      <PageLayout title={t('automaticPreviewTitle')} onBack={() => setIsPreviewOpen(false)}>
-        <section className={styles.autoPreviewPageCard}>
-          <div className={styles.autoPreviewPageHeader}>
-            <div className={styles.autoPreviewModalTemplateRow}>
-              <span className={styles.autoModeQuizTemplateLabel}>{t('automaticQuizTemplateLabel')}</span>
-              <div className={styles.autoModeQuizTemplateSegmented}>
-                <button
-                  type="button"
-                  className={`${styles.autoModeQuizTemplateButton} ${
-                    quizTemplateMode === 'openai' ? styles.autoModeQuizTemplateButtonActive : ''
-                  }`}
-                  onClick={() => setQuizTemplateMode('openai')}>
-                  {t('automaticQuizTemplateOpenAi')}
-                </button>
-                <button
-                  type="button"
-                  className={`${styles.autoModeQuizTemplateButton} ${
-                    quizTemplateMode === 'standard' ? styles.autoModeQuizTemplateButtonActive : ''
-                  }`}
-                  onClick={() => setQuizTemplateMode('standard')}>
-                  {t('automaticQuizTemplateStandard')}
-                </button>
-              </div>
-            </div>
-          </div>
+  const canOpenStep3 = !!quizPreview
+  const step2Ready = uploadedImages.length > 0
+  const detailCore = selectedBottle ? getBottleCoreData(selectedBottle) : null
+  const detailCompletion = selectedBottle ? getBottleCompletionMeta(selectedBottle) : null
 
-          <div className={styles.autoPreviewPageBody}>
-            <AutoTastingGamePreview
-              preview={quizPreview}
-              labels={{
-                sliderAria: t('automaticPreviewBottles'),
-                bottle: t('automaticPreviewBottleLabel'),
-                of: t('automaticPreviewOf'),
-                question: t('automaticPreviewQuestionLabel'),
-                producerMissing: t('automaticPreviewProducerMissing'),
-                yearMissing: t('automaticPreviewYearMissing'),
-                unnamedBottle: t('automaticPreviewUnnamedBottle'),
-              }}
-            />
-          </div>
-        </section>
+  useEffect(() => {
+    if (!selectedBottle || detailEditMode) return
+    syncDetailDraftFromImage(selectedBottle)
+  }, [detailEditMode, selectedBottle, syncDetailDraftFromImage])
 
-        <div className={styles.autoPreviewPageSpacer} />
-        <div className={styles.autoPreviewPageFooter}>
-          <button type="button" className="btn neutral" onClick={() => setIsPreviewOpen(false)}>
-            {t('close')}
-          </button>
-          <button
-            type="button"
-            className="btn success"
-            disabled={isCreatingQuiz}
-            onClick={handleCreateQuickQuiz}>
-            {isCreatingQuiz ? t('automaticCreatingQuiz') : t('automaticCreateQuizAction')}
-          </button>
-        </div>
-      </PageLayout>
-    )
+  useEffect(() => {
+    scrollPageTop()
+  }, [autoStep, selectedBottleId])
+
+  const automaticPageTitle = selectedBottle?.recognized_name || t('title')
+
+  function handleTopBack() {
+    if (selectedBottleId) {
+      handleCloseBottleDetail()
+      return
+    }
+    if (autoStep === 3) {
+      setAutoStep(2)
+      return
+    }
+    if (autoStep === 2) {
+      setAutoStep(1)
+      return
+    }
+    handleAttemptExit()
+  }
+
+  function handleStepClick(nextStep) {
+    if (selectedBottleId) {
+      handleCloseBottleDetail()
+    }
+    if (nextStep === 1) {
+      setAutoStep(1)
+      return
+    }
+    if (nextStep === 2 && step2Ready) {
+      setAutoStep(2)
+      return
+    }
+    if (nextStep === 3 && canOpenStep3) {
+      setAutoStep(3)
+    }
   }
 
   return (
-    <PageLayout title={t('title')} onBack={handleAttemptExit}>
+    <PageLayout title={automaticPageTitle} onBack={handleTopBack} topBarActions={topBarCredits}>
       <AutoToast toast={toast} onClose={() => setToast(null)} closeLabel={t('close')} />
       <InfoModal
         isOpen={isCreditsInfoOpen}
         onClose={() => setIsCreditsInfoOpen(false)}
         title={t('automaticCreditsInfoTitle')}>
         <p>{t('automaticCreditsInfoBody')}</p>
+        <p className={styles.autoCreditsInfoRemaining}>
+          {t('automaticCreditsInfoRemaining', {count: String(aiScanCredits.remaining)})}
+        </p>
         <ul className={styles.autoCreditsInfoList}>
           <li>{t('automaticCreditsInfoAnalyze')}</li>
           <li>{t('automaticCreditsInfoWeb')}</li>
         </ul>
       </InfoModal>
+
       {webSearchingImageId ? (
         <div className={styles.autoPageWebSearchOverlay}>
           <div className={styles.autoBottleWebSearchPanel}>
@@ -2680,89 +2551,867 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
           </div>
         </div>
       ) : null}
+
+      {isAnalyzingAll ? (
+        <div className={styles.autoPageAnalyzeOverlay}>
+          <div className={styles.autoPageAnalyzePanel}>
+            <div className={styles.autoBottleWebSearchSpinner} aria-hidden="true" />
+            <strong>
+              {t('automaticAnalyzingAllCount', {
+                count: String(pendingAnalyzeCount),
+              })}
+            </strong>
+            <span>{t('automaticAnalyzeOverlayHint')}</span>
+          </div>
+        </div>
+      ) : null}
+
       <main className={styles.autoModePage}>
-        <h1 className={styles.autoModeTitleCentered}>{t('automaticFlowTitle')}</h1>
-        <p className={styles.autoModeDescriptionCentered}>{t('automaticFlowDescription')}</p>
-
-        <>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            multiple
-            className={styles.autoModeFileInput}
-            onChange={(event) => handleFilesUpload(event.target.files)}
+        {!selectedBottleId ? (
+          <GameStepsBreadcrumbs
+            steps={automaticSteps}
+            currentStep={autoStep}
+            onStepClick={handleStepClick}
+            isStep2Completed={canOpenStep3}
+            isStep3Completed={false}
           />
+        ) : null}
 
-          {isUploading && uploadProgress.total > 0 ? (
-            <div className={styles.autoModeUploadProgressWrap}>
-              <p className={styles.autoModeUploadProgress}>
-                {uploadProgress.current}/{uploadProgress.total} {uploadProgress.phase}{' '}
-                {uploadProgress.fileName} ({uploadProgress.overallPercent}%)
-                {uploadProgress.totalBytes > 0
-                  ? ` · ${formatBytes(uploadProgress.loadedBytes)} / ${formatBytes(uploadProgress.totalBytes)}`
-                  : ''}
-              </p>
-              <div className={styles.autoModeUploadProgressBar}>
-                <span style={{width: `${uploadProgress.overallPercent}%`}} />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          multiple
+          className={styles.autoModeFileInput}
+          onChange={(event) => handleFilesUpload(event.target.files)}
+        />
+
+        {autoStep === 1 ? (
+          <>
+            <h1 className={styles.autoModeTitleCentered}>
+              {uploadedImages.length > 0
+                ? t('automaticStep1TitleWithPhotos')
+                : t('automaticStep1Title')}
+            </h1>
+            <p className={styles.autoModeDescriptionCentered}>
+              {uploadedImages.length > 0
+                ? t('automaticStep1DescriptionWithPhotos')
+                : t('automaticStep1Description')}
+            </p>
+
+            {isUploading && uploadProgress.total > 0 ? (
+              <div className={styles.autoModeUploadProgressWrap}>
+                <p className={styles.autoModeUploadProgress}>
+                  {uploadProgress.current}/{uploadProgress.total} {uploadProgress.phase}{' '}
+                  {uploadProgress.fileName} ({uploadProgress.overallPercent}%)
+                  {uploadProgress.totalBytes > 0
+                    ? ` · ${formatBytes(uploadProgress.loadedBytes)} / ${formatBytes(uploadProgress.totalBytes)}`
+                    : ''}
+                </p>
+                <div className={styles.autoModeUploadProgressBar}>
+                  <span style={{width: `${uploadProgress.overallPercent}%`}} />
+                </div>
               </div>
-            </div>
-          ) : null}
+            ) : null}
 
-          {!isUploading &&
-          previewLoadProgress.total > 0 &&
-          previewLoadProgress.loaded < previewLoadProgress.total ? (
-            <div className={styles.autoModeUploadProgressWrap}>
-              <p className={styles.autoModeUploadProgress}>
-                Anteprime caricate: {previewLoadProgress.loaded}/{previewLoadProgress.total}
-              </p>
-              <div className={styles.autoModeUploadProgressBar}>
-                <span
-                  style={{
-                    width: `${Math.round((previewLoadProgress.loaded / previewLoadProgress.total) * 100)}%`,
-                  }}
-                />
+            {!isUploading &&
+            previewLoadProgress.total > 0 &&
+            previewLoadProgress.loaded < previewLoadProgress.total ? (
+              <div className={styles.autoModeUploadProgressWrap}>
+                <p className={styles.autoModeUploadProgress}>
+                  {t('automaticPreviewLoadingLabel', {
+                    loaded: String(previewLoadProgress.loaded),
+                    total: String(previewLoadProgress.total),
+                  })}
+                </p>
+                <div className={styles.autoModeUploadProgressBar}>
+                  <span
+                    style={{
+                      width: `${Math.round((previewLoadProgress.loaded / previewLoadProgress.total) * 100)}%`,
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          ) : null}
-          {!isUploading && uploadedImages.length > 0 ? (
-            <div className={styles.autoModeTopActions}>
-              {/* <button
-                type="button"
-                className="btn  btn-ai btn-with-icon-end"
-                disabled={isUploading || isAnalyzingAll || !!analyzingImageId || isCreatingQuiz}
-                onClick={handleAnalyzeAll}>
-                <Icon src="/icons/vision.svg" size={36} className="btn-icon-big" />
-                {isAnalyzingAll ? t('automaticAnalyzingAll') : t('automaticAnalyzeAllAction')}
-              </button> */}
-              <button
-                type="button"
-                className="btn  tertiary"
-                disabled={
-                  isUploading ||
-                  isAnalyzingAll ||
-                  !!analyzingImageId ||
-                  uploadedImages.length === 0 ||
-                  !quizPreview
-                }
-                onClick={() => setIsPreviewOpen(true)}>
-                <Icon src="/icons/quiz.svg" size={36} className="btn-icon-big" />
-                {t('automaticPreviewQuizAction')}
-              </button>
-            </div>
-          ) : null}
+            ) : null}
 
-          <div className={styles.autoStepFixedRow}>
             <button
               type="button"
-              className="btn success"
+              className={`${styles.autoUploadHero} ${uploadedImages.length > 0 ? styles.autoUploadHeroActive : ''}`}
               disabled={isUploading || !!analyzingImageId || isAnalyzingAll}
               onClick={() => fileInputRef.current?.click()}>
-              {isUploading ? t('automaticUploading') : t('automaticScanAction')}
+              <span className={styles.autoUploadHeroIcon}>
+                <Icon name="photo" size={34} />
+              </span>
+              <strong>
+                {uploadedImages.length > 0
+                  ? t('automaticNextPhotoTitle')
+                  : t('automaticFirstPhotoTitle')}
+              </strong>
+              <span>
+                {uploadedImages.length > 0
+                  ? t('automaticNextPhotoSubtitle')
+                  : t('automaticFirstPhotoSubtitle')}
+              </span>
             </button>
-          </div>
-        </>
+
+            <div className={styles.autoUploadSectionHeader}>
+              <strong>{t('automaticAddedBottlesLabel')}</strong>
+              <span>({uploadedImages.length}/6)</span>
+            </div>
+
+            <section className={styles.autoUploadGrid}>
+              {Array.from({length: 6}).map((_, index) => {
+                const image = uploadedImages[index] || null
+                const previewFailed = image ? failedPreviewIds.includes(image.id) : false
+                const completion = image ? getBottleCompletionMeta(image) : null
+
+                if (!image) {
+                  return (
+                    <button
+                      key={`empty-${index}`}
+                      type="button"
+                      className={styles.autoUploadTileEmpty}
+                      onClick={() => fileInputRef.current?.click()}>
+                      <span className={styles.autoUploadTilePlus}>
+                        <Icon name="photo" size={22} />
+                      </span>
+                    </button>
+                  )
+                }
+
+                return (
+                  <div key={image.id} className={styles.autoUploadTileFilled}>
+                    <button
+                      type="button"
+                      className={`btn danger-negative btn-circle ${styles.autoUploadTileDelete}`}
+                      onClick={() => handleDeleteImage(image.id)}
+                      disabled={!!deletingImageId || !!analyzingImageId || isAnalyzingAll}
+                      aria-label={t('automaticDeleteAction')}>
+                      <Icon src="/icons/bucket.svg" size={18} />
+                    </button>
+                    <Image
+                      src={image.clientPreviewUrl || `/api/auto-tasting/image?id=${image.id}`}
+                      alt={image.original_filename || image.storage_path}
+                      fill
+                      unoptimized
+                      className={styles.autoUploadTileImage}
+                      sizes="(max-width: 520px) 33vw, 160px"
+                      onLoad={() => markPreviewLoaded(image.id)}
+                      onError={() => {
+                        handlePreviewImageError(image.id).catch(() => markPreviewError(image.id))
+                      }}
+                    />
+                    {previewFailed ? (
+                      <div className={styles.autoUploadTileFallback}>
+                        <span>{t('automaticPreviewUnavailable')}</span>
+                      </div>
+                    ) : null}
+                    {image.status === 'recognized' && completion ? (
+                      <span className={styles.autoUploadTileProgressPill}>
+                        <Icon name="check" size={14} />
+                        <span>{completion.percent}%</span>
+                      </span>
+                    ) : null}
+                  </div>
+                )
+              })}
+            </section>
+          </>
+        ) : null}
+
+        {autoStep === 2 && !selectedBottle ? (
+          <>
+            <h1 className={styles.autoModeTitleCentered}>{t('automaticReviewTitle')}</h1>
+            <p className={styles.autoModeDescriptionCentered}>{t('automaticReviewDescription')}</p>
+
+            <section className={styles.autoBottleSummaryList}>
+              {uploadedImages.map((image) => {
+                const completion = getBottleCompletionMeta(image)
+                const {details, grapes, region, appellation, wineType} = getBottleCoreData(image)
+                const previewFailed = failedPreviewIds.includes(image.id)
+                const statusLabel = completion.isComplete
+                  ? t('automaticBottleCompleteBadge')
+                  : t('automaticBottleIncompleteBadge')
+
+                return (
+                  <button
+                    key={image.id}
+                    type="button"
+                    className={styles.autoBottleSummaryCard}
+                    onClick={() => handleOpenBottleDetail(image)}>
+                    <div className={styles.autoBottleSummaryMedia}>
+                      <Image
+                        src={image.clientPreviewUrl || `/api/auto-tasting/image?id=${image.id}`}
+                        alt={image.original_filename || image.storage_path}
+                        fill
+                        unoptimized
+                        className={styles.autoBottleSummaryImage}
+                        sizes="120px"
+                        onError={() => {
+                          handlePreviewImageError(image.id).catch(() => markPreviewError(image.id))
+                        }}
+                      />
+                      {previewFailed ? (
+                        <div className={styles.autoBottleSummaryFallback}>
+                          <span>{t('automaticPreviewUnavailable')}</span>
+                        </div>
+                      ) : null}
+                    </div>
+                    <div className={styles.autoBottleSummaryBody}>
+                      <div className={styles.autoBottleSummaryHeader}>
+                        <strong>{image.recognized_name || image.original_filename}</strong>
+                        <span
+                          className={`${styles.autoBottleStatusBadge} ${
+                            completion.isComplete
+                              ? styles.autoBottleStatusBadgeComplete
+                              : styles.autoBottleStatusBadgeIncomplete
+                          }`}>
+                          <span
+                            className={styles.autoBottleStatusBadgeChart}
+                            style={{
+                              background: `conic-gradient(var(--success) ${completion.percent * 3.6}deg, rgba(77, 49, 155, 0) 0deg)`,
+                            }}>
+                            <span className={styles.autoBottleStatusBadgeChartInner} />
+                          </span>
+                          <span>{completion.percent}%</span>
+                        </span>
+                      </div>
+                      <p className={styles.autoBottleSummaryMeta}>
+                        {[image.recognized_producer, image.recognized_vintage]
+                          .filter(Boolean)
+                          .join(' · ') || t('automaticBottlePendingLabel')}
+                      </p>
+                      <div className={styles.autoBottleSummaryFacts}>
+                        {[details.country, region, appellation, wineType, grapes[0]]
+                          .filter(Boolean)
+                          .slice(0, 4)
+                          .map((item) => (
+                            <span
+                              key={`${image.id}-${item}`}
+                              className={styles.autoBottleSummaryFact}>
+                              {item}
+                            </span>
+                          ))}
+                      </div>
+                    </div>
+                  </button>
+                )
+              })}
+            </section>
+          </>
+        ) : null}
+
+        {autoStep === 2 && selectedBottle ? (
+          <>
+            {(() => {
+              const details = detailCore?.details || {}
+              const region = detailCore?.region || ''
+              const appellation = detailCore?.appellation || ''
+              const wineType = detailCore?.wineType || ''
+              const primaryGrape = detailCore?.grapes?.[0] || ''
+              const hasCatalogDetails = !!(
+                details.country ||
+                region ||
+                appellation ||
+                primaryGrape ||
+                wineType
+              )
+              const hasMatch = !!selectedBottle?.recognized_payload?.catalog_match?.matched
+              const hasCatalogSync = !!selectedBottle?.recognized_payload?.catalog_sync?.synced
+              const hasCatalogPresence = hasMatch || hasCatalogSync
+              const webEnrichmentMeta = selectedBottle?.recognized_payload?.web_enrichment || {}
+              const hasWebSources = Array.isArray(webEnrichmentMeta.sources)
+              const hasWebEnrichment =
+                !!webEnrichmentMeta.applied ||
+                !!details.short_description ||
+                !!details.why_notable ||
+                (hasWebSources && webEnrichmentMeta.sources.length > 0)
+              const hasRestoredWebData =
+                !hasWebEnrichment &&
+                !!details.web_enrichment_sources &&
+                Array.isArray(details.web_enrichment_sources) &&
+                details.web_enrichment_sources.length > 0
+              const requiresReview = !!selectedBottle?.recognized_payload?.review?.required
+              const isVerified = !!selectedBottle?.recognized_payload?.verification?.verified
+              const webSearchError =
+                selectedBottle?.recognized_payload?.web_enrichment?.error || null
+              const webSearchSkippedReason =
+                selectedBottle?.recognized_payload?.web_enrichment?.skipped &&
+                selectedBottle?.recognized_payload?.web_enrichment?.reason
+                  ? selectedBottle.recognized_payload.web_enrichment.reason
+                  : null
+              const hasVision =
+                selectedBottle?.recognized_payload?.provider === 'openai_vision' ||
+                String(selectedBottle?.recognized_payload?.extractor || '').startsWith(
+                  'openai-vision',
+                )
+              const localizedWhyNotable = localizeNarrativeText(details?.why_notable, lang)
+              const localizedShortDescription = localizeNarrativeText(
+                details?.short_description,
+                lang,
+              )
+              const webSources = hasWebSources ? webEnrichmentMeta.sources.filter(Boolean) : []
+              const priceBand = details.quiz_price_band || details.price_band || null
+              const bottleSpecItems = [
+                primaryGrape ? {label: t('automaticQuestionGrape'), value: primaryGrape} : null,
+                details.price_min != null && details.price_max != null
+                  ? {
+                      label:
+                        t('automaticPriceLabel') +
+                        (details.currency ? ` ${details.currency}` : ' EUR'),
+                      value: `${details.price_min} - ${details.price_max}`,
+                    }
+                  : details.average_price != null || details.price != null
+                    ? {
+                        label: t('automaticPriceLabel'),
+                        value: `${details.average_price ?? details.price}${details.currency ? ` ${details.currency}` : ' EUR'}`,
+                      }
+                    : null,
+                details.average_price != null || details.price != null
+                  ? {
+                      label: t('automaticMediumPriceLabel'),
+                      value: normalizePriceAnswer(details.average_price ?? details.price),
+                    }
+                  : null,
+                priceBand ? {label: t('automaticQuestionPrice'), value: priceBand} : null,
+                details.body
+                  ? {
+                      label: t('automaticQuestionBody'),
+                      value: normalizeBodyForQuiz(details.body, lang),
+                    }
+                  : null,
+                details.acidity
+                  ? {
+                      label: t('automaticQuestionAcidity'),
+                      value: normalizeAcidityForQuiz(details.acidity, lang),
+                    }
+                  : null,
+                details.harmony || details.harmonize
+                  ? {
+                      label: t('automaticQuestionHarmony'),
+                      value: normalizeHarmonyForQuiz(details.harmony || details.harmonize, lang),
+                    }
+                  : null,
+              ].filter(Boolean)
+              const webStatusMessage =
+                webSearchingImageId === selectedBottle.id
+                  ? t('automaticWebSearchingAction')
+                  : webSearchError
+                    ? webSearchError
+                    : hasWebEnrichment
+                      ? t('automaticWebSearchSuccess')
+                      : hasRestoredWebData
+                        ? t('automaticWebCatalogSuccess')
+                        : webSearchSkippedReason === 'catalog_sync_found'
+                          ? t('automaticWebSearchSkippedCatalogSynced')
+                          : webSearchSkippedReason === 'already_enriched'
+                            ? t('automaticWebSearchSkippedAlreadyEnriched')
+                            : webSearchSkippedReason === 'catalog_match_found'
+                              ? t('automaticWebSearchSkippedCatalogMatch')
+                              : null
+              const resolvedQuizDisplayValues = [
+                details.country,
+                region,
+                appellation,
+                wineType,
+                primaryGrape,
+              ].filter(Boolean)
+
+              return (
+                <section className={styles.autoBottleCard}>
+                  <div className={styles.autoBottleCardBody}>
+                    <div className={styles.autoBottleCardMediaCol}>
+                      <div className={styles.autoBottleCardPreviewWrap}>
+                        <Image
+                          src={
+                            selectedBottle.clientPreviewUrl ||
+                            `/api/auto-tasting/image?id=${selectedBottle.id}`
+                          }
+                          alt={selectedBottle.original_filename || selectedBottle.storage_path}
+                          fill
+                          unoptimized
+                          className={styles.autoBottleCardPreview}
+                          sizes="(max-width: 520px) 100vw, 360px"
+                        />
+                        {detailCompletion ? (
+                          <span className={styles.autoBottlePreviewProgressPill}>
+                            <span
+                              className={styles.autoBottleStatusBadgeChart}
+                              style={{
+                                background: `conic-gradient(var(--success) ${detailCompletion.percent * 3.6}deg, rgba(77, 49, 155, 0.12) 0deg)`,
+                              }}>
+                              <span className={styles.autoBottleStatusBadgeChartInner} />
+                            </span>
+                            <span>{detailCompletion.percent}%</span>
+                          </span>
+                        ) : null}
+                      </div>
+                    </div>
+
+                    <div className={styles.autoBottleCardInfoCol}>
+                      <div className={styles.autoModeUploadedBadges}>
+                        <span
+                          className={`${styles.autoBottleStatusBadge} ${
+                            detailCompletion?.isComplete
+                              ? styles.autoBottleStatusBadgeComplete
+                              : styles.autoBottleStatusBadgeIncomplete
+                          }`}>
+                          {detailCompletion?.isComplete
+                            ? t('automaticBottleCompleteBadge')
+                            : t('automaticBottleIncompleteBadge')}
+                        </span>
+                        {hasVision && (
+                          <span className={styles.autoModeFeatureBadge}>
+                            <Icon
+                              src="/icons/vision.svg"
+                              size={16}
+                              className={styles.autoModeFeatureIcon}
+                            />
+                            {t('automaticVisionBadge')}
+                          </span>
+                        )}
+                        {hasCatalogPresence && (
+                          <span className={styles.autoModeFeatureBadge}>
+                            <Icon
+                              src="/icons/match.svg"
+                              size={16}
+                              className={styles.autoModeFeatureIcon}
+                            />
+                            {t('automaticCatalogBadge')}
+                          </span>
+                        )}
+                        {hasWebEnrichment && (
+                          <span className={styles.autoModeFeatureBadge}>
+                            <Icon
+                              src="/icons/vision.svg"
+                              size={16}
+                              className={styles.autoModeFeatureIcon}
+                            />
+                            {t('automaticWebBadge')}
+                          </span>
+                        )}
+                        {!hasWebEnrichment && hasRestoredWebData && (
+                          <span className={styles.autoModeFeatureBadge}>
+                            <Icon
+                              src="/icons/share.svg"
+                              size={16}
+                              className={styles.autoModeFeatureIcon}
+                            />
+                            {t('automaticWebCatalogBadge')}
+                          </span>
+                        )}
+                        {requiresReview && (
+                          <span className={styles.autoModeFeatureBadge}>
+                            <Icon
+                              name="checkWarning"
+                              size={16}
+                              className={styles.autoModeFeatureIcon}
+                            />
+                            {t('automaticReviewBadge')}
+                          </span>
+                        )}
+                        {isVerified && (
+                          <span className={styles.autoModeFeatureBadge}>
+                            <Icon
+                              src="/icons/match.svg"
+                              size={16}
+                              className={styles.autoModeFeatureIcon}
+                            />
+                            {t('automaticVerifiedBadge')}
+                          </span>
+                        )}
+                        {hasCatalogSync && (
+                          <span className={styles.autoModeFeatureBadge}>
+                            <Icon
+                              src="/icons/redo.svg"
+                              size={16}
+                              className={styles.autoModeFeatureIcon}
+                            />
+                            {t('automaticCatalogSyncedBadge')}
+                          </span>
+                        )}
+                      </div>
+
+                      <p className={styles.autoBottleFoundName}>
+                        {selectedBottle.recognized_name || selectedBottle.original_filename}
+                      </p>
+
+                      {[
+                        selectedBottle.recognized_producer,
+                        selectedBottle.recognized_vintage,
+                      ].filter(Boolean).length > 0 ? (
+                        <p className={styles.autoBottleCardSubtitle}>
+                          {[selectedBottle.recognized_producer, selectedBottle.recognized_vintage]
+                            .filter(Boolean)
+                            .join(' | ')}
+                        </p>
+                      ) : null}
+
+                      {hasCatalogDetails ? (
+                        <div className={styles.autoBottleCardFacts}>
+                          {[details.country, region, appellation, wineType, primaryGrape]
+                            .filter(Boolean)
+                            .map((item, index) => (
+                              <span
+                                key={`${selectedBottle.id}-detail-fact-${index}`}
+                                className={styles.autoBottleFactChip}>
+                                <span>{item}</span>
+                              </span>
+                            ))}
+                        </div>
+                      ) : null}
+
+                      {!detailEditMode ? (
+                        <>
+                          {selectedBottle.status !== 'recognized' ? (
+                            <div className={styles.autoBottlePendingCard}>
+                              <p>{t('automaticBottlePendingHint')}</p>
+                              <button
+                                type="button"
+                                className="btn btn-ai"
+                                disabled={!canAnalyzeSingle || !!analyzingImageId || isAnalyzingAll}
+                                onClick={() => handleAnalyzeImage(selectedBottle.id)}>
+                                {analyzingImageId === selectedBottle.id
+                                  ? t('automaticAnalyzingSingle')
+                                  : t('automaticAnalyzeAction')}
+                              </button>
+                            </div>
+                          ) : null}
+
+                          {hasCatalogDetails ? (
+                            <div className={styles.autoBottleCardDataBlock}>
+                              {bottleSpecItems.length > 0 ? (
+                                <div className={styles.autoBottleSectionBlock}>
+                                  <p className={styles.autoBottleSectionTitle}>
+                                    {t('automaticBottleSpecsLabel')}
+                                  </p>
+                                  <div className={styles.autoBottleSpecGrid}>
+                                    {bottleSpecItems.map((item) => (
+                                      <div
+                                        key={`${selectedBottle.id}-${item.label}`}
+                                        className={styles.autoBottleSpecCard}>
+                                        <span className={styles.autoBottleSpecLabel}>
+                                          {item.label}
+                                        </span>
+                                        <strong className={styles.autoBottleSpecValue}>
+                                          {item.value}
+                                        </strong>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              ) : null}
+
+                              <div className={styles.autoBottleSectionBlock}>
+                                <p className={styles.autoBottleCardDataRow}>
+                                  <span className={styles.autoBottleDataLabel}>
+                                    <span className={styles.autoBottleDataLabelIconWrapper}>
+                                      <Icon
+                                        src="/icons/bolt.svg"
+                                        size={20}
+                                        className={styles.icon}
+                                      />
+                                    </span>
+                                    <strong>{t('automaticQuizResolvedLabel')}:</strong>
+                                  </span>
+                                </p>
+                                <div className={styles.autoBottleResolvedGrid}>
+                                  {resolvedQuizDisplayValues.map((value, index) => (
+                                    <span
+                                      key={`${selectedBottle.id}-resolved-${index}`}
+                                      className={styles.autoBottleResolvedChip}>
+                                      {value}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+
+                              <p className={styles.autoBottleCardDataRow}>
+                                <span className={styles.autoBottleDataLabel}>
+                                  <span className={styles.autoBottleDataLabelIconWrapper}>
+                                    <Icon src="/icons/quiz.svg" size={20} className={styles.icon} />
+                                  </span>
+                                  <strong>{t('automaticQuizDataLabel')}:</strong>
+                                </span>
+                              </p>
+                              <div className={styles.autoBottleQuickFacts}>
+                                {[
+                                  details.country,
+                                  region,
+                                  wineType,
+                                  selectedBottle.recognized_vintage,
+                                  ...(Array.isArray(details.grapes) && details.grapes.length > 0
+                                    ? details.grapes
+                                    : []),
+                                  details.average_price != null || details.price != null
+                                    ? `${t('automaticPriceLabel')}: ${details.average_price ?? details.price}${details.currency ? ` ${details.currency}` : ' EUR'}`
+                                    : null,
+                                  priceBand ? `${t('automaticQuestionPrice')}: ${priceBand}` : null,
+                                ]
+                                  .filter(Boolean)
+                                  .map((item, index) => (
+                                    <span
+                                      key={`${selectedBottle.id}-quick-${index}`}
+                                      className={styles.autoBottleQuickFactChip}>
+                                      {item}
+                                    </span>
+                                  ))}
+                              </div>
+
+                              {localizedWhyNotable ? (
+                                <div className={styles.autoBottleNarrativeCard}>
+                                  <p className={styles.autoBottleCardDataRow}>
+                                    <span className={styles.autoBottleDataLabel}>
+                                      <span className={styles.autoBottleDataLabelIconWrapper}>
+                                        <Icon src="/icons/book.svg" size={20} />
+                                      </span>
+                                      <strong>{t('automaticQuestionNotable')}:</strong>
+                                    </span>
+                                  </p>
+                                  <p className={styles.autoBottleNarrativeText}>
+                                    {localizedWhyNotable}
+                                  </p>
+                                </div>
+                              ) : null}
+
+                              {localizedShortDescription ? (
+                                <div className={styles.autoBottleNarrativeCard}>
+                                  <p className={styles.autoBottleCardDataRow}>
+                                    <span className={styles.autoBottleDataLabel}>
+                                      <span className={styles.autoBottleDataLabelIconWrapper}>
+                                        <Icon src="/icons/web.svg" size={20} />
+                                      </span>
+                                      <strong>{t('automaticWebSummaryLabel')}:</strong>
+                                    </span>
+                                  </p>
+                                  <p className={styles.autoBottleNarrativeText}>
+                                    {localizedShortDescription}
+                                  </p>
+                                </div>
+                              ) : null}
+
+                              {webSources.length > 0 ? (
+                                <details className={styles.autoBottleAccordion}>
+                                  <summary className={styles.autoBottleAccordionSummary}>
+                                    <Icon src="/icons/web.svg" size={16} />
+                                    <strong>{t('automaticWebSourcesLabel')}:</strong>
+                                  </summary>
+                                  <div className={styles.autoBottleAccordionBody}>
+                                    {webSources.map((source) => (
+                                      <a
+                                        key={`${selectedBottle.id}-${source}`}
+                                        href={source}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className={styles.autoBottleSourceLink}>
+                                        {source}
+                                      </a>
+                                    ))}
+                                  </div>
+                                </details>
+                              ) : null}
+
+                              {(selectedBottle.error_message || webSearchError) && (
+                                <span
+                                  className={`${styles.autoModeUploadedError} ${styles.autoBottleInlineStatus}`}>
+                                  {webSearchError || selectedBottle.error_message}
+                                </span>
+                              )}
+                              {webStatusMessage && !webSearchError ? (
+                                <span
+                                  className={`${styles.autoModeUploadedError} ${styles.autoBottleInlineStatus}`}>
+                                  {webStatusMessage}
+                                </span>
+                              ) : null}
+                              {lastWebSearchReview?.imageId === selectedBottle.id &&
+                              !webSearchReview ? (
+                                <button
+                                  type="button"
+                                  className={styles.autoBottleInlineLinkButton}
+                                  onClick={() => setWebSearchReview(lastWebSearchReview)}>
+                                  <Icon src="/icons/web.svg" size={16} />
+                                  <span>{t('automaticWebDiffReopenAction')}</span>
+                                </button>
+                              ) : null}
+                            </div>
+                          ) : null}
+
+                          <div className={styles.autoBottleCardFooterActionBar}>
+                            <button
+                              type="button"
+                              className="btn success"
+                              disabled={
+                                !!deletingImageId ||
+                                !!analyzingImageId ||
+                                isAnalyzingAll ||
+                                !!verifyingImageId ||
+                                !!webSearchingImageId
+                              }
+                              onClick={() => handleVerifyImage(selectedBottle.id)}>
+                              {verifyingImageId === selectedBottle.id
+                                ? t('automaticSavingCatalogAction')
+                                : isVerified
+                                  ? t('automaticUpdateCatalogAction')
+                                  : t('automaticSaveCatalogAction')}
+                            </button>
+                            <button
+                              type="button"
+                              className="btn quaternary"
+                              disabled={
+                                !!deletingImageId ||
+                                !!analyzingImageId ||
+                                isAnalyzingAll ||
+                                !!verifyingImageId ||
+                                !!webSearchingImageId ||
+                                !canRunWebSearch
+                              }
+                              onClick={() => handleWebSearchImage(selectedBottle.id)}>
+                              {webSearchingImageId === selectedBottle.id
+                                ? t('automaticWebSearchingAction')
+                                : t('automaticBottleEnrichAction')}
+                            </button>
+                            <button
+                              type="button"
+                              className="btn neutral"
+                              onClick={() => {
+                                syncDetailDraftFromImage(selectedBottle)
+                                setDetailEditMode(true)
+                              }}>
+                              {t('automaticBottleEditAction')}
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className={styles.autoBottleCardDataBlock}>
+                            <div className={styles.autoBottleEditGrid}>
+                              {[
+                                ['recognized_name', t('automaticDiffNameLabel')],
+                                ['recognized_producer', t('automaticDiffProducerLabel')],
+                                ['recognized_vintage', t('automaticDiffVintageLabel')],
+                                ['country', t('automaticQuestionCountry')],
+                                ['region', t('automaticQuestionRegion')],
+                                ['appellation', t('automaticDiffAppellationLabel')],
+                                ['type', t('automaticDiffTypeLabel')],
+                                ['grapes', t('automaticQuestionGrape')],
+                                ['average_price', t('automaticMediumPriceLabel')],
+                              ].map(([field, label]) => (
+                                <label key={field} className={styles.autoBottleEditField}>
+                                  <span>{label}</span>
+                                  <input
+                                    value={detailDraft?.[field] || ''}
+                                    onChange={(event) =>
+                                      handleDetailDraftChange(field, event.target.value)
+                                    }
+                                  />
+                                </label>
+                              ))}
+                              <label className={styles.autoBottleEditFieldFull}>
+                                <span>{t('automaticQuestionNotable')}</span>
+                                <textarea
+                                  rows={3}
+                                  value={detailDraft?.why_notable || ''}
+                                  onChange={(event) =>
+                                    handleDetailDraftChange('why_notable', event.target.value)
+                                  }
+                                />
+                              </label>
+                              <label className={styles.autoBottleEditFieldFull}>
+                                <span>{t('automaticWebSummaryLabel')}</span>
+                                <textarea
+                                  rows={4}
+                                  value={detailDraft?.short_description || ''}
+                                  onChange={(event) =>
+                                    handleDetailDraftChange('short_description', event.target.value)
+                                  }
+                                />
+                              </label>
+                            </div>
+                          </div>
+                          <div className={styles.autoBottleCardFooterActionBar}>
+                            <button
+                              type="button"
+                              className="btn neutral"
+                              onClick={() => {
+                                setDetailEditMode(false)
+                                syncDetailDraftFromImage(selectedBottle)
+                              }}>
+                              {t('automaticCancelAction')}
+                            </button>
+                            <button
+                              type="button"
+                              className="btn success"
+                              disabled={isSavingDetail}
+                              onClick={handleSaveBottleDetail}>
+                              {isSavingDetail
+                                ? t('automaticSavingAction')
+                                : t('automaticSaveAction')}
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </section>
+              )
+            })()}
+          </>
+        ) : null}
+        {autoStep === 3 ? (
+          <>
+            <h1 className={styles.autoModeTitleCentered}>{t('automaticPreviewTitle')}</h1>
+            <section className={styles.autoPreviewPageCard}>
+              <div className={styles.autoPreviewPageHeader}>
+                <div className={styles.autoPreviewModalTemplateRow}>
+                  <span className={styles.autoModeQuizTemplateLabel}>
+                    {t('automaticQuizTemplateLabel')}
+                  </span>
+                  <div className={styles.autoModeQuizTemplateSegmented}>
+                    <button
+                      type="button"
+                      className={`${styles.autoModeQuizTemplateButton} ${
+                        quizTemplateMode === 'openai' ? styles.autoModeQuizTemplateButtonActive : ''
+                      }`}
+                      onClick={() => setQuizTemplateMode('openai')}>
+                      {t('automaticQuizTemplateOpenAi')}
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.autoModeQuizTemplateButton} ${
+                        quizTemplateMode === 'standard'
+                          ? styles.autoModeQuizTemplateButtonActive
+                          : ''
+                      }`}
+                      onClick={() => setQuizTemplateMode('standard')}>
+                      {t('automaticQuizTemplateStandard')}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {quizPreview ? (
+                <div className={styles.autoPreviewPageBody}>
+                  <AutoTastingGamePreview
+                    preview={quizPreview}
+                    labels={{
+                      sliderAria: t('automaticPreviewBottles'),
+                      bottles: t('automaticPreviewBottles'),
+                      bottle: t('automaticPreviewBottleLabel'),
+                      of: t('automaticPreviewOf'),
+                      question: t('automaticPreviewQuestionLabel'),
+                      questionLabel: t('automaticPreviewQuestionLabel'),
+                      producerMissing: t('automaticPreviewProducerMissing'),
+                      yearMissing: t('automaticPreviewYearMissing'),
+                      unnamedBottle: t('automaticPreviewUnnamedBottle'),
+                      loadingBottle: t('automaticPreviewLoadingBottle'),
+                    }}
+                  />
+                </div>
+              ) : null}
+            </section>
+          </>
+        ) : null}
 
         {webSearchReview ? (
           <div
@@ -2799,21 +3448,31 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                     <button
                       key={diff.key}
                       type="button"
-                      className={`${styles.autoDiffItem} ${
-                        checked ? styles.autoDiffItemSelected : ''
-                      }`}
+                      className={`${styles.autoDiffItem} ${checked ? styles.autoDiffItemSelected : ''}`}
                       disabled={isApplyingWebDiff}
-                      onClick={() =>
+                      onClick={() => {
+                        if (isApplyingWebDiff) return
                         setWebSearchReview((prev) => {
                           if (!prev) return prev
-                          const nextSelected = checked
-                            ? prev.selectedFields.filter((field) => field !== diff.key)
-                            : [...prev.selectedFields, diff.key]
-                          return {...prev, selectedFields: nextSelected}
+                          const alreadySelected = prev.selectedFields.includes(diff.key)
+                          return {
+                            ...prev,
+                            selectedFields: alreadySelected
+                              ? prev.selectedFields.filter((key) => key !== diff.key)
+                              : [...prev.selectedFields, diff.key],
+                          }
                         })
-                      }>
+                      }}>
                       <div className={styles.autoDiffItemContent}>
-                        <strong>{diff.label}</strong>
+                        <div className={styles.autoDiffItemHeaderRow}>
+                          <strong>{diff.label}</strong>
+                          <span
+                            className={
+                              checked ? styles.autoDiffSelectedPill : styles.autoDiffUnselectedPill
+                            }>
+                            {checked ? t('selected') : t('unselected')}
+                          </span>
+                        </div>
                         <div className={styles.autoDiffColumns}>
                           <div className={styles.autoDiffColumn}>
                             <span>{t('automaticCurrentValueLabel')}</span>
@@ -2833,13 +3492,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
               <div className={styles.autoDiffSheetFooter}>
                 <button
                   type="button"
-                  className="btn  neutral"
-                  onClick={() => {
-                    setLastWebSearchReview(webSearchReview)
-                    setWebSearchReview(null)
-                  }}
-                  disabled={isApplyingWebDiff}>
-                  {t('skip')}
+                  className="btn neutral"
+                  onClick={() => setWebSearchReview(null)}>
+                  {t('close')}
                 </button>
                 <button
                   type="button"
@@ -2854,659 +3509,53 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
             </div>
           </div>
         ) : null}
-
-        <section className={styles.autoModeEmptyState}>
-          <strong>{t('automaticBottlesTitle')}</strong>
-          <div className={styles.autoModeMetricsGrid}>
-            <div className={`${styles.autoModeMetricCard} ${styles.autoModeMetricCardCredits}`}>
-              <span className={styles.autoModeMetricLabel}>
-                <div
-                  className={styles.autoModeMetricLabelIconWrapper + ' ' + styles.metricCardToken}>
-                  <Icon src="/icons/token.svg" size={36} className={styles.autoModeMetricIcon} />
-                </div>
-                {t('automaticMetricCreditsLabel')}
-              </span>
-              <strong className={styles.autoModeMetricValue}>{aiScanCredits.remaining}</strong>
-              <span className={styles.autoModeMetricMeta}>
-                {t('automaticMetricCreditsMeta', {
-                  used: String(aiScanCredits.used),
-                  total: String(aiScanCredits.available),
-                })}
-              </span>
-            </div>
-            <div className={`${styles.autoModeMetricCard} ${styles.autoModeMetricCardBottles}`}>
-              <span className={styles.autoModeMetricLabel}>
-                <div
-                  className={styles.autoModeMetricLabelIconWrapper + ' ' + styles.metricCardBottle}>
-                  <Icon src="/icons/bottle.svg" size={36} className={styles.autoModeMetricIcon} />
-                </div>
-                {t('automaticMetricBottlesLabel')}
-              </span>
-
-              <strong className={styles.autoModeMetricValue}>{uploadedImages.length}</strong>
-              <span className={styles.autoModeMetricMeta}>
-                {t('automaticMetricBottlesMeta', {
-                  analyzed: analyzedImagesCount,
-                  total: uploadedImages.length,
-                })}
-              </span>
-            </div>
-            <div className={`${styles.autoModeMetricCard} ${styles.autoModeMetricCardTokens}`}>
-              <span className={styles.autoModeMetricLabel}>
-                <div
-                  className={styles.autoModeMetricLabelIconWrapper + ' ' + styles.metricCardToken}>
-                  <Icon src="/icons/token.svg" size={36} className={styles.autoModeMetricIcon} />
-                </div>
-                {t('automaticMetricTokensLabel')}
-              </span>
-              <strong className={styles.autoModeMetricValue}>{autoTastingTokenTotals.total}</strong>
-              <span className={styles.autoModeMetricMeta}>
-                {t('automaticMetricTokensMeta', {
-                  vision: autoTastingTokenTotals.vision,
-                  web: autoTastingTokenTotals.web,
-                })}
-              </span>
-            </div>
-            <div className={`${styles.autoModeMetricCard} ${styles.autoModeMetricCardCost}`}>
-              <span className={styles.autoModeMetricLabel}>
-                <div
-                  className={styles.autoModeMetricLabelIconWrapper + ' ' + styles.metricCardCost}>
-                  <Icon src="/icons/dollar.svg" size={36} className={styles.autoModeMetricIcon} />
-                </div>
-                {t('automaticMetricCostLabel')}
-              </span>
-              <strong className={styles.autoModeMetricValue}>
-                {formatEstimatedCost(autoTastingTokenTotals.cost) || '—'}
-              </strong>
-              <span className={styles.autoModeMetricMeta}>
-                {uploadedImages.length > 0
-                  ? t('automaticMetricCostMeta', {
-                      average:
-                        formatEstimatedCost(autoTastingTokenTotals.cost / uploadedImages.length) ||
-                        '—',
-                    })
-                  : t('automaticMetricCostMetaEmpty')}
-              </span>
-            </div>
-          </div>
-          {uploadedImages.length === 0 ? (
-            <p className={styles.autoModeEmptyCopy}>{t('automaticBottlesEmpty')}</p>
-          ) : (
-            <ul className={styles.autoModeUploadedList}>
-              {uploadedImages.map((image) => {
-                const details = image.recognized_payload?.catalog_details || {}
-                const country = localizeCountryLabel(details?.country, lang)
-                const region = details
-                  ? localizeRegionLabel(inferRegion(details, image) || details?.region, lang) ||
-                    null
-                  : null
-                const appellation = localizeAppellationLabel(
-                  details?.quiz_appellation || details?.appellation,
-                  lang,
-                )
-                const wineType = mapWineTypeLabel(details?.type, lang)
-                const primaryGrape =
-                  (Array.isArray(details?.grapes) && details.grapes.length > 0
-                    ? details.grapes[0]
-                    : null) || null
-                const priceBand = details?.quiz_price_band || details?.price_band || null
-                const recognizedTitle = image.recognized_name || image.original_filename || '-'
-                const recognizedSubtitle = [image.recognized_producer, image.recognized_vintage]
-                  .filter(Boolean)
-                  .join(' | ')
-                const isProcessingThis = image.status === 'processing'
-                const confidencePercent = toConfidencePercent(image.recognition_confidence)
-                // const countryCode = getCountryCode(country)
-                const countryFlag = getCountryFlag(country)
-                const isAnalyzingThis = analyzingImageId === image.id
-                const hasCatalogDetails = Object.keys(details).length > 0
-                const hasRecognitionData =
-                  hasCatalogDetails ||
-                  !!image.recognized_name ||
-                  !!image.recognized_producer ||
-                  !!image.recognized_vintage ||
-                  image.status === 'recognized'
-                const hasVision =
-                  image.recognized_payload?.provider === 'openai_vision' ||
-                  String(image.recognized_payload?.extractor || '').startsWith('openai-vision')
-                const hasMatch = !!image.recognized_payload?.catalog_match?.matched
-                const hasCatalogSync = !!image.recognized_payload?.catalog_sync?.synced
-                const hasCatalogPresence = hasMatch || hasCatalogSync
-                const webEnrichmentMeta = image.recognized_payload?.web_enrichment || {}
-                const hasWebEnrichment = !!webEnrichmentMeta?.applied
-                const hasWebSources =
-                  Array.isArray(webEnrichmentMeta?.sources) && webEnrichmentMeta.sources.length > 0
-                const hasWebNarrative = !!details?.why_notable || !!details?.short_description
-                const hasWebRestored = !!webEnrichmentMeta?.restored_from_catalog
-                const hasRestoredWebData = hasWebRestored && !hasWebEnrichment
-                const hasWebEvidence =
-                  hasWebEnrichment || hasWebSources || hasWebNarrative || hasWebRestored
-                const requiresReview = !!image.recognized_payload?.review?.required
-                const isVerified = !!image.recognized_payload?.verification?.verified
-                const webSearchError = image.recognized_payload?.web_enrichment?.error || null
-                const webSearchSkippedReason =
-                  image.recognized_payload?.web_enrichment?.skipped &&
-                  image.recognized_payload?.web_enrichment?.reason
-                    ? image.recognized_payload.web_enrichment.reason
-                    : null
-                const tokenUsage = getTokenUsageFromImage(
-                  image,
-                  webPreviewUsageByImageId[image.id] || null,
-                )
-                const isVerifyingThis = verifyingImageId === image.id
-                const isWebSearchingThis = webSearchingImageId === image.id
-                const resolvedQuizValues = getResolvedQuizValuesForImage(image, quizPreview, lang)
-                const resolvedQuizDisplayValues =
-                  resolvedQuizValues.length > 0
-                    ? resolvedQuizValues
-                    : [
-                        details.country || '-',
-                        inferRegion(details, image) || '-',
-                        primaryGrape,
-                        image.recognized_vintage || '-',
-                      ].filter(Boolean)
-                const webSources = hasWebSources ? webEnrichmentMeta.sources.filter(Boolean) : []
-                const localizedWhyNotable = localizeNarrativeText(details?.why_notable, lang)
-                const localizedShortDescription = localizeNarrativeText(
-                  details?.short_description,
-                  lang,
-                )
-                const webStatusMessage = isWebSearchingThis
-                  ? t('automaticWebSearchingAction')
-                  : webSearchError
-                    ? webSearchError
-                    : hasWebEnrichment
-                      ? t('automaticWebSearchSuccess')
-                      : hasRestoredWebData
-                        ? t('automaticWebCatalogSuccess')
-                        : webSearchSkippedReason === 'catalog_sync_found'
-                          ? t('automaticWebSearchSkippedCatalogSynced')
-                          : webSearchSkippedReason === 'already_enriched'
-                            ? t('automaticWebSearchSkippedAlreadyEnriched')
-                            : webSearchSkippedReason === 'catalog_match_found'
-                              ? t('automaticWebSearchSkippedCatalogMatch')
-                              : null
-                const bottleSpecItems = [
-                  primaryGrape ? {label: t('automaticQuestionGrape'), value: primaryGrape} : null,
-                  details.price_min != null && details.price_max != null
-                    ? {
-                        label:
-                          t('automaticPriceLabel') +
-                          (details.currency ? ` ${details.currency}` : ' EUR'),
-                        value: `${details.price_min} - ${details.price_max}`,
-                      }
-                    : details.average_price != null || details.price != null
-                      ? {
-                          label: t('automaticPriceLabel'),
-                          value: `${details.average_price ?? details.price}${details.currency ? ` ${details.currency}` : ' EUR'}`,
-                        }
-                      : null,
-                  details.average_price != null || details.price != null
-                    ? {
-                        label: t('automaticMediumPriceLabel'),
-                        value: normalizePriceAnswer(details.average_price ?? details.price),
-                      }
-                    : null,
-                  priceBand ? {label: t('automaticQuestionPrice'), value: priceBand} : null,
-                  details.body
-                    ? {
-                        label: t('automaticQuestionBody'),
-                        value: normalizeBodyForQuiz(details.body, lang),
-                      }
-                    : null,
-                  details.acidity
-                    ? {
-                        label: t('automaticQuestionAcidity'),
-                        value: normalizeAcidityForQuiz(details.acidity, lang),
-                      }
-                    : null,
-                  details.harmony || details.harmonize
-                    ? {
-                        label: t('automaticQuestionHarmony'),
-                        value: normalizeHarmonyForQuiz(details.harmony || details.harmonize, lang),
-                      }
-                    : null,
-                ].filter(Boolean)
-                const previewFailed = failedPreviewIds.includes(image.id)
-
-                return (
-                  <li
-                    key={image.id}
-                    className={`${styles.autoBottleCard} ${isAnalyzingThis ? styles.autoBottleCardAnalyzing : ''}`}>
-                    <AnalyzeMagicOverlay
-                      active={isAnalyzingThis}
-                      className={styles.autoBottleCardMagicCanvas}
-                    />
-                    <div
-                      className={`${styles.autoBottleCardBody} ${!hasRecognitionData ? styles.autoBottleCardBodyPending : ''}`}>
-                      <div className={styles.autoBottleCardMediaCol}>
-                        <div className={styles.autoBottleCardPreviewWrap}>
-                          {deletingImageId === image.id ? (
-                            <span
-                              className={`${styles.autoDeleteState} ${styles.autoBottleDeleteState}`}>
-                              {t('automaticDeleting')}
-                            </span>
-                          ) : (
-                            <button
-                              type="button"
-                              className={`btn danger-negative btn-circle btn-with-icon-end ${styles.autoBottleDeleteButton}`}
-                              disabled={!!deletingImageId || !!analyzingImageId || isAnalyzingAll}
-                              aria-label={`${t('automaticDeleteAction')} ${image.original_filename || image.storage_path}`}
-                              onClick={() => handleDeleteImage(image.id)}>
-                              <Icon src="/icons/bucket.svg" size={24} className="btn-icon-big" />
-                            </button>
-                          )}
-                          <Image
-                            src={image.clientPreviewUrl || `/api/auto-tasting/image?id=${image.id}`}
-                            alt={image.original_filename || image.storage_path}
-                            className={styles.autoBottleCardPreview}
-                            fill
-                            unoptimized
-                            sizes="(max-width: 520px) 100vw, 360px"
-                            onLoad={() => markPreviewLoaded(image.id)}
-                            onError={() => {
-                              handlePreviewImageError(image.id).catch(() => markPreviewError(image.id))
-                            }}
-                          />
-                          {previewFailed ? (
-                            <div className={styles.autoBottlePreviewFallback}>
-                              <strong>{image.original_filename || 'Immagine caricata'}</strong>
-                              <span>Anteprima non disponibile su questo dispositivo</span>
-                            </div>
-                          ) : null}
-                        </div>
-                      </div>
-
-                      {hasRecognitionData ? (
-                        <div className={styles.autoBottleCardInfoCol}>
-                          <div className={styles.autoModeUploadedBadges}>
-                            {hasVision && (
-                              <span className={styles.autoModeFeatureBadge}>
-                                <Icon
-                                  src="/icons/vision.svg"
-                                  size={16}
-                                  className={styles.autoModeFeatureIcon}
-                                />
-                                {t('automaticVisionBadge')}
-                              </span>
-                            )}
-                            {hasCatalogPresence && (
-                              <span className={styles.autoModeFeatureBadge}>
-                                <Icon
-                                  src="/icons/match.svg"
-                                  size={16}
-                                  className={styles.autoModeFeatureIcon}
-                                />
-                                {t('automaticCatalogBadge')}
-                              </span>
-                            )}
-                            {hasWebEnrichment && (
-                              <span className={styles.autoModeFeatureBadge}>
-                                <Icon
-                                  src="/icons/vision.svg"
-                                  size={16}
-                                  className={styles.autoModeFeatureIcon}
-                                />
-                                {t('automaticWebBadge')}
-                              </span>
-                            )}
-                            {!hasWebEnrichment && hasRestoredWebData && (
-                              <span className={styles.autoModeFeatureBadge}>
-                                <Icon
-                                  src="/icons/share.svg"
-                                  size={16}
-                                  className={styles.autoModeFeatureIcon}
-                                />
-                                {t('automaticWebCatalogBadge')}
-                              </span>
-                            )}
-                            {requiresReview && (
-                              <span className={styles.autoModeFeatureBadge}>
-                                <Icon
-                                  name="checkWarning"
-                                  size={16}
-                                  className={styles.autoModeFeatureIcon}
-                                />
-                                {t('automaticReviewBadge')}
-                              </span>
-                            )}
-                            {isVerified && (
-                              <span className={styles.autoModeFeatureBadge}>
-                                <Icon
-                                  src="/icons/match.svg"
-                                  size={16}
-                                  className={styles.autoModeFeatureIcon}
-                                />
-                                {t('automaticVerifiedBadge')}
-                              </span>
-                            )}
-                            {hasCatalogSync && (
-                              <span className={styles.autoModeFeatureBadge}>
-                                <Icon
-                                  src="/icons/redo.svg"
-                                  size={16}
-                                  className={styles.autoModeFeatureIcon}
-                                />
-                                {t('automaticCatalogSyncedBadge')}
-                              </span>
-                            )}
-                            {confidencePercent != null && (
-                              <span className={styles.autoBottleConfidencePill}>
-                                {confidencePercent}%
-                              </span>
-                            )}
-                            {tokenUsage.total > 0 && (
-                              <span className={styles.autoBottleMetaPill}>
-                                {t('automaticTokenUsageValue', {
-                                  total: tokenUsage.total,
-                                  vision: tokenUsage.vision,
-                                  web: tokenUsage.web,
-                                })}
-                              </span>
-                            )}
-                            {tokenUsage.cost > 0 && (
-                              <span className={styles.autoBottleMetaPill}>
-                                {t('automaticEstimatedCostValue', {
-                                  cost: formatEstimatedCost(tokenUsage.cost),
-                                })}
-                              </span>
-                            )}
-                          </div>
-
-                          <p className={styles.autoBottleFoundName}>{recognizedTitle}</p>
-
-                          {recognizedSubtitle ? (
-                            <p className={styles.autoBottleCardSubtitle}>{recognizedSubtitle}</p>
-                          ) : null}
-
-                          {hasCatalogDetails ? (
-                            <div className={styles.autoBottleCardFacts}>
-                              {[
-                                country
-                                  ? {
-                                      value: country,
-                                      withFlag: true,
-                                    }
-                                  : null,
-                                region ? {value: region} : null,
-                                appellation ? {value: appellation} : null,
-                                wineType ? {value: wineType} : null,
-                                primaryGrape ? {value: primaryGrape} : null,
-                              ]
-                                .filter(Boolean)
-                                .map((item, index) => (
-                                  <span
-                                    key={`${image.id}-fact-${index}`}
-                                    className={styles.autoBottleFactChip}>
-                                    {item.withFlag && countryFlag ? (
-                                      <span className={styles.autoBottleCountryBadge}>
-                                        <span aria-hidden="true">{countryFlag}</span>
-                                      </span>
-                                    ) : null}
-                                    <span>{item.value}</span>
-                                  </span>
-                                ))}
-                            </div>
-                          ) : null}
-
-                          {hasCatalogDetails && (
-                            <div className={styles.autoBottleCardDataBlock}>
-                              {bottleSpecItems.length > 0 ? (
-                                <div className={styles.autoBottleSectionBlock}>
-                                  <p className={styles.autoBottleSectionTitle}>
-                                    {t('automaticBottleSpecsLabel')}
-                                  </p>
-                                  <div className={styles.autoBottleSpecGrid}>
-                                    {bottleSpecItems.map((item) => (
-                                      <div
-                                        key={`${image.id}-${item.label}`}
-                                        className={styles.autoBottleSpecCard}>
-                                        <span className={styles.autoBottleSpecLabel}>
-                                          {item.label}
-                                        </span>
-                                        <strong className={styles.autoBottleSpecValue}>
-                                          {item.value}
-                                        </strong>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              ) : null}
-                              <div className={styles.autoBottleSectionBlock}>
-                                <p className={styles.autoBottleCardDataRow}>
-                                  <span className={styles.autoBottleDataLabel}>
-                                    <span className={styles.autoBottleDataLabelIconWrapper}>
-                                      <Icon
-                                        src="/icons/bolt.svg"
-                                        size={20}
-                                        className={styles.icon}
-                                      />
-                                    </span>
-                                    <strong>{t('automaticQuizResolvedLabel')}:</strong>
-                                  </span>
-                                </p>
-                                <div className={styles.autoBottleResolvedGrid}>
-                                  {resolvedQuizDisplayValues.map((value, index) => (
-                                    <span
-                                      key={`${image.id}-resolved-${index}`}
-                                      className={styles.autoBottleResolvedChip}>
-                                      {value}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-
-                              <p className={styles.autoBottleCardDataRow}>
-                                <span className={styles.autoBottleDataLabel}>
-                                  <span className={styles.autoBottleDataLabelIconWrapper}>
-                                    <Icon src="/icons/quiz.svg" size={20} className={styles.icon} />
-                                  </span>
-                                  <strong>{t('automaticQuizDataLabel')}:</strong>
-                                </span>{' '}
-                              </p>
-                              <div className={styles.autoBottleQuickFacts}>
-                                {[
-                                  country,
-                                  region,
-                                  wineType,
-                                  image.recognized_vintage,
-                                  ...(Array.isArray(details.grapes) && details.grapes.length > 0
-                                    ? details.grapes
-                                    : []),
-                                  details.price_min != null && details.price_max != null
-                                    ? `${t('automaticPriceLabel')}: ${details.price_min}-${details.price_max}${details.currency ? ` ${details.currency}` : ' EUR'}`
-                                    : details.average_price != null || details.price != null
-                                      ? `${t('automaticPriceLabel')}: ${details.average_price ?? details.price}${details.currency ? ` ${details.currency}` : ' EUR'}`
-                                      : null,
-                                  details.average_price != null || details.price != null
-                                    ? `${t('automaticMediumPriceLabel')}: ${normalizePriceAnswer(details.average_price ?? details.price)}`
-                                    : null,
-                                  priceBand ? `${t('automaticQuestionPrice')}: ${priceBand}` : null,
-                                  details.body ||
-                                  details.acidity ||
-                                  details.harmony ||
-                                  details.harmonize
-                                    ? [
-                                        normalizeBodyForQuiz(details.body, lang),
-                                        normalizeAcidityForQuiz(details.acidity, lang),
-                                        normalizeHarmonyForQuiz(
-                                          details.harmony || details.harmonize,
-                                          lang,
-                                        ),
-                                      ]
-                                        .filter(Boolean)
-                                        .join(' / ')
-                                    : null,
-                                ]
-                                  .filter(Boolean)
-                                  .map((item, index) => (
-                                    <span
-                                      key={`${image.id}-quick-${index}`}
-                                      className={styles.autoBottleQuickFactChip}>
-                                      {item}
-                                    </span>
-                                  ))}
-                              </div>
-
-                              {localizedWhyNotable ? (
-                                <div className={styles.autoBottleNarrativeCard}>
-                                  <p className={styles.autoBottleCardDataRow}>
-                                    <span className={styles.autoBottleDataLabel}>
-                                      <span className={styles.autoBottleDataLabelIconWrapper}>
-                                        <Icon src="/icons/book.svg" size={20} />
-                                      </span>
-                                      <strong>{t('automaticQuestionNotable')}:</strong>
-                                    </span>
-                                  </p>
-                                  <p className={styles.autoBottleNarrativeText}>
-                                    {localizedWhyNotable}
-                                  </p>
-                                </div>
-                              ) : null}
-                              {localizedShortDescription ? (
-                                <div className={styles.autoBottleNarrativeCard}>
-                                  <p className={styles.autoBottleCardDataRow}>
-                                    <span className={styles.autoBottleDataLabel}>
-                                      <span className={styles.autoBottleDataLabelIconWrapper}>
-                                        <Icon src="/icons/web.svg" size={20} />
-                                      </span>
-                                      <strong>{t('automaticWebSummaryLabel')}:</strong>
-                                    </span>
-                                  </p>
-                                  <p className={styles.autoBottleNarrativeText}>
-                                    {localizedShortDescription}
-                                  </p>
-                                </div>
-                              ) : null}
-                              {webSources.length > 0 ? (
-                                <details className={styles.autoBottleAccordion}>
-                                  <summary className={styles.autoBottleAccordionSummary}>
-                                    <Icon src="/icons/web.svg" size={16} />
-                                    <strong>{t('automaticWebSourcesLabel')}:</strong>
-                                  </summary>
-                                  <div className={styles.autoBottleAccordionBody}>
-                                    {webSources.map((source) => (
-                                      <a
-                                        key={`${image.id}-${source}`}
-                                        href={source}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className={styles.autoBottleSourceLink}>
-                                        {source}
-                                      </a>
-                                    ))}
-                                  </div>
-                                </details>
-                              ) : null}
-                              {(image.error_message || webSearchError) && (
-                                <span
-                                  className={`${styles.autoModeUploadedError} ${styles.autoBottleInlineStatus}`}>
-                                  {webSearchError || image.error_message}
-                                </span>
-                              )}
-                              {webStatusMessage && !webSearchError ? (
-                                <span
-                                  className={`${styles.autoModeUploadedError} ${styles.autoBottleInlineStatus}`}>
-                                  {webStatusMessage}
-                                </span>
-                              ) : null}
-                              {lastWebSearchReview?.imageId === image.id && !webSearchReview ? (
-                                <button
-                                  type="button"
-                                  className={styles.autoBottleInlineLinkButton}
-                                  onClick={() => setWebSearchReview(lastWebSearchReview)}>
-                                  <Icon src="/icons/web.svg" size={16} />
-                                  <span>{t('automaticWebDiffReopenAction')}</span>
-                                </button>
-                              ) : null}
-                            </div>
-                          )}
-                        </div>
-                      ) : null}
-                    </div>
-
-                    <div className={styles.autoBottleCardFooterActionBar}>
-                      <button
-                        type="button"
-                        className="btn btn-ai btn-medium btn-with-icon-end"
-                        disabled={
-                          isAnalyzingAll ||
-                          !!analyzingImageId ||
-                          !!deletingImageId ||
-                          !!verifyingImageId ||
-                          !!webSearchingImageId ||
-                          !canAnalyzeSingle
-                        }
-                        onClick={() => handleAnalyzeImage(image.id)}>
-                        <Icon src="/icons/bolt.svg" size={36} className="btn-icon-big" />
-                        {isAnalyzingThis
-                          ? t('automaticAnalyzingSingle')
-                          : hasRecognitionData
-                            ? t('automaticAnalyzeAgainAction')
-                            : t('automaticAnalyzeAction')}
-                      </button>
-                      <button
-                        type="button"
-                        className={styles.autoBottleInlineInfoButton}
-                        onClick={() => setIsCreditsInfoOpen(true)}>
-                        {t('automaticCreditsInfoAction')}
-                      </button>
-                      {hasRecognitionData ? (
-                        <button
-                          type="button"
-                          className="btn quaternary btn-medium btn-with-icon-end"
-                          disabled={
-                            !!deletingImageId ||
-                            !!analyzingImageId ||
-                            isAnalyzingAll ||
-                            !!verifyingImageId ||
-                            !!webSearchingImageId ||
-                            !canRunWebSearch ||
-                            isProcessingThis
-                          }
-                          onClick={() => handleWebSearchImage(image.id)}>
-                          <Icon src="/icons/web.svg" size={32} className="btn-icon-big" />
-                          {isWebSearchingThis
-                            ? t('automaticWebSearchingAction')
-                            : t('automaticWebSearchAction')}
-                        </button>
-                      ) : null}
-                    </div>
-
-                    <div className={styles.autoBottleCardFooterActionBar}>
-                      {hasRecognitionData ? (
-                        <button
-                          type="button"
-                          className="btn success btn-medium btn-with-icon-end"
-                          disabled={
-                            !!deletingImageId ||
-                            !!analyzingImageId ||
-                            isAnalyzingAll ||
-                            !!verifyingImageId ||
-                            !!webSearchingImageId ||
-                            isProcessingThis
-                          }
-                          onClick={() => handleVerifyImage(image.id)}>
-                          <Icon
-                            src={isVerified ? '/icons/redo.svg' : '/icons/save.svg'}
-                            size={36}
-                            className="btn-icon-big"
-                          />
-                          {isVerifyingThis
-                            ? t('automaticSavingCatalogAction')
-                            : isVerified
-                              ? t('automaticUpdateCatalogAction')
-                              : t('automaticSaveCatalogAction')}
-                        </button>
-                      ) : null}
-                    </div>
-                  </li>
-                )
-              })}
-            </ul>
-          )}
-        </section>
       </main>
+
+      {autoStep === 1 && uploadedImages.length > 0 ? (
+        <div className={styles.autoStepFixedRow}>
+          <button
+            type="button"
+            className="btn success"
+            disabled={
+              pendingAnalyzeCount > 0
+                ? !canAnalyzeAll || isUploading || !!analyzingImageId || isAnalyzingAll
+                : false
+            }
+            onClick={
+              pendingAnalyzeCount > 0 ? handleAnalyzeAll : () => setAutoStep(2)
+            }>
+            {isAnalyzingAll
+              ? t('automaticAnalyzingAll')
+              : pendingAnalyzeCount > 0
+                ? t('automaticAnalyzeActionWithCount', {count: String(pendingAnalyzeCount)})
+                : t('continue')}
+          </button>
+        </div>
+      ) : null}
+
+      {autoStep === 2 && !selectedBottle ? (
+        <div className={styles.autoStepFixedRow}>
+          <button
+            type="button"
+            className="btn success"
+            disabled={!quizPreview || isCreatingQuiz || recognizedBottleCount === 0}
+            onClick={() => setAutoStep(3)}>
+            {t('automaticCreateQuestionnaireAction')}
+          </button>
+        </div>
+      ) : null}
+
+      {autoStep === 3 ? (
+        <div className={styles.autoStepFixedRow}>
+          <button
+            type="button"
+            className="btn success"
+            disabled={isCreatingQuiz || !quizPreview}
+            onClick={handleCreateQuickQuiz}>
+            {isCreatingQuiz ? t('automaticCreatingQuiz') : t('automaticSaveAction')}
+          </button>
+        </div>
+      ) : null}
     </PageLayout>
   )
 }

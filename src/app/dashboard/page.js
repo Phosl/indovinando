@@ -63,7 +63,7 @@ export default async function Dashboard() {
     <main className={styles.dashboard}>
       <div className={styles.container}>
         <section className={styles.arcadeHero}>
-          <Image src="/logo.svg" alt="Indovinando Logo" className={styles.logo} width={320} height={96} priority />
+          {/* <Image src="/logo.svg" alt="Indovinando Logo" className={styles.logo} width={320} height={96} priority /> */}
           <div className={styles.welcomeTextContainer}>
             <h1>
               {dashboardDict.welcome}, {isSuperAdmin ? 'Supremo' : ''}{' '}
@@ -126,7 +126,9 @@ export default async function Dashboard() {
             href="/classifiche"
             className={`${styles.sectionCard} ${styles.sectionCardTertiary} ${styles.sectionCardBottomArrow}`}>
             <div className={styles.sectionCardInfo}>
-              <span className={styles.sectionCardEyebrow}>{dashboardDict.communityEyebrow || 'Community'}</span>
+              <span className={styles.sectionCardEyebrow}>
+                {dashboardDict.communityEyebrow || 'Community'}
+              </span>
               <h3>{dashboardDict.rankingsTitle || 'Classifiche pubbliche'}</h3>
               <p>
                 {dashboardDict.rankingsDescription ||

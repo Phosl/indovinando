@@ -143,3 +143,6 @@ Riferimento:
 - [ ] Ripulire naming e copy del flusso `gioco solo`
 - [ ] Decidere se tenere o dismettere il percorso solo separato
 - [ ] Valutare se la home/profilo devono mostrare il widget community anche come teaser leggero
+
+## Next Up
+- [ ] riordinare domande e bottiglie con drag&drop

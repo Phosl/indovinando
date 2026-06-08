@@ -163,8 +163,8 @@ export default function GamePlayView({
       )}
 
       {isReadyToPlay && (
-        <div className={styles.card}>
-          <div className={styles.bottleHeader}>
+        <div>
+          {/* <div className={styles.bottleHeader}>
             <span className={styles.questionNumberGeneral}>
               {text.bottle} {activeBottleIndex + 1} {text.bottleCounterOf} {bottles.length}
             </span>
@@ -172,7 +172,7 @@ export default function GamePlayView({
             <p>
               {activeBottle?.producer || text.producerMissing} - {activeBottle?.year || text.yearNA}
             </p>
-          </div>
+          </div> */}
 
           <div className={styles.questionsList}>
             {questions.map((q, idx) => {
@@ -194,11 +194,7 @@ export default function GamePlayView({
                         <div
                           key={opt.id}
                           className={`${styles.option} ${
-                            hasCorrectOption
-                              ? isCorrect
-                                ? styles.correct
-                                : styles.wrong
-                              : ''
+                            hasCorrectOption ? (isCorrect ? styles.correct : styles.wrong) : ''
                           }`}>
                           {hasCorrectOption ? (
                             <Icon
