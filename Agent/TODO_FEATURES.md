@@ -18,9 +18,10 @@ Roadmap operativa da seguire step by step.
 - [x] Branding degustazioni
 - [x] Landing partner + burger menu pubblico
 - [x] Crediti analisi AI v1
-- [ ] Classifiche pubbliche
-- [ ] Widget community
-- [ ] Statistiche globali
+- [x] Classifiche pubbliche
+- [x] Widget community
+- [x] Statistiche globali
+- [x] Multiplayer semplificato come flusso principale
 
 ---
 
@@ -64,32 +65,53 @@ Riferimento:
 
 ### Step 4 — widget community
 
-- [ ] Creare card riusabile `Community`
-- [ ] Mostrare:
-  - [ ] miglior vino alla cieca
-  - [ ] vino più sorprendente
-  - [ ] miglior Q/P
-  - [ ] CTA `Esplora`
-- [ ] Collegare il widget a `/classifiche`
-- [ ] Inserire il widget in:
-  - [ ] dashboard
-  - [ ] landing
-  - [ ] profilo
+- [x] Creare card riusabile `Community`
+- [x] Mostrare:
+  - [x] miglior vino alla cieca
+  - [x] vino più sorprendente
+  - [x] miglior Q/P
+  - [x] CTA `Esplora`
+- [x] Collegare il widget a `/classifiche`
+- [x] Inserire il widget in:
+  - [x] dashboard
+  - [x] landing
+  - [x] profilo
   - [ ] home
 
 ### Step 5 — statistiche globali
 
-- [ ] Definire le formule per:
-  - [ ] degustazioni totali
-  - [ ] vini degustati
-  - [ ] valutazioni totali
-  - [ ] utenti attivi
-- [ ] Definire cosa significa `utente attivo`
-- [ ] Creare helper server-side unico per leggere queste metriche
-- [ ] Mostrare le statistiche in:
-  - [ ] landing
-  - [ ] pagina classifiche
+- [x] Definire le formule per:
+  - [x] degustazioni totali
+  - [x] vini analizzati da Indovinando AI
+  - [x] valutazioni totali
+  - [x] utenti attivi
+- [x] Definire cosa significa `utente attivo`
+- [x] Creare helper server-side unico per leggere queste metriche
+- [x] Mostrare le statistiche in:
+  - [x] landing
+  - [x] pagina classifiche
   - [ ] dashboard
+
+---
+
+## Blocco attuale: semplificazione flussi di gioco
+
+### Step 1 — multiplayer come flusso principale
+
+- [x] Nascondere `Live` dalla pagina `Scegli modalità`
+- [x] Rendere `Avvia una partita` un accesso diretto al multiplayer
+- [x] Trasformare `/game/[id]/mode` in redirect verso multiplayer
+- [x] Nascondere la bottom nav nella pagina multiplayer setup
+- [x] Togliere lo step manuale `Titolo evento`
+- [x] Usare il nome degustazione come titolo evento automatico
+- [x] Creare automaticamente link e QR se l'evento non esiste
+- [x] Rendere più robusta la stampa QR
+
+### Step 2 — convergenza dei nomi e dei percorsi
+
+- [ ] Ripulire i riferimenti residui a `Enoteca` dove il flusso è ormai “gioco solo”
+- [ ] Valutare se tenere ancora il flusso solo come route nascosta o dismetterlo
+- [ ] Riallineare eventuali back/entry secondari ancora pensati per `mode`
 
 ---
 
@@ -118,6 +140,6 @@ Riferimento:
 
 ## Prossima azione concreta
 
-- [x] Definire e collegare le statistiche globali reali a landing, `/classifiche` e dashboard
-- [x] Rifinire copy e note della pagina `/classifiche` sui dati reali
-- [x] Alleggerita la dashboard: i numeri community restano su landing e `/classifiche`
+- [ ] Ripulire naming e copy del flusso `gioco solo`
+- [ ] Decidere se tenere o dismettere il percorso solo separato
+- [ ] Valutare se la home/profilo devono mostrare il widget community anche come teaser leggero

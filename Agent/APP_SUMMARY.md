@@ -55,7 +55,6 @@
 - Community widget riusabile collegato agli stessi dati di `/classifiche`, mostrato in landing, dashboard e profilo con fallback su `Dati iniziali`.
 - Global community stats now stay on landing and `/classifiche`, with real counts from completed tasting events, AI-analyzed wines from the catalog pipeline, and a 30-day active-users window; the dashboard keeps only the lighter community entry points.
 - Table Live event entry is now split into clearer pages: the event home handles join-code entry, while dedicated `/create` and `/join` pages only ask for nickname + avatar with focused CTAs.
+- Multiplayer launch is now the primary tasting start flow: `Avvia una partita` goes directly to `/game/[id]/table-live`, the old `/mode` page redirects there, the event title is taken automatically from the tasting name, and share link / QR are prepared immediately without a manual setup step.
 - Course progress sync is now resilient to older schemas without `max_score`, and the existing course SQL migration keeps the schema aligned so dashboard counts can reflect synced lesson progress.
 - There is also a safe cleanup SQL for course progress to backfill `max_score`, normalize attempts/completed timestamps, and deduplicate repeated lesson rows before relying on dashboard counts.
-
-- Game start now uses a dedicated `/game/[id]/mode` page instead of an inline modal, reusing the same mode cards for Live, Enoteca, and Tavoli.
