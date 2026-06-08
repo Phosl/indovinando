@@ -43,6 +43,7 @@
   - colors based on CSS vars, preferring `--primary-text` and `--success`
 - Partner public pages now switch chrome by context: logged-out visitors see the landing header, while logged-in users keep the in-app top bar with back navigation.
 - Public landing navigation now uses a fixed header with logo + burger and a full-screen menu overlay.
+- Partner pages and rankings now also support a landing-mode back row under the public header, while logged-in users still keep the in-app back chrome.
 - Auto-tasting now supports scan credits v1: users start with 12 credits, bottle analysis costs 1 credit, web search costs 1 credit, the API blocks when credits run out, and the automatic create-game flow shows remaining credits plus an info panel in UI.
 - Public rankings v1 now lives on `/classifiche` with initial seeded data, global stats header, landing + dashboard entry points, and a clear `Dati iniziali` badge until real community aggregations are ready.
 - Public rankings now also have a real-data mini-spec in `Agent/RANKINGS_DATA_MODEL.md`, with valid sources (`enoteca`, `table-live`), the current limitation of classic `live`, and the recommended model for moving from demo data to real wine rankings.
@@ -52,8 +53,10 @@
 - The real rankings pipeline now has a normalized SQL view, `public_wine_rating_events`, which merges completed `enoteca` and `table-live` tasting events into one wine-level dataset ready for aggregation.
 - The pipeline also now has `public_wine_rankings`, an aggregated rankings view with blind, quality/price, surprising, and divisive scores plus eligibility flags and precomputed ranks.
 - `/classifiche` now reads real ranking data from `public_wine_rankings` when available, while keeping the `Dati iniziali` fallback when the real dataset is still too small.
-- Community widget riusabile collegato agli stessi dati di `/classifiche`, mostrato in landing, dashboard e profilo con fallback su `Dati iniziali`.
-- Global community stats now stay on landing and `/classifiche`, with real counts from completed tasting events, AI-analyzed wines from the catalog pipeline, and a 30-day active-users window; the dashboard keeps only the lighter community entry points.
+- `/classifiche` now links to a public wine detail page on `/classifiche/[wineKey]`, with ranking placements and community metrics for each wine.
+- The reusable community widget now shares the same ranking data, is shown on landing, dashboard and profile, and has been simplified into three cleaner highlight cards.
+- Global community stats now stay on landing and `/classifiche`, with real counts from completed tasting events, a fixed public count for AI-analyzed wines, and a 30-day active-users window; the dashboard keeps only the lighter community entry points.
+- The landing partner section now contains a real Google map for public partners with coordinates plus a horizontal strip of partner cards, instead of a static placeholder block.
 - Table Live event entry is now split into clearer pages: the event home handles join-code entry, while dedicated `/create` and `/join` pages only ask for nickname + avatar with focused CTAs.
 - Multiplayer launch is now the primary tasting start flow: `Avvia una partita` goes directly to `/game/[id]/table-live`, the old `/mode` page redirects there, the event title is taken automatically from the tasting name, and share link / QR are prepared immediately without a manual setup step.
 - Course progress sync is now resilient to older schemas without `max_score`, and the existing course SQL migration keeps the schema aligned so dashboard counts can reflect synced lesson progress.
