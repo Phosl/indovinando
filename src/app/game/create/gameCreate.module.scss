@@ -654,6 +654,66 @@
   }
 }
 
+.autoPreviewPageCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.autoPreviewPageHeader {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.autoPreviewPageBody {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+
+  :global(.prova) {
+    padding: 0;
+    border: 0;
+  }
+}
+
+.autoPreviewPageSpacer {
+  height: 88px;
+  flex: 0 0 88px;
+}
+
+.autoPreviewPageFooter {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: min(100%, 960px);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  background: var(--dark);
+  z-index: 3;
+
+  :global(.btn) {
+    width: 100%;
+    min-width: 170px;
+  }
+
+  :global(.btn.success) {
+    background-color: var(--success);
+    color: var(--white);
+    border-color: var(--success);
+
+    &:hover {
+      background: var(--success-700);
+      border-color: var(--success-700);
+    }
+  }
+}
+
 .autoModeUploadedList {
   margin: 8px 0 0;
   padding: 0;

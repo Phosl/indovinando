@@ -435,6 +435,7 @@
     "playEnoteca": "Enoteca",
     "playTableLive": "Tables & Groups",
     "chooseMode": "Choose mode",
+    "chooseModeDescription": "Choose the mode that best fits the tasting experience you want to start right now.",
     "close": "Close",
     "cancel": "Cancel",
     "printCard": "Print Card",
@@ -477,6 +478,36 @@
         "title": "Let's begin",
         "description": "Ready? Click \"Start\" to begin creating your game.",
         "icon": "🎉"
+      }
+    ]
+  },
+  "automaticOnboarding": {
+    "step": "Step",
+    "of": "of",
+    "back": "Back",
+    "disable": "Do not show again",
+    "next": "Next",
+    "start": "Start",
+    "steps": [
+      {
+        "title": "Take bottle photos",
+        "description": "Take or upload the bottle photos you want to use. The front label is the best place to start.",
+        "icon": "📸"
+      },
+      {
+        "title": "Indovinando AI recognizes them",
+        "description": "We analyze name, producer, vintage, and other useful details to build the questionnaire automatically.",
+        "icon": "🤖"
+      },
+      {
+        "title": "Review the collected data",
+        "description": "If something is missing, you can use web search to recover more information and complete the collected data.",
+        "icon": "📝"
+      },
+      {
+        "title": "Generate the questionnaire",
+        "description": "Once the bottles are ready, generate the quiz automatically and refine it only if you want to.",
+        "icon": "✨"
       }
     ]
   },

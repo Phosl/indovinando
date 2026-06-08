@@ -439,6 +439,7 @@
     "playEnoteca": "Enoteca",
     "playTableLive": "Tavoli e Gruppi",
     "chooseMode": "Scegli modalita",
+    "chooseModeDescription": "Scegli la modalità più adatta al tipo di degustazione che vuoi far partire adesso.",
     "close": "Chiudi",
     "cancel": "Annulla",
     "printCard": "Stampa",
@@ -481,6 +482,36 @@
         "title": "Iniziamo",
         "description": "Sei pronto? Clicca \"Inizia\" per cominciare a creare il tuo gioco.",
         "icon": "🎉"
+      }
+    ]
+  },
+  "automaticOnboarding": {
+    "step": "Passo",
+    "of": "di",
+    "back": "Indietro",
+    "disable": "Non mostrare più",
+    "next": "Avanti",
+    "start": "Inizia",
+    "steps": [
+      {
+        "title": "Fai le foto delle bottiglie",
+        "description": "Scatta o carica le foto delle bottiglie che vuoi usare. Meglio partire dalla fronte etichetta.",
+        "icon": "📸"
+      },
+      {
+        "title": "Indovinando AI le riconosce",
+        "description": "Analizziamo nome, produttore, annata e altri dettagli utili per costruire il questionario in automatico.",
+        "icon": "🤖"
+      },
+      {
+        "title": "Controlla i dati raccolti",
+        "description": "Se qualcosa manca, puoi usare la ricerca web per recuperare più informazioni e completare i dati raccolti.",
+        "icon": "📝"
+      },
+      {
+        "title": "Genera il questionario",
+        "description": "Quando le bottiglie sono pronte, generi il quiz automaticamente e poi lo rifinisci solo se vuoi.",
+        "icon": "✨"
       }
     ]
   },

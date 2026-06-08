@@ -11,9 +11,11 @@ export async function generateMetadata() {
   }
 }
 
-export default async function TableLiveModePage({params}) {
+export default async function TableLiveModePage({params, searchParams}) {
   const supabase = await createServerSupabase()
   const {id: gameId} = await params
+  const resolvedSearchParams = await Promise.resolve(searchParams)
+  const backHref = resolvedSearchParams?.back === 'mode' ? `/game/${gameId}/mode` : `/game/${gameId}`
 
   const {
     data: {user},
@@ -46,6 +48,7 @@ export default async function TableLiveModePage({params}) {
     <TableLiveModeClient
       gameId={game.id}
       gameName={game.name}
+      backHref={backHref}
       branding={getBusinessBranding(ownerProfile || {})}
     />
   )

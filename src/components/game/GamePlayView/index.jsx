@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import {useEffect, useMemo, useState} from 'react'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useT} from '@/lib/i18n/useT'
@@ -10,6 +11,7 @@ import {Button, ButtonLink} from '@/components/ui/Button'
 import {formatAppDate, formatAppDateTime} from '@/lib/dateFormat'
 import {watchMobileViewport} from '@/lib/deviceUtils'
 import {getGamePlayViewText} from '../utils/constants'
+import StartModeOptions from '../StartModeOptions'
 import styles from './GamePlayView.module.scss'
 
 export default function GamePlayView({
@@ -24,7 +26,6 @@ export default function GamePlayView({
   const t = useT('gamePlayViewActions')
   const text = getGamePlayViewText(lang)
   const [activeBottleIndex, setActiveBottleIndex] = useState(0)
-  const [startModalOpen, setStartModalOpen] = useState(false)
   const [historyOpen, setHistoryOpen] = useState(false)
   const [isMobileViewport, setIsMobileViewport] = useState(false)
   const isReadyToPlay = questions.length > 0 && bottles.length > 0
@@ -53,7 +54,17 @@ export default function GamePlayView({
       <div className={styles.card}>
         <div className={styles.gameHeader}>
           {gameAvatar && (
-            <img src={gameAvatar} alt="" aria-hidden="true" className={styles.gameAvatar} />
+            <div className={styles.gameAvatarWrap}>
+              <Image
+                src={gameAvatar}
+                alt=""
+                aria-hidden="true"
+                className={styles.gameAvatar}
+                width={88}
+                height={88}
+              />
+              <p className={styles.gameDateMobile}>{gameDateLabel}</p>
+            </div>
           )}
           <div className={styles.gameHeaderInfo}>
             <div>
@@ -88,12 +99,12 @@ export default function GamePlayView({
         </div>
         <div className={styles.actionsBar}>
           {isReadyToPlay ? (
-            <Button
+            <ButtonLink
+              href={`/game/${game.id}/mode`}
               variant="success"
-              className={`btn-start ${styles.actionBtn}`}
-              onClick={() => setStartModalOpen(true)}>
+              className={`btn-start ${styles.actionBtn}`}>
               {t('startMatch')}
-            </Button>
+            </ButtonLink>
           ) : (
             <div className={styles.setupCtaWrap}>
               <ButtonLink
@@ -207,57 +218,6 @@ export default function GamePlayView({
                 </div>
               )
             })}
-          </div>
-        </div>
-      )}
-
-      {isReadyToPlay && startModalOpen && (
-        <div className={styles.startModalBackdrop} onClick={() => setStartModalOpen(false)}>
-          <div className={styles.startModal} onClick={(event) => event.stopPropagation()}>
-            <div className={styles.startModalHeader}>
-              <h3>{t('chooseMode')}</h3>
-              <button
-                type="button"
-                className={styles.startModalX}
-                onClick={() => setStartModalOpen(false)}
-                aria-label={t('close')}>
-                ×
-              </button>
-            </div>
-            <div className={styles.startModalActions}>
-              <ButtonLink
-                variant="custom"
-                href={`/game/${game.id}/live`}
-                className={`${styles.startModeOption} ${styles.startModeOptionSuccess}`}>
-                <span className={styles.startModeTitle}>{t('playLive')}</span>
-                <span className={styles.startModeDescription}>{t('liveDescription')}</span>
-              </ButtonLink>
-              {game.status === 'published' && (
-                <ButtonLink
-                  variant="custom"
-                  href={`/enoteca/${game.id}`}
-                  className={`${styles.startModeOption} ${styles.startModeOptionQuaternary}`}>
-                  <span className={styles.startModeTitle}>{t('playEnoteca')}</span>
-                  <span className={styles.startModeDescription}>{t('enotecaDescription')}</span>
-                </ButtonLink>
-              )}
-              <ButtonLink
-                variant="custom"
-                href={`/game/${game.id}/table-live`}
-                className={`${styles.startModeOption} ${styles.startModeOptionSelected}`}>
-                <span className={styles.startModeTitle}>{t('playTableLive')}</span>
-                <span className={styles.startModeDescription}>{t('tableLiveDescription')}</span>
-              </ButtonLink>
-            </div>
-            <div className={styles.startModalFooter}>
-              <Button
-                type="button"
-                variant="neutral"
-                size="small"
-                onClick={() => setStartModalOpen(false)}>
-                {t('cancel')}
-              </Button>
-            </div>
           </div>
         </div>
       )}

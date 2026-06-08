@@ -29,6 +29,7 @@ export default function LiveSessionClient({
   questionsPreview = questions,
   bottles,
   userId,
+  backHref = '/miei-giochi',
   branding = {},
 }) {
   const router = useRouter()
@@ -297,7 +298,7 @@ export default function LiveSessionClient({
   if (loading) {
     return (
       <div className={styles.container}>
-        <TopBar title={t('creatingSession')} onBack={() => router.push('/miei-giochi')} />
+        <TopBar title={t('creatingSession')} onBack={() => router.push(backHref)} />
         <div className={styles.progressBarTrack}>
           <div className={styles.progressBarFill} />
         </div>
@@ -329,7 +330,7 @@ export default function LiveSessionClient({
 
   return (
     <div className={styles.container}>
-      <TopBar title={gameName} onBack={() => router.push('/miei-giochi')} />
+      <TopBar title={gameName} onBack={() => router.push(backHref)} />
 
       <div className={styles.lobbyCard}>
         <ShareDetailsTabs

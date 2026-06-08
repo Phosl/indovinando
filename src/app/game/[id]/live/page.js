@@ -11,12 +11,14 @@ export async function generateMetadata() {
   }
 }
 
-export default async function LiveSessionPage({params}) {
+export default async function LiveSessionPage({params, searchParams}) {
   const supabase = await createServerSupabase()
 
   // Resolve params if Promise
   const resolvedParams = await Promise.resolve(params)
   const gameId = resolvedParams.id
+  const resolvedSearchParams = await Promise.resolve(searchParams)
+  const backHref = resolvedSearchParams?.back === 'mode' ? `/game/${gameId}/mode` : '/miei-giochi'
 
   // Check auth
   const {
@@ -81,6 +83,7 @@ export default async function LiveSessionPage({params}) {
       questions={questions || []}
       bottles={bottles || []}
       userId={user.id}
+      backHref={backHref}
       branding={getBusinessBranding(ownerProfile || {})}
     />
   )

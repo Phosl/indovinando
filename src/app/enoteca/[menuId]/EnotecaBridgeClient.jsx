@@ -19,6 +19,7 @@ export default function EnotecaBridgeClient({
   questions = [],
   bottles = [],
   leaderboard = [],
+  backHref = '/miei-giochi',
   branding = {},
 }) {
   const {lang} = useLanguage()
@@ -36,8 +37,6 @@ export default function EnotecaBridgeClient({
     if (typeof window === 'undefined') return joinPath
     return `${window.location.origin}${joinPath}`
   }, [joinPath])
-  const backHref = '/miei-giochi'
-
   useEffect(() => {
     if (!shareLink) return
     let cancelled = false

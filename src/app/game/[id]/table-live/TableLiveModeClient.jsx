@@ -6,7 +6,7 @@ import QRCode from 'qrcode'
 import TopBar from '@/components/TopBar'
 import styles from './tableLiveMode.module.scss'
 
-export default function TableLiveModeClient({gameId, gameName, branding = {}}) {
+export default function TableLiveModeClient({gameId, gameName, backHref = `/game/${gameId}`, branding = {}}) {
   const router = useRouter()
   const [eventTitle, setEventTitle] = useState(`${gameName} Tavoli`)
   const [eventLink, setEventLink] = useState('')
@@ -149,7 +149,7 @@ export default function TableLiveModeClient({gameId, gameName, branding = {}}) {
   return (
     <div className={styles.page}>
       <div className={styles.topBarWrap}>
-        <TopBar title="Impostazioni evento" onBack={() => router.push(`/game/${gameId}`)} />
+        <TopBar title="Impostazioni evento" onBack={() => router.push(backHref)} />
       </div>
 
       <main className={styles.container}>

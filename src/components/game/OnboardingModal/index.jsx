@@ -13,9 +13,14 @@ import ModalCloseButton from '@/components/ui/ModalCloseButton'
  * @param {Function} onDisable - Callback when user disables onboarding
  * @param {'modal'|'page'} variant - Presentation variant
  */
-export default function OnboardingModal({onClose, onDisable, variant = 'modal'}) {
+export default function OnboardingModal({
+  onClose,
+  onDisable,
+  variant = 'modal',
+  translationKey = 'onboarding',
+}) {
   const [step, setStep] = useState(1)
-  const t = useT('onboarding')
+  const t = useT(translationKey)
   const steps = t('steps')
 
   const currentStep = steps[step - 1]

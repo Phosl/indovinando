@@ -3,8 +3,9 @@ import {notFound} from 'next/navigation'
 import EnotecaBridgeClient from './EnotecaBridgeClient'
 import {getBusinessBranding} from '@/lib/businessBranding'
 
-export default async function EnotecaMenuPage({params}) {
+export default async function EnotecaMenuPage({params, searchParams}) {
   const {menuId} = await params
+  const resolvedSearchParams = await Promise.resolve(searchParams)
   const supabase = await createServerSupabase()
 
   // Usa la tabella games esistente (pubblicato = status 'published')
@@ -52,6 +53,7 @@ export default async function EnotecaMenuPage({params}) {
       bottles={bottles || []}
       questions={questions || []}
       leaderboard={leaderboard || []}
+      backHref={resolvedSearchParams?.back === 'mode' ? `/game/${menuId}/mode` : '/miei-giochi'}
       branding={getBusinessBranding(ownerProfile || {})}
     />
   )

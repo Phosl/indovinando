@@ -57,3 +57,5 @@
 - Table Live event entry is now split into clearer pages: the event home handles join-code entry, while dedicated `/create` and `/join` pages only ask for nickname + avatar with focused CTAs.
 - Course progress sync is now resilient to older schemas without `max_score`, and the existing course SQL migration keeps the schema aligned so dashboard counts can reflect synced lesson progress.
 - There is also a safe cleanup SQL for course progress to backfill `max_score`, normalize attempts/completed timestamps, and deduplicate repeated lesson rows before relying on dashboard counts.
+
+- Game start now uses a dedicated `/game/[id]/mode` page instead of an inline modal, reusing the same mode cards for Live, Enoteca, and Tavoli.

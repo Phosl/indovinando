@@ -1185,7 +1185,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   const [lastWebSearchReview, setLastWebSearchReview] = useState(null)
   const [isApplyingWebDiff, setIsApplyingWebDiff] = useState(false)
   const [webPreviewUsageByImageId, setWebPreviewUsageByImageId] = useState({})
-  const [quizTemplateMode, setQuizTemplateMode] = useState('standard')
+  const [quizTemplateMode, setQuizTemplateMode] = useState('openai')
   const [isLeavingSession, setIsLeavingSession] = useState(false)
   const [uploadError, setUploadError] = useState('')
   const [toast, setToast] = useState(null)
@@ -2467,6 +2467,67 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     quizPreview = null
   }
 
+  if (isPreviewOpen && quizPreview) {
+    return (
+      <PageLayout title={t('automaticPreviewTitle')} onBack={() => setIsPreviewOpen(false)}>
+        <section className={styles.autoPreviewPageCard}>
+          <div className={styles.autoPreviewPageHeader}>
+            <div className={styles.autoPreviewModalTemplateRow}>
+              <span className={styles.autoModeQuizTemplateLabel}>{t('automaticQuizTemplateLabel')}</span>
+              <div className={styles.autoModeQuizTemplateSegmented}>
+                <button
+                  type="button"
+                  className={`${styles.autoModeQuizTemplateButton} ${
+                    quizTemplateMode === 'openai' ? styles.autoModeQuizTemplateButtonActive : ''
+                  }`}
+                  onClick={() => setQuizTemplateMode('openai')}>
+                  {t('automaticQuizTemplateOpenAi')}
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.autoModeQuizTemplateButton} ${
+                    quizTemplateMode === 'standard' ? styles.autoModeQuizTemplateButtonActive : ''
+                  }`}
+                  onClick={() => setQuizTemplateMode('standard')}>
+                  {t('automaticQuizTemplateStandard')}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.autoPreviewPageBody}>
+            <AutoTastingGamePreview
+              preview={quizPreview}
+              labels={{
+                sliderAria: t('automaticPreviewBottles'),
+                bottle: t('automaticPreviewBottleLabel'),
+                of: t('automaticPreviewOf'),
+                question: t('automaticPreviewQuestionLabel'),
+                producerMissing: t('automaticPreviewProducerMissing'),
+                yearMissing: t('automaticPreviewYearMissing'),
+                unnamedBottle: t('automaticPreviewUnnamedBottle'),
+              }}
+            />
+          </div>
+        </section>
+
+        <div className={styles.autoPreviewPageSpacer} />
+        <div className={styles.autoPreviewPageFooter}>
+          <button type="button" className="btn neutral" onClick={() => setIsPreviewOpen(false)}>
+            {t('close')}
+          </button>
+          <button
+            type="button"
+            className="btn success"
+            disabled={isCreatingQuiz}
+            onClick={handleCreateQuickQuiz}>
+            {isCreatingQuiz ? t('automaticCreatingQuiz') : t('automaticCreateQuizAction')}
+          </button>
+        </div>
+      </PageLayout>
+    )
+  }
+
   return (
     <PageLayout title={t('title')} onBack={handleAttemptExit}>
       <AutoToast toast={toast} onClose={() => setToast(null)} closeLabel={t('close')} />
@@ -2576,85 +2637,6 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
             </button>
           </div>
         </>
-
-        {isPreviewOpen && quizPreview && (
-          <div className={styles.autoPreviewModalOverlay} onClick={() => setIsPreviewOpen(false)}>
-            <div
-              className={styles.autoPreviewModalContent}
-              onClick={(event) => event.stopPropagation()}>
-              <div className={styles.autoPreviewModalHeader}>
-                <div className={styles.autoPreviewModalHeaderMain}>
-                  <h3>{t('automaticPreviewTitle')}</h3>
-                  <div className={styles.autoPreviewModalTemplateRow}>
-                    <span className={styles.autoModeQuizTemplateLabel}>
-                      {t('automaticQuizTemplateLabel')}
-                    </span>
-                    <div className={styles.autoModeQuizTemplateSegmented}>
-                      <button
-                        type="button"
-                        className={`${styles.autoModeQuizTemplateButton} ${
-                          quizTemplateMode === 'standard'
-                            ? styles.autoModeQuizTemplateButtonActive
-                            : ''
-                        }`}
-                        onClick={() => setQuizTemplateMode('standard')}>
-                        {t('automaticQuizTemplateStandard')}
-                      </button>
-                      <button
-                        type="button"
-                        className={`${styles.autoModeQuizTemplateButton} ${
-                          quizTemplateMode === 'openai'
-                            ? styles.autoModeQuizTemplateButtonActive
-                            : ''
-                        }`}
-                        onClick={() => setQuizTemplateMode('openai')}>
-                        {t('automaticQuizTemplateOpenAi')}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className={styles.autoPreviewModalClose}
-                  onClick={() => setIsPreviewOpen(false)}
-                  aria-label={t('close')}>
-                  ×
-                </button>
-              </div>
-
-              <div className={styles.autoPreviewModalBody}>
-                <AutoTastingGamePreview
-                  preview={quizPreview}
-                  labels={{
-                    sliderAria: t('automaticPreviewBottles'),
-                    bottle: t('automaticPreviewBottleLabel'),
-                    of: t('automaticPreviewOf'),
-                    question: t('automaticPreviewQuestionLabel'),
-                    producerMissing: t('automaticPreviewProducerMissing'),
-                    yearMissing: t('automaticPreviewYearMissing'),
-                    unnamedBottle: t('automaticPreviewUnnamedBottle'),
-                  }}
-                />
-              </div>
-
-              <div className={styles.autoPreviewModalFooter}>
-                <button
-                  type="button"
-                  className="btn btn-small neutral"
-                  onClick={() => setIsPreviewOpen(false)}>
-                  {t('close')}
-                </button>
-                <button
-                  type="button"
-                  className="btn success"
-                  disabled={isCreatingQuiz}
-                  onClick={handleCreateQuickQuiz}>
-                  {isCreatingQuiz ? t('automaticCreatingQuiz') : t('automaticCreateQuizAction')}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         {webSearchReview ? (
           <div
@@ -3394,9 +3376,22 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   )
 }
 
-function CreateOnboardingModal({showOnboarding, onClose, onDisable, variant = 'modal'}) {
+function CreateOnboardingModal({
+  showOnboarding,
+  onClose,
+  onDisable,
+  variant = 'modal',
+  translationKey = 'onboarding',
+}) {
   if (!showOnboarding) return null
-  return <OnboardingModal onClose={onClose} onDisable={onDisable} variant={variant} />
+  return (
+    <OnboardingModal
+      onClose={onClose}
+      onDisable={onDisable}
+      variant={variant}
+      translationKey={translationKey}
+    />
+  )
 }
 
 export default function GameCreateClient({
@@ -3461,6 +3456,7 @@ export default function GameCreateClient({
           showOnboarding={showOnboarding}
           onClose={() => setShowOnboarding(false)}
           onDisable={handleDisableOnboarding}
+          translationKey="automaticOnboarding"
         />
         <AutomaticModePlaceholder
           onBack={handleBackToModePicker}
