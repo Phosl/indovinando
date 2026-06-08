@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.39.1',
+    date: '8 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'refine landing page spacing and typography',
+    ],
+  },
+
+  {
     version: '1.39.0',
     date: '7 giugno 2026',
     label: 'Auto',
