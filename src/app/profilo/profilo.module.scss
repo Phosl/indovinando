@@ -103,6 +103,43 @@
   font-size: 0.9rem;
 }
 
+.profileBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.profileCompleteBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--success-100);
+  border: 1px solid var(--success);
+  color: var(--success-text);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.businessBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--primary-100);
+  border: 1px solid var(--primary);
+  color: var(--primary-text);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .topBarActions {
   display: flex;
   gap: 8px;
@@ -180,6 +217,10 @@
   }
 }
 
+a.avatarPickerBtn {
+  text-decoration: none;
+}
+
 .avatarPickerThumb {
   width: 36px;
   height: 36px;
@@ -208,6 +249,26 @@
   font-size: 0.85rem;
   color: #2e3f3a;
   white-space: nowrap;
+}
+
+.publicProfileRow {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.publicProfileText {
+  display: grid;
+  gap: 4px;
+}
+
+.publicProfileHint {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
 }
 
 .cardDivider {
@@ -641,4 +702,8 @@
   letter-spacing: 0.05em;
   color: #647169;
   text-align: center;
+}
+
+.communityCard {
+  margin-top: 0;
 }

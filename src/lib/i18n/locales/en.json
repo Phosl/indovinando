@@ -54,6 +54,9 @@
     "createGameCardTitle": "Create a new tasting",
     "createGameCardDescription": "Start creating your new tasting and share it with your friends.",
     "createGameCardAction": "Create",
+    "communityEyebrow": "Community",
+    "rankingsTitle": "Public rankings",
+    "rankingsDescription": "See which wines are emerging from the community’s real tastings.",
     "myGamesCardDescription": "Create, manage and play with your tasting games.",
     "yourProgress": "Your progress",
     "courseStartedDescription": "Keep going with your wine path.",
@@ -78,6 +81,13 @@
     }
   },
   "landing": {
+    "nav": {
+      "ariaLabel": "Landing menu",
+      "howItWorks": "How it works",
+      "partners": "Partners",
+      "rankings": "Rankings",
+      "login": "Log in"
+    },
     "hero": {
       "badge": "🍷 Wine Tasting Game",
       "title": "Turn a wine tasting into a game.",
@@ -139,8 +149,14 @@
         "Wine Hub"
       ],
       "counter": "20+ wine shops and wine professionals are already using Indovinando",
+      "counterDynamic": "{count} business partners are already visible on Indovinando",
+      "cardCta": "Open page",
+      "directoryCta": "Explore all partners",
+      "fallbackCategory": "Partner",
       "mapTitle": "Partner map",
-      "mapDescription": "Here you will be able to explore all partner wine shops, wineries, and wine experiences."
+      "mapDescription": "Here you will find wine shops, wineries, and wine experiences that are part of the Indovinando network.",
+      "scrollerLabel": "Featured public partners",
+      "mapEmpty": "The map will be available as soon as public partners complete their location."
     },
     "cta": {
       "eyebrow": "Start now",
@@ -148,7 +164,44 @@
       "description": "Create wine quizzes, run interactive tastings, and discover how much your friends or customers really know.",
       "primaryCta": "Start free",
       "secondaryCta": "See how it works"
+    },
+    "globalStats": {
+      "eyebrow": "Community",
+      "title": "Community in numbers",
+      "description": "Aggregated numbers from completed tastings and real ratings collected on Indovinando.",
+      "caption": "Active users are calculated over the last {days} days.",
+      "initialDataBadge": "Starter data",
+      "stats": {
+        "tastings": "tastings",
+        "ratings": "ratings",
+        "activeUsers": "active users",
+        "analyzedWines": "wines analyzed by Indovinando AI"
+      }
     }
+  },
+  "partnerDirectory": {
+    "title": "Partners",
+    "eyebrow": "Public partners",
+    "heading": "Discover the businesses using Indovinando",
+    "description": "Wine shops, restaurants, and wine businesses that chose to bring play into their tasting experiences.",
+    "cardCta": "Open page",
+    "emptyTitle": "The first partners are arriving",
+    "emptyDescription": "Soon you will find the public pages of business profiles using Indovinando here."
+  },
+  "partnerPublic": {
+    "topBarTitle": "Partner",
+    "visitWebsite": "Visit website",
+    "callPartner": "Call",
+    "infoTitle": "Business info",
+    "categoryLabel": "Category",
+    "addressLabel": "Address",
+    "areaLabel": "Area",
+    "phoneLabel": "Phone",
+    "websiteLabel": "Website",
+    "mapTitle": "Where to find it",
+    "openMap": "Open map",
+    "mapEmpty": "The map will be available as soon as the partner completes the location.",
+    "backToDirectory": "Back to partners"
   },
   "admin": {
     "catalog": {
@@ -191,16 +244,25 @@
     "title": "Create Tasting",
     "chooseModeTitle": "Choose how you want to prepare the game.",
     "quickTitle": "Quick",
-    "quickDescription": "Use our ready-made tasting template: add bottles and you're ready.",
+    "quickDescription": "Use our template: add bottles and answers, and you're ready.",
     "quickAction": "Use template",
     "customTitle": "Custom quiz",
     "customDescription": "Create your own questions and answers from scratch, and tailor every detail.",
     "customAction": "Start",
-    "automaticTitle": "Automatic mode",
-    "automaticDescription": "Take photos of the bottles, we'll analyze the data and create the quiz.",
+    "automaticTitle": "Automatic",
+    "automaticDescription": "Take photos of the bottles and generate the quiz.",
     "automaticAction": "Take photo",
     "automaticFlowTitle": "Bottle recognition",
-    "automaticFlowDescription": "Upload or take bottle photos. We will collect key information before generating the quiz.",
+    "automaticStep1Title": "Recognize the bottles",
+    "automaticStep1TitleWithPhotos": "Add more bottles",
+    "automaticStep1DescriptionWithPhotos": "Keep taking label photos to complete the automatic tasting setup.",
+    "automaticNextPhotoTitle": "Take another photo",
+    "automaticNextPhotoSubtitle": "Add another bottle from its label",
+    "automaticStep1Description": "Take a photo of the label. AI will automatically recognize the wine, producer, and vintage.",
+    "automaticFirstPhotoTitle": "Take the first photo",
+    "automaticFirstPhotoSubtitle": "Frame the label clearly",
+    "automaticAddedBottlesLabel": "Added bottles",
+    "automaticFlowDescription": "Take or upload bottle photos. We will collect the essential details before generating the questionnaire.",
     "automaticFlowStepsLabel": "Automatic mode steps",
     "automaticWizardStep1": "Step 1 · Intro",
     "automaticWizardStep2": "Step 2 · Bottle photos",
@@ -220,6 +282,7 @@
     "automaticBottlesTitle": "Collected bottles",
     "automaticBottlesEmpty": "No bottles added yet.",
     "automaticUploadError": "Error while uploading images. Please try again.",
+    "automaticDeleteSuccess": "Image deleted",
     "automaticDeleteError": "Error while deleting image. Please try again.",
     "automaticAnalyzeError": "Error while analyzing image. Please try again.",
     "automaticVerifyError": "Error while verifying the catalog entry. Please try again.",
@@ -230,6 +293,7 @@
     "automaticWebSearchSkippedCatalogSynced": "Web search skipped: bottle already synced in catalog.",
     "automaticWebSearchSkippedAlreadyEnriched": "Web search skipped: web data already present.",
     "automaticWebSearchSkippedCatalogMatch": "Web search skipped: catalog already has enough data.",
+    "automaticAnalyzeActionWithCount": "Analyze ({count})",
     "automaticAnalyzeAction": "Analyze",
     "automaticAnalyzeAgainAction": "Analyze again",
     "automaticAnalyzingSingle": "Analyzing...",
@@ -241,11 +305,11 @@
     "automaticWebSearchLoadingStepNotes": "Gathering details",
     "automaticWebSearchLoadingStepSources": "Finding sources",
     "automaticWebCatalogBadge": "Web sources",
-    "automaticWebDiffTitle": "I found new data",
-    "automaticWebDiffSubtitle": "Choose which fields you want to update on this bottle.",
+    "automaticWebDiffTitle": "New information found",
+    "automaticWebDiffSubtitle": "Select the information you want to add or update for this bottle.",
     "automaticCurrentValueLabel": "Current",
-    "automaticProposedValueLabel": "Proposed from web",
-    "automaticApplyWebDiffAction": "Update",
+    "automaticProposedValueLabel": "Found on the web",
+    "automaticApplyWebDiffAction": "Apply selection",
     "automaticUpdatingAction": "Updating...",
     "automaticDiffNameLabel": "Name",
     "automaticDiffProducerLabel": "Producer",
@@ -260,8 +324,8 @@
     "automaticAnalyzeAllAction": "Analyze all",
     "automaticAnalyzingAll": "Analyzing...",
     "automaticCreateQuizAction": "Create quick quiz",
-    "automaticPreviewQuizAction": "Quiz preview",
-    "automaticPreviewTitle": "Quiz preview",
+    "automaticPreviewQuizAction": "Open questionnaire",
+    "automaticPreviewTitle": "Questionnaire",
     "automaticOpenPreviewModal": "Open quick preview",
     "automaticPreviewEmpty": "At least one recognized bottle is required to show the preview.",
     "automaticPreviewBottles": "bottles",
@@ -291,7 +355,7 @@
     "automaticNotableOptionAppellation": "For the appellation",
     "automaticNotableOptionProfile": "For the wine's distinctive profile",
     "automaticQuestionPrice": "Price",
-    "automaticQuizTemplateLabel": "Quiz version",
+    "automaticQuizTemplateLabel": "Questionnaire template",
     "automaticQuizTemplateStandard": "Standard template",
     "automaticQuizTemplateOpenAi": "OpenAI template",
     "automaticWebSummaryLabel": "Web summary",
@@ -312,6 +376,14 @@
     "automaticQuizResolvedLabel": "Quick wine card",
     "automaticPriceLabel": "Price",
     "automaticMetricBottlesLabel": "Bottles",
+    "automaticMetricCreditsLabel": "Scan credits",
+    "automaticMetricCreditsMeta": "Used {used} of {total}",
+    "automaticCreditsInfoAction": "Credits info",
+    "automaticCreditsInfoTitle": "How credits work",
+    "automaticCreditsInfoBody": "Each AI action consumes credits. For now we use a simple and transparent rule.",
+    "automaticCreditsInfoRemaining": "Credits remaining: {count}",
+    "automaticCreditsInfoAnalyze": "Bottle analysis: 1 credit",
+    "automaticCreditsInfoWeb": "Web search: 1 credit",
     "automaticMetricBottlesMeta": "{analyzed}/{total} analyzed",
     "automaticMetricTokensLabel": "Total tokens",
     "automaticMetricTokensMeta": "Vision {vision} · Web {web}",
@@ -323,9 +395,37 @@
     "automaticTokenUsageValue": "{total} total · Vision {vision} · Web {web}",
     "automaticEstimatedCostValue": "Cost {cost}",
     "automaticLoadError": "Error while loading saved images.",
+    "automaticCreditsInsufficient": "You have no scan credits left.",
+    "automaticAnalyzeAllCreditsNeeded": "You need {needed} credits to analyze all bottles, but only {remaining} are left.",
     "openGuide": "Open guide",
     "loadingEditor": "Loading editor",
-    "skip": "Skip"
+    "selected": "Selected",
+    "unselected": "Unselected",
+    "skip": "Skip",
+    "automaticStepPhotosLabel": "Photos",
+    "automaticStepReviewLabel": "Details",
+    "automaticStepQuizLabel": "Quiz",
+    "automaticReviewTitle": "Analyzed bottles",
+    "automaticReviewDescription": "Review the main details for each bottle and complete anything missing before moving to the questionnaire.",
+    "automaticBottleCompleteBadge": "Complete",
+    "automaticBottleIncompleteBadge": "Needs review",
+    "automaticBottlePendingLabel": "Details updating",
+    "automaticBottleDetailTitle": "Bottle details",
+    "automaticBottleDetailDescription": "Review the bottle card, enrich it from the web, or complete missing fields manually.",
+    "automaticBottleEnrichAction": "Enrich from web",
+    "automaticBottleEditAction": "Edit",
+    "automaticUpdateDetailsError": "Error while saving bottle details.",
+    "automaticPreviewLoadingBottle": "Updating bottle preview...",
+    "automaticPreviewLoadingLabel": "Previews loaded: {loaded}/{total}",
+    "automaticPreviewUnavailable": "Preview unavailable",
+    "automaticAnalyzingAllCount": "Analyzing {count} bottles",
+    "automaticAnalyzeOverlayMore": "+{count} more",
+    "automaticAnalyzeOverlayHint": "I am reading the labels and collecting the essential details for each bottle.",
+    "automaticCreateQuestionnaireAction": "Continue",
+    "automaticSaveAction": "Save tasting",
+    "automaticCancelAction": "Cancel",
+    "automaticSavingAction": "Saving...",
+    "automaticBottlePendingHint": "This bottle still has incomplete data. You can run analysis again or complete it manually."
   },
   "tableLiveEvent": {
     "topBarTitle": "Table Live",
@@ -348,6 +448,7 @@
     "networkError": "Network error",
     "creatingAction": "Creating...",
     "createAndStartAction": "Create and start",
+    "createAction": "Create",
     "joiningAction": "Joining...",
     "joinAction": "Join",
     "backAction": "Back",
@@ -371,16 +472,17 @@
     "startMatch": "Start a match",
     "completeGame": "Add bottles",
     "playLive": "Play Live",
-    "playEnoteca": "Enoteca",
-    "playTableLive": "Tables & Groups",
+    "playEnoteca": "Create solo game",
+    "playTableLive": "Create multiplayer",
     "chooseMode": "Choose mode",
+    "chooseModeDescription": "Choose whether to start a tasting to play on your own or a multiplayer match to share with others.",
     "close": "Close",
     "cancel": "Cancel",
     "printCard": "Print Card",
     "edit": "Edit",
     "liveDescription": "Live multiplayer match with host and real-time leaderboard.",
-    "enotecaDescription": "Solo mode to play on your own and see the final result.",
-    "tableLiveDescription": "Separate mode for event QR, table codes, and parallel matches.",
+    "enotecaDescription": "Create a match to play this tasting on your own.",
+    "tableLiveDescription": "Create one event, print the QR code, and let each table play in a separate match with its own code.",
     "bottlesCount": "{count} Bottles",
     "questionsCount": "{count} Questions"
   },
@@ -416,6 +518,36 @@
         "title": "Let's begin",
         "description": "Ready? Click \"Start\" to begin creating your game.",
         "icon": "🎉"
+      }
+    ]
+  },
+  "automaticOnboarding": {
+    "step": "Step",
+    "of": "of",
+    "back": "Back",
+    "disable": "Do not show again",
+    "next": "Next",
+    "start": "Start",
+    "steps": [
+      {
+        "title": "Take bottle photos",
+        "description": "Take or upload the bottle photos you want to use. The front label is the best place to start.",
+        "icon": "📸"
+      },
+      {
+        "title": "Indovinando AI recognizes them",
+        "description": "We analyze name, producer, vintage, and other useful details to build the questionnaire automatically.",
+        "icon": "🤖"
+      },
+      {
+        "title": "Review the collected data",
+        "description": "If something is missing, you can use web search to recover more information and complete the collected data.",
+        "icon": "📝"
+      },
+      {
+        "title": "Generate the questionnaire",
+        "description": "Once the bottles are ready, generate the quiz automatically and refine it only if you want to.",
+        "icon": "✨"
       }
     ]
   },
@@ -615,10 +747,22 @@
     "step4Title": "Add bottle",
     "dontShowAgain": "Don't show again",
     "steps": [
-      {"id": 1, "label": "Game name"},
-      {"id": 2, "label": "Questionnaire"},
-      {"id": 3, "label": "Card"},
-      {"id": 4, "label": "Bottles"}
+      {
+        "id": 1,
+        "label": "Game name"
+      },
+      {
+        "id": 2,
+        "label": "Questionnaire"
+      },
+      {
+        "id": 3,
+        "label": "Card"
+      },
+      {
+        "id": 4,
+        "label": "Bottles"
+      }
     ],
     "alerts": {
       "GAME_NAME_REQUIRED": "Enter a game name.",
@@ -689,9 +833,13 @@
       "editTitlePrefix": "Edit bottle",
       "details": "Bottle details",
       "stepLabel": "Step {current} of {total}",
+      "bottleNameLabel": "Bottle name",
       "bottleNamePlaceholder": "Bottle name",
+      "producerLabel": "Producer",
       "producerPlaceholder": "Producer",
+      "yearLabel": "Year",
       "yearPlaceholder": "Year",
+      "incompleteBadge": "Incomplete",
       "wineInfoTitle": "Wine info",
       "wineTypeAriaLabel": "Wine type",
       "wineInfoHintPrimary": "Select the wine type for this bottle.",
@@ -897,6 +1045,65 @@
     "nowMoveToQuestions": "Now move on to the questions: they will help you reinforce the main steps and terminology.",
     "goalUnderstand": "Goal: understand, not just memorize."
   },
+  "rankingsPage": {
+    "title": "Rankings",
+    "eyebrow": "Community",
+    "heading": "Public wine rankings on Indovinando",
+    "description": "Public rankings built on real ratings collected from completed community tastings.",
+    "initialDataBadge": "Initial data",
+    "explorePartners": "Explore partners",
+    "stats": {
+      "tastings": "tastings",
+      "wines": "wines tasted",
+      "ratings": "ratings",
+      "activeUsers": "active users"
+    },
+    "sections": {
+      "blind": "Best blind tasting wines",
+      "qualityPrice": "Best quality/price ratio",
+      "surprising": "Most surprising wines",
+      "divisive": "Most divisive wines"
+    },
+    "realDataPills": [
+      "Real ratings only",
+      "Enoteca + Table",
+      "Growing over time"
+    ],
+    "realDataNote": "These rankings read real ratings from enoteca and table flows. If a section still has too little data, we temporarily show starter data.",
+    "globalStats": {
+      "eyebrow": "Community",
+      "title": "Community in numbers",
+      "description": "Aggregated numbers from completed tastings and real ratings collected on Indovinando.",
+      "caption": "Active users are calculated over the last {days} days.",
+      "initialDataBadge": "Starter data",
+      "stats": {
+        "tastings": "tastings",
+        "ratings": "ratings",
+        "activeUsers": "active users",
+        "analyzedWines": "wines analyzed by Indovinando AI"
+      }
+    },
+    "metricInfoLabel": "How this ranking works",
+    "metricFallback": "Metric explanation not available.",
+    "metrics": {
+      "blind": {
+        "description": "Ranks wines by the real average rating they received in completed tastings.",
+        "formula": "The higher the average rating, the higher the wine appears."
+      },
+      "qualityPrice": {
+        "description": "Combines perceived quality with the wine’s average price.",
+        "formula": "Rewards wines that earn strong ratings compared with their price."
+      },
+      "surprising": {
+        "description": "Highlights wines that score well even when they are less easily recognized.",
+        "formula": "A surprising wine has a strong rating and lower recognition in objective questions."
+      },
+      "divisive": {
+        "description": "Shows wines that split the community’s opinions the most.",
+        "formula": "The more spread out the ratings are, the more divisive the wine is."
+      }
+    }
+  },
   "auth": {
     "tagline": "Play, create and learn wine in one place.",
     "loginOrRegister": "Login or Register",
@@ -943,6 +1150,8 @@
     "howTheAppWorksDesc": "Open the onboarding guide with slides for Create Game, Quick Game, Enoteca, Live and Wine Course.",
     "openAppGuide": "Open app guide",
     "chooseAvatar": "Choose your avatar",
+    "preferences": "Preferences",
+    "editPreferences": "Edit",
     "yourStats": "Your stats",
     "gamesCreated": "Games created",
     "lessonsCompleted": "Lessons completed",
@@ -975,7 +1184,217 @@
     "rankPending": "Leaderboard position is currently unavailable.",
     "matchesEmpty": "No matches found for this profile.",
     "pointsUnit": "pts",
-    "won": "Won"
+    "won": "Won",
+    "profileCompleteBadge": "Profile complete",
+    "businessBadge": "Business",
+    "publicProfile": "Public profile",
+    "publicProfileHintPublic": "Your partner page is visible in the public directory.",
+    "publicProfileHintPrivate": "Your partner page is private and does not appear in the directory yet.",
+    "publicLabel": "Public",
+    "privateLabel": "Private",
+    "communityWidget": {
+      "eyebrow": "Community",
+      "title": "The wines getting attention",
+      "description": "A preview of the public rankings based on real community tastings.",
+      "blindTitle": "Best blind tasting wine",
+      "surprisingTitle": "Most surprising wine",
+      "qualityPriceTitle": "Best value",
+      "cta": "Explore",
+      "initialDataBadge": "Starter data"
+    }
+  },
+  "profileSetup": {
+    "reminderEyebrow": "Complete profile",
+    "summaryEyebrow": "Profile ready",
+    "reminderTitle": "Personalize your experience",
+    "summaryTitle": "Your profile preferences",
+    "reminderDescription": "A few quick taps are enough to tailor the dashboard, content and updates to your wine interests.",
+    "summaryDescription": "These preferences help us show you a more useful experience, closer to your wine world.",
+    "progressLabel": "{current}/{total} fields completed",
+    "completeAction": "Complete profile",
+    "editAction": "Edit profile",
+    "skipAction": "Skip",
+    "skipShortAction": "Skip",
+    "closeAction": "Close",
+    "backAction": "Back",
+    "backToApp": "Back to app",
+    "nextAction": "Continue",
+    "finishAction": "Save and continue",
+    "saveAction": "Save profile",
+    "savingAction": "Saving...",
+    "newsletterEnabled": "Subscribed",
+    "newsletterDisabled": "Not subscribed",
+    "modalEyebrow": "Quick onboarding",
+    "modalTitle": "Complete your profile",
+    "modalDescription": "No unnecessary fields: choose the options that fit you and save in under a minute.",
+    "wizard": {
+      "stepLabel": "Step {current} of {total}",
+      "profileType": {
+        "title": "What kind of profile are you?",
+        "description": "Choose the category that represents you best right now. It helps us shape the dashboard and features."
+      },
+      "experience": {
+        "title": "What is your experience level?",
+        "description": "This helps us suggest content and learning paths that fit your confidence."
+      },
+      "wineTypes": {
+        "title": "Which wines do you love most?",
+        "description": "Pick one or more styles to guide content, suggestions and community highlights."
+      },
+      "countries": {
+        "title": "Which countries do you prefer?",
+        "description": "Select the regions you are most curious about or choose most often."
+      },
+      "location": {
+        "title": "Where are you based?",
+        "description": "We use city and province for nearby partners, local events and more relevant updates."
+      },
+      "newsletter": {
+        "title": "Would you like updates?",
+        "description": "You can enable consent now and decide later how to use those communications."
+      },
+      "business": {
+        "title": "Tell us about your business",
+        "description": "For business profiles we collect the minimum data needed for future partner cards, partner map and tasting branding."
+      }
+    },
+    "sections": {
+      "profileType": "Profile type",
+      "experience": "Experience level",
+      "wineTypes": "Favorite wine types",
+      "countries": "Favorite countries",
+      "location": "Location",
+      "business": "Business details",
+      "newsletter": "Newsletter and events"
+    },
+    "fields": {
+      "profileType": "Profile type",
+      "experienceLevel": "Experience",
+      "wineTypes": "Wine preferences",
+      "countries": "Countries",
+      "location": "Area",
+      "businessName": "Business",
+      "businessType": "Business type",
+      "newsletter": "Newsletter"
+    },
+    "placeholders": {
+      "city": "City",
+      "province": "State / Province"
+    },
+    "newsletterHint": "Receive updates about Indovinando, events, rankings and new features. For now we only store the consent.",
+    "businessFields": {
+      "name": "Business name",
+      "type": "Business type",
+      "description": "Short description",
+      "website": "Website",
+      "phone": "Phone",
+      "address": "Address",
+      "latitude": "Latitude",
+      "longitude": "Longitude"
+    },
+    "businessPlaceholders": {
+      "name": "e.g. Rossi Wine Shop",
+      "type": "e.g. Wine bar, restaurant, wine shop",
+      "description": "Describe your business in a few lines",
+      "website": "https://...",
+      "phone": "+1 ...",
+      "address": "Business address",
+      "latitude": "41.9028",
+      "longitude": "12.4964"
+    },
+    "businessHelper": "For now address and coordinates are entered manually. Google Places integration can come in the next step.",
+    "businessMapsReady": "Search the address with Google Maps: selecting a result updates the coordinates automatically.",
+    "businessMapsFallback": "If the Google Maps key is not configured, you can still enter address and coordinates manually.",
+    "businessMapPreviewTitle": "Business map preview",
+    "branding": {
+      "eyebrow": "Tasting branding",
+      "title": "Business logo",
+      "description": "Upload your business logo. We use it in tasting QR flows, live mode, single mode, and printable tasting sheets.",
+      "placeholder": "Logo",
+      "activityNameFallback": "Your business",
+      "usageHint": "The logo is automatically reused in branded flows.",
+      "upload": "Upload logo",
+      "uploading": "Uploading...",
+      "error": "I couldn't upload the business logo."
+    },
+    "partnerPublic": {
+      "eyebrow": "Public page",
+      "title": "Public partner page",
+      "description": "Enable public visibility to appear on the landing page and in the partner directory.",
+      "helper": "You can turn your public partner page on or off at any time.",
+      "active": "Public",
+      "inactive": "Private",
+      "slugLabel": "Public URL",
+      "preview": "Preview page",
+      "directory": "Open directory",
+      "error": "I couldn't update the partner page visibility."
+    },
+    "checklist": {
+      "profileType": "Choose the profile type that fits you best",
+      "experience": "Tell us your experience level",
+      "preferences": "Select your favorite wines and countries",
+      "location": "Add city and province for more local experiences",
+      "business": "Complete the essential details of your business"
+    },
+    "profileTypes": {
+      "enthusiast": "Enthusiast",
+      "wine_shop": "Wine shop",
+      "restaurant": "Restaurant",
+      "educator": "Sommelier / Educator",
+      "other_business": "Other business"
+    },
+    "profileTypeDescriptions": {
+      "enthusiast": "I discover, play and learn for passion.",
+      "wine_shop": "I organize tastings and engage customers.",
+      "restaurant": "Wine is part of the table experience I create.",
+      "educator": "I teach groups or lead learning journeys.",
+      "other_business": "I run a business connected to wine."
+    },
+    "experienceLevels": {
+      "beginner": "Beginner",
+      "amateur": "Amateur",
+      "enthusiast": "Enthusiast",
+      "expert": "Expert",
+      "sommelier": "Sommelier",
+      "professional": "Professional"
+    },
+    "wineTypes": {
+      "reds": "Reds",
+      "whites": "Whites",
+      "roses": "Rosés",
+      "sparkling": "Sparkling",
+      "champagne": "Champagne",
+      "sweet": "Sweet wines",
+      "orange": "Orange wine",
+      "natural": "Natural wines"
+    },
+    "countries": {
+      "italy": "Italy",
+      "france": "France",
+      "spain": "Spain",
+      "usa": "United States",
+      "argentina": "Argentina",
+      "portugal": "Portugal",
+      "germany": "Germany",
+      "other": "Other"
+    },
+    "errors": {
+      "profileType": "Select a profile type.",
+      "experienceLevel": "Select your experience level.",
+      "wineTypes": "Choose at least one favorite wine type.",
+      "countries": "Choose at least one favorite country.",
+      "city": "Enter your city.",
+      "province": "Enter your state or province.",
+      "businessName": "Enter the business name.",
+      "businessType": "Enter the business type.",
+      "businessDescription": "Enter a short business description.",
+      "businessWebsite": "Enter the business website.",
+      "businessPhone": "Enter the business phone.",
+      "businessAddress": "Enter the business address.",
+      "businessCoordinates": "Enter the business latitude and longitude.",
+      "timeout": "Saving is taking too long. Please try again in a few seconds.",
+      "generic": "We could not save your profile. Please try again."
+    }
   },
   "course": {
     "title": "Wine Course",
@@ -1054,5 +1473,54 @@
         "description": "Create your first tasting or join an existing match."
       }
     ]
+  },
+  "communityWidget": {
+    "eyebrow": "Community",
+    "title": "The wines getting attention",
+    "description": "A preview of the public rankings based on real community tastings.",
+    "blindTitle": "Best blind tasting wine",
+    "surprisingTitle": "Most surprising wine",
+    "qualityPriceTitle": "Best value",
+    "cta": "Explore",
+    "initialDataBadge": "Starter data"
+  },
+  "globalStats": {
+    "eyebrow": "Community",
+    "title": "Community in numbers",
+    "description": "Aggregated numbers from completed tastings and real ratings collected on Indovinando.",
+    "caption": "Active users are calculated over the last {days} days.",
+    "initialDataBadge": "Starter data",
+    "stats": {
+      "tastings": "tastings",
+      "ratings": "ratings",
+      "activeUsers": "active users",
+      "analyzedWines": "wines analyzed by Indovinando AI"
+    }
+  },
+  "rankingsWinePage": {
+    "eyebrow": "Wine",
+    "summaryEyebrow": "Quick card",
+    "summaryTitle": "Community overview",
+    "rankingsEyebrow": "Rankings",
+    "rankingsTitle": "Where it stands",
+    "metricsTitle": "Wine metrics",
+    "sections": {
+      "blind": "Best blind tasting wines",
+      "qualityPrice": "Best quality/price ratio",
+      "surprising": "Most surprising wines",
+      "divisive": "Most divisive wines"
+    },
+    "stats": {
+      "ratingCount": "Real ratings",
+      "tastingCount": "Completed tastings",
+      "recognitionRate": "Recognition rate",
+      "averagePrice": "Average price"
+    },
+    "metrics": {
+      "blindLabel": "Average rating: {value}",
+      "qualityPriceLabel": "Quality/price: {value}",
+      "surprisingLabel": "Surprise score: {value}",
+      "divisiveLabel": "Divisive score: {value}"
+    }
   }
 }

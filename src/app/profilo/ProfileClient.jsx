@@ -13,6 +13,8 @@ import {useWineCourseProgress} from '@/app/corso-vino/hooks/useWineCourseProgres
 import {supabaseClient, resetBrowserClient} from '@/lib/supabaseClient'
 import {useT} from '@/lib/i18n/useT'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {isBusinessProfile, isProfileComplete} from '@/lib/profileSetup'
+import CommunityHighlightsCard from '@/components/community/CommunityHighlightsCard'
 import styles from './profilo.module.scss'
 // ── Player rank levels ────────────────────────────────────────────────────────
 const PLAYER_LEVELS = [
@@ -120,8 +122,10 @@ export default function ProfileClient({
   userLabel,
   email,
   initialAvatar,
+  profileData,
   levels,
   gamesCount,
+  communitySnapshot,
 }) {
   const router = useRouter()
   const t = useT('profile')
@@ -140,6 +144,7 @@ export default function ProfileClient({
   const [avatar, setAvatar] = useState(
     initialAvatar && ALL_AVATARS.includes(initialAvatar) ? initialAvatar : '😎',
   )
+  const hasBusinessProfile = useMemo(() => isBusinessProfile(profileData || {}), [profileData])
 
   useEffect(() => {
     const saved = localStorage.getItem(AVATAR_STORAGE_KEY)
@@ -319,6 +324,7 @@ export default function ProfileClient({
   )
 
   const stats = useMemo(() => computeCourseStats(levels, progress), [levels, progress])
+  const hasCompletedProfile = useMemo(() => isProfileComplete(profileData || {}), [profileData])
   const playerLevel = useMemo(
     () => computePlayerLevel(stats.completedLessons, stats.totalLessons),
     [stats],
@@ -378,6 +384,16 @@ export default function ProfileClient({
             <div>
               <h2 className={styles.name}>{userLabel}</h2>
               <p className={styles.email}>{email}</p>
+              {hasCompletedProfile || hasBusinessProfile ? (
+                <div className={styles.profileBadges}>
+                  {hasCompletedProfile ? (
+                    <span className={styles.profileCompleteBadge}>{t('profileCompleteBadge')}</span>
+                  ) : null}
+                  {hasBusinessProfile ? (
+                    <span className={styles.businessBadge}>{t('businessBadge')}</span>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           </div>
 
@@ -410,6 +426,45 @@ export default function ProfileClient({
               <span className={styles.avatarPickerLabel}>Scegli</span>
             </button>
           </div>
+
+          <div className={styles.optionDivider} />
+
+          <div className={styles.avatarRow}>
+            <span className={styles.labelWithIcon}>
+              <Icon name="profile" size={22} />
+              <span className={styles.label}>{t('preferences')}</span>
+            </span>
+            <Link href="/profilo/preferenze" className={styles.avatarPickerBtn}>
+              <span className={styles.avatarPickerDivider} />
+              <span className={styles.avatarPickerLabel}>{t('editPreferences')}</span>
+            </Link>
+          </div>
+
+          {hasBusinessProfile ? (
+            <>
+              <div className={styles.optionDivider} />
+
+              <div className={styles.publicProfileRow}>
+                <div className={styles.publicProfileText}>
+                  <span className={styles.labelWithIcon}>
+                    <Icon name="home" size={20} />
+                    <span className={styles.label}>{t('publicProfile')}</span>
+                  </span>
+                  <p className={styles.publicProfileHint}>
+                    {profileData?.is_partner_public
+                      ? t('publicProfileHintPublic')
+                      : t('publicProfileHintPrivate')}
+                  </p>
+                </div>
+                <Link href="/profilo/pubblico" className={styles.avatarPickerBtn}>
+                  <span className={styles.avatarPickerDivider} />
+                  <span className={styles.avatarPickerLabel}>
+                    {profileData?.is_partner_public ? t('publicLabel') : t('privateLabel')}
+                  </span>
+                </Link>
+              </div>
+            </>
+          ) : null}
 
           <div className={styles.optionDivider} />
 
@@ -520,6 +575,12 @@ export default function ProfileClient({
             </div>
           </div>
         </section>
+
+        <CommunityHighlightsCard
+          snapshot={communitySnapshot}
+          text={t('communityWidget') || {}}
+          className={styles.communityCard}
+        />
 
         {/* ── Come funziona + Changelog ── */}
         <section className={styles.card}>

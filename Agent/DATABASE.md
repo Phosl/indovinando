@@ -13,6 +13,10 @@ Panoramica aggiornata delle tabelle Supabase (PostgreSQL) usate dall'app.
 - `ENOTECA_SCHEMA.sql` - schema enoteca minimale
 - `WINE_CATALOG_SCHEMA.sql` - catalogo vini per creazione degustazione automatica
 - `AUTO_TASTING_MEDIA_SCHEMA.sql` - bucket + tabella immagini bottiglie (opzionale, isolato)
+- `SUPABASE_BUSINESS_BRANDING.sql` - logo attivita + bucket pubblico branding
+- `SUPABASE_AI_SCAN_CREDITS.sql` - crediti analisi AI per auto-tasting
+- `WINE_COURSE_MAX_SCORE_MIGRATION.sql` - allinea schema progresso corso con il client
+- `SUPABASE_WINE_COURSE_PROGRESS_CLEANUP.sql` - pulizia e deduplica sicura del progresso corso
 
 ## Diagramma ER (semplificato)
 
@@ -49,6 +53,30 @@ Profilo utente applicativo (username, onboarding e preferenze UI), legato a `aut
 | `preferred_language` | `TEXT`        | default `it`, valori ammessi `it`/`en`                              |
 | `avatar_emoji`       | `TEXT`        | opzionale                                                           |
 | `onboarding`         | `BOOLEAN`     | opzionale                                                           |
+| `profile_type`       | `TEXT`        | onboarding profilo fase 1                                           |
+| `experience_level`   | `TEXT`        | onboarding profilo fase 1                                           |
+| `favorite_wine_types`| `TEXT[]`      | preferenze vino multi-selezione                                     |
+| `favorite_countries` | `TEXT[]`      | paesi preferiti multi-selezione                                     |
+| `city`               | `TEXT`        | citta utente                                                        |
+| `province`           | `TEXT`        | provincia utente                                                    |
+| `newsletter_opt_in`  | `BOOLEAN`     | consenso newsletter                                                 |
+| `business_name`      | `TEXT`        | nome attivita per profili business                                  |
+| `business_type`      | `TEXT`        | tipologia attivita business                                          |
+| `business_description` | `TEXT`      | descrizione breve attivita                                           |
+| `business_website`   | `TEXT`        | sito web attivita                                                    |
+| `business_phone`     | `TEXT`        | telefono attivita                                                    |
+| `business_address`   | `TEXT`        | indirizzo attivita                                                   |
+| `business_latitude`  | `DOUBLE`      | coordinata lat                                                       |
+| `business_longitude` | `DOUBLE`      | coordinata lng                                                       |
+| `business_logo_path` | `TEXT`        | path storage del logo attivita                                       |
+| `business_logo_url`  | `TEXT`        | URL pubblico del logo attivita                                       |
+| `is_partner_public`  | `BOOLEAN`     | se `true` il partner puo comparire nelle pagine pubbliche            |
+| `partner_slug`       | `TEXT`        | slug pubblico univoco della scheda partner                           |
+| `ai_scan_credits_total` | `INTEGER`  | crediti base disponibili per analisi automatica                      |
+| `ai_scan_credits_bonus` | `INTEGER`  | crediti extra manuali / promozionali                                 |
+| `ai_scan_credits_used`  | `INTEGER`  | crediti gia consumati                                                |
+| `profile_completed_at` | `TIMESTAMPTZ` | completamento wizard profilo                                      |
+| `profile_prompt_dismissed_at` | `TIMESTAMPTZ` | ultimo skip del reminder profilo                           |
 | `super_admin`        | `BOOLEAN`     | default `false` — gestito solo via Supabase dashboard dal developer |
 | `created_at`         | `TIMESTAMPTZ` | opzionale                                                           |
 | `updated_at`         | `TIMESTAMPTZ` | aggiornato su salvataggi preferenze                                 |
@@ -61,6 +89,19 @@ Uso in app:
 - lingua UI (`preferred_language`)
 - avatar profilo (`avatar_emoji`)
 - accesso admin editor corsi (`super_admin`)
+- directory partner pubblica (`is_partner_public`, `partner_slug`)
+- branding degustazioni (`business_logo_path`, `business_logo_url`)
+- blocco analisi AI automatiche (`ai_scan_credits_total`, `ai_scan_credits_bonus`, `ai_scan_credits_used`)
+
+### Funzione: `consume_ai_scan_credits(uuid, integer)`
+
+Consuma in modo atomico i crediti analisi di un utente autenticato.
+
+- input: `p_user_id`, `p_amount`
+- output: snapshot aggiornato di `ai_scan_credits_total`, `ai_scan_credits_bonus`, `ai_scan_credits_used`
+- uso: route `POST /api/auto-tasting/analyze`
+
+Patch SQL: `SUPABASE_AI_SCAN_CREDITS.sql`
 
 ## Storage Bucket
 
@@ -161,10 +202,23 @@ Bottiglie da indovinare in un gioco.
 | `producer`     | `VARCHAR(255)`     | opzionale                 |
 | `year`         | `VARCHAR(4)`       | opzionale                 |
 | `wine_type`    | `TEXT`             | opzionale (red/white/...) |
+| `canonical_wine_key` | `TEXT`       | chiave aggregabile stabile per classifiche |
+| `wine_vintage_id` | `UUID`          | riferimento opzionale al catalogo vino |
+| `price_value`  | `NUMERIC(10,2)`    | snapshot prezzo medio al momento del salvataggio |
+| `price_min`    | `NUMERIC(10,2)`    | snapshot minimo prezzo |
+| `price_max`    | `NUMERIC(10,2)`    | snapshot massimo prezzo |
+| `price_currency` | `TEXT`           | valuta snapshot prezzo |
+| `price_band`   | `TEXT`             | fascia prezzo quiz/catalogo |
+| `region_label` | `TEXT`             | regione/quiz region snapshot |
+| `appellation_label` | `TEXT`        | appellation/quiz appellation snapshot |
 | `bottle_order` | `INTEGER`          | ordine                    |
 | `created_at`   | `TIMESTAMPTZ`      |                           |
 
 Indice: `idx_game_bottles_game_id`
+Indici aggiuntivi:
+
+- `idx_game_bottles_canonical_wine_key`
+- `idx_game_bottles_wine_vintage_id`
 
 ### `game_bottle_answers`
 
@@ -580,6 +634,7 @@ Sessione degustazione semplificata (anche anonima), basata su `games`.
 | ---------------------- | ------------------ | --------------------------- |
 | `id`                   | `UUID PK`          | default `gen_random_uuid()` |
 | `game_id`              | `UUID FK -> games` |                             |
+| `user_id`              | `UUID FK -> auth.users` | nullable, collega la degustazione al profilo utente |
 | `nickname`             | `TEXT`             |                             |
 | `table_name`           | `TEXT`             | opzionale                   |
 | `current_bottle_index` | `INTEGER`          | default `0`                 |
@@ -596,6 +651,7 @@ RLS (aperto per flusso anonimo):
 Indice:
 
 - `idx_enoteca_sessions_game`
+- `idx_enoteca_sessions_user`
 
 ### `enoteca_answers`
 
@@ -622,6 +678,92 @@ Indici:
 
 - `idx_enoteca_answers_session`
 - `idx_enoteca_answers_bottle`
+
+## View classifiche pubbliche
+
+### `public_wine_rating_events`
+
+Vista normalizzata per le classifiche pubbliche vino.
+
+Origini incluse:
+
+- `enoteca_answers` + `enoteca_tasting_sessions`
+- `table_live_round_answers` + `table_live_sessions`
+
+Origini escluse per ora:
+
+- `live_round_answers` classico, perché le risposte round-by-round oggi vengono cancellate
+
+Campi principali:
+
+- `source_flow`
+- `session_id`
+- `user_id`
+- `game_id`
+- `bottle_id`
+- `canonical_wine_key`
+- `wine_vintage_id`
+- `wine_name`
+- `producer`
+- `vintage_label`
+- `wine_type`
+- `region_label`
+- `appellation_label`
+- `price_value`
+- `question_id`
+- `question_kind`
+- `is_rating_question`
+- `is_neutral_question`
+- `rating_value`
+- `is_correct`
+- `points`
+- `answered_at`
+- `session_completed_at`
+
+Regole:
+
+- `enoteca` entra solo con `status = 'completed'`
+- `table-live` entra solo con `status = 'finished'`
+- `rating_value` viene valorizzato solo per domande `kind = 'rating'`
+- `is_correct` resta `NULL` per domande `rating` o neutrali
+
+Patch SQL: `SUPABASE_PUBLIC_WINE_RATING_EVENTS.sql`
+
+### `public_wine_rankings`
+
+Vista aggregata delle classifiche pubbliche vino, costruita sopra `public_wine_rating_events`.
+
+Metriche principali:
+
+- `blind_score` = media voti `rating`
+- `quality_price_score` = `blind_score / ln(avg_price_value + 1)`
+- `surprise_score` = `blind_score - (correctness_ratio * 10)`
+- `divisive_score` = `stddev_samp(rating_value)`
+
+Campi utili:
+
+- `display_name`
+- `producer`
+- `region_label`
+- `appellation_label`
+- `avg_price_value`
+- `rating_count`
+- `rating_session_count`
+- `correctness_ratio`
+- rank dedicati:
+  - `blind_rank`
+  - `quality_price_rank`
+  - `surprise_rank`
+  - `divisive_rank`
+
+Regole minime già applicate come flag:
+
+- `eligible_blind`
+- `eligible_quality_price`
+- `eligible_surprising`
+- `eligible_divisive`
+
+Patch SQL: `SUPABASE_PUBLIC_WINE_RANKINGS.sql`
 
 ## Storico Partite Live
 

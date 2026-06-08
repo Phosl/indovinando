@@ -40,6 +40,84 @@ function parseIsoTime(value) {
   return Number.isNaN(ts) ? 0 : ts
 }
 
+
+function isMissingMaxScoreColumnError(error) {
+  const message = String(error?.message || '').toLowerCase()
+  return (
+    message.includes('max_score') &&
+    (message.includes('column') || message.includes('schema cache'))
+  )
+}
+
+async function loadDbRows(client, uid) {
+  const preferred = await client
+    .from('wine_course_progress')
+    .select('level_id, lesson_id, completed, score, max_score, attempts, completed_at')
+    .eq('user_id', uid)
+
+  if (!preferred.error) {
+    return {
+      rows: preferred.data ?? [],
+      hasMaxScore: true,
+    }
+  }
+
+  if (!isMissingMaxScoreColumnError(preferred.error)) {
+    throw preferred.error
+  }
+
+  const fallback = await client
+    .from('wine_course_progress')
+    .select('level_id, lesson_id, completed, score, attempts, completed_at')
+    .eq('user_id', uid)
+
+  if (fallback.error) {
+    throw fallback.error
+  }
+
+  return {
+    rows: (fallback.data || []).map((row) => ({
+      ...row,
+      max_score: row.score ?? 0,
+    })),
+    hasMaxScore: false,
+  }
+}
+
+async function syncCompletedLessonsToDb(client, uid, progress, hasMaxScoreColumn) {
+  const rows = []
+
+  for (const [levelId, lessons] of Object.entries(progress || {})) {
+    for (const [lessonId, lesson] of Object.entries(lessons || {})) {
+      if (!lesson?.completed) continue
+      const payload = {
+        user_id: uid,
+        level_id: levelId,
+        lesson_id: lessonId,
+        completed: true,
+        score: Number(lesson.score ?? 0),
+        attempts: Number(lesson.attempts ?? 1),
+        completed_at: lesson.completedAt ?? new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }
+      if (hasMaxScoreColumn) {
+        payload.max_score = Number(lesson.maxScore ?? lesson.score ?? 0)
+      }
+      rows.push(payload)
+    }
+  }
+
+  if (!rows.length) return
+
+  const {error} = await client
+    .from('wine_course_progress')
+    .upsert(rows, {onConflict: 'user_id,level_id,lesson_id'})
+
+  if (error) {
+    console.error('[wine-course] DB backfill sync error:', error.message)
+  }
+}
+
 function mergeLessonProgress(localLesson = {}, dbLesson = {}) {
   const localCompleted = localLesson?.completed === true
   const dbCompleted = dbLesson?.completed === true
@@ -108,12 +186,9 @@ export function useWineCourseProgress() {
 
       // 3. Fetch DB in background to get authoritative progress
       try {
-        const {data: rows, error} = await supabaseClient
-          .from('wine_course_progress')
-          .select('level_id, lesson_id, completed, score, max_score, attempts, completed_at')
-          .eq('user_id', uid)
+        const {rows, hasMaxScore} = await loadDbRows(supabaseClient, uid)
 
-        if (cancelled || error) return
+        if (cancelled) return
 
         const dbProgress = rowsToProgress(rows ?? [])
         const merged = {...local}
@@ -131,7 +206,11 @@ export function useWineCourseProgress() {
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(merged))
         } catch {}
-      } catch {}
+
+        await syncCompletedLessonsToDb(supabaseClient, uid, merged, hasMaxScore)
+      } catch (error) {
+        console.error('[wine-course] load progress error:', error?.message || error)
+      }
     }
 
     loadProgress()
@@ -180,24 +259,37 @@ export function useWineCourseProgress() {
 
         // Sync to DB if logged in (fire-and-forget)
         if (userId) {
+          const payload = {
+            user_id: userId,
+            level_id: levelId,
+            lesson_id: lessonId,
+            completed: true,
+            score: bestScore,
+            max_score: storedMaxScore,
+            attempts,
+            completed_at: completedAt,
+            updated_at: completedAt,
+          }
+
           supabaseClient
             .from('wine_course_progress')
-            .upsert(
-              {
-                user_id: userId,
-                level_id: levelId,
-                lesson_id: lessonId,
-                completed: true,
-                score: bestScore,
-                max_score: storedMaxScore,
-                attempts,
-                completed_at: completedAt,
-                updated_at: completedAt,
-              },
-              {onConflict: 'user_id,level_id,lesson_id'},
-            )
-            .then(({error}) => {
-              if (error) console.error('[wine-course] DB sync error:', error.message)
+            .upsert(payload, {onConflict: 'user_id,level_id,lesson_id'})
+            .then(async ({error}) => {
+              if (!error) return
+              if (!isMissingMaxScoreColumnError(error)) {
+                console.error('[wine-course] DB sync error:', error.message)
+                return
+              }
+
+              const fallbackPayload = {...payload}
+              delete fallbackPayload.max_score
+              const fallback = await supabaseClient
+                .from('wine_course_progress')
+                .upsert(fallbackPayload, {onConflict: 'user_id,level_id,lesson_id'})
+
+              if (fallback.error) {
+                console.error('[wine-course] DB fallback sync error:', fallback.error.message)
+              }
             })
         }
 

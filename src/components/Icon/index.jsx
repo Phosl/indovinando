@@ -28,6 +28,7 @@ const ICONS = {
   profile: '/icons/profile.svg',
   enter: '/icons/enter.svg',
   plusFat: '/icons/plus-fat.svg',
+  photo: '/icons/photo.svg',
 }
 
 const ICON_RENDER_MODE = {

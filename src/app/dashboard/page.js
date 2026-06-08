@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import {redirect} from 'next/navigation'
 import Link from 'next/link'
 import DashboardInfoFabWrapper from './DashboardInfoFabWrapper'
@@ -8,6 +9,8 @@ import {getWineCourseData} from '@/lib/wineCourseContent'
 import ProgressBar from '@/components/ui/ProgressBar'
 import Icon from '@/components/Icon'
 import CreateGameCardLink from '@/components/CreateGameCardLink'
+import ProfileSetupPanel from '@/components/profile/ProfileSetupPanel'
+import {isProfileComplete} from '@/lib/profileSetup'
 import it from '@/lib/i18n/locales/it.json'
 import en from '@/lib/i18n/locales/en.json'
 import styles from './dashboard.module.scss'
@@ -24,7 +27,13 @@ export default async function Dashboard() {
   }
 
   const [profileResult, courseResult, completedLessonsResult, appVersion] = await Promise.all([
-    supabase.from('profiles').select('username, super_admin').eq('id', data.user.id).single(),
+    supabase
+      .from('profiles')
+      .select(
+        'username, super_admin, profile_type, experience_level, favorite_wine_types, favorite_countries, city, province, newsletter_opt_in, business_name, business_type, business_description, business_website, business_phone, business_address, business_latitude, business_longitude, profile_completed_at, profile_prompt_dismissed_at',
+      )
+      .eq('id', data.user.id)
+      .single(),
     getWineCourseData(lang).catch(() => ({levels: []})),
     supabase
       .from('wine_course_progress')
@@ -48,12 +57,13 @@ export default async function Dashboard() {
   const progressPct =
     totalLessons > 0 ? Math.round(Math.min(100, (completedLessons / totalLessons) * 100)) : 0
   const hasStartedCourse = completedLessons > 0
+  const showProfileSetupPanel = !isProfileComplete(profile || {})
 
   return (
     <main className={styles.dashboard}>
       <div className={styles.container}>
         <section className={styles.arcadeHero}>
-          <img src="/logo.svg" alt="Indovinando Logo" className={styles.logo} />
+          {/* <Image src="/logo.svg" alt="Indovinando Logo" className={styles.logo} width={320} height={96} priority /> */}
           <div className={styles.welcomeTextContainer}>
             <h1>
               {dashboardDict.welcome}, {isSuperAdmin ? 'Supremo' : ''}{' '}
@@ -63,6 +73,7 @@ export default async function Dashboard() {
           </div>
         </section>
 
+        {showProfileSetupPanel && <ProfileSetupPanel profile={profile || {}} mode="dashboard" />}
         <nav className={styles.menuGrid}>
           <CreateGameCardLink
             title={dashboardDict.createGameCardTitle}
@@ -101,12 +112,34 @@ export default async function Dashboard() {
                 <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
               </span>
             </div>
-            <img
+            <Image
               src="/img-card-course.svg"
               alt=""
               aria-hidden="true"
               className="card-illustration-absolute"
+              width={220}
+              height={220}
             />
+          </Link>
+
+          <Link
+            href="/classifiche"
+            className={`${styles.sectionCard} ${styles.sectionCardTertiary} ${styles.sectionCardBottomArrow}`}>
+            <div className={styles.sectionCardInfo}>
+              <span className={styles.sectionCardEyebrow}>
+                {dashboardDict.communityEyebrow || 'Community'}
+              </span>
+              <h3>{dashboardDict.rankingsTitle || 'Classifiche pubbliche'}</h3>
+              <p>
+                {dashboardDict.rankingsDescription ||
+                  'Scopri i vini più votati, sorprendenti e divisivi della community.'}
+              </p>
+            </div>
+            <div className={styles.sectionCardArrowRail} aria-hidden="true">
+              <span className={`btn icon-circle ${styles.sectionCardArrowBtn}`}>
+                <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
+              </span>
+            </div>
           </Link>
 
           {isSuperAdmin && (

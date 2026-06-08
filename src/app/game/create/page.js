@@ -9,7 +9,8 @@ export default async function Page({searchParams}) {
   if (params?.mode === 'quick') redirect('/game/create/quick')
   if (params?.mode === 'custom') redirect('/game/create/custom')
   if (params?.mode === 'automatic') redirect('/game/create/automatic')
-  const {initialShowOnboarding, userId, avatarOptions} = await getCreateGameData()
+  const {initialShowOnboarding, userId, avatarOptions, initialAiScanCredits} =
+    await getCreateGameData()
 
   return (
     <Suspense fallback={<GameCreateLoading />}>
@@ -17,6 +18,7 @@ export default async function Page({searchParams}) {
         initialShowOnboarding={initialShowOnboarding}
         userId={userId}
         avatarOptions={avatarOptions}
+        initialAiScanCredits={initialAiScanCredits}
         mode="choose"
       />
     </Suspense>

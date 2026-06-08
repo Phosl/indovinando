@@ -112,19 +112,19 @@ function AuthForm() {
         }
         router.push(safeNextPath)
       } else {
-        const {data, error: signupError} = await supabase.auth.signUp({email, password})
+        const normalizedUsername = username.trim()
+        const {data, error: signupError} = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              username: normalizedUsername,
+            },
+          },
+        })
         if (signupError) {
           setError(signupError.message)
           return
-        }
-        if (data?.user && username) {
-          const {error: profileError} = await supabase
-            .from('profiles')
-            .upsert({id: data.user.id, username: username.trim()})
-          if (profileError) {
-            setError(profileError.message)
-            return
-          }
         }
         setUsername('')
         setEmail('')
@@ -138,7 +138,7 @@ function AuthForm() {
           password,
         })
         if (loginAfterSignupError) {
-          setError(t('registrationComplete'))
+          setInfo(t('registrationComplete'))
           return
         }
         router.push(safeNextPath)

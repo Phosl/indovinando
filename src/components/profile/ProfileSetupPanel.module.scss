@@ -1,0 +1,117 @@
+.card {
+  background: var(--foreground);
+  border: 1px solid var(--button-secondary-border);
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  gap: 16px;
+}
+
+.cardDashboard {
+  background: linear-gradient(135deg, var(--success-50), var(--foreground));
+  border-color: var(--success-100);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.eyebrow {
+  display: inline-flex;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--success-text);
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.15;
+  color: var(--primary-text);
+}
+
+.description {
+  margin: 8px 0 0;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.progressBadge {
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--foreground);
+  border: 1px solid var(--success-100);
+  color: var(--success-text);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.checkList {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.summaryItem {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--foreground);
+  border: 1px solid var(--button-secondary-border);
+
+  strong {
+    color: var(--primary-text);
+    font-size: 16px;
+    line-height: 1.35;
+  }
+}
+
+.summaryLabel {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.actionBtn {
+  width: auto;
+}
+
+@media (max-width: 768px) {
+  .cardHeader {
+    display: grid;
+  }
+
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .progressBadge {
+    width: fit-content;
+  }
+}

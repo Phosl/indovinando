@@ -11,6 +11,7 @@ import {GameOverlays} from '@/app/live/session/[sessionId]/play/components/GameO
 import {useT} from '@/lib/i18n/useT'
 import AvatarDisplay from '@/components/AvatarDisplay'
 import Loader from '@/components/Loader'
+import {buildPublicAppUrl} from '@/lib/publicAppUrl'
 import {scrollPageTop} from '@/lib/scrollPageTop'
 import styles from '@/app/live/session/[sessionId]/play/playerLive.module.scss'
 import joinStyles from '@/app/live/session/[sessionId]/playerJoin.module.scss'
@@ -391,10 +392,10 @@ export default function TableLiveSessionClient({sessionId}) {
     const slug = data?.event?.slug
     router.push(slug ? `/table-live/event/${slug}` : '/')
   }
-  const sessionLink = useMemo(() => {
-    if (typeof window === 'undefined') return ''
-    return `${window.location.origin}/table-live/session/${sessionId}`
-  }, [sessionId])
+  const sessionLink = useMemo(
+    () => buildPublicAppUrl(`/table-live/session/${sessionId}`),
+    [sessionId],
+  )
 
   const handleCopyLink = async () => {
     try {
@@ -519,18 +520,12 @@ export default function TableLiveSessionClient({sessionId}) {
             <strong className={styles.lobbyCodeValue}>{data.session.joinCode}</strong>
           </div>
 
-          {data.me.isHost ? (
-            <button className="btn success" onClick={handleStart} disabled={starting}>
-              {starting ? tJoin('startingGameAction') : tJoin('startGameAction')}
-            </button>
-          ) : (
-            <p className={styles.lobbyWaitingNotice}>{tJoin('waitHostStart')}</p>
-          )}
+          {data.me.isHost ? null : <p className={styles.lobbyWaitingNotice}>{tJoin('waitHostStart')}</p>}
           <div className={joinStyles.shareButtons}>
-            <button className="btn neutral small" onClick={handleCopyLink}>
+            <button className="btn neutral btn-small" onClick={handleCopyLink}>
               {copied ? tJoin('copied') : tJoin('copyLink')}
             </button>
-            <button className="btn neutral small" onClick={handleShareLink}>
+            <button className="btn neutral btn-small" onClick={handleShareLink}>
               {tJoin('shareLink')}
             </button>
           </div>
@@ -562,6 +557,16 @@ export default function TableLiveSessionClient({sessionId}) {
           ) : null}
           {error ? <p>{error}</p> : null}
         </div>
+        {data.me.isHost ? (
+          <>
+            <div className={styles.lobbyBottomSpacer} />
+            <div className={styles.lobbyBottomRow}>
+              <button className="btn success-filled" onClick={handleStart} disabled={starting}>
+                {starting ? tJoin('startingGameAction') : tJoin('startGameAction')}
+              </button>
+            </div>
+          </>
+        ) : null}
         {overlays}
       </div>
     )

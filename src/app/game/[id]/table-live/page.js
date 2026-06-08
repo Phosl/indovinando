@@ -1,6 +1,7 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
+import {getBusinessBranding} from '@/lib/businessBranding'
 import TableLiveModeClient from './TableLiveModeClient'
 
 export async function generateMetadata() {
@@ -10,9 +11,11 @@ export async function generateMetadata() {
   }
 }
 
-export default async function TableLiveModePage({params}) {
+export default async function TableLiveModePage({params, searchParams}) {
   const supabase = await createServerSupabase()
   const {id: gameId} = await params
+  const resolvedSearchParams = await Promise.resolve(searchParams)
+  const backHref = resolvedSearchParams?.back === 'mode' ? `/game/${gameId}/mode` : `/game/${gameId}`
 
   const {
     data: {user},
@@ -33,5 +36,20 @@ export default async function TableLiveModePage({params}) {
     redirect('/dashboard')
   }
 
-  return <TableLiveModeClient gameId={game.id} gameName={game.name} />
+  const {data: ownerProfile} = await supabase
+    .from('profiles')
+    .select(
+      'username, business_name, business_type, business_website, business_phone, business_address, business_logo_path, business_logo_url, city, province',
+    )
+    .eq('id', user.id)
+    .maybeSingle()
+
+  return (
+    <TableLiveModeClient
+      gameId={game.id}
+      gameName={game.name}
+      backHref={backHref}
+      branding={getBusinessBranding(ownerProfile || {})}
+    />
+  )
 }

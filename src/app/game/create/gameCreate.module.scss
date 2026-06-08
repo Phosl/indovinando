@@ -136,8 +136,8 @@
   text-align: left;
   font-size: clamp(1.8rem, 3vw, 3.2rem);
   letter-spacing: -0.015em;
-  max-width: 14ch;
   color: #17184f;
+  width: 100%;
 }
 
 .autoModeDescriptionCentered {
@@ -295,24 +295,35 @@
   background: var(--white);
 }
 
-.autoModeMetricCard:nth-child(1) {
+.autoModeMetricCardCredits {
   background: var(--primary-50);
+
   .autoModeMetricLabel {
     color: var(--primary-text);
   }
 }
 
-.autoModeMetricCard:nth-child(2) {
+.autoModeMetricCardBottles {
   background: var(--success-50);
+
   .autoModeMetricLabel {
     color: var(--success-text);
   }
 }
 
-.autoModeMetricCard:nth-child(3) {
+.autoModeMetricCardTokens {
   background: var(--tertiary-50);
+
   .autoModeMetricLabel {
     color: var(--tertiary-text);
+  }
+}
+
+.autoModeMetricCardCost {
+  background: var(--secondary-50, var(--primary-50));
+
+  .autoModeMetricLabel {
+    color: var(--secondary-text, var(--primary-text));
   }
 }
 
@@ -390,8 +401,29 @@
 .autoModeUploadProgressBar span {
   display: block;
   height: 100%;
-  background: #2e88b5;
+  background: var(--success);
   transition: width 0.2s linear;
+}
+
+.autoCreditsInfoList {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-primary);
+  display: grid;
+  gap: 8px;
+}
+
+.autoBottleInlineInfoButton {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+  line-height: 1.4;
+  text-align: left;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .autoStepFixedRow {
@@ -622,6 +654,66 @@
   }
 }
 
+.autoPreviewPageCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.autoPreviewPageHeader {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.autoPreviewPageBody {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+
+  :global(.prova) {
+    padding: 0;
+    border: 0;
+  }
+}
+
+.autoPreviewPageSpacer {
+  height: 88px;
+  flex: 0 0 88px;
+}
+
+.autoPreviewPageFooter {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: min(100%, 960px);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  background: var(--dark);
+  z-index: 3;
+
+  :global(.btn) {
+    width: 100%;
+    min-width: 170px;
+  }
+
+  :global(.btn.success) {
+    background-color: var(--success);
+    color: var(--white);
+    border-color: var(--success);
+
+    &:hover {
+      background: var(--success-700);
+      border-color: var(--success-700);
+    }
+  }
+}
+
 .autoModeUploadedList {
   margin: 8px 0 0;
   padding: 0;
@@ -706,6 +798,54 @@
   height: 100%;
   max-height: 560px;
   object-fit: cover;
+}
+
+.autoBottlePreviewProgressPill {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(239, 255, 242, 0.96);
+  border: 1px solid var(--success-100);
+  color: var(--success-text);
+  font-size: 0.8rem;
+  font-weight: 800;
+  backdrop-filter: blur(6px);
+}
+
+.autoBottlePreviewFallback {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(252, 249, 239, 0.82) 0%, rgba(245, 241, 234, 0.96) 100%);
+
+  strong {
+    color: var(--primary-text);
+    font-size: 1rem;
+    font-weight: 900;
+    word-break: break-word;
+  }
+
+  span {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
 }
 
 .autoBottleCardInfoCol {
@@ -1095,7 +1235,7 @@
   text-align: left;
   border-radius: 14px;
   border: 1px solid #e3ddd3;
-  background: #ffffff;
+  background: var(--gray-100);
   padding: 12px;
   cursor: pointer;
 }
@@ -1117,6 +1257,38 @@
     font-size: 1rem;
     font-weight: 800;
   }
+}
+
+.autoDiffItemHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.autoDiffSelectedPill,
+.autoDiffUnselectedPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.autoDiffSelectedPill {
+  background: var(--success-surface);
+  border: 1px solid var(--success-100);
+  color: var(--success-text);
+}
+
+.autoDiffUnselectedPill {
+  background: var(--gray-50);
+  border: 1px solid var(--button-secondary-border);
+  color: var(--primary-text);
 }
 
 .autoDiffColumns {
@@ -1486,4 +1658,539 @@
   //   bottom: -4%;
   //   opacity: 0.32;
   // }
+}
+
+.autoTopBarCredits {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--success-100);
+  background: var(--success-surface);
+  color: var(--success-text);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.autoCreditsInfoRemaining {
+  margin: 10px 0 0;
+  color: var(--success-text);
+  font-weight: 800;
+}
+
+.autoPageAnalyzeOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1240;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(17, 29, 47, 0.46);
+  backdrop-filter: blur(4px);
+}
+
+.autoPageAnalyzePanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: min(100%, 340px);
+  border-radius: 20px;
+  padding: 24px 20px;
+  background: var(--white);
+  border: 1px solid var(--primary-100);
+  text-align: center;
+
+  strong {
+    color: var(--primary-text);
+    font-size: 1.1rem;
+  }
+
+  span {
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+}
+
+.autoUploadHero {
+  width: 100%;
+  min-height: 180px;
+  border-radius: 24px;
+  border: 2px dashed var(--primary);
+  background: linear-gradient(180deg, #ffffff 0%, #fcfaff 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 16px 16px;
+  strong {
+    color: var(--primary-text);
+    font-size: 1.9rem;
+    line-height: 1.15;
+  }
+
+  span {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+}
+
+.autoUploadHeroActive {
+  border-color: color-mix(in srgb, var(--primary-text) 22%, white);
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    color-mix(in srgb, var(--primary-text) 4%, white) 100%
+  );
+
+  .autoUploadHeroIcon {
+    background: radial-gradient(
+      circle at 50% 35%,
+      rgba(255, 255, 255, 0.95) 0%,
+      color-mix(in srgb, var(--primary-text) 10%, white) 100%
+    );
+    border-color: color-mix(in srgb, var(--primary-text) 18%, white);
+  }
+}
+
+.autoUploadHeroIcon {
+  width: 84px;
+  height: 84px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.95) 0%, #f2ebff 100%);
+  border: 1px solid #e2d6ff;
+  color: var(--primary-text);
+  box-shadow: 0 10px 24px rgba(120, 92, 212, 0.08);
+  span {
+    color: var(--primary-text);
+  }
+}
+
+.autoUploadSectionHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+
+  strong {
+    color: var(--primary-text);
+    font-size: 1.05rem;
+  }
+
+  span {
+    color: var(--primary);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+}
+
+.autoUploadGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.autoUploadTileEmpty,
+.autoUploadTileFilled {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.autoUploadTileEmpty {
+  border: 2px dashed var(--primary-200);
+  background: var(--white);
+  color: var(--primary-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  span {
+    color: var(--gray-300);
+  }
+}
+
+.autoUploadTilePlus {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-50);
+  color: var(--primary-text);
+}
+
+.autoUploadTileFilled {
+  background: var(--gray-100);
+}
+
+.autoUploadTileDelete {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  min-width: 38px !important;
+  padding: 0 !important;
+}
+
+.autoUploadTileImage {
+  object-fit: cover;
+}
+
+.autoUploadTileFallback {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.86);
+  text-align: center;
+
+  span {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+  }
+}
+
+.autoUploadTileProgressPill {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--success-surface);
+  border: 1px solid var(--success-100);
+  color: var(--success-text);
+  font-size: 0.78rem;
+  font-weight: 800;
+
+  :global(svg) {
+    flex: 0 0 auto;
+  }
+}
+
+.autoBottleSummaryList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.autoBottleSummaryCard {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 14px;
+  align-items: stretch;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid var(--gray-200);
+  background: var(--white);
+  text-align: left;
+}
+
+.autoBottleSummaryMedia {
+  position: relative;
+  min-height: 104px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--gray-100);
+}
+
+.autoBottleSummaryImage {
+  object-fit: cover;
+}
+
+.autoBottleSummaryFallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.88);
+
+  span {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+  }
+}
+
+.autoBottleSummaryBody {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.autoBottleSummaryProgressBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.autoBottleSummaryProgressMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  span {
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+}
+
+.autoBottleSummaryProgressBar {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--gray-100);
+  overflow: hidden;
+
+  span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--success) 0%, var(--primary-text) 100%);
+  }
+}
+
+.autoBottleSummaryHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+
+  strong {
+    color: var(--primary-text);
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+}
+
+.autoBottleStatusBadge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  white-space: nowrap;
+  background: var(--success-surface);
+  color: var(--success-text);
+  border: 1px solid var(--success-100);
+}
+
+.autoBottleStatusBadgeChart {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+  flex: 0 0 auto;
+}
+
+.autoBottleStatusBadgeChartInner {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--success-surface);
+}
+
+.autoBottleStatusBadgeComplete {
+  background: var(--success-50);
+  color: var(--success-text);
+  border: 1px solid var(--success-100);
+}
+
+.autoBottleStatusBadgeIncomplete {
+  background: var(--gray-100);
+  color: var(--text-secondary);
+  border: 1px solid var(--gray-100);
+}
+
+.autoBottleSummaryMeta {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.autoBottleSummaryFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.autoBottleSummaryFact {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: var(--primary-25);
+  color: var(--primary-text);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.autoBottleDetailCard {
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 14px;
+  border-radius: 22px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+}
+
+.autoBottleDetailPreview {
+  position: relative;
+  min-height: 340px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--gray-100);
+}
+
+.autoBottleDetailContent {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.autoBottleDetailGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.autoBottleDetailSpec {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--gray-100);
+
+  span {
+    color: var(--text-secondary);
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  strong {
+    color: var(--primary-text);
+    line-height: 1.4;
+  }
+}
+
+.autoBottleDetailNarrative {
+  margin: 0;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.autoBottleDetailActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.autoBottleEditGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.autoBottleEditField,
+.autoBottleEditFieldFull {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  span {
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    background: var(--white);
+    color: var(--primary-text);
+    padding: 12px 14px;
+    font: inherit;
+  }
+}
+
+.autoBottleEditFieldFull {
+  grid-column: 1 / -1;
+}
+
+.autoBottlePendingCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--gray-100);
+
+  p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 720px) {
+  .autoBottleDetailCard {
+    grid-template-columns: 1fr;
+  }
+
+  .autoBottleDetailPreview {
+    min-height: 260px;
+  }
+
+  .autoBottleDetailGrid,
+  .autoBottleEditGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .autoUploadHero {
+    min-height: 200px;
+
+    strong {
+      font-size: 1.65rem;
+    }
+  }
+
+  .autoUploadGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
 }

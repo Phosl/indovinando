@@ -586,6 +586,15 @@ export default function GameEditor({
               producer: b.producer,
               year: b.year,
               wineType: b.wine_type || '',
+              canonicalWineKey: b.canonical_wine_key || null,
+              wineVintageId: b.wine_vintage_id || null,
+              priceValue: b.price_value ?? null,
+              priceMin: b.price_min ?? null,
+              priceMax: b.price_max ?? null,
+              priceCurrency: b.price_currency || null,
+              priceBand: b.price_band || null,
+              regionLabel: b.region_label || null,
+              appellationLabel: b.appellation_label || null,
               answers,
             }
           })
@@ -908,7 +917,9 @@ export default function GameEditor({
     } else {
       setBottles((prev) => {
         const updated = [...prev]
+        const existingBottle = updated[activeBottleIndex] || {}
         updated[activeBottleIndex] = {
+          ...existingBottle,
           name: bottleName.trim(),
           producer: producer.trim(),
           year: year.trim(),

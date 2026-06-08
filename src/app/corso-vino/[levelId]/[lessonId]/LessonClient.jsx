@@ -9,6 +9,7 @@ import {useWineCourseProgress} from '../../hooks/useWineCourseProgress'
 import {useGameAudio} from '../../../live/session/[sessionId]/play/hooks/useGameAudio'
 import {useT} from '@/lib/i18n/useT'
 import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
+import {scrollPageTop} from '@/lib/scrollPageTop'
 import TopBar from '@/components/TopBar'
 import Icon from '@/components/Icon'
 
@@ -227,6 +228,11 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
     if (!container) return
     container.scrollTop = 0
   }, [didacticIndex, screen])
+
+  useEffect(() => {
+    if (screen !== 'question') return
+    scrollPageTop()
+  }, [questionIndex, screen])
 
   // Detect level-up after lesson completion
   useEffect(() => {

@@ -4,6 +4,7 @@ import {useMemo} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import Icon from '@/components/Icon'
+import CourseLevelCover from '@/components/course/CourseLevelCover'
 import {useWineCourseProgress} from '../hooks/useWineCourseProgress'
 import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
 import {useT} from '@/lib/i18n/useT'
@@ -50,7 +51,15 @@ export default function LevelClient({level, lessons, levels = []}) {
 
       {/* Level hero */}
       <div className={styles.levelHero}>
-        <div className={styles.levelEmoji}>{level.emoji}</div>
+        <CourseLevelCover
+          levelOrder={level.order}
+          title={level.title}
+          emoji={level.emoji}
+          className={styles.levelHeroMedia}
+          imageClassName={styles.levelCoverImage}
+          fallbackClassName={styles.levelHeroMedia}
+          overlayClassName={styles.levelCoverOverlay}
+        />
         <h1 className={styles.levelTitle}>{level.title}</h1>
         <p className={styles.levelDesc}>{level.description}</p>
       </div>

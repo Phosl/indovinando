@@ -20,10 +20,12 @@
   gap: 8px;
   white-space: nowrap;
   flex-shrink: 0;
+  width: auto;
   padding: 8px 12px;
   border: 2px solid var(--button-secondary-border);
   border-radius: 999px;
   background: var(--background);
+  color: var(--primary-text);
   text-decoration: none;
   font-weight: 900;
 }

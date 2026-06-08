@@ -2,6 +2,11 @@ import {notFound, redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getLocaleText} from '@/lib/i18n/getLocaleText'
 import {getServerLanguage} from '@/lib/i18n/server'
+import {
+  getBusinessBranding,
+  getBusinessContactLine,
+  getBusinessLocationLine,
+} from '@/lib/businessBranding'
 import styles from './print.module.scss'
 import PrintSheetClient from './PrintSheetClient'
 
@@ -67,12 +72,38 @@ export default async function GamePrintPage({params}) {
     (bottle) => (bottle.game_bottle_answers || []).length > 0,
   )
 
+  const {data: ownerProfile} = await supabase
+    .from('profiles')
+    .select(
+      'username, business_name, business_type, business_website, business_phone, business_address, business_logo_path, business_logo_url, city, province',
+    )
+    .eq('id', game.created_by)
+    .maybeSingle()
+
+  const branding = getBusinessBranding(ownerProfile || {})
+  const footerLocation = getBusinessLocationLine(branding)
+  const footerContacts = getBusinessContactLine(branding)
+
   return (
     <main className={styles.page}>
       <PrintSheetClient gameId={gameId} hasResults={hasResults} />
 
       <section className={styles.sheet}>
         <header className={styles.header}>
+          {(branding.logoUrl || branding.activityName) && (
+            <div className={styles.brandHeader}>
+              {branding.logoUrl ? (
+                <img
+                  src={branding.logoUrl}
+                  alt={branding.activityName || game.name}
+                  className={styles.brandLogo}
+                />
+              ) : null}
+              {branding.activityName ? (
+                <p className={styles.brandName}>{branding.activityName}</p>
+              ) : null}
+            </div>
+          )}
           <h1>{game.name}</h1>
           <div className={styles.playerRow}>
             <span>{`${printText.nameLabel}:`}</span>
@@ -134,6 +165,17 @@ export default async function GamePrintPage({params}) {
             </article>
           ))}
         </div>
+
+        <footer className={styles.footer}>
+          <div className={styles.footerBrand}>
+            <img src="/logo.svg" alt="Indovinando" className={styles.footerLogo} />
+            <div className={styles.footerMeta}>
+              {branding.activityName ? <strong>{branding.activityName}</strong> : null}
+              {footerLocation ? <span>{footerLocation}</span> : null}
+              {footerContacts ? <span>{footerContacts}</span> : null}
+            </div>
+          </div>
+        </footer>
       </section>
     </main>
   )

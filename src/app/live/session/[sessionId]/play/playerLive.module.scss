@@ -50,7 +50,7 @@
 
 // ── Top bar ───────────────────────────────────────────────────
 .topBarContainer {
-  padding: 0px 20px;
+  // padding: 0px 20px;
 }
 
 .topBar {
@@ -224,7 +224,7 @@
 .questionText {
   margin: 0;
   font-size: 1.5rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.4;
   color: var(--text-primary);
 }
@@ -815,6 +815,30 @@
   padding-bottom: 32px;
 }
 
+.lobbyBottomSpacer {
+  height: 88px;
+  flex: 0 0 88px;
+}
+
+.lobbyBottomRow {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  background: var(--dark);
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+
+  :global(.btn) {
+    width: 100%;
+    min-width: 170px;
+  }
+}
+
 .lobbyCodeBlock {
   border: 2px solid var(--selected);
   background: var(--selected-extra-light);
@@ -846,14 +870,23 @@
   margin: 0;
   padding: 14px 16px;
   border-radius: 14px;
-  background: color-mix(in srgb, var(--selected) 10%, var(--foreground));
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--selected) 8%, var(--foreground)) 0%,
+      color-mix(in srgb, var(--selected) 18%, var(--foreground)) 50%,
+      color-mix(in srgb, var(--selected) 8%, var(--foreground)) 100%
+    );
+  background-size: 200% 100%;
   border: 1.5px solid color-mix(in srgb, var(--selected-dark) 20%, white 80%);
   color: var(--selected-dark);
   font-size: 0.98rem;
   font-weight: 800;
   line-height: 1.45;
   text-align: center;
-  animation: lobbyNoticePulse 2.2s ease-in-out infinite;
+  animation:
+    lobbyNoticePulse 2.2s ease-in-out infinite,
+    lobbyNoticeShimmer 2s linear infinite;
 }
 
 .lobbyPlayersSection {
@@ -871,6 +904,16 @@
   50% {
     transform: translateY(-1px);
     box-shadow: 0 8px 20px color-mix(in srgb, var(--selected-dark) 10%, transparent 90%);
+  }
+}
+
+@keyframes lobbyNoticeShimmer {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
   }
 }
 

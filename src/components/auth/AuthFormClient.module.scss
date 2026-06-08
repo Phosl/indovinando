@@ -54,9 +54,9 @@
 .infoMessage {
   padding: 12px;
   border-radius: 10px;
-  background: #eefaf1;
-  border: 1px solid #bfe8c9;
-  color: #1f6d37;
+  background: var(--success-surface);
+  border: 1px solid var(--success-100);
+  color: var(--success-text);
   font-size: 0.92rem;
   font-weight: 700;
 }

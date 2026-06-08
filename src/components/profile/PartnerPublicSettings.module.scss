@@ -1,0 +1,102 @@
+.card {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+  background: var(--foreground);
+  border: 1px solid var(--button-secondary-border);
+  border-radius: 16px;
+}
+
+.cardPage {
+  border-color: var(--primary-100);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.eyebrow {
+  display: inline-flex;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary-text);
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.15;
+  color: var(--primary-text);
+}
+
+.description {
+  margin: 8px 0 0;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.toggleBtn {
+  width: auto;
+}
+
+.body {
+  display: grid;
+  gap: 12px;
+}
+
+.helper {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.metaRow {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--primary-50);
+  border: 1px solid var(--primary-100);
+}
+
+.metaLabel {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.metaValue {
+  color: var(--primary-text);
+  font-size: 16px;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.error {
+  margin: 0;
+  color: var(--danger-text);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+@media (max-width: 768px) {
+  .header {
+    display: grid;
+  }
+}

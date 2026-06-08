@@ -5,6 +5,7 @@ import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import Icon from '@/components/Icon'
 import GuestWarningModal from '@/components/course/GuestWarningModal'
+import CourseLevelCover from '@/components/course/CourseLevelCover'
 import ProgressBar from '@/components/ui/ProgressBar'
 import {useWineCourseProgress} from './hooks/useWineCourseProgress'
 import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
@@ -141,7 +142,15 @@ export default function CourseClient({levels, isAdmin = false, viewer, lang = 'i
               key={level.id}
               className={`${styles.levelCard} ${!canAccess ? styles.locked : ''}`}
               onClick={() => handleLevelClick(level)}>
-              <div className={styles.levelEmoji}>{level.emoji}</div>
+              <CourseLevelCover
+                levelOrder={level.order}
+                title={level.title}
+                emoji={level.emoji}
+                className={styles.levelMedia}
+                imageClassName={styles.levelCoverImage}
+                fallbackClassName={styles.levelMedia}
+                overlayClassName={styles.levelCoverOverlay}
+              />
               <div className={styles.levelInfo}>
                 <div className={styles.levelMeta}>
                   <span className={styles.levelOrder}>

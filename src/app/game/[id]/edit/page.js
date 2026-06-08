@@ -58,7 +58,7 @@ export default async function GameEditPage({params}) {
   const {data: bottles} = await supabase
     .from('game_bottles')
     .select(
-      'id, name, producer, year, wine_type, bottle_order, game_bottle_answers(question_id, option_id)',
+      'id, name, producer, year, wine_type, canonical_wine_key, wine_vintage_id, price_value, price_min, price_max, price_currency, price_band, region_label, appellation_label, bottle_order, game_bottle_answers(question_id, option_id)',
     )
     .eq('game_id', gameId)
     .order('bottle_order')

@@ -81,6 +81,14 @@ export default function BottleModal({
   const currentQuestionIsNeutral = isQuestionStep ? isNeutralQuestion(currentQuestion) : false
 
   const selectedAnswer = isQuestionStep ? currentAnswers[currentQuestionIndex] : null
+  const bottleNameMissing = !bottleName?.trim()
+  const producerMissing = !producer?.trim()
+  const yearMissing = !year?.trim()
+  const wineTypeMissing = !wineType?.trim()
+  const currentQuestionMissing =
+    isQuestionStep &&
+    !currentQuestionIsNeutral &&
+    (selectedAnswer === null || selectedAnswer === undefined)
 
   if (!isOpen) return null
 
@@ -147,6 +155,7 @@ export default function BottleModal({
   const backLabel = text.back
   const finalTitle = text.done
   const finalHint = text.finalHint
+  const incompleteLabel = text.incompleteBadge || (lang === 'en' ? 'Incomplete' : 'Incompleto')
 
   return (
     <div className={styles.modalOverlay}>
@@ -167,31 +176,53 @@ export default function BottleModal({
           {isDetailsStep && (
             <div className={styles.bottleInfoSection}>
               <h4>{text.details}</h4>
-              <input
-                className={styles.inputField}
-                placeholder={text.bottleNamePlaceholder}
-                value={bottleName}
-                onChange={(e) => onBottleNameChange(e.target.value)}
-              />
-              <input
-                className={styles.inputField}
-                placeholder={text.producerPlaceholder}
-                value={producer}
-                onChange={(e) => onProducerChange(e.target.value)}
-              />
-              <input
-                className={styles.inputField}
-                placeholder={text.yearPlaceholder}
-                value={year}
-                maxLength={4}
-                onChange={(e) => onYearChange(e.target.value)}
-              />
+              <div className={styles.fieldGroup}>
+                <div className={styles.fieldLabelRow}>
+                  <label className={styles.fieldLabel}>{text.bottleNameLabel || text.bottleNamePlaceholder}</label>
+                  {bottleNameMissing && <span className={styles.incompleteBadge}>{incompleteLabel}</span>}
+                </div>
+                <input
+                  className={`${styles.inputField} ${bottleNameMissing ? styles.inputFieldIncomplete : ''}`}
+                  placeholder={text.bottleNamePlaceholder}
+                  value={bottleName}
+                  onChange={(e) => onBottleNameChange(e.target.value)}
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <div className={styles.fieldLabelRow}>
+                  <label className={styles.fieldLabel}>{text.producerLabel || text.producerPlaceholder}</label>
+                  {producerMissing && <span className={styles.incompleteBadge}>{incompleteLabel}</span>}
+                </div>
+                <input
+                  className={`${styles.inputField} ${producerMissing ? styles.inputFieldIncomplete : ''}`}
+                  placeholder={text.producerPlaceholder}
+                  value={producer}
+                  onChange={(e) => onProducerChange(e.target.value)}
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <div className={styles.fieldLabelRow}>
+                  <label className={styles.fieldLabel}>{text.yearLabel || text.yearPlaceholder}</label>
+                  {yearMissing && <span className={styles.incompleteBadge}>{incompleteLabel}</span>}
+                </div>
+                <input
+                  className={`${styles.inputField} ${yearMissing ? styles.inputFieldIncomplete : ''}`}
+                  placeholder={text.yearPlaceholder}
+                  value={year}
+                  maxLength={4}
+                  onChange={(e) => onYearChange(e.target.value)}
+                />
+              </div>
             </div>
           )}
 
           {isInfoStep && (
-            <div className={styles.bottleInfoSection}>
-              <h4>{text.wineInfoTitle}</h4>
+            <div
+              className={`${styles.bottleInfoSection} ${wineTypeMissing ? styles.sectionIncomplete : ''}`}>
+              <div className={styles.sectionTitleRow}>
+                <h4>{text.wineInfoTitle}</h4>
+                {wineTypeMissing && <span className={styles.incompleteBadge}>{incompleteLabel}</span>}
+              </div>
               <ul className={styles.infoChecklist}>
                 <li>{text.wineInfoHintPrimary}</li>
                 <li>{text.wineInfoHintSecondary}</li>
@@ -213,11 +244,16 @@ export default function BottleModal({
           )}
 
           {isQuestionStep && currentQuestion && (
-            <div className={styles.questionStep}>
-              <h4 className={styles.questionStepTitle}>
-                {text.questionTitle
-                  ?.replace('{index}', String(currentQuestionIndex + 1))}
-              </h4>
+            <div className={`${styles.questionStep} ${currentQuestionMissing ? styles.sectionIncomplete : ''}`}>
+              <div className={styles.sectionTitleRow}>
+                <h4 className={styles.questionStepTitle}>
+                  {text.questionTitle
+                    ?.replace('{index}', String(currentQuestionIndex + 1))}
+                </h4>
+                {currentQuestionMissing && (
+                  <span className={styles.incompleteBadge}>{incompleteLabel}</span>
+                )}
+              </div>
               <p className={styles.questionStepText}>{currentQuestion.text}</p>
 
               {currentQuestionIsNeutral ? (

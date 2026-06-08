@@ -55,6 +55,9 @@
     "createGameCardTitle": "Crea una degustazione",
     "createGameCardDescription": "Prepara il questionario per la tua nuova degustazione.",
     "createGameCardAction": "Crea",
+    "communityEyebrow": "Community",
+    "rankingsTitle": "Classifiche pubbliche",
+    "rankingsDescription": "Scopri i vini che stanno emergendo dalle degustazioni reali della community.",
     "myGamesCardDescription": "Crea, gestisci e gioca con le tue degustazioni.",
     "yourProgress": "I tuoi progressi",
     "courseStartedDescription": "Continua il tuo percorso nel mondo del vino.",
@@ -79,6 +82,13 @@
     }
   },
   "landing": {
+    "nav": {
+      "ariaLabel": "Menu landing",
+      "howItWorks": "Come funziona",
+      "partners": "Partner",
+      "rankings": "Classifiche",
+      "login": "Accedi"
+    },
     "hero": {
       "badge": "🍷 Wine Tasting Game",
       "title": "Trasforma una degustazione di vino in un gioco.",
@@ -140,8 +150,14 @@
         "Wine Hub"
       ],
       "counter": "+20 enoteche e professionisti del vino stanno già utilizzando Indovinando",
+      "counterDynamic": "{count} partner business sono già visibili su Indovinando",
+      "cardCta": "Apri scheda",
+      "directoryCta": "Scopri tutti i partner",
+      "fallbackCategory": "Partner",
       "mapTitle": "Mappa partner",
-      "mapDescription": "Qui potrai visualizzare tutte le enoteche, cantine e wine experience aderenti."
+      "mapDescription": "Qui troverai enoteche, cantine e wine experience che fanno parte del network Indovinando.",
+      "scrollerLabel": "Partner pubblici in evidenza",
+      "mapEmpty": "La mappa sarà disponibile appena i partner pubblici completeranno la posizione."
     },
     "cta": {
       "eyebrow": "Inizia ora",
@@ -149,7 +165,44 @@
       "description": "Crea quiz sul vino, organizza degustazioni interattive e scopri quanto ne sanno davvero i tuoi amici o i tuoi clienti.",
       "primaryCta": "Inizia gratis",
       "secondaryCta": "Guarda come funziona"
+    },
+    "globalStats": {
+      "eyebrow": "Community",
+      "title": "I numeri della community",
+      "description": "Numeri aggregati dalle degustazioni completate e dalle valutazioni reali raccolte su Indovinando.",
+      "caption": "Utenti attivi calcolati sugli ultimi {days} giorni.",
+      "initialDataBadge": "Dati iniziali",
+      "stats": {
+        "tastings": "degustazioni",
+        "ratings": "valutazioni",
+        "activeUsers": "utenti attivi",
+        "analyzedWines": "vini analizzati da Indovinando AI"
+      }
     }
+  },
+  "partnerDirectory": {
+    "title": "Partner",
+    "eyebrow": "Partner pubblici",
+    "heading": "Scopri le attività che usano Indovinando",
+    "description": "Enoteche, ristoranti e realtà del vino che hanno scelto di portare il gioco nelle loro degustazioni.",
+    "cardCta": "Apri scheda",
+    "emptyTitle": "I primi partner stanno arrivando",
+    "emptyDescription": "Presto qui troverai le schede pubbliche delle attività business che usano Indovinando."
+  },
+  "partnerPublic": {
+    "topBarTitle": "Partner",
+    "visitWebsite": "Visita sito",
+    "callPartner": "Chiama",
+    "infoTitle": "Informazioni attività",
+    "categoryLabel": "Tipologia",
+    "addressLabel": "Indirizzo",
+    "areaLabel": "Zona",
+    "phoneLabel": "Telefono",
+    "websiteLabel": "Sito web",
+    "mapTitle": "Dove si trova",
+    "openMap": "Apri mappa",
+    "mapEmpty": "La mappa sarà disponibile appena il partner completerà la posizione.",
+    "backToDirectory": "Torna ai partner"
   },
   "admin": {
     "catalog": {
@@ -192,16 +245,25 @@
     "title": "Crea Degustazione",
     "chooseModeTitle": "Scegli come vuoi preparare il gioco.",
     "quickTitle": "Veloce",
-    "quickDescription": "Usa il nostro modello pronto per la degustazione: aggiungi le bottiglie e sei pronto.",
+    "quickDescription": "Usa il nostro modello. Aggiungi le bottiglie e le risposte corrette.",
     "quickAction": "Usa modello",
     "customTitle": "Personalizzato",
     "customDescription": "Crea le tue domande e risposta da zero, adatta ogni dettaglio al tuo stile.",
     "customAction": "Inizia",
-    "automaticTitle": "Modalita automatica",
-    "automaticDescription": "Scatta le foto delle bottiglie, analizzeremo i dati e prepareremo il quiz.",
+    "automaticTitle": "Automatica",
+    "automaticDescription": "Scatta le foto delle bottiglie e genera il quiz.",
     "automaticAction": "Scatta foto",
     "automaticFlowTitle": "Riconoscimento bottiglie",
-    "automaticFlowDescription": "Carica o scatta le foto delle bottiglie. Ti aiuteremo a raccogliere le informazioni necessarie prima di generare il quiz.",
+    "automaticStep1Title": "Riconosci le bottiglie",
+    "automaticStep1TitleWithPhotos": "Aggiungi altre bottiglie",
+    "automaticStep1DescriptionWithPhotos": "Continua a scattare foto delle etichette per completare la degustazione automatica.",
+    "automaticNextPhotoTitle": "Scatta un’altra foto",
+    "automaticNextPhotoSubtitle": "Aggiungi un’altra bottiglia dalla sua etichetta",
+    "automaticStep1Description": "Scatta una foto dell'etichetta. L'AI riconoscerà automaticamente vino, produttore e annata.",
+    "automaticFirstPhotoTitle": "Scatta la prima foto",
+    "automaticFirstPhotoSubtitle": "Inquadra bene l'etichetta",
+    "automaticAddedBottlesLabel": "Bottiglie aggiunte",
+    "automaticFlowDescription": "Scatta o carica le foto delle bottiglie. Ti aiutiamo a raccogliere i dati essenziali prima di generare il questionario.",
     "automaticFlowStepsLabel": "Passaggi modalita automatica",
     "automaticWizardStep1": "Step 1 · Spiegazione",
     "automaticWizardStep2": "Step 2 · Foto bottiglie",
@@ -221,6 +283,7 @@
     "automaticBottlesTitle": "Bottiglie raccolte",
     "automaticBottlesEmpty": "Nessuna bottiglia aggiunta per ora.",
     "automaticUploadError": "Errore durante il caricamento immagini. Riprova.",
+    "automaticDeleteSuccess": "Immagine eliminata",
     "automaticDeleteError": "Errore durante l'eliminazione immagine. Riprova.",
     "automaticAnalyzeError": "Errore durante l'analisi immagine. Riprova.",
     "automaticVerifyError": "Errore durante la verifica catalogo. Riprova.",
@@ -231,6 +294,7 @@
     "automaticWebSearchSkippedCatalogSynced": "Ricerca web saltata: bottiglia già sincronizzata nel catalogo.",
     "automaticWebSearchSkippedAlreadyEnriched": "Ricerca web saltata: dati web già presenti.",
     "automaticWebSearchSkippedCatalogMatch": "Ricerca web saltata: il catalogo ha già dati sufficienti.",
+    "automaticAnalyzeActionWithCount": "Analizza ({count})",
     "automaticAnalyzeAction": "Analizza",
     "automaticAnalyzeAgainAction": "Analizza di nuovo",
     "automaticAnalyzingSingle": "Analisi...",
@@ -242,11 +306,11 @@
     "automaticWebSearchLoadingStepNotes": "Raccolgo informazioni",
     "automaticWebSearchLoadingStepSources": "Cerco fonti",
     "automaticWebCatalogBadge": "Fonti web",
-    "automaticWebDiffTitle": "Ho trovato dati nuovi",
-    "automaticWebDiffSubtitle": "Scegli quali dati vuoi aggiornare sulla bottiglia.",
-    "automaticCurrentValueLabel": "Attuale",
-    "automaticProposedValueLabel": "Proposto dal web",
-    "automaticApplyWebDiffAction": "Aggiorna",
+    "automaticWebDiffTitle": "Nuove informazioni trovate",
+    "automaticWebDiffSubtitle": "Seleziona le informazioni che vuoi aggiungere o aggiornare in questa bottiglia.",
+    "automaticCurrentValueLabel": "Ora",
+    "automaticProposedValueLabel": "Trovato sul web",
+    "automaticApplyWebDiffAction": "Applica selezione",
     "automaticUpdatingAction": "Aggiornamento...",
     "automaticDiffNameLabel": "Nome",
     "automaticDiffProducerLabel": "Produttore",
@@ -261,8 +325,8 @@
     "automaticAnalyzeAllAction": "Analizza tutte",
     "automaticAnalyzingAll": "Analisi in corso...",
     "automaticCreateQuizAction": "Crea quiz rapido",
-    "automaticPreviewQuizAction": "Anteprima quiz",
-    "automaticPreviewTitle": "Anteprima quiz",
+    "automaticPreviewQuizAction": "Apri questionario",
+    "automaticPreviewTitle": "Questionario",
     "automaticOpenPreviewModal": "Apri quick preview",
     "automaticPreviewEmpty": "Serve almeno una bottiglia riconosciuta per mostrare l'anteprima.",
     "automaticPreviewBottles": "bottiglie",
@@ -292,7 +356,7 @@
     "automaticNotableOptionAppellation": "Per la denominazione o appellazione",
     "automaticNotableOptionProfile": "Per il profilo distintivo del vino",
     "automaticQuestionPrice": "Prezzo",
-    "automaticQuizTemplateLabel": "Versione quiz",
+    "automaticQuizTemplateLabel": "Template questionario",
     "automaticQuizTemplateStandard": "Template standard",
     "automaticQuizTemplateOpenAi": "Template OpenAI",
     "automaticWebSummaryLabel": "Sintesi web",
@@ -316,6 +380,14 @@
     "automaticMaxPriceLabel": "Max",
     "automaticMinPriceLabel": "Min",
     "automaticMetricBottlesLabel": "Bottiglie",
+    "automaticMetricCreditsLabel": "Crediti analisi",
+    "automaticMetricCreditsMeta": "Usati {used} su {total}",
+    "automaticCreditsInfoAction": "Info crediti",
+    "automaticCreditsInfoTitle": "Come funzionano i crediti",
+    "automaticCreditsInfoBody": "Ogni azione AI consuma crediti. In questa fase usiamo una regola semplice e trasparente.",
+    "automaticCreditsInfoRemaining": "Crediti rimasti: {count}",
+    "automaticCreditsInfoAnalyze": "Analisi bottiglia: 1 credito",
+    "automaticCreditsInfoWeb": "Ricerca web: 1 credito",
     "automaticMetricBottlesMeta": "{analyzed}/{total} analizzate",
     "automaticMetricTokensLabel": "Token totali",
     "automaticMetricTokensMeta": "Vision {vision} · Web {web}",
@@ -327,9 +399,37 @@
     "automaticTokenUsageValue": "{total} totali · Vision {vision} · Web {web}",
     "automaticEstimatedCostValue": "Costo {cost}",
     "automaticLoadError": "Errore nel caricamento delle immagini salvate.",
+    "automaticCreditsInsufficient": "Hai finito i crediti analisi disponibili.",
+    "automaticAnalyzeAllCreditsNeeded": "Servono {needed} crediti per analizzare tutte le bottiglie, ma al momento ne restano {remaining}.",
     "openGuide": "Riapri guida",
     "loadingEditor": "Caricamento editor",
-    "skip": "Salta"
+    "selected": "Selezionato",
+    "unselected": "Non selezionato",
+    "skip": "Salta",
+    "automaticStepPhotosLabel": "Foto",
+    "automaticStepReviewLabel": "Dettagli",
+    "automaticStepQuizLabel": "Questionario",
+    "automaticReviewTitle": "Bottiglie analizzate",
+    "automaticReviewDescription": "Controlla le informazioni principali di ogni bottiglia e completa quello che manca prima di passare al questionario.",
+    "automaticBottleCompleteBadge": "Completa",
+    "automaticBottleIncompleteBadge": "Da completare",
+    "automaticBottlePendingLabel": "Dati in aggiornamento",
+    "automaticBottleDetailTitle": "Dettaglio bottiglia",
+    "automaticBottleDetailDescription": "Rivedi la scheda della bottiglia, arricchisci i dati dal web o completa manualmente i campi mancanti.",
+    "automaticBottleEnrichAction": "Arricchisci con web",
+    "automaticBottleEditAction": "Modifica",
+    "automaticUpdateDetailsError": "Errore nel salvataggio dei dettagli bottiglia.",
+    "automaticPreviewLoadingBottle": "Aggiorno l'anteprima della bottiglia...",
+    "automaticPreviewLoadingLabel": "Anteprime caricate: {loaded}/{total}",
+    "automaticPreviewUnavailable": "Anteprima non disponibile",
+    "automaticAnalyzingAllCount": "Analizzo {count} bottiglie",
+    "automaticAnalyzeOverlayMore": "+{count} altre",
+    "automaticAnalyzeOverlayHint": "Sto leggendo le etichette e raccolgo i dati essenziali per ogni bottiglia.",
+    "automaticCreateQuestionnaireAction": "Continua",
+    "automaticSaveAction": "Salva degustazione",
+    "automaticCancelAction": "Annulla",
+    "automaticSavingAction": "Salvataggio...",
+    "automaticBottlePendingHint": "Questa bottiglia ha ancora dati incompleti. Puoi rilanciare l’analisi oppure completarla manualmente."
   },
   "tableLiveEvent": {
     "topBarTitle": "Live Tavoli",
@@ -352,6 +452,7 @@
     "networkError": "Errore di rete",
     "creatingAction": "Creazione...",
     "createAndStartAction": "Crea e inizia",
+    "createAction": "Crea",
     "joiningAction": "Ingresso...",
     "joinAction": "Partecipa",
     "backAction": "Indietro",
@@ -375,16 +476,17 @@
     "startMatch": "Avvia una partita",
     "completeGame": "Inserisci bottiglie",
     "playLive": "Gioca Live",
-    "playEnoteca": "Enoteca",
-    "playTableLive": "Tavoli e Gruppi",
+    "playEnoteca": "Crea gioco solo",
+    "playTableLive": "Crea multiplayer",
     "chooseMode": "Scegli modalita",
+    "chooseModeDescription": "Scegli se avviare una degustazione da giocare da soli oppure una partita multiplayer da condividere.",
     "close": "Chiudi",
     "cancel": "Annulla",
     "printCard": "Stampa",
     "edit": "Modifica",
     "liveDescription": "Partita multiplayer dal vivo con host e classifica in tempo reale.",
-    "enotecaDescription": "Modalita individuale per giocare in autonomia e vedere il risultato finale.",
-    "tableLiveDescription": "Modalita separata per eventi con QR unico, codici tavolo e partite parallele.",
+    "enotecaDescription": "Crea una partita per giocare questa degustazione in autonomia.",
+    "tableLiveDescription": "Crea un evento unico, stampa il QR e lascia che ogni tavolo giochi in una partita separata con codice dedicato.",
     "bottlesCount": "{count} Bottiglie",
     "questionsCount": "{count} Domande"
   },
@@ -420,6 +522,36 @@
         "title": "Iniziamo",
         "description": "Sei pronto? Clicca \"Inizia\" per cominciare a creare il tuo gioco.",
         "icon": "🎉"
+      }
+    ]
+  },
+  "automaticOnboarding": {
+    "step": "Passo",
+    "of": "di",
+    "back": "Indietro",
+    "disable": "Non mostrare più",
+    "next": "Avanti",
+    "start": "Inizia",
+    "steps": [
+      {
+        "title": "Fai le foto delle bottiglie",
+        "description": "Scatta o carica le foto delle bottiglie che vuoi usare. Meglio partire dalla fronte etichetta.",
+        "icon": "📸"
+      },
+      {
+        "title": "Indovinando AI le riconosce",
+        "description": "Analizziamo nome, produttore, annata e altri dettagli utili per costruire il questionario in automatico.",
+        "icon": "🤖"
+      },
+      {
+        "title": "Controlla i dati raccolti",
+        "description": "Se qualcosa manca, puoi usare la ricerca web per recuperare più informazioni e completare i dati raccolti.",
+        "icon": "📝"
+      },
+      {
+        "title": "Genera il questionario",
+        "description": "Quando le bottiglie sono pronte, generi il quiz automaticamente e poi lo rifinisci solo se vuoi.",
+        "icon": "✨"
       }
     ]
   },
@@ -619,10 +751,22 @@
     "step4Title": "Aggiungi bottiglia",
     "dontShowAgain": "Non mostrare più",
     "steps": [
-      {"id": 1, "label": "Nome gioco"},
-      {"id": 2, "label": "Questionario"},
-      {"id": 3, "label": "Scheda"},
-      {"id": 4, "label": "Bottiglie"}
+      {
+        "id": 1,
+        "label": "Nome gioco"
+      },
+      {
+        "id": 2,
+        "label": "Questionario"
+      },
+      {
+        "id": 3,
+        "label": "Scheda"
+      },
+      {
+        "id": 4,
+        "label": "Bottiglie"
+      }
     ],
     "alerts": {
       "GAME_NAME_REQUIRED": "Inserisci il nome del gioco.",
@@ -693,9 +837,13 @@
       "editTitlePrefix": "Modifica bottiglia",
       "details": "Dettagli bottiglia",
       "stepLabel": "Passo {current} di {total}",
+      "bottleNameLabel": "Nome bottiglia",
       "bottleNamePlaceholder": "Nome bottiglia",
+      "producerLabel": "Produttore",
       "producerPlaceholder": "Produttore",
+      "yearLabel": "Anno",
       "yearPlaceholder": "Anno",
+      "incompleteBadge": "Incompleto",
       "wineInfoTitle": "Info vino",
       "wineTypeAriaLabel": "Tipo di vino",
       "wineInfoHintPrimary": "Seleziona il tipo di vino per questa bottiglia.",
@@ -901,6 +1049,65 @@
     "nowMoveToQuestions": "Ora passa alle domande: ti aiuteranno a consolidare i passaggi principali e fissare la terminologia.",
     "goalUnderstand": "Obiettivo: capire, non solo ricordare."
   },
+  "rankingsPage": {
+    "title": "Classifiche",
+    "eyebrow": "Community",
+    "heading": "Le classifiche pubbliche del vino su Indovinando",
+    "description": "Classifiche pubbliche costruite sui voti reali raccolti nelle degustazioni completate della community.",
+    "initialDataBadge": "Dati iniziali",
+    "explorePartners": "Scopri i partner",
+    "stats": {
+      "tastings": "degustazioni",
+      "wines": "vini degustati",
+      "ratings": "valutazioni",
+      "activeUsers": "utenti attivi"
+    },
+    "sections": {
+      "blind": "Migliori vini alla cieca",
+      "qualityPrice": "Miglior rapporto qualità/prezzo",
+      "surprising": "Vini più sorprendenti",
+      "divisive": "Vini più divisivi"
+    },
+    "realDataPills": [
+      "Solo voti reali",
+      "Enoteca + Tavolo",
+      "Aggiornamento progressivo"
+    ],
+    "realDataNote": "Queste classifiche leggono i voti reali di enoteca e tavolo. Se una sezione ha ancora pochi dati, mostriamo un set iniziale temporaneo.",
+    "globalStats": {
+      "eyebrow": "Community",
+      "title": "I numeri della community",
+      "description": "Numeri aggregati dalle degustazioni completate e dalle valutazioni reali raccolte su Indovinando.",
+      "caption": "Utenti attivi calcolati sugli ultimi {days} giorni.",
+      "initialDataBadge": "Dati iniziali",
+      "stats": {
+        "tastings": "degustazioni",
+        "ratings": "valutazioni",
+        "activeUsers": "utenti attivi",
+        "analyzedWines": "vini analizzati da Indovinando AI"
+      }
+    },
+    "metricInfoLabel": "Come leggiamo questa classifica",
+    "metricFallback": "Spiegazione metrica non disponibile.",
+    "metrics": {
+      "blind": {
+        "description": "Ordina i vini in base al voto medio reale ricevuto nelle degustazioni completate.",
+        "formula": "Più il voto medio è alto, più il vino sale in classifica."
+      },
+      "qualityPrice": {
+        "description": "Mette insieme qualità percepita e prezzo medio del vino.",
+        "formula": "Premia i vini che raccolgono voti forti rispetto al loro prezzo."
+      },
+      "surprising": {
+        "description": "Fa emergere i vini che piacciono molto anche quando vengono riconosciuti meno facilmente.",
+        "formula": "Un vino sorprendente ha buon voto e bassa riconoscibilità nelle domande oggettive."
+      },
+      "divisive": {
+        "description": "Mostra i vini che spaccano di più i giudizi della community.",
+        "formula": "Più i voti sono distanti tra loro, più il vino risulta divisivo."
+      }
+    }
+  },
   "auth": {
     "tagline": "Gioca, crea e impara il vino in un unico posto.",
     "loginOrRegister": "Accedi o Registrati",
@@ -947,6 +1154,8 @@
     "howTheAppWorksDesc": "Apri la guida onboarding con slide su Crea Gioco, Gioco Veloce, Enoteca, Live e Corso Vino.",
     "openAppGuide": "Apri guida app",
     "chooseAvatar": "Scegli il tuo avatar",
+    "preferences": "Preferenze",
+    "editPreferences": "Modifica",
     "yourStats": "Le tue statistiche",
     "gamesCreated": "quiz creati",
     "lessonsCompleted": "Lezioni completate",
@@ -979,7 +1188,217 @@
     "rankPending": "Posizione classifica non disponibile al momento.",
     "matchesEmpty": "Nessuna partita trovata per questo profilo.",
     "pointsUnit": "pt",
-    "won": "Vinta"
+    "won": "Vinta",
+    "profileCompleteBadge": "Profilo completo",
+    "businessBadge": "Business",
+    "publicProfile": "Profilo pubblico",
+    "publicProfileHintPublic": "La tua scheda partner è visibile nella directory pubblica.",
+    "publicProfileHintPrivate": "La tua scheda partner è privata e non compare ancora nella directory.",
+    "publicLabel": "Pubblico",
+    "privateLabel": "Privato",
+    "communityWidget": {
+      "eyebrow": "Community",
+      "title": "I vini che si stanno facendo notare",
+      "description": "Un’anteprima delle classifiche pubbliche basate su degustazioni reali della community.",
+      "blindTitle": "Miglior vino alla cieca",
+      "surprisingTitle": "Vino più sorprendente",
+      "qualityPriceTitle": "Miglior Q/P",
+      "cta": "Esplora",
+      "initialDataBadge": "Dati iniziali"
+    }
+  },
+  "profileSetup": {
+    "reminderEyebrow": "Completa profilo",
+    "summaryEyebrow": "Profilo pronto",
+    "reminderTitle": "Personalizza la tua esperienza",
+    "summaryTitle": "Le tue preferenze profilo",
+    "reminderDescription": "Bastano pochi tocchi per adattare dashboard, contenuti e comunicazioni ai tuoi gusti.",
+    "summaryDescription": "Queste preferenze ci aiutano a mostrarti un'esperienza più utile e più vicina al tuo mondo del vino.",
+    "progressLabel": "{current}/{total} campi completati",
+    "completeAction": "Completa profilo",
+    "editAction": "Modifica profilo",
+    "skipAction": "Salta",
+    "skipShortAction": "Salta",
+    "closeAction": "Chiudi",
+    "backAction": "Indietro",
+    "backToApp": "Torna all'app",
+    "nextAction": "Continua",
+    "finishAction": "Salva e continua",
+    "saveAction": "Salva profilo",
+    "savingAction": "Salvataggio...",
+    "newsletterEnabled": "Iscritto",
+    "newsletterDisabled": "Non iscritto",
+    "modalEyebrow": "Onboarding rapido",
+    "modalTitle": "Completa il tuo profilo",
+    "modalDescription": "Niente campi inutili: scegli le opzioni che ti rappresentano e salva in meno di un minuto.",
+    "wizard": {
+      "stepLabel": "Step {current} di {total}",
+      "profileType": {
+        "title": "Che profilo hai?",
+        "description": "Scegli la categoria che ti rappresenta meglio oggi. Ci servirà per personalizzare dashboard e funzionalità."
+      },
+      "experience": {
+        "title": "Qual è il tuo livello?",
+        "description": "Ci aiuta a proporti contenuti e percorsi più adatti alla tua esperienza."
+      },
+      "wineTypes": {
+        "title": "Che vini ami di più?",
+        "description": "Seleziona uno o più stili per orientare contenuti, suggerimenti e community."
+      },
+      "countries": {
+        "title": "Quali paesi preferisci?",
+        "description": "Segna le aree che ti incuriosiscono di più o che scegli più spesso."
+      },
+      "location": {
+        "title": "Dove ti trovi?",
+        "description": "Useremo città e provincia per partner vicini, eventi locali e comunicazioni più rilevanti."
+      },
+      "newsletter": {
+        "title": "Vuoi ricevere aggiornamenti?",
+        "description": "Puoi attivare subito il consenso e decidere dopo come usare le comunicazioni."
+      },
+      "business": {
+        "title": "Raccontaci la tua attività",
+        "description": "Per i profili business raccogliamo i dati minimi utili a future schede partner, mappa e branding degustazioni."
+      }
+    },
+    "sections": {
+      "profileType": "Tipo profilo",
+      "experience": "Livello di esperienza",
+      "wineTypes": "Tipi di vino preferiti",
+      "countries": "Paesi preferiti",
+      "location": "Localizzazione",
+      "business": "Informazioni attività",
+      "newsletter": "Newsletter ed eventi"
+    },
+    "fields": {
+      "profileType": "Tipo profilo",
+      "experienceLevel": "Esperienza",
+      "wineTypes": "Preferenze vino",
+      "countries": "Paesi",
+      "location": "Zona",
+      "businessName": "Attività",
+      "businessType": "Tipologia",
+      "newsletter": "Newsletter"
+    },
+    "placeholders": {
+      "city": "Città",
+      "province": "Provincia"
+    },
+    "newsletterHint": "Ricevi novità su Indovinando, eventi, classifiche e nuove funzionalità. Per ora salviamo solo il consenso.",
+    "businessFields": {
+      "name": "Nome attività",
+      "type": "Tipologia attività",
+      "description": "Descrizione breve",
+      "website": "Sito web",
+      "phone": "Telefono",
+      "address": "Indirizzo",
+      "latitude": "Latitudine",
+      "longitude": "Longitudine"
+    },
+    "businessPlaceholders": {
+      "name": "Es. Enoteca Rossi",
+      "type": "Es. Enoteca, wine bar, ristorante",
+      "description": "Descrivi in poche righe la tua attività",
+      "website": "https://...",
+      "phone": "+39 ...",
+      "address": "Indirizzo attività",
+      "latitude": "41.9028",
+      "longitude": "12.4964"
+    },
+    "businessHelper": "Per ora indirizzo e coordinate si inseriscono manualmente. L'integrazione Google Places può arrivare nel passo successivo.",
+    "businessMapsReady": "Cerca l'indirizzo con Google Maps: selezionando un risultato, le coordinate si aggiornano automaticamente.",
+    "businessMapsFallback": "Se la chiave Google Maps non è configurata, puoi comunque inserire indirizzo e coordinate manualmente.",
+    "businessMapPreviewTitle": "Anteprima mappa attività",
+    "branding": {
+      "eyebrow": "Branding degustazioni",
+      "title": "Logo attività",
+      "description": "Carica il logo della tua attività. Lo useremo nei QR di degustazione, live, singolo e nelle schede stampabili.",
+      "placeholder": "Logo",
+      "activityNameFallback": "La tua attività",
+      "usageHint": "Il logo verrà riusato automaticamente nei flussi brandizzati.",
+      "upload": "Carica logo",
+      "uploading": "Caricamento...",
+      "error": "Non sono riuscita a caricare il logo dell'attività."
+    },
+    "partnerPublic": {
+      "eyebrow": "Scheda pubblica",
+      "title": "Scheda partner pubblica",
+      "description": "Attiva la visibilità pubblica per comparire nella landing e nella directory partner.",
+      "helper": "Puoi attivare o disattivare la tua scheda partner pubblica in qualsiasi momento.",
+      "active": "Pubblica",
+      "inactive": "Privata",
+      "slugLabel": "URL pubblico",
+      "preview": "Anteprima scheda",
+      "directory": "Apri directory",
+      "error": "Non sono riuscita ad aggiornare la visibilità della scheda partner."
+    },
+    "checklist": {
+      "profileType": "Scegli il tipo di profilo più adatto a te",
+      "experience": "Indica il tuo livello di esperienza",
+      "preferences": "Seleziona vini e paesi che preferisci",
+      "location": "Aggiungi città e provincia per esperienze più locali",
+      "business": "Completa i dati essenziali della tua attività"
+    },
+    "profileTypes": {
+      "enthusiast": "Appassionato",
+      "wine_shop": "Enoteca",
+      "restaurant": "Ristorante",
+      "educator": "Sommelier / Formatore",
+      "other_business": "Altra attività"
+    },
+    "profileTypeDescriptions": {
+      "enthusiast": "Scopro, gioco e imparo per passione.",
+      "wine_shop": "Organizzo degustazioni e coinvolgo clienti.",
+      "restaurant": "Uso il vino come parte dell'esperienza a tavola.",
+      "educator": "Formo gruppi o accompagno percorsi didattici.",
+      "other_business": "Ho un'attività che ruota intorno al vino."
+    },
+    "experienceLevels": {
+      "beginner": "Principiante",
+      "amateur": "Amatore",
+      "enthusiast": "Appassionato",
+      "expert": "Esperto",
+      "sommelier": "Sommelier",
+      "professional": "Professionista"
+    },
+    "wineTypes": {
+      "reds": "Rossi",
+      "whites": "Bianchi",
+      "roses": "Rosati",
+      "sparkling": "Bollicine",
+      "champagne": "Champagne",
+      "sweet": "Vini dolci",
+      "orange": "Orange Wine",
+      "natural": "Naturali"
+    },
+    "countries": {
+      "italy": "Italia",
+      "france": "Francia",
+      "spain": "Spagna",
+      "usa": "Stati Uniti",
+      "argentina": "Argentina",
+      "portugal": "Portogallo",
+      "germany": "Germania",
+      "other": "Altro"
+    },
+    "errors": {
+      "profileType": "Seleziona un tipo di profilo.",
+      "experienceLevel": "Seleziona il tuo livello di esperienza.",
+      "wineTypes": "Scegli almeno un tipo di vino preferito.",
+      "countries": "Scegli almeno un paese preferito.",
+      "city": "Inserisci la città.",
+      "province": "Inserisci la provincia.",
+      "businessName": "Inserisci il nome dell'attività.",
+      "businessType": "Inserisci la tipologia dell'attività.",
+      "businessDescription": "Inserisci una breve descrizione dell'attività.",
+      "businessWebsite": "Inserisci il sito web dell'attività.",
+      "businessPhone": "Inserisci il telefono dell'attività.",
+      "businessAddress": "Inserisci l'indirizzo dell'attività.",
+      "businessCoordinates": "Inserisci latitudine e longitudine dell'attività.",
+      "timeout": "Il salvataggio sta impiegando troppo tempo. Riprova tra qualche secondo.",
+      "generic": "Non sono riuscito a salvare il profilo. Riprova."
+    }
   },
   "course": {
     "title": "Corso Vino",
@@ -1058,5 +1477,54 @@
         "description": "Crea la tua prima degustazione oppure entra in una partita esistente."
       }
     ]
+  },
+  "communityWidget": {
+    "eyebrow": "Community",
+    "title": "I vini che si stanno facendo notare",
+    "description": "Un’anteprima delle classifiche pubbliche basate su degustazioni reali della community.",
+    "blindTitle": "Miglior vino alla cieca",
+    "surprisingTitle": "Vino più sorprendente",
+    "qualityPriceTitle": "Miglior Q/P",
+    "cta": "Esplora",
+    "initialDataBadge": "Dati iniziali"
+  },
+  "globalStats": {
+    "eyebrow": "Community",
+    "title": "I numeri della community",
+    "description": "Numeri aggregati dalle degustazioni completate e dalle valutazioni reali raccolte su Indovinando.",
+    "caption": "Utenti attivi calcolati sugli ultimi {days} giorni.",
+    "initialDataBadge": "Dati iniziali",
+    "stats": {
+      "tastings": "degustazioni",
+      "ratings": "valutazioni",
+      "activeUsers": "utenti attivi",
+      "analyzedWines": "vini analizzati da Indovinando AI"
+    }
+  },
+  "rankingsWinePage": {
+    "eyebrow": "Vino",
+    "summaryEyebrow": "Scheda rapida",
+    "summaryTitle": "Panoramica community",
+    "rankingsEyebrow": "Classifiche",
+    "rankingsTitle": "Dove si posiziona",
+    "metricsTitle": "Metriche del vino",
+    "sections": {
+      "blind": "Migliori vini alla cieca",
+      "qualityPrice": "Miglior rapporto qualità/prezzo",
+      "surprising": "Vini più sorprendenti",
+      "divisive": "Vini più divisivi"
+    },
+    "stats": {
+      "ratingCount": "Valutazioni reali",
+      "tastingCount": "Degustazioni completate",
+      "recognitionRate": "Riconoscibilità",
+      "averagePrice": "Prezzo medio"
+    },
+    "metrics": {
+      "blindLabel": "Voto medio: {value}",
+      "qualityPriceLabel": "Qualità/prezzo: {value}",
+      "surprisingLabel": "Indice sorpresa: {value}",
+      "divisiveLabel": "Indice divisivo: {value}"
+    }
   }
 }

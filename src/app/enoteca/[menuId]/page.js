@@ -1,15 +1,17 @@
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {notFound} from 'next/navigation'
 import EnotecaBridgeClient from './EnotecaBridgeClient'
+import {getBusinessBranding} from '@/lib/businessBranding'
 
-export default async function EnotecaMenuPage({params}) {
+export default async function EnotecaMenuPage({params, searchParams}) {
   const {menuId} = await params
+  const resolvedSearchParams = await Promise.resolve(searchParams)
   const supabase = await createServerSupabase()
 
   // Usa la tabella games esistente (pubblicato = status 'published')
   const {data: game} = await supabase
     .from('games')
-    .select('id, name, status')
+    .select('id, name, status, created_by')
     .eq('id', menuId)
     .single()
 
@@ -34,6 +36,14 @@ export default async function EnotecaMenuPage({params}) {
     .eq('status', 'completed')
     .order('total_score', {ascending: false})
 
+  const {data: ownerProfile} = await supabase
+    .from('profiles')
+    .select(
+      'username, business_name, business_type, business_website, business_phone, business_address, business_logo_path, business_logo_url, city, province',
+    )
+    .eq('id', game.created_by)
+    .maybeSingle()
+
   return (
     <EnotecaBridgeClient
       menuId={menuId}
@@ -43,6 +53,8 @@ export default async function EnotecaMenuPage({params}) {
       bottles={bottles || []}
       questions={questions || []}
       leaderboard={leaderboard || []}
+      backHref={resolvedSearchParams?.back === 'mode' ? `/game/${menuId}/mode` : '/miei-giochi'}
+      branding={getBusinessBranding(ownerProfile || {})}
     />
   )
 }

@@ -147,6 +147,14 @@
   white-space: nowrap;
 }
 
+.headerRight {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 // ── Podium (top 3) ───────────────────────────────────────────────────────────
 .podium {
   display: flex;

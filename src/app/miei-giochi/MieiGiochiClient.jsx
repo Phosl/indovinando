@@ -1,12 +1,12 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import {ButtonLink} from '@/components/ui/Button'
 import Icon from '@/components/Icon'
 import CreateGameCardLink from '@/components/CreateGameCardLink'
-import {formatAppDate} from '@/lib/dateFormat'
 import styles from './miei-giochi.module.scss'
 import {useT} from '@/lib/i18n/useT'
 
@@ -53,7 +53,14 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
               return (
                 <Link key={game.id} href={`/game/${game.id}`} className={styles.gameCardLink}>
                   <article className={styles.gameCard}>
-                    <img src={gameAvatar} alt="" aria-hidden="true" className={styles.gameAvatar} />
+                    <Image
+                      src={gameAvatar}
+                      alt=""
+                      aria-hidden="true"
+                      className={styles.gameAvatar}
+                      width={92}
+                      height={92}
+                    />
                     <div className={styles.gameCardBody}>
                       <div className={styles.gameCardTop}>
                         <h3>
@@ -62,9 +69,6 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
                             {game.status === 'published' ? '' : dashboardDict.incomplete}
                           </span>{' '}
                         </h3>
-                        <div className={styles.gameCardMeta}>
-                          <p className={styles.date}>{formatAppDate(game.created_at, lang)}</p>
-                        </div>
                       </div>
 
                       <div className={styles.statsRow}>

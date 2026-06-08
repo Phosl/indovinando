@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import styles from './TopBar.module.scss'
 import {useT} from '@/lib/i18n/useT'
 import ProgressBar from '@/components/ui/ProgressBar'
@@ -27,25 +28,44 @@ export default function TopBar({
 
   return (
     <div className={`${containerClassName} ${className}`} style={containerStyle}>
-      {onBack && (
+      {onBack ? (
         <button
           type="button"
           className={styles.backBtn}
           onClick={handleBackClick}
           aria-label={t('back')}>
-          <img src="/icons/back-icon.svg" alt="" aria-hidden="true" className={styles.backBtnIcon} />
+          <img
+            src="/icons/back-icon.svg"
+            alt=""
+            aria-hidden="true"
+            className={styles.backBtnIcon}
+          />
         </button>
+      ) : back ? (
+        <Link href={back} className={styles.backBtn} aria-label={t('back')}>
+          <img
+            src="/icons/back-icon.svg"
+            alt=""
+            aria-hidden="true"
+            className={styles.backBtnIcon}
+          />
+        </Link>
+      ) : null}
+      {title && progress === null && (
+        <h1 className={`${styles.title} ${titleClassName}`}>{title}</h1>
       )}
-      {title && <h1 className={`${styles.title} ${titleClassName}`}>{title}</h1>}
+      {progress !== null && title && (
+        <div className={styles.titleWithProgress}>
+          <h1 className={`${styles.title} ${titleClassName}`}>{title}</h1>
+          <ProgressBar
+            value={progress}
+            className={styles.progressTrack}
+            fillClassName={styles.progressFill}
+            ariaLabel="Top bar progress"
+          />
+        </div>
+      )}
       <div className={`${styles.actions} ${actionsClassName}`}>{children}</div>
-      {progress !== null && (
-        <ProgressBar
-          value={progress}
-          className={styles.progressTrack}
-          fillClassName={styles.progressFill}
-          ariaLabel="Top bar progress"
-        />
-      )}
     </div>
   )
 }

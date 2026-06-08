@@ -27,7 +27,7 @@
 .gameTitle {
   margin: 0;
   font-size: 28px;
-  font-weight: 900;
+  font-weight: 800;
   color: var(--text-primary);
   @media (max-width: 768px) {
     font-size: 22px;
@@ -94,7 +94,7 @@
   width: 96px;
   height: 96px;
   object-fit: cover;
-  border-radius: 20px;
+  border-radius: 12px;
   @media (max-width: 768px) {
     margin: 0 auto;
     width: 100%;
@@ -360,7 +360,7 @@
   max-width: 232px;
   h3 {
     font-size: 1.05rem;
-    font-weight: 900;
+    font-weight: 800;
     color: var(--text-primary);
     line-height: 1.25;
     max-width: 100%;
@@ -409,6 +409,35 @@
   box-shadow: 0px 4px 0px 0px var(--gray-light);
 }
 
+
+.previewBottleLoader {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: var(--gray-100);
+  color: var(--primary-text);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.previewBottleLoaderSpinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 2px solid rgba(77, 49, 155, 0.18);
+  border-top-color: var(--primary-text);
+  animation: previewBottleSpin 0.8s linear infinite;
+}
+
+@keyframes previewBottleSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .bottleHeader {
   margin-bottom: 14px;
   background: var(--primary-50);
@@ -417,7 +446,7 @@
   h2 {
     margin: 8px 0 4px;
     font-size: 1.2rem;
-    font-weight: 900;
+    font-weight: 800;
     color: var(--text-primary);
   }
 
@@ -464,6 +493,7 @@
   font-size: 12px;
   font-weight: 900;
   text-transform: uppercase;
+  display: none;
 }
 
 .questionTitle {
@@ -566,7 +596,7 @@
   h3 {
     margin: 0;
     font-size: 18px;
-    font-weight: 900;
+    font-weight: 800;
   }
 }
 
@@ -579,15 +609,68 @@
   border-bottom: 2px solid var(--button-secondary-border);
 }
 
+.gameAvatarWrap {
+  position: relative;
+}
+
 .startModalActions {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 8px;
-  padding: 0 20px;
+  gap: 12px;
+  padding: 0;
 
   a {
     width: 100%;
   }
+}
+
+.startModePageCard {
+  gap: 20px;
+  padding: 22px 18px 18px;
+  border-radius: 18px;
+}
+
+.startModePageHeader {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+}
+
+.startModePageEyebrow {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--primary-50);
+  color: var(--primary-text);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.startModePageTitle {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.startModePageDescription {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  max-width: 42ch;
+  margin-bottom: 16px;
+  display: none;
+}
+
+.gameDateMobile {
+  display: none;
 }
 
 .startModalX {
@@ -613,33 +696,63 @@
 
 .startModeOption {
   border: 2px solid var(--button-secondary-border);
-  border-radius: 12px;
+  border-radius: 16px;
   background: var(--primary-100);
-  padding: 14px 14px 13px;
+  padding: 16px;
   text-decoration: none;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   color: inherit;
   text-align: left;
   box-shadow: 0px 3px 0px 0px var(--gray-light);
   position: relative;
   overflow: hidden;
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.14s ease,
+    border-color 0.14s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.startModeCopy {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
 }
 
 .startModeTitle {
   font-size: 19px;
-  font-weight: 900;
+  font-weight: 800;
   color: var(--text-primary);
-  padding-left: 6px;
+  padding-left: 0;
 }
 
 .startModeDescription {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
-  line-height: 1.45;
-  padding-left: 6px;
+  line-height: 1.2rem;
+  padding-left: 0;
+  color: var(--text);
+  letter-spacing: 0em;
+}
+
+.startModeArrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--foreground) 88%, transparent);
+  color: currentColor;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  flex-shrink: 0;
 }
 
 .startModeOptionSuccess {
@@ -648,6 +761,10 @@
   box-shadow: 0px 0px 0px 0px var(--success);
 
   .startModeTitle {
+    color: var(--success-text);
+  }
+
+  .startModeArrow {
     color: var(--success-text);
   }
 
@@ -666,6 +783,10 @@
     color: var(--quaternary-text);
   }
 
+  .startModeArrow {
+    color: var(--quaternary-text);
+  }
+
   &::before {
     background: var(--quaternary);
     opacity: 0;
@@ -681,9 +802,65 @@
     color: var(--selected-dark);
   }
 
+  .startModeArrow {
+    color: var(--selected-dark);
+  }
+
   &::before {
     background: var(--selected);
     opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .startModePageCard {
+    padding: 18px 16px 16px;
+    gap: 16px;
+  }
+
+  .startModePageTitle {
+    font-size: 22px;
+  }
+
+  .startModeDescription {
+    font-size: 16px;
+  }
+
+  .startModeOption {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .startModeTitle {
+    font-size: 20px;
+  }
+
+  .startModeArrow {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .gameDate {
+    display: none;
+  }
+
+  .gameDateMobile {
+    display: inline-flex;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    margin: 0;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--foreground) 78%, transparent);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    backdrop-filter: blur(6px);
   }
 }
 

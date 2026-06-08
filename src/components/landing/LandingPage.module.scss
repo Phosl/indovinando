@@ -2,6 +2,186 @@
   width: 100%;
   overflow-x: hidden;
   background: var(--background);
+  padding-top: 40px;
+}
+
+.navWrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  padding: 16px 24px 0;
+  background: linear-gradient(180deg, var(--background), var(--background), transparent);
+  backdrop-filter: blur(8px);
+}
+
+.navSpacer {
+  height: 92px;
+}
+
+.navInner {
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  padding: 12px 18px;
+  border-radius: 22px;
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+}
+
+.navBurger {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 16px;
+  background: var(--foreground);
+  color: var(--primary-text);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
+
+  &:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-100);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.navBurgerLine {
+  width: 20px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.navBrand {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.navLogo {
+  width: clamp(200px, 200px, 230px); // clamp('min', 'preferred', 'max')
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 640px) {
+  .navWrap {
+    padding: 12px 12px 0;
+  }
+
+  .navInner {
+    padding: 10px 12px;
+    gap: 12px;
+  }
+
+  .navSpacer {
+    height: 84px;
+  }
+}
+
+.menuOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(16, 24, 40, 0.42);
+  backdrop-filter: blur(10px);
+}
+
+.menuPanel {
+  min-height: 100dvh;
+  background: linear-gradient(180deg, var(--background), var(--primary-50));
+  padding: 20px 24px 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.menuHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.menuClose {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 16px;
+  background: var(--foreground);
+  color: var(--primary-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease;
+
+  &:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-100);
+  }
+}
+
+.menuCloseGlyph {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.menuLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.navLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 56px;
+  color: var(--primary-text);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  transition: color 0.18s ease;
+
+  &:hover {
+    color: var(--primary-700);
+  }
+}
+
+.navLinkActive {
+  color: var(--primary-900);
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--success-500, var(--success));
+  }
 }
 
 .heroSection,
@@ -24,11 +204,6 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-}
-
-.heroLogo {
-  width: clamp(180px, 24vw, 240px);
-  height: auto;
 }
 
 .heroBadge,
@@ -226,26 +401,96 @@
   color: var(--primary-text);
 }
 
-.mapPlaceholder {
-  margin-top: 48px;
-  padding: 72px 32px;
+.partnerIntro {
+  margin: 16px auto 0;
+  max-width: 58ch;
   text-align: center;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.partnerShowcase {
+  margin-top: 48px;
+  display: grid;
+  gap: 20px;
+}
+
+.partnerMapCard {
+  padding: 20px;
   border-radius: 28px;
   background: var(--primary-50);
   border: 2px solid var(--primary-100);
+}
+
+.partnerMapHeader {
+  margin-bottom: 16px;
 
   h3 {
-    margin: 0 0 12px;
-    font-size: 1.9rem;
+    margin: 0;
+    font-size: 1.7rem;
     color: var(--primary-900);
   }
+}
+
+.partnerMapFrame {
+  position: relative;
+  overflow: hidden;
+  min-height: 380px;
+  border-radius: 22px;
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+}
+
+.partnerMapCanvas {
+  width: 100%;
+  height: 380px;
+}
+
+.partnerMapEmpty {
+  min-height: 380px;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
 
   p {
-    margin: 0 auto;
+    margin: 0;
     max-width: 52ch;
     color: var(--text-secondary);
     line-height: 1.6;
   }
+}
+
+.partnerScroller {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(280px, 360px);
+  gap: 16px;
+  overflow-x: auto;
+  padding: 4px 2px 8px;
+  scroll-snap-type: x proximity;
+}
+
+.partnerScrollerItem {
+  scroll-snap-align: start;
+}
+
+.partnerScroller::-webkit-scrollbar {
+  height: 10px;
+}
+
+.partnerScroller::-webkit-scrollbar-thumb {
+  background: var(--primary-100);
+  border-radius: 999px;
+}
+
+.partnerScroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mapActions {
+  display: flex;
+  justify-content: center;
 }
 
 .ctaCard {
@@ -278,6 +523,16 @@
 }
 
 @media (max-width: 900px) {
+  .navWrap {
+    padding: 12px 12px 0;
+  }
+
+  .navInner {
+    padding: 12px 14px;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .heroSection {
     min-height: auto;
     padding-top: 32px;
@@ -323,6 +578,12 @@
     width: min(1200px, calc(100% - 28px));
   }
 
+  .navLinks {
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
   .section {
     padding: 72px 0;
   }
@@ -339,12 +600,23 @@
 
   .featureCard,
   .partnerCard,
-  .mapPlaceholder,
+  .partnerMapCard,
   .ctaCard {
     border-radius: 20px;
   }
 
-  .mapPlaceholder {
-    padding: 48px 20px;
+  .partnerMapCard {
+    padding: 18px;
+  }
+
+  .partnerMapFrame,
+  .partnerMapCanvas,
+  .partnerMapEmpty {
+    min-height: 320px;
+    height: 320px;
+  }
+
+  .partnerScroller {
+    grid-auto-columns: minmax(260px, 88vw);
   }
 }

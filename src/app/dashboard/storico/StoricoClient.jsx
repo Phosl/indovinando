@@ -87,9 +87,12 @@ export default function StoricoClient({sessions, t, lang}) {
                     {formatAppDateTime(s.played_at, lang)}
                   </span>
                 </div>
-                <span className={styles.playerCount}>
-                  {s.player_count} {s.player_count === 1 ? t.player : t.players}
-                </span>
+                <div className={styles.headerRight}>
+                  {s.modeLabel ? <span className={styles.playerCount}>{s.modeLabel}</span> : null}
+                  <span className={styles.playerCount}>
+                    {s.player_count} {s.player_count === 1 ? t.player : t.players}
+                  </span>
+                </div>
               </div>
 
               {s.players?.length > 0 && (

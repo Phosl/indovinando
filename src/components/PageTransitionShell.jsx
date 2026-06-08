@@ -1,10 +1,9 @@
 'use client'
 
-import {useCallback, useEffect, useRef, useState} from 'react'
+import {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {usePathname, useRouter} from 'next/navigation'
 
 const LEAVE_MS = 0
-const ENTER_MS = 220
 const RECOVERY_MS = 1200
 
 function shouldIgnoreClick(event) {
@@ -62,7 +61,6 @@ export default function PageTransitionShell({children}) {
     setIsLeaving(false)
     transitionLockRef.current = false
     nextDirectionRef.current = 'forward'
-    setDirection('forward')
   }, [clearScheduledTransitions])
 
   const prefetchHref = useCallback((href) => {
@@ -77,19 +75,15 @@ export default function PageTransitionShell({children}) {
     setDirection(normalized)
   }, [])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     clearScheduledTransitions()
 
-    const frameId = window.requestAnimationFrame(() => {
-      setIsLeaving(false)
-      transitionLockRef.current = false
-      nextDirectionRef.current = 'forward'
-      setDirection('forward')
-    })
+    setDirection(nextDirectionRef.current === 'back' ? 'back' : 'forward')
+    setIsLeaving(false)
+    transitionLockRef.current = false
+    nextDirectionRef.current = 'forward'
 
-    return () => {
-      window.cancelAnimationFrame(frameId)
-    }
+    return undefined
   }, [clearScheduledTransitions, pathname])
 
   useEffect(() => {
@@ -112,7 +106,7 @@ export default function PageTransitionShell({children}) {
 
   useEffect(() => {
     const onNavigationIntent = (event) => {
-      queueDirection(event?.detail?.direction)
+      nextDirectionRef.current = event?.detail?.direction === 'back' ? 'back' : 'forward'
     }
 
     const onPopState = () => {
@@ -196,7 +190,7 @@ export default function PageTransitionShell({children}) {
   const className = `route-shell route-${direction}${isLeaving ? ' is-leaving' : ' is-entering'}`
 
   return (
-    <div key={`${pathname || 'root'}-${direction}`} className={className}>
+    <div key={pathname || 'root'} className={className}>
       {children}
     </div>
   )
