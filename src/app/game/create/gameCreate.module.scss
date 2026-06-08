@@ -800,6 +800,35 @@
   object-fit: cover;
 }
 
+.autoBottlePreviewFallback {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(252, 249, 239, 0.82) 0%, rgba(245, 241, 234, 0.96) 100%);
+
+  strong {
+    color: var(--primary-text);
+    font-size: 1rem;
+    font-weight: 900;
+    word-break: break-word;
+  }
+
+  span {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+}
+
 .autoBottleCardInfoCol {
   min-width: 0;
   display: flex;

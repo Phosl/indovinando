@@ -625,6 +625,19 @@ async function loadImageElementFromFile(file) {
   })
 }
 
+async function loadRenderableImageFromFile(file) {
+  if (typeof window !== 'undefined' && typeof window.createImageBitmap === 'function') {
+    try {
+      const bitmap = await window.createImageBitmap(file)
+      if (bitmap?.width && bitmap?.height) return bitmap
+    } catch {
+      // Fallback to HTMLImageElement below.
+    }
+  }
+
+  return loadImageElementFromFile(file)
+}
+
 async function renderCompressedImageBlob(image, {maxDimension, quality}) {
   const width = Number(image.naturalWidth || image.width || 0)
   const height = Number(image.naturalHeight || image.height || 0)
@@ -654,14 +667,23 @@ async function optimizeAutoTastingUploadFile(file) {
   const mimeType = String(file.type || '').toLowerCase()
   const isRasterConvertible =
     mimeType === 'image/jpeg' || mimeType === 'image/png' || mimeType === 'image/webp'
+  const isHeicFamily =
+    mimeType === 'image/heic' ||
+    mimeType === 'image/heif' ||
+    mimeType === 'image/heic-sequence' ||
+    mimeType === 'image/heif-sequence'
 
-  if (!isRasterConvertible || file.size <= AUTO_UPLOAD_COMPRESS_THRESHOLD_BYTES) {
+  if (!isRasterConvertible && !isHeicFamily) {
+    return file
+  }
+
+  if (isRasterConvertible && file.size <= AUTO_UPLOAD_COMPRESS_THRESHOLD_BYTES) {
     return file
   }
 
   try {
     const policy = getAutoUploadCompressionPolicy(file.size)
-    const image = await loadImageElementFromFile(file)
+    const image = await loadRenderableImageFromFile(file)
     let optimizedBlob = null
 
     for (const quality of policy.qualitySteps) {
@@ -675,7 +697,7 @@ async function optimizeAutoTastingUploadFile(file) {
     }
 
     if (!optimizedBlob) return file
-    if (optimizedBlob.size >= file.size * 0.92) return file
+    if (isRasterConvertible && optimizedBlob.size >= file.size * 0.92) return file
 
     const baseName = file.name.replace(/\.[^.]+$/, '') || 'bottle'
     return new File([optimizedBlob], `${baseName}.jpg`, {
@@ -1088,6 +1110,19 @@ function ModePickerScreen({onPick, onOpenGuide}) {
       <h1 className={styles.modePickerTitle}>{t('chooseModeTitle')}</h1>
       <div className={styles.modePickerGrid}>
         <button
+          className={`${styles.modeCard} ${styles.modeCardAutomatic}`}
+          onClick={() => onPick('automatic')}>
+          <div className={styles.modeCardContent}>
+            <strong className={styles.modeCardTitle}>{t('automaticTitle')}</strong>
+            <p className={styles.modeCardDesc}>{t('automaticDescription')}</p>
+            <span className="btn btn-small quaternary btn-automatic-game btn-inline btn-with-icon-end">
+              <span>{t('automaticAction')}</span>
+              <Icon name="plusFat" size={24} className="btn-icon" />
+            </span>
+          </div>
+        </button>
+
+        <button
           className={`${styles.modeCard} ${styles.modeCardQuick}`}
           onClick={() => onPick('quick')}>
           <Image
@@ -1129,18 +1164,6 @@ function ModePickerScreen({onPick, onOpenGuide}) {
           </div>
         </button>
 
-        <button
-          className={`${styles.modeCard} ${styles.modeCardAutomatic}`}
-          onClick={() => onPick('automatic')}>
-          <div className={styles.modeCardContent}>
-            <strong className={styles.modeCardTitle}>{t('automaticTitle')}</strong>
-            <p className={styles.modeCardDesc}>{t('automaticDescription')}</p>
-            <span className="btn btn-small quaternary btn-automatic-game btn-inline btn-with-icon-end">
-              <span>{t('automaticAction')}</span>
-              <Icon name="plusFat" size={24} className="btn-icon" />
-            </span>
-          </div>
-        </button>
       </div>
       <button
         type="button"
@@ -1160,6 +1183,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   const fileInputRef = useRef(null)
   const sessionImageIdsRef = useRef([])
   const loadedPreviewIdsRef = useRef(new Set())
+  const previewUrlByImageIdRef = useRef(new Map())
+  const originalPreviewFileByImageIdRef = useRef(new Map())
+  const previewRecoveryAttemptedIdsRef = useRef(new Set())
   const queuedLoadRef = useRef(false)
   const imagesLoadChainRef = useRef(Promise.resolve())
   const loadRetryTimeoutRef = useRef(null)
@@ -1192,6 +1218,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   const [uploadedImages, setUploadedImages] = useState([])
   const [previewLoadProgress, setPreviewLoadProgress] = useState({loaded: 0, total: 0})
   const [sessionImageIds, setSessionImageIds] = useState([])
+  const [failedPreviewIds, setFailedPreviewIds] = useState([])
   const [aiScanCredits, setAiScanCredits] = useState(() =>
     normalizeAiScanCredits(initialAiScanCredits || {}),
   )
@@ -1395,6 +1422,68 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     })
   }, [])
 
+  const markPreviewError = useCallback(
+    (imageId) => {
+      const id = String(imageId || '').trim()
+      if (!id) return
+      setFailedPreviewIds((prev) => (prev.includes(id) ? prev : [...prev, id]))
+      markPreviewLoaded(id)
+    },
+    [markPreviewLoaded],
+  )
+
+  const revokePreviewUrl = useCallback((imageId) => {
+    const id = String(imageId || '').trim()
+    if (!id) return
+    const currentUrl = previewUrlByImageIdRef.current.get(id)
+    if (!currentUrl) return
+    URL.revokeObjectURL(currentUrl)
+    previewUrlByImageIdRef.current.delete(id)
+  }, [])
+
+  const buildFallbackPreviewUrlFromOriginalFile = useCallback(async (imageId) => {
+    const id = String(imageId || '').trim()
+    if (!id) return null
+    const originalFile = originalPreviewFileByImageIdRef.current.get(id)
+    if (!(originalFile instanceof File)) return null
+
+    const convertedFile = await optimizeAutoTastingUploadFile(originalFile)
+    const nextPreviewUrl = URL.createObjectURL(convertedFile)
+    revokePreviewUrl(id)
+    previewUrlByImageIdRef.current.set(id, nextPreviewUrl)
+    return nextPreviewUrl
+  }, [revokePreviewUrl])
+
+  const mergeImageRowWithPreview = useCallback((row, fallbackRow = null) => {
+    const previewUrl =
+      previewUrlByImageIdRef.current.get(row?.id) ||
+      fallbackRow?.clientPreviewUrl ||
+      row?.clientPreviewUrl ||
+      null
+    return previewUrl ? {...fallbackRow, ...row, clientPreviewUrl: previewUrl} : {...fallbackRow, ...row}
+  }, [])
+
+  const handlePreviewImageError = useCallback(async (imageId) => {
+    const id = String(imageId || '').trim()
+    if (!id) return
+
+    if (previewRecoveryAttemptedIdsRef.current.has(id)) {
+      markPreviewError(id)
+      return
+    }
+
+    previewRecoveryAttemptedIdsRef.current.add(id)
+    const nextPreviewUrl = await buildFallbackPreviewUrlFromOriginalFile(id).catch(() => null)
+    if (nextPreviewUrl) {
+      setUploadedImages((prev) =>
+        prev.map((row) => (row.id === id ? {...row, clientPreviewUrl: nextPreviewUrl} : row)),
+      )
+      return
+    }
+
+    markPreviewError(id)
+  }, [buildFallbackPreviewUrlFromOriginalFile, markPreviewError])
+
   function uploadFileWithProgress(formData, onProgress) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()
@@ -1501,7 +1590,14 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
 
       const ids = sessionImageIdsRef.current
       if (!ids.length) {
+        previewUrlByImageIdRef.current.forEach((url) => {
+          URL.revokeObjectURL(url)
+        })
+        previewUrlByImageIdRef.current.clear()
+        originalPreviewFileByImageIdRef.current.clear()
+        previewRecoveryAttemptedIdsRef.current.clear()
         loadedPreviewIdsRef.current = new Set()
+        setFailedPreviewIds([])
         setPreviewLoadProgress({loaded: 0, total: 0})
         setUploadedImages([])
         return
@@ -1516,7 +1612,10 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
 
       loadedPreviewIdsRef.current = retainedLoadedIds
       setPreviewLoadProgress({loaded: retainedLoadedIds.size, total: filteredRows.length})
-      setUploadedImages(filteredRows)
+      setUploadedImages((prev) => {
+        const previousMap = new Map((prev || []).map((row) => [row.id, row]))
+        return filteredRows.map((row) => mergeImageRowWithPreview(row, previousMap.get(row.id) || null))
+      })
     }
 
     if (queuedLoadRef.current) {
@@ -1532,17 +1631,22 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       })
 
     return imagesLoadChainRef.current
-  }, [supabase, t, userId])
+  }, [mergeImageRowWithPreview, supabase, t, userId])
 
   useEffect(() => {
     sessionImageIdsRef.current = sessionImageIds
   }, [sessionImageIds])
 
   useEffect(() => {
+    const previewUrlMap = previewUrlByImageIdRef.current
     return () => {
       if (loadRetryTimeoutRef.current) {
         clearTimeout(loadRetryTimeoutRef.current)
       }
+      previewUrlMap.forEach((url) => {
+        URL.revokeObjectURL(url)
+      })
+      previewUrlMap.clear()
     }
   }, [])
 
@@ -1916,7 +2020,12 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
           continue
         }
 
-        if (metadataResult?.image) createdRows.push(metadataResult.image)
+        if (metadataResult?.image) {
+          const previewUrl = URL.createObjectURL(uploadFile)
+          previewUrlByImageIdRef.current.set(metadataResult.image.id, previewUrl)
+          originalPreviewFileByImageIdRef.current.set(metadataResult.image.id, file)
+          createdRows.push({...metadataResult.image, clientPreviewUrl: previewUrl})
+        }
       }
 
       if (createdRows.length > 0) {
@@ -1927,8 +2036,6 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
           return next
         })
         setUploadedImages((prev) => [...createdRows, ...prev])
-        // Refresh in background: do not block upload completion UI.
-        loadUploadedImages().catch(() => null)
       }
     } catch (error) {
       setUploadError(`${t('automaticUploadError')} (${error?.message || 'unknown'})`)
@@ -1978,6 +2085,10 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       }
 
       setUploadedImages((prev) => prev.filter((image) => image.id !== imageId))
+      setFailedPreviewIds((prev) => prev.filter((id) => id !== imageId))
+      revokePreviewUrl(imageId)
+      originalPreviewFileByImageIdRef.current.delete(imageId)
+      previewRecoveryAttemptedIdsRef.current.delete(imageId)
       setSessionImageIds((prev) => {
         const next = prev.filter((id) => id !== imageId)
         if (next.length > 0) {
@@ -2029,7 +2140,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       const updatedRows = Array.isArray(result?.updated) ? result.updated : []
       if (updatedRows.length > 0) {
         const map = Object.fromEntries(updatedRows.map((row) => [row.id, row]))
-        setUploadedImages((prev) => prev.map((row) => map[row.id] || row))
+        setUploadedImages((prev) =>
+          prev.map((row) => (map[row.id] ? mergeImageRowWithPreview(map[row.id], row) : row)),
+        )
       }
       loadUploadedImages().catch(() => null)
     } catch (error) {
@@ -2143,7 +2256,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       }
 
       setUploadedImages((prev) =>
-        prev.map((row) => (row.id === result.updated.id ? result.updated : row)),
+        prev.map((row) =>
+          row.id === result.updated.id ? mergeImageRowWithPreview(result.updated, row) : row,
+        ),
       )
       setWebPreviewUsageByImageId((prev) => {
         if (!(result.updated.id in prev)) return prev
@@ -2202,7 +2317,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       const updatedRows = Array.isArray(result?.updated) ? result.updated : []
       if (updatedRows.length > 0) {
         const map = Object.fromEntries(updatedRows.map((row) => [row.id, row]))
-        setUploadedImages((prev) => prev.map((row) => map[row.id] || row))
+        setUploadedImages((prev) =>
+          prev.map((row) => (map[row.id] ? mergeImageRowWithPreview(map[row.id], row) : row)),
+        )
       }
       loadUploadedImages().catch(() => null)
     } catch (error) {
@@ -2231,7 +2348,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
 
       if (result?.image) {
         setUploadedImages((prev) =>
-          prev.map((row) => (row.id === result.image.id ? result.image : row)),
+          prev.map((row) =>
+            row.id === result.image.id ? mergeImageRowWithPreview(result.image, row) : row,
+          ),
         )
       }
       loadUploadedImages().catch(() => null)
@@ -2276,6 +2395,13 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       clearSessionIds()
       setSessionImageIds([])
       setUploadedImages([])
+      setFailedPreviewIds([])
+      previewUrlByImageIdRef.current.forEach((url) => {
+        URL.revokeObjectURL(url)
+      })
+      previewUrlByImageIdRef.current.clear()
+      originalPreviewFileByImageIdRef.current.clear()
+      previewRecoveryAttemptedIdsRef.current.clear()
       onBack?.()
     } finally {
       setIsLeavingSession(false)
@@ -2941,6 +3067,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                       }
                     : null,
                 ].filter(Boolean)
+                const previewFailed = failedPreviewIds.includes(image.id)
 
                 return (
                   <li
@@ -2970,15 +3097,23 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                             </button>
                           )}
                           <Image
-                            src={`/api/auto-tasting/image?id=${image.id}`}
+                            src={image.clientPreviewUrl || `/api/auto-tasting/image?id=${image.id}`}
                             alt={image.original_filename || image.storage_path}
                             className={styles.autoBottleCardPreview}
                             fill
                             unoptimized
                             sizes="(max-width: 520px) 100vw, 360px"
                             onLoad={() => markPreviewLoaded(image.id)}
-                            onError={() => markPreviewLoaded(image.id)}
+                            onError={() => {
+                              handlePreviewImageError(image.id).catch(() => markPreviewError(image.id))
+                            }}
                           />
+                          {previewFailed ? (
+                            <div className={styles.autoBottlePreviewFallback}>
+                              <strong>{image.original_filename || 'Immagine caricata'}</strong>
+                              <span>Anteprima non disponibile su questo dispositivo</span>
+                            </div>
+                          ) : null}
                         </div>
                       </div>
 
