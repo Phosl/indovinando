@@ -54,6 +54,9 @@
     "createGameCardTitle": "Create a new tasting",
     "createGameCardDescription": "Start creating your new tasting and share it with your friends.",
     "createGameCardAction": "Create",
+    "communityEyebrow": "Community",
+    "rankingsTitle": "Public rankings",
+    "rankingsDescription": "See which wines are emerging from the community’s real tastings.",
     "myGamesCardDescription": "Create, manage and play with your tasting games.",
     "yourProgress": "Your progress",
     "courseStartedDescription": "Keep going with your wine path.",
@@ -82,6 +85,7 @@
       "ariaLabel": "Landing menu",
       "howItWorks": "How it works",
       "partners": "Partners",
+      "rankings": "Rankings",
       "login": "Log in"
     },
     "hero": {
@@ -158,6 +162,19 @@
       "description": "Create wine quizzes, run interactive tastings, and discover how much your friends or customers really know.",
       "primaryCta": "Start free",
       "secondaryCta": "See how it works"
+    },
+    "globalStats": {
+      "eyebrow": "Community",
+      "title": "Community in numbers",
+      "description": "Aggregated numbers from completed tastings and real ratings collected on Indovinando.",
+      "caption": "Active users are calculated over the last {days} days.",
+      "initialDataBadge": "Starter data",
+      "stats": {
+        "tastings": "tastings",
+        "ratings": "ratings",
+        "activeUsers": "active users",
+        "analyzedWines": "wines analyzed by Indovinando AI"
+      }
     }
   },
   "partnerDirectory": {
@@ -658,10 +675,22 @@
     "step4Title": "Add bottle",
     "dontShowAgain": "Don't show again",
     "steps": [
-      {"id": 1, "label": "Game name"},
-      {"id": 2, "label": "Questionnaire"},
-      {"id": 3, "label": "Card"},
-      {"id": 4, "label": "Bottles"}
+      {
+        "id": 1,
+        "label": "Game name"
+      },
+      {
+        "id": 2,
+        "label": "Questionnaire"
+      },
+      {
+        "id": 3,
+        "label": "Card"
+      },
+      {
+        "id": 4,
+        "label": "Bottles"
+      }
     ],
     "alerts": {
       "GAME_NAME_REQUIRED": "Enter a game name.",
@@ -940,6 +969,65 @@
     "nowMoveToQuestions": "Now move on to the questions: they will help you reinforce the main steps and terminology.",
     "goalUnderstand": "Goal: understand, not just memorize."
   },
+  "rankingsPage": {
+    "title": "Rankings",
+    "eyebrow": "Community",
+    "heading": "Public wine rankings on Indovinando",
+    "description": "Public rankings built on real ratings collected from completed community tastings.",
+    "initialDataBadge": "Initial data",
+    "explorePartners": "Explore partners",
+    "stats": {
+      "tastings": "tastings",
+      "wines": "wines tasted",
+      "ratings": "ratings",
+      "activeUsers": "active users"
+    },
+    "sections": {
+      "blind": "Best blind tasting wines",
+      "qualityPrice": "Best quality/price ratio",
+      "surprising": "Most surprising wines",
+      "divisive": "Most divisive wines"
+    },
+    "realDataPills": [
+      "Real ratings only",
+      "Enoteca + Table",
+      "Growing over time"
+    ],
+    "realDataNote": "These rankings read real ratings from enoteca and table flows. If a section still has too little data, we temporarily show starter data.",
+    "globalStats": {
+      "eyebrow": "Community",
+      "title": "Community in numbers",
+      "description": "Aggregated numbers from completed tastings and real ratings collected on Indovinando.",
+      "caption": "Active users are calculated over the last {days} days.",
+      "initialDataBadge": "Starter data",
+      "stats": {
+        "tastings": "tastings",
+        "ratings": "ratings",
+        "activeUsers": "active users",
+        "analyzedWines": "wines analyzed by Indovinando AI"
+      }
+    },
+    "metricInfoLabel": "How this ranking works",
+    "metricFallback": "Metric explanation not available.",
+    "metrics": {
+      "blind": {
+        "description": "Ranks wines by the real average rating they received in completed tastings.",
+        "formula": "The higher the average rating, the higher the wine appears."
+      },
+      "qualityPrice": {
+        "description": "Combines perceived quality with the wine’s average price.",
+        "formula": "Rewards wines that earn strong ratings compared with their price."
+      },
+      "surprising": {
+        "description": "Highlights wines that score well even when they are less easily recognized.",
+        "formula": "A surprising wine has a strong rating and lower recognition in objective questions."
+      },
+      "divisive": {
+        "description": "Shows wines that split the community’s opinions the most.",
+        "formula": "The more spread out the ratings are, the more divisive the wine is."
+      }
+    }
+  },
   "auth": {
     "tagline": "Play, create and learn wine in one place.",
     "loginOrRegister": "Login or Register",
@@ -1027,7 +1115,17 @@
     "publicProfileHintPublic": "Your partner page is visible in the public directory.",
     "publicProfileHintPrivate": "Your partner page is private and does not appear in the directory yet.",
     "publicLabel": "Public",
-    "privateLabel": "Private"
+    "privateLabel": "Private",
+    "communityWidget": {
+      "eyebrow": "Community",
+      "title": "The wines getting attention",
+      "description": "A preview of the public rankings based on real community tastings.",
+      "blindTitle": "Best blind tasting wine",
+      "surprisingTitle": "Most surprising wine",
+      "qualityPriceTitle": "Best value",
+      "cta": "Explore",
+      "initialDataBadge": "Starter data"
+    }
   },
   "profileSetup": {
     "reminderEyebrow": "Complete profile",
@@ -1299,5 +1397,28 @@
         "description": "Create your first tasting or join an existing match."
       }
     ]
+  },
+  "communityWidget": {
+    "eyebrow": "Community",
+    "title": "The wines getting attention",
+    "description": "A preview of the public rankings based on real community tastings.",
+    "blindTitle": "Best blind tasting wine",
+    "surprisingTitle": "Most surprising wine",
+    "qualityPriceTitle": "Best value",
+    "cta": "Explore",
+    "initialDataBadge": "Starter data"
+  },
+  "globalStats": {
+    "eyebrow": "Community",
+    "title": "Community in numbers",
+    "description": "Aggregated numbers from completed tastings and real ratings collected on Indovinando.",
+    "caption": "Active users are calculated over the last {days} days.",
+    "initialDataBadge": "Starter data",
+    "stats": {
+      "tastings": "tastings",
+      "ratings": "ratings",
+      "activeUsers": "active users",
+      "analyzedWines": "wines analyzed by Indovinando AI"
+    }
   }
 }

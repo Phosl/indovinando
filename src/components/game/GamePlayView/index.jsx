@@ -292,9 +292,10 @@ export default function GamePlayView({
                               {t('historyMatchLabel', {number: historySessions.length - index})}
                             </p>
                             <span className={styles.historyTypeBadge}>
-                              {(session.player_count || (session.players || []).length) > 1
-                                ? 'Live'
-                                : 'Single'}
+                              {session.modeLabel ||
+                                ((session.player_count || (session.players || []).length) > 1
+                                  ? 'Live'
+                                  : 'Single')}
                             </span>
                           </div>
                           <p className={styles.historyMeta}>

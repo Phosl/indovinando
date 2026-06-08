@@ -41,6 +41,25 @@ export default async function StoricoPage() {
     .eq('created_by', user.id)
     .limit(250)
 
+  const {data: ownedGames} = await supabase
+    .from('games')
+    .select('id, name')
+    .eq('created_by', user.id)
+    .limit(250)
+
+  const ownedGameIds = (ownedGames || []).map((game) => game.id)
+  const ownedGameNameById = new Map((ownedGames || []).map((game) => [game.id, game.name]))
+
+  const {data: enotecaSessions} = ownedGameIds.length
+    ? await supabase
+        .from('enoteca_tasting_sessions')
+        .select('id, game_id, nickname, table_name, total_score, completed_at')
+        .in('game_id', ownedGameIds)
+        .eq('status', 'completed')
+        .order('completed_at', {ascending: false})
+        .limit(250)
+    : {data: []}
+
   const eventIds = (hostedEvents || []).map((event) => event.id)
   const eventById = new Map((hostedEvents || []).map((event) => [event.id, event]))
 
@@ -109,6 +128,7 @@ export default async function StoricoPage() {
     return {
       id: `table-${session.id}`,
       game_name: gameNameById.get(event?.game_id) || 'Partita Tavolo',
+      modeLabel: lang === 'en' ? 'Table' : 'Tavolo',
       played_at:
         rows.reduce((latest, row) => {
           const ts = new Date(row.captured_at || 0).getTime()
@@ -119,7 +139,31 @@ export default async function StoricoPage() {
     }
   })
 
-  const sessions = [...(liveSessions || []), ...tableMappedSessions]
+  const liveMappedSessions = (liveSessions || []).map((session) => ({
+    ...session,
+    modeLabel: 'Live',
+  }))
+
+  const enotecaMappedSessions = (enotecaSessions || []).map((session) => ({
+    id: `enoteca-${session.id}`,
+    game_name:
+      ownedGameNameById.get(session.game_id) ||
+      (lang === 'en' ? 'Enoteca Tasting' : 'Degustazione Enoteca'),
+    modeLabel: 'Enoteca',
+    played_at: session.completed_at,
+    player_count: 1,
+    players: [
+      {
+        id: session.id,
+        nickname: session.nickname || (lang === 'en' ? 'Player' : 'Giocatore'),
+        total_score: Number(session.total_score || 0),
+        avatar_id: avatarFromNickname(session.nickname || ''),
+      },
+    ],
+  }))
+
+  const sessions = [...liveMappedSessions, ...tableMappedSessions, ...enotecaMappedSessions]
+    .filter((session) => session.played_at)
     .sort((a, b) => new Date(b.played_at || 0).getTime() - new Date(a.played_at || 0).getTime())
     .slice(0, 100)
 

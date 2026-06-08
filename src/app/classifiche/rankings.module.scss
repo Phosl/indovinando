@@ -1,0 +1,218 @@
+.page {
+  min-height: 100dvh;
+  background: var(--background);
+  padding: 0 12px 40px;
+}
+
+.container {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 18px;
+}
+
+.hero,
+.sectionCard {
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 24px;
+  box-shadow: 0 10px 28px rgba(26, 34, 44, 0.06);
+}
+
+.hero {
+  padding: 32px 24px;
+}
+
+.heroTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.eyebrow {
+  background: var(--primary-100);
+  color: var(--primary-text);
+}
+
+.hero h1 {
+  margin: 14px 0 12px;
+  color: var(--primary-900);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.04;
+}
+
+.hero p,
+.rankingMeta {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.heroPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.heroPill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--primary-50);
+  border: 1px solid var(--primary-100);
+  color: var(--primary-text);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.heroNote {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--gray-100);
+  border: 1px solid var(--button-secondary-border);
+  color: var(--text-secondary);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.sectionsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.sectionCard {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.sectionHeadingWrap {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+}
+
+.sectionTitleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.25rem;
+}
+
+.sectionInfoBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--button-secondary-border);
+  background: var(--foreground);
+  color: var(--primary-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 900;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.sectionInfoBtn:hover {
+  background: var(--primary-50);
+}
+
+
+.rankingList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rankingItem {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px;
+  border: 1px solid var(--primary-100);
+  border-radius: 18px;
+  background: var(--primary-50);
+}
+
+.rankIndex {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: var(--foreground);
+  border: 1px solid var(--primary-100);
+  color: var(--primary-text);
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.rankingContent {
+  display: grid;
+  gap: 6px;
+}
+
+.rankingContent h3 {
+  margin: 0;
+  color: var(--primary-text);
+  font-size: 1.06rem;
+  line-height: 1.25;
+}
+
+.ctaRow {
+  display: flex;
+  justify-content: center;
+  padding-top: 4px;
+}
+
+@media (max-width: 900px) {
+  .sectionsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 24px 18px;
+  }
+
+  .sectionCard {
+    padding: 18px;
+  }
+
+  .rankingItem {
+    padding: 12px;
+  }
+}

@@ -42,9 +42,9 @@ export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
             {isComplete ? t('summaryEyebrow') : t('reminderEyebrow')}
           </span>
           <h2 className={styles.title}>{isComplete ? t('summaryTitle') : t('reminderTitle')}</h2>
-          <p className={styles.description}>
+          {/* <p className={styles.description}>
             {isComplete ? t('summaryDescription') : t('reminderDescription')}
-          </p>
+          </p> */}
         </div>
         <div className={styles.progressBadge}>
           {t('progressLabel', {current: completionCount, total: totalFields})}
@@ -97,13 +97,14 @@ export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
           ) : null}
         </div>
       ) : (
-        <ul className={styles.checkList}>
-          <li>{t('checklist.profileType')}</li>
-          <li>{t('checklist.experience')}</li>
-          <li>{t('checklist.preferences')}</li>
-          <li>{t('checklist.location')}</li>
-          {isBusinessProfile(normalizedProfile) ? <li>{t('checklist.business')}</li> : null}
-        </ul>
+        ''
+        // <ul className={styles.checkList}>
+        //   <li>{t('checklist.profileType')}</li>
+        //   <li>{t('checklist.experience')}</li>
+        //   <li>{t('checklist.preferences')}</li>
+        //   <li>{t('checklist.location')}</li>
+        //   {isBusinessProfile(normalizedProfile) ? <li>{t('checklist.business')}</li> : null}
+        // </ul>
       )}
 
       <div className={styles.actions}>

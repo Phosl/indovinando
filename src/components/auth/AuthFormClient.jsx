@@ -138,7 +138,7 @@ function AuthForm() {
           password,
         })
         if (loginAfterSignupError) {
-          setError(t('registrationComplete'))
+          setInfo(t('registrationComplete'))
           return
         }
         router.push(safeNextPath)

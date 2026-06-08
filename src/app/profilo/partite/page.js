@@ -92,7 +92,10 @@ export default async function ProfileMatchesPage() {
 
   const [liveSessionsResult, liveSessionPlayersResult] = await Promise.all([
     sessionIds.length
-      ? supabase.from('live_sessions').select('id, game_id, created_at').in('id', sessionIds)
+      ? supabase
+          .from('live_sessions')
+          .select('id, game_id, created_at, finished_at, status')
+          .in('id', sessionIds)
       : Promise.resolve({data: []}),
     sessionIds.length
       ? supabase
@@ -102,7 +105,7 @@ export default async function ProfileMatchesPage() {
       : Promise.resolve({data: []}),
   ])
 
-  const liveSessions = liveSessionsResult.data || []
+  const liveSessions = (liveSessionsResult.data || []).filter((session) => session.status === 'finished')
   const livePlayers = liveSessionPlayersResult.data || []
   const sessionsById = new Map(liveSessions.map((row) => [row.id, row]))
 
@@ -184,14 +187,14 @@ export default async function ProfileMatchesPage() {
         gamesById.get(session?.game_id)?.cover_index >= 0
           ? gameAvatarOptions[gamesById.get(session?.game_id)?.cover_index] || ''
           : '',
-      playedAt: myRow.updated_at || session?.created_at || null,
+      playedAt: session?.finished_at || myRow.updated_at || session?.created_at || null,
       score: Number(myRow.total_score || 0),
       myNickname: myRow.nickname || (lang === 'en' ? 'You' : 'Tu'),
       isWin: Number(myRow.total_score || 0) >= maxScore && maxScore > 0,
       myAvatarId: myRow.avatar_id || myAvatarId || 1,
       opponents,
     }
-  })
+  }).filter((match) => match.playedAt)
 
   const enotecaMatches = (enotecaRows || []).map((row) => ({
     id: `enoteca-${row.id}`,
@@ -244,7 +247,7 @@ export default async function ProfileMatchesPage() {
           gamesById.get(session?.game_id)?.cover_index >= 0
             ? gameAvatarOptions[gamesById.get(session?.game_id)?.cover_index] || ''
             : '',
-        playedAt: myRow.last_seen_at || session?.updated_at || session?.created_at || null,
+        playedAt: session?.updated_at || myRow.last_seen_at || session?.created_at || null,
         score: Number(myRow.total_score || 0),
         myNickname: nickname,
         isWin: Number(myRow.total_score || 0) >= maxScore && maxScore > 0,

@@ -55,6 +55,9 @@
     "createGameCardTitle": "Crea una degustazione",
     "createGameCardDescription": "Prepara il questionario per la tua nuova degustazione.",
     "createGameCardAction": "Crea",
+    "communityEyebrow": "Community",
+    "rankingsTitle": "Classifiche pubbliche",
+    "rankingsDescription": "Scopri i vini che stanno emergendo dalle degustazioni reali della community.",
     "myGamesCardDescription": "Crea, gestisci e gioca con le tue degustazioni.",
     "yourProgress": "I tuoi progressi",
     "courseStartedDescription": "Continua il tuo percorso nel mondo del vino.",
@@ -83,6 +86,7 @@
       "ariaLabel": "Menu landing",
       "howItWorks": "Come funziona",
       "partners": "Partner",
+      "rankings": "Classifiche",
       "login": "Accedi"
     },
     "hero": {
@@ -159,6 +163,19 @@
       "description": "Crea quiz sul vino, organizza degustazioni interattive e scopri quanto ne sanno davvero i tuoi amici o i tuoi clienti.",
       "primaryCta": "Inizia gratis",
       "secondaryCta": "Guarda come funziona"
+    },
+    "globalStats": {
+      "eyebrow": "Community",
+      "title": "I numeri della community",
+      "description": "Numeri aggregati dalle degustazioni completate e dalle valutazioni reali raccolte su Indovinando.",
+      "caption": "Utenti attivi calcolati sugli ultimi {days} giorni.",
+      "initialDataBadge": "Dati iniziali",
+      "stats": {
+        "tastings": "degustazioni",
+        "ratings": "valutazioni",
+        "activeUsers": "utenti attivi",
+        "analyzedWines": "vini analizzati da Indovinando AI"
+      }
     }
   },
   "partnerDirectory": {
@@ -662,10 +679,22 @@
     "step4Title": "Aggiungi bottiglia",
     "dontShowAgain": "Non mostrare più",
     "steps": [
-      {"id": 1, "label": "Nome gioco"},
-      {"id": 2, "label": "Questionario"},
-      {"id": 3, "label": "Scheda"},
-      {"id": 4, "label": "Bottiglie"}
+      {
+        "id": 1,
+        "label": "Nome gioco"
+      },
+      {
+        "id": 2,
+        "label": "Questionario"
+      },
+      {
+        "id": 3,
+        "label": "Scheda"
+      },
+      {
+        "id": 4,
+        "label": "Bottiglie"
+      }
     ],
     "alerts": {
       "GAME_NAME_REQUIRED": "Inserisci il nome del gioco.",
@@ -944,6 +973,65 @@
     "nowMoveToQuestions": "Ora passa alle domande: ti aiuteranno a consolidare i passaggi principali e fissare la terminologia.",
     "goalUnderstand": "Obiettivo: capire, non solo ricordare."
   },
+  "rankingsPage": {
+    "title": "Classifiche",
+    "eyebrow": "Community",
+    "heading": "Le classifiche pubbliche del vino su Indovinando",
+    "description": "Classifiche pubbliche costruite sui voti reali raccolti nelle degustazioni completate della community.",
+    "initialDataBadge": "Dati iniziali",
+    "explorePartners": "Scopri i partner",
+    "stats": {
+      "tastings": "degustazioni",
+      "wines": "vini degustati",
+      "ratings": "valutazioni",
+      "activeUsers": "utenti attivi"
+    },
+    "sections": {
+      "blind": "Migliori vini alla cieca",
+      "qualityPrice": "Miglior rapporto qualità/prezzo",
+      "surprising": "Vini più sorprendenti",
+      "divisive": "Vini più divisivi"
+    },
+    "realDataPills": [
+      "Solo voti reali",
+      "Enoteca + Tavolo",
+      "Aggiornamento progressivo"
+    ],
+    "realDataNote": "Queste classifiche leggono i voti reali di enoteca e tavolo. Se una sezione ha ancora pochi dati, mostriamo un set iniziale temporaneo.",
+    "globalStats": {
+      "eyebrow": "Community",
+      "title": "I numeri della community",
+      "description": "Numeri aggregati dalle degustazioni completate e dalle valutazioni reali raccolte su Indovinando.",
+      "caption": "Utenti attivi calcolati sugli ultimi {days} giorni.",
+      "initialDataBadge": "Dati iniziali",
+      "stats": {
+        "tastings": "degustazioni",
+        "ratings": "valutazioni",
+        "activeUsers": "utenti attivi",
+        "analyzedWines": "vini analizzati da Indovinando AI"
+      }
+    },
+    "metricInfoLabel": "Come leggiamo questa classifica",
+    "metricFallback": "Spiegazione metrica non disponibile.",
+    "metrics": {
+      "blind": {
+        "description": "Ordina i vini in base al voto medio reale ricevuto nelle degustazioni completate.",
+        "formula": "Più il voto medio è alto, più il vino sale in classifica."
+      },
+      "qualityPrice": {
+        "description": "Mette insieme qualità percepita e prezzo medio del vino.",
+        "formula": "Premia i vini che raccolgono voti forti rispetto al loro prezzo."
+      },
+      "surprising": {
+        "description": "Fa emergere i vini che piacciono molto anche quando vengono riconosciuti meno facilmente.",
+        "formula": "Un vino sorprendente ha buon voto e bassa riconoscibilità nelle domande oggettive."
+      },
+      "divisive": {
+        "description": "Mostra i vini che spaccano di più i giudizi della community.",
+        "formula": "Più i voti sono distanti tra loro, più il vino risulta divisivo."
+      }
+    }
+  },
   "auth": {
     "tagline": "Gioca, crea e impara il vino in un unico posto.",
     "loginOrRegister": "Accedi o Registrati",
@@ -1031,7 +1119,17 @@
     "publicProfileHintPublic": "La tua scheda partner è visibile nella directory pubblica.",
     "publicProfileHintPrivate": "La tua scheda partner è privata e non compare ancora nella directory.",
     "publicLabel": "Pubblico",
-    "privateLabel": "Privato"
+    "privateLabel": "Privato",
+    "communityWidget": {
+      "eyebrow": "Community",
+      "title": "I vini che si stanno facendo notare",
+      "description": "Un’anteprima delle classifiche pubbliche basate su degustazioni reali della community.",
+      "blindTitle": "Miglior vino alla cieca",
+      "surprisingTitle": "Vino più sorprendente",
+      "qualityPriceTitle": "Miglior Q/P",
+      "cta": "Esplora",
+      "initialDataBadge": "Dati iniziali"
+    }
   },
   "profileSetup": {
     "reminderEyebrow": "Completa profilo",
@@ -1303,5 +1401,28 @@
         "description": "Crea la tua prima degustazione oppure entra in una partita esistente."
       }
     ]
+  },
+  "communityWidget": {
+    "eyebrow": "Community",
+    "title": "I vini che si stanno facendo notare",
+    "description": "Un’anteprima delle classifiche pubbliche basate su degustazioni reali della community.",
+    "blindTitle": "Miglior vino alla cieca",
+    "surprisingTitle": "Vino più sorprendente",
+    "qualityPriceTitle": "Miglior Q/P",
+    "cta": "Esplora",
+    "initialDataBadge": "Dati iniziali"
+  },
+  "globalStats": {
+    "eyebrow": "Community",
+    "title": "I numeri della community",
+    "description": "Numeri aggregati dalle degustazioni completate e dalle valutazioni reali raccolte su Indovinando.",
+    "caption": "Utenti attivi calcolati sugli ultimi {days} giorni.",
+    "initialDataBadge": "Dati iniziali",
+    "stats": {
+      "tastings": "degustazioni",
+      "ratings": "valutazioni",
+      "activeUsers": "utenti attivi",
+      "analyzedWines": "vini analizzati da Indovinando AI"
+    }
   }
 }

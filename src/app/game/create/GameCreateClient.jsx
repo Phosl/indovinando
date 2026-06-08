@@ -2316,6 +2316,17 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
         producer: image.recognized_producer,
         year: vintageValue || '',
         wineType: details.type || '',
+        wineVintageId:
+          image.recognized_payload?.catalog_sync?.vintage_id ||
+          image.recognized_payload?.web_enrichment?.wine_vintage_id ||
+          null,
+        priceValue: averagePrice,
+        priceMin: details.price_min ?? null,
+        priceMax: details.price_max ?? null,
+        priceCurrency: details.currency || null,
+        priceBand: details.quiz_price_band || details.price_band || null,
+        regionLabel: details.quiz_region || inferredRegion || details.region || null,
+        appellationLabel: details.quiz_appellation || details.appellation || null,
         _values: {
           country: localizeCountryLabel(details.country, lang),
           region: localizeRegionLabel(inferredRegion || details.region, lang),
@@ -2401,6 +2412,14 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
         producer: bottle.producer,
         year: bottle.year,
         wineType: bottle.wineType,
+        wineVintageId: bottle.wineVintageId || null,
+        priceValue: bottle.priceValue ?? null,
+        priceMin: bottle.priceMin ?? null,
+        priceMax: bottle.priceMax ?? null,
+        priceCurrency: bottle.priceCurrency || null,
+        priceBand: bottle.priceBand || null,
+        regionLabel: bottle.regionLabel || null,
+        appellationLabel: bottle.appellationLabel || null,
         answers,
       }
     })

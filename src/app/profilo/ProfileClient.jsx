@@ -14,6 +14,7 @@ import {supabaseClient, resetBrowserClient} from '@/lib/supabaseClient'
 import {useT} from '@/lib/i18n/useT'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {isBusinessProfile, isProfileComplete} from '@/lib/profileSetup'
+import CommunityHighlightsCard from '@/components/community/CommunityHighlightsCard'
 import styles from './profilo.module.scss'
 // ── Player rank levels ────────────────────────────────────────────────────────
 const PLAYER_LEVELS = [
@@ -124,6 +125,7 @@ export default function ProfileClient({
   profileData,
   levels,
   gamesCount,
+  communitySnapshot,
 }) {
   const router = useRouter()
   const t = useT('profile')
@@ -573,6 +575,12 @@ export default function ProfileClient({
             </div>
           </div>
         </section>
+
+        <CommunityHighlightsCard
+          snapshot={communitySnapshot}
+          text={t('communityWidget') || {}}
+          className={styles.communityCard}
+        />
 
         {/* ── Come funziona + Changelog ── */}
         <section className={styles.card}>

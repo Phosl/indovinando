@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import {redirect} from 'next/navigation'
 import Link from 'next/link'
 import DashboardInfoFabWrapper from './DashboardInfoFabWrapper'
@@ -62,7 +63,7 @@ export default async function Dashboard() {
     <main className={styles.dashboard}>
       <div className={styles.container}>
         <section className={styles.arcadeHero}>
-          <img src="/logo.svg" alt="Indovinando Logo" className={styles.logo} />
+          <Image src="/logo.svg" alt="Indovinando Logo" className={styles.logo} width={320} height={96} priority />
           <div className={styles.welcomeTextContainer}>
             <h1>
               {dashboardDict.welcome}, {isSuperAdmin ? 'Supremo' : ''}{' '}
@@ -73,7 +74,6 @@ export default async function Dashboard() {
         </section>
 
         {showProfileSetupPanel && <ProfileSetupPanel profile={profile || {}} mode="dashboard" />}
-
         <nav className={styles.menuGrid}>
           <CreateGameCardLink
             title={dashboardDict.createGameCardTitle}
@@ -112,12 +112,32 @@ export default async function Dashboard() {
                 <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
               </span>
             </div>
-            <img
+            <Image
               src="/img-card-course.svg"
               alt=""
               aria-hidden="true"
               className="card-illustration-absolute"
+              width={220}
+              height={220}
             />
+          </Link>
+
+          <Link
+            href="/classifiche"
+            className={`${styles.sectionCard} ${styles.sectionCardTertiary} ${styles.sectionCardBottomArrow}`}>
+            <div className={styles.sectionCardInfo}>
+              <span className={styles.sectionCardEyebrow}>{dashboardDict.communityEyebrow || 'Community'}</span>
+              <h3>{dashboardDict.rankingsTitle || 'Classifiche pubbliche'}</h3>
+              <p>
+                {dashboardDict.rankingsDescription ||
+                  'Scopri i vini più votati, sorprendenti e divisivi della community.'}
+              </p>
+            </div>
+            <div className={styles.sectionCardArrowRail} aria-hidden="true">
+              <span className={`btn icon-circle ${styles.sectionCardArrowBtn}`}>
+                <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
+              </span>
+            </div>
           </Link>
 
           {isSuperAdmin && (

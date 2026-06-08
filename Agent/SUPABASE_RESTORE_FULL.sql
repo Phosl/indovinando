@@ -211,7 +211,16 @@ create table if not exists game_bottles (
 );
 
 alter table game_bottles
-  add column if not exists wine_type text;
+  add column if not exists wine_type text,
+  add column if not exists canonical_wine_key text,
+  add column if not exists wine_vintage_id uuid,
+  add column if not exists price_value numeric(10,2),
+  add column if not exists price_min numeric(10,2),
+  add column if not exists price_max numeric(10,2),
+  add column if not exists price_currency text,
+  add column if not exists price_band text,
+  add column if not exists region_label text,
+  add column if not exists appellation_label text;
 
 create table if not exists game_bottle_answers (
   id uuid primary key default gen_random_uuid(),
@@ -225,6 +234,8 @@ create index if not exists idx_games_created_by on games(created_by);
 create index if not exists idx_game_questions_game_id on game_questions(game_id);
 create index if not exists idx_game_question_options_question_id on game_question_options(question_id);
 create index if not exists idx_game_bottles_game_id on game_bottles(game_id);
+create index if not exists idx_game_bottles_canonical_wine_key on game_bottles(canonical_wine_key);
+create index if not exists idx_game_bottles_wine_vintage_id on game_bottles(wine_vintage_id);
 create index if not exists idx_game_bottle_answers_bottle_id on game_bottle_answers(bottle_id);
 create index if not exists idx_game_bottle_answers_question_id on game_bottle_answers(question_id);
 
@@ -691,6 +702,7 @@ create table if not exists wine_course_progress (
   lesson_id text not null,
   completed boolean not null default false,
   score integer not null default 0,
+  max_score integer not null default 0,
   attempts integer not null default 0,
   completed_at timestamptz,
   updated_at timestamptz not null default now(),
@@ -722,6 +734,7 @@ create policy "Users update own progress"
 create table if not exists enoteca_tasting_sessions (
   id uuid primary key default gen_random_uuid(),
   game_id uuid not null references games(id) on delete cascade,
+  user_id uuid references auth.users(id) on delete set null,
   nickname text not null,
   table_name text,
   current_bottle_index integer not null default 0,
@@ -745,6 +758,7 @@ create table if not exists enoteca_answers (
 );
 
 create index if not exists idx_enoteca_sessions_game on enoteca_tasting_sessions(game_id);
+create index if not exists idx_enoteca_sessions_user on enoteca_tasting_sessions(user_id);
 create index if not exists idx_enoteca_answers_session on enoteca_answers(tasting_session_id);
 create index if not exists idx_enoteca_answers_bottle on enoteca_answers(bottle_id);
 

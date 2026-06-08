@@ -1,6 +1,7 @@
 import {NextResponse} from 'next/server'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {createClient} from '@supabase/supabase-js'
+import {buildCanonicalWineKey, parseNumericSnapshot} from '@/lib/wineIdentity'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -19,6 +20,11 @@ function normalizeYear(value) {
   return String(value ?? '')
     .trim()
     .slice(0, 4)
+}
+
+function normalizeOptionalText(value) {
+  const text = String(value ?? '').trim()
+  return text || null
 }
 
 export async function POST(request) {
@@ -140,14 +146,35 @@ export async function POST(request) {
     }
 
     if (Array.isArray(bottles) && bottles.length > 0) {
-      const bottleRows = bottles.map((bottle, index) => ({
-        game_id: currentGameId,
-        name: String(bottle.name ?? '').trim(),
-        producer: String(bottle.producer ?? '').trim(),
-        year: normalizeYear(bottle.year),
-        wine_type: String(bottle.wineType ?? '').trim() || null,
-        bottle_order: index,
-      }))
+      const bottleRows = bottles.map((bottle, index) => {
+        const normalizedName = String(bottle.name ?? '').trim()
+        const normalizedProducer = String(bottle.producer ?? '').trim()
+        const normalizedYear = normalizeYear(bottle.year)
+
+        return {
+          game_id: currentGameId,
+          name: normalizedName,
+          producer: normalizedProducer,
+          year: normalizedYear,
+          wine_type: String(bottle.wineType ?? '').trim() || null,
+          canonical_wine_key:
+            normalizeOptionalText(bottle.canonicalWineKey) ||
+            buildCanonicalWineKey({
+              name: normalizedName,
+              producer: normalizedProducer,
+              year: normalizedYear,
+            }),
+          wine_vintage_id: normalizeOptionalText(bottle.wineVintageId),
+          price_value: parseNumericSnapshot(bottle.priceValue),
+          price_min: parseNumericSnapshot(bottle.priceMin),
+          price_max: parseNumericSnapshot(bottle.priceMax),
+          price_currency: normalizeOptionalText(bottle.priceCurrency),
+          price_band: normalizeOptionalText(bottle.priceBand),
+          region_label: normalizeOptionalText(bottle.regionLabel),
+          appellation_label: normalizeOptionalText(bottle.appellationLabel),
+          bottle_order: index,
+        }
+      })
 
       const {data: insertedBottles, error: bottlesError} = await db
         .from('game_bottles')

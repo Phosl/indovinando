@@ -52,6 +52,7 @@ export default function LandingNav({text = {}}) {
 
   const howItWorksActive = pathname === '/' && currentHash === '#come-funziona'
   const partnersActive = pathname === '/partner' || pathname.startsWith('/partner/')
+  const rankingsActive = pathname === '/classifiche'
   const loginActive = pathname === '/auth'
 
   const navLinkClassName = (isActive) =>
@@ -109,6 +110,12 @@ export default function LandingNav({text = {}}) {
                 className={navLinkClassName(partnersActive)}
                 onClick={closeMenu}>
                 {text.partners || 'Partner'}
+              </Link>
+              <Link
+                href="/classifiche"
+                className={navLinkClassName(rankingsActive)}
+                onClick={closeMenu}>
+                {text.rankings || 'Classifiche'}
               </Link>
               <Link href="/auth" className={navLinkClassName(loginActive)} onClick={closeMenu}>
                 {text.login || 'Accedi'}
