@@ -58,6 +58,14 @@ export default async function Dashboard() {
     totalLessons > 0 ? Math.round(Math.min(100, (completedLessons / totalLessons) * 100)) : 0
   const hasStartedCourse = completedLessons > 0
   const showProfileSetupPanel = !isProfileComplete(profile || {})
+  const normalizedUsername = String(profile?.username || '').trim().toLowerCase()
+  const normalizedEmail = String(data.user.email || '').trim().toLowerCase()
+  const isPapaWelcome =
+    normalizedUsername === 'cesare' || normalizedEmail === 'cesare.degennaro@gmail.com'
+  const welcomeName = isPapaWelcome ? 'papà' : profile?.username || data.user.email
+  const welcomeTitle = isPapaWelcome
+    ? `${dashboardDict.welcome} ${isSuperAdmin ? 'Supremo ' : ''}${welcomeName}!`
+    : `${dashboardDict.welcome}, ${isSuperAdmin ? 'Supremo ' : ''}${welcomeName}!`
 
   return (
     <main className={styles.dashboard}>
@@ -65,10 +73,7 @@ export default async function Dashboard() {
         <section className={styles.arcadeHero}>
           {/* <Image src="/logo.svg" alt="Indovinando Logo" className={styles.logo} width={320} height={96} priority /> */}
           <div className={styles.welcomeTextContainer}>
-            <h1>
-              {dashboardDict.welcome}, {isSuperAdmin ? 'Supremo' : ''}{' '}
-              {profile?.username || data.user.email}!
-            </h1>
+            <h1>{welcomeTitle}</h1>
             <h3 className={styles.subtitle}>{dashboardDict.subtitle}</h3>
           </div>
         </section>

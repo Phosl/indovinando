@@ -132,6 +132,7 @@ const OPENAI_TEMPLATE_OPTION_KEYS = {
 
 const MIN_AUTO_QUIZ_OPTIONS = 5
 const AUTO_TASTING_LIST_TIMEOUT_MS = 12000
+const AUTO_ANALYZE_BATCH_SIZE = 3
 
 const WINE_TYPE_ALIASES = {
   Bianco: ['white', 'bianco', 'blanc', 'blanco', 'weiss'],
@@ -871,6 +872,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   const [verifyingImageId, setVerifyingImageId] = useState('')
   const [webSearchingImageId, setWebSearchingImageId] = useState('')
   const [isAnalyzingAll, setIsAnalyzingAll] = useState(false)
+  const [currentAnalyzeBatchCount, setCurrentAnalyzeBatchCount] = useState(0)
   const [isCreatingQuiz, setIsCreatingQuiz] = useState(false)
   const [webSearchReview, setWebSearchReview] = useState(null)
   const [lastWebSearchReview, setLastWebSearchReview] = useState(null)
@@ -1515,7 +1517,18 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     ],
     [t],
   )
+  const analyzeLoadingMessages = useMemo(
+    () => [
+      t('automaticAnalyzeLoadingStepLabel'),
+      t('automaticAnalyzeLoadingStepName'),
+      t('automaticAnalyzeLoadingStepWine'),
+      t('automaticAnalyzeLoadingStepDetails'),
+      t('automaticAnalyzeLoadingStepTaste'),
+    ],
+    [t],
+  )
   const [webSearchLoadingStep, setWebSearchLoadingStep] = useState(0)
+  const [analyzeLoadingStep, setAnalyzeLoadingStep] = useState(0)
 
   useEffect(() => {
     if (!webSearchingImageId) {
@@ -1529,6 +1542,19 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
 
     return () => clearInterval(intervalId)
   }, [webSearchLoadingMessages.length, webSearchingImageId])
+
+  useEffect(() => {
+    if (!isAnalyzingAll) {
+      setAnalyzeLoadingStep(0)
+      return undefined
+    }
+
+    const intervalId = setInterval(() => {
+      setAnalyzeLoadingStep((prev) => (prev + 1) % analyzeLoadingMessages.length)
+    }, 1400)
+
+    return () => clearInterval(intervalId)
+  }, [analyzeLoadingMessages.length, isAnalyzingAll])
 
   useEffect(() => {
     if (!userId) return undefined
@@ -1931,7 +1957,10 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     try {
       const {response, result} = await postJsonWithRetry(
         '/api/auto-tasting/analyze',
-        {imageId},
+        {
+          imageId,
+          useWebEnrichment: true,
+        },
         {timeoutMs: 35000, retries: 3},
       )
       if (!response.ok) {
@@ -2127,7 +2156,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
 
   async function handleAnalyzeAll() {
     if (isAnalyzingAll || analyzingImageId || webSearchingImageId) return
-    const ids = sessionImageIdsRef.current
+    const ids = pendingAnalyzeImages.map((image) => image.id).filter(Boolean)
     if (!ids.length) return
     if (!canAnalyzeAll) {
       setUploadError(
@@ -2141,34 +2170,43 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       return
     }
     setIsAnalyzingAll(true)
+    setCurrentAnalyzeBatchCount(Math.min(AUTO_ANALYZE_BATCH_SIZE, ids.length))
     setUploadError('')
     try {
-      const {response, result} = await postJsonWithRetry(
-        '/api/auto-tasting/analyze',
-        {analyzeAll: true, imageIds: ids},
-        {timeoutMs: 60000, retries: 2},
-      )
-      if (!response.ok) {
-        if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))
-        if (response.status === 402) {
-          setUploadError(
-            t('automaticAnalyzeAllCreditsNeeded', {
-              needed: String(pendingAnalyzeCount),
-              remaining: String(result?.credits?.remaining ?? aiScanCredits.remaining),
-            }),
-          )
+      for (let startIndex = 0; startIndex < ids.length; startIndex += AUTO_ANALYZE_BATCH_SIZE) {
+        const batchIds = ids.slice(startIndex, startIndex + AUTO_ANALYZE_BATCH_SIZE)
+        setCurrentAnalyzeBatchCount(batchIds.length)
+        const {response, result} = await postJsonWithRetry(
+          '/api/auto-tasting/analyze',
+          {
+            analyzeAll: true,
+            imageIds: batchIds,
+            useWebEnrichment: true,
+          },
+          {timeoutMs: 60000, retries: 2},
+        )
+        if (!response.ok) {
+          if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))
+          if (response.status === 402) {
+            setUploadError(
+              t('automaticAnalyzeAllCreditsNeeded', {
+                needed: String(pendingAnalyzeCount),
+                remaining: String(result?.credits?.remaining ?? aiScanCredits.remaining),
+              }),
+            )
+            return
+          }
+          setUploadError(`${t('automaticAnalyzeError')} (${result?.error || 'analyze all'})`)
           return
         }
-        setUploadError(`${t('automaticAnalyzeError')} (${result?.error || 'analyze all'})`)
-        return
-      }
-      if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))
-      const updatedRows = Array.isArray(result?.updated) ? result.updated : []
-      if (updatedRows.length > 0) {
-        const map = Object.fromEntries(updatedRows.map((row) => [row.id, row]))
-        setUploadedImages((prev) =>
-          prev.map((row) => (map[row.id] ? mergeImageRowWithPreview(map[row.id], row) : row)),
-        )
+        if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))
+        const updatedRows = Array.isArray(result?.updated) ? result.updated : []
+        if (updatedRows.length > 0) {
+          const map = Object.fromEntries(updatedRows.map((row) => [row.id, row]))
+          setUploadedImages((prev) =>
+            prev.map((row) => (map[row.id] ? mergeImageRowWithPreview(map[row.id], row) : row)),
+          )
+        }
       }
       setSelectedBottleId('')
       setDetailEditMode(false)
@@ -2179,6 +2217,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       setUploadError(`${t('automaticAnalyzeError')} (${error?.message || 'unknown'})`)
     } finally {
       setIsAnalyzingAll(false)
+      setCurrentAnalyzeBatchCount(0)
     }
   }
 
@@ -2558,10 +2597,11 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
             <div className={styles.autoBottleWebSearchSpinner} aria-hidden="true" />
             <strong>
               {t('automaticAnalyzingAllCount', {
-                count: String(pendingAnalyzeCount),
+                count: String(currentAnalyzeBatchCount || Math.min(AUTO_ANALYZE_BATCH_SIZE, pendingAnalyzeCount)),
               })}
             </strong>
-            <span>{t('automaticAnalyzeOverlayHint')}</span>
+            <span>{analyzeLoadingMessages[analyzeLoadingStep]}</span>
+            <small>{t('automaticAnalyzeOverlayHint')}</small>
           </div>
         </div>
       ) : null}

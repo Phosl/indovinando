@@ -4,7 +4,10 @@ export const LANGUAGE_COOKIE = 'app_lang'
 
 export function normalizeLanguage(value) {
   if (!value) return DEFAULT_LANGUAGE
-  const normalized = String(value).toLowerCase()
+  const normalized = String(value)
+    .toLowerCase()
+    .trim()
+    .split(/[,;-]/)[0]
   return SUPPORTED_LANGUAGES.includes(normalized) ? normalized : DEFAULT_LANGUAGE
 }
 

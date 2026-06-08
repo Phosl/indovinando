@@ -257,6 +257,40 @@ function parseOpenAIJson(text) {
   }
 }
 
+function toNonEmptyString(value) {
+  const normalized = String(value || '').trim()
+  return normalized || ''
+}
+
+function getBottleCompletionMetaFromExtracted(extracted) {
+  const details = extracted?.recognized_payload?.catalog_details || {}
+  const grapes = Array.isArray(details?.grapes)
+    ? details.grapes.map((value) => toNonEmptyString(value)).filter(Boolean)
+    : []
+  const region = toNonEmptyString(details?.quiz_region || details?.region)
+  const wineType = toNonEmptyString(details?.type)
+  const requiredChecks = [
+    toNonEmptyString(extracted?.recognized_name),
+    toNonEmptyString(extracted?.recognized_producer),
+    toNonEmptyString(extracted?.recognized_vintage),
+    toNonEmptyString(details?.country),
+    region,
+    wineType,
+    grapes[0] || '',
+  ]
+  const totalFields = requiredChecks.length
+  const missingCount = requiredChecks.filter((value) => !value).length
+  const completedCount = totalFields - missingCount
+  const percent = Math.max(0, Math.min(100, Math.round((completedCount / totalFields) * 100)))
+  return {
+    isComplete: missingCount === 0,
+    missingCount,
+    completedCount,
+    totalFields,
+    percent,
+  }
+}
+
 function summarizeOpenAIUsage(responseJson) {
   const usage = responseJson?.usage
   if (!usage || typeof usage !== 'object') return null
@@ -1929,6 +1963,8 @@ export async function POST(request) {
               extracted.recognized_payload.ranked_lines.length > 0)
           )
           const hasCatalogMatch = !!extracted?.recognized_payload?.catalog_match?.matched
+          const completionMeta = getBottleCompletionMetaFromExtracted(extracted)
+          const shouldAutoEnrichIncompleteBottle = completionMeta.percent < 80
           const hasCatalogSync =
             !!row?.recognized_payload?.catalog_sync?.synced ||
             !!extracted?.recognized_payload?.catalog_sync?.synced
@@ -1965,7 +2001,8 @@ export async function POST(request) {
             !shouldForceSkipWebEnrichment &&
             !shouldSkipWebEnrichmentOnly &&
             (forceWebEnrichment ||
-              (!(hasCatalogMatch || hasCatalogSync) &&
+              (shouldAutoEnrichIncompleteBottle &&
+                !(hasCatalogSync && !forceWebEnrichment) &&
                 (!alreadyEnriched ||
                   !hasExistingGrapes ||
                   !hasExistingNarrative ||
@@ -2032,7 +2069,12 @@ export async function POST(request) {
                     : 'catalog_match_found',
               },
             }
-          } else if (useWebEnrichment && hasCatalogMatch && hasExistingAveragePrice) {
+          } else if (
+            useWebEnrichment &&
+            hasCatalogMatch &&
+            hasExistingAveragePrice &&
+            !shouldAutoEnrichIncompleteBottle
+          ) {
             extracted.recognized_payload = {
               ...(extracted.recognized_payload || {}),
               web_enrichment: {

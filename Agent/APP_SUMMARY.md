@@ -45,6 +45,7 @@
 - Public landing navigation now uses a fixed header with logo + burger and a full-screen menu overlay.
 - Partner pages and rankings now also support a landing-mode back row under the public header, while logged-in users still keep the in-app back chrome.
 - Auto-tasting now supports scan credits v1: users start with 12 credits, bottle analysis costs 1 credit, web search costs 1 credit, the API blocks when credits run out, and the automatic create-game flow shows remaining credits plus an info panel in UI.
+- The main `Analizza` action now also attempts automatic web enrichment for bottles still below the completion threshold after recognition, so users more often land on a usable bottle card without an extra manual pass.
 - Public rankings v1 now lives on `/classifiche` with initial seeded data, global stats header, landing + dashboard entry points, and a clear `Dati iniziali` badge until real community aggregations are ready.
 - Public rankings now also have a real-data mini-spec in `Agent/RANKINGS_DATA_MODEL.md`, with valid sources (`enoteca`, `table-live`), the current limitation of classic `live`, and the recommended model for moving from demo data to real wine rankings.
 - Match history is being aligned across play modes: `enoteca` now has a dedicated SQL patch for a stable `user_id` link, profile history reads completed sessions more strictly, and the single game page can aggregate `live`, `enoteca`, and `table-live` history together.
