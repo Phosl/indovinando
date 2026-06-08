@@ -11,7 +11,6 @@ import {Button, ButtonLink} from '@/components/ui/Button'
 import {formatAppDate, formatAppDateTime} from '@/lib/dateFormat'
 import {watchMobileViewport} from '@/lib/deviceUtils'
 import {getGamePlayViewText} from '../utils/constants'
-import StartModeOptions from '../StartModeOptions'
 import styles from './GamePlayView.module.scss'
 
 export default function GamePlayView({
@@ -100,7 +99,7 @@ export default function GamePlayView({
         <div className={styles.actionsBar}>
           {isReadyToPlay ? (
             <ButtonLink
-              href={`/game/${game.id}/mode`}
+              href={`/game/${game.id}/table-live`}
               variant="success"
               className={`btn-start ${styles.actionBtn}`}>
               {t('startMatch')}

@@ -20,6 +20,7 @@ function isActive(pathname, href, key) {
 function shouldRender(pathname) {
   if (!pathname) return false
   if (pathname.startsWith('/table-live/session/')) return false
+  if (/^\/game\/[^/]+\/table-live$/.test(pathname)) return false
   if (pathname.startsWith('/profilo/completa')) return false
   if (pathname === '/dashboard') return true
   if (pathname.startsWith('/miei-giochi')) return true
@@ -32,7 +33,6 @@ function shouldRender(pathname) {
 
   const gameMatch = pathname.match(/^\/game\/([^/]+)$/)
   if (gameMatch && gameMatch[1] !== 'create') return true
-  if (/^\/game\/[^/]+\/table-live$/.test(pathname)) return true
 
   if (pathname === '/corso-vino') return true
   if (/^\/corso-vino\/[^/]+$/.test(pathname)) return true

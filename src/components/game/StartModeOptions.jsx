@@ -11,19 +11,6 @@ export default function StartModeOptions({gameId, isPublished = false}) {
 
   return (
     <div className={styles.startModalActions}>
-      <ButtonLink
-        variant="custom"
-        href={`/game/${gameId}/live${modeQuery}`}
-        className={`${styles.startModeOption} ${styles.startModeOptionSuccess}`}>
-        <div className={styles.startModeCopy}>
-          <span className={styles.startModeTitle}>{t('playLive')}</span>
-          <span className={styles.startModeDescription}>{t('liveDescription')}</span>
-        </div>
-        <span className={styles.startModeArrow} aria-hidden="true">
-          <Icon name="forward" size={20} />
-        </span>
-      </ButtonLink>
-
       {isPublished ? (
         <ButtonLink
           variant="custom"
