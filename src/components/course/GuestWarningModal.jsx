@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import styles from './GuestWarningModal.module.scss'
 import {useT} from '@/lib/i18n/useT'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
@@ -26,9 +27,9 @@ export default function GuestWarningModal({isOpen, onClose}) {
         </div>
 
         <div className={styles.actions}>
-          <a href="/?next=/corso-vino" className="btn success">
+          <Link href="/?next=/corso-vino" className="btn success">
             {t('guest.signUp')}
-          </a>
+          </Link>
           <button className="btn tertiary btn-small" onClick={onClose}>
             {t('guest.continueAsGuest')}
           </button>

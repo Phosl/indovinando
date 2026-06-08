@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useRef, useState, useTransition} from 'react'
+import {useCallback, useEffect, useRef, useState, useTransition} from 'react'
 import {usePathname, useRouter} from 'next/navigation'
 import styles from './catalog.module.scss'
 
@@ -20,17 +20,20 @@ export default function ProduttoriFiltersClient({q = ''}) {
   const skipFirstEffect = useRef(true)
   const hasInvalidQuery = !isValidTextQuery(queryValue)
 
-  const pushFilters = (nextQuery) => {
-    if (!isValidTextQuery(nextQuery)) return
+  const pushFilters = useCallback(
+    (nextQuery) => {
+      if (!isValidTextQuery(nextQuery)) return
 
-    const params = new URLSearchParams()
-    if (nextQuery.trim()) params.set('q', nextQuery.trim())
-    const query = params.toString()
-    const target = query ? `${pathname}?${query}` : pathname
-    startTransition(() => {
-      router.replace(target, {scroll: false})
-    })
-  }
+      const params = new URLSearchParams()
+      if (nextQuery.trim()) params.set('q', nextQuery.trim())
+      const query = params.toString()
+      const target = query ? `${pathname}?${query}` : pathname
+      startTransition(() => {
+        router.replace(target, {scroll: false})
+      })
+    },
+    [pathname, router],
+  )
 
   useEffect(() => {
     if (skipFirstEffect.current) {
@@ -43,7 +46,7 @@ export default function ProduttoriFiltersClient({q = ''}) {
     }, DEBOUNCE_MS)
 
     return () => clearTimeout(timeout)
-  }, [queryValue])
+  }, [pushFilters, queryValue])
 
   const handleSubmit = (event) => {
     event.preventDefault()

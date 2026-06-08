@@ -1,6 +1,7 @@
 'use client'
 
-import {useState, useEffect, useMemo, useCallback} from 'react'
+import Link from 'next/link'
+import {useState, useMemo, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import Icon from '@/components/Icon'
@@ -20,8 +21,9 @@ export default function CourseClient({levels, isAdmin = false, viewer, lang = 'i
   const {loaded, authChecked, userId, getLevelCompletedCount, getLessonProgress, getLessonStatus} =
     useWineCourseProgress()
   const t = useT('course')
-  const [showGuestWarning, setShowGuestWarning] = useState(false)
+  const [guestWarningDismissed, setGuestWarningDismissed] = useState(false)
   const backHref = authChecked && !userId ? '/' : '/dashboard'
+  const showGuestWarning = loaded && authChecked && !userId && !guestWarningDismissed
 
   const handleLevelClick = useCallback(
     (level) => {
@@ -60,22 +62,16 @@ export default function CourseClient({levels, isAdmin = false, viewer, lang = 'i
     }
   }, [levels, loaded, getLevelCompletedCount])
 
-  useEffect(() => {
-    if (loaded && authChecked && !userId) {
-      setShowGuestWarning(true)
-    }
-  }, [loaded, authChecked, userId])
-
   return (
     <div className={styles.page}>
       <TopBar title={t('title')} onBack={() => router.push(backHref)}>
         {isAdmin && (
-          <a
+          <Link
             href="/admin/corsi"
             className="btn secondary"
             style={{fontSize: '13px', padding: '6px 12px'}}>
             ⚙️ Admin
-          </a>
+          </Link>
         )}
       </TopBar>
 
@@ -110,8 +106,8 @@ export default function CourseClient({levels, isAdmin = false, viewer, lang = 'i
       </div>
 
       <GuestWarningModal
-        isOpen={showGuestWarning && !userId}
-        onClose={() => setShowGuestWarning(false)}
+        isOpen={showGuestWarning}
+        onClose={() => setGuestWarningDismissed(true)}
       />
 
       {!viewer?.isRegistered && (

@@ -1,6 +1,6 @@
 'use client'
 
-import {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {usePathname, useRouter} from 'next/navigation'
 
 const LEAVE_MS = 0
@@ -36,8 +36,7 @@ function isInternalNavigationAnchor(anchor) {
 export default function PageTransitionShell({children}) {
   const router = useRouter()
   const pathname = usePathname()
-  const [isLeaving, setIsLeaving] = useState(false)
-  const [direction, setDirection] = useState('forward')
+  const [transitionState, setTransitionState] = useState({direction: 'forward', isLeaving: false})
   const leaveTimeoutRef = useRef(null)
   const recoveryTimeoutRef = useRef(null)
   const transitionLockRef = useRef(false)
@@ -58,7 +57,7 @@ export default function PageTransitionShell({children}) {
 
   const resetTransitionState = useCallback(() => {
     clearScheduledTransitions()
-    setIsLeaving(false)
+    setTransitionState((prev) => ({...prev, isLeaving: false}))
     transitionLockRef.current = false
     nextDirectionRef.current = 'forward'
   }, [clearScheduledTransitions])
@@ -72,24 +71,26 @@ export default function PageTransitionShell({children}) {
   const queueDirection = useCallback((nextDirection) => {
     const normalized = nextDirection === 'back' ? 'back' : 'forward'
     nextDirectionRef.current = normalized
-    setDirection(normalized)
   }, [])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     clearScheduledTransitions()
+    const frameId = window.requestAnimationFrame(() => {
+      setTransitionState({
+        direction: nextDirectionRef.current === 'back' ? 'back' : 'forward',
+        isLeaving: false,
+      })
+      transitionLockRef.current = false
+      nextDirectionRef.current = 'forward'
+    })
 
-    setDirection(nextDirectionRef.current === 'back' ? 'back' : 'forward')
-    setIsLeaving(false)
-    transitionLockRef.current = false
-    nextDirectionRef.current = 'forward'
-
-    return undefined
+    return () => window.cancelAnimationFrame(frameId)
   }, [clearScheduledTransitions, pathname])
 
   useEffect(() => {
     const recoverIfNeeded = () => {
       if (document.hidden) return
-      if (!transitionLockRef.current && !isLeaving) return
+      if (!transitionLockRef.current && !transitionState.isLeaving) return
       resetTransitionState()
     }
 
@@ -102,7 +103,7 @@ export default function PageTransitionShell({children}) {
       window.removeEventListener('focus', recoverIfNeeded)
       document.removeEventListener('visibilitychange', recoverIfNeeded)
     }
-  }, [isLeaving, resetTransitionState])
+  }, [resetTransitionState, transitionState.isLeaving])
 
   useEffect(() => {
     const onNavigationIntent = (event) => {
@@ -134,7 +135,10 @@ export default function PageTransitionShell({children}) {
 
       event.preventDefault()
       transitionLockRef.current = true
-      setIsLeaving(true)
+      setTransitionState({
+        direction: nextDirectionRef.current === 'back' ? 'back' : 'forward',
+        isLeaving: true,
+      })
 
       if (leaveTimeoutRef.current) {
         clearTimeout(leaveTimeoutRef.current)
@@ -187,10 +191,10 @@ export default function PageTransitionShell({children}) {
     }
   }, [clearScheduledTransitions, prefetchHref, queueDirection, resetTransitionState, router])
 
-  const className = `route-shell route-${direction}${isLeaving ? ' is-leaving' : ' is-entering'}`
+  const className = `route-shell route-${transitionState.direction}${transitionState.isLeaving ? ' is-leaving' : ' is-entering'}`
 
   return (
-    <div key={pathname || 'root'} className={className}>
+    <div className={className}>
       {children}
     </div>
   )

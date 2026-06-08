@@ -43,7 +43,9 @@ export default function BusinessLocationPicker({
   const t = useT('profileSetup')
   const inputRef = useRef(null)
   const inputId = useId()
-  const [status, setStatus] = useState('idle')
+  const [status, setStatus] = useState(() =>
+    process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ? 'idle' : 'fallback',
+  )
   const mapQuery = useMemo(() => {
     if (address?.trim()) return encodeURIComponent(address.trim())
     if (latitude !== null && longitude !== null) return encodeURIComponent(`${latitude},${longitude}`)
@@ -53,7 +55,6 @@ export default function BusinessLocationPicker({
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
     if (!apiKey || !inputRef.current) {
-      setStatus('fallback')
       return
     }
 

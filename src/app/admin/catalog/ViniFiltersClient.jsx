@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useRef, useState, useTransition} from 'react'
+import {useCallback, useEffect, useRef, useState, useTransition} from 'react'
 import {usePathname, useRouter} from 'next/navigation'
 import styles from './catalog.module.scss'
 
@@ -26,25 +26,28 @@ export default function ViniFiltersClient({q = '', producer = '', type = '', cou
     !isValidTextQuery(producerValue) ||
     !isValidTextQuery(countryValue)
 
-  const pushFilters = (nextValues) => {
-    if (
-      !isValidTextQuery(nextValues.nameValue) ||
-      !isValidTextQuery(nextValues.producerValue) ||
-      !isValidTextQuery(nextValues.countryValue)
-    )
-      return
+  const pushFilters = useCallback(
+    (nextValues) => {
+      if (
+        !isValidTextQuery(nextValues.nameValue) ||
+        !isValidTextQuery(nextValues.producerValue) ||
+        !isValidTextQuery(nextValues.countryValue)
+      )
+        return
 
-    const params = new URLSearchParams()
-    if (nextValues.nameValue.trim()) params.set('q', nextValues.nameValue.trim())
-    if (nextValues.producerValue.trim()) params.set('producer', nextValues.producerValue.trim())
-    if (nextValues.typeValue) params.set('type', nextValues.typeValue)
-    if (nextValues.countryValue.trim()) params.set('country', nextValues.countryValue.trim())
-    const query = params.toString()
-    const target = query ? `${pathname}?${query}` : pathname
-    startTransition(() => {
-      router.replace(target, {scroll: false})
-    })
-  }
+      const params = new URLSearchParams()
+      if (nextValues.nameValue.trim()) params.set('q', nextValues.nameValue.trim())
+      if (nextValues.producerValue.trim()) params.set('producer', nextValues.producerValue.trim())
+      if (nextValues.typeValue) params.set('type', nextValues.typeValue)
+      if (nextValues.countryValue.trim()) params.set('country', nextValues.countryValue.trim())
+      const query = params.toString()
+      const target = query ? `${pathname}?${query}` : pathname
+      startTransition(() => {
+        router.replace(target, {scroll: false})
+      })
+    },
+    [pathname, router],
+  )
 
   useEffect(() => {
     if (skipFirstEffect.current) {
@@ -57,7 +60,7 @@ export default function ViniFiltersClient({q = '', producer = '', type = '', cou
     }, DEBOUNCE_MS)
 
     return () => clearTimeout(timeout)
-  }, [nameValue, producerValue, typeValue, countryValue])
+  }, [countryValue, nameValue, producerValue, pushFilters, typeValue])
 
   const handleSubmit = (event) => {
     event.preventDefault()

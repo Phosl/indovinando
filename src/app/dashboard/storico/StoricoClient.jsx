@@ -1,16 +1,19 @@
 'use client'
 
-import {useEffect, useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import styles from './storico.module.scss'
 import AvatarDisplay from '@/components/AvatarDisplay'
 import {formatAppDateTime} from '@/lib/dateFormat'
 
 export default function StoricoClient({sessions, t, lang}) {
   const [activeGame, setActiveGame] = useState(null) // null = tutti
-  const normalizeGameName = (name) =>
-    String(name ?? '')
-      .trim()
-      .toLocaleLowerCase(lang || 'it')
+  const normalizeGameName = useCallback(
+    (name) =>
+      String(name ?? '')
+        .trim()
+        .toLocaleLowerCase(lang || 'it'),
+    [lang],
+  )
 
   // Build unique game filter options preserving first-seen order
   const gameOptions = useMemo(() => {
@@ -27,18 +30,17 @@ export default function StoricoClient({sessions, t, lang}) {
       }
     }
     return Array.from(map.values())
-  }, [sessions, lang])
+  }, [normalizeGameName, sessions])
 
-  useEffect(() => {
-    if (activeGame && !gameOptions.some((g) => g.key === activeGame)) {
-      setActiveGame(null)
-    }
-  }, [activeGame, gameOptions])
+  const resolvedActiveGame =
+    activeGame && gameOptions.some((option) => option.key === activeGame) ? activeGame : null
 
   const filtered = useMemo(
     () =>
-      activeGame ? sessions.filter((s) => normalizeGameName(s.game_name) === activeGame) : sessions,
-    [sessions, activeGame, lang],
+      resolvedActiveGame
+        ? sessions.filter((s) => normalizeGameName(s.game_name) === resolvedActiveGame)
+        : sessions,
+    [normalizeGameName, resolvedActiveGame, sessions],
   )
 
   if (!sessions.length) {
@@ -56,7 +58,7 @@ export default function StoricoClient({sessions, t, lang}) {
       {gameOptions.length > 1 && (
         <div className={styles.filterBar}>
           <button
-            className={`${styles.pill} ${!activeGame ? styles.pillActive : ''}`}
+            className={`${styles.pill} ${!resolvedActiveGame ? styles.pillActive : ''}`}
             onClick={() => setActiveGame(null)}>
             {t.allGames || (lang === 'en' ? 'All' : 'Tutti')}
             <span className={styles.pillCount}>{sessions.length}</span>
@@ -65,8 +67,10 @@ export default function StoricoClient({sessions, t, lang}) {
             return (
               <button
                 key={option.key}
-                className={`${styles.pill} ${activeGame === option.key ? styles.pillActive : ''}`}
-                onClick={() => setActiveGame(activeGame === option.key ? null : option.key)}>
+                className={`${styles.pill} ${resolvedActiveGame === option.key ? styles.pillActive : ''}`}
+                onClick={() =>
+                  setActiveGame(resolvedActiveGame === option.key ? null : option.key)
+                }>
                 {option.label}
                 <span className={styles.pillCount}>{option.count}</span>
               </button>

@@ -17,16 +17,17 @@ export default function AuthEntryClient({appVersion}) {
     if (typeof window === 'undefined') return
 
     const mediaQuery = window.matchMedia('(display-mode: standalone)')
-    const updateStandaloneState = () => {
-      setIsStandalone(mediaQuery.matches || window.navigator.standalone === true)
-    }
-
     const ua = window.navigator.userAgent.toLowerCase()
     const isIosDevice = /iphone|ipad|ipod/.test(ua)
     const isAndroidDevice = /android/.test(ua)
-
-    setInstallPlatform(isIosDevice ? 'ios' : isAndroidDevice ? 'android' : 'generic')
-    updateStandaloneState()
+    const updateStandaloneState = () => {
+      setIsStandalone(mediaQuery.matches || window.navigator.standalone === true)
+    }
+    const initialPlatform = isIosDevice ? 'ios' : isAndroidDevice ? 'android' : 'generic'
+    const frameId = window.requestAnimationFrame(() => {
+      setInstallPlatform(initialPlatform)
+      updateStandaloneState()
+    })
 
     const handleBeforeInstallPrompt = (event) => {
       event.preventDefault()
@@ -45,6 +46,7 @@ export default function AuthEntryClient({appVersion}) {
     window.addEventListener('appinstalled', handleAppInstalled)
 
     return () => {
+      window.cancelAnimationFrame(frameId)
       mediaQuery.removeEventListener?.('change', updateStandaloneState)
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
       window.removeEventListener('appinstalled', handleAppInstalled)
@@ -107,12 +109,7 @@ export default function AuthEntryClient({appVersion}) {
       <div className={styles.container}>
         <section className={styles.shell}>
           <div className={styles.brandBlock}>
-            <img
-              className={styles.logo}
-              src="/logo.svg"
-              alt="Indovinando Logo"
-              className={styles.logo}
-            />
+            <img className={styles.logo} src="/logo.svg" alt="Indovinando Logo" />
             <div>
               <p className={styles.tagline}>{t('tagline')}</p>
             </div>

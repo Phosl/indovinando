@@ -254,8 +254,8 @@ main.flex-container {
   width: 100%;
   min-height: 100dvh;
   position: relative;
-  left: 0;
-  will-change: left, opacity;
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
 }
 
 .route-shell.route-forward.is-leaving {
@@ -277,44 +277,44 @@ main.flex-container {
 @keyframes routeLeaveLeft {
   from {
     opacity: 1;
-    left: 0;
+    transform: translate3d(0, 0, 0);
   }
   to {
     opacity: 0;
-    left: -28px;
+    transform: translate3d(-20px, 0, 0);
   }
 }
 
 @keyframes routeEnterRight {
   from {
     opacity: 0;
-    left: 28px;
+    transform: translate3d(20px, 0, 0);
   }
   to {
     opacity: 1;
-    left: 0;
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes routeLeaveRight {
   from {
     opacity: 1;
-    left: 0;
+    transform: translate3d(0, 0, 0);
   }
   to {
     opacity: 0;
-    left: 28px;
+    transform: translate3d(20px, 0, 0);
   }
 }
 
 @keyframes routeEnterLeft {
   from {
     opacity: 0;
-    left: -28px;
+    transform: translate3d(-20px, 0, 0);
   }
   to {
     opacity: 1;
-    left: 0;
+    transform: translate3d(0, 0, 0);
   }
 }
 

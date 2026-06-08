@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useRef, useState, useTransition} from 'react'
+import {useCallback, useEffect, useRef, useState, useTransition} from 'react'
 import {usePathname, useRouter} from 'next/navigation'
 import styles from './catalog.module.scss'
 
@@ -21,20 +21,23 @@ export default function ProduttoreDettaglioFiltersClient({producerId = '', q = '
   const skipFirstEffect = useRef(true)
   const hasInvalidQuery = !isValidTextQuery(nameValue)
 
-  const pushFilters = (nextValues) => {
-    if (!isValidTextQuery(nextValues.nameValue)) return
+  const pushFilters = useCallback(
+    (nextValues) => {
+      if (!isValidTextQuery(nextValues.nameValue)) return
 
-    const params = new URLSearchParams()
-    if (producerId) params.set('producerId', producerId)
-    if (nextValues.nameValue.trim()) params.set('q', nextValues.nameValue.trim())
-    if (nextValues.typeValue) params.set('type', nextValues.typeValue)
+      const params = new URLSearchParams()
+      if (producerId) params.set('producerId', producerId)
+      if (nextValues.nameValue.trim()) params.set('q', nextValues.nameValue.trim())
+      if (nextValues.typeValue) params.set('type', nextValues.typeValue)
 
-    const query = params.toString()
-    const target = query ? `${pathname}?${query}` : pathname
-    startTransition(() => {
-      router.replace(target, {scroll: false})
-    })
-  }
+      const query = params.toString()
+      const target = query ? `${pathname}?${query}` : pathname
+      startTransition(() => {
+        router.replace(target, {scroll: false})
+      })
+    },
+    [pathname, producerId, router],
+  )
 
   useEffect(() => {
     if (skipFirstEffect.current) {
@@ -47,7 +50,7 @@ export default function ProduttoreDettaglioFiltersClient({producerId = '', q = '
     }, DEBOUNCE_MS)
 
     return () => clearTimeout(timeout)
-  }, [nameValue, typeValue])
+  }, [nameValue, pushFilters, typeValue])
 
   const handleSubmit = (event) => {
     event.preventDefault()

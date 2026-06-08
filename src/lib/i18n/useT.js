@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {useCallback, useMemo} from 'react'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import it from './locales/it.json'
 import en from './locales/en.json'
@@ -25,8 +25,14 @@ function getByPath(root, key) {
 export function useT(namespace) {
   const {lang} = useLanguage()
   const locale = LOCALES[lang] ?? LOCALES.it
-  const ns = namespace ? (getByPath(locale, namespace) ?? {}) : locale
-  const fallbackNs = namespace ? (getByPath(LOCALES.it, namespace) ?? {}) : LOCALES.it
+  const ns = useMemo(
+    () => (namespace ? (getByPath(locale, namespace) ?? {}) : locale),
+    [locale, namespace],
+  )
+  const fallbackNs = useMemo(
+    () => (namespace ? (getByPath(LOCALES.it, namespace) ?? {}) : LOCALES.it),
+    [namespace],
+  )
 
   const t = useCallback(
     (key, vars) => {

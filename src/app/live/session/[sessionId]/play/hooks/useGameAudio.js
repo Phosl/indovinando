@@ -4,14 +4,14 @@ import {haptic} from '@/lib/haptic'
 const AUDIO_PREFERENCE_KEY = 'live_audio_enabled'
 
 export function useGameAudio() {
-  const [audioEnabled, setAudioEnabled] = useState(true)
+  const [audioEnabled, setAudioEnabled] = useState(() => {
+    if (typeof window === 'undefined') return true
+    return localStorage.getItem(AUDIO_PREFERENCE_KEY) !== 'off'
+  })
   const soundsRef = useRef({correct: null, wrong: null, bottleCompleted: null})
   const primedRef = useRef(false)
 
   useEffect(() => {
-    const savedPreference = localStorage.getItem(AUDIO_PREFERENCE_KEY)
-    if (savedPreference === 'off') setAudioEnabled(false)
-
     soundsRef.current = {
       correct: new Audio('/indovinando-correct.mp3'),
       wrong: new Audio('/indovinando-wrong.mp3'),

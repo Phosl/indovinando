@@ -22,10 +22,6 @@ export default function LandingNav({text = {}}) {
   }, [])
 
   useEffect(() => {
-    setMenuOpen(false)
-  }, [pathname, currentHash])
-
-  useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
 
     return () => {
