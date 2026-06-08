@@ -77,6 +77,7 @@ Riferimento:
   - [x] landing
   - [x] profilo
   - [ ] home
+- [x] trasformare il widget in 3 card più leggibili
 
 ### Step 5 — statistiche globali
 
@@ -91,6 +92,15 @@ Riferimento:
   - [x] landing
   - [x] pagina classifiche
   - [ ] dashboard
+- [x] correggere il conteggio pubblico dei `vini analizzati da Indovinando AI`
+
+### Step 6 — scheda vino pubblica
+
+- [x] creare una scheda vino pubblica navigabile da `/classifiche`
+- [x] rendere cliccabili le card ranking anche con fallback iniziale
+- [x] aggiungere metriche e posizionamenti del vino
+- [ ] arricchire la scheda con immagine bottiglia dal catalogo
+- [ ] valutare vini simili / correlati
 
 ---
 
@@ -132,9 +142,10 @@ Riferimento:
 
 ### Evoluzione partner
 
-- [ ] mappa partner reale
+- [x] mappa partner reale in landing
 - [ ] filtri partner
 - [ ] schede partner più ricche
+- [ ] affinare marker / UX mappa partner
 
 ---
 
@@ -143,6 +154,7 @@ Riferimento:
 - [ ] Ripulire naming e copy del flusso `gioco solo`
 - [ ] Decidere se tenere o dismettere il percorso solo separato
 - [ ] Valutare se la home/profilo devono mostrare il widget community anche come teaser leggero
+- [ ] Valutare se aggiungere la scheda vino pubblica anche da altri punti oltre a `/classifiche`
 
 ## Next Up
 - [ ] riordinare domande e bottiglie con drag&drop
