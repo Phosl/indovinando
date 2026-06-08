@@ -192,10 +192,10 @@
 
 .heroSection {
   min-height: calc(100vh - 48px);
-  padding: 48px 0 72px;
+  padding: 56px 0 84px;
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
-  gap: 48px;
+  gap: 56px;
   align-items: center;
 }
 
@@ -203,7 +203,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 20px;
+  gap: 24px;
 }
 
 .heroBadge,
@@ -225,18 +225,18 @@
 
 .heroTitle {
   margin: 0;
-  font-size: clamp(3rem, 6vw, 5.2rem);
-  line-height: 0.94;
+  font-size: clamp(3.1rem, 6vw, 5.4rem);
+  line-height: 0.96;
   font-weight: 900;
   color: var(--primary-900);
-  max-width: 10ch;
+  max-width: 11ch;
 }
 
 .heroSubtitle {
   margin: 0;
   max-width: 620px;
-  font-size: 1.125rem;
-  line-height: 1.7;
+  font-size: 1.16rem;
+  line-height: 1.75;
   color: var(--text-secondary);
 }
 
@@ -267,18 +267,18 @@
 }
 
 .section {
-  padding: 88px 0;
+  padding: 96px 0;
 }
 
 .sectionHeader {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 44px;
 
   h2 {
-    margin: 12px auto 0;
+    margin: 14px auto 0;
     max-width: 16ch;
-    font-size: clamp(2rem, 4.5vw, 3rem);
-    line-height: 1.06;
+    font-size: clamp(2.1rem, 4.5vw, 3.15rem);
+    line-height: 1.08;
     font-weight: 900;
     color: var(--primary-900);
   }
@@ -287,7 +287,7 @@
 .featureGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  gap: 22px;
 }
 
 .featureCard,
@@ -299,11 +299,11 @@
 
 .featureCard {
   border-radius: 20px;
-  padding: 28px;
+  padding: 30px;
   text-align: center;
 
   h3 {
-    margin: 12px 0 10px;
+    margin: 14px 0 10px;
     font-size: 1.35rem;
     font-weight: 800;
     color: var(--text-primary);
@@ -312,7 +312,7 @@
   p {
     margin: 0;
     color: var(--text-secondary);
-    line-height: 1.6;
+    line-height: 1.68;
   }
 }
 
@@ -323,8 +323,8 @@
 
 .sectionAlt {
   width: min(1200px, calc(100% - 32px));
-  margin: 24px auto;
-  padding: 80px 24px;
+  margin: 28px auto;
+  padding: 84px 28px;
   background: var(--primary-50);
   border-radius: 28px;
 }
@@ -332,15 +332,15 @@
 .wineBoxContent {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
-  gap: 48px;
+  gap: 56px;
   align-items: center;
 }
 
 .wineBoxInfo {
   h2 {
-    margin: 16px 0;
-    font-size: clamp(2.2rem, 5vw, 3.4rem);
-    line-height: 1.04;
+    margin: 18px 0;
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    line-height: 1.07;
     font-weight: 900;
     color: var(--primary-900);
     max-width: 14ch;
@@ -348,9 +348,9 @@
 
   p {
     margin: 0;
-    font-size: 1.05rem;
+    font-size: 1.08rem;
     color: var(--text-secondary);
-    line-height: 1.7;
+    line-height: 1.75;
     max-width: 60ch;
   }
 }
@@ -358,10 +358,10 @@
 .wineBoxSteps {
   list-style: none;
   padding: 0;
-  margin: 28px 0 32px;
+  margin: 30px 0 34px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 
   li {
     font-size: 1.05rem;
@@ -393,7 +393,7 @@
 }
 
 .partnerCounter {
-  margin: 32px auto 0;
+  margin: 34px auto 0;
   max-width: 40ch;
   text-align: center;
   font-size: 1.1rem;
@@ -410,9 +410,9 @@
 }
 
 .partnerShowcase {
-  margin-top: 48px;
+  margin-top: 52px;
   display: grid;
-  gap: 20px;
+  gap: 22px;
 }
 
 .partnerMapCard {
@@ -423,7 +423,7 @@
 }
 
 .partnerMapHeader {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 
   h3 {
     margin: 0;
@@ -494,25 +494,25 @@
 }
 
 .ctaCard {
-  padding: 72px 40px;
+  padding: 76px 40px;
   border-radius: 28px;
   background: linear-gradient(135deg, var(--primary), var(--selected));
   color: var(--white);
   text-align: center;
 
   h2 {
-    margin: 16px auto;
+    margin: 18px auto;
     max-width: 14ch;
-    font-size: clamp(2.2rem, 5vw, 3.8rem);
-    line-height: 1.05;
+    font-size: clamp(2.25rem, 5vw, 3.9rem);
+    line-height: 1.08;
     font-weight: 900;
   }
 
   p {
     max-width: 720px;
     margin: 0 auto;
-    font-size: 1.08rem;
-    line-height: 1.7;
+    font-size: 1.1rem;
+    line-height: 1.75;
     opacity: 0.96;
   }
 }
@@ -535,9 +535,10 @@
 
   .heroSection {
     min-height: auto;
-    padding-top: 32px;
+    padding-top: 36px;
+    padding-bottom: 72px;
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 32px;
   }
 
   .heroContent {
@@ -564,11 +565,11 @@
 
   .sectionAlt {
     width: min(1200px, calc(100% - 24px));
-    padding: 64px 20px;
+    padding: 68px 20px;
   }
 
   .ctaCard {
-    padding: 48px 24px;
+    padding: 52px 24px;
   }
 }
 
@@ -585,7 +586,28 @@
   }
 
   .section {
-    padding: 72px 0;
+    padding: 76px 0;
+  }
+
+  .heroTitle {
+    font-size: clamp(2.65rem, 11vw, 3.3rem);
+    line-height: 1;
+  }
+
+  .heroSubtitle,
+  .wineBoxInfo p,
+  .partnerIntro,
+  .ctaCard p {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .sectionHeader {
+    margin-bottom: 32px;
+  }
+
+  .sectionHeader h2 {
+    font-size: clamp(1.9rem, 8vw, 2.35rem);
   }
 
   .heroActions,
