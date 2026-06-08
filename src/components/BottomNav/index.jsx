@@ -80,7 +80,7 @@ export default function BottomNav({forceVisible = false}) {
   }, [])
 
   const isGuest = authChecked && !userId
-  if (!forceVisible && effectivePathname.startsWith('/table-live/event/') && isGuest) return null
+  if (!forceVisible && effectivePathname.startsWith('/table-live/event/')) return null
   if (!forceVisible && !shouldRender(effectivePathname)) return null
 
   const items = [

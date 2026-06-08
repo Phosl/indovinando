@@ -519,18 +519,12 @@ export default function TableLiveSessionClient({sessionId}) {
             <strong className={styles.lobbyCodeValue}>{data.session.joinCode}</strong>
           </div>
 
-          {data.me.isHost ? (
-            <button className="btn success" onClick={handleStart} disabled={starting}>
-              {starting ? tJoin('startingGameAction') : tJoin('startGameAction')}
-            </button>
-          ) : (
-            <p className={styles.lobbyWaitingNotice}>{tJoin('waitHostStart')}</p>
-          )}
+          {data.me.isHost ? null : <p className={styles.lobbyWaitingNotice}>{tJoin('waitHostStart')}</p>}
           <div className={joinStyles.shareButtons}>
-            <button className="btn neutral small" onClick={handleCopyLink}>
+            <button className="btn neutral btn-small" onClick={handleCopyLink}>
               {copied ? tJoin('copied') : tJoin('copyLink')}
             </button>
-            <button className="btn neutral small" onClick={handleShareLink}>
+            <button className="btn neutral btn-small" onClick={handleShareLink}>
               {tJoin('shareLink')}
             </button>
           </div>
@@ -562,6 +556,16 @@ export default function TableLiveSessionClient({sessionId}) {
           ) : null}
           {error ? <p>{error}</p> : null}
         </div>
+        {data.me.isHost ? (
+          <>
+            <div className={styles.lobbyBottomSpacer} />
+            <div className={styles.lobbyBottomRow}>
+              <button className="btn success-filled" onClick={handleStart} disabled={starting}>
+                {starting ? tJoin('startingGameAction') : tJoin('startGameAction')}
+              </button>
+            </div>
+          </>
+        ) : null}
         {overlays}
       </div>
     )

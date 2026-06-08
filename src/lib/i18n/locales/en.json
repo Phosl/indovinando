@@ -408,6 +408,7 @@
     "networkError": "Network error",
     "creatingAction": "Creating...",
     "createAndStartAction": "Create and start",
+    "createAction": "Create",
     "joiningAction": "Joining...",
     "joinAction": "Join",
     "backAction": "Back",

@@ -412,6 +412,7 @@
     "networkError": "Errore di rete",
     "creatingAction": "Creazione...",
     "createAndStartAction": "Crea e inizia",
+    "createAction": "Crea",
     "joiningAction": "Ingresso...",
     "joinAction": "Partecipa",
     "backAction": "Indietro",
