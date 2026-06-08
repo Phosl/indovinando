@@ -20,7 +20,7 @@ export default function StartModeOptions({gameId, isPublished = false}) {
           <span className={styles.startModeDescription}>{t('liveDescription')}</span>
         </div>
         <span className={styles.startModeArrow} aria-hidden="true">
-          <Icon name="forward" size={18} />
+          <Icon name="forward" size={20} />
         </span>
       </ButtonLink>
 
@@ -34,7 +34,7 @@ export default function StartModeOptions({gameId, isPublished = false}) {
             <span className={styles.startModeDescription}>{t('enotecaDescription')}</span>
           </div>
           <span className={styles.startModeArrow} aria-hidden="true">
-            <Icon name="forward" size={18} />
+            <Icon name="forward" size={20} />
           </span>
         </ButtonLink>
       ) : null}
@@ -48,7 +48,7 @@ export default function StartModeOptions({gameId, isPublished = false}) {
           <span className={styles.startModeDescription}>{t('tableLiveDescription')}</span>
         </div>
         <span className={styles.startModeArrow} aria-hidden="true">
-          <Icon name="forward" size={18} />
+          <Icon name="forward" size={20} />
         </span>
       </ButtonLink>
     </div>

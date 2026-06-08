@@ -618,6 +618,7 @@
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  margin-bottom: 12px;
 }
 
 .startModePageTitle {
@@ -625,6 +626,7 @@
   font-size: 24px;
   font-weight: 900;
   color: var(--text-primary);
+  margin-bottom: 16px;
 }
 
 .startModePageDescription {
@@ -633,7 +635,8 @@
   line-height: 1.5;
   color: var(--text-secondary);
   max-width: 42ch;
-  margin-bottom: 6px;
+  margin-bottom: 16px;
+  display: none;
 }
 
 .gameDateMobile {
@@ -694,17 +697,18 @@
 
 .startModeTitle {
   font-size: 19px;
-  font-weight: 900;
+  font-weight: 800;
   color: var(--text-primary);
   padding-left: 0;
 }
 
 .startModeDescription {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
-  line-height: 1.45;
+  line-height: 1.2rem;
   padding-left: 0;
-  color: var(--text-secondary);
+  color: var(--text);
+  letter-spacing: 0em;
 }
 
 .startModeArrow {
@@ -789,7 +793,7 @@
   }
 
   .startModeDescription {
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .startModeOption {
@@ -798,13 +802,13 @@
   }
 
   .startModeTitle {
-    font-size: 18px;
+    font-size: 20px;
   }
 
   .startModeArrow {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
   }
 }
 
