@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.41.0',
+    date: '9 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'add public user precision rankings to community leaderboards',
+    ],
+  },
+
+  {
     version: '1.40.1',
     date: '8 giugno 2026',
     label: 'Auto',
