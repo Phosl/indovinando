@@ -50,6 +50,8 @@ export default function BottleModal({
   const alertMessages = getAlertMessages(lang)
   const isNewBottle = bottleIndex === null
   const [wizardStep, setWizardStep] = useState(0)
+  const [showFullEdit, setShowFullEdit] = useState(false)
+  const [repairSnapshot, setRepairSnapshot] = useState(null)
   const modalBodyRef = useRef(null)
   const WINE_TYPES = [
     {value: 'rosso', label: lang === 'en' ? 'Red' : 'Rosso'},
@@ -58,15 +60,82 @@ export default function BottleModal({
     {value: 'champagne', label: lang === 'en' ? 'Sparkling' : 'Champagne'},
     {value: 'altro', label: lang === 'en' ? 'Other' : 'Altro'},
   ]
+  const bottleNameMissing = !bottleName?.trim()
+  const producerMissing = !producer?.trim()
+  const yearMissing = !year?.trim()
+  const wineTypeMissing = !wineType?.trim()
+  const missingQuestionIndexes = useMemo(
+    () =>
+      questions.reduce((acc, question, index) => {
+        if (!isNeutralQuestion(question) && (currentAnswers[index] === null || currentAnswers[index] === undefined)) {
+          acc.push(index)
+        }
+        return acc
+      }, []),
+    [currentAnswers, questions],
+  )
+  const hasIncompleteBottle =
+    bottleNameMissing || producerMissing || yearMissing || wineTypeMissing || missingQuestionIndexes.length > 0
+  useEffect(() => {
+    if (!isOpen) return
 
-  const questionCount = questions.length
-  const totalSteps = questionCount + 3 // details + info + one step per question + final
-  const isDetailsStep = wizardStep === 0
-  const isInfoStep = wizardStep === 1
-  const isQuestionStep = wizardStep > 1 && wizardStep <= questionCount + 1
-  const isFinalStep = wizardStep === totalSteps - 1
+    const shouldUseRepairMode =
+      !isNewBottle &&
+      (bottleNameMissing || producerMissing || yearMissing || wineTypeMissing || missingQuestionIndexes.length > 0)
+    setShowFullEdit(false)
+    setWizardStep(0)
+    setRepairSnapshot(
+      shouldUseRepairMode
+        ? {
+            bottleNameMissing,
+            producerMissing,
+            yearMissing,
+            wineTypeMissing,
+            missingQuestionIndexes,
+          }
+        : null,
+    )
+  }, [isOpen, isNewBottle, bottleIndex, resetToken])
 
-  const currentQuestionIndex = isQuestionStep ? wizardStep - 2 : -1
+  const isRepairMode = Boolean(repairSnapshot) && !showFullEdit
+
+  const stepModels = useMemo(() => {
+    if (isRepairMode) {
+      const repairSteps = []
+      if (
+        repairSnapshot?.bottleNameMissing ||
+        repairSnapshot?.producerMissing ||
+        repairSnapshot?.yearMissing
+      ) {
+        repairSteps.push({kind: 'details'})
+      }
+      if (repairSnapshot?.wineTypeMissing) repairSteps.push({kind: 'info'})
+      ;(repairSnapshot?.missingQuestionIndexes || []).forEach((questionIndex) => {
+        repairSteps.push({kind: 'question', questionIndex})
+      })
+      return repairSteps
+    }
+
+    return [
+      {kind: 'details'},
+      {kind: 'info'},
+      ...questions.map((_, questionIndex) => ({kind: 'question', questionIndex})),
+      {kind: 'final'},
+    ]
+  }, [
+    isRepairMode,
+    questions,
+    repairSnapshot,
+  ])
+
+  const totalSteps = stepModels.length
+  const currentStepModel = stepModels[wizardStep] || stepModels[0] || {kind: 'details'}
+  const isDetailsStep = currentStepModel.kind === 'details'
+  const isInfoStep = currentStepModel.kind === 'info'
+  const isQuestionStep = currentStepModel.kind === 'question'
+  const isFinalStep = currentStepModel.kind === 'final'
+
+  const currentQuestionIndex = isQuestionStep ? currentStepModel.questionIndex : -1
   const currentQuestion = isQuestionStep ? questions[currentQuestionIndex] : null
   const currentQuestionOptions = useMemo(() => {
     if (!currentQuestion) return []
@@ -82,15 +151,11 @@ export default function BottleModal({
   const currentQuestionIsNeutral = isQuestionStep ? isNeutralQuestion(currentQuestion) : false
 
   const selectedAnswer = isQuestionStep ? currentAnswers[currentQuestionIndex] : null
-  const bottleNameMissing = !bottleName?.trim()
-  const producerMissing = !producer?.trim()
-  const yearMissing = !year?.trim()
-  const wineTypeMissing = !wineType?.trim()
   const currentQuestionMissing =
     isQuestionStep &&
     !currentQuestionIsNeutral &&
     (selectedAnswer === null || selectedAnswer === undefined)
-
+  const isLastStep = wizardStep >= totalSteps - 1
   useEffect(() => {
     if (!isOpen) return
 
@@ -145,12 +210,21 @@ export default function BottleModal({
   function handleNextStep() {
     if (isDetailsStep) {
       if (!validateDetails()) return
+      if (isRepairMode && isLastStep) {
+        handleSave()
+        return
+      }
       setWizardStep((prev) => Math.min(prev + 1, totalSteps - 1))
       return
     }
 
     if (isInfoStep && !wineType?.trim()) {
       onNotify?.(text.selectWineType, 'error')
+      return
+    }
+
+    if (isInfoStep && isRepairMode && isLastStep) {
+      handleSave()
       return
     }
 
@@ -163,6 +237,11 @@ export default function BottleModal({
       return
     }
 
+    if ((isQuestionStep || isFinalStep) && isRepairMode && isLastStep) {
+      handleSave()
+      return
+    }
+
     setWizardStep((prev) => Math.min(prev + 1, totalSteps - 1))
   }
 
@@ -170,11 +249,23 @@ export default function BottleModal({
     setWizardStep((prev) => Math.max(prev - 1, 0))
   }
 
+  function handleInputKeyDown(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+  }
+
   const nextLabel = text.next
   const backLabel = text.back
   const finalTitle = text.done
   const finalHint = text.finalHint
   const incompleteLabel = text.incompleteBadge || (lang === 'en' ? 'Incomplete' : 'Incompleto')
+  const detailsSectionIncomplete = bottleNameMissing || producerMissing || yearMissing
+  const showBottleNameField = !isRepairMode || repairSnapshot?.bottleNameMissing
+  const showProducerField = !isRepairMode || repairSnapshot?.producerMissing
+  const showYearField = !isRepairMode || repairSnapshot?.yearMissing
+  const showInfoChecklist = !isRepairMode || repairSnapshot?.wineTypeMissing
 
   return (
     <div className={styles.modalOverlay}>
@@ -188,13 +279,25 @@ export default function BottleModal({
                 ?.replace('{total}', String(totalSteps))}
             </span>
           </h3>
+          {isRepairMode ? (
+            <button
+              type="button"
+              className={styles.showAllButton}
+              onClick={() => {
+                setShowFullEdit(true)
+                setWizardStep(0)
+              }}>
+              {text.showAllFields}
+            </button>
+          ) : null}
           <ModalCloseButton className={styles.closeBtn} onClick={onCancel} />
         </div>
 
         <div ref={modalBodyRef} className={styles.modalBody}>
           {isDetailsStep && (
-            <div className={styles.bottleInfoSection}>
+            <div className={`${styles.bottleInfoSection} ${detailsSectionIncomplete ? styles.sectionIncomplete : ''}`}>
               <h4>{text.details}</h4>
+              {showBottleNameField ? (
               <div className={styles.fieldGroup}>
                 <div className={styles.fieldLabelRow}>
                   <label className={styles.fieldLabel}>{text.bottleNameLabel || text.bottleNamePlaceholder}</label>
@@ -205,8 +308,11 @@ export default function BottleModal({
                   placeholder={text.bottleNamePlaceholder}
                   value={bottleName}
                   onChange={(e) => onBottleNameChange(e.target.value)}
+                  onKeyDown={handleInputKeyDown}
                 />
               </div>
+              ) : null}
+              {showProducerField ? (
               <div className={styles.fieldGroup}>
                 <div className={styles.fieldLabelRow}>
                   <label className={styles.fieldLabel}>{text.producerLabel || text.producerPlaceholder}</label>
@@ -217,8 +323,11 @@ export default function BottleModal({
                   placeholder={text.producerPlaceholder}
                   value={producer}
                   onChange={(e) => onProducerChange(e.target.value)}
+                  onKeyDown={handleInputKeyDown}
                 />
               </div>
+              ) : null}
+              {showYearField ? (
               <div className={styles.fieldGroup}>
                 <div className={styles.fieldLabelRow}>
                   <label className={styles.fieldLabel}>{text.yearLabel || text.yearPlaceholder}</label>
@@ -230,8 +339,10 @@ export default function BottleModal({
                   value={year}
                   maxLength={4}
                   onChange={(e) => onYearChange(e.target.value)}
+                  onKeyDown={handleInputKeyDown}
                 />
               </div>
+              ) : null}
             </div>
           )}
 
@@ -242,10 +353,12 @@ export default function BottleModal({
                 <h4>{text.wineInfoTitle}</h4>
                 {wineTypeMissing && <span className={styles.incompleteBadge}>{incompleteLabel}</span>}
               </div>
+              {showInfoChecklist ? (
               <ul className={styles.infoChecklist}>
                 <li>{text.wineInfoHintPrimary}</li>
                 <li>{text.wineInfoHintSecondary}</li>
               </ul>
+              ) : null}
               <div className={styles.typePills} role="radiogroup" aria-label={text.wineTypeAriaLabel}>
                 {WINE_TYPES.map((item) => (
                   <button
@@ -350,7 +463,7 @@ export default function BottleModal({
         </div>
 
         <div className={styles.modalFooter}>
-          <button className="btn ghost" onClick={onCancel}>
+          <button type="button" className="btn ghost" onClick={onCancel}>
             {text.exit}
           </button>
           <div className={styles.footerActionsRight}>
@@ -365,11 +478,11 @@ export default function BottleModal({
               </button>
             )}
             {!isFinalStep ? (
-              <button className="btn success" onClick={handleNextStep}>
-                {nextLabel}
+              <button type="button" className="btn success" onClick={handleNextStep}>
+                {isRepairMode && isLastStep ? (isNewBottle ? text.saveNew : text.saveEdit) : nextLabel}
               </button>
             ) : (
-              <button className="btn success" onClick={handleSave}>
+              <button type="button" className="btn success" onClick={handleSave}>
                 {isNewBottle ? text.saveNew : text.saveEdit}
               </button>
             )}

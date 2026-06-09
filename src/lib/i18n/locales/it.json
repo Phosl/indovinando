@@ -798,6 +798,8 @@
       "QUESTION_TEXT_REQUIRED": "Inserisci il testo della domanda.",
       "OPTIONS_REQUIRED": "Tutte le opzioni devono essere compilate.",
       "QUESTIONNAIRE_UPDATED": "Questionario aggiornato. Le risposte delle bottiglie sono state riallineate: controlla quelle mancanti.",
+      "BOTTLE_SAVED_SUCCESS": "Bottiglia salvata con successo.",
+      "BOTTLE_COMPLETED_SUCCESS": "Bottiglia completata e salvata.",
       "USER_NOT_AUTHENTICATED": "Utente non autenticato",
       "GAME_SAVED_SUCCESS": "Gioco salvato con successo!",
       "GAME_UPDATED_SUCCESS": "Gioco aggiornato con successo!",
@@ -850,7 +852,7 @@
       "confirmDelete": "Eliminare questa bottiglia?",
       "reorder": "Trascina per riordinare"
     },
-    "bottleModal": {
+  "bottleModal": {
       "newTitle": "Nuova bottiglia",
       "editTitlePrefix": "Modifica bottiglia",
       "details": "Dettagli bottiglia",
@@ -867,8 +869,10 @@
       "wineInfoHintPrimary": "Seleziona il tipo di vino per questa bottiglia.",
       "wineInfoHintSecondary": "Questo dato aiuta a rendere più chiari quiz, scheda e catalogo.",
       "questionTitle": "Domanda {index}",
-      "selectWineType": "Seleziona il tipo di vino.",
-      "next": "Avanti",
+    "selectWineType": "Seleziona il tipo di vino.",
+    "showAllFields": "Vedi tutti i campi",
+    "reviewAll": "Vedi scheda completa",
+    "next": "Avanti",
       "back": "Indietro",
       "done": "Fine",
       "finalHint": "Controlla e salva questa bottiglia, poi aggiungine un'altra se serve.",

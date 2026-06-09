@@ -791,6 +791,8 @@
       "QUESTION_TEXT_REQUIRED": "Enter the question text.",
       "OPTIONS_REQUIRED": "All options must be filled in.",
       "QUESTIONNAIRE_UPDATED": "Questionnaire updated. Bottle answers were realigned: review any missing ones.",
+      "BOTTLE_SAVED_SUCCESS": "Bottle saved successfully.",
+      "BOTTLE_COMPLETED_SUCCESS": "Bottle completed and saved.",
       "USER_NOT_AUTHENTICATED": "User not authenticated",
       "GAME_SAVED_SUCCESS": "Game saved successfully!",
       "GAME_UPDATED_SUCCESS": "Game updated successfully!",
@@ -846,7 +848,7 @@
       "confirmDelete": "Delete this bottle?",
       "reorder": "Drag to reorder"
     },
-    "bottleModal": {
+  "bottleModal": {
       "newTitle": "New bottle",
       "editTitlePrefix": "Edit bottle",
       "details": "Bottle details",
@@ -863,8 +865,10 @@
       "wineInfoHintPrimary": "Select the wine type for this bottle.",
       "wineInfoHintSecondary": "This helps keep the quiz, bottle card, and catalog clearer.",
       "questionTitle": "Question {index}",
-      "selectWineType": "Select wine type.",
-      "next": "Next",
+    "selectWineType": "Select wine type.",
+    "showAllFields": "Show all fields",
+    "reviewAll": "Open full edit",
+    "next": "Next",
       "back": "Back",
       "done": "Done",
       "finalHint": "Review and save this bottle, then continue with another if needed.",

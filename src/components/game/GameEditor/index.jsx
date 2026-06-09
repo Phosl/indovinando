@@ -16,7 +16,12 @@ import BottlesList from '../BottlesList'
 import BottleModal from '../BottleModal'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
 import TopBar from '@/components/TopBar'
-import {validateGameName, validateQuestionnaire, validateBottleForm} from '../utils/validations'
+import {
+  isBottleComplete,
+  validateGameName,
+  validateQuestionnaire,
+  validateBottleForm,
+} from '../utils/validations'
 import {
   MIN_STEP,
   MAX_STEP,
@@ -941,6 +946,10 @@ export default function GameEditor({
   }
 
   function concludeBottle(keepOpenForAnother = false) {
+    const previousBottle =
+      activeBottleIndex !== null && activeBottleIndex !== undefined ? bottles[activeBottleIndex] : null
+    const wasIncomplete = previousBottle ? !isBottleComplete(previousBottle, templateQuestions) : false
+
     try {
       validateBottleForm(
         bottleName,
@@ -987,6 +996,11 @@ export default function GameEditor({
     const shouldKeepOpen = keepOpenForAnother && activeBottleIndex === null
     if (shouldKeepOpen) {
       setBottleModalResetToken((prev) => prev + 1)
+      showToast(alertMessages.BOTTLE_SAVED_SUCCESS, 'success')
+    } else if (wasIncomplete) {
+      showToast(alertMessages.BOTTLE_COMPLETED_SUCCESS, 'success')
+    } else {
+      showToast(alertMessages.BOTTLE_SAVED_SUCCESS, 'success')
     }
 
     setIsModalOpen(shouldKeepOpen)
