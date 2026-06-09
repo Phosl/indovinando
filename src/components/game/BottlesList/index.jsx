@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import Image from 'next/image'
-import {DndContext, DragOverlay, PointerSensor, closestCenter, useSensor, useSensors} from '@dnd-kit/core'
+import {DndContext, PointerSensor, closestCenter, useSensor, useSensors} from '@dnd-kit/core'
 import {SortableContext, useSortable, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
 import {isBottleComplete} from '../utils/validations'
@@ -18,6 +18,7 @@ function BottleCard({
   onDeleteBottle,
   onRequestDeleteBottle,
   dragHandleProps,
+  dragHandleRef,
   cardRef,
   cardStyle,
   isDragging = false,
@@ -38,6 +39,7 @@ function BottleCard({
       }}>
       <button
         type="button"
+        ref={dragHandleRef}
         className={styles.cardRail}
         onClick={(event) => event.stopPropagation()}
         aria-label={text.reorder}
@@ -91,7 +93,7 @@ function BottleCard({
 
 function SortableBottleCard(props) {
   const {bottle} = props
-  const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({
+  const {attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging} = useSortable({
     id: bottle.clientId,
   })
 
@@ -103,6 +105,7 @@ function SortableBottleCard(props) {
         transform: CSS.Transform.toString(transform),
         transition,
       }}
+      dragHandleRef={setActivatorNodeRef}
       dragHandleProps={{...attributes, ...listeners}}
       isDragging={isDragging}
     />
@@ -120,14 +123,6 @@ export default function BottlesList({
 }) {
   const {lang} = useLanguage()
   const text = getBottlesListText(lang)
-  const [activeBottleId, setActiveBottleId] = useState(null)
-  const [activeBottleWidth, setActiveBottleWidth] = useState(null)
-  const activeBottle = activeBottleId
-    ? bottles.find((bottle) => bottle.clientId === activeBottleId) || null
-    : null
-  const activeBottleIndex = activeBottle
-    ? bottles.findIndex((bottle) => bottle.clientId === activeBottleId)
-    : -1
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -153,17 +148,8 @@ export default function BottlesList({
           sensors={sensors}
           collisionDetection={closestCenter}
           autoScroll={false}
-          onDragStart={({active}) => {
-            setActiveBottleId(active?.id || null)
-            setActiveBottleWidth(active?.rect?.current?.initial?.width || null)
-          }}
-          onDragCancel={() => {
-            setActiveBottleId(null)
-            setActiveBottleWidth(null)
-          }}
+          onDragCancel={() => {}}
           onDragEnd={({active, over}) => {
-            setActiveBottleId(null)
-            setActiveBottleWidth(null)
             onReorderBottles?.(active?.id, over?.id)
           }}>
           <SortableContext
@@ -184,21 +170,6 @@ export default function BottlesList({
               ))}
             </div>
           </SortableContext>
-          <DragOverlay>
-            {activeBottle ? (
-              <BottleCard
-                bottle={activeBottle}
-                index={activeBottleIndex}
-                questions={questions}
-                text={text}
-                onEditBottle={onEditBottle}
-                onDeleteBottle={onDeleteBottle}
-                onRequestDeleteBottle={onRequestDeleteBottle}
-                isOverlay
-                cardStyle={activeBottleWidth ? {width: `${activeBottleWidth}px`} : undefined}
-              />
-            ) : null}
-          </DragOverlay>
         </DndContext>
       )}
     </div>

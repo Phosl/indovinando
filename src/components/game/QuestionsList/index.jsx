@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {DndContext, DragOverlay, PointerSensor, closestCenter, useSensor, useSensors} from '@dnd-kit/core'
+import {DndContext, PointerSensor, closestCenter, useSensor, useSensors} from '@dnd-kit/core'
 import {SortableContext, useSortable, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
 import {isNeutralQuestion, isPlayerRatingQuestion, isQuestionComplete} from '../utils/validations'
@@ -17,6 +17,7 @@ function QuestionCard({
   onDeleteQuestion,
   onRequestDeleteQuestion,
   dragHandleProps,
+  dragHandleRef,
   cardRef,
   cardStyle,
   isDragging = false,
@@ -42,6 +43,7 @@ function QuestionCard({
       }}>
       <button
         type="button"
+        ref={dragHandleRef}
         className={styles.cardRail}
         onClick={(event) => event.stopPropagation()}
         aria-label={text.reorder}
@@ -100,7 +102,7 @@ function QuestionCard({
 
 function SortableQuestionCard(props) {
   const {question} = props
-  const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({
+  const {attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging} = useSortable({
     id: question.id,
   })
 
@@ -112,6 +114,7 @@ function SortableQuestionCard(props) {
         transform: CSS.Transform.toString(transform),
         transition,
       }}
+      dragHandleRef={setActivatorNodeRef}
       dragHandleProps={{...attributes, ...listeners}}
       isDragging={isDragging}
     />
@@ -129,14 +132,6 @@ export default function QuestionsList({
 }) {
   const {lang} = useLanguage()
   const text = getQuestionsListText(lang)
-  const [activeQuestionId, setActiveQuestionId] = useState(null)
-  const [activeQuestionWidth, setActiveQuestionWidth] = useState(null)
-  const activeQuestion = activeQuestionId
-    ? questions.find((question) => question.id === activeQuestionId) || null
-    : null
-  const activeQuestionIndex = activeQuestion
-    ? questions.findIndex((question) => question.id === activeQuestionId)
-    : -1
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -160,17 +155,8 @@ export default function QuestionsList({
           sensors={sensors}
           collisionDetection={closestCenter}
           autoScroll={false}
-          onDragStart={({active}) => {
-            setActiveQuestionId(active?.id || null)
-            setActiveQuestionWidth(active?.rect?.current?.initial?.width || null)
-          }}
-          onDragCancel={() => {
-            setActiveQuestionId(null)
-            setActiveQuestionWidth(null)
-          }}
+          onDragCancel={() => {}}
           onDragEnd={({active, over}) => {
-            setActiveQuestionId(null)
-            setActiveQuestionWidth(null)
             onReorderQuestions?.(active?.id, over?.id)
           }}>
           <SortableContext
@@ -191,21 +177,6 @@ export default function QuestionsList({
               ))}
             </div>
           </SortableContext>
-          <DragOverlay>
-            {activeQuestion ? (
-              <QuestionCard
-                question={activeQuestion}
-                index={activeQuestionIndex}
-                text={text}
-                isQuickCreate={isQuickCreate}
-                onEditQuestion={onEditQuestion}
-                onDeleteQuestion={onDeleteQuestion}
-                onRequestDeleteQuestion={onRequestDeleteQuestion}
-                isOverlay
-                cardStyle={activeQuestionWidth ? {width: `${activeQuestionWidth}px`} : undefined}
-              />
-            ) : null}
-          </DragOverlay>
         </DndContext>
       )}
     </div>

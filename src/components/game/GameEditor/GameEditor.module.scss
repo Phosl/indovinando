@@ -237,14 +237,14 @@
 
 .stepEnterForward {
   .stepBody {
-    animation: wizardStepSlideForward 0.22s ease forwards;
+    animation: wizardStepSlideForward 0.22s ease;
     will-change: transform, opacity;
   }
 }
 
 .stepEnterBack {
   .stepBody {
-    animation: wizardStepSlideBack 0.22s ease forwards;
+    animation: wizardStepSlideBack 0.22s ease;
     will-change: transform, opacity;
   }
 }
