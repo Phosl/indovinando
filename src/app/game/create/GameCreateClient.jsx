@@ -894,8 +894,14 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   const [aiScanCredits, setAiScanCredits] = useState(() =>
     normalizeAiScanCredits(initialAiScanCredits || {}),
   )
+  const [displayedAiCredits, setDisplayedAiCredits] = useState(() =>
+    normalizeAiScanCredits(initialAiScanCredits || {}).remaining,
+  )
+  const [isCreditsSpendAnimating, setIsCreditsSpendAnimating] = useState(false)
   const [isCreditsInfoOpen, setIsCreditsInfoOpen] = useState(false)
   const lastLoggedImagesRef = useRef('')
+  const creditsAnimationTimeoutRef = useRef(null)
+  const creditsAnimationIntervalRef = useRef(null)
 
   const sessionIdsStorageKey = useMemo(
     () => (userId ? `auto_tasting_session_image_ids:${userId}` : ''),
@@ -1557,6 +1563,61 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   }, [analyzeLoadingMessages.length, isAnalyzingAll])
 
   useEffect(() => {
+    return () => {
+      if (creditsAnimationTimeoutRef.current) {
+        clearTimeout(creditsAnimationTimeoutRef.current)
+      }
+      if (creditsAnimationIntervalRef.current) {
+        clearInterval(creditsAnimationIntervalRef.current)
+      }
+    }
+  }, [])
+
+  const animateCreditsSpend = useCallback((fromRemaining, toRemaining) => {
+    const startValue = Number(fromRemaining)
+    const endValue = Number(toRemaining)
+
+    if (!Number.isFinite(startValue) || !Number.isFinite(endValue) || endValue >= startValue) {
+      setDisplayedAiCredits(toRemaining)
+      setIsCreditsSpendAnimating(false)
+      return
+    }
+
+    if (creditsAnimationTimeoutRef.current) {
+      clearTimeout(creditsAnimationTimeoutRef.current)
+    }
+    if (creditsAnimationIntervalRef.current) {
+      clearInterval(creditsAnimationIntervalRef.current)
+    }
+
+    setDisplayedAiCredits(String(startValue))
+    setIsCreditsSpendAnimating(false)
+
+    creditsAnimationTimeoutRef.current = window.setTimeout(() => {
+      setIsCreditsSpendAnimating(true)
+      let currentValue = startValue
+
+      creditsAnimationIntervalRef.current = window.setInterval(() => {
+        currentValue -= 1
+        setDisplayedAiCredits(String(Math.max(endValue, currentValue)))
+
+        if (currentValue <= endValue) {
+          if (creditsAnimationIntervalRef.current) {
+            clearInterval(creditsAnimationIntervalRef.current)
+            creditsAnimationIntervalRef.current = null
+          }
+          window.setTimeout(() => setIsCreditsSpendAnimating(false), 280)
+        }
+      }, 220)
+    }, 2300)
+  }, [])
+
+  useEffect(() => {
+    if (isCreditsSpendAnimating) return
+    setDisplayedAiCredits(aiScanCredits.remaining)
+  }, [aiScanCredits.remaining, isCreditsSpendAnimating])
+
+  useEffect(() => {
     if (!userId) return undefined
 
     function refreshImages() {
@@ -1582,18 +1643,50 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     [t],
   )
 
+  const creditsConfettiPieces = useMemo(
+    () =>
+      Array.from({length: 16}, (_, index) => ({
+        id: `credit-confetti-${index}`,
+        x: `${(index - 7.5) * 7}px`,
+        delay: `${index * 18}ms`,
+        rotation: `${(index % 2 === 0 ? -1 : 1) * (14 + index * 6)}deg`,
+      })),
+    [],
+  )
+
   const topBarCredits = useMemo(
     () => (
       <button
         type="button"
-        className={styles.autoTopBarCredits}
+        className={`${styles.autoTopBarCredits} ${isCreditsSpendAnimating ? styles.autoTopBarCreditsAnimating : ''}`}
         onClick={() => setIsCreditsInfoOpen(true)}
         aria-label={t('automaticCreditsInfoAction')}>
+        {isCreditsSpendAnimating ? (
+          <>
+            <span className={styles.autoTopBarCreditsSweep} aria-hidden="true" />
+            <span className={styles.autoTopBarCreditsGlow} aria-hidden="true" />
+            <span className={styles.autoTopBarCreditsConfetti} aria-hidden="true">
+            {creditsConfettiPieces.map((piece) => (
+              <span
+                key={piece.id}
+                className={styles.autoTopBarCreditsConfettiPiece}
+                style={
+                  {
+                    '--credit-confetti-x': piece.x,
+                    '--credit-confetti-delay': piece.delay,
+                    '--credit-confetti-rotation': piece.rotation,
+                  }
+                }
+              />
+            ))}
+            </span>
+          </>
+        ) : null}
         <Icon src="/icons/token.svg" size={16} />
-        <span>{aiScanCredits.remaining}</span>
+        <span>{displayedAiCredits}</span>
       </button>
     ),
-    [aiScanCredits.remaining, t],
+    [creditsConfettiPieces, displayedAiCredits, isCreditsSpendAnimating, t],
   )
 
   const getBottleCoreData = useCallback(
@@ -1948,6 +2041,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     }
     setAnalyzingImageId(imageId)
     setUploadError('')
+    const previousCreditsRemaining = aiScanCredits.remaining
     setWebPreviewUsageByImageId((prev) => {
       if (!(imageId in prev)) return prev
       const next = {...prev}
@@ -1972,7 +2066,11 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
         setUploadError(`${t('automaticAnalyzeError')} (${result?.error || 'analyze'})`)
         return
       }
-      if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))
+      if (result?.credits) {
+        const normalizedCredits = normalizeAiScanCredits(result.credits)
+        setAiScanCredits(normalizedCredits)
+        animateCreditsSpend(previousCreditsRemaining, normalizedCredits.remaining)
+      }
 
       const updatedRows = Array.isArray(result?.updated) ? result.updated : []
       if (updatedRows.length > 0) {
@@ -2172,6 +2270,8 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     setIsAnalyzingAll(true)
     setCurrentAnalyzeBatchCount(Math.min(AUTO_ANALYZE_BATCH_SIZE, ids.length))
     setUploadError('')
+    const previousCreditsRemaining = aiScanCredits.remaining
+    let finalCreditsRemaining = previousCreditsRemaining
     try {
       for (let startIndex = 0; startIndex < ids.length; startIndex += AUTO_ANALYZE_BATCH_SIZE) {
         const batchIds = ids.slice(startIndex, startIndex + AUTO_ANALYZE_BATCH_SIZE)
@@ -2199,7 +2299,11 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
           setUploadError(`${t('automaticAnalyzeError')} (${result?.error || 'analyze all'})`)
           return
         }
-        if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))
+        if (result?.credits) {
+          const normalizedCredits = normalizeAiScanCredits(result.credits)
+          setAiScanCredits(normalizedCredits)
+          finalCreditsRemaining = normalizedCredits.remaining
+        }
         const updatedRows = Array.isArray(result?.updated) ? result.updated : []
         if (updatedRows.length > 0) {
           const map = Object.fromEntries(updatedRows.map((row) => [row.id, row]))
@@ -2212,6 +2316,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       setDetailEditMode(false)
       setDetailDraft(null)
       setAutoStep(2)
+      animateCreditsSpend(previousCreditsRemaining, finalCreditsRemaining)
       loadUploadedImages().catch(() => null)
     } catch (error) {
       setUploadError(`${t('automaticAnalyzeError')} (${error?.message || 'unknown'})`)

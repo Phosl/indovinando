@@ -1,12 +1,14 @@
 .page {
-  min-height: 100dvh;
+  height: 100dvh;
   background: var(--background);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .topBarWrap {
   padding: 10px 12px 0;
+  flex-shrink: 0;
 }
 
 .container {
@@ -18,6 +20,8 @@
   gap: 16px;
   flex: 1;
   width: 100%;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .header {
@@ -109,6 +113,10 @@
   }
 }
 
+.codeLabelError {
+  color: var(--danger-text) !important;
+}
+
 .avatarGrid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -187,17 +195,16 @@
 }
 
 .buttonRow {
-  position: sticky;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 35;
+  position: relative;
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
   background: var(--dark);
-  margin-top: auto;
+  flex-shrink: 0;
+  border-top: 1px solid color-mix(in srgb, var(--white) 8%, transparent);
+  box-shadow: 0 -8px 18px color-mix(in srgb, var(--dark) 16%, transparent);
   padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
 
   :global(.btn) {
@@ -220,13 +227,6 @@
 .avatarSelected {
   border-color: var(--success);
   background: var(--success-surface);
-}
-
-.error {
-  margin: 0;
-  color: var(--danger-text);
-  font-weight: 700;
-  text-align: center;
 }
 
 .hint {

@@ -431,6 +431,7 @@
   left: 0;
   right: 0;
   bottom: 0;
+  transform: translate(0px);
   z-index: 35;
   display: flex;
   align-items: center;
@@ -1661,6 +1662,8 @@
 }
 
 .autoTopBarCredits {
+  position: relative;
+  overflow: visible;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -1671,6 +1674,142 @@
   padding: 8px 12px;
   font-size: 0.9rem;
   font-weight: 800;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease;
+}
+
+.autoTopBarCreditsAnimating {
+  animation: autoCreditsPulse 0.52s ease 2;
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--success) 22%, transparent);
+}
+
+.autoTopBarCreditsSweep {
+  position: absolute;
+  inset: 2px auto 2px 2px;
+  width: 34%;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--success) 0%, transparent) 0%,
+    color-mix(in srgb, var(--success) 42%, transparent) 38%,
+    color-mix(in srgb, var(--success-text) 85%, transparent) 100%
+  );
+  opacity: 0;
+  filter: blur(0.5px);
+  animation: autoCreditsSweep 900ms ease-in-out forwards;
+}
+
+.autoTopBarCreditsGlow {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--success-light) 68%, white 32%);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--success) 12%, transparent),
+    0 0 10px color-mix(in srgb, var(--success) 20%, transparent);
+  opacity: 0;
+  transform: translateY(-50%);
+  animation: autoCreditsGlowTravel 900ms ease-in-out forwards;
+}
+
+.autoTopBarCreditsConfetti {
+  position: absolute;
+  inset: -12px -4px auto -4px;
+  height: 42px;
+  pointer-events: none;
+}
+
+.autoTopBarCreditsConfettiPiece {
+  position: absolute;
+  left: 14%;
+  top: 12px;
+  width: 5px;
+  height: 11px;
+  border-radius: 3px;
+  background: var(--success);
+  opacity: 0;
+  transform: translate(-50%, 0) rotate(0deg) scale(0.9);
+  animation: autoCreditsConfetti 620ms ease-out forwards;
+  animation-delay: var(--credit-confetti-delay, 0ms);
+
+  &:nth-child(3n) {
+    background: var(--success-200);
+  }
+
+  &:nth-child(3n + 1) {
+    background: var(--success-text);
+  }
+
+  &:nth-child(4n) {
+    width: 4px;
+    height: 8px;
+  }
+}
+
+@keyframes autoCreditsPulse {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes autoCreditsSweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-8px) scaleX(0.82);
+  }
+  18% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(165%) scaleX(1.08);
+  }
+}
+
+@keyframes autoCreditsGlowTravel {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-6px) scale(0.78);
+  }
+  16% {
+    opacity: 1;
+  }
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(88px) scale(0.56);
+  }
+}
+
+@keyframes autoCreditsConfetti {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) rotate(0deg) scale(0.85);
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + 70px + var(--credit-confetti-x, 0px)), -22px)
+      rotate(var(--credit-confetti-rotation, 0deg)) scale(0.5);
+  }
 }
 
 .autoCreditsInfoRemaining {

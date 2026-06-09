@@ -254,8 +254,7 @@ main.flex-container {
   width: 100%;
   min-height: 100dvh;
   position: relative;
-  transform: translate3d(0, 0, 0);
-  will-change: transform, opacity;
+  will-change: opacity;
 }
 
 .route-shell.route-forward.is-leaving {
@@ -263,7 +262,7 @@ main.flex-container {
 }
 
 .route-shell.route-forward.is-entering {
-  animation: routeEnterRight 0.22s ease both;
+  animation: routeEnterRight 0.22s ease;
 }
 
 .route-shell.route-back.is-leaving {
@@ -271,7 +270,7 @@ main.flex-container {
 }
 
 .route-shell.route-back.is-entering {
-  animation: routeEnterLeft 0.22s ease both;
+  animation: routeEnterLeft 0.22s ease;
 }
 
 @keyframes routeLeaveLeft {

@@ -20,6 +20,7 @@ export default function TableLiveEventHomeClient({
   const t = useT('tableLiveEvent')
   const [joinCode, setJoinCode] = useState('')
   const [error, setError] = useState('')
+  const [validatingJoinCode, setValidatingJoinCode] = useState(false)
   const joinCodeInputRefs = useRef([])
 
   const title = useMemo(() => `${eventTitle} · ${gameName}`, [eventTitle, gameName])
@@ -36,6 +37,7 @@ export default function TableLiveEventHomeClient({
       const next = joinCode.padEnd(4, ' ').split('')
       next[index] = ''
       setJoinCode(next.join('').replace(/\s+/g, ''))
+      setError('')
       return
     }
 
@@ -49,6 +51,7 @@ export default function TableLiveEventHomeClient({
 
     const normalized = next.join('').replace(/\s+/g, '').slice(0, 4)
     setJoinCode(normalized)
+    setError('')
 
     const nextIndex = Math.min(index + digits.length, 3)
     window.requestAnimationFrame(() => focusJoinDigit(nextIndex))
@@ -69,13 +72,41 @@ export default function TableLiveEventHomeClient({
     }
   }
 
-  const goToJoin = () => {
+  const goToJoin = async () => {
     if (joinCode.trim().length !== 4) {
       setError(t('joinCodeRequired'))
       return
     }
     setError('')
-    router.push(`/table-live/event/${eventSlug}/join?code=${encodeURIComponent(joinCode.trim())}`)
+    setValidatingJoinCode(true)
+    try {
+      const response = await fetch('/api/table-live/session/validate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          eventSlug,
+          joinCode: joinCode.trim(),
+        }),
+      })
+      const payload = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          setError(t('joinCodeInvalid'))
+        } else if (response.status === 409) {
+          setError(t('joinCodeClosed'))
+        } else {
+          setError(payload?.error || t('joinError'))
+        }
+        return
+      }
+
+      router.push(`/table-live/event/${eventSlug}/join?code=${encodeURIComponent(joinCode.trim())}`)
+    } catch {
+      setError(t('networkError'))
+    } finally {
+      setValidatingJoinCode(false)
+    }
   }
 
   const goToCreate = () => {
@@ -97,7 +128,9 @@ export default function TableLiveEventHomeClient({
         </header>
 
         <section className={styles.card}>
-          <label>{t('joinCodeLabel')}</label>
+          <label className={error ? styles.codeLabelError : ''}>
+            {error || t('joinCodeLabel')}
+          </label>
           <div className={styles.codeInputGroup} aria-label={t('joinCodeAria')}>
             {joinCodeDigits.map((digit, index) => (
               <input
@@ -121,9 +154,9 @@ export default function TableLiveEventHomeClient({
             ))}
           </div>
           <p className={styles.codeHint}>{t('joinCodeHint')}</p>
-          <Button variant="primary-filled" type="button" onClick={goToJoin}>
+          <Button variant="primary-filled" type="button" onClick={goToJoin} disabled={validatingJoinCode}>
             <Icon name="enter" size={36} />
-            {t('joinSessionAction')}
+            {validatingJoinCode ? t('joinCodeChecking') : t('joinSessionAction')}
           </Button>
 
           <div className={styles.orSeparator}>
@@ -134,7 +167,6 @@ export default function TableLiveEventHomeClient({
             <Icon name="plus" size={36} />
             {t('createSessionAction')}
           </button>
-          {error ? <p className={styles.error}>{error}</p> : null}
         </section>
 
         <p className={styles.hint}>{t('eventLabel', {title})}</p>
