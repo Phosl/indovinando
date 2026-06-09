@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.43.0',
+    date: '9 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'polish game editor ordering UI and card interactions',
+    ],
+  },
+
+  {
     version: '1.42.0',
     date: '9 giugno 2026',
     label: 'Auto',
