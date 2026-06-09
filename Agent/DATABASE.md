@@ -765,6 +765,47 @@ Regole minime già applicate come flag:
 
 Patch SQL: `SUPABASE_PUBLIC_WINE_RANKINGS.sql`
 
+### `public_user_rankings`
+
+Vista aggregata delle classifiche pubbliche utenti, costruita sopra `public_wine_rating_events`.
+
+Obiettivo v1:
+
+- mostrare gli utenti registrati più precisi
+- usare solo sessioni concluse e risposte reali
+- escludere per ora guest e nickname non stabili
+
+Campi utili:
+
+- `user_id`
+- `display_name`
+- `profile_type`
+- `session_count`
+- `objective_answer_count`
+- `objective_correct_count`
+- `correctness_ratio`
+- `rating_answer_count`
+- `blind_rating_avg`
+- `total_points`
+- `avg_points_per_answer`
+- `eligible_precision`
+- `precision_rank`
+
+Regole minime v1:
+
+- almeno `12` risposte oggettive
+- almeno `3` sessioni concluse
+
+Ranking v1:
+
+- ordinato per `correctness_ratio` decrescente
+- tie-break su:
+  - `objective_answer_count`
+  - `session_count`
+  - `total_points`
+
+Patch SQL: `SUPABASE_PUBLIC_USER_RANKINGS.sql`
+
 ## Storico Partite Live
 
 ### `live_session_results`

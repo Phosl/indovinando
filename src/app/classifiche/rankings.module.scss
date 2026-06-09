@@ -35,6 +35,7 @@
 }
 
 .hero,
+.userSectionCard,
 .sectionCard {
   background: var(--foreground);
   border: 2px solid var(--button-secondary-border);
@@ -44,6 +45,80 @@
 
 .hero {
   padding: 32px 24px;
+}
+
+.userSectionCard {
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+}
+
+.userSectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.userSectionTitle {
+  margin: 10px 0 8px;
+  color: var(--primary-900);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  line-height: 1.08;
+}
+
+.userSectionDescription {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.userRankingList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.userRankingItem {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px;
+  border: 1px solid var(--primary-100);
+  border-radius: 18px;
+  background: var(--primary-50);
+}
+
+.userRankIndex {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: var(--foreground);
+  border: 1px solid var(--primary-100);
+  color: var(--primary-text);
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.userRankingContent {
+  display: grid;
+  gap: 6px;
+}
+
+.userRankingContent h3 {
+  margin: 0;
+  color: var(--primary-text);
+  font-size: 1.06rem;
+  line-height: 1.25;
+}
+
+.userRankingMeta,
+.userRankingSubMeta {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.45;
 }
 
 .heroTopRow {
@@ -332,6 +407,7 @@
     grid-template-columns: 1fr;
   }
 
+  .userRankingList,
   .detailGrid {
     grid-template-columns: 1fr;
   }

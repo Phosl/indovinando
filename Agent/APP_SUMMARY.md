@@ -53,6 +53,7 @@
 - `game_bottles` is now prepared for real rankings with stable wine identity and price snapshot fields, and the save flow persists these values for both manual and automatic tastings.
 - The real rankings pipeline now has a normalized SQL view, `public_wine_rating_events`, which merges completed `enoteca` and `table-live` tasting events into one wine-level dataset ready for aggregation.
 - The pipeline also now has `public_wine_rankings`, an aggregated rankings view with blind, quality/price, surprising, and divisive scores plus eligibility flags and precomputed ranks.
+- The public rankings pipeline now also targets a user layer: `public_user_rankings` is the v1 view for registered-user skill rankings based on real completed answers, starting from “most precise users”.
 - `/classifiche` now reads real ranking data from `public_wine_rankings` when available, while keeping the `Dati iniziali` fallback when the real dataset is still too small.
 - `/classifiche` now links to a public wine detail page on `/classifiche/[wineKey]`, with ranking placements and community metrics for each wine.
 - The reusable community widget now shares the same ranking data, is shown on landing, dashboard and profile, and has been simplified into three cleaner highlight cards.
@@ -60,5 +61,6 @@
 - The landing partner section now contains a real Google map for public partners with coordinates plus a horizontal strip of partner cards, instead of a static placeholder block.
 - Table Live event entry is now split into clearer pages: the event home handles join-code entry, while dedicated `/create` and `/join` pages only ask for nickname + avatar with focused CTAs.
 - Multiplayer launch is now the primary tasting start flow: `Avvia una partita` goes directly to `/game/[id]/table-live`, the old `/mode` page redirects there, the event title is taken automatically from the tasting name, and share link / QR are prepared immediately without a manual setup step.
+- `enoteca` and classic `live` are now effectively legacy hidden flows in product navigation; they still support historical/ranking data where needed today, but the long-term product direction is to remove them after migration is complete.
 - Course progress sync is now resilient to older schemas without `max_score`, and the existing course SQL migration keeps the schema aligned so dashboard counts can reflect synced lesson progress.
 - There is also a safe cleanup SQL for course progress to backfill `max_score`, normalize attempts/completed timestamps, and deduplicate repeated lesson rows before relying on dashboard counts.

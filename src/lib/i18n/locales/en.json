@@ -1090,6 +1090,15 @@
     },
     "metricInfoLabel": "How this ranking works",
     "metricFallback": "Metric explanation not available.",
+    "userSection": {
+      "eyebrow": "Players",
+      "title": "Most precise users",
+      "description": "Registered users ranked by their percentage of correct answers on objective questions.",
+      "accuracyLabel": "Accuracy",
+      "sessionsLabel": "Tastings",
+      "answersLabel": "Answers",
+      "note": "Only users with at least 3 completed tastings and 12 objective answers enter this ranking."
+    },
     "metrics": {
       "blind": {
         "description": "Ranks wines by the real average rating they received in completed tastings.",

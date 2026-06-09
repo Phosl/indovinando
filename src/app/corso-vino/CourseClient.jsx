@@ -105,10 +105,7 @@ export default function CourseClient({levels, isAdmin = false, viewer, lang = 'i
         </div>
       </div>
 
-      <GuestWarningModal
-        isOpen={showGuestWarning}
-        onClose={() => setGuestWarningDismissed(true)}
-      />
+      <GuestWarningModal isOpen={showGuestWarning} onClose={() => setGuestWarningDismissed(true)} />
 
       {!viewer?.isRegistered && (
         <section className={styles.accessPanel}>
@@ -145,7 +142,7 @@ export default function CourseClient({levels, isAdmin = false, viewer, lang = 'i
                 className={styles.levelMedia}
                 imageClassName={styles.levelCoverImage}
                 fallbackClassName={styles.levelMedia}
-                overlayClassName={styles.levelCoverOverlay}
+                // overlayClassName={styles.levelCoverOverlay}
               />
               <div className={styles.levelInfo}>
                 <div className={styles.levelMeta}>

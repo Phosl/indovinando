@@ -19,6 +19,7 @@ Roadmap operativa da seguire step by step.
 - [x] Landing partner + burger menu pubblico
 - [x] Crediti analisi AI v1
 - [x] Classifiche pubbliche
+- [ ] Classifiche utenti pubbliche
 - [x] Widget community
 - [x] Statistiche globali
 - [x] Multiplayer semplificato come flusso principale
@@ -102,6 +103,14 @@ Riferimento:
 - [ ] arricchire la scheda con immagine bottiglia dal catalogo
 - [ ] valutare vini simili / correlati
 
+### Step 7 — classifica utenti pubblica
+
+- [ ] definire metrica utenti più precisi
+- [ ] usare solo utenti registrati con identità stabile
+- [ ] creare vista `public_user_rankings`
+- [ ] mostrare top utenti in `/classifiche`
+- [ ] valutare teaser dashboard / landing in un secondo step
+
 ---
 
 ## Blocco attuale: semplificazione flussi di gioco
@@ -122,6 +131,7 @@ Riferimento:
 - [ ] Ripulire i riferimenti residui a `Enoteca` dove il flusso è ormai “gioco solo”
 - [ ] Valutare se tenere ancora il flusso solo come route nascosta o dismetterlo
 - [ ] Riallineare eventuali back/entry secondari ancora pensati per `mode`
+- [ ] Annotare e poi rimuovere `enoteca` e `live` classici come flussi legacy nascosti
 
 ---
 

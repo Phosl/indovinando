@@ -67,6 +67,48 @@ export default async function RankingsPage() {
           text={text.globalStats || {stats: text.stats || {}}}
         />
 
+        {snapshot.userSection?.items?.length ? (
+          <section className={styles.userSectionCard}>
+            <div className={styles.userSectionHeader}>
+              <div>
+                <span className={styles.eyebrow}>{text.userSection?.eyebrow || 'Players'}</span>
+                <h2 className={styles.userSectionTitle}>
+                  {text.userSection?.title || 'Most precise users'}
+                </h2>
+                <p className={styles.userSectionDescription}>
+                  {text.userSection?.description ||
+                    'Registered users ranked by correctness on objective questions.'}
+                </p>
+              </div>
+            </div>
+
+            <div className={styles.userRankingList}>
+              {snapshot.userSection.items.map((item, index) => (
+                <article key={item.id} className={styles.userRankingItem}>
+                  <div className={styles.userRankIndex}>{index + 1}</div>
+                  <div className={styles.userRankingContent}>
+                    <h3>{item.name}</h3>
+                    <p className={styles.userRankingMeta}>
+                      {(text.userSection?.accuracyLabel || 'Precision') +
+                        ` ${Math.round(Number(item.accuracyRatio || 0) * 100)}%`}
+                    </p>
+                    <p className={styles.userRankingSubMeta}>
+                      {(text.userSection?.sessionsLabel || 'Sessions') +
+                        ` ${item.sessionCount || 0} · ` +
+                        (text.userSection?.answersLabel || 'Answers') +
+                        ` ${item.objectiveAnswerCount || 0}`}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            {text.userSection?.note ? (
+              <div className={styles.heroNote}>{text.userSection.note}</div>
+            ) : null}
+          </section>
+        ) : null}
+
         <RankingsSectionsClient sections={snapshot.sections} text={text} />
 
         <section className={styles.ctaRow}>

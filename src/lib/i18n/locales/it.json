@@ -1094,6 +1094,15 @@
     },
     "metricInfoLabel": "Come leggiamo questa classifica",
     "metricFallback": "Spiegazione metrica non disponibile.",
+    "userSection": {
+      "eyebrow": "Giocatori",
+      "title": "Utenti più precisi",
+      "description": "Utenti registrati ordinati per percentuale di risposte corrette nelle domande oggettive.",
+      "accuracyLabel": "Precisione",
+      "sessionsLabel": "Degustazioni",
+      "answersLabel": "Risposte",
+      "note": "Entrano in classifica solo utenti con almeno 3 degustazioni concluse e 12 risposte oggettive."
+    },
     "metrics": {
       "blind": {
         "description": "Ordina i vini in base al voto medio reale ricevuto nelle degustazioni completate.",

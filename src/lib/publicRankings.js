@@ -130,6 +130,36 @@ const FALLBACK_SECTIONS = [
   },
 ]
 
+const FALLBACK_USER_SECTION = {
+  id: 'precision',
+  items: [
+    {
+      id: 'user-1',
+      name: 'Marco',
+      profileType: 'wine_lover',
+      accuracyRatio: 0.92,
+      sessionCount: 8,
+      objectiveAnswerCount: 34,
+    },
+    {
+      id: 'user-2',
+      name: 'Giulia',
+      profileType: 'sommelier',
+      accuracyRatio: 0.89,
+      sessionCount: 6,
+      objectiveAnswerCount: 28,
+    },
+    {
+      id: 'user-3',
+      name: 'Andrea',
+      profileType: 'professional',
+      accuracyRatio: 0.87,
+      sessionCount: 5,
+      objectiveAnswerCount: 24,
+    },
+  ],
+}
+
 const ACTIVE_USERS_DAYS = 30
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -198,6 +228,12 @@ function buildFallbackGlobalStatsSnapshot() {
       activeUsersDays: ACTIVE_USERS_DAYS,
     },
   }
+}
+
+function formatPercent(value) {
+  const numeric = Number(value)
+  if (!Number.isFinite(numeric)) return null
+  return `${Math.round(numeric * 100)}%`
 }
 
 async function loadRealGlobalStatsSnapshot(supabase) {
@@ -275,11 +311,44 @@ async function loadSectionRows(supabase, sectionId) {
   }))
 }
 
+async function loadUserRankingRows(supabase) {
+  const {data, error} = await supabase
+    .from('public_user_rankings')
+    .select(
+      [
+        'user_id',
+        'display_name',
+        'profile_type',
+        'session_count',
+        'objective_answer_count',
+        'correctness_ratio',
+        'precision_rank',
+        'eligible_precision',
+      ].join(', '),
+    )
+    .eq('eligible_precision', true)
+    .order('precision_rank', {ascending: true})
+    .limit(3)
+
+  if (error) return []
+
+  return (data || []).map((row) => ({
+    id: `user-${row.user_id}`,
+    name: row.display_name || '—',
+    profileType: row.profile_type || null,
+    accuracyRatio: Number(row.correctness_ratio || 0),
+    sessionCount: Number(row.session_count || 0),
+    objectiveAnswerCount: Number(row.objective_answer_count || 0),
+  }))
+}
+
 export function getFallbackPublicRankingsSnapshot() {
   return {
     isInitialData: true,
     sectionsInitialData: true,
+    userSectionInitialData: true,
     globalStats: buildFallbackGlobalStatsSnapshot(),
+    userSection: FALLBACK_USER_SECTION,
     sections: FALLBACK_SECTIONS,
   }
 }
@@ -339,9 +408,10 @@ export async function getPublicRankingsSnapshot(supabase) {
   }
 
   try {
-    const [globalStats, blindItems, qualityPriceItems, surprisingItems, divisiveItems] =
+    const [globalStats, userRankingItems, blindItems, qualityPriceItems, surprisingItems, divisiveItems] =
       await Promise.all([
         getPublicGlobalStatsSnapshot(supabase),
+        loadUserRankingRows(supabase),
         loadSectionRows(supabase, 'blind'),
         loadSectionRows(supabase, 'qualityPrice'),
         loadSectionRows(supabase, 'surprising'),
@@ -356,11 +426,16 @@ export async function getPublicRankingsSnapshot(supabase) {
     ]
 
     const sectionsInitialData = sections.some((section) => section.items.length === 0)
+    const userSectionInitialData = userRankingItems.length === 0
 
     return {
-      isInitialData: sectionsInitialData,
+      isInitialData: sectionsInitialData || userSectionInitialData,
       sectionsInitialData,
+      userSectionInitialData,
       globalStats,
+      userSection: userSectionInitialData
+        ? FALLBACK_USER_SECTION
+        : {id: 'precision', items: userRankingItems},
       sections: sectionsInitialData ? FALLBACK_SECTIONS : sections,
     }
   } catch {
