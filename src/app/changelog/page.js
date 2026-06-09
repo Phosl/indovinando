@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.43.4',
+    date: '9 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Fix guided bottle repair save flow',
+    ],
+  },
+
+  {
     version: '1.43.3',
     date: '9 giugno 2026',
     label: 'Auto',
