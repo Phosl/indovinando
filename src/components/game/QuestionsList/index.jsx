@@ -40,22 +40,24 @@ function QuestionCard({
         if (isLockedInQuickCreate) return
         onEditQuestion(index)
       }}>
-      <div className={styles.questionIndex}>{index + 1}</div>
+      <button
+        type="button"
+        className={styles.cardRail}
+        onClick={(event) => event.stopPropagation()}
+        aria-label={text.reorder}
+        title={text.reorder}
+        {...dragHandleProps}>
+        <div className={styles.questionIndex}>{index + 1}</div>
+        <div className={styles.dragHandle}>
+          <Icon name="drag" size={20} className={styles.dragIcon} />
+        </div>
+      </button>
       <div className={styles.cardInfo}>
         <div className={styles.cardHeader}>
           <h4 className={styles.questionText}>{question.text}</h4>
           <div className={styles.cardActions}>
             {isLockedInQuickCreate ? <span className={styles.lockedBadge}>{text.lockedPlayer}</span> : null}
             {isNeutral ? <span className={styles.lockedBadge}>{text.lockedNeutral}</span> : null}
-            <button
-              type="button"
-              className={styles.dragHandle}
-              onClick={(event) => event.stopPropagation()}
-              aria-label={text.reorder}
-              title={text.reorder}
-              {...dragHandleProps}>
-              <Icon name="drag" size={20} className={styles.dragIcon} />
-            </button>
             {!isLockedInQuickCreate ? (
               <button
                 type="button"

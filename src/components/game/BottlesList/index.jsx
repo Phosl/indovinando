@@ -36,22 +36,24 @@ function BottleCard({
         if (isOverlay) return
         onEditBottle(index)
       }}>
-      <div className={styles.bottleIndex}>{index + 1}</div>
+      <button
+        type="button"
+        className={styles.cardRail}
+        onClick={(event) => event.stopPropagation()}
+        aria-label={text.reorder}
+        title={text.reorder}
+        {...dragHandleProps}>
+        <div className={styles.bottleIndex}>{index + 1}</div>
+        <div className={styles.dragHandle}>
+          <Icon name="drag" size={20} className={styles.dragIcon} />
+        </div>
+      </button>
       <div className={styles.cardInfo}>
         <div className={styles.cardHeader}>
           <h4>
             {bottle.name} {bottle.year}
           </h4>
           <div className={styles.cardActions}>
-            <button
-              type="button"
-              className={styles.dragHandle}
-              onClick={(event) => event.stopPropagation()}
-              aria-label={text.reorder}
-              title={text.reorder}
-              {...dragHandleProps}>
-              <Icon name="drag" size={20} className={styles.dragIcon} />
-            </button>
             <button
               type="button"
               className={styles.iconActionBtn}
