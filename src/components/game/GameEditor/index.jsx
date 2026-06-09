@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import {memo, useCallback, useEffect, useState, useRef} from 'react'
 import {usePathname, useRouter, useSearchParams} from 'next/navigation'
+import {arrayMove} from '@dnd-kit/sortable'
 import modalStyles from './QuestionnaireIntroModal.module.scss'
 import {Button} from '@/components/ui/Button'
 import Icon from '@/components/Icon'
@@ -196,6 +197,23 @@ function normalizeBottleYear(value) {
     .slice(0, 4)
 }
 
+function createClientItemId(prefix) {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return `${prefix}-${crypto.randomUUID()}`
+  }
+
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+}
+
+function scrollViewportTop() {
+  if (typeof window === 'undefined') return
+
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  })
+}
+
 const StepOneSection = memo(function StepOneSection({
   editorText,
   gameName,
@@ -253,6 +271,7 @@ const StepTwoSection = memo(function StepTwoSection({
   onNewQuestion,
   onDeleteQuestion,
   onRequestDeleteQuestion,
+  onReorderQuestions,
   onSaveQuestionnaire,
   onBack,
   onShowIntro,
@@ -278,6 +297,7 @@ const StepTwoSection = memo(function StepTwoSection({
           onNewQuestion={onNewQuestion}
           onDeleteQuestion={onDeleteQuestion}
           onRequestDeleteQuestion={onRequestDeleteQuestion}
+          onReorderQuestions={onReorderQuestions}
           isQuickCreate={isQuickCreate}
         />
       </div>
@@ -342,6 +362,7 @@ const StepFourSection = memo(function StepFourSection({
   onNewBottle,
   onDeleteBottle,
   onRequestDeleteBottle,
+  onReorderBottles,
   onShowInfo,
   onBack,
   onPublish,
@@ -370,6 +391,7 @@ const StepFourSection = memo(function StepFourSection({
           onNewBottle={onNewBottle}
           onDeleteBottle={onDeleteBottle}
           onRequestDeleteBottle={onRequestDeleteBottle}
+          onReorderBottles={onReorderBottles}
         />
       </div>
 
@@ -582,6 +604,7 @@ export default function GameEditor({
             })
             return {
               id: b.id,
+              clientId: b.id || createClientItemId('bottle'),
               name: b.name,
               producer: b.producer,
               year: b.year,
@@ -721,6 +744,7 @@ export default function GameEditor({
   }
 
   function openQuestionModal(index) {
+    scrollViewportTop()
     setEditingQuestionIndex(index)
     setIsQuestionModalOpen(true)
   }
@@ -731,8 +755,35 @@ export default function GameEditor({
   }
 
   function openNewQuestionModal() {
+    scrollViewportTop()
     setEditingQuestionIndex(null)
     setIsQuestionModalOpen(true)
+  }
+
+  function handleReorderQuestions(activeId, overId) {
+    if (!activeId || !overId || activeId === overId) return
+
+    setQuestionDraft((prev) => {
+      const oldIndex = prev.findIndex((question) => question.id === activeId)
+      const newIndex = prev.findIndex((question) => question.id === overId)
+
+      if (oldIndex < 0 || newIndex < 0 || oldIndex === newIndex) return prev
+
+      return arrayMove(prev, oldIndex, newIndex)
+    })
+  }
+
+  function handleReorderBottles(activeId, overId) {
+    if (!activeId || !overId || activeId === overId) return
+
+    setBottles((prev) => {
+      const oldIndex = prev.findIndex((bottle) => bottle.clientId === activeId)
+      const newIndex = prev.findIndex((bottle) => bottle.clientId === overId)
+
+      if (oldIndex < 0 || newIndex < 0 || oldIndex === newIndex) return prev
+
+      return arrayMove(prev, oldIndex, newIndex)
+    })
   }
 
   function saveQuestionnaire() {
@@ -858,6 +909,7 @@ export default function GameEditor({
   }
 
   function selectBottle(index) {
+    scrollViewportTop()
     const selected = bottles[index]
     if (!selected) return
 
@@ -878,6 +930,7 @@ export default function GameEditor({
   }
 
   function startNewBottle() {
+    scrollViewportTop()
     setActiveBottleIndex(null)
     setBottleName('')
     setProducer('')
@@ -907,6 +960,7 @@ export default function GameEditor({
       setBottles((prev) => [
         ...prev,
         {
+          clientId: createClientItemId('bottle'),
           name: bottleName.trim(),
           producer: producer.trim(),
           year: year.trim(),
@@ -1018,6 +1072,7 @@ export default function GameEditor({
         onNewQuestion={openNewQuestionModal}
         onDeleteQuestion={deleteQuestion}
         onRequestDeleteQuestion={requestDeleteQuestion}
+        onReorderQuestions={handleReorderQuestions}
         onSaveQuestionnaire={saveQuestionnaire}
         onBack={() => goToStep(1)}
         onShowIntro={() => setShowQuestionnaireIntro(true)}
@@ -1044,6 +1099,7 @@ export default function GameEditor({
         onNewBottle={startNewBottle}
         onDeleteBottle={deleteBottle}
         onRequestDeleteBottle={requestDeleteBottle}
+        onReorderBottles={handleReorderBottles}
         onShowInfo={() => setShowBottlesIntro(true)}
         onBack={() => goToStep(3)}
         onPublish={publishGame}

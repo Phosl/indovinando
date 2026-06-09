@@ -820,6 +820,7 @@
       "confirmDelete": "Delete this question?",
       "lockedPlayer": "Player",
       "lockedNeutral": "Neutral",
+      "reorder": "Drag to reorder",
       "playerAnswerFree": "Player chooses the answer",
       "neutralNoCorrectAnswer": "No correct answer required",
       "sliderPreview": "1-10 slider",
@@ -831,7 +832,8 @@
       "empty": "No bottles yet. Add your first one!",
       "edit": "Edit",
       "delete": "Delete",
-      "confirmDelete": "Delete this bottle?"
+      "confirmDelete": "Delete this bottle?",
+      "reorder": "Drag to reorder"
     },
     "bottleModal": {
       "newTitle": "New bottle",

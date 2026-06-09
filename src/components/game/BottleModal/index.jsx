@@ -1,6 +1,6 @@
 'use client'
 
-import {useMemo, useState} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {validateBottleForm} from '../utils/validations'
 import {isNeutralQuestion, isPlayerRatingQuestion} from '../utils/validations'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
@@ -50,6 +50,7 @@ export default function BottleModal({
   const alertMessages = getAlertMessages(lang)
   const isNewBottle = bottleIndex === null
   const [wizardStep, setWizardStep] = useState(0)
+  const modalBodyRef = useRef(null)
   const WINE_TYPES = [
     {value: 'rosso', label: lang === 'en' ? 'Red' : 'Rosso'},
     {value: 'bianco', label: lang === 'en' ? 'White' : 'Bianco'},
@@ -89,6 +90,24 @@ export default function BottleModal({
     isQuestionStep &&
     !currentQuestionIsNeutral &&
     (selectedAnswer === null || selectedAnswer === undefined)
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    if (typeof window !== 'undefined') {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+    }
+
+    requestAnimationFrame(() => {
+      modalBodyRef.current?.scrollTo({
+        top: 0,
+        behavior: 'auto',
+      })
+    })
+  }, [isOpen, bottleIndex, resetToken, wizardStep])
 
   if (!isOpen) return null
 
@@ -172,7 +191,7 @@ export default function BottleModal({
           <ModalCloseButton className={styles.closeBtn} onClick={onCancel} />
         </div>
 
-        <div className={styles.modalBody}>
+        <div ref={modalBodyRef} className={styles.modalBody}>
           {isDetailsStep && (
             <div className={styles.bottleInfoSection}>
               <h4>{text.details}</h4>

@@ -29,6 +29,8 @@ const ICONS = {
   enter: '/icons/enter.svg',
   plusFat: '/icons/plus-fat.svg',
   photo: '/icons/photo.svg',
+  drag: '/icons/drag.svg',
+  bucket: '/icons/bucket.svg',
 }
 
 const ICON_RENDER_MODE = {

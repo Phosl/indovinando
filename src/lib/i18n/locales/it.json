@@ -824,6 +824,7 @@
       "confirmDelete": "Eliminare questa domanda?",
       "lockedPlayer": "Player",
       "lockedNeutral": "Neutra",
+      "reorder": "Trascina per riordinare",
       "playerAnswerFree": "Risposta libera del giocatore",
       "neutralNoCorrectAnswer": "Nessuna risposta corretta richiesta",
       "sliderPreview": "Slider 1-10",
@@ -835,7 +836,8 @@
       "empty": "Nessuna bottiglia ancora. Aggiungi la prima!",
       "edit": "Modifica",
       "delete": "Elimina",
-      "confirmDelete": "Eliminare questa bottiglia?"
+      "confirmDelete": "Eliminare questa bottiglia?",
+      "reorder": "Trascina per riordinare"
     },
     "bottleModal": {
       "newTitle": "Nuova bottiglia",

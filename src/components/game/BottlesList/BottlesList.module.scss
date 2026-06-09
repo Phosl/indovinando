@@ -38,8 +38,8 @@
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
@@ -61,10 +61,10 @@
 
   &.incomplete {
     opacity: 0.7;
-    border-color: #ff9800;
+    border-color: var(--warning);
 
     .status {
-      color: #ff9800;
+      color: var(--warning);
     }
   }
 
@@ -75,6 +75,15 @@
       color: var(--accept);
     }
   }
+}
+
+.dragging {
+  opacity: 0.22;
+}
+
+.overlayCard {
+  box-shadow: 0 14px 28px color-mix(in srgb, var(--primary-text) 12%, transparent);
+  pointer-events: none;
 }
 .bottleIndex {
   color: var(--tertiary-text);
@@ -88,6 +97,7 @@
   flex-direction: column;
   flex: 1;
   padding: 16px;
+  min-width: 0;
 }
 
 .cardHeader {
@@ -103,6 +113,55 @@
     color: var(--text-primary);
     flex: 1;
   }
+}
+
+.cardActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.dragHandle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 34px;
+  border: 1px solid var(--button-secondary-border);
+  border-radius: 10px;
+  background: var(--foreground);
+  color: var(--text-secondary);
+  cursor: grab;
+  flex-shrink: 0;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.dragIcon {
+  color: var(--text-secondary);
+}
+
+.iconActionBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--button-secondary-border);
+  border-radius: 10px;
+  background: var(--foreground);
+  color: var(--danger);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.deleteIcon {
+  color: var(--danger);
 }
 
 .status {

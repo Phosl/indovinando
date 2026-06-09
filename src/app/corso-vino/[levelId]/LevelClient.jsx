@@ -60,6 +60,8 @@ export default function LevelClient({level, lessons, levels = []}) {
           fallbackClassName={styles.levelHeroMedia}
           overlayClassName={styles.levelCoverOverlay}
         />
+
+        <h2 className={styles.levelOrder}>{level.order}</h2>
         <h1 className={styles.levelTitle}>{level.title}</h1>
         <p className={styles.levelDesc}>{level.description}</p>
       </div>

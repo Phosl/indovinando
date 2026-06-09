@@ -152,6 +152,18 @@
   color: var(--white);
   padding: 0 20px;
 }
+.levelOrder {
+  position: relative;
+  z-index: 1;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--white);
+  padding: 4px 16px;
+  margin: 0 auto;
+  margin-bottom: 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--white) 30%, transparent);
+}
 
 .levelDesc {
   position: relative;

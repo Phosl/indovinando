@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import {useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {validateQuestionForm} from '../utils/validations'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {getAlertMessages, getQuestionModalText} from '../utils/constants'
@@ -25,6 +25,25 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
   const [questionText, setQuestionText] = useState(() => question?.text || '')
   const [options, setOptions] = useState(() => [...(question?.options || ['', ''])])
   const [isNeutral, setIsNeutral] = useState(() => question?.isNeutral === true)
+  const modalBodyRef = useRef(null)
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    if (typeof window !== 'undefined') {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+    }
+
+    requestAnimationFrame(() => {
+      modalBodyRef.current?.scrollTo({
+        top: 0,
+        behavior: 'auto',
+      })
+    })
+  }, [isOpen, questionIndex])
 
   function updateOption(index, value) {
     const newOptions = [...options]
@@ -76,7 +95,7 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
           <ModalCloseButton className={styles.closeBtn} onClick={onCancel} />
         </div>
 
-        <div className={styles.modalBody}>
+        <div ref={modalBodyRef} className={styles.modalBody}>
           <div className={styles.formGroup}>
             <label>{text.questionLabel}</label>
             <textarea

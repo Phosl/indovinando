@@ -28,8 +28,8 @@
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
@@ -47,12 +47,21 @@
 
   &.incomplete {
     opacity: 0.7;
-    border-color: #ff9800;
+    border-color: var(--warning);
   }
 
   &.complete {
     border-color: var(--tertiary);
   }
+}
+
+.dragging {
+  opacity: 0.22;
+}
+
+.overlayCard {
+  box-shadow: 0 14px 28px color-mix(in srgb, var(--primary-text) 12%, transparent);
+  pointer-events: none;
 }
 
 .questionIndex {
@@ -115,11 +124,51 @@
   min-height: 28px;
   padding: 0 10px;
   border-radius: 999px;
-  background: #eef3fb;
-  color: #244260;
+  background: var(--gray-light);
+  color: var(--primary-text);
   font-size: 0.76rem;
   font-weight: 800;
   white-space: nowrap;
+}
+
+.dragHandle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 34px;
+  border: 1px solid var(--button-secondary-border);
+  border-radius: 10px;
+  background: var(--foreground);
+  color: var(--text-secondary);
+  cursor: grab;
+  flex-shrink: 0;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.dragIcon {
+  color: var(--text-secondary);
+}
+
+.iconActionBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--button-secondary-border);
+  border-radius: 10px;
+  background: var(--foreground);
+  color: var(--danger);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.deleteIcon {
+  color: var(--danger);
 }
 
 .optionsCount {
