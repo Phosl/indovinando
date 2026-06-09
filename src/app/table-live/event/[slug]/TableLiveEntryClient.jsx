@@ -175,7 +175,6 @@ export default function TableLiveEntryClient({eventSlug, eventTitle, gameName, m
         </form>
 
         <p className={styles.hint}>{t('eventLabel', {title})}</p>
-        <div className={styles.buttonRowSpacer} />
       </main>
       <div className={styles.buttonRow}>
         <button className="btn success-filled" type="button" onClick={submit} disabled={loading}>
