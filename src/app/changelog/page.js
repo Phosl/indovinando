@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.43.5',
+    date: '9 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Stabilize drag and drop behavior in game editor',
+    ],
+  },
+
+  {
     version: '1.43.4',
     date: '9 giugno 2026',
     label: 'Auto',
