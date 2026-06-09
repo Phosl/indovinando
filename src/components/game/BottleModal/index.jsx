@@ -295,7 +295,10 @@ export default function BottleModal({
 
         <div ref={modalBodyRef} className={styles.modalBody}>
           {isDetailsStep && (
-            <div className={`${styles.bottleInfoSection} ${detailsSectionIncomplete ? styles.sectionIncomplete : ''}`}>
+            <div
+              className={`${styles.bottleInfoSection} ${
+                isRepairMode && detailsSectionIncomplete ? styles.sectionIncomplete : ''
+              }`}>
               <h4>{text.details}</h4>
               {showBottleNameField ? (
               <div className={styles.fieldGroup}>
@@ -348,7 +351,9 @@ export default function BottleModal({
 
           {isInfoStep && (
             <div
-              className={`${styles.bottleInfoSection} ${wineTypeMissing ? styles.sectionIncomplete : ''}`}>
+              className={`${styles.bottleInfoSection} ${
+                isRepairMode && wineTypeMissing ? styles.sectionIncomplete : ''
+              }`}>
               <div className={styles.sectionTitleRow}>
                 <h4>{text.wineInfoTitle}</h4>
                 {wineTypeMissing && <span className={styles.incompleteBadge}>{incompleteLabel}</span>}
@@ -376,7 +381,10 @@ export default function BottleModal({
           )}
 
           {isQuestionStep && currentQuestion && (
-            <div className={`${styles.questionStep} ${currentQuestionMissing ? styles.sectionIncomplete : ''}`}>
+            <div
+              className={`${styles.questionStep} ${
+                isRepairMode && currentQuestionMissing ? styles.sectionIncomplete : ''
+              }`}>
               <div className={styles.sectionTitleRow}>
                 <h4 className={styles.questionStepTitle}>
                   {text.questionTitle
