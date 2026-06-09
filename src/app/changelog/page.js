@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.43.3',
+    date: '9 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Fix bottom action bar rendering on game creation screens',
+    ],
+  },
+
+  {
     version: '1.43.2',
     date: '9 giugno 2026',
     label: 'Auto',
