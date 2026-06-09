@@ -122,6 +122,66 @@
   margin: 6px 0 2px;
 }
 
+.settingsCard {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--button-secondary-border);
+  border-radius: 14px;
+  background: var(--background);
+}
+
+.settingsHeader {
+  display: grid;
+  gap: 4px;
+}
+
+.settingsTitle {
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--primary-text);
+}
+
+.settingsDescription {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.settingsOptions {
+  display: grid;
+  gap: 10px;
+}
+
+.settingsOption {
+  display: grid;
+  gap: 4px;
+  text-align: left;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 14px;
+  background: var(--foreground);
+  color: var(--primary-text);
+  padding: 12px 14px;
+  cursor: pointer;
+}
+
+.settingsOptionActive {
+  border-color: var(--success);
+  background: var(--success-surface);
+}
+
+.settingsOptionTitle {
+  font-size: 0.95rem;
+  font-weight: 900;
+}
+
+.settingsOptionText {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
 .buttonRowSpacer {
   height: 88px;
   flex: 0 0 88px;

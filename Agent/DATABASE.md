@@ -469,6 +469,24 @@ Questo permette di recuperarle in analisi successive senza rifare per forza la w
 
 ## Tabelle Live Multiplayer
 
+### `table_live_sessions`
+
+Sessione multiplayer tavolo generata da un evento pubblico.
+
+| Colonna               | Tipo         | Note                                                  |
+| --------------------- | ------------ | ----------------------------------------------------- |
+| `id`                  | `UUID PK`    |                                                       |
+| `event_id`            | `UUID FK`    | `table_live_events.id`                                |
+| `game_id`             | `UUID FK`    | `games.id`                                            |
+| `join_code`           | `TEXT`       | codice breve univoco per evento                       |
+| `status`              | `TEXT`       | `lobby`, `playing`, `finished`, `expired`             |
+| `current_bottle_index`| `INT`        | indice bottiglia corrente                             |
+| `answer_reveal_mode`  | `TEXT`       | `instant` o `end`; default `instant`                  |
+| `round_status`        | `TEXT`       | stato round interno                                   |
+| `last_activity_at`    | `TIMESTAMPTZ`| heartbeat / cleanup                                   |
+| `created_at`          | `TIMESTAMPTZ`|                                                       |
+| `updated_at`          | `TIMESTAMPTZ`|                                                       |
+
 ### `live_sessions`
 
 Sessione live avviata da host.

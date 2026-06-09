@@ -26,6 +26,7 @@ export default function TableLiveEntryClient({eventSlug, eventTitle, gameName, m
   const t = useT('tableLiveEvent')
   const [nickname, setNickname] = useState('')
   const [selectedAvatarId, setSelectedAvatarId] = useState(1)
+  const [answerRevealMode, setAnswerRevealMode] = useState('instant')
   const [loading, setLoading] = useState(false)
   const [redirecting, setRedirecting] = useState(false)
   const [error, setError] = useState('')
@@ -56,6 +57,7 @@ export default function TableLiveEntryClient({eventSlug, eventTitle, gameName, m
         body: JSON.stringify({
           eventSlug,
           nickname: nickname.trim(),
+          ...(!isJoin ? {answerRevealMode} : {}),
           ...(isJoin ? {joinCode: initialJoinCode.trim()} : {}),
         }),
       })
@@ -136,6 +138,38 @@ export default function TableLiveEntryClient({eventSlug, eventTitle, gameName, m
               )
             })}
           </div>
+
+          {!isJoin ? (
+            <>
+              <div className={styles.sectionDivider} aria-hidden="true" />
+              <section className={styles.settingsCard}>
+                <div className={styles.settingsHeader}>
+                  <strong className={styles.settingsTitle}>{t('answerMode.title')}</strong>
+                  <p className={styles.settingsDescription}>{t('answerMode.description')}</p>
+                </div>
+                <div className={styles.settingsOptions}>
+                  <button
+                    type="button"
+                    className={`${styles.settingsOption} ${
+                      answerRevealMode === 'instant' ? styles.settingsOptionActive : ''
+                    }`}
+                    onClick={() => setAnswerRevealMode('instant')}>
+                    <span className={styles.settingsOptionTitle}>{t('answerMode.instantTitle')}</span>
+                    <span className={styles.settingsOptionText}>{t('answerMode.instantBody')}</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.settingsOption} ${
+                      answerRevealMode === 'end' ? styles.settingsOptionActive : ''
+                    }`}
+                    onClick={() => setAnswerRevealMode('end')}>
+                    <span className={styles.settingsOptionTitle}>{t('answerMode.endTitle')}</span>
+                    <span className={styles.settingsOptionText}>{t('answerMode.endBody')}</span>
+                  </button>
+                </div>
+              </section>
+            </>
+          ) : null}
 
           {error ? <p className={styles.error}>{error}</p> : null}
         </form>

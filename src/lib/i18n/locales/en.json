@@ -459,7 +459,15 @@
     "backAction": "Back",
     "joinCodeValueLabel": "Game code",
     "eventLabel": "Event: {title}",
-    "discoverAppAction": "Discover the app"
+    "discoverAppAction": "Discover the app",
+    "answerMode": {
+      "title": "Quiz options",
+      "description": "Choose when to show the correct answers to players.",
+      "instantTitle": "Show answers right away",
+      "instantBody": "Immediate feedback after each question. This is the default mode.",
+      "endTitle": "Show answers at the end",
+      "endBody": "Players finish the quiz first and only see results at the end of the bottle."
+    }
   },
   "gamePlayPage": {
     "title": "Tasting Details",
@@ -911,7 +919,11 @@
       "bottleComplete": "Bottle complete!",
       "bottleResults": "Bottle results",
       "finalLeaderboardSoon": "You will see the final leaderboard shortly.",
-      "movingToBottle": "Moving to bottle {index}."
+      "movingToBottle": "Moving to bottle {index}.",
+      "finalRevealAction": "Reveal results",
+      "confirmAction": "Confirm",
+      "loadingNextBottle": "Opening the next bottle...",
+      "loadingLeaderboard": "Opening the final leaderboard..."
     },
     "results": {
       "bottleCounter": "Bottle {current}/{total}",
@@ -939,6 +951,7 @@
       "correctAnswer": "Correct answer:",
       "checking": "Checking...",
       "check": "Check",
+      "confirm": "Confirm",
       "bottleCounter": "Bottle {current}/{total}",
       "questionCounter": "Question {current} of {total}",
       "waitingOthers": "Waiting for others...",

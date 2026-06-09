@@ -23,10 +23,15 @@ export async function POST(request) {
     const body = await request.json()
     const eventSlug = String(body?.eventSlug || '').trim()
     const nickname = String(body?.nickname || '').trim()
+    const answerRevealMode = String(body?.answerRevealMode || 'instant')
+      .trim()
+      .toLowerCase()
 
     if (!eventSlug || !nickname) {
       return NextResponse.json({error: 'Missing required fields'}, {status: 400})
     }
+
+    const normalizedAnswerRevealMode = answerRevealMode === 'end' ? 'end' : 'instant'
 
     const supabase = await createServerSupabase()
     const {
@@ -58,6 +63,7 @@ export async function POST(request) {
           join_code: joinCode,
           status: 'lobby',
           current_bottle_index: 0,
+          answer_reveal_mode: normalizedAnswerRevealMode,
           round_status: 'waiting_answers',
           last_activity_at: new Date().toISOString(),
         })

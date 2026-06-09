@@ -270,9 +270,17 @@
 }
 
 .optSelected {
-  border-color: var(--selected-dark);
-  background: var(--selected-extra-light);
-  box-shadow: 0px 0px 0px 0px var(--selected-dark);
+  border-color: var(--secondary);
+  background: var(--secondary-100);
+  box-shadow: 0px 0px 0px 0px var(--secondary);
+  color: var(--secondary-text);
+}
+
+.optConfirmed {
+  border-color: var(--primary-text);
+  background: var(--secondary-100);
+  box-shadow: 0px 0px 0px 0px var(--secondary);
+  color: var(--primary-text);
 }
 
 .optCorrect {
@@ -378,6 +386,18 @@
     cursor: not-allowed;
     box-shadow: none;
   }
+}
+
+.blockingOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: color-mix(in srgb, var(--background) 82%, transparent);
+  backdrop-filter: blur(2px);
 }
 
 .secondaryButton {
@@ -870,13 +890,12 @@
   margin: 0;
   padding: 14px 16px;
   border-radius: 14px;
-  background:
-    linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--selected) 8%, var(--foreground)) 0%,
-      color-mix(in srgb, var(--selected) 18%, var(--foreground)) 50%,
-      color-mix(in srgb, var(--selected) 8%, var(--foreground)) 100%
-    );
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--selected) 8%, var(--foreground)) 0%,
+    color-mix(in srgb, var(--selected) 18%, var(--foreground)) 50%,
+    color-mix(in srgb, var(--selected) 8%, var(--foreground)) 100%
+  );
   background-size: 200% 100%;
   border: 1.5px solid color-mix(in srgb, var(--selected-dark) 20%, white 80%);
   color: var(--selected-dark);

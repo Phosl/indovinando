@@ -463,7 +463,15 @@
     "backAction": "Indietro",
     "joinCodeValueLabel": "Codice partita",
     "eventLabel": "Evento: {title}",
-    "discoverAppAction": "Scopri l'app"
+    "discoverAppAction": "Scopri l'app",
+    "answerMode": {
+      "title": "Opzioni quiz",
+      "description": "Scegli quando mostrare le risposte corrette ai partecipanti.",
+      "instantTitle": "Risposte subito",
+      "instantBody": "Controllo immediato dopo ogni domanda. È la modalità predefinita.",
+      "endTitle": "Risposte alla fine",
+      "endBody": "I giocatori completano il quiz e vedono i risultati solo alla fine della bottiglia."
+    }
   },
   "gamePlayPage": {
     "title": "Dettaglio Degustazione",
@@ -915,7 +923,11 @@
       "bottleComplete": "Bottiglia completata!",
       "bottleResults": "Risultati bottiglia",
       "finalLeaderboardSoon": "Vedrai subito la classifica finale.",
-      "movingToBottle": "Passaggio alla bottiglia {index}."
+      "movingToBottle": "Passaggio alla bottiglia {index}.",
+      "finalRevealAction": "Rivela risultati",
+      "confirmAction": "Conferma",
+      "loadingNextBottle": "Apro la prossima bottiglia...",
+      "loadingLeaderboard": "Apro la classifica finale..."
     },
     "results": {
       "bottleCounter": "Bottiglia {current}/{total}",
@@ -943,6 +955,7 @@
       "correctAnswer": "Risposta corretta:",
       "checking": "Controllo...",
       "check": "Controlla",
+      "confirm": "Conferma",
       "bottleCounter": "Bottiglia {current}/{total}",
       "questionCounter": "Domanda {current} di {total}",
       "waitingOthers": "In attesa degli altri...",

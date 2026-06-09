@@ -5,6 +5,14 @@
 - Stack: `Next.js` + `Supabase`
 - Main product pillars: degustazioni, corso vino, profili, community, subscriptions
 
+## Table-live answer reveal mode
+
+- La creazione sessione `table-live` supporta:
+  - `instant`: feedback immediato dopo ogni domanda
+  - `end`: reveal dei risultati alla schermata finale della bottiglia
+- Default: `instant`
+- Persistenza: `table_live_sessions.answer_reveal_mode`
+
 ## Profile phase 1
 
 - `profiles` now supports:

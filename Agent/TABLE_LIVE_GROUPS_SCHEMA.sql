@@ -28,6 +28,7 @@ create table if not exists public.table_live_sessions (
   join_code text not null,
   status text not null default 'lobby' check (status in ('lobby', 'playing', 'finished', 'expired')),
   current_bottle_index int not null default 0,
+  answer_reveal_mode text not null default 'instant' check (answer_reveal_mode in ('instant', 'end')),
   round_status text not null default 'waiting_answers' check (round_status in ('waiting_answers', 'advancing')),
   last_activity_at timestamptz not null default now(),
   created_at timestamptz not null default now(),

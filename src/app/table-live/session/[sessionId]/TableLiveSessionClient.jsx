@@ -66,6 +66,7 @@ export default function TableLiveSessionClient({sessionId}) {
   const [overlayStandings, setOverlayStandings] = useState([])
   const [isLoadingStandings, setIsLoadingStandings] = useState(false)
   const [playerMarkedNext, setPlayerMarkedNext] = useState(false)
+  const [pendingAction, setPendingAction] = useState('')
   const isMountedRef = useRef(true)
   const inFlightRef = useRef(false)
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
@@ -104,6 +105,11 @@ export default function TableLiveSessionClient({sessionId}) {
           setCheckedQuestions({})
           setRoundAnswers({})
           setPlayerMarkedNext(false)
+          setPendingAction('')
+        }
+
+        if (payload.session.status === 'finished') {
+          setPendingAction('')
         }
       }
     } catch {
@@ -190,6 +196,8 @@ export default function TableLiveSessionClient({sessionId}) {
   )
 
   const currentBottleIndex = data?.session?.currentBottleIndex || 0
+  const answerRevealMode = data?.session?.answerRevealMode === 'end' ? 'end' : 'instant'
+  const shouldRevealAnswersInstantly = answerRevealMode === 'instant'
   const currentBottle = data?.bottles?.[currentBottleIndex] || null
   const isLastBottle = currentBottleIndex >= (data?.bottles?.length || 1) - 1
   const currentQuestion = questions[slideIndex]
@@ -291,15 +299,17 @@ export default function TableLiveSessionClient({sessionId}) {
   }
 
   const handleCheck = async (questionId, optionId) => {
-    if (!playerAuth || !questionId || !optionId || checkedQuestions[questionId] || checking) return
+    if (!playerAuth || !questionId || !optionId || checkedQuestions[questionId] || checking) return false
     const currentQuestion = questions.find((question) => question.id === questionId)
     const isNeutral = isNeutralQuestion(currentQuestion)
     setChecking(true)
     const correctOptionId = data?.correctOptionByQuestion?.[questionId]
     const isCorrect = isNeutral ? null : correctOptionId === optionId
     const points = isCorrect === true ? 10 : 0
-    if (isCorrect === true) playSound('correct')
-    else if (isCorrect === false) playSound('wrong')
+    if (shouldRevealAnswersInstantly) {
+      if (isCorrect === true) playSound('correct')
+      else if (isCorrect === false) playSound('wrong')
+    }
     setCheckedQuestions((prev) => ({...prev, [questionId]: true}))
     setRoundAnswers((prev) => ({
       ...prev,
@@ -319,9 +329,18 @@ export default function TableLiveSessionClient({sessionId}) {
       })
       const payload = await response.json().catch(() => null)
       if (!response.ok) {
+        setCheckedQuestions((prev) => {
+          const next = {...prev}
+          delete next[questionId]
+          return next
+        })
+        setRoundAnswers((prev) => {
+          const next = {...prev}
+          delete next[questionId]
+          return next
+        })
         setError(payload?.error || tJoin('answerFailed'))
-        playSound('wrong')
-        return
+        return false
       }
       setRoundAnswers((prev) => ({
         ...prev,
@@ -332,11 +351,27 @@ export default function TableLiveSessionClient({sessionId}) {
         },
       }))
       loadSession()
+      return true
     } catch {
+      setCheckedQuestions((prev) => {
+        const next = {...prev}
+        delete next[questionId]
+        return next
+      })
+      setRoundAnswers((prev) => {
+        const next = {...prev}
+        delete next[questionId]
+        return next
+      })
       setError(tJoin('networkError'))
+      return false
     } finally {
       setChecking(false)
     }
+  }
+
+  const handleConfirmAndContinue = async (questionId, optionId) => {
+    await handleCheck(questionId, optionId)
   }
 
   const handleContinue = () => {
@@ -349,26 +384,32 @@ export default function TableLiveSessionClient({sessionId}) {
   }
 
   const handleNextBottle = async () => {
-    if (!allPlayersCompletedThisRound) return
+    if (!allPlayersCompletedThisRound || pendingAction) return
     if (!data?.me?.isHost) {
       setPlayerMarkedNext(true)
       return
     }
     playSound('bottleCompleted')
-    await fetch('/api/table-live/advance-auto', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({sessionId}),
-    })
+    setPendingAction('nextBottle')
+    try {
+      await fetch('/api/table-live/advance-auto', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({sessionId}),
+      })
+    } catch {
+      if (isMountedRef.current) setPendingAction('')
+    }
   }
 
   const handleFinalLeaderboard = async () => {
-    if (!allPlayersCompletedThisRound) return
+    if (!allPlayersCompletedThisRound || pendingAction) return
     if (!data?.me?.isHost) {
       setPlayerMarkedNext(true)
       return
     }
     playSound('bottleCompleted')
+    setPendingAction('leaderboard')
     try {
       await fetch('/api/table-live/advance-auto', {
         method: 'POST',
@@ -449,6 +490,24 @@ export default function TableLiveSessionClient({sessionId}) {
     />
   ) : null
 
+  const pendingOverlay =
+    pendingAction === 'nextBottle' ? (
+      <div className={styles.blockingOverlay}>
+        <Loader label={tPlayerLive('loadingNextBottle')} />
+      </div>
+    ) : pendingAction === 'leaderboard' ? (
+      <div className={styles.blockingOverlay}>
+        <Loader label={tPlayerLive('loadingLeaderboard')} />
+      </div>
+    ) : null
+
+  const mergedOverlays = (
+    <>
+      {overlays}
+      {pendingOverlay}
+    </>
+  )
+
   if (loading) {
     return (
       <div className={styles.fullPage}>
@@ -498,7 +557,7 @@ export default function TableLiveSessionClient({sessionId}) {
           <div className={styles.centeredCard}>
             <Loader label={tJoin('gameStartingTitle')} />
           </div>
-          {overlays}
+          {mergedOverlays}
         </div>
       )
     }
@@ -567,7 +626,7 @@ export default function TableLiveSessionClient({sessionId}) {
             </div>
           </>
         ) : null}
-        {overlays}
+        {mergedOverlays}
       </div>
     )
   }
@@ -609,7 +668,7 @@ export default function TableLiveSessionClient({sessionId}) {
             onOpenExit={() => setExitModalOpen(true)}
           />
         }
-        overlays={overlays}
+        overlays={mergedOverlays}
       />
     )
   }
@@ -644,6 +703,7 @@ export default function TableLiveSessionClient({sessionId}) {
         currentPlayerData={topBarPlayer}
         onNextBottle={handleNextBottle}
         onViewLeaderboard={handleFinalLeaderboard}
+        isActionPending={Boolean(pendingAction)}
         topBar={
           <TopBar
             playerData={topBarPlayer}
@@ -655,7 +715,7 @@ export default function TableLiveSessionClient({sessionId}) {
             onOpenExit={() => setExitModalOpen(true)}
           />
         }
-        overlays={overlays}
+        overlays={mergedOverlays}
       />
     )
   }
@@ -673,14 +733,18 @@ export default function TableLiveSessionClient({sessionId}) {
       selectedOption={selectedAnswers[currentQuestion?.id]}
       checkResult={roundAnswers[currentQuestion?.id]}
       correctOptionByQuestion={data.correctOptionByQuestion || {}}
+      shouldRevealAnswersInstantly={shouldRevealAnswersInstantly}
       clickedReady={clickedReady}
       isLastSlide={slideIndex >= questions.length - 1}
       comboCount={0}
       isCheckingAnswer={checking}
+      finalRevealLabel={tPlayerLive('finalRevealAction')}
+      confirmLabel={tPlayerLive('confirmAction')}
       onSelect={(questionId, optionId) =>
         setSelectedAnswers((prev) => ({...prev, [questionId]: optionId}))
       }
       onCheck={handleCheck}
+      onConfirmAndContinue={handleConfirmAndContinue}
       onContinue={handleContinue}
       topBar={
         <TopBar
@@ -694,7 +758,7 @@ export default function TableLiveSessionClient({sessionId}) {
           onOpenExit={() => setExitModalOpen(true)}
         />
       }
-      overlays={overlays}
+      overlays={mergedOverlays}
     />
   )
 }

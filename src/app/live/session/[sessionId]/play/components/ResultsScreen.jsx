@@ -31,6 +31,7 @@ export const ResultsScreen = memo(function ResultsScreen({
   currentPlayerData,
   onNextBottle,
   onViewLeaderboard,
+  isActionPending = false,
   topBar,
   overlays,
 }) {
@@ -244,14 +245,16 @@ export const ResultsScreen = memo(function ResultsScreen({
           <button
             className={styles.continueButton}
             onClick={onViewLeaderboard}
-            disabled={!allPlayersCompletedThisRound}>
+            disabled={!allPlayersCompletedThisRound || isActionPending}>
             {t('showFinalLeaderboard')}
           </button>
         ) : (
           <button
             className={styles.continueButton}
             onClick={onNextBottle}
-            disabled={!allPlayersCompletedThisRound || (!isHostUser && playerMarkedNext)}>
+            disabled={
+              !allPlayersCompletedThisRound || (!isHostUser && playerMarkedNext) || isActionPending
+            }>
             {!allPlayersCompletedThisRound && isHostUser
               ? `${playersReadyCount}/${readyParticipantsCount} ${t('playersReady')}`
               : t('nextBottle')}

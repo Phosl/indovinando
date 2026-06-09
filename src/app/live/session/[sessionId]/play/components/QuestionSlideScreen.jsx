@@ -27,12 +27,16 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
   selectedOption,
   checkResult,
   correctOptionByQuestion,
+  shouldRevealAnswersInstantly = true,
   clickedReady,
   isLastSlide,
   comboCount,
   isCheckingAnswer,
+  finalRevealLabel,
+  confirmLabel,
   onSelect,
   onCheck,
+  onConfirmAndContinue,
   onContinue,
   topBar,
   overlays,
@@ -50,12 +54,22 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
     (e) => {
       if (e.key !== 'Enter') return
       if (!isChecked && selectedOption && !isSlideTransitioning) {
-        onCheck(currentQuestion.id, selectedOption)
+        if (shouldRevealAnswersInstantly) onCheck(currentQuestion.id, selectedOption)
+        else onConfirmAndContinue(currentQuestion.id, selectedOption)
       } else if (isChecked && !isSlideTransitioning) {
         onContinue(currentQuestion.id)
       }
     },
-    [isChecked, selectedOption, isSlideTransitioning, currentQuestion, onCheck, onContinue],
+    [
+      isChecked,
+      selectedOption,
+      isSlideTransitioning,
+      currentQuestion,
+      onCheck,
+      onConfirmAndContinue,
+      onContinue,
+      shouldRevealAnswersInstantly,
+    ],
   )
 
   useEffect(() => {
@@ -113,7 +127,11 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
                 !currentQuestionIsNeutral && correctOptionByQuestion[currentQuestion?.id] === option.id
               let optClass = styles.optionButton
               if (isChecked) {
-                if (currentQuestionIsNeutral)
+                if (!shouldRevealAnswersInstantly)
+                  optClass = isSelected
+                    ? `${styles.optionButton} ${styles.optConfirmed}`
+                    : `${styles.optionButton} ${styles.optDimmed}`
+                else if (currentQuestionIsNeutral)
                   optClass = isSelected
                     ? `${styles.optionButton} ${styles.optSelected}`
                     : `${styles.optionButton} ${styles.optDimmed}`
@@ -138,7 +156,7 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
 
       <div
         className={`${styles.bottomPanel} ${!isChecked ? styles.mobileCheckFixed : ''} ${
-          isChecked
+          isChecked && shouldRevealAnswersInstantly
             ? currentQuestionIsNeutral
               ? ''
               : checkResult?.isCorrect === true
@@ -148,7 +166,7 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
                 : ''
             : ''
         }`}>
-        {isChecked && (
+        {isChecked && shouldRevealAnswersInstantly && (
           <div className={styles.resultFeedback}>
             {currentQuestionIsNeutral ? (
               <span className={styles.feedbackLabel}>+0</span>
@@ -179,16 +197,28 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
         {!isChecked ? (
           <button
             className={styles.checkButton}
-            onClick={() => onCheck(currentQuestion.id, selectedOption)}
+            onClick={() =>
+              shouldRevealAnswersInstantly
+                ? onCheck(currentQuestion.id, selectedOption)
+                : onConfirmAndContinue(currentQuestion.id, selectedOption)
+            }
             disabled={isCheckingAnswer}>
-            {isCheckingAnswer ? t('checking') : t('check')}
+            {isCheckingAnswer
+              ? t('checking')
+              : shouldRevealAnswersInstantly
+                ? t('check')
+                : confirmLabel || t('confirm')}
           </button>
         ) : (
           <button
             className={styles.continueButton}
             onClick={() => onContinue(currentQuestion.id)}
             disabled={isSlideTransitioning}>
-            {isLastSlide ? (clickedReady ? t('waitingOthers') : t('seeResults')) : t('continue')}
+            {isLastSlide
+              ? clickedReady
+                ? t('waitingOthers')
+                : finalRevealLabel || t('seeResults')
+              : t('continue')}
           </button>
         )}
       </div>
