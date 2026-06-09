@@ -260,7 +260,6 @@ export default function BottleModal({
   const backLabel = text.back
   const finalTitle = text.done
   const finalHint = text.finalHint
-  const incompleteLabel = text.incompleteBadge || (lang === 'en' ? 'Incomplete' : 'Incompleto')
   const detailsSectionIncomplete = bottleNameMissing || producerMissing || yearMissing
   const showBottleNameField = !isRepairMode || repairSnapshot?.bottleNameMissing
   const showProducerField = !isRepairMode || repairSnapshot?.producerMissing
@@ -304,7 +303,6 @@ export default function BottleModal({
               <div className={styles.fieldGroup}>
                 <div className={styles.fieldLabelRow}>
                   <label className={styles.fieldLabel}>{text.bottleNameLabel || text.bottleNamePlaceholder}</label>
-                  {bottleNameMissing && <span className={styles.incompleteBadge}>{incompleteLabel}</span>}
                 </div>
                 <input
                   className={`${styles.inputField} ${bottleNameMissing ? styles.inputFieldIncomplete : ''}`}
@@ -319,7 +317,6 @@ export default function BottleModal({
               <div className={styles.fieldGroup}>
                 <div className={styles.fieldLabelRow}>
                   <label className={styles.fieldLabel}>{text.producerLabel || text.producerPlaceholder}</label>
-                  {producerMissing && <span className={styles.incompleteBadge}>{incompleteLabel}</span>}
                 </div>
                 <input
                   className={`${styles.inputField} ${producerMissing ? styles.inputFieldIncomplete : ''}`}
@@ -334,7 +331,6 @@ export default function BottleModal({
               <div className={styles.fieldGroup}>
                 <div className={styles.fieldLabelRow}>
                   <label className={styles.fieldLabel}>{text.yearLabel || text.yearPlaceholder}</label>
-                  {yearMissing && <span className={styles.incompleteBadge}>{incompleteLabel}</span>}
                 </div>
                 <input
                   className={`${styles.inputField} ${yearMissing ? styles.inputFieldIncomplete : ''}`}
@@ -356,7 +352,6 @@ export default function BottleModal({
               }`}>
               <div className={styles.sectionTitleRow}>
                 <h4>{text.wineInfoTitle}</h4>
-                {wineTypeMissing && <span className={styles.incompleteBadge}>{incompleteLabel}</span>}
               </div>
               {showInfoChecklist ? (
               <ul className={styles.infoChecklist}>
@@ -390,9 +385,6 @@ export default function BottleModal({
                   {text.questionTitle
                     ?.replace('{index}', String(currentQuestionIndex + 1))}
                 </h4>
-                {currentQuestionMissing && (
-                  <span className={styles.incompleteBadge}>{incompleteLabel}</span>
-                )}
               </div>
               <p className={styles.questionStepText}>{currentQuestion.text}</p>
 
