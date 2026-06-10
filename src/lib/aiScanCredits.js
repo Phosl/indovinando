@@ -1,4 +1,4 @@
-export const DEFAULT_AI_SCAN_CREDITS_TOTAL = 12
+export const DEFAULT_AI_SCAN_CREDITS_TOTAL = 30
 
 export function normalizeAiScanCredits(rawProfile = {}) {
   const totalBase = Number(

@@ -251,6 +251,22 @@ a.avatarPickerBtn {
   white-space: nowrap;
 }
 
+.creditsBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--success-50);
+  border: 1px solid var(--success-100);
+  color: var(--success-text);
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
 .publicProfileRow {
   margin-top: 14px;
   display: flex;

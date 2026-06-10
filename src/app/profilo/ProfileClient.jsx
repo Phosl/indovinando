@@ -15,6 +15,7 @@ import {useT} from '@/lib/i18n/useT'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {isBusinessProfile, isProfileComplete} from '@/lib/profileSetup'
 import CommunityHighlightsCard from '@/components/community/CommunityHighlightsCard'
+import {normalizeAiScanCredits} from '@/lib/aiScanCredits'
 import styles from './profilo.module.scss'
 // ── Player rank levels ────────────────────────────────────────────────────────
 const PLAYER_LEVELS = [
@@ -145,6 +146,7 @@ export default function ProfileClient({
     initialAvatar && ALL_AVATARS.includes(initialAvatar) ? initialAvatar : '😎',
   )
   const hasBusinessProfile = useMemo(() => isBusinessProfile(profileData || {}), [profileData])
+  const aiCredits = useMemo(() => normalizeAiScanCredits(profileData || {}), [profileData])
 
   useEffect(() => {
     const saved = localStorage.getItem(AVATAR_STORAGE_KEY)
@@ -438,6 +440,16 @@ export default function ProfileClient({
               <span className={styles.avatarPickerDivider} />
               <span className={styles.avatarPickerLabel}>{t('editPreferences')}</span>
             </Link>
+          </div>
+
+          <div className={styles.optionDivider} />
+
+          <div className={styles.avatarRow}>
+            <span className={styles.labelWithIcon}>
+              <Icon src="/icons/token.svg" size={20} />
+              <span className={styles.label}>{t('credits')}</span>
+            </span>
+            <span className={styles.creditsBadge}>{aiCredits.remaining}</span>
           </div>
 
           {hasBusinessProfile ? (

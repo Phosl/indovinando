@@ -1,16 +1,16 @@
 alter table public.profiles
-  add column if not exists ai_scan_credits_total integer not null default 12,
+  add column if not exists ai_scan_credits_total integer not null default 30,
   add column if not exists ai_scan_credits_bonus integer not null default 0,
   add column if not exists ai_scan_credits_used integer not null default 0;
 
 alter table public.profiles
-  alter column ai_scan_credits_total set default 12,
+  alter column ai_scan_credits_total set default 30,
   alter column ai_scan_credits_bonus set default 0,
   alter column ai_scan_credits_used set default 0;
 
 update public.profiles
 set
-  ai_scan_credits_total = coalesce(ai_scan_credits_total, 12),
+  ai_scan_credits_total = coalesce(ai_scan_credits_total, 30),
   ai_scan_credits_bonus = coalesce(ai_scan_credits_bonus, 0),
   ai_scan_credits_used = coalesce(ai_scan_credits_used, 0)
 where
@@ -37,7 +37,7 @@ begin
 
   update public.profiles as profile_row
   set
-    ai_scan_credits_total = coalesce(profile_row.ai_scan_credits_total, 12),
+    ai_scan_credits_total = coalesce(profile_row.ai_scan_credits_total, 30),
     ai_scan_credits_bonus = coalesce(profile_row.ai_scan_credits_bonus, 0),
     ai_scan_credits_used = coalesce(profile_row.ai_scan_credits_used, 0)
   where profile_row.id = p_user_id;
@@ -50,7 +50,7 @@ begin
   where
     profile_row.id = p_user_id
     and (
-      coalesce(profile_row.ai_scan_credits_total, 12) +
+      coalesce(profile_row.ai_scan_credits_total, 30) +
       coalesce(profile_row.ai_scan_credits_bonus, 0) -
       coalesce(profile_row.ai_scan_credits_used, 0)
     ) >= v_amount

@@ -66,7 +66,7 @@ create table if not exists profiles (
   business_address text,
   business_latitude double precision,
   business_longitude double precision,
-  ai_scan_credits_total integer not null default 12,
+  ai_scan_credits_total integer not null default 30,
   ai_scan_credits_bonus integer not null default 0,
   ai_scan_credits_used integer not null default 0,
   profile_completed_at timestamptz,
@@ -117,7 +117,7 @@ begin
 
   update public.profiles as profile_row
   set
-    ai_scan_credits_total = coalesce(profile_row.ai_scan_credits_total, 12),
+    ai_scan_credits_total = coalesce(profile_row.ai_scan_credits_total, 30),
     ai_scan_credits_bonus = coalesce(profile_row.ai_scan_credits_bonus, 0),
     ai_scan_credits_used = coalesce(profile_row.ai_scan_credits_used, 0)
   where profile_row.id = p_user_id;
@@ -130,7 +130,7 @@ begin
   where
     profile_row.id = p_user_id
     and (
-      coalesce(profile_row.ai_scan_credits_total, 12) +
+      coalesce(profile_row.ai_scan_credits_total, 30) +
       coalesce(profile_row.ai_scan_credits_bonus, 0) -
       coalesce(profile_row.ai_scan_credits_used, 0)
     ) >= v_amount
