@@ -1946,6 +1946,11 @@
   font-weight: 700;
 }
 
+.autoPageAnalyzeAutoHint {
+  color: var(--success-text);
+  font-weight: 800;
+}
+
 @keyframes autoAnalyzeProgress {
   0% {
     transform: translateX(-115%);
@@ -2133,6 +2138,50 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.autoAddMoreBottlesCard {
+  width: 100%;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 20px;
+  border: 2px dashed var(--primary-200);
+  background: linear-gradient(180deg, var(--white) 0%, var(--primary-25) 100%);
+  text-align: left;
+
+  strong {
+    color: var(--primary-text);
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  span {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+}
+
+.autoAddMoreBottlesIcon {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-50);
+  color: var(--primary-text);
+}
+
+.autoAddMoreBottlesCopy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .autoBottleSummaryCard {

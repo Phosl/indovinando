@@ -656,6 +656,18 @@ function uniqueIds(values) {
   ]
 }
 
+function isGenericBottleFilename(value) {
+  const normalized = String(value || '')
+    .trim()
+    .toLowerCase()
+  if (!normalized) return true
+  return (
+    /^image\.(jpe?g|png|webp|heic|heif)$/i.test(normalized) ||
+    /^photo\.(jpe?g|png|webp|heic|heif)$/i.test(normalized) ||
+    /^blob$/i.test(normalized)
+  )
+}
+
 function readStoredIds(storage, key) {
   if (!storage || !key) return []
   try {
@@ -873,6 +885,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   const [webSearchingImageId, setWebSearchingImageId] = useState('')
   const [isAnalyzingAll, setIsAnalyzingAll] = useState(false)
   const [currentAnalyzeBatchCount, setCurrentAnalyzeBatchCount] = useState(0)
+  const [currentAnalyzeBatchIndex, setCurrentAnalyzeBatchIndex] = useState(0)
+  const [currentAnalyzeBatchTotal, setCurrentAnalyzeBatchTotal] = useState(0)
+  const [isAutoAnalyzingAfterUpload, setIsAutoAnalyzingAfterUpload] = useState(false)
   const [isCreatingQuiz, setIsCreatingQuiz] = useState(false)
   const [webSearchReview, setWebSearchReview] = useState(null)
   const [lastWebSearchReview, setLastWebSearchReview] = useState(null)
@@ -1434,6 +1449,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   )
   const [webSearchLoadingStep, setWebSearchLoadingStep] = useState(0)
   const [analyzeLoadingStep, setAnalyzeLoadingStep] = useState(0)
+  const isAnalyzeOverlayVisible = isAnalyzingAll || !!analyzingImageId
 
   useEffect(() => {
     if (!webSearchingImageId) {
@@ -1449,7 +1465,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   }, [webSearchLoadingMessages.length, webSearchingImageId])
 
   useEffect(() => {
-    if (!isAnalyzingAll) {
+    if (!isAnalyzeOverlayVisible) {
       setAnalyzeLoadingStep(0)
       return undefined
     }
@@ -1459,7 +1475,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     }, 1400)
 
     return () => clearInterval(intervalId)
-  }, [analyzeLoadingMessages.length, isAnalyzingAll])
+  }, [analyzeLoadingMessages.length, isAnalyzeOverlayVisible])
 
   useEffect(() => {
     return () => {
@@ -1646,6 +1662,39 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     [getBottleCoreData],
   )
 
+  const getBottleDisplayName = useCallback(
+    (image, index = 0) => {
+      const recognizedName = String(image?.recognized_name || '').trim()
+      if (recognizedName) return recognizedName
+
+      const originalFilename = String(image?.original_filename || '').trim()
+      if (originalFilename && !isGenericBottleFilename(originalFilename)) {
+        return originalFilename
+      }
+
+      return t('automaticBottleFallbackName', {index: String(index + 1)})
+    },
+    [t],
+  )
+
+  const reanalyzableImages = useMemo(
+    () =>
+      uploadedImages.filter((image) => {
+        if (!image?.id) return false
+        if (['processing', 'uploaded', 'failed'].includes(image.status)) return true
+        if (image.status !== 'recognized') return false
+        return !getBottleCompletionMeta(image).isComplete
+      }),
+    [getBottleCompletionMeta, uploadedImages],
+  )
+  const reanalyzableImageIds = useMemo(
+    () => reanalyzableImages.map((image) => image.id).filter(Boolean),
+    [reanalyzableImages],
+  )
+  const reanalyzableCount = reanalyzableImageIds.length
+  const canReanalyzeAll =
+    reanalyzableCount > 0 && aiScanCredits.remaining >= reanalyzableCount
+
   const recognizedBottleCount = useMemo(
     () => uploadedImages.filter((image) => image.status === 'recognized').length,
     [uploadedImages],
@@ -1653,6 +1702,10 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
 
   const selectedBottle = useMemo(
     () => uploadedImages.find((image) => image.id === selectedBottleId) || null,
+    [selectedBottleId, uploadedImages],
+  )
+  const selectedBottleIndex = useMemo(
+    () => uploadedImages.findIndex((image) => image.id === selectedBottleId),
     [selectedBottleId, uploadedImages],
   )
 
@@ -1709,6 +1762,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   async function handleFilesUpload(fileList) {
     if (!userId || !fileList?.length) return
 
+    let autoAnalyzeIds = []
     setIsUploading(true)
     setUploadProgress({
       current: 0,
@@ -1857,6 +1911,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
           return next
         })
         setUploadedImages((prev) => [...createdRows, ...prev])
+        if (createdIds.length > 1) {
+          autoAnalyzeIds = createdIds
+        }
       }
     } catch (error) {
       setUploadError(`${t('automaticUploadError')} (${error?.message || 'unknown'})`)
@@ -1874,6 +1931,19 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       })
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
+      }
+    }
+
+    if (autoAnalyzeIds.length > 0) {
+      if (aiScanCredits.remaining >= autoAnalyzeIds.length) {
+        setIsAutoAnalyzingAfterUpload(true)
+        await handleAnalyzeAll(autoAnalyzeIds, {autoTriggered: true})
+      } else {
+        setToast({
+          message: t('automaticAutoAnalyzeInsufficientCredits'),
+          tone: 'error',
+          duration: 3600,
+        })
       }
     }
   }
@@ -2151,15 +2221,18 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     }
   }
 
-  async function handleAnalyzeAll() {
+  async function handleAnalyzeAll(overrideIds = null, options = {}) {
     if (isAnalyzingAll || analyzingImageId || webSearchingImageId) return
-    const ids = pendingAnalyzeImages.map((image) => image.id).filter(Boolean)
+    const ids = Array.isArray(overrideIds)
+      ? overrideIds.map((id) => String(id || '').trim()).filter(Boolean)
+      : pendingAnalyzeImages.map((image) => image.id).filter(Boolean)
     if (!ids.length) return
-    if (!canAnalyzeAll) {
+    const neededCredits = ids.length
+    if (aiScanCredits.remaining < neededCredits) {
       setUploadError(
-        pendingAnalyzeCount > aiScanCredits.remaining
+        neededCredits > aiScanCredits.remaining
           ? t('automaticAnalyzeAllCreditsNeeded', {
-              needed: String(pendingAnalyzeCount),
+              needed: String(neededCredits),
               remaining: String(aiScanCredits.remaining),
             })
           : t('automaticCreditsInsufficient'),
@@ -2168,12 +2241,16 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     }
     setIsAnalyzingAll(true)
     setCurrentAnalyzeBatchCount(Math.min(AUTO_ANALYZE_BATCH_SIZE, ids.length))
+    setCurrentAnalyzeBatchTotal(Math.ceil(ids.length / AUTO_ANALYZE_BATCH_SIZE))
+    setCurrentAnalyzeBatchIndex(1)
     setUploadError('')
     const previousCreditsRemaining = aiScanCredits.remaining
     let finalCreditsRemaining = previousCreditsRemaining
     try {
       for (let startIndex = 0; startIndex < ids.length; startIndex += AUTO_ANALYZE_BATCH_SIZE) {
         const batchIds = ids.slice(startIndex, startIndex + AUTO_ANALYZE_BATCH_SIZE)
+        const batchNumber = Math.floor(startIndex / AUTO_ANALYZE_BATCH_SIZE) + 1
+        setCurrentAnalyzeBatchIndex(batchNumber)
         setCurrentAnalyzeBatchCount(batchIds.length)
         const {response, result} = await postJsonWithRetry(
           '/api/auto-tasting/analyze',
@@ -2189,7 +2266,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
           if (response.status === 402) {
             setUploadError(
               t('automaticAnalyzeAllCreditsNeeded', {
-                needed: String(pendingAnalyzeCount),
+                needed: String(neededCredits),
                 remaining: String(result?.credits?.remaining ?? aiScanCredits.remaining),
               }),
             )
@@ -2222,6 +2299,11 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     } finally {
       setIsAnalyzingAll(false)
       setCurrentAnalyzeBatchCount(0)
+      setCurrentAnalyzeBatchIndex(0)
+      setCurrentAnalyzeBatchTotal(0)
+      if (options.autoTriggered) {
+        setIsAutoAnalyzingAfterUpload(false)
+      }
     }
   }
 
@@ -2543,7 +2625,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     scrollPageTop()
   }, [autoStep, selectedBottleId])
 
-  const automaticPageTitle = selectedBottle?.recognized_name || t('title')
+  const automaticPageTitle = selectedBottle
+    ? getBottleDisplayName(selectedBottle, selectedBottleIndex >= 0 ? selectedBottleIndex : 0)
+    : t('title')
 
   function handleTopBack() {
     if (selectedBottleId) {
@@ -2634,10 +2718,23 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                   })}
             </strong>
             <span>{analyzeLoadingMessages[analyzeLoadingStep]}</span>
+            {isAnalyzingAll && currentAnalyzeBatchTotal > 1 ? (
+              <small>
+                {t('automaticAnalyzeBatchProgress', {
+                  current: String(currentAnalyzeBatchIndex || 1),
+                  total: String(currentAnalyzeBatchTotal),
+                })}
+              </small>
+            ) : null}
             <div className={styles.autoPageAnalyzeProgressBar} aria-hidden="true">
               <span />
             </div>
             <small>{t('automaticAnalyzeOverlayHint')}</small>
+            {isAutoAnalyzingAfterUpload ? (
+              <small className={styles.autoPageAnalyzeAutoHint}>
+                {t('automaticAnalyzeOverlayAutoHint')}
+              </small>
+            ) : null}
             <small className={styles.autoPageAnalyzePatience}>
               {t('automaticAnalyzeOverlayPatience')}
             </small>
@@ -2805,7 +2902,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
             <p className={styles.autoModeDescriptionCentered}>{t('automaticReviewDescription')}</p>
 
             <section className={styles.autoBottleSummaryList}>
-              {uploadedImages.map((image) => {
+              {uploadedImages.map((image, index) => {
                 const completion = getBottleCompletionMeta(image)
                 const {details, grapes, region, appellation, wineType} = getBottleCoreData(image)
                 const previewFailed = failedPreviewIds.includes(image.id)
@@ -2842,7 +2939,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                     </div>
                     <div className={styles.autoBottleSummaryBody}>
                       <div className={styles.autoBottleSummaryHeader}>
-                        <strong>{image.recognized_name || image.original_filename}</strong>
+                        <strong>{getBottleDisplayName(image, index)}</strong>
                         <div className={styles.autoBottleSummaryHeaderBadges}>
                           <span
                             className={`${styles.autoBottleStatusBadge} ${
@@ -2874,9 +2971,11 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                         </div>
                       </div>
                       <p className={styles.autoBottleSummaryMeta}>
-                        {[image.recognized_producer, image.recognized_vintage]
-                          .filter(Boolean)
-                          .join(' · ') || t('automaticBottlePendingLabel')}
+                        {image.status === 'recognized'
+                          ? [image.recognized_producer, image.recognized_vintage]
+                              .filter(Boolean)
+                              .join(' · ') || t('automaticBottlePendingLabel')
+                          : t('automaticBottleAnalyzingLabel')}
                       </p>
                       <div className={styles.autoBottleSummaryFacts}>
                         {[details.country, region, appellation, wineType, grapes[0]]
@@ -2895,6 +2994,19 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                 )
               })}
             </section>
+
+            <button
+              type="button"
+              className={styles.autoAddMoreBottlesCard}
+              onClick={() => setAutoStep(1)}>
+              <span className={styles.autoAddMoreBottlesIcon}>
+                <Icon name="photo" size={22} />
+              </span>
+              <div className={styles.autoAddMoreBottlesCopy}>
+                <strong>{t('automaticAddMoreBottlesTitle')}</strong>
+                <span>{t('automaticAddMoreBottlesDescription')}</span>
+              </div>
+            </button>
           </>
         ) : null}
 
@@ -2916,6 +3028,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
               const hasMatch = !!selectedBottle?.recognized_payload?.catalog_match?.matched
               const hasCatalogSync = !!selectedBottle?.recognized_payload?.catalog_sync?.synced
               const hasCatalogPresence = hasMatch || hasCatalogSync
+              const shouldAllowReanalyze =
+                selectedBottle.status !== 'recognized' ||
+                (detailCompletion ? !detailCompletion.isComplete : true)
               const webEnrichmentMeta = selectedBottle?.recognized_payload?.web_enrichment || {}
               const hasWebSources = Array.isArray(webEnrichmentMeta.sources)
               const hasWebEnrichment =
@@ -3123,7 +3238,10 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                       </div>
 
                       <p className={styles.autoBottleFoundName}>
-                        {selectedBottle.recognized_name || selectedBottle.original_filename}
+                        {getBottleDisplayName(
+                          selectedBottle,
+                          selectedBottleIndex >= 0 ? selectedBottleIndex : 0,
+                        )}
                       </p>
 
                       {[
@@ -3153,9 +3271,13 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
 
                       {!detailEditMode ? (
                         <>
-                          {selectedBottle.status !== 'recognized' ? (
+                          {shouldAllowReanalyze ? (
                             <div className={styles.autoBottlePendingCard}>
-                              <p>{t('automaticBottlePendingHint')}</p>
+                              <p>
+                                {selectedBottle.status === 'recognized'
+                                  ? t('automaticBottleReanalyzeHint')
+                                  : t('automaticBottlePendingHint')}
+                              </p>
                               <button
                                 type="button"
                                 className="btn btn-ai"
@@ -3163,7 +3285,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                                 onClick={() => handleAnalyzeImage(selectedBottle.id)}>
                                 {analyzingImageId === selectedBottle.id
                                   ? t('automaticAnalyzingSingle')
-                                  : t('automaticAnalyzeAction')}
+                                  : selectedBottle.status === 'recognized'
+                                    ? t('automaticAnalyzeAgainAction')
+                                    : t('automaticAnalyzeAction')}
                               </button>
                             </div>
                           ) : null}
@@ -3640,16 +3764,24 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
             disabled={
               pendingAnalyzeCount > 0
                 ? !canAnalyzeAll || isUploading || !!analyzingImageId || isAnalyzingAll
-                : false
+                : reanalyzableCount > 0
+                  ? !canReanalyzeAll || isUploading || !!analyzingImageId || isAnalyzingAll
+                  : false
             }
             onClick={
-              pendingAnalyzeCount > 0 ? handleAnalyzeAll : () => setAutoStep(2)
+              pendingAnalyzeCount > 0
+                ? () => handleAnalyzeAll()
+                : reanalyzableCount > 0
+                  ? () => handleAnalyzeAll(reanalyzableImageIds)
+                  : () => setAutoStep(2)
             }>
             {isAnalyzingAll
               ? t('automaticAnalyzingAll')
               : pendingAnalyzeCount > 0
                 ? t('automaticAnalyzeActionWithCount', {count: String(pendingAnalyzeCount)})
-                : t('continue')}
+                : reanalyzableCount > 0
+                  ? t('automaticAnalyzeAgainAction')
+                  : t('continue')}
           </button>
         </div>
       ) : null}

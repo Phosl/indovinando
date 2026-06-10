@@ -18,7 +18,9 @@ export default function GamePlayPageClient({
 }) {
   const router = useRouter()
   const t = useT('gamePlayPage')
+  const tc = useT('common')
   const [isDeleting, setIsDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
 
   const handleDelete = async () => {
     const message = t('deleteConfirm')
@@ -26,8 +28,15 @@ export default function GamePlayPageClient({
       return
     }
     setIsDeleting(true)
+    setDeleteError('')
     try {
-      await onDelete(game.id)
+      const result = await onDelete(game.id)
+      if (!result?.ok) {
+        setDeleteError(result?.error || t('deleteError'))
+        return
+      }
+      router.push('/miei-giochi')
+      router.refresh()
     } finally {
       setIsDeleting(false)
     }
@@ -48,12 +57,15 @@ export default function GamePlayPageClient({
         />
 
         {isOwner && (
-          <button
-            onClick={handleDelete}
-            disabled={isDeleting}
-            className={`btn btn-small danger ${isDeleting ? 'disabled' : ''}`}>
-            {isDeleting ? '...' : t('delete')}
-          </button>
+          <>
+            <button
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className={`btn btn-small danger ${isDeleting ? 'disabled' : ''}`}>
+              {isDeleting ? '...' : t('delete')}
+            </button>
+            {deleteError ? <p className={styles.deleteError}>{deleteError}</p> : null}
+          </>
         )}
       </div>
     </main>
