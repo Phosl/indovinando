@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.43.10',
+    date: '10 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Update GameCreateClient.jsx',
+    ],
+  },
+
+  {
     version: '1.43.9',
     date: '10 giugno 2026',
     label: 'Auto',
