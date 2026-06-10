@@ -132,8 +132,6 @@ const OPENAI_TEMPLATE_OPTION_KEYS = {
 
 const MIN_AUTO_QUIZ_OPTIONS = 5
 const AUTO_TASTING_LIST_TIMEOUT_MS = 12000
-const AUTO_ANALYZE_BATCH_SIZE = 3
-
 const WINE_TYPE_ALIASES = {
   Bianco: ['white', 'bianco', 'blanc', 'blanco', 'weiss'],
   Rosso: ['red', 'rosso', 'rouge', 'tinto'],
@@ -2240,26 +2238,23 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       return
     }
     setIsAnalyzingAll(true)
-    setCurrentAnalyzeBatchCount(Math.min(AUTO_ANALYZE_BATCH_SIZE, ids.length))
-    setCurrentAnalyzeBatchTotal(Math.ceil(ids.length / AUTO_ANALYZE_BATCH_SIZE))
+    setCurrentAnalyzeBatchCount(ids.length)
+    setCurrentAnalyzeBatchTotal(ids.length)
     setCurrentAnalyzeBatchIndex(1)
     setUploadError('')
     const previousCreditsRemaining = aiScanCredits.remaining
     let finalCreditsRemaining = previousCreditsRemaining
     try {
-      for (let startIndex = 0; startIndex < ids.length; startIndex += AUTO_ANALYZE_BATCH_SIZE) {
-        const batchIds = ids.slice(startIndex, startIndex + AUTO_ANALYZE_BATCH_SIZE)
-        const batchNumber = Math.floor(startIndex / AUTO_ANALYZE_BATCH_SIZE) + 1
-        setCurrentAnalyzeBatchIndex(batchNumber)
-        setCurrentAnalyzeBatchCount(batchIds.length)
+      for (let index = 0; index < ids.length; index += 1) {
+        const imageId = ids[index]
+        setCurrentAnalyzeBatchIndex(index + 1)
         const {response, result} = await postJsonWithRetry(
           '/api/auto-tasting/analyze',
           {
-            analyzeAll: true,
-            imageIds: batchIds,
+            imageId,
             useWebEnrichment: true,
           },
-          {timeoutMs: 60000, retries: 2},
+          {timeoutMs: 35000, retries: 3},
         )
         if (!response.ok) {
           if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))
@@ -2272,7 +2267,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
             )
             return
           }
-          setUploadError(`${t('automaticAnalyzeError')} (${result?.error || 'analyze all'})`)
+          setUploadError(`${t('automaticAnalyzeError')} (${result?.error || 'analyze'})`)
           return
         }
         if (result?.credits) {
@@ -2710,11 +2705,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
             <strong>
               {analyzingImageId
                 ? t('automaticAnalyzingSingle')
-                : t('automaticAnalyzingAllCount', {
-                    count: String(
-                      currentAnalyzeBatchCount ||
-                        Math.min(AUTO_ANALYZE_BATCH_SIZE, pendingAnalyzeCount),
-                    ),
+                : t('automaticAnalyzeBottleProgress', {
+                    current: String(currentAnalyzeBatchIndex || 1),
+                    total: String(currentAnalyzeBatchTotal || currentAnalyzeBatchCount || pendingAnalyzeCount),
                   })}
             </strong>
             <span>{analyzeLoadingMessages[analyzeLoadingStep]}</span>

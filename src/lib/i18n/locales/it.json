@@ -432,6 +432,7 @@
     "automaticPreviewLoadingLabel": "Anteprime caricate: {loaded}/{total}",
     "automaticPreviewUnavailable": "Anteprima non disponibile",
     "automaticAnalyzingAllCount": "Analizzo {count} bottiglie",
+    "automaticAnalyzeBottleProgress": "Analizzo bottiglia {current} di {total}",
     "automaticAnalyzeLoadingStepLabel": "Leggo le etichette",
     "automaticAnalyzeLoadingStepName": "Cerco nome e produttore",
     "automaticAnalyzeLoadingStepWine": "Riconosco il vino",

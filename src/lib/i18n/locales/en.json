@@ -428,6 +428,7 @@
     "automaticPreviewLoadingLabel": "Previews loaded: {loaded}/{total}",
     "automaticPreviewUnavailable": "Preview unavailable",
     "automaticAnalyzingAllCount": "Analyzing {count} bottles",
+    "automaticAnalyzeBottleProgress": "Analyzing bottle {current} of {total}",
     "automaticAnalyzeLoadingStepLabel": "Reading labels",
     "automaticAnalyzeLoadingStepName": "Looking for name and producer",
     "automaticAnalyzeLoadingStepWine": "Recognizing the wine",
