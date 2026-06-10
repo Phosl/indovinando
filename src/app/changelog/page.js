@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.43.13',
+    date: '10 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Add return-to-photo CTA in automatic bottle review step',
+    ],
+  },
+
+  {
     version: '1.43.12',
     date: '10 giugno 2026',
     label: 'Auto',
