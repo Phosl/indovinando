@@ -879,6 +879,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   const [isApplyingWebDiff, setIsApplyingWebDiff] = useState(false)
   const [, setWebPreviewUsageByImageId] = useState({})
   const [quizTemplateMode, setQuizTemplateMode] = useState('openai')
+  const [generatedQuizSignature, setGeneratedQuizSignature] = useState('')
   const [autoStep, setAutoStep] = useState(1)
   const [selectedBottleId, setSelectedBottleId] = useState('')
   const [detailEditMode, setDetailEditMode] = useState(false)
@@ -899,7 +900,6 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   )
   const [isCreditsSpendAnimating, setIsCreditsSpendAnimating] = useState(false)
   const [isCreditsInfoOpen, setIsCreditsInfoOpen] = useState(false)
-  const lastLoggedImagesRef = useRef('')
   const creditsAnimationTimeoutRef = useRef(null)
   const creditsAnimationIntervalRef = useRef(null)
 
@@ -1400,107 +1400,6 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       duration: 4200,
     })
   }, [uploadError])
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || uploadedImages.length === 0) return
-
-    const snapshot = JSON.stringify(
-      uploadedImages.map((image) => ({
-        id: image.id,
-        status: image.status,
-        recognized_name: image.recognized_name || null,
-        recognized_producer: image.recognized_producer || null,
-        recognized_vintage: image.recognized_vintage || null,
-        recognition_confidence: image.recognition_confidence || null,
-        review_required: !!image.recognized_payload?.review?.required,
-        catalog_match: !!image.recognized_payload?.catalog_match?.matched,
-        country: image.recognized_payload?.catalog_details?.country || null,
-        region:
-          image.recognized_payload?.catalog_details?.quiz_region ||
-          image.recognized_payload?.catalog_details?.region ||
-          null,
-        appellation:
-          image.recognized_payload?.catalog_details?.quiz_appellation ||
-          image.recognized_payload?.catalog_details?.appellation ||
-          null,
-        grapes: Array.isArray(image.recognized_payload?.catalog_details?.grapes)
-          ? image.recognized_payload.catalog_details.grapes
-          : [],
-        short_description: image.recognized_payload?.catalog_details?.short_description || null,
-        why_notable: image.recognized_payload?.catalog_details?.why_notable || null,
-        body: image.recognized_payload?.catalog_details?.body || null,
-        acidity: image.recognized_payload?.catalog_details?.acidity || null,
-        harmony:
-          image.recognized_payload?.catalog_details?.harmony ||
-          image.recognized_payload?.catalog_details?.harmonize ||
-          null,
-        web_enrichment_applied: !!image.recognized_payload?.web_enrichment?.applied,
-        web_enrichment_sources: Array.isArray(image.recognized_payload?.web_enrichment?.sources)
-          ? image.recognized_payload.web_enrichment.sources
-          : [],
-      })),
-    )
-
-    if (lastLoggedImagesRef.current === snapshot) return
-    lastLoggedImagesRef.current = snapshot
-
-    const rows = uploadedImages.map((image) => {
-      const details = image.recognized_payload?.catalog_details || {}
-      return {
-        id: image.id,
-        status: image.status,
-        name: image.recognized_name || null,
-        producer: image.recognized_producer || null,
-        vintage: image.recognized_vintage || null,
-        country: details.country || null,
-        region: details.quiz_region || details.region || null,
-        appellation: details.quiz_appellation || details.appellation || null,
-        grapes: Array.isArray(details.grapes) ? details.grapes.join(', ') : '',
-        shortDescription: details.short_description || null,
-        whyNotable: details.why_notable || null,
-        body: details.body || null,
-        acidity: details.acidity || null,
-        harmony: details.harmony || details.harmonize || null,
-        webEnrichmentApplied: !!image.recognized_payload?.web_enrichment?.applied,
-        webSources: Array.isArray(image.recognized_payload?.web_enrichment?.sources)
-          ? image.recognized_payload.web_enrichment.sources.join('\n')
-          : '',
-        confidence: image.recognition_confidence || null,
-        reviewRequired: !!image.recognized_payload?.review?.required,
-        matchedInCatalog: !!image.recognized_payload?.catalog_match?.matched,
-      }
-    })
-
-    console.groupCollapsed(`[auto-tasting] recognized bottles (${rows.length})`)
-    console.table(rows)
-    const webRows = uploadedImages
-      .map((image) => ({
-        id: image.id,
-        name: image.recognized_name || null,
-        producer: image.recognized_producer || null,
-        applied: !!image.recognized_payload?.web_enrichment?.applied,
-        confidence: image.recognized_payload?.web_enrichment?.confidence ?? null,
-        shortDescription: image.recognized_payload?.catalog_details?.short_description || null,
-        whyNotable: image.recognized_payload?.catalog_details?.why_notable || null,
-        sources: Array.isArray(image.recognized_payload?.web_enrichment?.sources)
-          ? image.recognized_payload.web_enrichment.sources
-          : [],
-        error: image.recognized_payload?.web_enrichment?.error || null,
-      }))
-      .filter(
-        (row) =>
-          row.applied ||
-          row.shortDescription ||
-          row.whyNotable ||
-          row.sources.length > 0 ||
-          row.error,
-      )
-    if (webRows.length > 0) {
-      console.log('[auto-tasting] web enrichment', webRows)
-    }
-    console.log('[auto-tasting] raw images', uploadedImages)
-    console.groupEnd()
-  }, [uploadedImages])
 
   const pendingAnalyzeImages = useMemo(
     () =>
@@ -2327,7 +2226,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   }
 
 
-  async function handleVerifyImage(imageId) {
+  async function handleVerifyImage(imageId, options = {}) {
     if (!imageId) return
     if (verifyingImageId || analyzingImageId || isAnalyzingAll || deletingImageId) return
     setVerifyingImageId(imageId)
@@ -2350,6 +2249,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
             row.id === result.image.id ? mergeImageRowWithPreview(result.image, row) : row,
           ),
         )
+        if (options.closeAfterSave) {
+          handleCloseBottleDetail()
+        }
       }
       loadUploadedImages().catch(() => null)
     } catch (error) {
@@ -2616,7 +2518,18 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     quizPreview = null
   }
 
-  const canOpenStep3 = !!quizPreview
+  const currentQuizSignature = useMemo(() => {
+    if (!quizPreview) return ''
+    return JSON.stringify({
+      template: quizTemplateMode,
+      questions: quizPreview.questions,
+      bottles: quizPreview.bottles,
+    })
+  }, [quizPreview, quizTemplateMode])
+
+  const hasGeneratedQuiz = generatedQuizSignature.length > 0
+  const isQuizOutdated =
+    !!currentQuizSignature && hasGeneratedQuiz && generatedQuizSignature !== currentQuizSignature
   const step2Ready = uploadedImages.length > 0
   const detailCore = selectedBottle ? getBottleCoreData(selectedBottle) : null
   const detailCompletion = selectedBottle ? getBottleCompletionMeta(selectedBottle) : null
@@ -2660,9 +2573,19 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       setAutoStep(2)
       return
     }
-    if (nextStep === 3 && canOpenStep3) {
-      setAutoStep(3)
+  }
+
+  function handleProceedToQuestionnaire() {
+    if (!quizPreview || !currentQuizSignature) return
+    if (!hasGeneratedQuiz || isQuizOutdated) {
+      setGeneratedQuizSignature(currentQuizSignature)
     }
+    setAutoStep(3)
+  }
+
+  function handleSyncGeneratedQuiz() {
+    if (!quizPreview || !currentQuizSignature) return
+    setGeneratedQuizSignature(currentQuizSignature)
   }
 
   return (
@@ -2696,17 +2619,28 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
         </div>
       ) : null}
 
-      {isAnalyzingAll ? (
+      {isAnalyzingAll || analyzingImageId ? (
         <div className={styles.autoPageAnalyzeOverlay}>
           <div className={styles.autoPageAnalyzePanel}>
             <div className={styles.autoBottleWebSearchSpinner} aria-hidden="true" />
             <strong>
-              {t('automaticAnalyzingAllCount', {
-                count: String(currentAnalyzeBatchCount || Math.min(AUTO_ANALYZE_BATCH_SIZE, pendingAnalyzeCount)),
-              })}
+              {analyzingImageId
+                ? t('automaticAnalyzingSingle')
+                : t('automaticAnalyzingAllCount', {
+                    count: String(
+                      currentAnalyzeBatchCount ||
+                        Math.min(AUTO_ANALYZE_BATCH_SIZE, pendingAnalyzeCount),
+                    ),
+                  })}
             </strong>
             <span>{analyzeLoadingMessages[analyzeLoadingStep]}</span>
+            <div className={styles.autoPageAnalyzeProgressBar} aria-hidden="true">
+              <span />
+            </div>
             <small>{t('automaticAnalyzeOverlayHint')}</small>
+            <small className={styles.autoPageAnalyzePatience}>
+              {t('automaticAnalyzeOverlayPatience')}
+            </small>
           </div>
         </div>
       ) : null}
@@ -2717,7 +2651,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
             steps={automaticSteps}
             currentStep={autoStep}
             onStepClick={handleStepClick}
-            isStep2Completed={canOpenStep3}
+            isStep2Completed={false}
             isStep3Completed={false}
           />
         ) : null}
@@ -2875,6 +2809,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                 const completion = getBottleCompletionMeta(image)
                 const {details, grapes, region, appellation, wineType} = getBottleCoreData(image)
                 const previewFailed = failedPreviewIds.includes(image.id)
+                const hasCatalogPresence =
+                  !!image.recognized_payload?.catalog_match?.matched ||
+                  !!image.recognized_payload?.catalog_sync?.synced
                 const statusLabel = completion.isComplete
                   ? t('automaticBottleCompleteBadge')
                   : t('automaticBottleIncompleteBadge')
@@ -2906,21 +2843,35 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                     <div className={styles.autoBottleSummaryBody}>
                       <div className={styles.autoBottleSummaryHeader}>
                         <strong>{image.recognized_name || image.original_filename}</strong>
-                        <span
-                          className={`${styles.autoBottleStatusBadge} ${
-                            completion.isComplete
-                              ? styles.autoBottleStatusBadgeComplete
-                              : styles.autoBottleStatusBadgeIncomplete
-                          }`}>
+                        <div className={styles.autoBottleSummaryHeaderBadges}>
                           <span
-                            className={styles.autoBottleStatusBadgeChart}
-                            style={{
-                              background: `conic-gradient(var(--success) ${completion.percent * 3.6}deg, rgba(77, 49, 155, 0) 0deg)`,
-                            }}>
-                            <span className={styles.autoBottleStatusBadgeChartInner} />
+                            className={`${styles.autoBottleStatusBadge} ${
+                              completion.isComplete
+                                ? styles.autoBottleStatusBadgeComplete
+                                : styles.autoBottleStatusBadgeIncomplete
+                            }`}>
+                            <span
+                              className={styles.autoBottleStatusBadgeChart}
+                              style={{
+                                background: `conic-gradient(var(--success) ${completion.percent * 3.6}deg, rgba(77, 49, 155, 0) 0deg)`,
+                              }}>
+                              <span className={styles.autoBottleStatusBadgeChartInner} />
+                            </span>
+                            <span>{completion.percent}%</span>
                           </span>
-                          <span>{completion.percent}%</span>
-                        </span>
+                          {hasCatalogPresence ? (
+                            <span
+                              className={`${styles.autoModeFeatureBadge} ${styles.autoModeFeatureBadgeIconOnly}`}
+                              title={t('automaticCatalogBadge')}
+                              aria-label={t('automaticCatalogBadge')}>
+                              <Icon
+                                src="/icons/match.svg"
+                                size={16}
+                                className={styles.autoModeFeatureIcon}
+                              />
+                            </span>
+                          ) : null}
+                        </div>
                       </div>
                       <p className={styles.autoBottleSummaryMeta}>
                         {[image.recognized_producer, image.recognized_vintage]
@@ -3079,18 +3030,6 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                           className={styles.autoBottleCardPreview}
                           sizes="(max-width: 520px) 100vw, 360px"
                         />
-                        {detailCompletion ? (
-                          <span className={styles.autoBottlePreviewProgressPill}>
-                            <span
-                              className={styles.autoBottleStatusBadgeChart}
-                              style={{
-                                background: `conic-gradient(var(--success) ${detailCompletion.percent * 3.6}deg, rgba(77, 49, 155, 0.12) 0deg)`,
-                              }}>
-                              <span className={styles.autoBottleStatusBadgeChartInner} />
-                            </span>
-                            <span>{detailCompletion.percent}%</span>
-                          </span>
-                        ) : null}
                       </div>
                     </div>
 
@@ -3102,9 +3041,14 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                               ? styles.autoBottleStatusBadgeComplete
                               : styles.autoBottleStatusBadgeIncomplete
                           }`}>
-                          {detailCompletion?.isComplete
-                            ? t('automaticBottleCompleteBadge')
-                            : t('automaticBottleIncompleteBadge')}
+                          <span
+                            className={styles.autoBottleStatusBadgeChart}
+                            style={{
+                              background: `conic-gradient(var(--success) ${(detailCompletion?.percent || 0) * 3.6}deg, rgba(77, 49, 155, 0.12) 0deg)`,
+                            }}>
+                            <span className={styles.autoBottleStatusBadgeChartInner} />
+                          </span>
+                          <span>{detailCompletion?.percent || 0}%</span>
                         </span>
                         {hasVision && (
                           <span className={styles.autoModeFeatureBadge}>
@@ -3357,6 +3301,29 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                                 </details>
                               ) : null}
 
+                              <div className={styles.autoBottleBackLabelBox}>
+                                <div className={styles.autoBottleBackLabelHeader}>
+                                  <strong>{t('automaticBackLabelTitle')}</strong>
+                                  <span className={styles.autoBottleBackLabelBadge}>
+                                    {t('automaticBackLabelSoon')}
+                                  </span>
+                                </div>
+                                <p>{t('automaticBackLabelDescription')}</p>
+                                <button
+                                  type="button"
+                                  className={styles.autoBottleBackLabelAction}
+                                  onClick={() =>
+                                    setToast({
+                                      message: t('automaticBackLabelComingSoonToast'),
+                                      tone: 'success',
+                                      duration: 2800,
+                                    })
+                                  }>
+                                  <Icon name="photo" size={18} />
+                                  <span>{t('automaticBackLabelAction')}</span>
+                                </button>
+                              </div>
+
                               {(selectedBottle.error_message || webSearchError) && (
                                 <span
                                   className={`${styles.autoModeUploadedError} ${styles.autoBottleInlineStatus}`}>
@@ -3382,50 +3349,6 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                             </div>
                           ) : null}
 
-                          <div className={styles.autoBottleCardFooterActionBar}>
-                            <button
-                              type="button"
-                              className="btn success"
-                              disabled={
-                                !!deletingImageId ||
-                                !!analyzingImageId ||
-                                isAnalyzingAll ||
-                                !!verifyingImageId ||
-                                !!webSearchingImageId
-                              }
-                              onClick={() => handleVerifyImage(selectedBottle.id)}>
-                              {verifyingImageId === selectedBottle.id
-                                ? t('automaticSavingCatalogAction')
-                                : isVerified
-                                  ? t('automaticUpdateCatalogAction')
-                                  : t('automaticSaveCatalogAction')}
-                            </button>
-                            <button
-                              type="button"
-                              className="btn quaternary"
-                              disabled={
-                                !!deletingImageId ||
-                                !!analyzingImageId ||
-                                isAnalyzingAll ||
-                                !!verifyingImageId ||
-                                !!webSearchingImageId ||
-                                !canRunWebSearch
-                              }
-                              onClick={() => handleWebSearchImage(selectedBottle.id)}>
-                              {webSearchingImageId === selectedBottle.id
-                                ? t('automaticWebSearchingAction')
-                                : t('automaticBottleEnrichAction')}
-                            </button>
-                            <button
-                              type="button"
-                              className="btn neutral"
-                              onClick={() => {
-                                syncDetailDraftFromImage(selectedBottle)
-                                setDetailEditMode(true)
-                              }}>
-                              {t('automaticBottleEditAction')}
-                            </button>
-                          </div>
                         </>
                       ) : (
                         <>
@@ -3474,30 +3397,83 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                               </label>
                             </div>
                           </div>
-                          <div className={styles.autoBottleCardFooterActionBar}>
-                            <button
-                              type="button"
-                              className="btn neutral"
-                              onClick={() => {
-                                setDetailEditMode(false)
-                                syncDetailDraftFromImage(selectedBottle)
-                              }}>
-                              {t('automaticCancelAction')}
-                            </button>
-                            <button
-                              type="button"
-                              className="btn success"
-                              disabled={isSavingDetail}
-                              onClick={handleSaveBottleDetail}>
-                              {isSavingDetail
-                                ? t('automaticSavingAction')
-                                : t('automaticSaveAction')}
-                            </button>
-                          </div>
                         </>
                       )}
                     </div>
                   </div>
+                  {!detailEditMode ? (
+                    <div className={styles.autoBottleCardFooterActionBar}>
+                      <button
+                        type="button"
+                        className="btn neutral"
+                        onClick={handleCloseBottleDetail}>
+                        {t('automaticCancelAction')}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn neutral"
+                        onClick={() => {
+                          syncDetailDraftFromImage(selectedBottle)
+                          setDetailEditMode(true)
+                        }}>
+                        {t('automaticBottleEditAction')}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn quaternary"
+                        disabled={
+                          !!deletingImageId ||
+                          !!analyzingImageId ||
+                          isAnalyzingAll ||
+                          !!verifyingImageId ||
+                          !!webSearchingImageId ||
+                          !canRunWebSearch
+                        }
+                        onClick={() => handleWebSearchImage(selectedBottle.id)}>
+                        {webSearchingImageId === selectedBottle.id
+                          ? t('automaticWebSearchingAction')
+                          : t('automaticBottleEnrichAction')}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn success"
+                        disabled={
+                          !!deletingImageId ||
+                          !!analyzingImageId ||
+                          isAnalyzingAll ||
+                          !!verifyingImageId ||
+                          !!webSearchingImageId
+                        }
+                        onClick={() =>
+                          handleVerifyImage(selectedBottle.id, {closeAfterSave: true})
+                        }>
+                        {verifyingImageId === selectedBottle.id
+                          ? t('automaticSavingCatalogAction')
+                          : isVerified
+                            ? t('automaticUpdateCatalogAction')
+                            : t('automaticSaveCatalogAction')}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className={styles.autoBottleCardFooterActionBar}>
+                      <button
+                        type="button"
+                        className="btn neutral"
+                        onClick={() => {
+                          setDetailEditMode(false)
+                          syncDetailDraftFromImage(selectedBottle)
+                        }}>
+                        {t('automaticCancelAction')}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn success"
+                        disabled={isSavingDetail}
+                        onClick={handleSaveBottleDetail}>
+                        {isSavingDetail ? t('automaticSavingAction') : t('automaticSaveAction')}
+                      </button>
+                    </div>
+                  )}
                 </section>
               )
             })()}
@@ -3684,8 +3660,10 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
             type="button"
             className="btn success"
             disabled={!quizPreview || isCreatingQuiz || recognizedBottleCount === 0}
-            onClick={() => setAutoStep(3)}>
-            {t('automaticCreateQuestionnaireAction')}
+            onClick={handleProceedToQuestionnaire}>
+            {hasGeneratedQuiz && isQuizOutdated
+              ? t('automaticRegenerateQuestionnaireAction')
+              : t('automaticCreateQuestionnaireAction')}
           </button>
         </div>
       ) : null}
@@ -3696,8 +3674,12 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
             type="button"
             className="btn success"
             disabled={isCreatingQuiz || !quizPreview}
-            onClick={handleCreateQuickQuiz}>
-            {isCreatingQuiz ? t('automaticCreatingQuiz') : t('automaticSaveAction')}
+            onClick={isQuizOutdated ? handleSyncGeneratedQuiz : handleCreateQuickQuiz}>
+            {isQuizOutdated
+              ? t('automaticRegenerateQuestionnaireAction')
+              : isCreatingQuiz
+                ? t('automaticCreatingQuiz')
+                : t('automaticSaveAction')}
           </button>
         </div>
       ) : null}

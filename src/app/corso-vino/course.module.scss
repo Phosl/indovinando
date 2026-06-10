@@ -356,6 +356,10 @@
   height: auto;
   border-radius: 16px;
   overflow: hidden;
+  @media (max-width: 768px) {
+    max-width: 80px;
+    max-height: 80px;
+  }
 }
 
 .levelCoverImage {
