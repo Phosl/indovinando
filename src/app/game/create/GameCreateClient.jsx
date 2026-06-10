@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import {Suspense, useCallback, useMemo, useRef, useState} from 'react'
+import {Suspense, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import {createClient} from '@/lib/supabaseClient'
 import GameEditor from '@/components/game/GameEditor'
