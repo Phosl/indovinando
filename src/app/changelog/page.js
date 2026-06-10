@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.43.14',
+    date: '10 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Clarify automatic analysis progress during bottle-by-bottle batch scans',
+    ],
+  },
+
+  {
     version: '1.43.13',
     date: '10 giugno 2026',
     label: 'Auto',
