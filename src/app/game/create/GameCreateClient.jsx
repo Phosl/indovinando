@@ -683,6 +683,23 @@ function writeStoredIds(storage, key, ids) {
   storage.setItem(key, JSON.stringify(uniqueIds(ids)))
 }
 
+function readStoredObject(storage, key) {
+  if (!storage || !key) return null
+  try {
+    const raw = storage.getItem(key)
+    if (!raw) return null
+    const parsed = JSON.parse(raw)
+    return parsed && typeof parsed === 'object' ? parsed : null
+  } catch {
+    return null
+  }
+}
+
+function writeStoredObject(storage, key, value) {
+  if (!storage || !key) return
+  storage.setItem(key, JSON.stringify(value || {}))
+}
+
 async function withClientTimeout(promise, timeoutMs, label = 'request') {
   let timeoutId
   const timeoutPromise = new Promise((_, reject) => {
@@ -898,7 +915,6 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   const [detailEditMode, setDetailEditMode] = useState(false)
   const [detailDraft, setDetailDraft] = useState(null)
   const [isSavingDetail, setIsSavingDetail] = useState(false)
-  const [isLeavingSession, setIsLeavingSession] = useState(false)
   const [uploadError, setUploadError] = useState('')
   const [toast, setToast] = useState(null)
   const [uploadedImages, setUploadedImages] = useState([])
@@ -917,11 +933,11 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   const creditsAnimationIntervalRef = useRef(null)
 
   const sessionIdsStorageKey = useMemo(
-    () => (userId ? `auto_tasting_session_image_ids:${userId}` : ''),
+    () => (userId ? `auto_tasting_draft_image_ids:${userId}` : ''),
     [userId],
   )
-  const pendingDeleteStorageKey = useMemo(
-    () => (userId ? `auto_tasting_pending_delete_ids:${userId}` : ''),
+  const draftStateStorageKey = useMemo(
+    () => (userId ? `auto_tasting_draft_state:${userId}` : ''),
     [userId],
   )
 
@@ -929,16 +945,17 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     (ids) => {
       if (typeof window === 'undefined') return
       writeStoredIds(window.sessionStorage, sessionIdsStorageKey, ids)
-      writeStoredIds(window.localStorage, pendingDeleteStorageKey, ids)
+      writeStoredIds(window.localStorage, sessionIdsStorageKey, ids)
     },
-    [pendingDeleteStorageKey, sessionIdsStorageKey],
+    [sessionIdsStorageKey],
   )
 
   const clearSessionIds = useCallback(() => {
     if (typeof window === 'undefined') return
     if (sessionIdsStorageKey) window.sessionStorage.removeItem(sessionIdsStorageKey)
-    if (pendingDeleteStorageKey) window.localStorage.removeItem(pendingDeleteStorageKey)
-  }, [pendingDeleteStorageKey, sessionIdsStorageKey])
+    if (sessionIdsStorageKey) window.localStorage.removeItem(sessionIdsStorageKey)
+    if (draftStateStorageKey) window.localStorage.removeItem(draftStateStorageKey)
+  }, [draftStateStorageKey, sessionIdsStorageKey])
 
   const formatWebDiffValue = useCallback(
     (field, value, rowLike) => {
@@ -1354,56 +1371,45 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   useEffect(() => {
     if (!userId || typeof window === 'undefined') return
 
-    const sessionIds = readStoredIds(window.sessionStorage, sessionIdsStorageKey)
+    const storedSessionIds = readStoredIds(window.sessionStorage, sessionIdsStorageKey)
+    const sessionIds =
+      storedSessionIds.length > 0
+        ? storedSessionIds
+        : readStoredIds(window.localStorage, sessionIdsStorageKey)
     setSessionImageIds(sessionIds)
+    if (storedSessionIds.length === 0 && sessionIds.length > 0) {
+      writeStoredIds(window.sessionStorage, sessionIdsStorageKey, sessionIds)
+    }
 
-    const pendingIds = readStoredIds(window.localStorage, pendingDeleteStorageKey)
-    if (!pendingIds.length) return
-    ;(async () => {
-      await Promise.allSettled(
-        pendingIds.map((id) =>
-          fetch('/api/auto-tasting/delete', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({imageId: id}),
-          }),
-        ),
+    const storedDraftState = readStoredObject(window.localStorage, draftStateStorageKey)
+    if (storedDraftState) {
+      const restoredStep = Number(storedDraftState.autoStep || 1)
+      setAutoStep(restoredStep >= 2 && sessionIds.length > 0 ? Math.min(restoredStep, 3) : 1)
+      setQuizTemplateMode(
+        storedDraftState.quizTemplateMode === 'standard' ? 'standard' : 'openai',
       )
-      window.localStorage.removeItem(pendingDeleteStorageKey)
-      if (sessionIdsStorageKey) {
-        window.sessionStorage.removeItem(sessionIdsStorageKey)
-      }
-      setSessionImageIds([])
-      if (sessionIdsStorageKey) {
-        const freshSessionIds = readStoredIds(window.sessionStorage, sessionIdsStorageKey)
-        setSessionImageIds(freshSessionIds)
-      }
-      loadUploadedImages().catch(() => null)
-    })()
-  }, [loadUploadedImages, pendingDeleteStorageKey, sessionIdsStorageKey, userId])
+      setGeneratedQuizSignature(
+        typeof storedDraftState.generatedQuizSignature === 'string'
+          ? storedDraftState.generatedQuizSignature
+          : '',
+      )
+    }
+  }, [draftStateStorageKey, sessionIdsStorageKey, userId])
 
   useEffect(() => {
-    if (!userId || typeof window === 'undefined') return undefined
-
-    function handleBeforeUnload(event) {
-      const ids = sessionImageIdsRef.current
-      if (!ids.length) return
-      writeStoredIds(window.localStorage, pendingDeleteStorageKey, ids)
-      event.preventDefault()
-      event.returnValue = ''
-    }
-
-    window.addEventListener('beforeunload', handleBeforeUnload)
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-    }
-  }, [pendingDeleteStorageKey, userId])
+    if (!userId || typeof window === 'undefined' || !draftStateStorageKey) return
+    writeStoredObject(window.localStorage, draftStateStorageKey, {
+      autoStep,
+      quizTemplateMode,
+      generatedQuizSignature,
+    })
+  }, [autoStep, draftStateStorageKey, generatedQuizSignature, quizTemplateMode, userId])
 
   useEffect(() => {
     if (!userId) return
 
     loadUploadedImages()
-  }, [loadUploadedImages, userId])
+  }, [loadUploadedImages, sessionImageIds, userId])
 
   useEffect(() => {
     if (!uploadError) return
@@ -2338,51 +2344,13 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     }
   }
 
-  async function cleanupSessionImages(ids) {
-    const normalizedIds = uniqueIds(ids)
-    if (!normalizedIds.length) return
-
-    await Promise.allSettled(
-      normalizedIds.map((id) =>
-        fetch('/api/auto-tasting/delete', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({imageId: id}),
-        }),
-      ),
-    )
-  }
-
   async function handleAttemptExit() {
-    if (isLeavingSession) return
     const ids = sessionImageIdsRef.current
     if (!ids.length) {
       onBack?.()
       return
     }
-
-    const shouldLeave = window.confirm(
-      'Se esci ora, le foto caricate in questa sessione verranno cancellate. Vuoi continuare?',
-    )
-    if (!shouldLeave) return
-
-    setIsLeavingSession(true)
-    try {
-      await cleanupSessionImages(ids)
-      clearSessionIds()
-      setSessionImageIds([])
-      setUploadedImages([])
-      setFailedPreviewIds([])
-      previewUrlByImageIdRef.current.forEach((url) => {
-        URL.revokeObjectURL(url)
-      })
-      previewUrlByImageIdRef.current.clear()
-      originalPreviewFileByImageIdRef.current.clear()
-      previewRecoveryAttemptedIdsRef.current.clear()
-      onBack?.()
-    } finally {
-      setIsLeavingSession(false)
-    }
+    onBack?.()
   }
 
   function buildAutoQuizPayload(images, mode = 'standard') {
@@ -2580,6 +2548,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       if (!response.ok || !result?.id) {
         throw new Error(result?.error || 'save failed')
       }
+      clearSessionIds()
       router.push(`/game/${result.id}`)
     } catch (error) {
       setUploadError(`${t('automaticCreateQuizError')} (${error?.message || 'unknown'})`)
