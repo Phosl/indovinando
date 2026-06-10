@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.43.15',
+    date: '10 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Preserve automatic tasting draft when leaving the wizard accidentally',
+    ],
+  },
+
+  {
     version: '1.43.14',
     date: '10 giugno 2026',
     label: 'Auto',
