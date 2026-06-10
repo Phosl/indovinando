@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.43.9',
+    date: '10 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Improve dashboard and tasting loading shells, and add warning CTA for incomplete bottles',
+    ],
+  },
+
+  {
     version: '1.43.8',
     date: '10 giugno 2026',
     label: 'Auto',
