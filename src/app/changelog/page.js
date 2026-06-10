@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.43.12',
+    date: '10 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Add profile credits display and increase default AI scan credits',
+    ],
+  },
+
+  {
     version: '1.43.11',
     date: '10 giugno 2026',
     label: 'Auto',
