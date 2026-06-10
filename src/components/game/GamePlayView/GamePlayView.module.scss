@@ -327,6 +327,17 @@
   justify-content: flex-end;
 }
 
+.incompleteCtaRow {
+  margin-top: -8px;
+  margin-bottom: 18px;
+  display: flex;
+  width: 100%;
+}
+
+.incompleteCtaBtn {
+  width: 100%;
+}
+
 .sliderSection {
   width: 100%;
 }
@@ -358,6 +369,10 @@
   width: fit-content;
   min-width: 148px;
   max-width: 232px;
+  transition:
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    background-color 0.16s ease;
   h3 {
     font-size: 1.05rem;
     font-weight: 800;
@@ -388,13 +403,20 @@
 
 .bottleIndex {
   @extend %capsuleBadge;
-  position: re;
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 4px 9px;
   background: var(--primary);
   color: var(--white);
+}
+
+.bottleIncompleteDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--white);
+  flex-shrink: 0;
 }
 
 .activeBottle {

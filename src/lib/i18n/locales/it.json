@@ -504,7 +504,8 @@
     "enotecaDescription": "Crea una partita per giocare questa degustazione in autonomia.",
     "tableLiveDescription": "Crea un evento unico, stampa il QR e lascia che ogni tavolo giochi in una partita separata con codice dedicato.",
     "bottlesCount": "{count} Bottiglie",
-    "questionsCount": "{count} Domande"
+    "questionsCount": "{count} Domande",
+    "completeBottles": "Completa bottiglie"
   },
   "onboarding": {
     "step": "Passo",
@@ -852,7 +853,7 @@
       "confirmDelete": "Eliminare questa bottiglia?",
       "reorder": "Trascina per riordinare"
     },
-  "bottleModal": {
+    "bottleModal": {
       "newTitle": "Nuova bottiglia",
       "editTitlePrefix": "Modifica bottiglia",
       "details": "Dettagli bottiglia",
@@ -869,10 +870,10 @@
       "wineInfoHintPrimary": "Seleziona il tipo di vino per questa bottiglia.",
       "wineInfoHintSecondary": "Questo dato aiuta a rendere più chiari quiz, scheda e catalogo.",
       "questionTitle": "Domanda {index}",
-    "selectWineType": "Seleziona il tipo di vino.",
-    "showAllFields": "Vedi tutti i campi",
-    "reviewAll": "Vedi scheda completa",
-    "next": "Avanti",
+      "selectWineType": "Seleziona il tipo di vino.",
+      "showAllFields": "Vedi tutti i campi",
+      "reviewAll": "Vedi scheda completa",
+      "next": "Avanti",
       "back": "Indietro",
       "done": "Fine",
       "finalHint": "Controlla e salva questa bottiglia, poi aggiungine un'altra se serve.",

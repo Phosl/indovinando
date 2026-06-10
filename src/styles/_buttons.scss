@@ -115,6 +115,16 @@
   }
 }
 
+.btn.warning {
+  background-color: var(--warning-100);
+  color: var(--warning-text);
+  border-color: var(--warning);
+
+  &:hover {
+    background: var(--warning-200);
+  }
+}
+
 .btn.quaternary {
   background-color: var(--quaternary-100);
   color: var(--quaternary-text);

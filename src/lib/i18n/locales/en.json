@@ -500,7 +500,8 @@
     "enotecaDescription": "Create a match to play this tasting on your own.",
     "tableLiveDescription": "Create one event, print the QR code, and let each table play in a separate match with its own code.",
     "bottlesCount": "{count} Bottles",
-    "questionsCount": "{count} Questions"
+    "questionsCount": "{count} Questions",
+    "completeBottles": "Complete bottles"
   },
   "onboarding": {
     "step": "Step",
@@ -848,7 +849,7 @@
       "confirmDelete": "Delete this bottle?",
       "reorder": "Drag to reorder"
     },
-  "bottleModal": {
+    "bottleModal": {
       "newTitle": "New bottle",
       "editTitlePrefix": "Edit bottle",
       "details": "Bottle details",
@@ -865,10 +866,10 @@
       "wineInfoHintPrimary": "Select the wine type for this bottle.",
       "wineInfoHintSecondary": "This helps keep the quiz, bottle card, and catalog clearer.",
       "questionTitle": "Question {index}",
-    "selectWineType": "Select wine type.",
-    "showAllFields": "Show all fields",
-    "reviewAll": "Open full edit",
-    "next": "Next",
+      "selectWineType": "Select wine type.",
+      "showAllFields": "Show all fields",
+      "reviewAll": "Open full edit",
+      "next": "Next",
       "back": "Back",
       "done": "Done",
       "finalHint": "Review and save this bottle, then continue with another if needed.",

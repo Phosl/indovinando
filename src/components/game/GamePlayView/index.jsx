@@ -11,6 +11,7 @@ import {Button, ButtonLink} from '@/components/ui/Button'
 import {formatAppDate, formatAppDateTime} from '@/lib/dateFormat'
 import {watchMobileViewport} from '@/lib/deviceUtils'
 import {getGamePlayViewText} from '../utils/constants'
+import {isBottleComplete} from '../utils/validations'
 import styles from './GamePlayView.module.scss'
 
 export default function GamePlayView({
@@ -28,6 +29,10 @@ export default function GamePlayView({
   const [historyOpen, setHistoryOpen] = useState(false)
   const [isMobileViewport, setIsMobileViewport] = useState(false)
   const isReadyToPlay = questions.length > 0 && bottles.length > 0
+  const hasIncompleteBottles = useMemo(
+    () => bottles.some((bottle) => !isBottleComplete(bottle, questions)),
+    [bottles, questions],
+  )
 
   useEffect(() => {
     return watchMobileViewport(setIsMobileViewport)
@@ -139,6 +144,20 @@ export default function GamePlayView({
             </ButtonLink>
           </div>
         </div>
+        {isOwner && hasIncompleteBottles ? (
+          <div className={styles.incompleteCtaRow}>
+            <ButtonLink
+              href={`/game/${game.id}/edit?step=4`}
+              variant="warning"
+              size={isMobileViewport ? 'small' : undefined}
+              className={styles.incompleteCtaBtn}>
+              <span className={styles.actionBtnContent}>
+                <Icon name="edit" size={24} className={styles.actionBtnIcon} />
+                <span>{t('completeBottles')}</span>
+              </span>
+            </ButtonLink>
+          </div>
+        ) : null}
       </div>
 
       {isReadyToPlay && (
