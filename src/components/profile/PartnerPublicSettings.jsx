@@ -13,7 +13,7 @@ export default function PartnerPublicSettings({profile, mode = 'panel'}) {
   const [error, setError] = useState('')
 
   const partnerSlug = useMemo(() => buildPartnerSlug(profile || {}), [profile])
-  const previewHref = `/partner/${partnerSlug}`
+  const previewHref = `/partner/${partnerSlug}?preview=1`
 
   const handleToggle = async () => {
     setError('')
@@ -50,14 +50,23 @@ export default function PartnerPublicSettings({profile, mode = 'panel'}) {
         </div>
         <button
           type="button"
-          className={`btn ${isPublic ? 'success' : 'neutral'} btn-inline ${styles.toggleBtn}`}
+          role="switch"
+          aria-checked={isPublic}
+          aria-label={t('partnerPublic.toggleLabel')}
+          className={`${styles.toggleBtn} ${isPublic ? styles.toggleBtnActive : ''}`}
           onClick={handleToggle}
           disabled={isSaving}>
-          {isSaving
-            ? t('savingAction')
-            : isPublic
-              ? t('partnerPublic.active')
-              : t('partnerPublic.inactive')}
+          <span className={styles.toggleLabels}>
+            <span className={`${styles.toggleLabel} ${isPublic ? styles.toggleLabelActive : ''}`}>
+              {t('partnerPublic.active')}
+            </span>
+            <span className={`${styles.toggleLabel} ${!isPublic ? styles.toggleLabelActive : ''}`}>
+              {t('partnerPublic.inactive')}
+            </span>
+          </span>
+          <span className={styles.toggleTrack} aria-hidden="true">
+            <span className={styles.toggleThumb} />
+          </span>
         </button>
       </div>
 

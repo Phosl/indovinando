@@ -3,7 +3,7 @@ import {notFound} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {getLocaleText} from '@/lib/i18n/getLocaleText'
-import {getPublicPartnerBySlug} from '@/lib/partners'
+import {getPublicPartnerBySlug, mapProfileToPublicPartner} from '@/lib/partners'
 import PartnerPageHeader from '@/components/partner/PartnerPageHeader'
 import styles from '../partner.module.scss'
 
@@ -14,8 +14,9 @@ export async function generateMetadata({params}) {
   }
 }
 
-export default async function PartnerDetailPage({params}) {
+export default async function PartnerDetailPage({params, searchParams}) {
   const {slug} = await params
+  const resolvedSearchParams = await searchParams
   const supabase = await createServerSupabase()
   const lang = await getServerLanguage()
   const {
@@ -24,7 +25,22 @@ export default async function PartnerDetailPage({params}) {
   const text = getLocaleText(lang, 'partnerPublic', {})
   const landingText = getLocaleText(lang, 'landing', {})
   const commonText = getLocaleText(lang, 'common', {})
-  const partner = await getPublicPartnerBySlug(supabase, slug, lang)
+  const previewMode = resolvedSearchParams?.preview === '1'
+  let partner = await getPublicPartnerBySlug(supabase, slug, lang)
+
+  if (!partner && previewMode && user) {
+    const {data: ownProfile} = await supabase
+      .from('profiles')
+      .select(
+        'id, username, profile_type, business_name, business_type, business_description, business_website, business_phone, business_address, business_latitude, business_longitude, business_logo_url, city, province, is_partner_public, partner_slug',
+      )
+      .eq('id', user.id)
+      .single()
+
+    if (ownProfile && String(ownProfile.partner_slug || '').trim() === slug) {
+      partner = mapProfileToPublicPartner(ownProfile, lang)
+    }
+  }
 
   if (!partner) notFound()
 

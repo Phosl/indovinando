@@ -1360,6 +1360,7 @@
       "helper": "You can turn your public partner page on or off at any time.",
       "active": "Public",
       "inactive": "Private",
+      "toggleLabel": "Enable or disable the public partner page",
       "slugLabel": "Public URL",
       "preview": "Preview page",
       "directory": "Open directory",

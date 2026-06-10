@@ -5,6 +5,8 @@ import {createClient} from '@/lib/supabaseClient'
 import GameEditor from '@/components/game/GameEditor'
 import OnboardingModal from '@/components/game/OnboardingModal'
 
+const CREATE_ONBOARDING_STORAGE_KEY = 'hideCreateOnboarding'
+
 const TEMPLATE_QUESTIONS = [
   {
     text: 'Stato',
@@ -45,15 +47,28 @@ const TEMPLATE_QUESTIONS = [
 
 export default function GameCreateClient({userId, initialShowOnboarding, avatarOptions = []}) {
   const supabase = createClient()
-  const [showOnboarding, setShowOnboarding] = useState(initialShowOnboarding)
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return (
+        initialShowOnboarding &&
+        window.localStorage.getItem(CREATE_ONBOARDING_STORAGE_KEY) !== '1'
+      )
+    }
+    return initialShowOnboarding
+  })
 
   async function handleDisableOnboarding() {
+    setShowOnboarding(false)
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(CREATE_ONBOARDING_STORAGE_KEY, '1')
+    }
+
     if (!userId) {
-      setShowOnboarding(false)
       return
     }
-    await supabase.from('profiles').update({onboarding: false}).eq('id', userId)
-    setShowOnboarding(false)
+    try {
+      await supabase.from('profiles').update({onboarding: false}).eq('id', userId)
+    } catch {}
   }
 
   return (

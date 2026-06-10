@@ -1364,6 +1364,7 @@
       "helper": "Puoi attivare o disattivare la tua scheda partner pubblica in qualsiasi momento.",
       "active": "Pubblica",
       "inactive": "Privata",
+      "toggleLabel": "Attiva o disattiva la scheda partner pubblica",
       "slugLabel": "URL pubblico",
       "preview": "Anteprima scheda",
       "directory": "Apri directory",

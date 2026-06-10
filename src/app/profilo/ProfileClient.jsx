@@ -458,9 +458,7 @@ export default function ProfileClient({
                 </div>
                 <Link href="/profilo/pubblico" className={styles.avatarPickerBtn}>
                   <span className={styles.avatarPickerDivider} />
-                  <span className={styles.avatarPickerLabel}>
-                    {profileData?.is_partner_public ? t('publicLabel') : t('privateLabel')}
-                  </span>
+                  <span className={styles.avatarPickerLabel}>{t('editAction')}</span>
                 </Link>
               </div>
             </>

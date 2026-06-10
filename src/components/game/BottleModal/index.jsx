@@ -49,9 +49,6 @@ export default function BottleModal({
   const text = getBottleModalText(lang)
   const alertMessages = getAlertMessages(lang)
   const isNewBottle = bottleIndex === null
-  const [wizardStep, setWizardStep] = useState(0)
-  const [showFullEdit, setShowFullEdit] = useState(false)
-  const [repairSnapshot, setRepairSnapshot] = useState(null)
   const modalBodyRef = useRef(null)
   const WINE_TYPES = [
     {value: 'rosso', label: lang === 'en' ? 'Red' : 'Rosso'},
@@ -76,27 +73,19 @@ export default function BottleModal({
   )
   const hasIncompleteBottle =
     bottleNameMissing || producerMissing || yearMissing || wineTypeMissing || missingQuestionIndexes.length > 0
-  useEffect(() => {
-    if (!isOpen) return
-
-    const shouldUseRepairMode =
-      !isNewBottle &&
-      (bottleNameMissing || producerMissing || yearMissing || wineTypeMissing || missingQuestionIndexes.length > 0)
-    setShowFullEdit(false)
-    setWizardStep(0)
-    setRepairSnapshot(
-      shouldUseRepairMode
-        ? {
-            bottleNameMissing,
-            producerMissing,
-            yearMissing,
-            wineTypeMissing,
-            missingQuestionIndexes,
-          }
-        : null,
-    )
-  }, [isOpen, isNewBottle, bottleIndex, resetToken])
-
+  const initialRepairSnapshot =
+    !isNewBottle && hasIncompleteBottle
+      ? {
+          bottleNameMissing,
+          producerMissing,
+          yearMissing,
+          wineTypeMissing,
+          missingQuestionIndexes,
+        }
+      : null
+  const [wizardStep, setWizardStep] = useState(0)
+  const [showFullEdit, setShowFullEdit] = useState(false)
+  const [repairSnapshot] = useState(initialRepairSnapshot)
   const isRepairMode = Boolean(repairSnapshot) && !showFullEdit
 
   const stepModels = useMemo(() => {

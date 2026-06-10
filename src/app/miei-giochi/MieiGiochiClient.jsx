@@ -114,7 +114,7 @@ export default function MieiGiochiClient({games, avatarOptions = [], lang, dashb
         ) : (
           <div className={styles.guideContainer}>
             <h3>oppure</h3>
-            <ButtonLink href="/guida" variant="neutral" size="small">
+            <ButtonLink href="/info" variant="neutral" size="small">
               {t('openAppGuide')}
             </ButtonLink>
           </div>
