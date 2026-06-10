@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.43.8',
+    date: '10 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Fix mobile onboarding dismiss and partner public profile flow',
+    ],
+  },
+
+  {
     version: '1.43.7',
     date: '9 giugno 2026',
     label: 'Auto',
