@@ -647,7 +647,7 @@ async function runOpenAIWebEnrichment(extracted) {
     tools: [
       {
         type: 'web_search',
-        search_context_size: 'low',
+        search_context_size: 'medium',
       },
     ],
     include: ['web_search_call.action.sources'],
@@ -2039,8 +2039,28 @@ export async function POST(request) {
             existingWebEnrichment.sources.length > 0
           const hasExistingAveragePrice =
             existingCatalogDetails?.average_price != null || existingCatalogDetails?.price != null
+          const hasExistingRegion =
+            !!toNonEmptyString(
+              existingCatalogDetails?.quiz_region || existingCatalogDetails?.region,
+            )
+          const hasExistingType = !!toNonEmptyString(existingCatalogDetails?.type)
+          const hasExistingCountry = !!toNonEmptyString(existingCatalogDetails?.country)
+          const needsCoreFieldEnrichment =
+            !hasExistingCountry ||
+            !hasExistingRegion ||
+            !hasExistingType ||
+            !hasExistingGrapes ||
+            !hasExistingAveragePrice
+          const needsNarrativeEnrichment = !hasExistingNarrative || !hasExistingSources
+          const shouldPreferFreshWebEnrichment =
+            shouldAutoEnrichIncompleteBottle ||
+            needsCoreFieldEnrichment ||
+            needsNarrativeEnrichment
           const hasSufficientCatalogData =
             hasCatalogMatch &&
+            hasExistingCountry &&
+            hasExistingRegion &&
+            hasExistingType &&
             hasExistingGrapes &&
             hasExistingNarrative &&
             hasExistingSources &&
@@ -2048,10 +2068,12 @@ export async function POST(request) {
           const shouldForceSkipWebEnrichment =
             !forceWebEnrichment &&
             !webEnrichmentOnly &&
+            !shouldPreferFreshWebEnrichment &&
             (hasCatalogSync || alreadyEnriched)
           const shouldSkipWebEnrichmentOnly =
             webEnrichmentOnly &&
             !forceWebEnrichment &&
+            !shouldPreferFreshWebEnrichment &&
             (hasCatalogSync || alreadyEnriched || hasSufficientCatalogData)
           const shouldRunWebEnrichment =
             useWebEnrichment &&
