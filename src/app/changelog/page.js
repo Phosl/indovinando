@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.44.5',
+    date: '11 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Improve app responsiveness with profile streaming, Google Maps cleanup, and course cover fallback fixes',
+    ],
+  },
+
+  {
     version: '1.44.4',
     date: '11 giugno 2026',
     label: 'Auto',
