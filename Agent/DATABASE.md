@@ -15,6 +15,15 @@ Panoramica aggiornata delle tabelle Supabase (PostgreSQL) usate dall'app.
 - `AUTO_TASTING_MEDIA_SCHEMA.sql` - bucket + tabella immagini bottiglie (opzionale, isolato)
 - `SUPABASE_BUSINESS_BRANDING.sql` - logo attivita + bucket pubblico branding
 - `SUPABASE_AI_SCAN_CREDITS.sql` - crediti analisi AI per auto-tasting
+- `SUPABASE_AI_CREDIT_PURCHASES.sql` - schema proposto per ordini Stripe + ledger crediti
+- `SUPABASE_PARTNER_PUBLIC.sql` - visibilita pubblica partner + slug scheda pubblica
+- `SUPABASE_PROFILE_BUSINESS_STEP.sql` - campi business aggiuntivi del wizard profilo
+- `SUPABASE_PUBLIC_WINE_RATING_EVENTS.sql` - dataset unificato eventi/voti reali per classifiche
+- `SUPABASE_PUBLIC_WINE_RANKINGS.sql` - aggregazioni ranking vino pubbliche
+- `SUPABASE_PUBLIC_USER_RANKINGS.sql` - aggregazioni ranking utenti pubbliche
+- `SUPABASE_GAME_BOTTLES_RANKINGS.sql` - chiavi vino e snapshot prezzo in `game_bottles`
+- `SUPABASE_ENOTECA_HISTORY_USER.sql` - link `user_id` storico enoteca
+- `SUPABASE_TABLE_LIVE_ANSWER_REVEAL_MODE.sql` - modalita reveal risposte per table-live
 - `WINE_COURSE_MAX_SCORE_MIGRATION.sql` - allinea schema progresso corso con il client
 - `SUPABASE_WINE_COURSE_PROGRESS_CLEANUP.sql` - pulizia e deduplica sicura del progresso corso
 
@@ -92,6 +101,7 @@ Uso in app:
 - directory partner pubblica (`is_partner_public`, `partner_slug`)
 - branding degustazioni (`business_logo_path`, `business_logo_url`)
 - blocco analisi AI automatiche (`ai_scan_credits_total`, `ai_scan_credits_bonus`, `ai_scan_credits_used`)
+- profilo business pubblico (`is_partner_public`, `partner_slug`, coordinate, branding)
 
 ### Funzione: `consume_ai_scan_credits(uuid, integer)`
 
@@ -102,6 +112,13 @@ Consuma in modo atomico i crediti analisi di un utente autenticato.
 - uso: route `POST /api/auto-tasting/analyze`
 
 Patch SQL: `SUPABASE_AI_SCAN_CREDITS.sql`
+
+Nota prodotto:
+
+- stato attuale: nuovi utenti ricevono crediti iniziali e il client mostra il residuo nel profilo e
+  nel flusso automatico
+- limite attuale: il sistema ha solo contatori aggregati, non ancora un ledger acquisti/ricariche
+  dedicato
 
 ## Storage Bucket
 

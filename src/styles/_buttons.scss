@@ -68,6 +68,17 @@
     background: var(--primary-200);
   }
 }
+
+.btn.primary-dark {
+  background-color: color-mix(in srgb, var(--primary-200) 100%, transparent 100%);
+  color: var(--primary-text);
+  border-color: var(--primary-text);
+  &:hover {
+    background: var(--primary-text);
+    color: var(--white);
+  }
+}
+
 .btn.primary-filled {
   background-color: var(--primary-text);
   color: var(--white);

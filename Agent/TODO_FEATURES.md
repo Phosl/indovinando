@@ -23,6 +23,8 @@ Roadmap operativa da seguire step by step.
 - [x] Widget community
 - [x] Statistiche globali
 - [x] Multiplayer semplificato come flusso principale
+- [x] Wizard automatico più robusto con review bottiglie e recovery draft
+- [x] Drag&drop per riordinare domande e bottiglie
 
 ---
 
@@ -139,16 +141,19 @@ Riferimento:
 
 ### Monetizzazione / piani
 
-- [ ] Stripe
-- [ ] piani `Free / Pro / Business`
-- [ ] limiti scansioni AI per piano
-- [ ] gestione abbonamenti
+- [ ] vendere pacchetti crediti AI una tantum
+- [ ] Stripe Checkout + webhook conferma pagamento
+- [ ] ledger acquisti / ricariche crediti
+- [ ] pagina profilo / wizard con CTA `Compra crediti`
+- [ ] Apple Pay / Google Pay via Stripe
+- [ ] valutare poi piani `Pro / Business` solo dopo validazione uso crediti
 
 ### Evoluzione crediti AI
 
-- [ ] distinguere chiaramente costo `analisi` vs `web search`
+- [x] distinguere chiaramente costo `analisi` vs `web search`
 - [ ] mostrare cronologia consumi
-- [ ] prevedere ricariche / bonus / reset mensile
+- [ ] introdurre acquisti reali e bonus promo separati
+- [ ] valutare reset mensile solo se nasceranno piani in abbonamento
 
 ### Evoluzione partner
 
@@ -161,10 +166,11 @@ Riferimento:
 
 ## Prossima azione concreta
 
-- [ ] Ripulire naming e copy del flusso `gioco solo`
-- [ ] Decidere se tenere o dismettere il percorso solo separato
-- [ ] Valutare se la home/profilo devono mostrare il widget community anche come teaser leggero
-- [ ] Valutare se aggiungere la scheda vino pubblica anche da altri punti oltre a `/classifiche`
+- [ ] Definire pack crediti (`10 / 30 / 100` o simili)
+- [ ] Creare schema DB per ordini + ledger crediti
+- [ ] Implementare checkout Stripe in test mode
+- [ ] Implementare webhook server-side che accredita i crediti
+- [ ] Aggiungere storico ricariche nel profilo
 
 ## Next Up
-- [ ] riordinare domande e bottiglie con drag&drop
+- [ ] affinare copy e naming dei flussi legacy nascosti

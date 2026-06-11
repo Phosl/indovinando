@@ -80,19 +80,18 @@
 
 .modeCardBgImage {
   position: absolute;
-  right: 2%;
-  top: 20%;
-  width: auto;
-
-  height: 60%;
+  right: 20px;
   z-index: 1;
   pointer-events: none;
   user-select: none;
-  opacity: 0.8;
+  opacity: 1;
+  width: 150px;
+  top: 50%;
+  transform: translate(0, -50%);
 }
 
 .modeCard {
-  :global(.quaternary) {
+  :global(.primary-dark) {
     font-size: 16px;
     text-transform: uppercase;
   }
@@ -100,11 +99,21 @@
     background: #ffe8b8;
     border-color: #f8b624;
     color: #ee7600;
+    &:hover {
+      background: #ee7600;
+      border-color: #ee7600;
+      color: #ffffff;
+    }
   }
   :global(.btn-custom-game) {
     background: #f4cfdb;
     border-color: #cf2c61;
     color: #cf2c61;
+    &:hover {
+      background: #cf2c61;
+      border-color: #cf2c61;
+      color: #ffffff;
+    }
   }
   :global(.btn-automatic-game) {
     background: #d5f1ff;

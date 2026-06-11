@@ -5,6 +5,30 @@
 - Stack: `Next.js` + `Supabase`
 - Main product pillars: degustazioni, corso vino, profili, community, subscriptions
 
+## Last 6 days — delivered recap
+
+- Profile phase 1 completed with dedicated wizard, preferences page, and dashboard/profile updates.
+- Business profiles extended with public visibility, partner page, partner landing presence, Google
+  Maps coordinates, and branding/logo support.
+- Public partner navigation polished for both landing mode and logged-in app mode.
+- Public rankings shipped with:
+  - real wine ranking pipeline
+  - public wine detail page
+  - community widget
+  - global stats on landing and rankings
+  - public user precision ranking pipeline start
+- Multiplayer launch simplified into the main flow, with direct event creation/link sharing and
+  smoother create/join screens.
+- Automatic tasting heavily refined with:
+  - stronger mobile upload flow
+  - HEIC/preview resilience work
+  - scan credits visible in UI
+  - clearer batch analysis loading
+  - bottle review step with add-more CTA
+  - draft recovery after accidental exit
+  - incomplete-bottle guided repair flow
+  - drag & drop ordering for questions and bottles
+
 ## Table-live answer reveal mode
 
 - La creazione sessione `table-live` supporta:

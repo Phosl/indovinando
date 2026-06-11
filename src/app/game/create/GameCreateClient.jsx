@@ -807,10 +807,18 @@ function ModePickerScreen({onPick, onOpenGuide}) {
         <button
           className={`${styles.modeCard} ${styles.modeCardAutomatic}`}
           onClick={() => onPick('automatic')}>
+          <Image
+            src="/game-options-automatic.svg"
+            alt=""
+            aria-hidden="true"
+            className={styles.modeCardBgImage}
+            width={260}
+            height={260}
+          />
           <div className={styles.modeCardContent}>
             <strong className={styles.modeCardTitle}>{t('automaticTitle')}</strong>
             <p className={styles.modeCardDesc}>{t('automaticDescription')}</p>
-            <span className="btn btn-small quaternary btn-automatic-game btn-inline btn-with-icon-end">
+            <span className="btn btn-small primary-dark btn-inline btn-with-icon-end">
               <span>{t('automaticAction')}</span>
               <Icon name="plusFat" size={24} className="btn-icon" />
             </span>
@@ -831,7 +839,7 @@ function ModePickerScreen({onPick, onOpenGuide}) {
           <div className={styles.modeCardContent}>
             <strong className={styles.modeCardTitle}>{t('quickTitle')}</strong>
             <p className={styles.modeCardDesc}>{t('quickDescription')}</p>
-            <span className="btn btn-small quaternary btn-quick-game btn-inline btn-with-icon-end">
+            <span className="btn btn-small primary-dark btn-quick-game btn-inline btn-with-icon-end">
               <span>{t('quickAction')}</span>
               <Icon name="forward" size={24} className="btn-icon" />
             </span>
@@ -852,7 +860,7 @@ function ModePickerScreen({onPick, onOpenGuide}) {
           <div className={styles.modeCardContent}>
             <strong className={styles.modeCardTitle}>{t('customTitle')}</strong>
             <p className={styles.modeCardDesc}>{t('customDescription')}</p>
-            <span className="btn btn-small quaternary btn-custom-game btn-inline btn-with-icon-end">
+            <span className="btn btn-small primary-dark btn-custom-game btn-inline btn-with-icon-end">
               <span>{t('customAction')}</span>
               <Icon name="forward" size={24} className="btn-icon" />
             </span>

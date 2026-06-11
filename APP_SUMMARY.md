@@ -101,6 +101,41 @@ and as a training/event tool, with persistent results and admin controls.
 - Admin/data tooling for catalog quality and scalability.
 - Growing architecture designed to support new modes without changing the core concept.
 
+## 9) Latest delivered areas
+
+### Profiles and business
+
+- User profile phase 1 is live with profile type, experience, preferences, newsletter, and completion
+  flow.
+- Business profiles now support activity details, address/geolocation, public visibility, and logo.
+- Public partner pages are live, with landing-aware navigation for logged-out visitors and in-app
+  back navigation for logged-in users.
+
+### Community and rankings
+
+- Public rankings are live on `/classifiche`.
+- Community widgets and global stats are connected to landing, profile, and dashboard entry points.
+- Wine rankings now read from real completed tasting data when enough data exists, with safe demo
+  fallback.
+- Public wine detail pages are available from the rankings flow.
+
+### Automatic tasting
+
+- Automatic tasting is now a 3-step flow: photo upload, bottle review, questionnaire generation.
+- Users can upload bottle photos, review detected bottle cards, enrich missing data, and generate a
+  tasting quiz from the reviewed list.
+- Scan credits are active and visible in UI.
+- Draft recovery is more resilient if the user leaves the wizard accidentally.
+- Batch analysis feedback is clearer, with explicit loading progress and better delete/upload
+  feedback.
+
+### Multiplayer direction
+
+- Multiplayer/table flow is now the main tasting start path.
+- Event creation is simplified: the tasting name becomes the event title automatically, and link/QR
+  are prepared earlier in the flow.
+- Older `live` and `enoteca` flows are being treated as legacy hidden paths to retire gradually.
+
 # Indovinando - Panoramica dell'App
 
 ## 1) L'idea in una frase
