@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.44.0',
+    date: '11 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'add Stripe credit purchases, profile history, and admin transaction insights',
+    ],
+  },
+
+  {
     version: '1.43.17',
     date: '11 giugno 2026',
     label: 'Auto',
