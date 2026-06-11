@@ -64,14 +64,14 @@
 
 .avatars {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
   gap: 10px;
 }
 
 .avatar {
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: 999px;
+  border-radius: 16px;
 }
 
 .buttonRow {
@@ -92,12 +92,8 @@
   border-radius: 999px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .wrapper {
     padding: 0 14px;
-  }
-
-  .avatars {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

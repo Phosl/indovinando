@@ -73,7 +73,8 @@ function QuestionnaireIntroModal({
               {closeLabel}
             </Button>
 
-            <Button variant="neutral" size="small" textOnly onClick={onDisable}>
+            <Button variant="neutral" size="small" onClick={onDisable}>
+              <Icon name="removeSmall" size={18} />
               {disableLabel}
             </Button>
           </div>
@@ -107,7 +108,8 @@ function BottlesIntroModal({
             <Button variant="success" onClick={onClose}>
               {closeLabel}
             </Button>
-            <Button variant="neutral" size="small" textOnly onClick={onDisable}>
+            <Button variant="neutral" size="small" onClick={onDisable}>
+              <Icon name="removeSmall" size={18} />
               {disableLabel}
             </Button>
           </div>
@@ -134,7 +136,7 @@ function DeleteConfirmModal({
         <h3 className={modalStyles.confirmTitle}>{title}</h3>
         <p className={modalStyles.confirmDescription}>{description}</p>
         <div className={modalStyles.confirmActions}>
-          <Button variant="neutral" onClick={onCancel}>
+          <Button variant="warning" onClick={onCancel}>
             {cancelLabel}
           </Button>
           <Button variant="danger" onClick={onConfirm}>

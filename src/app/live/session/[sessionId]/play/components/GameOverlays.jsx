@@ -86,7 +86,7 @@ export const GameOverlays = memo(function GameOverlays({
                   </p>
                   <div className={styles.kickConfirmActions}>
                     <button
-                      className={styles.exitSecondary}
+                      className="btn warning"
                       onClick={() => setPendingKickPlayer(null)}>
                       {t('cancel')}
                     </button>
@@ -118,7 +118,7 @@ export const GameOverlays = memo(function GameOverlays({
             <h3>{t('leaveGameTitle')}</h3>
             <p className={styles.exitHint}>{t('leaveGameDesc')}</p>
             <div className={styles.exitActions}>
-              <button className="btn neutral" onClick={onCloseExit}>
+              <button className="btn warning" onClick={onCloseExit}>
                 {t('cancel')}
               </button>
               <button className="btn danger" onClick={onExitGame}>

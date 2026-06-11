@@ -1924,6 +1924,59 @@
   }
 }
 
+.autoPageAnalyzeCards {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.autoPageAnalyzeCard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--button-secondary-border);
+  text-align: left;
+
+  strong {
+    font-size: 0.96rem;
+    line-height: 1.35;
+  }
+
+  small {
+    font-size: 0.78rem;
+  }
+}
+
+.autoPageAnalyzeCardFound {
+  background: var(--success-50);
+  border-color: var(--success-100);
+
+  strong {
+    color: var(--success-text);
+  }
+}
+
+.autoPageAnalyzeCardCurrent {
+  background: var(--primary-25);
+  border-color: var(--primary-100);
+
+  strong {
+    color: var(--primary-text);
+  }
+}
+
+.autoPageAnalyzeCardLabel {
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .autoPageAnalyzeProgressBar {
   width: 100%;
   height: 8px;
@@ -2076,6 +2129,24 @@
 
 .autoUploadTileFilled {
   background: var(--gray-100);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease,
+    filter 0.22s ease;
+}
+
+.autoUploadTileDeleting {
+  opacity: 0;
+  transform: scale(0.96);
+  filter: saturate(0.9);
+}
+
+.autoUploadTileDeleteOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(227, 60, 60, 0.18) 0%, rgba(227, 60, 60, 0.32) 100%);
+  pointer-events: none;
 }
 
 .autoUploadTileDelete {
@@ -2083,10 +2154,13 @@
   top: 10px;
   right: 10px;
   z-index: 2;
-  width: 38px;
-  height: 38px;
-  min-width: 38px !important;
+  width: 40px;
+  height: 40px;
+  min-width: 40px !important;
   padding: 0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 20px rgba(227, 60, 60, 0.16);
+  background: rgba(255, 255, 255, 0.94);
 }
 
 .autoUploadTileImage {

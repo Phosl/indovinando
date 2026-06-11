@@ -157,7 +157,7 @@ export default function QuestionModal({isOpen, questionIndex, question, onSave, 
         </div>
 
         <div className={styles.modalFooter}>
-          <button className="btn neutral" onClick={onCancel}>
+          <button className="btn warning" onClick={onCancel}>
             {text.cancel}
           </button>
           <button className="btn success" onClick={handleSave}>

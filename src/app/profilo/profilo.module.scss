@@ -548,7 +548,7 @@ a.avatarPickerBtn {
   font-size: 0.85rem;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .avatarGrid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }

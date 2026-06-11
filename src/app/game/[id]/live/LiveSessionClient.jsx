@@ -471,7 +471,7 @@ export default function LiveSessionClient({
             className={styles.startButton}>
             {isStartingGame ? t('starting') : t('startGame')} ({playersCount} {t('players')})
           </button>
-          <button onClick={handleCancel} className={styles.cancelButton}>
+          <button onClick={handleCancel} className={`btn warning ${styles.cancelButton}`}>
             {t('cancel')}
           </button>
         </div>
@@ -496,7 +496,7 @@ export default function LiveSessionClient({
               <button className={styles.startButton} onClick={handlePrintQr}>
                 {t('print')}
               </button>
-              <button className={styles.cancelButton} onClick={() => setQrOpen(false)}>
+              <button className={`btn neutral ${styles.cancelButton}`} onClick={() => setQrOpen(false)}>
                 {t('close')}
               </button>
             </div>

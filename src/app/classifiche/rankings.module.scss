@@ -223,7 +223,6 @@
   font-size: 1.25rem;
 }
 
-
 .sectionTitle {
   display: inline-flex;
   align-items: center;
@@ -256,7 +255,6 @@
 .sectionInfoBtn:hover {
   background: var(--primary-50);
 }
-
 
 .rankingList {
   display: flex;
@@ -413,7 +411,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .hero {
     padding: 24px 18px;
   }

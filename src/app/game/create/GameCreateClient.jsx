@@ -902,7 +902,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   const [currentAnalyzeBatchCount, setCurrentAnalyzeBatchCount] = useState(0)
   const [currentAnalyzeBatchIndex, setCurrentAnalyzeBatchIndex] = useState(0)
   const [currentAnalyzeBatchTotal, setCurrentAnalyzeBatchTotal] = useState(0)
-  const [isAutoAnalyzingAfterUpload, setIsAutoAnalyzingAfterUpload] = useState(false)
+  const [lastAnalyzedBottleName, setLastAnalyzedBottleName] = useState('')
   const [isCreatingQuiz, setIsCreatingQuiz] = useState(false)
   const [webSearchReview, setWebSearchReview] = useState(null)
   const [lastWebSearchReview, setLastWebSearchReview] = useState(null)
@@ -924,8 +924,8 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   const [aiScanCredits, setAiScanCredits] = useState(() =>
     normalizeAiScanCredits(initialAiScanCredits || {}),
   )
-  const [displayedAiCredits, setDisplayedAiCredits] = useState(() =>
-    normalizeAiScanCredits(initialAiScanCredits || {}).remaining,
+  const [displayedAiCredits, setDisplayedAiCredits] = useState(
+    () => normalizeAiScanCredits(initialAiScanCredits || {}).remaining,
   )
   const [isCreditsSpendAnimating, setIsCreditsSpendAnimating] = useState(false)
   const [isCreditsInfoOpen, setIsCreditsInfoOpen] = useState(false)
@@ -945,7 +945,6 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     (ids) => {
       if (typeof window === 'undefined') return
       writeStoredIds(window.sessionStorage, sessionIdsStorageKey, ids)
-      writeStoredIds(window.localStorage, sessionIdsStorageKey, ids)
     },
     [sessionIdsStorageKey],
   )
@@ -953,7 +952,6 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   const clearSessionIds = useCallback(() => {
     if (typeof window === 'undefined') return
     if (sessionIdsStorageKey) window.sessionStorage.removeItem(sessionIdsStorageKey)
-    if (sessionIdsStorageKey) window.localStorage.removeItem(sessionIdsStorageKey)
     if (draftStateStorageKey) window.localStorage.removeItem(draftStateStorageKey)
   }, [draftStateStorageKey, sessionIdsStorageKey])
 
@@ -1371,23 +1369,23 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   useEffect(() => {
     if (!userId || typeof window === 'undefined') return
 
-    const storedSessionIds = readStoredIds(window.sessionStorage, sessionIdsStorageKey)
-    const sessionIds =
-      storedSessionIds.length > 0
-        ? storedSessionIds
-        : readStoredIds(window.localStorage, sessionIdsStorageKey)
-    setSessionImageIds(sessionIds)
-    if (storedSessionIds.length === 0 && sessionIds.length > 0) {
-      writeStoredIds(window.sessionStorage, sessionIdsStorageKey, sessionIds)
+    const navigationType =
+      window.performance?.getEntriesByType?.('navigation')?.[0]?.type ||
+      window.performance?.navigation?.type ||
+      ''
+    if (navigationType === 'reload') {
+      if (sessionIdsStorageKey) window.sessionStorage.removeItem(sessionIdsStorageKey)
+      if (draftStateStorageKey) window.localStorage.removeItem(draftStateStorageKey)
     }
+
+    const storedSessionIds = readStoredIds(window.sessionStorage, sessionIdsStorageKey)
+    setSessionImageIds(storedSessionIds)
 
     const storedDraftState = readStoredObject(window.localStorage, draftStateStorageKey)
     if (storedDraftState) {
       const restoredStep = Number(storedDraftState.autoStep || 1)
-      setAutoStep(restoredStep >= 2 && sessionIds.length > 0 ? Math.min(restoredStep, 3) : 1)
-      setQuizTemplateMode(
-        storedDraftState.quizTemplateMode === 'standard' ? 'standard' : 'openai',
-      )
+      setAutoStep(restoredStep >= 2 && storedSessionIds.length > 0 ? Math.min(restoredStep, 3) : 1)
+      setQuizTemplateMode(storedDraftState.quizTemplateMode === 'standard' ? 'standard' : 'openai')
       setGeneratedQuizSignature(
         typeof storedDraftState.generatedQuizSignature === 'string'
           ? storedDraftState.generatedQuizSignature
@@ -1446,14 +1444,24 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       t('automaticAnalyzeLoadingStepLabel'),
       t('automaticAnalyzeLoadingStepName'),
       t('automaticAnalyzeLoadingStepWine'),
+      t('automaticAnalyzeSpeedHint'),
       t('automaticAnalyzeLoadingStepDetails'),
-      t('automaticAnalyzeLoadingStepTaste'),
+    ],
+    [t],
+  )
+  const analyzeCelebratePrefixes = useMemo(
+    () => [
+      t('automaticAnalyzeCelebrateEureka'),
+      t('automaticAnalyzeCelebrateYuppi'),
+      t('automaticAnalyzeCelebrateOle'),
+      t('automaticAnalyzeCelebrateCiSiamo'),
     ],
     [t],
   )
   const [webSearchLoadingStep, setWebSearchLoadingStep] = useState(0)
   const [analyzeLoadingStep, setAnalyzeLoadingStep] = useState(0)
   const isAnalyzeOverlayVisible = isAnalyzingAll || !!analyzingImageId
+  const currentAnalyzeStepLabel = analyzeLoadingMessages[analyzeLoadingStep]
 
   useEffect(() => {
     if (!webSearchingImageId) {
@@ -1585,19 +1593,17 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
             <span className={styles.autoTopBarCreditsSweep} aria-hidden="true" />
             <span className={styles.autoTopBarCreditsGlow} aria-hidden="true" />
             <span className={styles.autoTopBarCreditsConfetti} aria-hidden="true">
-            {creditsConfettiPieces.map((piece) => (
-              <span
-                key={piece.id}
-                className={styles.autoTopBarCreditsConfettiPiece}
-                style={
-                  {
+              {creditsConfettiPieces.map((piece) => (
+                <span
+                  key={piece.id}
+                  className={styles.autoTopBarCreditsConfettiPiece}
+                  style={{
                     '--credit-confetti-x': piece.x,
                     '--credit-confetti-delay': piece.delay,
                     '--credit-confetti-rotation': piece.rotation,
-                  }
-                }
-              />
-            ))}
+                  }}
+                />
+              ))}
             </span>
           </>
         ) : null}
@@ -1680,6 +1686,10 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     },
     [t],
   )
+  const analyzeCelebratePrefix =
+    analyzeCelebratePrefixes[
+      Math.max(0, ((currentAnalyzeBatchIndex || 1) - 1) % analyzeCelebratePrefixes.length)
+    ]
 
   const reanalyzableImages = useMemo(
     () =>
@@ -1696,8 +1706,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     [reanalyzableImages],
   )
   const reanalyzableCount = reanalyzableImageIds.length
-  const canReanalyzeAll =
-    reanalyzableCount > 0 && aiScanCredits.remaining >= reanalyzableCount
+  const canReanalyzeAll = reanalyzableCount > 0 && aiScanCredits.remaining >= reanalyzableCount
 
   const recognizedBottleCount = useMemo(
     () => uploadedImages.filter((image) => image.status === 'recognized').length,
@@ -1766,7 +1775,6 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
   async function handleFilesUpload(fileList) {
     if (!userId || !fileList?.length) return
 
-    let autoAnalyzeIds = []
     setIsUploading(true)
     setUploadProgress({
       current: 0,
@@ -1915,9 +1923,6 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
           return next
         })
         setUploadedImages((prev) => [...createdRows, ...prev])
-        if (createdIds.length > 1) {
-          autoAnalyzeIds = createdIds
-        }
       }
     } catch (error) {
       setUploadError(`${t('automaticUploadError')} (${error?.message || 'unknown'})`)
@@ -1935,19 +1940,6 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       })
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
-      }
-    }
-
-    if (autoAnalyzeIds.length > 0) {
-      if (aiScanCredits.remaining >= autoAnalyzeIds.length) {
-        setIsAutoAnalyzingAfterUpload(true)
-        await handleAnalyzeAll(autoAnalyzeIds, {autoTriggered: true})
-      } else {
-        setToast({
-          message: t('automaticAutoAnalyzeInsufficientCredits'),
-          tone: 'error',
-          duration: 3600,
-        })
       }
     }
   }
@@ -1978,6 +1970,8 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
         setUploadError(`${t('automaticDeleteError')} (${result?.error || 'delete'})`)
         return
       }
+
+      await new Promise((resolve) => setTimeout(resolve, 220))
 
       setUploadedImages((prev) => prev.filter((image) => image.id !== imageId))
       setFailedPreviewIds((prev) => prev.filter((id) => id !== imageId))
@@ -2013,6 +2007,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       return
     }
     setAnalyzingImageId(imageId)
+    setLastAnalyzedBottleName('')
     setUploadError('')
     const previousCreditsRemaining = aiScanCredits.remaining
     setWebPreviewUsageByImageId((prev) => {
@@ -2048,6 +2043,16 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       const updatedRows = Array.isArray(result?.updated) ? result.updated : []
       if (updatedRows.length > 0) {
         const map = Object.fromEntries(updatedRows.map((row) => [row.id, row]))
+        const updatedCurrentRow =
+          updatedRows.find((row) => row.id === imageId) || updatedRows[0] || null
+        if (updatedCurrentRow?.recognized_name) {
+          const uploadedIndex = uploadedImages.findIndex(
+            (image) => image.id === updatedCurrentRow.id,
+          )
+          setLastAnalyzedBottleName(
+            getBottleDisplayName(updatedCurrentRow, uploadedIndex >= 0 ? uploadedIndex : 0),
+          )
+        }
         setUploadedImages((prev) =>
           prev.map((row) => (map[row.id] ? mergeImageRowWithPreview(map[row.id], row) : row)),
         )
@@ -2058,6 +2063,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       setUploadError(`${t('automaticAnalyzeError')} (${error?.message || 'unknown'})`)
     } finally {
       setAnalyzingImageId('')
+      setLastAnalyzedBottleName('')
     }
   }
 
@@ -2225,7 +2231,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     }
   }
 
-  async function handleAnalyzeAll(overrideIds = null, options = {}) {
+  async function handleAnalyzeAll(overrideIds = null) {
     if (isAnalyzingAll || analyzingImageId || webSearchingImageId) return
     const ids = Array.isArray(overrideIds)
       ? overrideIds.map((id) => String(id || '').trim()).filter(Boolean)
@@ -2247,6 +2253,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
     setCurrentAnalyzeBatchCount(ids.length)
     setCurrentAnalyzeBatchTotal(ids.length)
     setCurrentAnalyzeBatchIndex(1)
+    setLastAnalyzedBottleName('')
     setUploadError('')
     const previousCreditsRemaining = aiScanCredits.remaining
     let finalCreditsRemaining = previousCreditsRemaining
@@ -2284,6 +2291,16 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
         const updatedRows = Array.isArray(result?.updated) ? result.updated : []
         if (updatedRows.length > 0) {
           const map = Object.fromEntries(updatedRows.map((row) => [row.id, row]))
+          const updatedCurrentRow =
+            updatedRows.find((row) => row.id === imageId) || updatedRows[0] || null
+          if (updatedCurrentRow?.recognized_name) {
+            const uploadedIndex = uploadedImages.findIndex(
+              (image) => image.id === updatedCurrentRow.id,
+            )
+            setLastAnalyzedBottleName(
+              getBottleDisplayName(updatedCurrentRow, uploadedIndex >= 0 ? uploadedIndex : 0),
+            )
+          }
           setUploadedImages((prev) =>
             prev.map((row) => (map[row.id] ? mergeImageRowWithPreview(map[row.id], row) : row)),
           )
@@ -2302,12 +2319,9 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       setCurrentAnalyzeBatchCount(0)
       setCurrentAnalyzeBatchIndex(0)
       setCurrentAnalyzeBatchTotal(0)
-      if (options.autoTriggered) {
-        setIsAutoAnalyzingAfterUpload(false)
-      }
+      setLastAnalyzedBottleName('')
     }
   }
-
 
   async function handleVerifyImage(imageId, options = {}) {
     if (!imageId) return
@@ -2670,36 +2684,45 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       {isAnalyzingAll || analyzingImageId ? (
         <div className={styles.autoPageAnalyzeOverlay}>
           <div className={styles.autoPageAnalyzePanel}>
-            <div className={styles.autoBottleWebSearchSpinner} aria-hidden="true" />
             <strong>
-              {analyzingImageId
-                ? t('automaticAnalyzingSingle')
-                : t('automaticAnalyzeBottleProgress', {
-                    current: String(currentAnalyzeBatchIndex || 1),
-                    total: String(currentAnalyzeBatchTotal || currentAnalyzeBatchCount || pendingAnalyzeCount),
-                  })}
+              {t('automaticAnalyzeBottleProgress', {
+                current: String(currentAnalyzeBatchIndex || 1),
+                total: String(
+                  currentAnalyzeBatchTotal || currentAnalyzeBatchCount || pendingAnalyzeCount,
+                ),
+              })}
             </strong>
-            <span>{analyzeLoadingMessages[analyzeLoadingStep]}</span>
-            {isAnalyzingAll && currentAnalyzeBatchTotal > 1 ? (
-              <small>
-                {t('automaticAnalyzeBatchProgress', {
-                  current: String(currentAnalyzeBatchIndex || 1),
-                  total: String(currentAnalyzeBatchTotal),
-                })}
-              </small>
-            ) : null}
             <div className={styles.autoPageAnalyzeProgressBar} aria-hidden="true">
               <span />
             </div>
-            <small>{t('automaticAnalyzeOverlayHint')}</small>
-            {isAutoAnalyzingAfterUpload ? (
-              <small className={styles.autoPageAnalyzeAutoHint}>
-                {t('automaticAnalyzeOverlayAutoHint')}
-              </small>
+
+            {currentAnalyzeStepLabel ? (
+              <div className={`${styles.autoPageAnalyzeCard} ${styles.autoPageAnalyzeCardCurrent}`}>
+                <span className={styles.autoPageAnalyzeCardLabel}>
+                  {t('automaticAnalyzeCurrentLabel')}
+                </span>
+                <strong>{currentAnalyzeStepLabel}</strong>
+              </div>
             ) : null}
-            <small className={styles.autoPageAnalyzePatience}>
-              {t('automaticAnalyzeOverlayPatience')}
-            </small>
+
+            {(lastAnalyzedBottleName || currentAnalyzeStepLabel) && (
+              <div className={styles.autoPageAnalyzeCards}>
+                {lastAnalyzedBottleName ? (
+                  <div
+                    className={`${styles.autoPageAnalyzeCard} ${styles.autoPageAnalyzeCardFound}`}>
+                    <span className={styles.autoPageAnalyzeCardLabel}>
+                      {t('automaticAnalyzeFoundLabel')}
+                    </span>
+                    <strong>
+                      {t('automaticAnalyzeFoundBottle', {
+                        prefix: analyzeCelebratePrefix,
+                        name: lastAnalyzedBottleName,
+                      })}
+                    </strong>
+                  </div>
+                ) : null}
+              </div>
+            )}
           </div>
         </div>
       ) : null}
@@ -2819,13 +2842,24 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                 }
 
                 return (
-                  <div key={image.id} className={styles.autoUploadTileFilled}>
+                  <div
+                    key={image.id}
+                    className={`${styles.autoUploadTileFilled} ${
+                      deletingImageId === image.id ? styles.autoUploadTileDeleting : ''
+                    }`}>
+                    {deletingImageId === image.id ? (
+                      <div className={styles.autoUploadTileDeleteOverlay} aria-hidden="true" />
+                    ) : null}
                     <button
                       type="button"
                       className={`btn danger-negative btn-circle ${styles.autoUploadTileDelete}`}
                       onClick={() => handleDeleteImage(image.id)}
                       disabled={!!deletingImageId || !!analyzingImageId || isAnalyzingAll}
-                      aria-label={t('automaticDeleteAction')}>
+                      aria-label={
+                        deletingImageId === image.id
+                          ? t('automaticDeleting')
+                          : t('automaticDeleteAction')
+                      }>
                       <Icon src="/icons/bucket.svg" size={18} />
                     </button>
                     <Image
@@ -3434,7 +3468,6 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                               ) : null}
                             </div>
                           ) : null}
-
                         </>
                       ) : (
                         <>
@@ -3491,7 +3524,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                     <div className={styles.autoBottleCardFooterActionBar}>
                       <button
                         type="button"
-                        className="btn neutral"
+                        className="btn warning"
                         onClick={handleCloseBottleDetail}>
                         {t('automaticCancelAction')}
                       </button>
@@ -3544,7 +3577,7 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                     <div className={styles.autoBottleCardFooterActionBar}>
                       <button
                         type="button"
-                        className="btn neutral"
+                        className="btn warning"
                         onClick={() => {
                           setDetailEditMode(false)
                           syncDetailDraftFromImage(selectedBottle)
@@ -3815,8 +3848,7 @@ export default function GameCreateClient({
   const [showOnboarding, setShowOnboarding] = useState(() => {
     if (typeof window !== 'undefined') {
       return (
-        initialShowOnboarding &&
-        window.localStorage.getItem(CREATE_ONBOARDING_STORAGE_KEY) !== '1'
+        initialShowOnboarding && window.localStorage.getItem(CREATE_ONBOARDING_STORAGE_KEY) !== '1'
       )
     }
     return initialShowOnboarding

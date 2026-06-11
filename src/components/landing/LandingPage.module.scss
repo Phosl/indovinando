@@ -81,7 +81,7 @@
   height: auto;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .navWrap {
     padding: 12px 12px 0;
   }
@@ -573,7 +573,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .heroSection,
   .section {
     width: min(1200px, calc(100% - 28px));

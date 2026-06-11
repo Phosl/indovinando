@@ -6,6 +6,7 @@ import styles from './OnboardingModal.module.scss'
 import {useT} from '@/lib/i18n/useT'
 import Icon from '@/components/Icon'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
+import {Button} from '@/components/ui/Button'
 
 /**
  * OnboardingModal component - displays onboarding information for game creation
@@ -73,10 +74,15 @@ export default function OnboardingModal({
           </div>
 
           {onDisable && (
-            <button className={styles.disableBtn} onClick={onDisable} type="button">
+            <Button
+              variant="neutral"
+              size="small"
+              className={styles.disableBtn}
+              onClick={onDisable}
+              type="button">
               <Icon name="removeSmall" size={18} />
               {t('disable')}
-            </button>
+            </Button>
           )}
         </div>
       </div>

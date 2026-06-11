@@ -125,6 +125,17 @@
   }
 }
 
+.btn.warning-ghost {
+  background-color: transparent;
+  color: var(--warning-text);
+  border-color: var(--warning-200);
+
+  &:hover {
+    background: var(--warning-100);
+    border-color: var(--warning);
+  }
+}
+
 .btn.quaternary {
   background-color: var(--quaternary-100);
   color: var(--quaternary-text);
