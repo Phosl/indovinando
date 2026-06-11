@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.43.16',
+    date: '11 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Refine automatic tasting loading, delete feedback, and draft recovery',
+    ],
+  },
+
+  {
     version: '1.43.15',
     date: '10 giugno 2026',
     label: 'Auto',
