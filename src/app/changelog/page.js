@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.44.3',
+    date: '11 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Improve profile loading and fix course cover fallbacks',
+    ],
+  },
+
+  {
     version: '1.44.2',
     date: '11 giugno 2026',
     label: 'Auto',
