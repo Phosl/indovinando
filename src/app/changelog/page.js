@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.44.1',
+    date: '11 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Refine rankings navigation and move credit history into a dedicated page',
+    ],
+  },
+
+  {
     version: '1.44.0',
     date: '11 giugno 2026',
     label: 'Auto',
