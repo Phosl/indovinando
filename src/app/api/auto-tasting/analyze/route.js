@@ -291,6 +291,26 @@ function getBottleCompletionMetaFromExtracted(extracted) {
   }
 }
 
+function getAutoWebEnrichmentMetaFromExtracted(extracted) {
+  const details = extracted?.recognized_payload?.catalog_details || {}
+  const grapes = Array.isArray(details?.grapes)
+    ? details.grapes.map((value) => toNonEmptyString(value)).filter(Boolean)
+    : []
+  const region = toNonEmptyString(details?.quiz_region || details?.region)
+  const criticalMissingFields = [
+    !toNonEmptyString(extracted?.recognized_vintage) ? 'vintage' : null,
+    !toNonEmptyString(details?.country) ? 'country' : null,
+    !region ? 'region' : null,
+    !toNonEmptyString(details?.type) ? 'type' : null,
+    !grapes[0] ? 'grape' : null,
+  ].filter(Boolean)
+
+  return {
+    shouldAutoEnrich: criticalMissingFields.length > 0,
+    criticalMissingFields,
+  }
+}
+
 function summarizeOpenAIUsage(responseJson) {
   const usage = responseJson?.usage
   if (!usage || typeof usage !== 'object') return null
@@ -485,6 +505,28 @@ function parseNumericOrNull(value) {
   return Number.isFinite(numeric) ? numeric : null
 }
 
+function resolveRepresentativePrice(price, min, max) {
+  const numericPrice = parseNumericOrNull(price)
+  const numericMin = parseNumericOrNull(min)
+  const numericMax = parseNumericOrNull(max)
+  const hasRange = numericMin != null || numericMax != null
+
+  if (!hasRange) return numericPrice
+
+  const safeMin = numericMin ?? numericMax
+  const safeMax = numericMax ?? numericMin
+
+  if (numericPrice != null && safeMin != null && safeMax != null) {
+    if (numericPrice >= safeMin && numericPrice <= safeMax) return numericPrice
+  }
+
+  if (safeMin != null && safeMax != null) {
+    return Number(((safeMin + safeMax) / 2).toFixed(2))
+  }
+
+  return safeMin ?? safeMax ?? numericPrice
+}
+
 function resolveEffectivePriceContext(catalogVintage = null, sourcePriceContext = null) {
   const catalogPrice = parseNumericOrNull(catalogVintage?.price)
   const catalogMin = parseNumericOrNull(catalogVintage?.price_min)
@@ -492,22 +534,28 @@ function resolveEffectivePriceContext(catalogVintage = null, sourcePriceContext 
   const sourcePrice = parseNumericOrNull(sourcePriceContext?.price ?? sourcePriceContext?.average_price)
   const sourceMin = parseNumericOrNull(sourcePriceContext?.price_min)
   const sourceMax = parseNumericOrNull(sourcePriceContext?.price_max)
+  const effectiveCatalogPrice = resolveRepresentativePrice(catalogPrice, catalogMin, catalogMax)
+  const effectiveSourcePrice = resolveRepresentativePrice(sourcePrice, sourceMin, sourceMax)
 
   const hasCatalogRange = catalogMin != null || catalogMax != null
   const hasSourceRange = sourceMin != null || sourceMax != null
   const preferSource = hasSourceRange && !hasCatalogRange
 
-  const chosenMin = preferSource ? sourceMin ?? sourcePrice : catalogMin ?? sourceMin ?? catalogPrice ?? sourcePrice
-  const chosenMax = preferSource ? sourceMax ?? sourcePrice : catalogMax ?? sourceMax ?? catalogPrice ?? sourcePrice
+  const chosenMin = preferSource
+    ? sourceMin ?? effectiveSourcePrice
+    : catalogMin ?? sourceMin ?? effectiveCatalogPrice ?? effectiveSourcePrice
+  const chosenMax = preferSource
+    ? sourceMax ?? effectiveSourcePrice
+    : catalogMax ?? sourceMax ?? effectiveCatalogPrice ?? effectiveSourcePrice
   const chosenPrice = preferSource
-    ? sourcePrice ?? chosenMin ?? chosenMax
-    : catalogPrice ?? sourcePrice ?? chosenMin ?? chosenMax
+    ? effectiveSourcePrice ?? chosenMin ?? chosenMax
+    : effectiveCatalogPrice ?? effectiveSourcePrice ?? chosenMin ?? chosenMax
 
   return {
     price: chosenPrice,
     price_min: chosenMin,
     price_max: chosenMax,
-    average_price: sourcePrice ?? chosenPrice,
+    average_price: effectiveSourcePrice ?? chosenPrice,
     currency:
       (preferSource ? sourcePriceContext?.currency : catalogVintage?.currency || sourcePriceContext?.currency) ||
       null,
@@ -1446,7 +1494,10 @@ async function enrichWithWineCatalog(supabase, extracted, existingPayload = null
         existingPayload?.web_enrichment || extracted?.recognized_payload?.web_enrichment || null,
       )
       const knownVintages = [...new Set((bundle.vintages || []).map((v) => v?.vintage).filter(Boolean))]
-      const latestWithPrice = (bundle.vintages || []).find((v) => v?.price != null) || null
+      const latestWithPrice =
+        (bundle.vintages || []).find(
+          (v) => v?.price != null || v?.price_min != null || v?.price_max != null,
+        ) || null
       const effectivePrice = resolveEffectivePriceContext(latestWithPrice, sourcePriceContext)
       const resolvedVintage =
         extracted?.recognized_vintage && knownVintages.includes(extracted.recognized_vintage)
@@ -1604,7 +1655,10 @@ async function enrichWithWineCatalog(supabase, extracted, existingPayload = null
           existingPayload?.web_enrichment || extracted?.recognized_payload?.web_enrichment || null,
         )
         const knownVintages = [...new Set((bundle.vintages || []).map((v) => v?.vintage).filter(Boolean))]
-        const latestWithPrice = (bundle.vintages || []).find((v) => v?.price != null) || null
+        const latestWithPrice =
+          (bundle.vintages || []).find(
+            (v) => v?.price != null || v?.price_min != null || v?.price_max != null,
+          ) || null
         const effectivePrice = resolveEffectivePriceContext(latestWithPrice, sourcePriceContext)
         const resolvedVintage =
           extracted?.recognized_vintage && knownVintages.includes(extracted.recognized_vintage)
@@ -1739,7 +1793,9 @@ async function enrichWithWineCatalog(supabase, extracted, existingPayload = null
   }
 
   const knownVintages = [...new Set((vintages || []).map((v) => v?.vintage).filter(Boolean))]
-  const latestWithPrice = (vintages || []).find((v) => v?.price != null) || null
+  const latestWithPrice =
+    (vintages || []).find((v) => v?.price != null || v?.price_min != null || v?.price_max != null) ||
+    null
   const narrative = parseCatalogNarrativeFromNotes(best.label?.notes)
   const bundle = await loadCatalogLabelBundle(supabase, best.label.id)
   const sourceNarrative = bundle?.latestSourcePayload?.raw_payload?.extracted_notes || {}
@@ -1964,7 +2020,9 @@ export async function POST(request) {
           )
           const hasCatalogMatch = !!extracted?.recognized_payload?.catalog_match?.matched
           const completionMeta = getBottleCompletionMetaFromExtracted(extracted)
-          const shouldAutoEnrichIncompleteBottle = completionMeta.percent < 80
+          const autoWebEnrichmentMeta = getAutoWebEnrichmentMetaFromExtracted(extracted)
+          const shouldAutoEnrichIncompleteBottle =
+            completionMeta.percent < 80 || autoWebEnrichmentMeta.shouldAutoEnrich
           const hasCatalogSync =
             !!row?.recognized_payload?.catalog_sync?.synced ||
             !!extracted?.recognized_payload?.catalog_sync?.synced
@@ -2019,6 +2077,8 @@ export async function POST(request) {
                   producer: extracted?.recognized_producer || null,
                   reason: webEnrichment.reason,
                   forceWebEnrichment,
+                  completionPercent: completionMeta.percent,
+                  criticalMissingFields: autoWebEnrichmentMeta.criticalMissingFields,
                 })
               } else {
                 console.log('[auto-tasting] web enrichment result', {
@@ -2026,6 +2086,8 @@ export async function POST(request) {
                   wine: extracted?.recognized_name || null,
                   producer: extracted?.recognized_producer || null,
                   forceWebEnrichment,
+                  completionPercent: completionMeta.percent,
+                  criticalMissingFields: autoWebEnrichmentMeta.criticalMissingFields,
                   parsed: webEnrichment?.parsed || null,
                   sources: webEnrichment?.sources || [],
                 })

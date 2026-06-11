@@ -1,5 +1,6 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {createAdminSupabase} from '@/lib/supabaseAdmin'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {getWineCourseData} from '@/lib/wineCourseContent'
 import {getPublicRankingsSnapshot} from '@/lib/publicRankings'
@@ -19,22 +20,92 @@ export default async function ProfilePage() {
 
   if (!user) redirect('/auth?next=/profilo')
 
-  const [profileResult, gamesResult, courseResult, communitySnapshot] = await Promise.all([
+  const [profileResult, gamesResult, courseResult, communitySnapshot, myCreditOrdersResult] = await Promise.all([
     supabase
       .from('profiles')
       .select(
-        'username, avatar_emoji, profile_type, experience_level, favorite_wine_types, favorite_countries, city, province, newsletter_opt_in, business_name, business_type, business_description, business_website, business_phone, business_address, business_latitude, business_longitude, business_logo_path, business_logo_url, is_partner_public, partner_slug, profile_completed_at, profile_prompt_dismissed_at, ai_scan_credits_total, ai_scan_credits_bonus, ai_scan_credits_used',
+        'username, avatar_emoji, super_admin, profile_type, experience_level, favorite_wine_types, favorite_countries, city, province, newsletter_opt_in, business_name, business_type, business_description, business_website, business_phone, business_address, business_latitude, business_longitude, business_logo_path, business_logo_url, is_partner_public, partner_slug, profile_completed_at, profile_prompt_dismissed_at, ai_scan_credits_total, ai_scan_credits_bonus, ai_scan_credits_used',
       )
       .eq('id', user.id)
       .single(),
     supabase.from('games').select('id', {count: 'exact', head: true}).eq('created_by', user.id),
     getWineCourseData(lang).catch(() => ({levels: []})),
     getPublicRankingsSnapshot(supabase),
+    supabase
+      .from('ai_credit_purchase_orders')
+      .select(
+        'id, pack_code, credits_amount, amount_cents, currency, status, completed_at, created_at',
+      )
+      .eq('user_id', user.id)
+      .order('created_at', {ascending: false})
+      .limit(30),
   ])
 
   const profile = profileResult.data
   const gamesCount = gamesResult.count ?? 0
   const levels = courseResult?.levels ?? []
+  const myCreditOrders = myCreditOrdersResult.data || []
+  const isSuperAdmin = profile?.super_admin === true
+
+  let adminCreditSnapshot = null
+
+  if (isSuperAdmin) {
+    try {
+      const admin = createAdminSupabase()
+      const {data: allOrders = []} = await admin
+        .from('ai_credit_purchase_orders')
+        .select(
+          'id, user_id, pack_code, credits_amount, amount_cents, currency, status, completed_at, created_at, metadata',
+        )
+        .order('created_at', {ascending: false})
+        .limit(200)
+
+      const completedOrders = allOrders.filter((order) => order.status === 'completed')
+      const totalRevenueCents = completedOrders.reduce(
+        (sum, order) => sum + Number(order.amount_cents || 0),
+        0,
+      )
+      const totalCreditsSold = completedOrders.reduce(
+        (sum, order) => sum + Number(order.credits_amount || 0),
+        0,
+      )
+
+      const last14Days = Array.from({length: 14}, (_, index) => {
+        const date = new Date()
+        date.setHours(0, 0, 0, 0)
+        date.setDate(date.getDate() - (13 - index))
+        const key = date.toISOString().slice(0, 10)
+        return {
+          key,
+          label: `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}`,
+          revenueCents: 0,
+          orders: 0,
+        }
+      })
+
+      const dayMap = new Map(last14Days.map((item) => [item.key, item]))
+      completedOrders.forEach((order) => {
+        const sourceDate = order.completed_at || order.created_at
+        if (!sourceDate) return
+        const key = new Date(sourceDate).toISOString().slice(0, 10)
+        const bucket = dayMap.get(key)
+        if (!bucket) return
+        bucket.revenueCents += Number(order.amount_cents || 0)
+        bucket.orders += 1
+      })
+
+      adminCreditSnapshot = {
+        totalOrders: allOrders.length,
+        totalCompletedOrders: completedOrders.length,
+        totalRevenueCents,
+        totalCreditsSold,
+        recentOrders: allOrders.slice(0, 30),
+        chart: last14Days,
+      }
+    } catch (error) {
+      console.error('[profile credits admin snapshot]', error)
+    }
+  }
 
   return (
     <ProfileClient
@@ -46,6 +117,8 @@ export default async function ProfilePage() {
       levels={levels}
       gamesCount={gamesCount || 0}
       communitySnapshot={communitySnapshot}
+      myCreditOrders={myCreditOrders}
+      adminCreditSnapshot={adminCreditSnapshot}
     />
   )
 }

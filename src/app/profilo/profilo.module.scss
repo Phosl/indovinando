@@ -267,6 +267,314 @@ a.avatarPickerBtn {
   line-height: 1;
 }
 
+.creditsActions {
+  margin-top: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.creditsHint {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.buyCreditsBtn {
+  width: 100%;
+}
+
+.creditPackList {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.creditPackCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--success-100);
+  background: var(--success-50);
+}
+
+.creditPackMeta {
+  display: grid;
+  gap: 4px;
+}
+
+.creditPackTitle {
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--primary-text);
+}
+
+.creditPackSubtitle {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.creditPackAction {
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+}
+
+.creditPackPrice {
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--success-text);
+}
+
+.creditSectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.creditTabs {
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 6px;
+  border-radius: 999px;
+  background: var(--gray-50, #f4f4f4);
+}
+
+.creditTabBtn {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.creditTabBtnActive {
+  background: var(--foreground);
+  color: var(--primary-text);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.creditHistoryList {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.creditHistoryItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--gray-light);
+  background: var(--foreground);
+}
+
+.creditHistoryMain {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.creditHistoryTitle {
+  font-size: 0.98rem;
+  font-weight: 900;
+  color: var(--primary-text);
+}
+
+.creditHistoryMeta {
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  word-break: break-word;
+}
+
+.creditHistorySide {
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+  flex-shrink: 0;
+}
+
+.creditHistoryAmount {
+  font-size: 0.96rem;
+  font-weight: 900;
+  color: var(--primary-text);
+}
+
+.creditHistoryStatus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.creditHistoryStatusSuccess {
+  background: var(--success-50);
+  color: var(--success-text);
+  border: 1px solid var(--success-100);
+}
+
+.creditHistoryStatusNeutral {
+  background: var(--gray-50, #f4f4f4);
+  color: var(--text-secondary);
+  border: 1px solid var(--gray-light);
+}
+
+.creditEmptyState {
+  margin: 14px 0 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.adminCreditsPanel {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.creditChartCard {
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--gray-light);
+  background: var(--foreground);
+}
+
+.creditChartHeader {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 12px;
+
+  strong {
+    color: var(--primary-text);
+    font-size: 0.98rem;
+  }
+
+  span {
+    color: var(--text-secondary);
+    font-size: 0.84rem;
+  }
+}
+
+.creditChart {
+  display: grid;
+  grid-template-columns: repeat(14, minmax(0, 1fr));
+  gap: 8px;
+  align-items: end;
+  min-height: 190px;
+}
+
+.creditChartCol {
+  display: grid;
+  gap: 8px;
+  align-items: end;
+}
+
+.creditChartValue {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.creditChartBarWrap {
+  height: 120px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--gray-50, #f4f4f4);
+  padding: 6px;
+}
+
+.creditChartBar {
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--success) 0%, var(--primary) 100%);
+}
+
+.creditChartLabel {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.toastViewport {
+  position: fixed;
+  left: 50%;
+  top: max(18px, calc(env(safe-area-inset-top) + 10px));
+  transform: translateX(-50%);
+  z-index: 1200;
+  width: min(calc(100vw - 24px), 420px);
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+  border: 1px solid transparent;
+  pointer-events: auto;
+}
+
+.toastInfo {
+  background: var(--foreground);
+  border-color: var(--gray-light);
+  color: var(--text-secondary);
+}
+
+.toastSuccess {
+  background: var(--success-50);
+  border-color: var(--success-100);
+  color: var(--success-text);
+}
+
+.toastError {
+  background: var(--danger-50, #fff4f4);
+  border-color: var(--danger-100, #efc4c4);
+  color: var(--danger-text, #6a2323);
+}
+
+.toastMessage {
+  font-size: 0.94rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.toastClose {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+  color: currentColor;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 .publicProfileRow {
   margin-top: 14px;
   display: flex;

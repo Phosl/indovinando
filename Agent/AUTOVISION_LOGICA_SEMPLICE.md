@@ -34,9 +34,41 @@ catalogo, e usiamo quei dati per precompilare la creazione del gioco/quiz.
 8. UI usa questi dati per precompilare bottiglia e suggerire domande.
 9. Se l’utente conferma, il vino viene creato o aggiornato nel catalogo.
 
-Importante: il web enrichment non e piu “sempre acceso”. E opt-in.
-Se la ricerca web non trova differenze utili, puo comunque consumare token: il risultato giusto in
-UI e “nessun nuovo dato visibile”, non “ricerca non eseguita”.
+Importante: il web enrichment non e piu “sempre acceso” in modo incondizionato.
+
+Nel flusso attuale:
+
+- il pulsante manuale `Fai web-search` lo forza sempre
+- l’analisi iniziale prova ad attivarlo automaticamente solo in alcuni casi
+
+Regola attuale auto-enrichment:
+
+- viene tentato se la bottiglia risulta sotto `80%` di completezza
+- oppure se manca almeno un campo critico tra:
+  - annata
+  - paese
+  - regione
+  - tipo
+  - primo vitigno
+- la completezza oggi e calcolata su 7 campi:
+  - nome vino
+  - produttore
+  - annata
+  - paese
+  - regione
+  - tipo
+  - primo vitigno
+
+Questo evita il caso fastidioso in cui una bottiglia con `6 campi su 7` risulta ancora
+“incompleta” per la UI ma non attiva la ricerca web automatica solo perche e gia sopra l’80%.
+
+Questo spiega i casi in cui:
+
+- la prima analisi batch sembra “quasi completa ma non del tutto”
+- la `Fai web-search` manuale trova poi dati mancanti
+
+Quindi oggi non e necessariamente un bug Vision: spesso e una conseguenza della soglia attuale di
+auto-enrichment.
 
 ## 3) Come viene fatto il match (senza tecnicismi)
 

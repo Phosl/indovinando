@@ -142,9 +142,11 @@ Riferimento:
 ### Monetizzazione / piani
 
 - [ ] vendere pacchetti crediti AI una tantum
-- [ ] Stripe Checkout + webhook conferma pagamento
-- [ ] ledger acquisti / ricariche crediti
-- [ ] pagina profilo / wizard con CTA `Compra crediti`
+- [x] scaffold Stripe Checkout + webhook conferma pagamento
+- [x] storico ricariche base nel profilo
+- [x] pannello super admin con transazioni, totale e grafico
+- [ ] ledger acquisti / ricariche crediti rifinito
+- [x] pagina profilo con CTA `Compra crediti`
 - [ ] Apple Pay / Google Pay via Stripe
 - [ ] valutare poi piani `Pro / Business` solo dopo validazione uso crediti
 

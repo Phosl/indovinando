@@ -100,6 +100,28 @@ function chooseBestVintageValue(existingValue, incomingValue, {preferIncoming = 
   return existingValue ?? incomingValue ?? null
 }
 
+function resolveRepresentativePrice(price, min, max) {
+  const numericPrice = Number(price)
+  const safePrice = Number.isFinite(numericPrice) ? numericPrice : null
+  const numericMin = Number(min)
+  const safeMin = Number.isFinite(numericMin) ? numericMin : null
+  const numericMax = Number(max)
+  const safeMax = Number.isFinite(numericMax) ? numericMax : null
+  const hasRange = safeMin != null || safeMax != null
+
+  if (!hasRange) return safePrice
+
+  if (safePrice != null && safeMin != null && safeMax != null) {
+    if (safePrice >= safeMin && safePrice <= safeMax) return safePrice
+  }
+
+  if (safeMin != null && safeMax != null) {
+    return Number(((safeMin + safeMax) / 2).toFixed(2))
+  }
+
+  return safeMin ?? safeMax ?? safePrice
+}
+
 function resolveMergedVintageFields(existing, payload) {
   const hasIncomingRange = payload.price_min != null || payload.price_max != null
   const hasExistingRange = existing.price_min != null || existing.price_max != null
@@ -702,8 +724,11 @@ export async function POST(request) {
     }
 
     const details = imageRow.recognized_payload?.catalog_details || {}
-    const resolvedPrice =
-      details.price ?? details.average_price ?? null
+    const resolvedPrice = resolveRepresentativePrice(
+      details.average_price ?? details.price ?? null,
+      details.price_min ?? null,
+      details.price_max ?? null,
+    )
     const resolvedCurrency = details.currency || null
     const resolvedPriceBand = details.quiz_price_band || details.price_band || null
 

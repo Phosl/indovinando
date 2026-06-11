@@ -28,6 +28,13 @@
   - draft recovery after accidental exit
   - incomplete-bottle guided repair flow
   - drag & drop ordering for questions and bottles
+- Stripe credits v1 is now scaffolded in app code with:
+  - hosted checkout session route
+  - webhook route for payment confirmation
+  - profile CTA to buy credits
+  - profile credit top-up history
+  - super-admin transaction overview with totals and trend chart
+- Stripe now also has a dev/testing handoff guide in `Agent/STRIPE_DEV_TEST_GUIDE.md`.
 
 ## Table-live answer reveal mode
 

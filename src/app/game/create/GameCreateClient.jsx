@@ -79,6 +79,28 @@ function normalizePriceAnswer(price, min = 5) {
   return `${Math.max(min, Math.round(numeric / 5) * 5)}€`
 }
 
+function resolveRepresentativePrice(price, min, max) {
+  const numericPrice = Number(price)
+  const safePrice = Number.isFinite(numericPrice) ? numericPrice : null
+  const numericMin = Number(min)
+  const safeMin = Number.isFinite(numericMin) ? numericMin : null
+  const numericMax = Number(max)
+  const safeMax = Number.isFinite(numericMax) ? numericMax : null
+  const hasRange = safeMin != null || safeMax != null
+
+  if (!hasRange) return safePrice
+
+  if (safePrice != null && safeMin != null && safeMax != null) {
+    if (safePrice >= safeMin && safePrice <= safeMax) return safePrice
+  }
+
+  if (safeMin != null && safeMax != null) {
+    return Number(((safeMin + safeMax) / 2).toFixed(2))
+  }
+
+  return safeMin ?? safeMax ?? safePrice
+}
+
 function getVintageBandLabel(year, lang = 'it') {
   const numeric = Number(year)
   if (!Number.isFinite(numeric)) return null
@@ -1631,7 +1653,12 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
       const appellation = details.quiz_appellation || details.appellation || ''
       const wineType = mapWineTypeLabel(details.type, lang) || ''
       const priceBand = details.quiz_price_band || details.price_band || ''
-      const averagePrice = details.average_price ?? details.price ?? ''
+      const averagePrice =
+        resolveRepresentativePrice(
+          details.average_price ?? details.price ?? null,
+          details.price_min ?? null,
+          details.price_max ?? null,
+        ) ?? ''
       const priceRange =
         details.price_min != null && details.price_max != null
           ? `${details.price_min}-${details.price_max}${details.currency ? ` ${details.currency}` : ''}`
@@ -2402,7 +2429,11 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
           .replace(/\s+/g, ' '),
         notableOptions,
       )
-      const averagePrice = details.average_price ?? details.price ?? null
+      const averagePrice = resolveRepresentativePrice(
+        details.average_price ?? details.price ?? null,
+        details.price_min ?? null,
+        details.price_max ?? null,
+      )
       const priceValue = normalizePriceAnswer(averagePrice)
       return {
         name: image.recognized_name,
@@ -3068,6 +3099,11 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
               )
               const webSources = hasWebSources ? webEnrichmentMeta.sources.filter(Boolean) : []
               const priceBand = details.quiz_price_band || details.price_band || null
+              const representativePrice = resolveRepresentativePrice(
+                details.average_price ?? details.price ?? null,
+                details.price_min ?? null,
+                details.price_max ?? null,
+              )
               const bottleSpecItems = [
                 primaryGrape ? {label: t('automaticQuestionGrape'), value: primaryGrape} : null,
                 details.price_min != null && details.price_max != null
@@ -3077,16 +3113,16 @@ function AutomaticModePlaceholder({onBack, userId, initialAiScanCredits}) {
                         (details.currency ? ` ${details.currency}` : ' EUR'),
                       value: `${details.price_min} - ${details.price_max}`,
                     }
-                  : details.average_price != null || details.price != null
+                  : representativePrice != null
                     ? {
                         label: t('automaticPriceLabel'),
-                        value: `${details.average_price ?? details.price}${details.currency ? ` ${details.currency}` : ' EUR'}`,
+                        value: `${representativePrice}${details.currency ? ` ${details.currency}` : ' EUR'}`,
                       }
                     : null,
-                details.average_price != null || details.price != null
+                representativePrice != null
                   ? {
                       label: t('automaticMediumPriceLabel'),
-                      value: normalizePriceAnswer(details.average_price ?? details.price),
+                      value: normalizePriceAnswer(representativePrice),
                     }
                   : null,
                 priceBand ? {label: t('automaticQuestionPrice'), value: priceBand} : null,
