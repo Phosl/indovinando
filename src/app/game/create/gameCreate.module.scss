@@ -88,6 +88,9 @@
   width: 140px;
   top: 50%;
   transform: translate(0, -50%);
+  @media (max-width: 768px) {
+    width: 100px;
+  }
 }
 
 .modeCard {

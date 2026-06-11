@@ -164,6 +164,14 @@ Riferimento:
 - [ ] schede partner più ricche
 - [ ] affinare marker / UX mappa partner
 
+### Migliorie performance / architettura
+
+- [ ] alleggerire `LanguageProvider` evitando sync client non necessari al mount
+- [ ] alleggerire `BottomNav` riducendo fetch auth client-side globali
+- [ ] rivedere `PageTransitionShell` per limitare costi globali di prefetch e interception
+- [ ] spezzare `GameCreateClient` in moduli più piccoli e lazy dove possibile
+- [ ] verificare altri blocchi globali che rallentano il primo paint delle top bar
+
 ---
 
 ## Prossima azione concreta

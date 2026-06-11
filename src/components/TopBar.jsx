@@ -5,6 +5,25 @@ import styles from './TopBar.module.scss'
 import {useT} from '@/lib/i18n/useT'
 import ProgressBar from '@/components/ui/ProgressBar'
 
+function BackIcon({className = ''}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+      className={className}>
+      <path
+        d="M14.5 19l-7-7 7-7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 export default function TopBar({
   title,
   children,
@@ -34,21 +53,11 @@ export default function TopBar({
           className={styles.backBtn}
           onClick={handleBackClick}
           aria-label={t('back')}>
-          <img
-            src="/icons/back-icon.svg"
-            alt=""
-            aria-hidden="true"
-            className={styles.backBtnIcon}
-          />
+          <BackIcon className={styles.backBtnIcon} />
         </button>
       ) : back ? (
         <Link href={back} className={styles.backBtn} aria-label={t('back')}>
-          <img
-            src="/icons/back-icon.svg"
-            alt=""
-            aria-hidden="true"
-            className={styles.backBtnIcon}
-          />
+          <BackIcon className={styles.backBtnIcon} />
         </Link>
       ) : null}
       {title && progress === null && (
