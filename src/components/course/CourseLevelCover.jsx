@@ -2,7 +2,7 @@
 
 import {useMemo, useState} from 'react'
 
-const COVER_EXTENSIONS = ['webp', 'png', 'jpg', 'jpeg', 'svg']
+const COVER_EXTENSIONS = ['png', 'jpg', 'jpeg', 'webp', 'svg']
 const FALLBACK_IMAGE_SRC = '/corsi/cover_corso.png'
 
 export default function CourseLevelCover({

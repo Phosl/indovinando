@@ -126,7 +126,7 @@ export default function ProfileClient({
   profileData,
   levels,
   gamesCount,
-  communitySnapshot,
+  children,
 }) {
   const router = useRouter()
   const t = useT('profile')
@@ -597,12 +597,7 @@ export default function ProfileClient({
           </div>
         </section>
 
-        <CommunityHighlightsCard
-          snapshot={communitySnapshot}
-          text={t('communityWidget') || {}}
-          ctaHref="/classifiche?back=%2Fprofilo"
-          className={styles.communityCard}
-        />
+        {children ? <div className={styles.communityCard}>{children}</div> : null}
 
         {/* ── Come funziona + Changelog ── */}
         <section className={styles.card}>

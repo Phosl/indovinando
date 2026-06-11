@@ -1,9 +1,10 @@
+import {Suspense} from 'react'
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {getWineCourseData} from '@/lib/wineCourseContent'
-import {getPublicRankingsSnapshot} from '@/lib/publicRankings'
 import ProfileClient from './ProfileClient'
+import ProfileCommunitySection from './ProfileCommunitySection'
 
 export const metadata = {
   title: 'Profilo',
@@ -19,7 +20,7 @@ export default async function ProfilePage() {
 
   if (!user) redirect('/auth?next=/profilo')
 
-  const [profileResult, gamesResult, courseResult, communitySnapshot] = await Promise.all([
+  const [profileResult, gamesResult, courseResult] = await Promise.all([
     supabase
       .from('profiles')
       .select(
@@ -29,7 +30,6 @@ export default async function ProfilePage() {
       .single(),
     supabase.from('games').select('id', {count: 'exact', head: true}).eq('created_by', user.id),
     getWineCourseData(lang).catch(() => ({levels: []})),
-    getPublicRankingsSnapshot(supabase),
   ])
 
   const profile = profileResult.data
@@ -44,7 +44,10 @@ export default async function ProfilePage() {
       profileData={profile || {}}
       levels={levels}
       gamesCount={gamesCount || 0}
-      communitySnapshot={communitySnapshot}
-    />
+    >
+      <Suspense fallback={null}>
+        <ProfileCommunitySection />
+      </Suspense>
+    </ProfileClient>
   )
 }
