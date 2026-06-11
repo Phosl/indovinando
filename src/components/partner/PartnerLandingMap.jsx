@@ -44,10 +44,15 @@ export default function PartnerLandingMap({partners = [], className = ''}) {
 
     let cancelled = false
     let map = null
+    let mapsApi = null
+    const markers = []
+    const infoWindows = []
+    const markerListeners = []
 
     loadGoogleMaps(apiKey)
       .then((maps) => {
         if (cancelled || !maps || !mapRef.current) return
+        mapsApi = maps
 
         const defaultCenter = {
           lat: mapPartners[0].latitude,
@@ -78,6 +83,7 @@ export default function PartnerLandingMap({partners = [], className = ''}) {
             map,
             title: partner.name,
           })
+          markers.push(marker)
 
           const infoWindow = new maps.InfoWindow({
             content: `
@@ -88,8 +94,10 @@ export default function PartnerLandingMap({partners = [], className = ''}) {
               </div>
             `,
           })
+          infoWindows.push(infoWindow)
 
-          marker.addListener('click', () => infoWindow.open({anchor: marker, map}))
+          const clickListener = marker.addListener('click', () => infoWindow.open({anchor: marker, map}))
+          markerListeners.push(clickListener)
           bounds.extend(position)
         })
 
@@ -107,6 +115,23 @@ export default function PartnerLandingMap({partners = [], className = ''}) {
 
     return () => {
       cancelled = true
+      markerListeners.forEach((listener) => {
+        if (listener?.remove) {
+          listener.remove()
+        } else if (mapsApi?.event?.removeListener) {
+          mapsApi.event.removeListener(listener)
+        }
+      })
+      infoWindows.forEach((infoWindow) => infoWindow?.close?.())
+      markers.forEach((marker) => {
+        if (mapsApi?.event?.clearInstanceListeners) {
+          mapsApi.event.clearInstanceListeners(marker)
+        }
+        marker?.setMap?.(null)
+      })
+      if (map && mapsApi?.event?.clearInstanceListeners) {
+        mapsApi.event.clearInstanceListeners(map)
+      }
     }
   }, [mapPartners])
 

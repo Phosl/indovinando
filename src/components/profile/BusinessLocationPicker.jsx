@@ -59,15 +59,19 @@ export default function BusinessLocationPicker({
     }
 
     let cancelled = false
+    let mapsApi = null
+    let autocomplete = null
+    let placeChangedListener = null
     loadGoogleMaps(apiKey)
       .then((maps) => {
         if (cancelled || !maps || !inputRef.current) return
+        mapsApi = maps
 
-        const autocomplete = new maps.places.Autocomplete(inputRef.current, {
+        autocomplete = new maps.places.Autocomplete(inputRef.current, {
           fields: ['formatted_address', 'geometry', 'name'],
         })
 
-        autocomplete.addListener('place_changed', () => {
+        placeChangedListener = autocomplete.addListener('place_changed', () => {
           const place = autocomplete.getPlace()
           const nextAddress = place?.formatted_address || place?.name || ''
           const nextLat = place?.geometry?.location?.lat?.() ?? null
@@ -86,6 +90,14 @@ export default function BusinessLocationPicker({
 
     return () => {
       cancelled = true
+      if (placeChangedListener?.remove) {
+        placeChangedListener.remove()
+      } else if (mapsApi?.event?.removeListener && placeChangedListener) {
+        mapsApi.event.removeListener(placeChangedListener)
+      }
+      if (autocomplete && mapsApi?.event?.clearInstanceListeners) {
+        mapsApi.event.clearInstanceListeners(autocomplete)
+      }
     }
   }, [onAddressChange, onLatitudeChange, onLongitudeChange])
 
