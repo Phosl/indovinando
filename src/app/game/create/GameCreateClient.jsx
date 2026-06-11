@@ -135,7 +135,11 @@ export default function GameCreateClient({
               onBack={handleBackToModePicker}
             />
           ) : (
-            <GameEditor userId={userId} avatarOptions={avatarOptions} onBack={handleBackToModePicker} />
+            <GameEditor
+              userId={userId}
+              avatarOptions={avatarOptions}
+              onBack={handleBackToModePicker}
+            />
           )}
         </Suspense>
       </div>
