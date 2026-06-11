@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.44.4',
+    date: '11 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Add Google Maps cleanup and speed up profile loading',
+    ],
+  },
+
+  {
     version: '1.44.3',
     date: '11 giugno 2026',
     label: 'Auto',
