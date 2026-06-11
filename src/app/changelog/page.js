@@ -37,6 +37,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.43.17',
+    date: '11 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'update app recap and add Stripe credits monetization plan',
+    ],
+  },
+
+  {
     version: '1.43.16',
     date: '11 giugno 2026',
     label: 'Auto',
