@@ -29,7 +29,13 @@ function HighlightItem({iconSrc, title, item}) {
   )
 }
 
-export default function CommunityHighlightsCard({snapshot, text = {}, className = ''}) {
+export default function CommunityHighlightsCard({
+  snapshot,
+  text = {},
+  className = '',
+  ctaHref = '/classifiche',
+  disableTransition = false,
+}) {
   const blind = getTopItem(snapshot, 'blind')
   const surprising = getTopItem(snapshot, 'surprising')
   const qualityPrice = getTopItem(snapshot, 'qualityPrice')
@@ -47,26 +53,31 @@ export default function CommunityHighlightsCard({snapshot, text = {}, className 
         </div>
       </div>
 
-      <div className={styles.list}>
-        <HighlightItem
-          iconSrc={SECTION_ICON_BY_ID.blind}
-          title={text.blindTitle || 'Miglior vino alla cieca'}
-          item={blind}
-        />
-        <HighlightItem
-          iconSrc={SECTION_ICON_BY_ID.surprising}
-          title={text.surprisingTitle || 'Vino più sorprendente'}
-          item={surprising}
-        />
-        <HighlightItem
-          iconSrc={SECTION_ICON_BY_ID.qualityPrice}
-          title={text.qualityPriceTitle || 'Miglior Q/P'}
-          item={qualityPrice}
-        />
+      <div className={styles.sliderWrap}>
+        <div className={styles.list}>
+          <HighlightItem
+            iconSrc={SECTION_ICON_BY_ID.blind}
+            title={text.blindTitle || 'Miglior vino alla cieca'}
+            item={blind}
+          />
+          <HighlightItem
+            iconSrc={SECTION_ICON_BY_ID.surprising}
+            title={text.surprisingTitle || 'Vino più sorprendente'}
+            item={surprising}
+          />
+          <HighlightItem
+            iconSrc={SECTION_ICON_BY_ID.qualityPrice}
+            title={text.qualityPriceTitle || 'Miglior Q/P'}
+            item={qualityPrice}
+          />
+        </div>
       </div>
 
       <div className={styles.actions}>
-        <Link href="/classifiche" className="btn secondary btn-inline">
+        <Link
+          href={ctaHref}
+          data-no-transition={disableTransition ? 'true' : undefined}
+          className="btn secondary btn-inline">
           {text.cta || 'Esplora'}
         </Link>
       </div>

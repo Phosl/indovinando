@@ -273,6 +273,29 @@ a.avatarPickerBtn {
   gap: 10px;
 }
 
+.creditsSummaryRow {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--success-50);
+  border: 1px solid var(--success-100);
+}
+
+.creditsSummaryLabel {
+  color: var(--primary-text);
+}
+
+.creditsSummaryValue {
+  color: var(--success-text);
+  font-size: 0.96rem;
+  font-weight: 900;
+  text-align: right;
+}
+
 .creditsHint {
   margin: 0;
   font-size: 0.9rem;

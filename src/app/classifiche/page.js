@@ -15,7 +15,7 @@ export const metadata = {
   title: 'Classifiche',
 }
 
-export default async function RankingsPage() {
+export default async function RankingsPage({searchParams}) {
   const supabase = await createServerSupabase()
   const lang = await getServerLanguage()
   const locale = lang === 'en' ? en : it
@@ -26,12 +26,19 @@ export default async function RankingsPage() {
     data: {user},
   } = await supabase.auth.getUser()
   const snapshot = await getPublicRankingsSnapshot(supabase)
+  const resolvedSearchParams = await searchParams
+  const requestedBackHref =
+    typeof resolvedSearchParams?.back === 'string' ? resolvedSearchParams.back : null
+  const safeBackHref =
+    requestedBackHref && requestedBackHref.startsWith('/') && !requestedBackHref.startsWith('//')
+      ? requestedBackHref
+      : '/dashboard'
 
   return (
     <main className={styles.page}>
       <div className={styles.container}>
         {user ? (
-          <TopBarBack title={text.title} href="/dashboard" />
+          <TopBarBack title={text.title} href={safeBackHref} />
         ) : (
           <>
             <LandingNav text={landingText.nav || {}} />

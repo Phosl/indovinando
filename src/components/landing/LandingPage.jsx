@@ -42,6 +42,7 @@ export default async function LandingPage() {
         <CommunityHighlightsCard
           snapshot={rankingsSnapshot}
           text={communityWidgetText}
+          disableTransition
         />
       </section>
       <LandingPartnersMap text={text.partners || {}} partners={partners} />
