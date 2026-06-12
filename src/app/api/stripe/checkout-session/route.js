@@ -44,8 +44,11 @@ export async function POST(request) {
     }
 
     const stripe = getStripeClient()
-    const successUrl = buildCheckoutReturnUrl(request, '/profilo?stripe=success')
-    const cancelUrl = buildCheckoutReturnUrl(request, '/profilo?stripe=cancel')
+    const successUrl = buildCheckoutReturnUrl(
+      request,
+      `/profilo/crediti?stripe=success&pack=${encodeURIComponent(pack.code)}`,
+    )
+    const cancelUrl = buildCheckoutReturnUrl(request, '/profilo/crediti?stripe=cancel')
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',

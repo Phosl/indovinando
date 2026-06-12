@@ -22,6 +22,7 @@ import {
   validateQuestionnaire,
   validateBottleForm,
 } from '../utils/validations'
+import {normalizeGameWineType} from '../utils/wineType'
 import {
   MIN_STEP,
   MAX_STEP,
@@ -581,7 +582,10 @@ export default function GameEditor({
 
       // Load questions
       if (initialQuestions.length > 0) {
-        const normalizedQuestions = initialQuestions
+        const sortedInitialQuestions = [...initialQuestions].sort(
+          (a, b) => (a.display_order || 0) - (b.display_order || 0),
+        )
+        const normalizedQuestions = sortedInitialQuestions
           .sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
           .map((q) => ({
             id: q.id,
@@ -598,16 +602,24 @@ export default function GameEditor({
 
       // Load bottles
       if (initialBottles.length > 0) {
+        const sortedInitialQuestions = [...initialQuestions].sort(
+          (a, b) => (a.display_order || 0) - (b.display_order || 0),
+        )
         const normalizedBottles = initialBottles
           .sort((a, b) => (a.bottle_order || 0) - (b.bottle_order || 0))
           .map((b) => {
-            const questionIdByIndex = new Map((initialQuestions || []).map((q, idx) => [q.id, idx]))
-            const answers = (b.game_bottle_answers || []).map((ans) => {
+            const questionIdByIndex = new Map(
+              sortedInitialQuestions.map((question, index) => [question.id, index]),
+            )
+            const answers = Array(sortedInitialQuestions.length).fill(null)
+            ;(b.game_bottle_answers || []).forEach((ans) => {
               const qIdx = questionIdByIndex.get(ans.question_id)
-              const optionIndexInQuestion = (initialQuestions || [])[
-                qIdx
-              ]?.game_question_options?.findIndex((opt) => opt.id === ans.option_id)
-              return optionIndexInQuestion ?? null
+              if (!Number.isInteger(qIdx) || qIdx < 0) return
+              const sortedOptions = [
+                ...((sortedInitialQuestions[qIdx]?.game_question_options || []).filter(Boolean)),
+              ].sort((a, b) => (a.option_order || 0) - (b.option_order || 0))
+              const optionIndexInQuestion = sortedOptions.findIndex((opt) => opt.id === ans.option_id)
+              answers[qIdx] = optionIndexInQuestion ?? null
             })
             return {
               id: b.id,
@@ -615,7 +627,7 @@ export default function GameEditor({
               name: b.name,
               producer: b.producer,
               year: b.year,
-              wineType: b.wine_type || '',
+              wineType: normalizeGameWineType(b.wine_type || ''),
               canonicalWineKey: b.canonical_wine_key || null,
               wineVintageId: b.wine_vintage_id || null,
               priceValue: b.price_value ?? null,
@@ -924,7 +936,7 @@ export default function GameEditor({
     setBottleName(selected.name ?? '')
     setProducer(selected.producer ?? '')
     setYear(selected.year ?? '')
-    setWineType(selected.wineType ?? '')
+    setWineType(normalizeGameWineType(selected.wineType ?? ''))
     const normalizedAnswers = templateQuestions.map((question, qIndex) => {
       const candidate = selected.answers?.[qIndex]
       const isValid =
@@ -975,7 +987,7 @@ export default function GameEditor({
           name: bottleName.trim(),
           producer: producer.trim(),
           year: year.trim(),
-          wineType: wineType.trim(),
+          wineType: normalizeGameWineType(wineType),
           answers: [...currentAnswers],
         },
       ])
@@ -988,7 +1000,7 @@ export default function GameEditor({
           name: bottleName.trim(),
           producer: producer.trim(),
           year: year.trim(),
-          wineType: wineType.trim(),
+          wineType: normalizeGameWineType(wineType),
           answers: [...currentAnswers],
         }
         return updated

@@ -353,6 +353,54 @@ a.avatarPickerBtn {
   color: var(--success-text);
 }
 
+.creditsCheckoutPanel {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: 8px 4px 4px;
+}
+
+.creditsCheckoutSpinner {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 3px solid var(--success-100);
+  border-top-color: var(--success);
+  animation: creditsCheckoutSpin 0.9s linear infinite;
+}
+
+.creditsCheckoutTitle {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--primary-text);
+}
+
+.creditsCheckoutText {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.creditsSuccessIconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--success-50);
+  color: var(--success-text);
+  border: 1px solid var(--success-100);
+}
+
+@keyframes creditsCheckoutSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .creditSectionHeader {
   display: flex;
   align-items: flex-start;

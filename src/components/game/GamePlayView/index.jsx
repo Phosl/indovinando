@@ -29,10 +29,11 @@ export default function GamePlayView({
   const [historyOpen, setHistoryOpen] = useState(false)
   const [isMobileViewport, setIsMobileViewport] = useState(false)
   const isReadyToPlay = questions.length > 0 && bottles.length > 0
-  const hasIncompleteBottles = useMemo(
-    () => bottles.some((bottle) => !isBottleComplete(bottle, questions)),
+  const incompleteBottlesCount = useMemo(
+    () => bottles.filter((bottle) => !isBottleComplete(bottle, questions)).length,
     [bottles, questions],
   )
+  const hasIncompleteBottles = incompleteBottlesCount > 0
 
   useEffect(() => {
     return watchMobileViewport(setIsMobileViewport)
@@ -153,7 +154,14 @@ export default function GamePlayView({
               className={styles.incompleteCtaBtn}>
               <span className={styles.actionBtnContent}>
                 <Icon name="edit" size={24} className={styles.actionBtnIcon} />
-                <span>{t('completeBottles')}</span>
+                <span>
+                  {t(
+                    incompleteBottlesCount === 1
+                      ? 'completeSingleBottle'
+                      : 'completeMultipleBottles',
+                    {count: String(incompleteBottlesCount)},
+                  )}
+                </span>
               </span>
             </ButtonLink>
           </div>
