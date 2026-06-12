@@ -6,6 +6,7 @@ import InfoModal from '@/components/InfoModal'
 import Icon from '@/components/Icon'
 import {useT} from '@/lib/i18n/useT'
 import {normalizeAiScanCredits} from '@/lib/aiScanCredits'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
 import styles from '@/app/profilo/profilo.module.scss'
 
 const CREDIT_PACK_OPTIONS = [
@@ -42,21 +43,22 @@ function ProfileToast({toast, onClose, closeLabel}) {
   )
 }
 
-function formatCreditsCurrency(amountCents = 0, currency = 'EUR') {
-  return new Intl.NumberFormat(undefined, {
+function formatCreditsCurrency(amountCents = 0, currency = 'EUR', lang = 'it') {
+  return new Intl.NumberFormat(lang === 'en' ? 'en-US' : 'it-IT', {
     style: 'currency',
     currency: String(currency || 'EUR').toUpperCase(),
   }).format(Number(amountCents || 0) / 100)
 }
 
-function formatCreditsDate(value) {
+function formatCreditsDate(value, lang = 'it') {
   if (!value) return '—'
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return '—'
-  return new Intl.DateTimeFormat(undefined, {
+  return new Intl.DateTimeFormat(lang === 'en' ? 'en-US' : 'it-IT', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
+    timeZone: 'UTC',
   }).format(date)
 }
 
@@ -65,6 +67,7 @@ export default function ProfileCreditsClient({
   myCreditOrders = [],
   adminCreditSnapshot = null,
 }) {
+  const {lang} = useLanguage()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -73,6 +76,9 @@ export default function ProfileCreditsClient({
   const [showCreditsModal, setShowCreditsModal] = useState(false)
   const [activeCreditsTab, setActiveCreditsTab] = useState('mine')
   const [isBuyingCredits, setIsBuyingCredits] = useState(false)
+  const [pendingPackCode, setPendingPackCode] = useState('')
+  const [showPurchaseSuccessModal, setShowPurchaseSuccessModal] = useState(false)
+  const [purchaseSuccessPackCode, setPurchaseSuccessPackCode] = useState('')
   const [toast, setToast] = useState(null)
 
   const aiCredits = useMemo(() => normalizeAiScanCredits(profileData || {}), [profileData])
@@ -82,23 +88,34 @@ export default function ProfileCreditsClient({
     const values = (adminCreditSnapshot?.chart || []).map((item) => Number(item.revenueCents || 0))
     return Math.max(0, ...values)
   }, [adminCreditSnapshot])
+  const pendingPack = useMemo(
+    () => CREDIT_PACK_OPTIONS.find((pack) => pack.code === pendingPackCode) || null,
+    [pendingPackCode],
+  )
+  const purchaseSuccessPack = useMemo(
+    () => CREDIT_PACK_OPTIONS.find((pack) => pack.code === purchaseSuccessPackCode) || null,
+    [purchaseSuccessPackCode],
+  )
 
   useEffect(() => {
     const stripeStatus = searchParams.get('stripe')
     if (!stripeStatus) return
 
     if (stripeStatus === 'success') {
-      setToast({tone: 'success', message: t('creditsPurchaseSuccess')})
+      setPurchaseSuccessPackCode(searchParams.get('pack') || '')
+      setShowPurchaseSuccessModal(true)
     } else if (stripeStatus === 'cancel') {
       setToast({tone: 'info', message: t('creditsPurchaseCancelled')})
     }
 
+    router.refresh()
     router.replace(pathname, {scroll: false})
   }, [pathname, router, searchParams, t])
 
   const handleBuyCredits = useCallback(
     async (packCode) => {
       if (isBuyingCredits) return
+      setPendingPackCode(packCode)
       setIsBuyingCredits(true)
 
       try {
@@ -120,12 +137,18 @@ export default function ProfileCreditsClient({
           message: error?.message || t('creditsPurchaseError'),
           duration: 4200,
         })
-      } finally {
         setIsBuyingCredits(false)
+        setPendingPackCode('')
       }
     },
     [isBuyingCredits, t],
   )
+
+  const handleClosePurchaseSuccess = useCallback(() => {
+    setShowPurchaseSuccessModal(false)
+    setPurchaseSuccessPackCode('')
+    router.push('/profilo')
+  }, [router])
 
   return (
     <>
@@ -208,12 +231,12 @@ export default function ProfileCreditsClient({
                       {t('creditsPackTitle', {count: String(order.credits_amount || 0)})}
                     </strong>
                     <span className={styles.creditHistoryMeta}>
-                      {formatCreditsDate(order.completed_at || order.created_at)}
+                      {formatCreditsDate(order.completed_at || order.created_at, lang)}
                     </span>
                   </div>
                   <div className={styles.creditHistorySide}>
                     <span className={styles.creditHistoryAmount}>
-                      {formatCreditsCurrency(order.amount_cents, order.currency)}
+                      {formatCreditsCurrency(order.amount_cents, order.currency, lang)}
                     </span>
                     <span
                       className={`${styles.creditHistoryStatus} ${
@@ -243,7 +266,7 @@ export default function ProfileCreditsClient({
               </div>
               <div className={styles.statItem}>
                 <span className={styles.statValue}>
-                  {formatCreditsCurrency(adminCreditSnapshot.totalRevenueCents)}
+                  {formatCreditsCurrency(adminCreditSnapshot.totalRevenueCents, 'EUR', lang)}
                 </span>
                 <span className={styles.statLabel}>{t('creditsAdminTotalRevenue')}</span>
               </div>
@@ -263,7 +286,7 @@ export default function ProfileCreditsClient({
                   return (
                     <div key={item.key} className={styles.creditChartCol}>
                       <span className={styles.creditChartValue}>
-                        {formatCreditsCurrency(item.revenueCents)}
+                        {formatCreditsCurrency(item.revenueCents, 'EUR', lang)}
                       </span>
                       <span className={styles.creditChartBarWrap}>
                         <span className={styles.creditChartBar} style={{height: `${ratio}%`}} />
@@ -283,12 +306,12 @@ export default function ProfileCreditsClient({
                       {t('creditsPackTitle', {count: String(order.credits_amount || 0)})}
                     </strong>
                     <span className={styles.creditHistoryMeta}>
-                      {formatCreditsDate(order.completed_at || order.created_at)} · {order.user_id}
+                      {formatCreditsDate(order.completed_at || order.created_at, lang)} · {order.user_id}
                     </span>
                   </div>
                   <div className={styles.creditHistorySide}>
                     <span className={styles.creditHistoryAmount}>
-                      {formatCreditsCurrency(order.amount_cents, order.currency)}
+                      {formatCreditsCurrency(order.amount_cents, order.currency, lang)}
                     </span>
                     <span
                       className={`${styles.creditHistoryStatus} ${
@@ -313,33 +336,75 @@ export default function ProfileCreditsClient({
         onClose={() => {
           if (isBuyingCredits) return
           setShowCreditsModal(false)
+          setPendingPackCode('')
         }}
         title={t('creditsModalTitle')}
-        icon="">
-        <p>{t('creditsModalDescription')}</p>
-        <div className={styles.creditPackList}>
-          {CREDIT_PACK_OPTIONS.map((pack) => (
-            <div key={pack.code} className={styles.creditPackCard}>
-              <div className={styles.creditPackMeta}>
-                <strong className={styles.creditPackTitle}>
-                  {t('creditsPackTitle', {count: String(pack.credits)})}
-                </strong>
-                <span className={styles.creditPackSubtitle}>
-                  {t('creditsPackSubtitle', {count: String(pack.credits)})}
-                </span>
-              </div>
-              <div className={styles.creditPackAction}>
-                <span className={styles.creditPackPrice}>{pack.amount}</span>
-                <button
-                  type="button"
-                  className="btn success btn-small"
-                  onClick={() => handleBuyCredits(pack.code)}
-                  disabled={isBuyingCredits}>
-                  {isBuyingCredits ? t('creditsPurchaseLoading') : t('creditsPurchaseAction')}
-                </button>
-              </div>
+        icon=""
+        fullScreen={isBuyingCredits}
+        disableClose={isBuyingCredits}>
+        {isBuyingCredits ? (
+          <div className={styles.creditsCheckoutPanel}>
+            <div className={styles.creditsSuccessIconWrap} aria-hidden="true">
+              <Icon src="/icons/token.svg" size={22} />
             </div>
-          ))}
+            <div className={styles.creditsCheckoutSpinner} aria-hidden="true" />
+            <strong className={styles.creditsCheckoutTitle}>{t('creditsCheckoutTitle')}</strong>
+            <p className={styles.creditsCheckoutText}>
+              {pendingPack
+                ? t('creditsCheckoutBodyWithPack', {count: String(pendingPack.credits)})
+                : t('creditsCheckoutBody')}
+            </p>
+          </div>
+        ) : (
+          <>
+            <p>{t('creditsModalDescription')}</p>
+            <div className={styles.creditPackList}>
+              {CREDIT_PACK_OPTIONS.map((pack) => (
+                <div key={pack.code} className={styles.creditPackCard}>
+                  <div className={styles.creditPackMeta}>
+                    <strong className={styles.creditPackTitle}>
+                      {t('creditsPackTitle', {count: String(pack.credits)})}
+                    </strong>
+                    <span className={styles.creditPackSubtitle}>
+                      {t('creditsPackSubtitle', {count: String(pack.credits)})}
+                    </span>
+                  </div>
+                  <div className={styles.creditPackAction}>
+                    <span className={styles.creditPackPrice}>{pack.amount}</span>
+                    <button
+                      type="button"
+                      className="btn success btn-small"
+                      onClick={() => handleBuyCredits(pack.code)}
+                      disabled={isBuyingCredits}>
+                      {t('creditsPurchaseAction')}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </InfoModal>
+
+      <InfoModal
+        isOpen={showPurchaseSuccessModal}
+        onClose={handleClosePurchaseSuccess}
+        title={t('creditsPurchaseSuccessTitle')}
+        icon="">
+        <div className={styles.creditsCheckoutPanel}>
+          <div className={styles.creditsSuccessIconWrap} aria-hidden="true">
+            <Icon src="/icons/token.svg" size={22} />
+          </div>
+          <p className={styles.creditsCheckoutText}>
+            {purchaseSuccessPack
+              ? t('creditsPurchaseSuccessBodyWithPack', {
+                  count: String(purchaseSuccessPack.credits),
+                })
+              : t('creditsPurchaseSuccess')}
+          </p>
+          <button type="button" className="btn success" onClick={handleClosePurchaseSuccess}>
+            {t('creditsPurchaseSuccessConfirm')}
+          </button>
         </div>
       </InfoModal>
     </>
