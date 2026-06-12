@@ -524,7 +524,9 @@
     "tableLiveDescription": "Create one event, print the QR code, and let each table play in a separate match with its own code.",
     "bottlesCount": "{count} Bottles",
     "questionsCount": "{count} Questions",
-    "completeBottles": "Complete bottles"
+    "completeBottles": "Complete bottles",
+    "completeSingleBottle": "Complete 1 bottle",
+    "completeMultipleBottles": "Complete {count} bottles"
   },
   "onboarding": {
     "step": "Step",

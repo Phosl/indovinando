@@ -530,7 +530,9 @@
     "tableLiveDescription": "Crea un evento unico, stampa il QR e lascia che ogni tavolo giochi in una partita separata con codice dedicato.",
     "bottlesCount": "{count} Bottiglie",
     "questionsCount": "{count} Domande",
-    "completeBottles": "Completa bottiglie"
+    "completeBottles": "Completa bottiglie",
+    "completeSingleBottle": "Completa 1 bottiglia",
+    "completeMultipleBottles": "Completa {count} bottiglie"
   },
   "onboarding": {
     "step": "Passo",

@@ -22,6 +22,7 @@ import {
   validateQuestionnaire,
   validateBottleForm,
 } from '../utils/validations'
+import {normalizeGameWineType} from '../utils/wineType'
 import {
   MIN_STEP,
   MAX_STEP,
@@ -615,7 +616,7 @@ export default function GameEditor({
               name: b.name,
               producer: b.producer,
               year: b.year,
-              wineType: b.wine_type || '',
+              wineType: normalizeGameWineType(b.wine_type || ''),
               canonicalWineKey: b.canonical_wine_key || null,
               wineVintageId: b.wine_vintage_id || null,
               priceValue: b.price_value ?? null,
@@ -924,7 +925,7 @@ export default function GameEditor({
     setBottleName(selected.name ?? '')
     setProducer(selected.producer ?? '')
     setYear(selected.year ?? '')
-    setWineType(selected.wineType ?? '')
+    setWineType(normalizeGameWineType(selected.wineType ?? ''))
     const normalizedAnswers = templateQuestions.map((question, qIndex) => {
       const candidate = selected.answers?.[qIndex]
       const isValid =
@@ -975,7 +976,7 @@ export default function GameEditor({
           name: bottleName.trim(),
           producer: producer.trim(),
           year: year.trim(),
-          wineType: wineType.trim(),
+          wineType: normalizeGameWineType(wineType),
           answers: [...currentAnswers],
         },
       ])
@@ -988,7 +989,7 @@ export default function GameEditor({
           name: bottleName.trim(),
           producer: producer.trim(),
           year: year.trim(),
-          wineType: wineType.trim(),
+          wineType: normalizeGameWineType(wineType),
           answers: [...currentAnswers],
         }
         return updated
