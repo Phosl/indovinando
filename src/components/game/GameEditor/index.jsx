@@ -603,12 +603,14 @@ export default function GameEditor({
           .sort((a, b) => (a.bottle_order || 0) - (b.bottle_order || 0))
           .map((b) => {
             const questionIdByIndex = new Map((initialQuestions || []).map((q, idx) => [q.id, idx]))
-            const answers = (b.game_bottle_answers || []).map((ans) => {
+            const answers = Array((initialQuestions || []).length).fill(null)
+            ;(b.game_bottle_answers || []).forEach((ans) => {
               const qIdx = questionIdByIndex.get(ans.question_id)
+              if (!Number.isInteger(qIdx) || qIdx < 0) return
               const optionIndexInQuestion = (initialQuestions || [])[
                 qIdx
               ]?.game_question_options?.findIndex((opt) => opt.id === ans.option_id)
-              return optionIndexInQuestion ?? null
+              answers[qIdx] = optionIndexInQuestion ?? null
             })
             return {
               id: b.id,

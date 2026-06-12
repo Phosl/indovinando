@@ -60,6 +60,34 @@ export const isBottleComplete = (bottle, questionsOrLength) => {
   const questions = Array.isArray(questionsOrLength) ? questionsOrLength : null
   const questionsLength = questions ? questions.length : Number(questionsOrLength) || 0
   const answers = Array.isArray(bottle?.answers) ? bottle.answers : []
+  const answersAreRows =
+    answers.length > 0 &&
+    answers.every(
+      (answer) =>
+        answer &&
+        typeof answer === 'object' &&
+        'question_id' in answer &&
+        'option_id' in answer,
+    )
+
+  if (questions && answersAreRows) {
+    return (
+      bottle &&
+      bottle.name &&
+      bottle.producer &&
+      bottle.year &&
+      bottle.wineType &&
+      questions.every((question) => {
+        if (isNeutralQuestion(question)) return true
+        return answers.some(
+          (answer) =>
+            answer?.question_id === question.id &&
+            answer?.option_id !== null &&
+            answer?.option_id !== undefined,
+        )
+      })
+    )
+  }
 
   return (
     bottle &&
