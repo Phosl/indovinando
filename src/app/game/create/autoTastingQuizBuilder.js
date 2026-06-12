@@ -7,6 +7,7 @@ import {
   inferVintageQuizValue,
   localizeCountryLabel,
   localizeRegionLabel,
+  normalizeToken,
   normalizeAcidityForQuiz,
   normalizeBodyForQuiz,
   normalizeHarmonyForQuiz,
@@ -14,6 +15,36 @@ import {
   normalizePriceAnswer,
   resolveRepresentativePrice,
 } from './autoTastingHelpers'
+
+function findQuestionOptionIndex(question, value, lang) {
+  if (!value || !Array.isArray(question?.options)) return -1
+
+  const rawMatchIndex = question.options.findIndex((option) => option === value)
+  if (rawMatchIndex >= 0) return rawMatchIndex
+
+  const normalizedValue = normalizeToken(value)
+  if (!normalizedValue) return -1
+
+  if (question._key === 'country') {
+    const localizedValue = normalizeToken(localizeCountryLabel(value, lang))
+    return question.options.findIndex((option) => {
+      const normalizedOption = normalizeToken(option)
+      const localizedOption = normalizeToken(localizeCountryLabel(option, lang))
+      return normalizedOption === normalizedValue || localizedOption === localizedValue
+    })
+  }
+
+  if (question._key === 'region') {
+    const localizedValue = normalizeToken(localizeRegionLabel(value, lang))
+    return question.options.findIndex((option) => {
+      const normalizedOption = normalizeToken(option)
+      const localizedOption = normalizeToken(localizeRegionLabel(option, lang))
+      return normalizedOption === normalizedValue || localizedOption === localizedValue
+    })
+  }
+
+  return question.options.findIndex((option) => normalizeToken(option) === normalizedValue)
+}
 
 export function buildAutoQuizPayload({images, lang = 'it', localizedTemplateOptions, mode = 'standard', t}) {
   const notableOptions = getLocalizedNotableOptions(lang)
@@ -148,7 +179,7 @@ export function buildAutoQuizPayload({images, lang = 'it', localizedTemplateOpti
       if (!question._key || question.kind === 'rating' || question.isNeutral === true) return null
       const value = bottle._values[question._key]
       if (!value) return null
-      const idx = question.options.findIndex((option) => option === value)
+      const idx = findQuestionOptionIndex(question, value, lang)
       return idx >= 0 ? idx : null
     })
     return {

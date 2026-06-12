@@ -582,7 +582,10 @@ export default function GameEditor({
 
       // Load questions
       if (initialQuestions.length > 0) {
-        const normalizedQuestions = initialQuestions
+        const sortedInitialQuestions = [...initialQuestions].sort(
+          (a, b) => (a.display_order || 0) - (b.display_order || 0),
+        )
+        const normalizedQuestions = sortedInitialQuestions
           .sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
           .map((q) => ({
             id: q.id,
@@ -599,17 +602,23 @@ export default function GameEditor({
 
       // Load bottles
       if (initialBottles.length > 0) {
+        const sortedInitialQuestions = [...initialQuestions].sort(
+          (a, b) => (a.display_order || 0) - (b.display_order || 0),
+        )
         const normalizedBottles = initialBottles
           .sort((a, b) => (a.bottle_order || 0) - (b.bottle_order || 0))
           .map((b) => {
-            const questionIdByIndex = new Map((initialQuestions || []).map((q, idx) => [q.id, idx]))
-            const answers = Array((initialQuestions || []).length).fill(null)
+            const questionIdByIndex = new Map(
+              sortedInitialQuestions.map((question, index) => [question.id, index]),
+            )
+            const answers = Array(sortedInitialQuestions.length).fill(null)
             ;(b.game_bottle_answers || []).forEach((ans) => {
               const qIdx = questionIdByIndex.get(ans.question_id)
               if (!Number.isInteger(qIdx) || qIdx < 0) return
-              const optionIndexInQuestion = (initialQuestions || [])[
-                qIdx
-              ]?.game_question_options?.findIndex((opt) => opt.id === ans.option_id)
+              const sortedOptions = [
+                ...((sortedInitialQuestions[qIdx]?.game_question_options || []).filter(Boolean)),
+              ].sort((a, b) => (a.option_order || 0) - (b.option_order || 0))
+              const optionIndexInQuestion = sortedOptions.findIndex((opt) => opt.id === ans.option_id)
               answers[qIdx] = optionIndexInQuestion ?? null
             })
             return {
