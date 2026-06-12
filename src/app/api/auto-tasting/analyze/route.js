@@ -412,6 +412,20 @@ function mergePersistentRecognitionPayload(existingPayload, nextPayload) {
       ...(existingPayload?.catalog_sync || {}),
       ...(nextPayload?.catalog_sync || {}),
     },
+    pipeline_debug: {
+      ...(existingPayload?.pipeline_debug || {}),
+      ...(nextPayload?.pipeline_debug || {}),
+    },
+  }
+}
+
+function updatePipelineDebug(payload, patch) {
+  return {
+    ...(payload || {}),
+    pipeline_debug: {
+      ...(payload?.pipeline_debug || {}),
+      ...patch,
+    },
   }
 }
 
@@ -646,7 +660,7 @@ async function runOpenAIWebEnrichment(extracted) {
     ? extracted.recognized_payload.ranked_lines
         .map((line) => toNullableTrimmed(line))
         .filter(Boolean)
-        .slice(0, 12)
+        .slice(0, 20)
     : []
   const recognitionNotes = toNullableTrimmed(
     extracted?.recognized_payload?.openai_payload?.result?.notes,
@@ -675,6 +689,7 @@ async function runOpenAIWebEnrichment(extracted) {
       'If the label seems to show only a project, estate, or brand, infer the most likely full commercial wine name only when strongly supported by multiple reputable sources.',
       'Use the wine color/type as a strong disambiguation signal when a producer has multiple variants with the same core name, for example Bianco vs Rosso.',
       'Treat the visible label text below as a primary hint. Words like Bianco, Rosso, Sicilia, Etna, DOP, DOC or DOCG can be decisive for disambiguation.',
+      'When name or producer are weak or partial, rely more heavily on the visible label text to identify the exact bottle.',
       'If catalog hints are generic or partial, prefer the bottle identity that best matches the visible label text and reputable web sources.',
       'Do not stop at country-level data when more specific region, appellation, grapes, or style information is available from strong sources.',
       'If the wine is produced by a collaboration or joint project, put all producer names in producer separated by " / ".',
@@ -2043,9 +2058,17 @@ export async function POST(request) {
             row.original_filename,
             row.storage_path,
           )
+          extracted.recognized_payload = updatePipelineDebug(extracted.recognized_payload, {
+            vision: true,
+          })
         }
         if (extracted?.ok) {
           extracted = await enrichWithWineCatalog(supabase, extracted, row.recognized_payload || {})
+          extracted.recognized_payload = updatePipelineDebug(extracted.recognized_payload, {
+            catalog: true,
+            catalog_matched: !!extracted?.recognized_payload?.catalog_match?.matched,
+            catalog_synced: !!extracted?.recognized_payload?.catalog_sync?.synced,
+          })
           const hasUsefulIdentity = !!(
             extracted?.recognized_name ||
             extracted?.recognized_producer ||
@@ -2148,12 +2171,21 @@ export async function POST(request) {
                 })
               }
               extracted = mergeWebEnrichment(extracted, webEnrichment)
+              extracted.recognized_payload = updatePipelineDebug(extracted.recognized_payload, {
+                web: !!webEnrichment?.parsed,
+                web_skipped: false,
+              })
               if (shouldRetryCatalogAfterWeb(extractedBeforeWeb, extracted)) {
                 extracted = await enrichWithWineCatalog(
                   supabase,
                   extracted,
                   extracted.recognized_payload || {},
                 )
+                extracted.recognized_payload = updatePipelineDebug(extracted.recognized_payload, {
+                  catalog_refined: true,
+                  catalog_matched: !!extracted?.recognized_payload?.catalog_match?.matched,
+                  catalog_synced: !!extracted?.recognized_payload?.catalog_sync?.synced,
+                })
               }
             } catch (error) {
               console.log('[auto-tasting] web enrichment skipped', {
@@ -2169,6 +2201,10 @@ export async function POST(request) {
                   error: error?.message || 'web enrichment failed',
                 },
               }
+              extracted.recognized_payload = updatePipelineDebug(extracted.recognized_payload, {
+                web: false,
+                web_skipped: false,
+              })
             }
           } else if (shouldForceSkipWebEnrichment) {
             extracted.recognized_payload = {
@@ -2179,6 +2215,10 @@ export async function POST(request) {
                 reason: hasCatalogSync ? 'catalog_sync_found' : 'already_enriched',
               },
             }
+            extracted.recognized_payload = updatePipelineDebug(extracted.recognized_payload, {
+              web: false,
+              web_skipped: true,
+            })
           } else if (shouldSkipWebEnrichmentOnly) {
             extracted.recognized_payload = {
               ...(extracted.recognized_payload || {}),
@@ -2193,6 +2233,10 @@ export async function POST(request) {
                     : 'catalog_match_found',
               },
             }
+            extracted.recognized_payload = updatePipelineDebug(extracted.recognized_payload, {
+              web: false,
+              web_skipped: true,
+            })
           } else if (
             useWebEnrichment &&
             hasCatalogMatch &&
@@ -2208,6 +2252,10 @@ export async function POST(request) {
                 reason: 'catalog_match_found',
               },
             }
+            extracted.recognized_payload = updatePipelineDebug(extracted.recognized_payload, {
+              web: false,
+              web_skipped: true,
+            })
           }
         }
       } catch (error) {

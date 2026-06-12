@@ -2437,6 +2437,28 @@
   gap: 8px;
 }
 
+.autoBottleDebugRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.autoBottleDebugBadge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
 .autoBottleSummaryFact {
   display: inline-flex;
   align-items: center;

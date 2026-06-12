@@ -82,7 +82,7 @@ export function buildAutoQuizPayload({images, lang = 'it', localizedTemplateOpti
     {key: 'price', text: t('automaticQuestionPrice')},
   ]
   const openAiQuestionDefs = [
-    {key: 'country', text: t('automaticQuestionCountry')},
+    {key: 'country', text: t('automaticQuestionCountry'), forceInclude: true},
     {key: 'region', text: t('automaticQuestionRegion')},
     {key: 'grape', text: t('automaticQuestionGrape')},
     {key: 'vintage', text: t('automaticQuestionVintage')},

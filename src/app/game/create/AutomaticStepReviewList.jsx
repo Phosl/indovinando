@@ -4,6 +4,23 @@ import Image from 'next/image'
 import Icon from '@/components/Icon'
 import styles from './gameCreate.module.scss'
 
+function getEnrichmentDebugSteps(image, t) {
+  const pipeline = image?.recognized_payload?.pipeline_debug || {}
+  const hasCatalogPresence =
+    !!image?.recognized_payload?.catalog_match?.matched || !!image?.recognized_payload?.catalog_sync?.synced
+  const hasWebEnrichment =
+    !!image?.recognized_payload?.web_enrichment?.applied ||
+    (Array.isArray(image?.recognized_payload?.web_enrichment?.sources) &&
+      image.recognized_payload.web_enrichment.sources.length > 0)
+
+  return [
+    pipeline.vision ? t('automaticDebugVisionDone') : null,
+    pipeline.catalog || hasCatalogPresence ? t('automaticDebugCatalogDone') : null,
+    pipeline.web || hasWebEnrichment ? t('automaticDebugWebDone') : null,
+    pipeline.catalog_refined ? t('automaticDebugCatalogRefined') : null,
+  ].filter(Boolean)
+}
+
 export default function AutomaticStepReviewList({
   failedPreviewIds,
   getBottleCompletionMeta,
@@ -29,6 +46,7 @@ export default function AutomaticStepReviewList({
           const hasCatalogPresence =
             !!image.recognized_payload?.catalog_match?.matched ||
             !!image.recognized_payload?.catalog_sync?.synced
+          const debugSteps = getEnrichmentDebugSteps(image, t)
 
           return (
             <button
@@ -104,6 +122,15 @@ export default function AutomaticStepReviewList({
                       </span>
                     ))}
                 </div>
+                {debugSteps.length > 0 ? (
+                  <div className={styles.autoBottleDebugRow} aria-label={t('automaticDebugPipelineLabel')}>
+                    {debugSteps.map((step) => (
+                      <span key={`${image.id}-${step}`} className={styles.autoBottleDebugBadge}>
+                        {step}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             </button>
           )

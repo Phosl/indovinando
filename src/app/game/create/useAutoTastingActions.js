@@ -393,8 +393,8 @@ export function useAutoTastingActions({
       try {
         const {response, result} = await postJsonWithRetry(
           '/api/auto-tasting/analyze',
-          {imageId, useWebEnrichment: true},
-          {timeoutMs: 35000, retries: 3},
+          {imageId, useWebEnrichment: true, forceWebEnrichment: true},
+          {timeoutMs: 45000, retries: 3},
         )
         if (!response.ok) {
           if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))
@@ -692,8 +692,8 @@ export function useAutoTastingActions({
           setCurrentAnalyzeBatchIndex(index + 1)
           const {response, result} = await postJsonWithRetry(
             '/api/auto-tasting/analyze',
-            {imageId, useWebEnrichment: true},
-            {timeoutMs: 35000, retries: 3},
+            {imageId, useWebEnrichment: true, forceWebEnrichment: true},
+            {timeoutMs: 45000, retries: 3},
           )
           if (!response.ok) {
             if (result?.credits) setAiScanCredits(normalizeAiScanCredits(result.credits))

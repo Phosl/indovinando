@@ -4,6 +4,24 @@ import Image from 'next/image'
 import Icon from '@/components/Icon'
 import styles from './gameCreate.module.scss'
 
+function getEnrichmentDebugSteps(selectedBottle, t) {
+  const pipeline = selectedBottle?.recognized_payload?.pipeline_debug || {}
+  const hasCatalogPresence =
+    !!selectedBottle?.recognized_payload?.catalog_match?.matched ||
+    !!selectedBottle?.recognized_payload?.catalog_sync?.synced
+  const hasWebEnrichment =
+    !!selectedBottle?.recognized_payload?.web_enrichment?.applied ||
+    (Array.isArray(selectedBottle?.recognized_payload?.web_enrichment?.sources) &&
+      selectedBottle.recognized_payload.web_enrichment.sources.length > 0)
+
+  return [
+    pipeline.vision ? t('automaticDebugVisionDone') : null,
+    pipeline.catalog || hasCatalogPresence ? t('automaticDebugCatalogDone') : null,
+    pipeline.web || hasWebEnrichment ? t('automaticDebugWebDone') : null,
+    pipeline.catalog_refined ? t('automaticDebugCatalogRefined') : null,
+  ].filter(Boolean)
+}
+
 export default function AutomaticBottleDetail({
   analyzingImageId,
   canAnalyzeSingle,
@@ -137,6 +155,7 @@ export default function AutomaticBottleDetail({
   const resolvedQuizDisplayValues = [details.country, region, appellation, wineType, primaryGrape].filter(
     Boolean,
   )
+  const debugSteps = getEnrichmentDebugSteps(selectedBottle, t)
 
   return (
     <section className={styles.autoBottleCard}>
@@ -236,6 +255,15 @@ export default function AutomaticBottleDetail({
                     <span>{item}</span>
                   </span>
                 ))}
+            </div>
+          ) : null}
+          {debugSteps.length > 0 ? (
+            <div className={styles.autoBottleDebugRow} aria-label={t('automaticDebugPipelineLabel')}>
+              {debugSteps.map((step) => (
+                <span key={`${selectedBottle.id}-${step}`} className={styles.autoBottleDebugBadge}>
+                  {step}
+                </span>
+              ))}
             </div>
           ) : null}
 
