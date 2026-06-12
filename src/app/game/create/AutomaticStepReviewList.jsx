@@ -56,7 +56,16 @@ export default function AutomaticStepReviewList({
               </div>
               <div className={styles.autoBottleSummaryBody}>
                 <div className={styles.autoBottleSummaryHeader}>
-                  <strong>{getBottleDisplayName(image, index)}</strong>
+                  <div className={styles.autoBottleSummaryHeaderText}>
+                    <strong>{getBottleDisplayName(image, index)}</strong>
+                    <p className={styles.autoBottleSummaryMeta}>
+                      {image.status === 'recognized'
+                        ? [image.recognized_producer, image.recognized_vintage]
+                            .filter(Boolean)
+                            .join(' · ') || t('automaticBottlePendingLabel')
+                        : t('automaticBottleAnalyzingLabel')}
+                    </p>
+                  </div>
                   <div className={styles.autoBottleSummaryHeaderBadges}>
                     <span
                       className={`${styles.autoBottleStatusBadge} ${
@@ -87,13 +96,7 @@ export default function AutomaticStepReviewList({
                     ) : null}
                   </div>
                 </div>
-                <p className={styles.autoBottleSummaryMeta}>
-                  {image.status === 'recognized'
-                    ? [image.recognized_producer, image.recognized_vintage]
-                        .filter(Boolean)
-                        .join(' · ') || t('automaticBottlePendingLabel')
-                    : t('automaticBottleAnalyzingLabel')}
-                </p>
+
                 <div className={styles.autoBottleSummaryFacts}>
                   {[details.country, region, appellation, wineType, grapes[0]]
                     .filter(Boolean)

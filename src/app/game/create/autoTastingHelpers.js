@@ -210,9 +210,11 @@ export function localizeHarmonyLabel(canonical, lang = 'it') {
 export function normalizeBodyForQuiz(value, lang = 'it') {
   const normalized = normalizeToken(value)
   if (!normalized) return null
-  if (normalized === 'light' || normalized === 'light-bodied') return localizeBodyLabel('light', lang)
+  if (normalized === 'light' || normalized === 'light-bodied')
+    return localizeBodyLabel('light', lang)
   if (normalized === 'medium-light') return localizeBodyLabel('medium-light', lang)
-  if (normalized === 'medium' || normalized === 'medium-bodied') return localizeBodyLabel('medium', lang)
+  if (normalized === 'medium' || normalized === 'medium-bodied')
+    return localizeBodyLabel('medium', lang)
   if (normalized === 'medium-full') return localizeBodyLabel('medium-full', lang)
   if (normalized === 'full' || normalized === 'full-bodied') return localizeBodyLabel('full', lang)
   return String(value).trim()
@@ -224,7 +226,8 @@ export function normalizeAcidityForQuiz(value, lang = 'it') {
   if (normalized === 'soft' || normalized === 'morbida') return localizeAcidityLabel('soft', lang)
   if (normalized === 'fresh' || normalized === 'low') return localizeAcidityLabel('fresh', lang)
   if (normalized === 'medium') return localizeAcidityLabel('medium', lang)
-  if (normalized === 'lively' || normalized === 'vivace') return localizeAcidityLabel('lively', lang)
+  if (normalized === 'lively' || normalized === 'vivace')
+    return localizeAcidityLabel('lively', lang)
   if (normalized === 'high') return localizeAcidityLabel('high', lang)
   return String(value).trim()
 }
@@ -232,11 +235,13 @@ export function normalizeAcidityForQuiz(value, lang = 'it') {
 export function normalizeHarmonyForQuiz(value, lang = 'it') {
   const normalized = normalizeToken(value)
   if (!normalized) return null
-  if (normalized === 'direct' || normalized === 'diretto') return localizeHarmonyLabel('direct', lang)
+  if (normalized === 'direct' || normalized === 'diretto')
+    return localizeHarmonyLabel('direct', lang)
   if (normalized === 'balanced') return localizeHarmonyLabel('balanced', lang)
   if (normalized === 'elegant') return localizeHarmonyLabel('elegant', lang)
   if (normalized === 'structured') return localizeHarmonyLabel('structured', lang)
-  if (normalized === 'complex' || normalized === 'complesso') return localizeHarmonyLabel('complex', lang)
+  if (normalized === 'complex' || normalized === 'complesso')
+    return localizeHarmonyLabel('complex', lang)
   return String(value).trim()
 }
 
@@ -300,9 +305,18 @@ export function localizeNarrativeText(value, lang = 'it') {
   const replacements =
     lang === 'it'
       ? [
-          [/A collaboration between renowned (producers|winemakers)/gi, 'Una collaborazione tra produttori rinomati'],
-          [/highlighting Etna'?s unique terroir/gi, "che valorizza l'unicità del terroir dell'Etna"],
-          [/highlighting Sicily'?s volcanic terroir/gi, 'che valorizza il terroir vulcanico della Sicilia'],
+          [
+            /A collaboration between renowned (producers|winemakers)/gi,
+            'Una collaborazione tra produttori rinomati',
+          ],
+          [
+            /highlighting Etna'?s unique terroir/gi,
+            "che valorizza l'unicità del terroir dell'Etna",
+          ],
+          [
+            /highlighting Sicily'?s volcanic terroir/gi,
+            'che valorizza il terroir vulcanico della Sicilia',
+          ],
           [/focusing on Etna'?s unique terroir/gi, "incentrata sull'unicità del terroir dell'Etna"],
           [/A refined white wine/gi, 'Un raffinato vino bianco'],
           [/A Sicilian white wine/gi, 'Un vino bianco siciliano'],
@@ -317,7 +331,10 @@ export function localizeNarrativeText(value, lang = 'it') {
           [/with mineral notes/gi, 'con note minerali'],
         ]
       : [
-          [/Una collaborazione tra produttori rinomati/gi, 'A collaboration between renowned producers'],
+          [
+            /Una collaborazione tra produttori rinomati/gi,
+            'A collaboration between renowned producers',
+          ],
           [/Un raffinato vino bianco/gi, 'A refined white wine'],
           [/Un vino bianco siciliano/gi, 'A Sicilian white wine'],
           [/Un vino bianco teso e minerale/gi, 'A crisp, mineral-driven white wine'],
@@ -327,7 +344,10 @@ export function localizeNarrativeText(value, lang = 'it') {
           [/con note floreali e agrumate/gi, 'with floral and citrus notes'],
           [/con note minerali/gi, 'with mineral notes'],
         ]
-  return replacements.reduce((acc, [pattern, replacement]) => acc.replace(pattern, replacement), text)
+  return replacements.reduce(
+    (acc, [pattern, replacement]) => acc.replace(pattern, replacement),
+    text,
+  )
 }
 
 export function inferRegion(details, image) {
@@ -335,12 +355,38 @@ export function inferRegion(details, image) {
   if (quizRegion) return quizRegion
   const direct = String(details?.region || '').trim()
   if (direct) return direct
-  const source = [details?.appellation, image?.recognized_name, image?.recognized_payload?.text_preview]
+  const source = [
+    details?.appellation,
+    image?.recognized_name,
+    image?.recognized_payload?.text_preview,
+  ]
     .filter(Boolean)
     .join(' ')
     .toLowerCase()
   if (!source) return null
-  const regionHints = ['sicilia', 'toscana', 'piemonte', 'veneto', 'umbria', 'marche', 'campania', 'puglia', 'lazio', 'abruzzo', 'sardegna', 'friuli', 'trentino', 'liguria', 'calabria', 'molise', 'basilicata', 'vallée d aoste', 'valle d aosta', 'lombardia', 'emilia romagna']
+  const regionHints = [
+    'sicilia',
+    'toscana',
+    'piemonte',
+    'veneto',
+    'umbria',
+    'marche',
+    'campania',
+    'puglia',
+    'lazio',
+    'abruzzo',
+    'sardegna',
+    'friuli',
+    'trentino',
+    'liguria',
+    'calabria',
+    'molise',
+    'basilicata',
+    'vallée d aoste',
+    'valle d aosta',
+    'lombardia',
+    'emilia romagna',
+  ]
   return regionHints.find((region) => source.includes(region)) || null
 }
 
@@ -368,11 +414,50 @@ export function getLocalizedNotableOptions(lang = 'it') {
 export function normalizeNotableForQuiz(value, notableOptions) {
   const normalized = normalizeToken(value)
   if (!normalized) return null
-  if (normalized.includes('collaboration') || normalized.includes('collaborazione') || normalized.includes('renowned producers') || normalized.includes('renowned winemakers') || normalized.includes('gaja') || normalized.includes('graci')) return notableOptions.collaboration
-  if (normalized.includes('etna') || normalized.includes('territory') || normalized.includes('terroir') || normalized.includes('volcanic') || normalized.includes('territorio') || normalized.includes('vulcan')) return notableOptions.territory
-  if (normalized.includes('grape') || normalized.includes('grapes') || normalized.includes('vitigno') || normalized.includes('uvaggio') || normalized.includes('carricante') || normalized.includes('nebbiolo') || normalized.includes('sangiovese')) return notableOptions.grape
-  if (normalized.includes('producer') || normalized.includes('cantina') || normalized.includes('winemaking') || normalized.includes('style') || normalized.includes('stile')) return notableOptions.producer
-  if (normalized.includes('appellation') || normalized.includes('denominazione') || normalized.includes('dop') || normalized.includes('doc') || normalized.includes('docg')) return notableOptions.appellation
+  if (
+    normalized.includes('collaboration') ||
+    normalized.includes('collaborazione') ||
+    normalized.includes('renowned producers') ||
+    normalized.includes('renowned winemakers') ||
+    normalized.includes('gaja') ||
+    normalized.includes('graci')
+  )
+    return notableOptions.collaboration
+  if (
+    normalized.includes('etna') ||
+    normalized.includes('territory') ||
+    normalized.includes('terroir') ||
+    normalized.includes('volcanic') ||
+    normalized.includes('territorio') ||
+    normalized.includes('vulcan')
+  )
+    return notableOptions.territory
+  if (
+    normalized.includes('grape') ||
+    normalized.includes('grapes') ||
+    normalized.includes('vitigno') ||
+    normalized.includes('uvaggio') ||
+    normalized.includes('carricante') ||
+    normalized.includes('nebbiolo') ||
+    normalized.includes('sangiovese')
+  )
+    return notableOptions.grape
+  if (
+    normalized.includes('producer') ||
+    normalized.includes('cantina') ||
+    normalized.includes('winemaking') ||
+    normalized.includes('style') ||
+    normalized.includes('stile')
+  )
+    return notableOptions.producer
+  if (
+    normalized.includes('appellation') ||
+    normalized.includes('denominazione') ||
+    normalized.includes('dop') ||
+    normalized.includes('doc') ||
+    normalized.includes('docg')
+  )
+    return notableOptions.appellation
   return notableOptions.profile
 }
 
@@ -387,9 +472,12 @@ export function formatBytes(value) {
 }
 
 export function getAutoUploadCompressionPolicy(fileSize) {
-  if (fileSize >= 12 * 1024 * 1024) return {maxDimension: 1500, qualitySteps: [0.72, 0.64], targetBytes: 1.6 * 1024 * 1024}
-  if (fileSize >= 8 * 1024 * 1024) return {maxDimension: 1700, qualitySteps: [0.78, 0.7], targetBytes: 2.1 * 1024 * 1024}
-  if (fileSize >= 5 * 1024 * 1024) return {maxDimension: 1900, qualitySteps: [0.82, 0.74], targetBytes: 2.5 * 1024 * 1024}
+  if (fileSize >= 12 * 1024 * 1024)
+    return {maxDimension: 1500, qualitySteps: [0.72, 0.64], targetBytes: 1.6 * 1024 * 1024}
+  if (fileSize >= 8 * 1024 * 1024)
+    return {maxDimension: 1700, qualitySteps: [0.78, 0.7], targetBytes: 2.1 * 1024 * 1024}
+  if (fileSize >= 5 * 1024 * 1024)
+    return {maxDimension: 1900, qualitySteps: [0.82, 0.74], targetBytes: 2.5 * 1024 * 1024}
   return {maxDimension: 2200, qualitySteps: [0.84, 0.78], targetBytes: 3 * 1024 * 1024}
 }
 
@@ -441,8 +529,13 @@ export async function renderCompressedImageBlob(image, {maxDimension, quality}) 
 export async function optimizeAutoTastingUploadFile(file) {
   if (!(file instanceof File)) return file
   const mimeType = String(file.type || '').toLowerCase()
-  const isRasterConvertible = mimeType === 'image/jpeg' || mimeType === 'image/png' || mimeType === 'image/webp'
-  const isHeicFamily = mimeType === 'image/heic' || mimeType === 'image/heif' || mimeType === 'image/heic-sequence' || mimeType === 'image/heif-sequence'
+  const isRasterConvertible =
+    mimeType === 'image/jpeg' || mimeType === 'image/png' || mimeType === 'image/webp'
+  const isHeicFamily =
+    mimeType === 'image/heic' ||
+    mimeType === 'image/heif' ||
+    mimeType === 'image/heic-sequence' ||
+    mimeType === 'image/heif-sequence'
   if (!isRasterConvertible && !isHeicFamily) return file
   if (isHeicFamily || file.size <= 8 * 1024 * 1024) return file
   try {
@@ -450,27 +543,45 @@ export async function optimizeAutoTastingUploadFile(file) {
     const image = await loadRenderableImageFromFile(file)
     let optimizedBlob = null
     for (const quality of policy.qualitySteps) {
-      const candidate = await renderCompressedImageBlob(image, {maxDimension: policy.maxDimension, quality})
+      const candidate = await renderCompressedImageBlob(image, {
+        maxDimension: policy.maxDimension,
+        quality,
+      })
       if (!candidate) continue
       optimizedBlob = candidate
       if (candidate.size <= policy.targetBytes) break
     }
     if (!optimizedBlob || optimizedBlob.size >= file.size * 0.98) return file
     const baseName = file.name.replace(/\.[^.]+$/, '') || 'bottle'
-    return new File([optimizedBlob], `${baseName}.jpg`, {type: 'image/jpeg', lastModified: file.lastModified || Date.now()})
+    return new File([optimizedBlob], `${baseName}.jpg`, {
+      type: 'image/jpeg',
+      lastModified: file.lastModified || Date.now(),
+    })
   } catch {
     return file
   }
 }
 
 export function uniqueIds(values) {
-  return [...new Set((Array.isArray(values) ? values : []).map((value) => String(value || '').trim()).filter(Boolean))]
+  return [
+    ...new Set(
+      (Array.isArray(values) ? values : [])
+        .map((value) => String(value || '').trim())
+        .filter(Boolean),
+    ),
+  ]
 }
 
 export function isGenericBottleFilename(value) {
-  const normalized = String(value || '').trim().toLowerCase()
+  const normalized = String(value || '')
+    .trim()
+    .toLowerCase()
   if (!normalized) return true
-  return /^image\.(jpe?g|png|webp|heic|heif)$/i.test(normalized) || /^photo\.(jpe?g|png|webp|heic|heif)$/i.test(normalized) || /^blob$/i.test(normalized)
+  return (
+    /^image\.(jpe?g|png|webp|heic|heif)$/i.test(normalized) ||
+    /^photo\.(jpe?g|png|webp|heic|heif)$/i.test(normalized) ||
+    /^blob$/i.test(normalized)
+  )
 }
 
 export function readStoredIds(storage, key) {
@@ -510,7 +621,10 @@ export function writeStoredObject(storage, key, value) {
 export async function withClientTimeout(promise, timeoutMs, label = 'request') {
   let timeoutId
   const timeoutPromise = new Promise((_, reject) => {
-    timeoutId = setTimeout(() => reject(new Error(`${label} timeout after ${timeoutMs}ms`)), timeoutMs)
+    timeoutId = setTimeout(
+      () => reject(new Error(`${label} timeout after ${timeoutMs}ms`)),
+      timeoutMs,
+    )
   })
   try {
     return await Promise.race([promise, timeoutPromise])
@@ -521,7 +635,12 @@ export async function withClientTimeout(promise, timeoutMs, label = 'request') {
 
 export function isTransientLoadError(error) {
   const message = String(error?.message || '').toLowerCase()
-  return message.includes('abort') || message.includes('timeout') || message.includes('network') || message.includes('failed to fetch')
+  return (
+    message.includes('abort') ||
+    message.includes('timeout') ||
+    message.includes('network') ||
+    message.includes('failed to fetch')
+  )
 }
 
 export function valuesEqualForDiff(left, right) {
