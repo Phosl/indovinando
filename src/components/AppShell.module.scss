@@ -8,10 +8,9 @@
   position: sticky;
   top: 0;
   z-index: 90;
-  padding: max(6px, env(safe-area-inset-top)) 12px 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 8px) 12px 0;
   background: var(--background);
   backdrop-filter: blur(10px);
-  padding-top: 0px;
   box-shadow: 0 2px 0 var(--button-secondary-border);
 }
 

@@ -4,7 +4,7 @@
 }
 
 .topBarWrap {
-  padding: 10px 12px 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 12px 0;
 }
 
 .container {

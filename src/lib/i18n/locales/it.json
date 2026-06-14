@@ -495,6 +495,11 @@
     "joinCodeValueLabel": "Codice partita",
     "eventLabel": "Evento: {title}",
     "discoverAppAction": "Scopri l'app",
+    "stepNickname": "Nome",
+    "stepAvatar": "Avatar",
+    "stepQuiz": "Opzioni quiz",
+    "continueAction": "Continua",
+    "stepCounter": "Passo {current} di {total}",
     "answerMode": {
       "title": "Opzioni quiz",
       "description": "Scegli quando mostrare le risposte corrette ai partecipanti.",

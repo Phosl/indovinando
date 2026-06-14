@@ -7,7 +7,7 @@
 }
 
 .topBarWrap {
-  padding: 10px 12px 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 12px 0;
   flex-shrink: 0;
 }
 
@@ -122,6 +122,36 @@
   }
 }
 
+.stepHeader {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.stepEyebrow {
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--primary-text);
+}
+
+.stepTitle {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.stepHint {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+}
+
 .codeLabelError {
   color: var(--danger-text) !important;
 }
@@ -204,7 +234,8 @@
 }
 
 .buttonRow {
-  position: relative;
+  position: sticky;
+  bottom: 0;
   z-index: 20;
   display: flex;
   align-items: center;
@@ -214,11 +245,18 @@
   flex-shrink: 0;
   border-top: 1px solid color-mix(in srgb, var(--white) 8%, transparent);
   box-shadow: 0 -8px 18px color-mix(in srgb, var(--dark) 16%, transparent);
-  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  padding: 10px 16px calc(env(safe-area-inset-bottom, 0px) + 14px);
 
   :global(.btn) {
-    width: 100%;
-    min-width: 170px;
+    min-width: 140px;
+  }
+
+  :global(.success-filled) {
+    flex: 1;
+  }
+
+  :global(.btn.neutral) {
+    flex: 0 0 auto;
   }
 }
 

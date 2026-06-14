@@ -1,18 +1,6 @@
 import {NextResponse} from 'next/server'
 import {createServerSupabase} from '@/lib/supabaseServer'
-import {createClient} from '@supabase/supabase-js'
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-function createWriteClient(fallback) {
-  if (SUPABASE_URL && SERVICE_ROLE_KEY) {
-    return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
-      auth: {persistSession: false, autoRefreshToken: false},
-    })
-  }
-  return fallback
-}
+import {createAdminSupabase} from '@/lib/supabaseAdmin'
 
 function slugify(value) {
   return String(value || '')
@@ -59,7 +47,7 @@ export async function POST(request) {
       return NextResponse.json({error: 'Game not found'}, {status: 404})
     }
 
-    const db = createWriteClient(supabase)
+    const db = createAdminSupabase()
     const base = slugify(title) || 'evento'
 
     let created = null

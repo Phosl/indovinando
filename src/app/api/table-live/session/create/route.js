@@ -1,18 +1,6 @@
 import {NextResponse} from 'next/server'
 import {createServerSupabase} from '@/lib/supabaseServer'
-import {createClient} from '@supabase/supabase-js'
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-function createWriteClient(fallback) {
-  if (SUPABASE_URL && SERVICE_ROLE_KEY) {
-    return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
-      auth: {persistSession: false, autoRefreshToken: false},
-    })
-  }
-  return fallback
-}
+import {createAdminSupabase} from '@/lib/supabaseAdmin'
 
 function randomJoinCode() {
   return String(Math.floor(1000 + Math.random() * 9000))
@@ -39,7 +27,7 @@ export async function POST(request) {
     } = await supabase.auth.getUser()
     const userId = user?.id || null
 
-    const db = createWriteClient(supabase)
+    const db = createAdminSupabase()
 
     const {data: event, error: eventError} = await db
       .from('table_live_events')

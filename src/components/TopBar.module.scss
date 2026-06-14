@@ -11,6 +11,7 @@
   overflow: hidden;
   padding: 8px 0px;
   @media (max-width: 768px) {
+    --topbar-side-width: clamp(56px, 28vw, 112px);
     margin-bottom: 16px;
   }
   &.wrapped {
@@ -104,16 +105,25 @@
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
+  @media (max-width: 520px) {
+    font-size: 1.05rem;
+  }
 }
 
 .actions {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: flex-end;
   align-items: center;
   flex-shrink: 0;
   max-width: 100%;
+  min-width: 0;
+
+  > * {
+    min-width: 0;
+    max-width: 100%;
+  }
 }
 
 .titleWithProgress {

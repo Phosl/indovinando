@@ -71,7 +71,7 @@
   max-width: calc(100% - 32px);
   @media (max-width: 768px) {
     margin: 0px;
-    margin-top: 12px;
+    margin-top: calc(env(safe-area-inset-top, 0px) + 12px);
     padding: 12px 16px;
     max-width: 100%;
   }

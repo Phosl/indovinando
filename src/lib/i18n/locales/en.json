@@ -489,6 +489,11 @@
     "joinCodeValueLabel": "Game code",
     "eventLabel": "Event: {title}",
     "discoverAppAction": "Discover the app",
+    "stepNickname": "Name",
+    "stepAvatar": "Avatar",
+    "stepQuiz": "Quiz options",
+    "continueAction": "Continue",
+    "stepCounter": "Step {current} of {total}",
     "answerMode": {
       "title": "Quiz options",
       "description": "Choose when to show the correct answers to players.",
