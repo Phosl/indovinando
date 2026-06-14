@@ -1,7 +1,7 @@
 export default function manifest() {
   const isPreview = process.env.VERCEL_ENV === 'preview'
   const iconBase = isPreview ? '/app_icon_feature' : '/app_icon'
-  const themeColor = isPreview ? '#145f4d' : '#ffffff'
+  const themeColor = '#fcf9ef'
 
   return {
     name: 'Indovinando',

@@ -1,14 +1,11 @@
 'use client'
 
 import {useMemo, useState} from 'react'
-import TopBar from '@/components/TopBar'
-import {useRouter} from 'next/navigation'
 import AvatarDisplay from '@/components/AvatarDisplay'
 import {formatAppDateTime} from '@/lib/dateFormat'
 import styles from './partite.module.scss'
 
 export default function PartiteClient({lang, t, summary, matches}) {
-  const router = useRouter()
   const [activeGame, setActiveGame] = useState(null)
 
   const gameOptions = useMemo(() => {
@@ -45,11 +42,6 @@ export default function PartiteClient({lang, t, summary, matches}) {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <TopBar
-          title={t.matchesTitle || (lang === 'en' ? 'Your matches' : 'Le tue partite')}
-          onBack={() => router.push('/profilo')}
-        />
-
         <section className={styles.card}>
           <div className={styles.summaryGrid}>
             <div className={styles.metric}>

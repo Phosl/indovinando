@@ -66,7 +66,7 @@ create table if not exists public.table_live_events (
   id uuid primary key default gen_random_uuid(),
   slug text not null unique,
   title text not null,
-  game_id uuid not null references public.games(id) on delete restrict,
+  game_id uuid not null references public.games(id) on delete cascade,
   created_by uuid null references auth.users(id) on delete set null,
   status text not null default 'active' check (status in ('active', 'closed')),
   inactivity_timeout_minutes int not null default 15 check (inactivity_timeout_minutes between 1 and 240),
@@ -84,7 +84,7 @@ create index if not exists idx_table_live_events_status
 create table if not exists public.table_live_sessions (
   id uuid primary key default gen_random_uuid(),
   event_id uuid not null references public.table_live_events(id) on delete cascade,
-  game_id uuid not null references public.games(id) on delete restrict,
+  game_id uuid not null references public.games(id) on delete cascade,
   join_code text not null,
   status text not null default 'lobby' check (status in ('lobby', 'playing', 'finished', 'expired')),
   current_bottle_index int not null default 0,
@@ -215,4 +215,3 @@ Step 1C:
 
 - timeout inattivita configurabile
 - gestione stati `finished/expired`
-

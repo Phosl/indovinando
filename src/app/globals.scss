@@ -1,8 +1,12 @@
 @use '../styles/reset';
 @use '../styles/buttons';
 
+:root {
+  --app-background: #fcf9ef;
+}
+
 body {
-  --background: #fcf9ef;
+  --background: var(--app-background);
   --foreground: #fff;
   --tertiary: #1a9de0;
   --text-primary: #000;
@@ -57,6 +61,7 @@ body {
   --primary-50: #f1edfb;
   --primary-100: #e4dbf8;
   --primary-200: #c9baf5;
+  --primary-300: #a88ef0;
   --primary-400: #a88ef0;
   --primary-700: #6b2f8e;
   --primary-900: #2b1860;
@@ -110,7 +115,7 @@ body {
 
 html {
   color-scheme: light;
-  background-color: #var(--background);
+  background-color: var(--app-background);
 }
 
 input {

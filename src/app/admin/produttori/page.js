@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import TopBarBack from '@/components/TopBarBack'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {requireSuperAdmin} from '@/lib/courseAdmin'
 import ProduttoriFiltersClient from '../catalog/ProduttoriFiltersClient'
@@ -56,8 +55,6 @@ export default async function AdminProduttoriPage({searchParams}) {
 
   return (
     <main className={styles.page}>
-      <TopBarBack title="Admin - Produttori" href="/admin" />
-
       <div className={styles.container}>
         <div className={styles.header}>
           <h2 className={styles.sectionTitle}>Lista produttori</h2>

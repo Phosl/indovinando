@@ -47,19 +47,21 @@ export default function TopBar({
 
   return (
     <div className={`${containerClassName} ${className}`} style={containerStyle}>
-      {onBack ? (
-        <button
-          type="button"
-          className={styles.backBtn}
-          onClick={handleBackClick}
-          aria-label={t('back')}>
-          <BackIcon className={styles.backBtnIcon} />
-        </button>
-      ) : back ? (
-        <Link href={back} className={styles.backBtn} aria-label={t('back')}>
-          <BackIcon className={styles.backBtnIcon} />
-        </Link>
-      ) : null}
+      <div className={styles.sideSlot}>
+        {onBack ? (
+          <button
+            type="button"
+            className={styles.backBtn}
+            onClick={handleBackClick}
+            aria-label={t('back')}>
+            <BackIcon className={styles.backBtnIcon} />
+          </button>
+        ) : back ? (
+          <Link href={back} className={styles.backBtn} aria-label={t('back')}>
+            <BackIcon className={styles.backBtnIcon} />
+          </Link>
+        ) : null}
+      </div>
       {title && progress === null && (
         <h1 className={`${styles.title} ${titleClassName}`}>{title}</h1>
       )}
@@ -74,7 +76,9 @@ export default function TopBar({
           />
         </div>
       )}
-      <div className={`${styles.actions} ${actionsClassName}`}>{children}</div>
+      <div className={`${styles.sideSlot} ${styles.actionsSlot}`}>
+        <div className={`${styles.actions} ${actionsClassName}`}>{children}</div>
+      </div>
     </div>
   )
 }

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import {useEffect, useMemo, useState} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useT} from '@/lib/i18n/useT'
 import AvatarDisplay from '@/components/AvatarDisplay'
@@ -26,8 +26,10 @@ export default function GamePlayView({
   const t = useT('gamePlayViewActions')
   const text = getGamePlayViewText(lang)
   const [activeBottleIndex, setActiveBottleIndex] = useState(0)
+  const [pendingBottleIndex, setPendingBottleIndex] = useState(null)
   const [historyOpen, setHistoryOpen] = useState(false)
   const [isMobileViewport, setIsMobileViewport] = useState(false)
+  const switchTimerRef = useRef(null)
   const isReadyToPlay = questions.length > 0 && bottles.length > 0
   const incompleteBottlesCount = useMemo(
     () => bottles.filter((bottle) => !isBottleComplete(bottle, questions)).length,
@@ -39,7 +41,30 @@ export default function GamePlayView({
     return watchMobileViewport(setIsMobileViewport)
   }, [])
 
+  useEffect(() => {
+    return () => {
+      if (switchTimerRef.current) {
+        window.clearTimeout(switchTimerRef.current)
+      }
+    }
+  }, [])
+
+  function handleBottleSwitch(nextIndex) {
+    if (nextIndex === activeBottleIndex) return
+    if (switchTimerRef.current) {
+      window.clearTimeout(switchTimerRef.current)
+    }
+    setPendingBottleIndex(nextIndex)
+    switchTimerRef.current = window.setTimeout(() => {
+      setActiveBottleIndex(nextIndex)
+      setPendingBottleIndex(null)
+      switchTimerRef.current = null
+    }, 320)
+  }
+
   const activeBottle = bottles[activeBottleIndex]
+  const isSwitchingBottle = pendingBottleIndex !== null
+  const visibleBottleIndex = pendingBottleIndex ?? activeBottleIndex
 
   const answerMap = useMemo(() => {
     if (!activeBottle) return new Map()
@@ -120,6 +145,29 @@ export default function GamePlayView({
               </ButtonLink>
             </div>
           )}
+
+          {isOwner && hasIncompleteBottles ? (
+            <div className={styles.incompleteCtaRow}>
+              <ButtonLink
+                href={`/game/${game.id}/edit?step=4`}
+                variant="warning"
+                size={isMobileViewport ? 'small' : undefined}
+                className={styles.incompleteCtaBtn}>
+                <span className={styles.actionBtnContent}>
+                  <Icon name="warning" size={24} className={styles.actionBtnIcon} />
+                  <span>
+                    {t(
+                      incompleteBottlesCount === 1
+                        ? 'completeSingleBottle'
+                        : 'completeMultipleBottles',
+                      {count: String(incompleteBottlesCount)},
+                    )}
+                  </span>
+                </span>
+              </ButtonLink>
+            </div>
+          ) : null}
+
           <div className={styles.actionsBtnBottom}>
             {isOwner && (
               <ButtonLink
@@ -145,27 +193,6 @@ export default function GamePlayView({
             </ButtonLink>
           </div>
         </div>
-        {isOwner && hasIncompleteBottles ? (
-          <div className={styles.incompleteCtaRow}>
-            <ButtonLink
-              href={`/game/${game.id}/edit?step=4`}
-              variant="warning"
-              size={isMobileViewport ? 'small' : undefined}
-              className={styles.incompleteCtaBtn}>
-              <span className={styles.actionBtnContent}>
-                <Icon name="edit" size={24} className={styles.actionBtnIcon} />
-                <span>
-                  {t(
-                    incompleteBottlesCount === 1
-                      ? 'completeSingleBottle'
-                      : 'completeMultipleBottles',
-                    {count: String(incompleteBottlesCount)},
-                  )}
-                </span>
-              </span>
-            </ButtonLink>
-          </div>
-        ) : null}
       </div>
 
       {isReadyToPlay && (
@@ -174,8 +201,8 @@ export default function GamePlayView({
             {bottles.map((bottle, idx) => (
               <button
                 key={bottle.id}
-                className={`${styles.bottleCard} ${idx === activeBottleIndex ? styles.activeBottle : ''}`}
-                onClick={() => setActiveBottleIndex(idx)}>
+                className={`${styles.bottleCard} ${idx === visibleBottleIndex ? styles.activeBottle : ''}`}
+                onClick={() => handleBottleSwitch(idx)}>
                 <span className={styles.bottleIndex}>{idx + 1}</span>
                 <div className={styles.bottleCardBody}>
                   <h3>
@@ -190,7 +217,7 @@ export default function GamePlayView({
       )}
 
       {isReadyToPlay && (
-        <div>
+        <div className={`${styles.card} ${styles.bottlePreviewCard}`} aria-live="polite">
           {/* <div className={styles.bottleHeader}>
             <span className={styles.questionNumberGeneral}>
               {text.bottle} {activeBottleIndex + 1} {text.bottleCounterOf} {bottles.length}
@@ -201,46 +228,55 @@ export default function GamePlayView({
             </p>
           </div> */}
 
-          <div className={styles.questionsList}>
-            {questions.map((q, idx) => {
-              const correctOptionId = answerMap.get(q.id)
-              const hasCorrectOption = Boolean(correctOptionId)
-              return (
-                <div key={q.id} className={styles.questionBlock}>
-                  <div className={styles.questionHeader}>
-                    <span className={styles.questionNumber}>
-                      {text.question} {idx + 1}
-                    </span>
-                    <p className={styles.questionTitle}>{q.text}</p>
-                  </div>
+          {isSwitchingBottle ? (
+            <div className={styles.previewBottleLoaderWrap}>
+              <div className={styles.previewBottleLoader}>
+                <span className={styles.previewBottleLoaderSpinner} aria-hidden="true" />
+                <span>{t('loadingBottle')}</span>
+              </div>
+            </div>
+          ) : (
+            <div className={styles.questionsList}>
+              {questions.map((q, idx) => {
+                const correctOptionId = answerMap.get(q.id)
+                const hasCorrectOption = Boolean(correctOptionId)
+                return (
+                  <div key={q.id} className={styles.questionBlock}>
+                    <div className={styles.questionHeader}>
+                      <span className={styles.questionNumber}>
+                        {text.question} {idx + 1}
+                      </span>
+                      <p className={styles.questionTitle}>{q.text}</p>
+                    </div>
 
-                  <div className={styles.options}>
-                    {q.options.map((opt) => {
-                      const isCorrect = hasCorrectOption && opt.id === correctOptionId
-                      return (
-                        <div
-                          key={opt.id}
-                          className={`${styles.option} ${
-                            hasCorrectOption ? (isCorrect ? styles.correct : styles.wrong) : ''
-                          }`}>
-                          {hasCorrectOption ? (
-                            <Icon
-                              className={styles.optionIcon}
-                              name={isCorrect ? 'checkCorrect' : 'checkWrong'}
-                              size={24}
-                            />
-                          ) : null}
-                          <span>{opt.text}</span>
-                        </div>
-                      )
-                    })}
-                  </div>
+                    <div className={styles.options}>
+                      {q.options.map((opt) => {
+                        const isCorrect = hasCorrectOption && opt.id === correctOptionId
+                        return (
+                          <div
+                            key={opt.id}
+                            className={`${styles.option} ${
+                              hasCorrectOption ? (isCorrect ? styles.correct : styles.wrong) : ''
+                            }`}>
+                            {hasCorrectOption ? (
+                              <Icon
+                                className={styles.optionIcon}
+                                name={isCorrect ? 'checkCorrect' : 'checkWrong'}
+                                size={24}
+                              />
+                            ) : null}
+                            <span>{opt.text}</span>
+                          </div>
+                        )
+                      })}
+                    </div>
 
-                  {/* <p className={styles.correctLabel}>{text.correctLabel}</p> */}
-                </div>
-              )
-            })}
-          </div>
+                    {/* <p className={styles.correctLabel}>{text.correctLabel}</p> */}
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       )}
 

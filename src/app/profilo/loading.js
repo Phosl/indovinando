@@ -21,25 +21,6 @@ export default function ProfiloLoading() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        {/* TopBar skeleton */}
-        <div
-          className="skeleton-frame"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '40px 1fr 40px',
-            alignItems: 'center',
-            columnGap: 12,
-            width: '100%',
-            maxWidth: 960,
-            padding: '10px 14px',
-            margin: '0 auto 16px auto',
-            boxSizing: 'border-box',
-          }}>
-          <Bone w="40px" h="40px" style={{borderRadius: 10}} />
-          <Bone w="160px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
-          <Bone w="40px" h="40px" style={{borderRadius: 10, marginLeft: 'auto'}} />
-        </div>
-
         {/* Header card: avatar + nome + email + lingua + avatar picker */}
         <div className={styles.headerCard}>
           <div className={styles.userRow}>

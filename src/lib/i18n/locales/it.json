@@ -51,6 +51,7 @@
     "printCard": "Stampa ",
     "emptyState": "Non hai ancora creato degustazioni. Inizia ora!",
     "emptyStateFirstGame": "Non hai ancora creato degustazioni. Crea la tua prima degustazione per iniziare a giocare.",
+    "gameDeletedToast": "Degustazione eliminata.",
     "createFirstGame": "Crea la tua prima degustazione",
     "createGameCardTitle": "Crea una degustazione",
     "createGameCardDescription": "Prepara il questionario per la tua nuova degustazione.",
@@ -205,6 +206,9 @@
     "backToDirectory": "Torna ai partner"
   },
   "admin": {
+    "title": "Admin",
+    "coursesTitle": "Admin — Corsi",
+    "producersTitle": "Admin - Produttori",
     "catalog": {
       "backLabel": "Admin",
       "winesTitle": "Admin - Vini",
@@ -502,8 +506,10 @@
   },
   "gamePlayPage": {
     "title": "Dettaglio Degustazione",
+    "deleteModalTitle": "Eliminare degustazione?",
     "deleteConfirm": "Sei sicuro di voler eliminare questo gioco? Non sara recuperabile.",
     "delete": "Elimina",
+    "deleting": "Eliminazione...",
     "deleteError": "Impossibile eliminare la degustazione.",
     "gameFallback": "Gioco",
     "loadErrorTitle": "Errore caricamento partita",
@@ -532,7 +538,8 @@
     "questionsCount": "{count} Domande",
     "completeBottles": "Completa bottiglie",
     "completeSingleBottle": "Completa 1 bottiglia",
-    "completeMultipleBottles": "Completa {count} bottiglie"
+    "completeMultipleBottles": "Completa {count} bottiglie",
+    "loadingBottle": "Aggiorno anteprima bottiglia..."
   },
   "onboarding": {
     "step": "Passo",
@@ -637,6 +644,9 @@
     "seeResults": "Vedi risultati",
     "continue": "Continua",
     "chapterLabel": "Capitolo {index}",
+    "takeawaysTitle": "Concetti chiave",
+    "audioOn": "ON",
+    "audioOff": "OFF",
     "levelUpTitle": "🎉 Sei salito di livello!",
     "levelUpPhrases": [
       "Il tuo naso da sommelier si sta sviluppando!",
@@ -953,6 +963,7 @@
       "participantNotFoundDesc": "Rientra dalla pagina di accesso alla sessione con il tuo nickname.",
       "backToJoin": "Torna all'accesso",
       "loadingGame": "Caricamento partita...",
+      "loadingGameDesc": "Sto preparando domande, bottiglie e classifica live. Tra poco si parte.",
       "sessionNotReadyTitle": "🕒 Sessione non pronta",
       "sessionNotReadyDesc": "Attendi l'avvio del gioco.",
       "bottleComplete": "Bottiglia completata!",
@@ -1051,7 +1062,7 @@
       "restoringAccessHint": "Controllo se eri gia dentro a questa partita.",
       "joinError": "Errore durante l'accesso al gioco",
       "gameStartingTitle": "🎉 Il gioco inizia...",
-      "gameStartingDesc": "Stai per entrare nel gioco!",
+      "gameStartingDesc": "Sto preparando domande, bottiglie e classifica live. Tra poco si parte.",
       "chooseAvatar": "Scegli il tuo avatar",
       "nicknamePlaceholder": "Es: Marco, Anna...",
       "joining": "Accesso...",

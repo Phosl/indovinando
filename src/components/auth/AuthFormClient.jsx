@@ -4,7 +4,6 @@ import {useEffect, useState, Suspense} from 'react'
 import {createClient, resetBrowserClient} from '@/lib/supabaseClient'
 import {useRouter, useSearchParams} from 'next/navigation'
 import {useT} from '@/lib/i18n/useT'
-import TopBar from '@/components/TopBar'
 import styles from './AuthFormClient.module.scss'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -22,7 +21,6 @@ function wait(ms) {
 function AuthForm() {
   const router = useRouter()
   const t = useT('auth')
-  const tHome = useT('home')
   const searchParams = useSearchParams()
   const nextPath = searchParams.get('next') || '/dashboard'
   const safeNextPath = nextPath.startsWith('/') ? nextPath : '/dashboard'
@@ -206,8 +204,6 @@ function AuthForm() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <TopBar title={tHome('loginOrRegister')} onBack={() => router.push('/')} />
-
         <section className={styles.card}>
           <div className={styles.brandBlock}>
             <h1 className={styles.title}>

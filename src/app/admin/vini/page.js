@@ -1,4 +1,3 @@
-import TopBar from '@/components/TopBar'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {requireSuperAdmin} from '@/lib/courseAdmin'
 import {formatAppDate} from '@/lib/dateFormat'
@@ -109,8 +108,6 @@ export default async function AdminViniPage({searchParams}) {
 
   return (
     <main className={styles.page}>
-      <TopBar title={t.winesTitle || 'Admin - Vini'} back="/admin" backLabel={t.backLabel || 'Admin'} />
-
       <div className={styles.container}>
         <div className={styles.header}>
           <h2 className={styles.sectionTitle}>{t.winesListTitle || 'Lista vini'}</h2>

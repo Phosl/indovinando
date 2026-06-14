@@ -1,7 +1,6 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
-import TopBarBack from '@/components/TopBarBack'
 import StoricoClient from './StoricoClient'
 import styles from './storico.module.scss'
 import it from '@/lib/i18n/locales/it.json'
@@ -169,7 +168,6 @@ export default async function StoricoPage() {
 
   return (
     <main className={styles.page}>
-      <TopBarBack title={t.title} href="/dashboard" />
       <div className={styles.container}>
         <div className={styles.header}>
           <p className={styles.subtitle}>{t.subtitle}</p>

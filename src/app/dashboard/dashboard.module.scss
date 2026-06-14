@@ -282,6 +282,13 @@
   line-height: 1.2;
 }
 
+.courseProgressSkeleton {
+  display: inline-flex;
+  width: 150px;
+  height: 14px;
+  border-radius: 999px;
+}
+
 .courseProgressPercent {
   display: inline-flex;
   align-items: center;

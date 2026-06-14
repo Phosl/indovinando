@@ -1,4 +1,5 @@
 .topBar {
+  --topbar-side-width: clamp(56px, 18vw, 100px);
   position: relative;
   display: flex;
   align-items: center;
@@ -15,7 +16,30 @@
   &.wrapped {
     flex-direction: column;
     align-items: flex-start;
+
+    .sideSlot {
+      width: auto;
+      flex-basis: auto;
+    }
+
+    .title,
+    .titleWithProgress {
+      width: 100%;
+      text-align: left;
+    }
   }
+}
+
+.sideSlot {
+  width: var(--topbar-side-width);
+  flex: 0 0 var(--topbar-side-width);
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.actionsSlot {
+  justify-content: flex-end;
 }
 
 .progressTrack {
@@ -79,9 +103,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: calc(100% - 40px);
   text-align: center;
-  margin-right: 40px;
 }
 
 .actions {
@@ -91,13 +113,15 @@
   justify-content: flex-end;
   align-items: center;
   flex-shrink: 0;
+  max-width: 100%;
 }
 
 .titleWithProgress {
   display: flex;
-  justify-content: left;
+  flex: 1;
+  min-width: 0;
+  justify-content: center;
   position: relative;
-  width: 100%;
   .progressTrack {
     position: absolute;
     bottom: -8px;

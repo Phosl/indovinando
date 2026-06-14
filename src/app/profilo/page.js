@@ -20,30 +20,18 @@ export default async function ProfilePage() {
 
   if (!user) redirect('/auth?next=/profilo')
 
-  const [profileResult, gamesResult, courseResult] = await Promise.all([
-    supabase
-      .from('profiles')
-      .select(
-        'username, avatar_emoji, super_admin, profile_type, experience_level, favorite_wine_types, favorite_countries, city, province, newsletter_opt_in, business_name, business_type, business_description, business_website, business_phone, business_address, business_latitude, business_longitude, business_logo_path, business_logo_url, is_partner_public, partner_slug, profile_completed_at, profile_prompt_dismissed_at, ai_scan_credits_total, ai_scan_credits_bonus, ai_scan_credits_used',
-      )
-      .eq('id', user.id)
-      .single(),
-    supabase.from('games').select('id', {count: 'exact', head: true}).eq('created_by', user.id),
-    getWineCourseData(lang).catch(() => ({levels: []})),
-  ])
+  const courseResult = await getWineCourseData(lang).catch(() => ({levels: []}))
 
-  const profile = profileResult.data
-  const gamesCount = gamesResult.count ?? 0
   const levels = courseResult?.levels ?? []
   return (
     <ProfileClient
       userId={user.id}
-      userLabel={profile?.username || user.email}
+      userLabel={user.email || ''}
       email={user.email || ''}
-      initialAvatar={profile?.avatar_emoji || null}
-      profileData={profile || {}}
+      initialAvatar={null}
+      profileData={{}}
       levels={levels}
-      gamesCount={gamesCount || 0}
+      gamesCount={0}
     >
       <Suspense fallback={null}>
         <ProfileCommunitySection />

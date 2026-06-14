@@ -15,7 +15,6 @@ import GameStepsBreadcrumbs from '../GameStepsBreadcrumbs'
 import BottlesList from '../BottlesList'
 import BottleModal from '../BottleModal'
 import ModalCloseButton from '@/components/ui/ModalCloseButton'
-import TopBar from '@/components/TopBar'
 import {
   isBottleComplete,
   validateGameName,
@@ -1225,12 +1224,6 @@ export default function GameEditor({
   return (
     <div className={styles.editor}>
       <EditorToast toast={toast} onClose={() => setToast(null)} closeLabel={tCommon('close')} />
-      <TopBar
-        title={isEditMode ? editorText.topBarEdit : editorText.topBarCreate}
-        onBack={() => {
-          if (onBack) return onBack()
-          router.push(isEditMode && gameId ? `/game/${gameId}` : '/dashboard')
-        }}></TopBar>
       <GameStepsBreadcrumbs
         steps={steps}
         currentStep={step}

@@ -4,7 +4,6 @@ import {createServerSupabase} from '@/lib/supabaseServer'
 import {getGameAvatarOptions} from '@/lib/gameAvatarOptions'
 import {getLocaleText} from '@/lib/i18n/getLocaleText'
 import {getServerLanguage} from '@/lib/i18n/server'
-import TopBarBack from '@/components/TopBarBack'
 import GamePlayPageClient from './GamePlayPageClient'
 import {deleteGame} from './actions'
 import styles from './GamePlayPage.module.scss'
@@ -115,10 +114,6 @@ export default async function GamePlayPage({params}) {
     return (
       <main className={styles.page}>
         <div className={styles.container}>
-          <TopBarBack
-            title={game.name || pageText.gameFallback}
-            href="/miei-giochi"
-          />
           <section className={styles.emptyCard}>
             <h1 className={styles.emptyTitle}>{pageText.loadErrorTitle}</h1>
             <p className={styles.emptyText}>{questionsError?.message || bottlesError?.message}</p>

@@ -18,24 +18,6 @@ function Bone({w, h, style}) {
 export default function CorsoVinoLoading() {
   return (
     <main style={{padding: '0 12px 112px', maxWidth: 960, margin: '0 auto', boxSizing: 'border-box'}}>
-      {/* TopBar skeleton */}
-      <div
-        className="skeleton-frame"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '40px minmax(0, 1fr) 32px',
-          alignItems: 'center',
-          columnGap: 12,
-          width: '100%',
-          padding: '10px 14px',
-          margin: '0 0 14px',
-          boxSizing: 'border-box',
-        }}>
-        <Bone w="40px" h="40px" style={{borderRadius: 10}} />
-        <Bone w="clamp(140px, 42vw, 220px)" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
-        <Bone w="24px" h="24px" style={{borderRadius: 999, marginLeft: 'auto'}} />
-      </div>
-
       {/* Hero skeleton */}
       <div
         className="skeleton-card"

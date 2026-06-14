@@ -26,23 +26,6 @@ export default function GameEditLoading() {
         flexDirection: 'column',
         gap: 16,
       }}>
-      <div
-        className="skeleton-frame"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '40px 1fr 40px',
-          alignItems: 'center',
-          columnGap: 12,
-          width: '100%',
-          padding: '10px 14px',
-          margin: '0 auto 16px auto',
-          boxSizing: 'border-box',
-        }}>
-        <Bone w="40px" h="40px" style={{borderRadius: 10}} />
-        <Bone w="190px" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
-        <Bone w="40px" h="40px" style={{borderRadius: 10, marginLeft: 'auto'}} />
-      </div>
-
       {/* Breadcrumbs */}
       <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
         {[1, 2, 3, 4].map((i) => (

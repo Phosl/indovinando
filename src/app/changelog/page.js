@@ -1,5 +1,4 @@
 import styles from './changelog.module.scss'
-import TopBarBack from '@/components/TopBarBack'
 import {getServerLanguage} from '@/lib/i18n/server'
 
 export async function generateMetadata() {
@@ -1863,13 +1862,11 @@ function buildActivityDays(entries) {
 export default async function ChangelogPage() {
   const lang = await getServerLanguage()
   const text = lang === 'en' ? UI_TEXT.en : UI_TEXT.it
-  const backHref = '/'
   const activityDays = buildActivityDays(CHANGELOG)
   const maxActivity = Math.max(1, ...activityDays.map((day) => day.count))
 
   return (
     <div className={styles.page}>
-      <TopBarBack title={text.title.replace('📋 ', '')} href={backHref} />
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>{text.title}</h1>

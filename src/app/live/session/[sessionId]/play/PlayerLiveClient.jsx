@@ -251,7 +251,10 @@ export default function PlayerLiveClient({
   if (resolvingPlayer || loadingGameData) {
     return (
       <div className={styles.fullPage}>
-        <Loader label={t('loadingGame')} />
+        <div className={styles.centeredCard}>
+          <Loader label={t('loadingGame')} />
+          <p className={styles.loadingHint}>{t('loadingGameDesc')}</p>
+        </div>
       </div>
     )
   }
@@ -424,7 +427,7 @@ export default function PlayerLiveClient({
       onSelect={handleSelect}
       onCheck={handleCheck}
       onContinue={handleContinue}
-      topBar={<TopBar {...topBarProps} withProgress />}
+      topBar={<TopBar {...topBarProps} />}
       overlays={overlays}
     />
   )

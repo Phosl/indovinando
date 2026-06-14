@@ -42,6 +42,19 @@ function avatarFromNickname(nickname = '') {
   return (hash % 10) + 1
 }
 
+function SessionLoadingScreen({label, hint, topBar = null, overlays = null}) {
+  return (
+    <div className={styles.fullPage}>
+      {topBar}
+      <div className={styles.centeredCard}>
+        <Loader label={label} />
+        {hint ? <p className={styles.loadingHint}>{hint}</p> : null}
+      </div>
+      {overlays}
+    </div>
+  )
+}
+
 export default function TableLiveSessionClient({sessionId}) {
   const router = useRouter()
   const tJoin = useT('live.playerJoin')
@@ -69,6 +82,7 @@ export default function TableLiveSessionClient({sessionId}) {
   const [pendingAction, setPendingAction] = useState('')
   const isMountedRef = useRef(true)
   const inFlightRef = useRef(false)
+  const ignoreLobbyUntilRef = useRef(0)
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
 
   useEffect(() => {
@@ -94,6 +108,16 @@ export default function TableLiveSessionClient({sessionId}) {
       }
 
       if (isMountedRef.current) {
+        if (
+          payload.session.status === 'lobby' &&
+          ignoreLobbyUntilRef.current &&
+          Date.now() < ignoreLobbyUntilRef.current
+        ) {
+          return
+        }
+        if (payload.session.status !== 'lobby') {
+          ignoreLobbyUntilRef.current = 0
+        }
         setData(payload)
         setError('')
         const index = payload.session.currentBottleIndex || 0
@@ -266,8 +290,20 @@ export default function TableLiveSessionClient({sessionId}) {
     scrollPageTop()
   }, [currentBottleIndex, slideIndex, data?.session?.status, starting, clickedReady])
 
+  useEffect(() => {
+    if (!starting) return
+    if (data?.session?.status === 'finished') {
+      setStarting(false)
+      return
+    }
+    if (data?.session?.status !== 'lobby' && currentQuestion) {
+      setStarting(false)
+    }
+  }, [currentQuestion, data?.session?.status, starting])
+
   const handleStart = async () => {
     if (!data?.me?.isHost || starting || !playerAuth) return
+    ignoreLobbyUntilRef.current = Date.now() + 4000
     setStarting(true)
     try {
       const response = await fetch('/api/table-live/session/start', {
@@ -281,6 +317,7 @@ export default function TableLiveSessionClient({sessionId}) {
       })
       const payload = await response.json().catch(() => null)
       if (!response.ok) {
+        ignoreLobbyUntilRef.current = 0
         setError(payload?.error || tJoin('startFailed'))
         setStarting(false)
         return
@@ -293,13 +330,15 @@ export default function TableLiveSessionClient({sessionId}) {
         }))
       }
     } catch {
+      ignoreLobbyUntilRef.current = 0
       setError(tJoin('networkError'))
       setStarting(false)
     }
   }
 
   const handleCheck = async (questionId, optionId) => {
-    if (!playerAuth || !questionId || !optionId || checkedQuestions[questionId] || checking) return false
+    if (!playerAuth || !questionId || !optionId || checkedQuestions[questionId] || checking)
+      return false
     const currentQuestion = questions.find((question) => question.id === questionId)
     const isNeutral = isNeutralQuestion(currentQuestion)
     setChecking(true)
@@ -509,11 +548,7 @@ export default function TableLiveSessionClient({sessionId}) {
   )
 
   if (loading) {
-    return (
-      <div className={styles.fullPage}>
-        <div className={styles.centeredCard}>{tPlayerLive('loadingGame')}</div>
-      </div>
-    )
+    return <SessionLoadingScreen label={tPlayerLive('loadingGame')} hint={tJoin('gameStartingDesc')} />
   }
 
   if (!data) {
@@ -530,44 +565,33 @@ export default function TableLiveSessionClient({sessionId}) {
   }
 
   if (!data.me || !topBarPlayer) {
-    return (
-      <div className={styles.fullPage}>
-        <div className={styles.centeredCard}>
-          <Loader label={tJoin('joining')} />
-          <p style={{marginTop: 10}}>{tJoin('gameStartingDesc')}</p>
-        </div>
-      </div>
-    )
+    return <SessionLoadingScreen label={tJoin('joining')} hint={tJoin('gameStartingDesc')} />
   }
 
-  if (data.session.status === 'lobby') {
-    // Show loading screen after host clicks "Inizia partita"
-    if (starting) {
-      return (
-        <div className={styles.fullPage}>
+  if (starting || (data.session.status === 'playing' && !currentQuestion)) {
+    return (
+      <SessionLoadingScreen
+        label={tJoin('gameStartingTitle')}
+        hint={tJoin('gameStartingDesc')}
+        topBar={
           <TopBar
             playerData={topBarPlayer}
-            liveQuestions={[]}
-            currentSlideIndex={0}
             audioEnabled={audioEnabled}
             onToggleAudio={toggleAudio}
             onOpenLeaderboard={() => setLeaderboardOpen(true)}
             onOpenExit={() => setExitModalOpen(true)}
           />
-          <div className={styles.centeredCard}>
-            <Loader label={tJoin('gameStartingTitle')} />
-          </div>
-          {mergedOverlays}
-        </div>
-      )
-    }
+        }
+        overlays={mergedOverlays}
+      />
+    )
+  }
 
+  if (data.session.status === 'lobby') {
     return (
       <div className={styles.fullPage}>
         <TopBar
           playerData={topBarPlayer}
-          liveQuestions={[]}
-          currentSlideIndex={0}
           audioEnabled={audioEnabled}
           onToggleAudio={toggleAudio}
           onOpenLeaderboard={() => setLeaderboardOpen(true)}
@@ -579,7 +603,9 @@ export default function TableLiveSessionClient({sessionId}) {
             <strong className={styles.lobbyCodeValue}>{data.session.joinCode}</strong>
           </div>
 
-          {data.me.isHost ? null : <p className={styles.lobbyWaitingNotice}>{tJoin('waitHostStart')}</p>}
+          {data.me.isHost ? null : (
+            <p className={styles.lobbyWaitingNotice}>{tJoin('waitHostStart')}</p>
+          )}
           <div className={joinStyles.shareButtons}>
             <button className="btn neutral btn-small" onClick={handleCopyLink}>
               {copied ? tJoin('copied') : tJoin('copyLink')}
@@ -600,14 +626,12 @@ export default function TableLiveSessionClient({sessionId}) {
                     <span className={styles.lobbyPlayerAvatar}>
                       <AvatarDisplay
                         avatarId={player.avatar_id || avatarFromNickname(player.nickname)}
-                        size={28}
+                        size={36}
                       />
                     </span>
                     <div className={styles.lobbyPlayerMeta}>
                       <p className={styles.lobbyPlayerName}>{player.nickname}</p>
-                      {player.is_host ? (
-                        <span className={styles.lobbyPlayerHost}>Host</span>
-                      ) : null}
+                      {player.is_host ? <span className={styles.lobbyPlayerHost}>Host</span> : null}
                     </div>
                   </div>
                 ))}

@@ -28,7 +28,6 @@ export default function TableLiveEntryClient({eventSlug, eventTitle, gameName, m
   const [selectedAvatarId, setSelectedAvatarId] = useState(1)
   const [answerRevealMode, setAnswerRevealMode] = useState('instant')
   const [loading, setLoading] = useState(false)
-  const [redirecting, setRedirecting] = useState(false)
   const [error, setError] = useState('')
 
   const title = useMemo(() => `${eventTitle} · ${gameName}`, [eventTitle, gameName])
@@ -48,6 +47,7 @@ export default function TableLiveEntryClient({eventSlug, eventTitle, gameName, m
 
     setError('')
     setLoading(true)
+    window.dispatchEvent(new CustomEvent('app:navigation-intent', {detail: {direction: 'forward'}}))
     let didRedirect = false
 
     try {
@@ -71,8 +71,7 @@ export default function TableLiveEntryClient({eventSlug, eventTitle, gameName, m
 
       persistPlayer(payload.sessionId, payload, selectedAvatarId)
       didRedirect = true
-      setRedirecting(true)
-      router.push(`/table-live/session/${payload.sessionId}`)
+      router.replace(`/table-live/session/${payload.sessionId}`)
     } catch {
       setError(t('networkError'))
     } finally {
@@ -80,17 +79,11 @@ export default function TableLiveEntryClient({eventSlug, eventTitle, gameName, m
     }
   }
 
-  if (redirecting) {
+  if (loading) {
     return (
       <div className={styles.page}>
-        <div className={styles.topBarWrap}>
-          <TopBar
-            title={isJoin ? t('joinTitle') : t('createTitle')}
-            onBack={() => router.push(`/table-live/event/${eventSlug}`)}
-          />
-        </div>
-        <main className={styles.container}>
-          <section className={styles.card}>
+        <main className={`${styles.container} ${styles.loadingContainer}`}>
+          <section className={`${styles.card} ${styles.loadingCard}`}>
             <LoaderRow
               label={isJoin ? t('joiningAction') : t('creatingAction')}
               hint={t('eventLabel', {title})}
