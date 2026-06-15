@@ -4,6 +4,7 @@
   --topbar-progress-track: rgba(16, 185, 129, 0.16);
   --topbar-progress-fill: linear-gradient(90deg, #34d399, #10b981);
   --topbar-progress-shadow: 0 0 8px rgba(16, 185, 129, 0.45);
+  margin-top: calc(env(safe-area-inset-top, 0px) + 10px);
 }
 
 // ── Intro card ────────────────────────────────────────────────

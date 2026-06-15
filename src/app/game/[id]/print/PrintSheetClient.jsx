@@ -16,6 +16,7 @@ export default function PrintSheetClient({gameId, hasResults}) {
         className={styles.toolbar}
         titleClassName={styles.toolbarTitle}
         maxWidth="210mm"
+        safeAreaTop
         onBack={() => router.push(`/game/${gameId}`)}
       />
 

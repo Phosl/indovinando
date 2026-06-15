@@ -31,6 +31,10 @@
   }
 }
 
+.safeAreaTop {
+  margin-top: env(safe-area-inset-top, 0px);
+}
+
 .sideSlot {
   width: var(--topbar-side-width);
   flex: 0 0 var(--topbar-side-width);

@@ -22,6 +22,7 @@ export default function CorsoVinoLessonLoading() {
         maxWidth: 960,
         margin: '0 auto',
         padding: '0 12px',
+        paddingTop: 'calc(env(safe-area-inset-top, 0px) + 10px)',
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100dvh',

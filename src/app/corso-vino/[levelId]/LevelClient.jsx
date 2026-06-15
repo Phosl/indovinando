@@ -45,6 +45,7 @@ export default function LevelClient({level, lessons, levels = []}) {
   return (
     <div className={styles.page}>
       <TopBar
+        className={styles.pageTopBar}
         title={t('levelTitle', {index: level.order})}
         onBack={() => router.push(backHref)}
         progress={topProgress.pct}></TopBar>

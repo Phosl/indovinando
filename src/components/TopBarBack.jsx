@@ -9,5 +9,5 @@ import TopBar from '@/components/TopBar'
  */
 export default function TopBarBack({title, href}) {
   const router = useRouter()
-  return <TopBar title={title} onBack={() => router.push(href)} />
+  return <TopBar title={title} onBack={() => router.push(href)} safeAreaTop />
 }

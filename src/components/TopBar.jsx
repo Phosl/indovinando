@@ -34,11 +34,15 @@ export default function TopBar({
   maxWidth,
   wrapTitle = false,
   progress = null, // 0-100, renders slim bar at bottom
+  safeAreaTop = false,
   back, // Legacy prop, ignored
 }) {
   const t = useT('common')
   const containerStyle = maxWidth ? {maxWidth} : {}
-  const containerClassName = wrapTitle ? `${styles.topBar} ${styles.wrapped}` : styles.topBar
+  const baseContainerClassName = wrapTitle ? `${styles.topBar} ${styles.wrapped}` : styles.topBar
+  const containerClassName = safeAreaTop
+    ? `${baseContainerClassName} ${styles.safeAreaTop}`
+    : baseContainerClassName
 
   const handleBackClick = () => {
     window.dispatchEvent(new CustomEvent('app:navigation-intent', {detail: {direction: 'back'}}))

@@ -298,7 +298,7 @@ export default function LiveSessionClient({
   if (loading) {
     return (
       <div className={styles.container}>
-        <TopBar title={t('creatingSession')} onBack={() => router.push(backHref)} />
+        <TopBar title={t('creatingSession')} onBack={() => router.push(backHref)} safeAreaTop />
         <div className={styles.progressBarTrack}>
           <div className={styles.progressBarFill} />
         </div>
@@ -330,7 +330,7 @@ export default function LiveSessionClient({
 
   return (
     <div className={styles.container}>
-      <TopBar title={gameName} onBack={() => router.push(backHref)} />
+      <TopBar title={gameName} onBack={() => router.push(backHref)} safeAreaTop />
 
       <div className={styles.lobbyCard}>
         <ShareDetailsTabs

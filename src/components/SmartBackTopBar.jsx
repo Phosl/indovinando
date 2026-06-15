@@ -15,5 +15,5 @@ export default function SmartBackTopBar({title, fallbackHref = '/'}) {
     router.push(fallbackHref)
   }
 
-  return <TopBar title={title} onBack={handleBack} />
+  return <TopBar title={title} onBack={handleBack} safeAreaTop />
 }
