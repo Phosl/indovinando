@@ -10,7 +10,7 @@ import {getServerLanguage} from '@/lib/i18n/server'
 
 const isPreview = process.env.VERCEL_ENV === 'preview'
 const iconBase = isPreview ? '/app_icon_feature' : '/app_icon'
-const appBackgroundColor = '#fcf9ef'
+const appSafeTopColor = '#000000'
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -22,7 +22,7 @@ export const metadata = {
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'black-translucent',
+    statusBarStyle: 'black',
     title: 'Indovinando',
   },
   icons: {
@@ -37,7 +37,7 @@ export const viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
-  themeColor: appBackgroundColor,
+  themeColor: appSafeTopColor,
 }
 
 export default async function RootLayout({children}) {
@@ -47,7 +47,7 @@ export default async function RootLayout({children}) {
     <html lang={lang}>
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         <meta name="apple-mobile-web-app-title" content="Indovinando" />
         <AppleSplashLinks />
       </head>

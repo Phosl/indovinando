@@ -1,6 +1,6 @@
 'use client'
 
-import {useMemo} from 'react'
+import {useEffect, useMemo} from 'react'
 import {useRouter} from 'next/navigation'
 import TopBar from '@/components/TopBar'
 import Icon from '@/components/Icon'
@@ -8,6 +8,7 @@ import CourseLevelCover from '@/components/course/CourseLevelCover'
 import {useWineCourseProgress} from '../hooks/useWineCourseProgress'
 import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
 import {useT} from '@/lib/i18n/useT'
+import {scrollPageTop} from '@/lib/scrollPageTop'
 import styles from './level.module.scss'
 
 const PASS_THRESHOLD = 0.75
@@ -17,6 +18,10 @@ export default function LevelClient({level, lessons, levels = []}) {
   const {loaded, getLessonStatus, getLessonProgress} = useWineCourseProgress()
   const t = useT('level')
   const backHref = '/corso-vino'
+
+  useEffect(() => {
+    scrollPageTop()
+  }, [])
 
   const topProgress = useMemo(() => {
     if (!levels?.length) {

@@ -4,12 +4,20 @@ const normalizeBaseUrl = (value) => {
 }
 
 export function getPublicAppOrigin() {
+  if (typeof window !== 'undefined') {
+    const runtimeOrigin = normalizeBaseUrl(window.location.origin)
+    if (runtimeOrigin) return runtimeOrigin
+  }
+
   const envBaseUrl = normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL)
   if (envBaseUrl) return envBaseUrl
 
-  if (typeof window === 'undefined') return ''
+  const vercelUrl = normalizeBaseUrl(process.env.VERCEL_URL)
+  if (vercelUrl) {
+    return vercelUrl.startsWith('http') ? vercelUrl : `https://${vercelUrl}`
+  }
 
-  return normalizeBaseUrl(window.location.origin)
+  return ''
 }
 
 export function buildPublicAppUrl(path = '/') {
