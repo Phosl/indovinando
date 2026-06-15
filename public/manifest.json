@@ -4,8 +4,8 @@
   "description": "Wine Trivia Live Multiplayer Game",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "background_color": "#fcf9ef",
+  "theme_color": "#fcf9ef",
   "icons": [
     {
       "src": "/app_icon/android-chrome-192x192.png",

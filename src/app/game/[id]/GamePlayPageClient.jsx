@@ -3,7 +3,8 @@
 import {useRouter} from 'next/navigation'
 import {useState} from 'react'
 import GamePlayView from '@/components/game/GamePlayView'
-import TopBar from '@/components/TopBar'
+import Icon from '@/components/Icon'
+import InfoModal from '@/components/InfoModal'
 import {useT} from '@/lib/i18n/useT'
 import styles from './GamePlayPage.module.scss'
 
@@ -21,12 +22,9 @@ export default function GamePlayPageClient({
   const tc = useT('common')
   const [isDeleting, setIsDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
 
   const handleDelete = async () => {
-    const message = t('deleteConfirm')
-    if (!window.confirm(message)) {
-      return
-    }
     setIsDeleting(true)
     setDeleteError('')
     try {
@@ -35,7 +33,8 @@ export default function GamePlayPageClient({
         setDeleteError(result?.error || t('deleteError'))
         return
       }
-      router.push('/miei-giochi')
+      setDeleteModalOpen(false)
+      router.replace('/miei-giochi?toast=game-deleted')
       router.refresh()
     } finally {
       setIsDeleting(false)
@@ -45,8 +44,6 @@ export default function GamePlayPageClient({
   return (
     <main className="flex-container">
       <div className="flex-column" style={{width: '100%', maxWidth: 960, margin: '0 auto'}}>
-        <TopBar title={t('title')} onBack={() => router.push('/miei-giochi')} />
-
         <GamePlayView
           game={game}
           questions={questions}
@@ -59,15 +56,45 @@ export default function GamePlayPageClient({
         {isOwner && (
           <>
             <button
-              onClick={handleDelete}
+              onClick={() => {
+                setDeleteError('')
+                setDeleteModalOpen(true)
+              }}
               disabled={isDeleting}
               className={`btn btn-small danger ${isDeleting ? 'disabled' : ''}`}>
-              {isDeleting ? '...' : t('delete')}
+              {t('delete')}
             </button>
             {deleteError ? <p className={styles.deleteError}>{deleteError}</p> : null}
           </>
         )}
       </div>
+      <InfoModal
+        isOpen={deleteModalOpen}
+        onClose={() => {
+          if (!isDeleting) setDeleteModalOpen(false)
+        }}
+        title={t('deleteModalTitle')}
+        icon={<Icon name="bucket" size={24} />}
+        disableClose={isDeleting}>
+        <p className={styles.deleteModalText}>{t('deleteConfirm')}</p>
+        {deleteError ? <p className={styles.deleteError}>{deleteError}</p> : null}
+        <div className={styles.deleteModalActions}>
+          <button
+            type="button"
+            className="btn warning"
+            disabled={isDeleting}
+            onClick={() => setDeleteModalOpen(false)}>
+            {tc('cancel')}
+          </button>
+          <button
+            type="button"
+            className={`btn danger ${isDeleting ? 'disabled' : ''}`}
+            disabled={isDeleting}
+            onClick={handleDelete}>
+            {isDeleting ? t('deleting') : t('delete')}
+          </button>
+        </div>
+      </InfoModal>
     </main>
   )
 }

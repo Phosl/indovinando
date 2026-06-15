@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import {useState, useMemo, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
-import TopBar from '@/components/TopBar'
 import Icon from '@/components/Icon'
 import GuestWarningModal from '@/components/course/GuestWarningModal'
 import CourseLevelCover from '@/components/course/CourseLevelCover'
@@ -22,15 +21,24 @@ export default function CourseClient({levels, isAdmin = false, viewer, lang = 'i
     useWineCourseProgress()
   const t = useT('course')
   const [guestWarningDismissed, setGuestWarningDismissed] = useState(false)
-  const backHref = authChecked && !userId ? '/' : '/dashboard'
-  const showGuestWarning = loaded && authChecked && !userId && !guestWarningDismissed
+  const effectiveViewer = useMemo(
+    () => ({
+      ...viewer,
+      userId: viewer?.userId || userId || null,
+      isRegistered: Boolean(viewer?.isRegistered || userId),
+      isPremium: Boolean(viewer?.isPremium),
+    }),
+    [userId, viewer],
+  )
+  const showGuestWarning =
+    loaded && authChecked && !effectiveViewer.isRegistered && !guestWarningDismissed
 
   const handleLevelClick = useCallback(
     (level) => {
       const path = `/corso-vino/${level.id}`
-      const canAccess = canAccessLevel(level, viewer)
+      const canAccess = canAccessLevel(level, effectiveViewer)
       if (!canAccess) {
-        const reason = getLockedReason(level, viewer)
+        const reason = getLockedReason(level, effectiveViewer)
         if (reason === 'registered') {
           router.push(getAuthRedirectPath(path, lang))
           return
@@ -40,7 +48,7 @@ export default function CourseClient({levels, isAdmin = false, viewer, lang = 'i
       }
       router.push(path)
     },
-    [lang, router, viewer],
+    [effectiveViewer, lang, router],
   )
 
   const nextLevelProgress = useMemo(() => {
@@ -64,16 +72,16 @@ export default function CourseClient({levels, isAdmin = false, viewer, lang = 'i
 
   return (
     <div className={styles.page}>
-      <TopBar title={t('title')} onBack={() => router.push(backHref)}>
-        {isAdmin && (
+      {isAdmin && (
+        <div className={styles.adminActionRow}>
           <Link
             href="/admin/corsi"
             className="btn secondary"
             style={{fontSize: '13px', padding: '6px 12px'}}>
             ⚙️ Admin
           </Link>
-        )}
-      </TopBar>
+        </div>
+      )}
 
       {/* Hero */}
       <div className={styles.hero}>
@@ -107,7 +115,7 @@ export default function CourseClient({levels, isAdmin = false, viewer, lang = 'i
 
       <GuestWarningModal isOpen={showGuestWarning} onClose={() => setGuestWarningDismissed(true)} />
 
-      {!viewer?.isRegistered && (
+      {!effectiveViewer.isRegistered && (
         <section className={styles.accessPanel}>
           <div className={styles.accessPanelText}>
             <strong>{t('accessPanelTitle')}</strong>
@@ -125,8 +133,8 @@ export default function CourseClient({levels, isAdmin = false, viewer, lang = 'i
       {/* Level list */}
       <div className={styles.levels}>
         {levels.map((level) => {
-          const canAccess = canAccessLevel(level, viewer)
-          const lockedReason = getLockedReason(level, viewer)
+          const canAccess = canAccessLevel(level, effectiveViewer)
+          const lockedReason = getLockedReason(level, effectiveViewer)
           const completed = loaded ? getLevelCompletedCount(level) : 0
           const total = level.lessonIds.length
 

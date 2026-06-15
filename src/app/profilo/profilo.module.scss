@@ -322,6 +322,15 @@ a.avatarPickerBtn {
   border-radius: 16px;
   border: 1px solid var(--success-100);
   background: var(--success-50);
+  animation: creditsPackCardIn 280ms ease-out both;
+}
+
+.creditPackCard:nth-child(2) {
+  animation-delay: 40ms;
+}
+
+.creditPackCard:nth-child(3) {
+  animation-delay: 80ms;
 }
 
 .creditPackMeta {
@@ -358,7 +367,14 @@ a.avatarPickerBtn {
   justify-items: center;
   gap: 14px;
   text-align: center;
-  padding: 8px 4px 4px;
+  width: min(100%, 460px);
+  margin: auto;
+  padding: 24px 20px;
+  border-radius: 24px;
+  border: 1px solid var(--gray-150);
+  background: var(--foreground);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
+  animation: creditsCheckoutCardIn 260ms ease-out;
 }
 
 .creditsCheckoutSpinner {
@@ -398,6 +414,28 @@ a.avatarPickerBtn {
 @keyframes creditsCheckoutSpin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes creditsCheckoutCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes creditsPackCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 

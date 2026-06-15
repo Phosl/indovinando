@@ -34,11 +34,15 @@ export default function TopBar({
   maxWidth,
   wrapTitle = false,
   progress = null, // 0-100, renders slim bar at bottom
+  safeAreaTop = false,
   back, // Legacy prop, ignored
 }) {
   const t = useT('common')
   const containerStyle = maxWidth ? {maxWidth} : {}
-  const containerClassName = wrapTitle ? `${styles.topBar} ${styles.wrapped}` : styles.topBar
+  const baseContainerClassName = wrapTitle ? `${styles.topBar} ${styles.wrapped}` : styles.topBar
+  const containerClassName = safeAreaTop
+    ? `${baseContainerClassName} ${styles.safeAreaTop}`
+    : baseContainerClassName
 
   const handleBackClick = () => {
     window.dispatchEvent(new CustomEvent('app:navigation-intent', {detail: {direction: 'back'}}))
@@ -47,19 +51,21 @@ export default function TopBar({
 
   return (
     <div className={`${containerClassName} ${className}`} style={containerStyle}>
-      {onBack ? (
-        <button
-          type="button"
-          className={styles.backBtn}
-          onClick={handleBackClick}
-          aria-label={t('back')}>
-          <BackIcon className={styles.backBtnIcon} />
-        </button>
-      ) : back ? (
-        <Link href={back} className={styles.backBtn} aria-label={t('back')}>
-          <BackIcon className={styles.backBtnIcon} />
-        </Link>
-      ) : null}
+      <div className={styles.sideSlot}>
+        {onBack ? (
+          <button
+            type="button"
+            className={styles.backBtn}
+            onClick={handleBackClick}
+            aria-label={t('back')}>
+            <BackIcon className={styles.backBtnIcon} />
+          </button>
+        ) : back ? (
+          <Link href={back} className={styles.backBtn} aria-label={t('back')}>
+            <BackIcon className={styles.backBtnIcon} />
+          </Link>
+        ) : null}
+      </div>
       {title && progress === null && (
         <h1 className={`${styles.title} ${titleClassName}`}>{title}</h1>
       )}
@@ -74,7 +80,9 @@ export default function TopBar({
           />
         </div>
       )}
-      <div className={`${styles.actions} ${actionsClassName}`}>{children}</div>
+      <div className={`${styles.sideSlot} ${styles.actionsSlot}`}>
+        <div className={`${styles.actions} ${actionsClassName}`}>{children}</div>
+      </div>
     </div>
   )
 }

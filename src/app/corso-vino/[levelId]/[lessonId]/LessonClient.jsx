@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, useEffect, useRef, useMemo} from 'react'
+import {useState, useEffect, useRef, useMemo, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
 // Reuse live-game fullscreen shell styles
 import pStyles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
@@ -12,10 +12,12 @@ import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
 import {scrollPageTop} from '@/lib/scrollPageTop'
 import TopBar from '@/components/TopBar'
 import Icon from '@/components/Icon'
+import {useAppData} from '@/components/AppDataContext'
 
 export default function LessonClient({level, lesson, nextLessonId, levels = []}) {
   const router = useRouter()
   const {completeLesson, getLessonProgress, loaded, authChecked, userId} = useWineCourseProgress()
+  const {refresh: refreshAppData} = useAppData()
   const {audioEnabled, toggleAudio, playSound} = useGameAudio()
   const t = useT('lesson')
 
@@ -37,6 +39,13 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
   const introScrollRef = useRef(null)
 
   const comboToastTimerRef = useRef(null)
+
+  const refreshAppDataSoon = useCallback(() => {
+    const timer = window.setTimeout(() => {
+      refreshAppData({force: true})
+    }, 900)
+    timersRef.current.push(timer)
+  }, [refreshAppData])
 
   const getComboMsg = (n) => {
     if (n < 2) return null
@@ -78,6 +87,19 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
   const chapterProgressPct = questions.length
     ? Math.round(((questionIndex + 1) / questions.length) * 100)
     : 100
+  const audioButtonLabel = audioEnabled ? t('audioOn') : t('audioOff')
+  const audioButtonIcon = audioEnabled ? 'volumeOn' : 'volumeOff'
+  const audioButton = (
+    <button
+      type="button"
+      className={pStyles.audioButton}
+      onClick={toggleAudio}
+      aria-label={audioButtonLabel}
+      title={audioButtonLabel}>
+      <Icon name={audioButtonIcon} size={20} className={pStyles.topActionIcon} />
+      <span>{audioButtonLabel}</span>
+    </button>
+  )
 
   const isCorrect = checked && selectedId === correctId
   const nextLessonPath = nextLessonId ? `/corso-vino/${level.id}/${nextLessonId}` : null
@@ -207,6 +229,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
       // Snapshot current level before completing (levelProgress is based on pre-complete data)
       prevLevelNumRef.current = levelProgress?.levelNum ?? null
       completeLesson(level.id, lesson.id, score, questions.length)
+      refreshAppDataSoon()
       setScreen('result')
     }
   }
@@ -329,6 +352,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
           const score = Math.min(questions.length, computedCorrect)
           prevLevelNumRef.current = levelProgress?.levelNum ?? null
           completeLesson(level.id, lesson.id, score, questions.length)
+          refreshAppDataSoon()
           setScreen('result')
         }
       }
@@ -353,6 +377,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
     isCorrect,
     levelProgress?.levelNum,
     completeLesson,
+    refreshAppDataSoon,
     level.id,
     lesson.id,
     questions.length,
@@ -367,9 +392,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
           title={t('chapterLabel', {index: String(level.order)})}
           onBack={() => router.push(backHref)}
           progress={introProgressPct}>
-          <button className={pStyles.audioButton} onClick={toggleAudio}>
-            {audioEnabled ? '🔊 ON' : '🔇 OFF'}
-          </button>
+          {audioButton}
         </TopBar>
 
         <div className={pStyles.slideContent} ref={introScrollRef}>
@@ -385,13 +408,16 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
               </p>
             ))}
             {currentDidacticSlide.keyPoints?.length > 0 && (
-              <ul className={xStyles.keyPoints}>
-                {currentDidacticSlide.keyPoints.map((kp, i) => (
-                  <li key={i} className={xStyles.keyPoint}>
-                    {kp}
-                  </li>
-                ))}
-              </ul>
+              <div className={xStyles.keyPointsBox}>
+                <p className={xStyles.keyPointsTitle}>{t('takeawaysTitle')}</p>
+                <ul className={xStyles.keyPoints}>
+                  {currentDidacticSlide.keyPoints.map((kp, i) => (
+                    <li key={i} className={xStyles.keyPoint}>
+                      {kp}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
         </div>
@@ -436,10 +462,12 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
           title={t('chapterLabel', {index: String(level.order)})}
           onBack={() => router.push(backHref)}
           progress={100}>
-          <button className={pStyles.audioButton} onClick={toggleAudio}>
-            {audioEnabled ? '🔊 ON' : '🔇 OFF'}
-          </button>
-          <button className={pStyles.leaderboardButton} onClick={() => router.push(backHref)}>
+          {audioButton}
+          <button
+            type="button"
+            className={pStyles.leaderboardButton}
+            onClick={() => router.push(backHref)}>
+            <Icon name="crown" size={20} className={pStyles.topActionIcon} />
             {t('allLessons')}
           </button>
         </TopBar>
@@ -562,9 +590,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
           title={lesson.title}
           onBack={() => router.push(backHref)}
           progress={100}>
-          <button className={pStyles.audioButton} onClick={toggleAudio}>
-            {audioEnabled ? '🔊 ON' : '🔇 OFF'}
-          </button>
+          {audioButton}
         </TopBar>
         <div className={pStyles.slideContent}>
           <div className={xStyles.resultHero}>
@@ -594,9 +620,7 @@ export default function LessonClient({level, lesson, nextLessonId, levels = []})
         title={t('chapterLabel', {index: String(level.order)})}
         onBack={() => router.push(backHref)}
         progress={chapterProgressPct}>
-        <button className={pStyles.audioButton} onClick={toggleAudio}>
-          {audioEnabled ? '🔊 ON' : '🔇 OFF'}
-        </button>
+        {audioButton}
       </TopBar>
 
       {visibleCombo && (

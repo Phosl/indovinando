@@ -1,6 +1,6 @@
 import styles from './Icon.module.scss'
 
-const ICON_SIZE_SCALE = [16, 20, 24, 32, 40, 48]
+const ICON_SIZE_SCALE = [16, 20, 24, 28, 32, 40, 48]
 
 const ICONS = {
   checkCorrect: '/icons/check-correct.svg',
@@ -8,7 +8,9 @@ const ICONS = {
   checkCorrectWhite: '/icons/check-correct-white.svg',
   checkWrongWhite: '/icons/check-wrong-white.svg',
   checkWarning: '/icons/check-warning.svg',
+  warning: '/icons/warning.svg',
   removeSmall: '/icons/remove-small.svg',
+  removeSmallIcon: '/icons/remove-small-icon.svg',
   edit: '/icons/edit.svg',
   print: '/icons/print.svg',
   share: '/icons/share.svg',
@@ -31,6 +33,9 @@ const ICONS = {
   photo: '/icons/photo.svg',
   drag: '/icons/drag.svg',
   bucket: '/icons/bucket.svg',
+  volumeOn: '/icons/volume_on.svg',
+  volumeOff: '/icons/volume_off.svg',
+  crown: '/icons/crown.svg',
 }
 
 const ICON_RENDER_MODE = {

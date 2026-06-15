@@ -2,26 +2,66 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import {useRouter} from 'next/navigation'
-import TopBar from '@/components/TopBar'
+import {useCallback, useEffect, useState} from 'react'
+import {usePathname, useRouter, useSearchParams} from 'next/navigation'
 import {ButtonLink} from '@/components/ui/Button'
 import Icon from '@/components/Icon'
 import CreateGameCardLink from '@/components/CreateGameCardLink'
 import styles from './miei-giochi.module.scss'
 import {useT} from '@/lib/i18n/useT'
 
-export default function MieiGiochiClient({games, avatarOptions = [], lang, dashboardDict}) {
-  const router = useRouter()
+function GamesToast({toast, onClose, closeLabel}) {
+  useEffect(() => {
+    if (!toast) return undefined
+    const timeoutId = window.setTimeout(() => onClose(), toast.duration || 3200)
+    return () => window.clearTimeout(timeoutId)
+  }, [onClose, toast])
+
+  if (!toast) return null
+
+  return (
+    <div className={styles.toastViewport} aria-live="polite">
+      <div className={`${styles.toast} ${styles.toastSuccess}`}>
+        <span className={styles.toastMessage}>{toast.message}</span>
+        <button type="button" className={styles.toastClose} onClick={onClose} aria-label={closeLabel}>
+          ×
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export default function MieiGiochiClient({games, avatarOptions = [], dashboardDict}) {
   const t = useT('profile')
+  const tc = useT('common')
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const [toast, setToast] = useState(null)
+
+  const closeToast = useCallback(() => setToast(null), [])
+
+  useEffect(() => {
+    if (searchParams.get('toast') !== 'game-deleted') return
+
+    const timeoutId = window.setTimeout(() => {
+      setToast({
+        tone: 'success',
+        message: dashboardDict.gameDeletedToast,
+      })
+
+      const nextParams = new URLSearchParams(searchParams.toString())
+      nextParams.delete('toast')
+      const nextUrl = nextParams.toString() ? `${pathname}?${nextParams.toString()}` : pathname
+      router.replace(nextUrl, {scroll: false})
+    }, 0)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [dashboardDict.gameDeletedToast, pathname, router, searchParams])
 
   return (
     <div className={styles.page}>
-      <div className={styles.topBarContainer}>
-        <TopBar
-          title={dashboardDict.myGames || 'I miei giochi'}
-          onBack={() => router.push('/dashboard')}
-        />
-      </div>
+      <GamesToast toast={toast} onClose={closeToast} closeLabel={tc('close')} />
       <div className={styles.content}>
         {games.length === 0 && (
           <div className={styles.emptyState}>{dashboardDict.emptyStateFirstGame}</div>

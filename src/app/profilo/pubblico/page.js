@@ -1,5 +1,4 @@
 import {redirect} from 'next/navigation'
-import TopBar from '@/components/TopBar'
 import BusinessBrandingSettings from '@/components/profile/BusinessBrandingSettings'
 import PartnerPublicSettings from '@/components/profile/PartnerPublicSettings'
 import {createServerSupabase} from '@/lib/supabaseServer'
@@ -28,7 +27,6 @@ export default async function ProfilePublicPage() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <TopBar title="Profilo pubblico" back="/profilo" backLabel="Profilo" />
         <BusinessBrandingSettings profile={profile || {}} />
         <PartnerPublicSettings profile={profile || {}} mode="page" />
       </div>

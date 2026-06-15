@@ -627,6 +627,12 @@ Tabelle principali:
 
 Migration: `TABLE_LIVE_GROUPS_SCHEMA.sql`
 
+Delete/cascade:
+
+- `table_live_events.game_id` e `table_live_sessions.game_id` usano `ON DELETE CASCADE`
+- quando una degustazione viene eliminata, eventi, sessioni, giocatori, risposte e risultati tavolo vengono rimossi a cascata
+- migration correttiva: `SUPABASE_GAME_DELETE_TABLE_LIVE_CASCADE.sql`
+
 RLS (step 1):
 
 - RLS abilitato su tutte le `table_live_*`

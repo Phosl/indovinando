@@ -1,6 +1,5 @@
 import {getWineCourseData} from '@/lib/wineCourseContent'
 import {requireSuperAdmin} from '@/lib/courseAdmin'
-import TopBarBack from '@/components/TopBarBack'
 import Link from 'next/link'
 import styles from './admin.module.scss'
 
@@ -24,8 +23,6 @@ export default async function AdminCorsiPage() {
 
   return (
     <main className={styles.page}>
-      <TopBarBack title="⚙️ Admin — Corsi" href="/corso-vino" />
-
       <div className={styles.container}>
         <div className={styles.header}>
           <h2 className={styles.sectionTitle}>Livelli disponibili</h2>

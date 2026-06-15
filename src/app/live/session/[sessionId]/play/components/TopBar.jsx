@@ -2,16 +2,13 @@ import {memo} from 'react'
 import styles from '../playerLive.module.scss'
 import {useT} from '@/lib/i18n/useT'
 import AvatarDisplay from '@/components/AvatarDisplay'
+import Icon from '@/components/Icon'
 
 /**
  * Persistent top bar shown across all game screens.
- * withProgress=true renders the slide-progress pill row.
  */
 export const TopBar = memo(function TopBar({
   playerData,
-  liveQuestions,
-  currentSlideIndex,
-  withProgress,
   audioEnabled,
   onToggleAudio,
   onOpenLeaderboard,
@@ -28,28 +25,31 @@ export const TopBar = memo(function TopBar({
         <span className={styles.nickname}>{playerData.nickname}</span>
       </div>
 
-      {withProgress && (
-        <div className={styles.progressPills}>
-          {liveQuestions.map((_, idx) => (
-            <span
-              key={idx}
-              className={`${styles.pill} ${idx < currentSlideIndex ? styles.pillDone : ''} ${
-                idx === currentSlideIndex ? styles.pillActive : ''
-              }`}
-            />
-          ))}
-        </div>
-      )}
-
       <div className={styles.topActions}>
-        <button className={styles.audioButton} onClick={onToggleAudio}>
-          {audioEnabled ? `🔊 ${t('audioOn')}` : `🔇 ${t('audioOff')}`}
+        <button
+          type="button"
+          className={styles.audioButton}
+          onClick={onToggleAudio}
+          aria-label={audioEnabled ? t('audioOn') : t('audioOff')}
+          title={audioEnabled ? t('audioOn') : t('audioOff')}>
+          <Icon
+            name={audioEnabled ? 'volumeOn' : 'volumeOff'}
+            size={20}
+            className={styles.topActionIcon}
+          />
+          <span>{audioEnabled ? t('audioOn') : t('audioOff')}</span>
         </button>
-        <button className={styles.leaderboardButton} onClick={onOpenLeaderboard}>
-          {t('leaderboard')}
+        <button type="button" className={styles.leaderboardButton} onClick={onOpenLeaderboard}>
+          <Icon name="crown" size={20} className={styles.topActionIcon} />
+          <span>{t('leaderboard')}</span>
         </button>
-        <button className={styles.exitButton} onClick={onOpenExit} aria-label={t('exitGame')}>
-          X
+        <button
+          type="button"
+          className={styles.exitButton}
+          onClick={onOpenExit}
+          aria-label={t('exitGame')}
+          title={t('exitGame')}>
+          <Icon name="removeSmallIcon" size={28} />
         </button>
       </div>
     </div>

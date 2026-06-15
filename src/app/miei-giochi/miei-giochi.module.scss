@@ -8,12 +8,6 @@
   max-width: 960px;
   margin: 0 auto;
 }
-.topBarContainer {
-  padding: 0px 20px;
-  @media (max-width: 768px) {
-    padding: 0px 12px;
-  }
-}
 
 // ── Content area ─────────────────────────────────────────────
 .content {
@@ -25,6 +19,54 @@
   @media (max-width: 768px) {
     padding: 0px 12px;
   }
+}
+
+.toastViewport {
+  position: fixed;
+  left: 50%;
+  top: max(18px, calc(env(safe-area-inset-top) + 10px));
+  transform: translateX(-50%);
+  z-index: 1200;
+  width: min(calc(100vw - 24px), 420px);
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+  border: 1px solid transparent;
+  pointer-events: auto;
+}
+
+.toastSuccess {
+  background: var(--success-50);
+  border-color: var(--success-100);
+  color: var(--success-text);
+}
+
+.toastMessage {
+  font-size: 0.94rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.toastClose {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+  color: currentColor;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .gamesHeaderActions {

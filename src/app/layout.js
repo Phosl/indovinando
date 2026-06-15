@@ -4,13 +4,13 @@ import LanguageProvider from '@/components/i18n/LanguageProvider'
 import PwaRegistrar from '@/components/PwaRegistrar'
 import ScrollToTop from '@/components/ScrollToTop'
 import AppleSplashLinks from '@/components/AppleSplashLinks'
-import PageTransitionShell from '@/components/PageTransitionShell'
+import AppShell from '@/components/AppShell'
 import BottomNav from '@/components/BottomNav'
 import {getServerLanguage} from '@/lib/i18n/server'
 
 const isPreview = process.env.VERCEL_ENV === 'preview'
 const iconBase = isPreview ? '/app_icon_feature' : '/app_icon'
-const themeColor = isPreview ? '#145f4d' : '#ffffff'
+const appSafeTopColor = '#000000'
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -22,7 +22,7 @@ export const metadata = {
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
+    statusBarStyle: 'black',
     title: 'Indovinando',
   },
   icons: {
@@ -37,7 +37,7 @@ export const viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
-  themeColor,
+  themeColor: appSafeTopColor,
 }
 
 export default async function RootLayout({children}) {
@@ -47,7 +47,7 @@ export default async function RootLayout({children}) {
     <html lang={lang}>
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         <meta name="apple-mobile-web-app-title" content="Indovinando" />
         <AppleSplashLinks />
       </head>
@@ -55,7 +55,7 @@ export default async function RootLayout({children}) {
         <LanguageProvider initialLang={lang}>
           <PwaRegistrar />
           <ScrollToTop />
-          <PageTransitionShell>{children}</PageTransitionShell>
+          <AppShell>{children}</AppShell>
           <BottomNav />
         </LanguageProvider>
       </body>

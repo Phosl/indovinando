@@ -50,6 +50,7 @@
     "printCard": "Print Card",
     "emptyState": "You haven't created any games yet. Start now!",
     "emptyStateFirstGame": "You haven't created any games yet. Create your first game to start playing.",
+    "gameDeletedToast": "Tasting deleted.",
     "createFirstGame": "Create your first game",
     "createGameCardTitle": "Create a new tasting",
     "createGameCardDescription": "Start creating your new tasting and share it with your friends.",
@@ -204,6 +205,9 @@
     "backToDirectory": "Back to partners"
   },
   "admin": {
+    "title": "Admin",
+    "coursesTitle": "Admin — Courses",
+    "producersTitle": "Admin - Producers",
     "catalog": {
       "backLabel": "Admin",
       "winesTitle": "Admin - Wines",
@@ -485,6 +489,11 @@
     "joinCodeValueLabel": "Game code",
     "eventLabel": "Event: {title}",
     "discoverAppAction": "Discover the app",
+    "stepNickname": "Name",
+    "stepAvatar": "Avatar",
+    "stepQuiz": "Quiz options",
+    "continueAction": "Continue",
+    "stepCounter": "Step {current} of {total}",
     "answerMode": {
       "title": "Quiz options",
       "description": "Choose when to show the correct answers to players.",
@@ -496,8 +505,10 @@
   },
   "gamePlayPage": {
     "title": "Tasting Details",
+    "deleteModalTitle": "Delete tasting?",
     "deleteConfirm": "Are you sure you want to delete this game? It cannot be recovered.",
     "delete": "Delete",
+    "deleting": "Deleting...",
     "deleteError": "Unable to delete this tasting.",
     "gameFallback": "Game",
     "loadErrorTitle": "Error loading game",
@@ -526,7 +537,8 @@
     "questionsCount": "{count} Questions",
     "completeBottles": "Complete bottles",
     "completeSingleBottle": "Complete 1 bottle",
-    "completeMultipleBottles": "Complete {count} bottles"
+    "completeMultipleBottles": "Complete {count} bottles",
+    "loadingBottle": "Updating bottle preview..."
   },
   "onboarding": {
     "step": "Step",
@@ -631,6 +643,9 @@
     "seeResults": "See results",
     "continue": "Continue",
     "chapterLabel": "Chapter {index}",
+    "takeawaysTitle": "Key takeaways",
+    "audioOn": "ON",
+    "audioOff": "OFF",
     "levelUpTitle": "🎉 Level up!",
     "levelUpPhrases": [
       "Your sommelier nose is blossoming!",
@@ -947,6 +962,7 @@
       "participantNotFoundDesc": "Rejoin from the session entry page using your nickname.",
       "backToJoin": "Back to join",
       "loadingGame": "Loading game...",
+      "loadingGameDesc": "Preparing questions, bottles, and the live leaderboard. The game is about to start.",
       "sessionNotReadyTitle": "🕒 Session not ready",
       "sessionNotReadyDesc": "Wait for the game to start.",
       "bottleComplete": "Bottle complete!",
@@ -1045,7 +1061,7 @@
       "restoringAccessHint": "Checking whether you already joined this session.",
       "joinError": "Error while joining the game",
       "gameStartingTitle": "The game is starting...",
-      "gameStartingDesc": "You are about to enter the game!",
+      "gameStartingDesc": "Preparing questions, bottles, and the live leaderboard. The game is about to start.",
       "chooseAvatar": "Choose your avatar",
       "nicknamePlaceholder": "Ex: Alex, Emma...",
       "joining": "Joining...",

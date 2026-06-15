@@ -1,6 +1,6 @@
 .btn {
   padding: 16px 24px;
-  border-radius: 16px;
+  border-radius: 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -191,7 +191,7 @@
 .btn.neutral {
   background-color: var(--dark-100);
   color: var(--dark-text);
-  border-color: var(--dark);
+  // border-color: var(--dark);
 
   &:hover {
     background: var(--dark-200);

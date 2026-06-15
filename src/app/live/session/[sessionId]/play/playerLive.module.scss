@@ -10,6 +10,10 @@
   font-weight: 900;
   text-transform: uppercase;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
 
 %primaryActionButton {
@@ -67,7 +71,7 @@
   max-width: calc(100% - 32px);
   @media (max-width: 768px) {
     margin: 0px;
-    margin-top: 12px;
+    margin-top: calc(env(safe-area-inset-top, 0px) + 12px);
     padding: 12px 16px;
     max-width: 100%;
   }
@@ -99,6 +103,7 @@
   display: flex;
   gap: 5px;
   flex-shrink: 0;
+  min-width: 0;
 }
 
 .pill {
@@ -139,10 +144,18 @@
   touch-action: manipulation;
 }
 
+.topActionIcon {
+  color: currentColor;
+  flex-shrink: 0;
+}
+
 .exitButton {
   @extend %topActionButton;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
+  border-color: var(--danger);
+  background: var(--foreground);
+  color: var(--danger);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -151,8 +164,16 @@
   font-weight: 900;
   line-height: 1;
   margin-left: 2px;
-  transform: translateY(-0.5px);
   touch-action: manipulation;
+
+  &:hover {
+    background: var(--danger-surface);
+  }
+
+  // span {
+  //   width: 32px;
+  //   height: 32px;
+  // }
 }
 
 // ── Scrollable question area ──────────────────────────────────
@@ -219,6 +240,24 @@
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+.questionMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  .progressPills {
+    flex: 1;
+    min-width: 96px;
+  }
+
+  .pill {
+    flex: 1;
+    max-width: 20px;
+    min-width: 10px;
+  }
 }
 
 .questionText {
@@ -827,6 +866,13 @@
   }
 }
 
+.loadingHint {
+  margin: 0;
+  color: var(--text-secondary);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
 .lobbyCard {
   width: 100%;
   max-width: 640px;
@@ -981,8 +1027,8 @@
 }
 
 .lobbyPlayerAvatar {
-  width: 42px;
-  height: 42px;
+  width: 64px;
+  height: 64px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -1030,6 +1076,7 @@
   align-items: flex-end;
   justify-content: center;
   z-index: 40;
+  animation: sheetBackdropIn 0.18s ease-out both;
 }
 
 .sheet {
@@ -1041,12 +1088,35 @@
   padding: 12px 16px calc(16px + env(safe-area-inset-bottom, 0px));
   max-height: 72dvh;
   overflow: auto;
+  animation: bottomSheetIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
 
   h3 {
     margin: 8px 0 16px;
     font-size: 1.8rem;
     font-weight: 900;
     color: var(--text-primary);
+  }
+}
+
+@keyframes sheetBackdropIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bottomSheetIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

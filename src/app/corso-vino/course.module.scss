@@ -13,6 +13,12 @@
   }
 }
 
+.adminActionRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
 // ── Header ────────────────────────────────────────────────────
 .header {
   display: flex;

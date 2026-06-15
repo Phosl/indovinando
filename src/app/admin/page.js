@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import TopBarBack from '@/components/TopBarBack'
 import {requireSuperAdmin} from '@/lib/courseAdmin'
 import styles from './corsi/admin.module.scss'
 
@@ -8,7 +7,6 @@ export default async function AdminPage() {
 
   return (
     <main className={styles.page}>
-      <TopBarBack title="Admin" href="/dashboard" />
       <div className={styles.container}>
         <div className={styles.header}>
           <h2 className={styles.sectionTitle}>Pannello amministrazione</h2>

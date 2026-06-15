@@ -1,18 +1,16 @@
 'use client'
 
 import Image from 'next/image'
-import {useRouter} from 'next/navigation'
 import Icon from '@/components/Icon'
 import PageLayout from '@/components/PageLayout'
 import {useT} from '@/lib/i18n/useT'
 import styles from './gameCreate.module.scss'
 
 export default function ModePickerScreen({onPick, onOpenGuide}) {
-  const router = useRouter()
   const t = useT('gameCreate')
 
   return (
-    <PageLayout title={t('title')} onBack={() => router.push('/miei-giochi')}>
+    <PageLayout>
       <h1 className={styles.modePickerTitle}>{t('chooseModeTitle')}</h1>
       <div className={styles.modePickerGrid}>
         <button

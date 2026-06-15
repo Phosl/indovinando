@@ -1,5 +1,4 @@
 import {redirect} from 'next/navigation'
-import TopBar from '@/components/TopBar'
 import ProfileSetupPanel from '@/components/profile/ProfileSetupPanel'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import styles from '../profilo.module.scss'
@@ -27,7 +26,6 @@ export default async function ProfilePreferencesPage() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <TopBar title="Preferenze" back="/profilo" backLabel="Profilo" />
         <ProfileSetupPanel profile={profile || {}} mode="preferences" />
       </div>
     </main>

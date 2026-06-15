@@ -1,0 +1,28 @@
+.shell {
+  width: 100%;
+  min-height: 100dvh;
+  background: var(--background);
+}
+
+.topBarLayer {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  padding: calc(env(safe-area-inset-top, 0px) + 8px) 12px 0;
+  background: var(--background);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 0 var(--button-secondary-border);
+}
+
+.topBarInner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.contentLayer {
+  width: 100%;
+}
+
+.contentLayer :global(.route-shell) {
+  min-height: auto;
+}

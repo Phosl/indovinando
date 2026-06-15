@@ -7,6 +7,7 @@ import Icon from '@/components/Icon'
 import {useT} from '@/lib/i18n/useT'
 import {normalizeAiScanCredits} from '@/lib/aiScanCredits'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
+import {useAppData} from '@/components/AppDataContext'
 import styles from '@/app/profilo/profilo.module.scss'
 
 const CREDIT_PACK_OPTIONS = [
@@ -73,6 +74,7 @@ export default function ProfileCreditsClient({
   const searchParams = useSearchParams()
   const t = useT('profile')
   const tc = useT('common')
+  const {profile: sharedProfile, credits: sharedCredits, refresh: refreshAppData} = useAppData()
   const [showCreditsModal, setShowCreditsModal] = useState(false)
   const [activeCreditsTab, setActiveCreditsTab] = useState('mine')
   const [isBuyingCredits, setIsBuyingCredits] = useState(false)
@@ -81,8 +83,15 @@ export default function ProfileCreditsClient({
   const [purchaseSuccessPackCode, setPurchaseSuccessPackCode] = useState('')
   const [toast, setToast] = useState(null)
 
-  const aiCredits = useMemo(() => normalizeAiScanCredits(profileData || {}), [profileData])
-  const isSuperAdmin = profileData?.super_admin === true
+  const effectiveProfile = useMemo(
+    () => sharedProfile || profileData || {},
+    [profileData, sharedProfile],
+  )
+  const aiCredits = useMemo(
+    () => sharedCredits || normalizeAiScanCredits(effectiveProfile || {}),
+    [effectiveProfile, sharedCredits],
+  )
+  const isSuperAdmin = effectiveProfile?.super_admin === true
   const hasCreditHistory = myCreditOrders.length > 0
   const adminChartMax = useMemo(() => {
     const values = (adminCreditSnapshot?.chart || []).map((item) => Number(item.revenueCents || 0))
@@ -104,13 +113,14 @@ export default function ProfileCreditsClient({
     if (stripeStatus === 'success') {
       setPurchaseSuccessPackCode(searchParams.get('pack') || '')
       setShowPurchaseSuccessModal(true)
+      refreshAppData({force: true})
     } else if (stripeStatus === 'cancel') {
       setToast({tone: 'info', message: t('creditsPurchaseCancelled')})
     }
 
     router.refresh()
     router.replace(pathname, {scroll: false})
-  }, [pathname, router, searchParams, t])
+  }, [pathname, refreshAppData, router, searchParams, t])
 
   const handleBuyCredits = useCallback(
     async (packCode) => {

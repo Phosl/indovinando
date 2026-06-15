@@ -79,6 +79,7 @@ export default function TableLiveEventHomeClient({
     }
     setError('')
     setValidatingJoinCode(true)
+    let didNavigate = false
     try {
       const response = await fetch('/api/table-live/session/validate', {
         method: 'POST',
@@ -101,16 +102,19 @@ export default function TableLiveEventHomeClient({
         return
       }
 
+      didNavigate = true
+      window.dispatchEvent(new CustomEvent('app:navigation-intent', {detail: {direction: 'forward'}}))
       router.push(`/table-live/event/${eventSlug}/join?code=${encodeURIComponent(joinCode.trim())}`)
     } catch {
       setError(t('networkError'))
     } finally {
-      setValidatingJoinCode(false)
+      if (!didNavigate) setValidatingJoinCode(false)
     }
   }
 
   const goToCreate = () => {
     setError('')
+    window.dispatchEvent(new CustomEvent('app:navigation-intent', {detail: {direction: 'forward'}}))
     router.push(`/table-live/event/${eventSlug}/create`)
   }
 

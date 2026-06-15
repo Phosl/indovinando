@@ -4,7 +4,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {useEffect, useMemo, useState, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
-import TopBar from '@/components/TopBar'
 import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
 import InfoModal from '@/components/InfoModal'
 import Icon from '@/components/Icon'
@@ -16,6 +15,7 @@ import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {isBusinessProfile, isProfileComplete} from '@/lib/profileSetup'
 import CommunityHighlightsCard from '@/components/community/CommunityHighlightsCard'
 import {normalizeAiScanCredits} from '@/lib/aiScanCredits'
+import {useAppData} from '@/components/AppDataContext'
 import styles from './profilo.module.scss'
 // ── Player rank levels ────────────────────────────────────────────────────────
 const PLAYER_LEVELS = [
@@ -132,6 +132,12 @@ export default function ProfileClient({
   const t = useT('profile')
   const tc = useT('common')
   const {isSwitching} = useLanguage()
+  const {
+    profile: sharedProfile,
+    credits: sharedCredits,
+    gamesCount: sharedGamesCount,
+    refresh: refreshAppData,
+  } = useAppData()
   const {progress, loaded} = useWineCourseProgress()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
@@ -141,12 +147,22 @@ export default function ProfileClient({
   const [deferredInstallPrompt, setDeferredInstallPrompt] = useState(null)
   const [installPlatform, setInstallPlatform] = useState('generic')
   const [isStandalone, setIsStandalone] = useState(false)
+  const effectiveProfile = useMemo(
+    () => sharedProfile || profileData || {},
+    [profileData, sharedProfile],
+  )
+  const effectiveUserLabel = effectiveProfile?.username || userLabel
+  const effectiveAvatar = effectiveProfile?.avatar_emoji || initialAvatar
+  const effectiveGamesCount = sharedProfile ? sharedGamesCount : gamesCount
+  const aiCredits = sharedCredits || normalizeAiScanCredits(effectiveProfile)
 
   const [avatar, setAvatar] = useState(
-    initialAvatar && ALL_AVATARS.includes(initialAvatar) ? initialAvatar : '😎',
+    effectiveAvatar && ALL_AVATARS.includes(effectiveAvatar) ? effectiveAvatar : '😎',
   )
-  const hasBusinessProfile = useMemo(() => isBusinessProfile(profileData || {}), [profileData])
-  const aiCredits = useMemo(() => normalizeAiScanCredits(profileData || {}), [profileData])
+  const hasBusinessProfile = useMemo(
+    () => isBusinessProfile(effectiveProfile || {}),
+    [effectiveProfile],
+  )
 
   useEffect(() => {
     const saved = localStorage.getItem(AVATAR_STORAGE_KEY)
@@ -154,8 +170,8 @@ export default function ProfileClient({
       setAvatar(saved)
       return
     }
-    if (initialAvatar && ALL_AVATARS.includes(initialAvatar)) setAvatar(initialAvatar)
-  }, [initialAvatar])
+    if (effectiveAvatar && ALL_AVATARS.includes(effectiveAvatar)) setAvatar(effectiveAvatar)
+  }, [effectiveAvatar])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -211,10 +227,12 @@ export default function ProfileClient({
 
         if (error) {
           console.error('[profile] failed to persist avatar_emoji:', error.message)
+        } else {
+          refreshAppData({force: true})
         }
       }
     },
-    [userId],
+    [refreshAppData, userId],
   )
 
   const handleLogout = useCallback(async () => {
@@ -326,7 +344,10 @@ export default function ProfileClient({
   )
 
   const stats = useMemo(() => computeCourseStats(levels, progress), [levels, progress])
-  const hasCompletedProfile = useMemo(() => isProfileComplete(profileData || {}), [profileData])
+  const hasCompletedProfile = useMemo(
+    () => isProfileComplete(effectiveProfile || {}),
+    [effectiveProfile],
+  )
   const playerLevel = useMemo(
     () => computePlayerLevel(stats.completedLessons, stats.totalLessons),
     [stats],
@@ -350,10 +371,11 @@ export default function ProfileClient({
             .eq('id', userId)
             .then(({error}) => {
               if (error) console.error('[profile] failed to update player_level:', error.message)
+              else refreshAppData({force: true})
             })
         }
       })
-  }, [loaded, userId, playerLevel.level.num])
+  }, [loaded, refreshAppData, userId, playerLevel.level.num])
 
   return (
     <main className={styles.page}>
@@ -365,8 +387,6 @@ export default function ProfileClient({
         </div>
       ) : null}
       <div className={styles.container}>
-        <TopBar title={t('title')} onBack={() => router.push('/dashboard')}></TopBar>
-
         {/* ── Header: user info + lingua + avatar button ── */}
         <section className={styles.headerCard}>
           <div className={styles.userRow}>
@@ -384,7 +404,7 @@ export default function ProfileClient({
               )}
             </div>
             <div>
-              <h2 className={styles.name}>{userLabel}</h2>
+              <h2 className={styles.name}>{effectiveUserLabel}</h2>
               <p className={styles.email}>{email}</p>
               {hasCompletedProfile || hasBusinessProfile ? (
                 <div className={styles.profileBadges}>
@@ -474,7 +494,7 @@ export default function ProfileClient({
                     <span className={styles.label}>{t('publicProfile')}</span>
                   </span>
                   <p className={styles.publicProfileHint}>
-                    {profileData?.is_partner_public
+                    {effectiveProfile?.is_partner_public
                       ? t('publicProfileHintPublic')
                       : t('publicProfileHintPrivate')}
                   </p>
@@ -575,7 +595,7 @@ export default function ProfileClient({
           <h2>{t('yourStats')}</h2>
           <div className={styles.statsGrid}>
             <div className={styles.statItem}>
-              <span className={styles.statValue}>{gamesCount}</span>
+              <span className={styles.statValue}>{effectiveGamesCount}</span>
               <span className={styles.statLabel}>{t('gamesCreated')}</span>
             </div>
             <div className={styles.statItem}>

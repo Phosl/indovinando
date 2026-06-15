@@ -1,8 +1,13 @@
 @use '../styles/reset';
 @use '../styles/buttons';
 
+:root {
+  --app-background: #fcf9ef;
+  --app-safe-top-background: #000;
+}
+
 body {
-  --background: #fcf9ef;
+  --background: var(--app-background);
   --foreground: #fff;
   --tertiary: #1a9de0;
   --text-primary: #000;
@@ -48,7 +53,7 @@ body {
   --button: rgb(57, 57, 57);
   --button-dark: rgb(27, 27, 27);
   color: var(--text-primary);
-  background-color: var(--background);
+  background-color: var(--app-safe-top-background);
   font-family: var(--font-geist-sans);
 
   // Clean Palette
@@ -57,6 +62,7 @@ body {
   --primary-50: #f1edfb;
   --primary-100: #e4dbf8;
   --primary-200: #c9baf5;
+  --primary-300: #a88ef0;
   --primary-400: #a88ef0;
   --primary-700: #6b2f8e;
   --primary-900: #2b1860;
@@ -106,11 +112,24 @@ body {
   --dark: #333;
   --dark-100: #f5f5f5;
   --dark-200: #e0e0e0;
+  position: relative;
 }
 
 html {
   color-scheme: light;
-  background-color: #var(--background);
+  background-color: var(--app-safe-top-background);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--app-safe-top-background);
+  pointer-events: none;
+  z-index: 9999;
 }
 
 input {

@@ -5,6 +5,7 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import {createClient} from '@/lib/supabaseClient'
 import {GameStepsBreadcrumbs} from '@/components/game'
+import {useAppShellTopBar} from '@/components/AppShellContext'
 import PageLayout from '@/components/PageLayout'
 import Icon from '@/components/Icon'
 import InfoModal from '@/components/InfoModal'
@@ -870,7 +871,7 @@ export default function AutomaticModeContainer({onBack, userId, initialAiScanCre
     ? getBottleDisplayName(selectedBottle, selectedBottleIndex >= 0 ? selectedBottleIndex : 0)
     : t('title')
 
-  function handleTopBack() {
+  const handleTopBack = useCallback(() => {
     if (selectedBottleId) {
       handleCloseBottleDetail()
       return
@@ -884,7 +885,18 @@ export default function AutomaticModeContainer({onBack, userId, initialAiScanCre
       return
     }
     handleAttemptExit()
-  }
+  }, [autoStep, handleAttemptExit, handleCloseBottleDetail, selectedBottleId])
+
+  const shellTopBar = useMemo(
+    () => ({
+      title: automaticPageTitle,
+      onBack: handleTopBack,
+      actions: topBarCredits,
+    }),
+    [automaticPageTitle, handleTopBack, topBarCredits],
+  )
+
+  useAppShellTopBar(shellTopBar)
 
   function handleStepClick(nextStep) {
     if (selectedBottleId) {
@@ -914,7 +926,7 @@ export default function AutomaticModeContainer({onBack, userId, initialAiScanCre
   }
 
   return (
-    <PageLayout title={automaticPageTitle} onBack={handleTopBack} topBarActions={topBarCredits}>
+    <PageLayout>
       <AutoToast toast={toast} onClose={() => setToast(null)} closeLabel={t('close')} />
       <InfoModal
         isOpen={isCreditsInfoOpen}

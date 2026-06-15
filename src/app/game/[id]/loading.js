@@ -27,23 +27,6 @@ export default function GameLoading() {
         boxSizing: 'border-box',
       }}>
       <div
-        className="skeleton-frame"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '40px minmax(0, 1fr) 32px',
-          alignItems: 'center',
-          columnGap: 12,
-          width: '100%',
-          padding: '10px 14px',
-          margin: '0 0 14px',
-          boxSizing: 'border-box',
-        }}>
-        <Bone w="40px" h="40px" style={{borderRadius: 10}} />
-        <Bone w="clamp(160px, 44vw, 240px)" h="20px" style={{margin: '0 auto', borderRadius: 6}} />
-        <Bone w="24px" h="24px" style={{borderRadius: 999, marginLeft: 'auto'}} />
-      </div>
-
-      <div
         className="skeleton-card"
         style={{
           padding: '14px',

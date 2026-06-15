@@ -113,9 +113,21 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
         <div className={styles.bottleBadge}>
           {t('bottleCounter', {current: currentBottleIndex + 1, total: totalBottles})}
         </div>
-        <p className={styles.questionCounter}>
-          {t('questionCounter', {current: currentSlideIndex + 1, total: totalSlides})}
-        </p>
+        <div className={styles.questionMeta}>
+          <p className={styles.questionCounter}>
+            {t('questionCounter', {current: currentSlideIndex + 1, total: totalSlides})}
+          </p>
+          <div className={styles.progressPills} aria-hidden="true">
+            {Array.from({length: totalSlides}).map((_, idx) => (
+              <span
+                key={idx}
+                className={`${styles.pill} ${idx < currentSlideIndex ? styles.pillDone : ''} ${
+                  idx === currentSlideIndex ? styles.pillActive : ''
+                }`}
+              />
+            ))}
+          </div>
+        </div>
         <h2 className={styles.questionText}>{currentQuestion?.text}</h2>
 
         <div className={styles.optionsList}>

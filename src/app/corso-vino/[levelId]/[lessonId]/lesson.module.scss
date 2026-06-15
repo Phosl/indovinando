@@ -4,6 +4,7 @@
   --topbar-progress-track: rgba(16, 185, 129, 0.16);
   --topbar-progress-fill: linear-gradient(90deg, #34d399, #10b981);
   --topbar-progress-shadow: 0 0 8px rgba(16, 185, 129, 0.45);
+  margin-top: calc(env(safe-area-inset-top, 0px) + 10px);
 }
 
 // ── Intro card ────────────────────────────────────────────────
@@ -49,25 +50,53 @@
   font-weight: 600;
 }
 
+.keyPointsBox {
+  margin-top: 4px;
+  padding: 14px;
+  border: 2px solid var(--primary-100);
+  border-radius: 16px;
+  background: var(--primary-50);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.keyPointsTitle {
+  width: fit-content;
+  margin: 0;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--foreground);
+  color: var(--primary-text);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .keyPoints {
   list-style: none;
-  margin: 4px 0 0;
+  margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .keyPoint {
-  font-size: 1.2rem;
+  font-size: 1.08rem;
   font-weight: 800;
-  color: var(--selected-dark);
-  background: var(--selected-extra-light);
-  border-radius: 8px;
-  padding: 8px 12px;
+  color: var(--primary-text);
+  background: var(--foreground);
+  border: 1px solid var(--primary-100);
+  border-radius: 12px;
+  padding: 10px 12px;
+  line-height: 1.45;
 
   &::before {
-    content: '• ';
+    content: '•';
+    margin-right: 8px;
+    color: var(--selected-dark);
   }
 }
 

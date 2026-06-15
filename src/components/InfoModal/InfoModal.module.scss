@@ -7,7 +7,7 @@
   justify-content: center;
   z-index: 1100;
   padding: 0;
-  animation: fadeIn 0.15s ease-out;
+  animation: fadeIn 0.22s ease-out;
 
   @media (min-width: 520px) {
     align-items: center;
@@ -18,6 +18,7 @@
 .overlayFullScreen {
   align-items: stretch;
   padding: 0;
+  animation: fadeIn 0.22s ease-out;
 }
 
 :root {
@@ -44,7 +45,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: slideUp 0.22s ease-out;
+  animation: slideUp 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 
   @media (min-width: 520px) {
     border-radius: 20px;
@@ -60,6 +61,7 @@
   border-radius: 0;
   border: none;
   box-shadow: none;
+  animation: sheetFullScreenIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes slideUp {
@@ -70,6 +72,17 @@
   to {
     transform: translateY(0);
     opacity: 1;
+  }
+}
+
+@keyframes sheetFullScreenIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 

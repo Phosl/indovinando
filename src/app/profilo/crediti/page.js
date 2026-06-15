@@ -1,11 +1,7 @@
 import {redirect} from 'next/navigation'
-import TopBar from '@/components/TopBar'
 import ProfileCreditsClient from '@/components/profile/ProfileCreditsClient'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {createAdminSupabase} from '@/lib/supabaseAdmin'
-import {getServerLanguage} from '@/lib/i18n/server'
-import it from '@/lib/i18n/locales/it.json'
-import en from '@/lib/i18n/locales/en.json'
 import styles from '../profilo.module.scss'
 
 export const metadata = {
@@ -14,9 +10,6 @@ export const metadata = {
 
 export default async function ProfileCreditsPage() {
   const supabase = await createServerSupabase()
-  const lang = await getServerLanguage()
-  const locale = lang === 'en' ? en : it
-  const profileText = locale.profile || it.profile
   const {
     data: {user},
   } = await supabase.auth.getUser()
@@ -105,7 +98,6 @@ export default async function ProfileCreditsPage() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <TopBar title={profileText.credits || 'Crediti'} back="/profilo" backLabel="Profilo" />
         <ProfileCreditsClient
           profileData={profile}
           myCreditOrders={myCreditOrders}

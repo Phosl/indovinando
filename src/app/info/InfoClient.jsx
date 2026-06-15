@@ -2,7 +2,6 @@
 
 import {useEffect, useState} from 'react'
 import {useRouter} from 'next/navigation'
-import TopBar from '@/components/TopBar'
 import {useT} from '@/lib/i18n/useT'
 import {supabaseClient} from '@/lib/supabaseClient'
 import styles from './info.module.scss'
@@ -20,7 +19,6 @@ export default function InfoClient() {
   const currentSlide = slides[current]
   const isFirst = current === 0
   const isLast = current === slides.length - 1
-  const backHref = authChecked && !userId ? '/' : '/profilo'
   const doneHref = authChecked && userId ? '/dashboard' : '/'
 
   useEffect(() => {
@@ -59,8 +57,6 @@ export default function InfoClient() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <TopBar title={t('title')} onBack={() => router.push(backHref)}></TopBar>
-
         <section className={styles.card}>
           <div className={styles.progressRow}>
             <span className={styles.progressText}>
