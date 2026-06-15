@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server'
 import {createServerSupabase} from '@/lib/supabaseServer'
-import {createAdminSupabase} from '@/lib/supabaseAdmin'
+import {createAdminSupabaseOrFallback} from '@/lib/supabaseAdmin'
 
 export async function POST(request) {
   try {
@@ -14,7 +14,7 @@ export async function POST(request) {
     }
 
     const supabase = await createServerSupabase()
-    const db = createAdminSupabase()
+    const db = createAdminSupabaseOrFallback(supabase)
 
     const {data: session, error: sessionError} = await db
       .from('table_live_sessions')

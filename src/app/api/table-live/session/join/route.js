@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server'
 import {createServerSupabase} from '@/lib/supabaseServer'
-import {createAdminSupabase} from '@/lib/supabaseAdmin'
+import {createAdminSupabaseOrFallback} from '@/lib/supabaseAdmin'
 
 function isExpired(session, timeoutMinutes) {
   const lastActivity = new Date(session.last_activity_at).getTime()
@@ -25,7 +25,7 @@ export async function POST(request) {
     } = await supabase.auth.getUser()
     const userId = user?.id || null
 
-    const db = createAdminSupabase()
+    const db = createAdminSupabaseOrFallback(supabase)
 
     const {data: event, error: eventError} = await db
       .from('table_live_events')

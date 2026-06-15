@@ -15,3 +15,11 @@ export function createAdminSupabase() {
     },
   })
 }
+
+export function createAdminSupabaseOrFallback(fallbackClient) {
+  try {
+    return createAdminSupabase()
+  } catch {
+    return fallbackClient
+  }
+}

@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server'
 import {createServerSupabase} from '@/lib/supabaseServer'
-import {createAdminSupabase} from '@/lib/supabaseAdmin'
+import {createAdminSupabaseOrFallback} from '@/lib/supabaseAdmin'
 
 function slugify(value) {
   return String(value || '')
@@ -47,7 +47,7 @@ export async function POST(request) {
       return NextResponse.json({error: 'Game not found'}, {status: 404})
     }
 
-    const db = createAdminSupabase()
+    const db = createAdminSupabaseOrFallback(supabase)
     const base = slugify(title) || 'evento'
 
     let created = null
