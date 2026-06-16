@@ -204,8 +204,45 @@ Copy `.env.example` to `.env.local` and fill in:
 ```
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=     # required for admin routes (finish, standings, history)
+SUPABASE_SERVICE_ROLE_KEY=              # required for admin/server write routes in production
+NEXT_PUBLIC_APP_URL=                    # optional; used server-side for Stripe return URLs
+
+OPENAI_API_KEY=                         # required for automatic bottle recognition / enrichment
+OPENAI_WEB_ENRICHMENT_ENABLED=true      # enables the extra web enrichment pass
+
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=        # required for business profile location picker + partner map
+
+STRIPE_SECRET_KEY=                      # required for credit checkout session creation
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=     # Stripe publishable key for client checkout UI
+STRIPE_WEBHOOK_SECRET=                  # Stripe webhook signature secret
+STRIPE_PRICE_AI_CREDITS_10=
+STRIPE_PRICE_AI_CREDITS_30=
+STRIPE_PRICE_AI_CREDITS_100=
 ```
+
+### Vercel / Preview Notes
+
+- `NEXT_PUBLIC_*` variables are exposed to the browser by design. This is expected for:
+  - `NEXT_PUBLIC_SUPABASE_URL`
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+  - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` (must be referrer-restricted in Google Cloud)
+- `SUPABASE_SERVICE_ROLE_KEY` is intentionally more sensitive and can be kept only in `Production`
+  if you do not want admin writes available in preview deployments.
+- Table-live routes now fall back gracefully when the service role key is missing in preview. In
+  that case, preview behavior depends on your RLS policies instead of crashing with an env error.
+- Public app links (share URLs, QR links, join links) now follow the active runtime origin on the
+  client, so Vercel preview deployments generate preview-domain links automatically.
+- Stripe checkout return URLs still use `NEXT_PUBLIC_APP_URL` server-side when configured; otherwise
+  they fall back to the current request origin.
+
+### PWA / iPhone Safe Area
+
+- The app uses `viewport-fit=cover` and explicit safe-area spacing for top bars and sticky bottom
+  actions.
+- iPhone/PWA status bar styling is configured in `src/app/layout.js`.
+- If iOS does not immediately reflect a changed status bar style or safe-area color, remove and
+  re-add the app to the home screen before re-testing.
 
 ### API Routes
 
@@ -222,10 +259,10 @@ SUPABASE_SERVICE_ROLE_KEY=     # required for admin routes (finish, standings, h
 
 ## 📖 Additional Documentation
 
-- [DATABASE.md](./DATABASE.md) — Full table reference with RLS and scoring
-- [BACKLOG.md](./BACKLOG.md) — Completed work and upcoming tasks
-- [TESTING_CHECKLIST.md](./TESTING_CHECKLIST.md) — Manual QA checklist
-- [SUPABASE_SETUP_GUIDE.md](./SUPABASE_SETUP_GUIDE.md) — Supabase project setup guide
+- [DATABASE.md](./Agent/DATABASE.md) — Full table reference with RLS and scoring
+- [BACKLOG.md](./Agent/BACKLOG.md) — Completed work and upcoming tasks
+- [TESTING_CHECKLIST.md](./Agent/TESTING_CHECKLIST.md) — Manual QA checklist
+- [SUPABASE_SETUP_GUIDE.md](./Agent/SUPABASE_SETUP_GUIDE.md) — Supabase project setup guide
 
 - [SPLASHSCREEN] https://progressier.com/pwa-icons-and-ios-splash-screen-generator -[FAVICON]
   https://favicon.io/favicon-converter/

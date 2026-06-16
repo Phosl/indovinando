@@ -12,7 +12,7 @@ create table if not exists live_session_results (
   game_name     text not null,
   played_at     timestamptz not null,
   player_count  int not null default 0,
-  -- Full leaderboard snapshot: [{id, nickname, avatar_id, total_score, rank, is_host}]
+  -- Full leaderboard snapshot: [{id, user_id, nickname, avatar_id, total_score, rank, is_host}]
   players       jsonb not null default '[]',
   created_at    timestamptz default now()
 );

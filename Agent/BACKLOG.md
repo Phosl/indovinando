@@ -43,6 +43,10 @@
   più visibile.
 - Esteso il dizionario IT/EN nelle aree `auto-tasting`, `BottleModal`, `QuestionsList` e parti del
   flusso live/table-live.
+- Route `table-live` rese più robuste in preview Vercel con fallback quando manca
+  `SUPABASE_SERVICE_ROLE_KEY`, evitando il crash su env admin assenti.
+- Sistemata la `bottomRow` del flusso crea/partecipa `table-live` per evitare sbordi laterali in
+  mobile/PWA.
 
 ### Live Multiplayer — Bug & stabilità
 
@@ -74,6 +78,9 @@
 - Creato `TopBarBack.jsx`: thin client wrapper che accetta `href` stringa (usabile da server
   component).
 - Applicato a `/dashboard/storico` e `/changelog`.
+- Rifinite safe-area/status bar PWA su iPhone e aumentato lo spazio hero della dashboard home.
+- I link condivisi pubblici seguono ora il runtime origin attivo, quindi preview, locale e
+  produzione generano URL coerenti.
 
 ### Corso Vino UX
 

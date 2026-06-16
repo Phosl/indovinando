@@ -53,8 +53,9 @@ body {
   --button: rgb(57, 57, 57);
   --button-dark: rgb(27, 27, 27);
   color: var(--text-primary);
-  background-color: var(--app-safe-top-background);
+  background-color: var(--background);
   font-family: var(--font-geist-sans);
+  min-height: 100dvh;
 
   // Clean Palette
   --primary: #9275e2;
@@ -277,6 +278,7 @@ main.flex-container {
   width: 100%;
   min-height: 100dvh;
   position: relative;
+  background: var(--background);
   will-change: opacity;
 }
 

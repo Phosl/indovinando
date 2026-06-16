@@ -66,12 +66,19 @@ export default async function ProfileMatchesPage() {
     return []
   }
 
-  const [liveMineResult, allLiveScoresResult, enotecaRows, tableMineResult] = await Promise.all([
+  const [liveMineResult, liveHostedSnapshotsResult, allLiveScoresResult, enotecaRows, tableMineResult] =
+    await Promise.all([
     supabase
       .from('live_players')
       .select('id, session_id, user_id, nickname, avatar_id, total_score, updated_at')
       .eq('user_id', user.id)
       .order('updated_at', {ascending: false})
+      .limit(250),
+    supabase
+      .from('live_session_results')
+      .select('id, session_id, game_id, game_name, played_at, player_count, players')
+      .eq('host_user_id', user.id)
+      .order('played_at', {ascending: false})
       .limit(250),
     supabase
       .from('live_players')
@@ -136,11 +143,16 @@ export default async function ProfileMatchesPage() {
   const tableSessionsById = new Map(tableSessions.map((row) => [row.id, row]))
 
   const gameIdsLive = Array.from(new Set(liveSessions.map((row) => row.game_id).filter(Boolean)))
+  const gameIdsLiveSnapshots = Array.from(
+    new Set((liveHostedSnapshotsResult.data || []).map((row) => row.game_id).filter(Boolean)),
+  )
   const gameIdsTable = Array.from(new Set(tableSessions.map((row) => row.game_id).filter(Boolean)))
   const gameIdsEnoteca = Array.from(
     new Set((enotecaRows || []).map((row) => row.game_id).filter(Boolean)),
   )
-  const allGameIds = Array.from(new Set([...gameIdsLive, ...gameIdsTable, ...gameIdsEnoteca]))
+  const allGameIds = Array.from(
+    new Set([...gameIdsLive, ...gameIdsLiveSnapshots, ...gameIdsTable, ...gameIdsEnoteca]),
+  )
   const gamesResult = allGameIds.length
     ? await supabase.from('games').select('id, name, cover_index').in('id', allGameIds)
     : {data: []}
@@ -159,42 +171,95 @@ export default async function ProfileMatchesPage() {
     tablePlayersBySession.get(player.session_id).push(player)
   }
 
-  const liveMatches = myLiveRows.map((myRow) => {
-    const allPlayers = (playersBySession.get(myRow.session_id) || []).sort(
-      (a, b) => Number(b.total_score || 0) - Number(a.total_score || 0),
-    )
-    const session = sessionsById.get(myRow.session_id)
-    const maxScore = allPlayers.length
-      ? Math.max(...allPlayers.map((p) => Number(p.total_score || 0)))
-      : Number(myRow.total_score || 0)
+  const snapshotLiveSessionIds = new Set(
+    (liveHostedSnapshotsResult.data || []).map((row) => row.session_id).filter(Boolean),
+  )
 
-    const opponents = allPlayers
-      .filter((p) => p.id !== myRow.id)
-      .map((p) => ({
-        id: p.id,
-        nickname: p.nickname || (lang === 'en' ? 'Player' : 'Giocatore'),
-        avatarId: p.avatar_id || 1,
-        score: Number(p.total_score || 0),
-      }))
+  const liveMatchesFromCurrent = myLiveRows
+    .filter((myRow) => !snapshotLiveSessionIds.has(myRow.session_id))
+    .map((myRow) => {
+      const allPlayers = (playersBySession.get(myRow.session_id) || []).sort(
+        (a, b) => Number(b.total_score || 0) - Number(a.total_score || 0),
+      )
+      const session = sessionsById.get(myRow.session_id)
+      const maxScore = allPlayers.length
+        ? Math.max(...allPlayers.map((p) => Number(p.total_score || 0)))
+        : Number(myRow.total_score || 0)
 
-    return {
-      id: `live-${myRow.session_id}`,
-      mode: 'live',
-      gameName:
-        gamesById.get(session?.game_id)?.name || (lang === 'en' ? 'Live Match' : 'Partita Live'),
-      gameAvatar:
-        Number.isInteger(gamesById.get(session?.game_id)?.cover_index) &&
-        gamesById.get(session?.game_id)?.cover_index >= 0
-          ? gameAvatarOptions[gamesById.get(session?.game_id)?.cover_index] || ''
-          : '',
-      playedAt: session?.finished_at || myRow.updated_at || session?.created_at || null,
-      score: Number(myRow.total_score || 0),
-      myNickname: myRow.nickname || (lang === 'en' ? 'You' : 'Tu'),
-      isWin: Number(myRow.total_score || 0) >= maxScore && maxScore > 0,
-      myAvatarId: myRow.avatar_id || myAvatarId || 1,
-      opponents,
-    }
-  }).filter((match) => match.playedAt)
+      const opponents = allPlayers
+        .filter((p) => p.id !== myRow.id)
+        .map((p) => ({
+          id: p.id,
+          nickname: p.nickname || (lang === 'en' ? 'Player' : 'Giocatore'),
+          avatarId: p.avatar_id || 1,
+          score: Number(p.total_score || 0),
+        }))
+
+      return {
+        id: `live-${myRow.session_id}`,
+        mode: 'live',
+        gameName:
+          gamesById.get(session?.game_id)?.name ||
+          (lang === 'en' ? 'Live Match' : 'Partita Live'),
+        gameAvatar:
+          Number.isInteger(gamesById.get(session?.game_id)?.cover_index) &&
+          gamesById.get(session?.game_id)?.cover_index >= 0
+            ? gameAvatarOptions[gamesById.get(session?.game_id)?.cover_index] || ''
+            : '',
+        playedAt: session?.finished_at || myRow.updated_at || session?.created_at || null,
+        score: Number(myRow.total_score || 0),
+        myNickname: myRow.nickname || (lang === 'en' ? 'You' : 'Tu'),
+        isWin: Number(myRow.total_score || 0) >= maxScore && maxScore > 0,
+        myAvatarId: myRow.avatar_id || myAvatarId || 1,
+        opponents,
+      }
+    })
+    .filter((match) => match.playedAt)
+
+  const liveMatchesFromSnapshots = (liveHostedSnapshotsResult.data || [])
+    .map((session) => {
+      const players = Array.isArray(session.players) ? session.players : []
+      const sortedPlayers = [...players].sort(
+        (a, b) => Number(b.total_score || 0) - Number(a.total_score || 0),
+      )
+      const myPlayer =
+        sortedPlayers.find((player) => player?.is_host === true) || sortedPlayers[0] || null
+
+      if (!myPlayer) return null
+
+      const maxScore = sortedPlayers.length
+        ? Math.max(...sortedPlayers.map((player) => Number(player?.total_score || 0)))
+        : Number(myPlayer.total_score || 0)
+
+      const opponents = sortedPlayers
+        .filter((player) => player?.id !== myPlayer.id)
+        .map((player) => ({
+          id: player?.id || crypto.randomUUID(),
+          nickname: player?.nickname || (lang === 'en' ? 'Player' : 'Giocatore'),
+          avatarId: player?.avatar_id || 1,
+          score: Number(player?.total_score || 0),
+        }))
+
+      return {
+        id: `live-snapshot-${session.session_id || session.id}`,
+        mode: 'live',
+        gameName: session.game_name || (lang === 'en' ? 'Live Match' : 'Partita Live'),
+        gameAvatar:
+          Number.isInteger(gamesById.get(session.game_id)?.cover_index) &&
+          gamesById.get(session.game_id)?.cover_index >= 0
+            ? gameAvatarOptions[gamesById.get(session.game_id)?.cover_index] || ''
+            : '',
+        playedAt: session.played_at || null,
+        score: Number(myPlayer.total_score || 0),
+        myNickname: myPlayer.nickname || (lang === 'en' ? 'You' : 'Tu'),
+        isWin: Number(myPlayer.total_score || 0) >= maxScore && maxScore > 0,
+        myAvatarId: myPlayer.avatar_id || myAvatarId || 1,
+        opponents,
+      }
+    })
+    .filter(Boolean)
+
+  const liveMatches = [...liveMatchesFromSnapshots, ...liveMatchesFromCurrent]
 
   const enotecaMatches = (enotecaRows || []).map((row) => ({
     id: `enoteca-${row.id}`,

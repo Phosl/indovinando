@@ -207,7 +207,17 @@ export default function TableLiveModeClient({gameId, gameName, backHref = `/game
 
   const handleOpenLink = () => {
     if (!eventLink) return
-    window.open(eventLink, '_blank', 'noopener,noreferrer')
+
+    try {
+      const targetUrl = new URL(eventLink, window.location.origin)
+      if (targetUrl.origin === window.location.origin) {
+        window.dispatchEvent(new CustomEvent('app:navigation-intent', {detail: {direction: 'forward'}}))
+        router.push(`${targetUrl.pathname}${targetUrl.search}${targetUrl.hash}`)
+        return
+      }
+    } catch {}
+
+    window.location.href = eventLink
   }
 
   return (

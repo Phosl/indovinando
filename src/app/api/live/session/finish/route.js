@@ -250,7 +250,7 @@ export async function POST(request) {
         const [{data: finalPlayers}, {data: gameRow}] = await Promise.all([
           db
             .from('live_players')
-            .select('id, nickname, avatar_id, total_score, is_host')
+            .select('id, user_id, nickname, avatar_id, total_score, is_host')
             .eq('session_id', trimmedSessionId)
             .order('total_score', {ascending: false}),
           db.from('games').select('name').eq('id', session.game_id).maybeSingle(),
@@ -258,6 +258,7 @@ export async function POST(request) {
 
         const players = (finalPlayers || []).map((p, idx) => ({
           id: p.id,
+          user_id: p.user_id || null,
           nickname: p.nickname,
           avatar_id: p.avatar_id,
           total_score: p.total_score || 0,

@@ -22,7 +22,10 @@ export default function CorsoVinoLevelLoading() {
         padding: '0 12px 112px',
         paddingTop: 'calc(env(safe-area-inset-top, 0px) + 10px)',
         maxWidth: 960,
+        minHeight: '100dvh',
+        width: '100%',
         margin: '0 auto',
+        background: 'var(--background)',
         boxSizing: 'border-box',
       }}>
       {/* TopBar skeleton */}

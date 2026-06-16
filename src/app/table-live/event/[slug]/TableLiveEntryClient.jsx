@@ -51,6 +51,7 @@ export default function TableLiveEntryClient({
   const isJoin = mode === 'join'
   const totalSteps = isJoin ? 2 : 3
   const isLastStep = stepIndex === totalSteps - 1
+  const isOptionsStep = !isJoin && stepIndex === 2
   const progress = totalSteps > 1 ? Math.round((stepIndex / (totalSteps - 1)) * 100) : 100
 
   const stepTitle = useMemo(() => {
@@ -169,11 +170,13 @@ export default function TableLiveEntryClient({
       <main className={styles.container}>
         <form className={styles.card} onSubmit={submit}>
           <div className={styles.stepHeader}>
-            <span className={styles.stepEyebrow}>
-              {t('stepCounter', {current: String(stepIndex + 1), total: String(totalSteps)})}
-            </span>
+            {!isOptionsStep ? (
+              <span className={styles.stepEyebrow}>
+                {t('stepCounter', {current: String(stepIndex + 1), total: String(totalSteps)})}
+              </span>
+            ) : null}
             <h2 className={styles.stepTitle}>{stepTitle}</h2>
-            <p className={styles.stepHint}>{t('eventLabel', {title})}</p>
+            {!isOptionsStep ? <p className={styles.stepHint}>{t('eventLabel', {title})}</p> : null}
           </div>
 
           {stepIndex === 0 ? (
@@ -210,12 +213,9 @@ export default function TableLiveEntryClient({
             </>
           ) : null}
 
-          {!isJoin && stepIndex === 2 ? (
+          {isOptionsStep ? (
             <section className={styles.settingsCard}>
-              <div className={styles.settingsHeader}>
-                <strong className={styles.settingsTitle}>{t('answerMode.title')}</strong>
-                <p className={styles.settingsDescription}>{t('answerMode.description')}</p>
-              </div>
+              <p className={styles.settingsDescription}>{t('answerMode.description')}</p>
               <div className={styles.settingsOptions}>
                 <button
                   type="button"
