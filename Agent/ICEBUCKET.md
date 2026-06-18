@@ -8,7 +8,8 @@ Idee buone ma non prioritarie. Da riprendere quando c'è tempo.
 
 - [ ] **Offline: Corso Vino** — i JSON dei corsi sono statici in `/public/corsi/`, con cache-first
       nel SW si può giocare completamente offline
-- [ ] **Offline: shell app** — cachare TopBar, CSS, font per caricamento istantaneo anche senza rete
+- [x] **Offline: shell app** — runtime cache per asset shell/statici (`/_next/static`, CSS, font,
+      icone) senza chunk Next hardcoded
 - [ ] **Pagina "Sei offline"** — invece del browser error, mostrare una schermata brandizzata con
       messaggio gentile
 - [x] **Splash screen animato** — logo/icona animata durante il caricamento iniziale instead della

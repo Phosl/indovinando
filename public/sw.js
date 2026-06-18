@@ -1,4 +1,4 @@
-const CACHE_NAME = 'indovinando-v4'
+const CACHE_NAME = 'indovinando-v5'
 const OFFLINE_URL = '/offline.html'
 
 // Pre-scarica tutti i JSON dei corsi (it + en) all'installazione
@@ -11,13 +11,47 @@ const PRECACHE_URLS = [
   ...COURSE_LEVELS.map((n) => `/corsi/en/corso_livello_${n}.json`),
 ]
 
+const STATIC_ASSET_PATHS = [
+  '/_next/static/',
+  '/app_icon/',
+  '/app_icon_feature/',
+  '/icons/',
+  '/avatar/',
+  '/combo/',
+  '/onboarding/',
+  '/splash/',
+]
+
+const STATIC_ASSET_EXTENSIONS = [
+  '.css',
+  '.js',
+  '.woff',
+  '.woff2',
+  '.ttf',
+  '.otf',
+  '.png',
+  '.jpg',
+  '.jpeg',
+  '.svg',
+  '.webp',
+  '.ico',
+]
+
+function shouldCacheStaticAsset(url) {
+  if (STATIC_ASSET_PATHS.some((path) => url.pathname.startsWith(path))) return true
+  return STATIC_ASSET_EXTENSIONS.some((extension) => url.pathname.endsWith(extension))
+}
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches
-      .open(CACHE_NAME)
-      .then((cache) => cache.addAll(PRECACHE_URLS))
-      .then(() => self.skipWaiting()),
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS)),
   )
+})
+
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting()
+  }
 })
 
 self.addEventListener('activate', (event) => {
@@ -38,6 +72,23 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url)
   if (url.origin !== self.location.origin) return
   if (url.pathname.startsWith('/api/')) return
+
+  if (shouldCacheStaticAsset(url)) {
+    event.respondWith(
+      caches.match(event.request).then((cached) => {
+        if (cached) return cached
+
+        return fetch(event.request).then((response) => {
+          if (response.ok) {
+            const clone = response.clone()
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone))
+          }
+          return response
+        })
+      }),
+    )
+    return
+  }
 
   // Strategia: Network first, fallback a offline.html solo per navigazione HTML
   event.respondWith(
