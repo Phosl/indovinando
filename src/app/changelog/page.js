@@ -36,6 +36,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.46.0',
+    date: '18 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'add internal preview page for super admins',
+    ],
+  },
+
+  {
     version: '1.45.0',
     date: '18 giugno 2026',
     label: 'Auto',
