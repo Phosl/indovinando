@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import styles from './LandingPage.module.scss'
 
 export default function LandingWineBox() {
@@ -6,29 +7,36 @@ export default function LandingWineBox() {
     <section className={styles.section}>
       <div className={styles.wineBoxContent}>
         <div className={styles.wineBoxInfo}>
-          <span className={styles.eyebrow}>Wine Box Experience</span>
+          <span className={styles.eyebrow}>Kit degustazione</span>
 
-          <h2>Trasforma una semplice box in un&apos;esperienza di degustazione completa</h2>
+          <h2>Porta la degustazione alla cieca pronta sul tavolo</h2>
 
           <p>
-            Ogni bottiglia diventa una sfida. Scansiona le etichette, genera il quiz automaticamente
-            e scopri chi riconosce davvero i vini della degustazione.
+            Buste numerate, schede stampabili, QR partita e classifiche: tutto quello che serve per
+            far giocare un gruppo e raccogliere valutazioni reali sui vini.
           </p>
 
           <ul className={styles.wineBoxSteps}>
-            <li>📦 Ricevi la box</li>
-            <li>🍷 Degusta le bottiglie</li>
-            <li>📱 Scansiona le etichette</li>
-            <li>🏆 Scopri il punteggio finale</li>
+            <li>Prepara le bottiglie bendate</li>
+            <li>Stampa schede professionali</li>
+            <li>Condividi il QR dell&apos;evento</li>
+            <li>Raccogli classifiche e valutazioni</li>
           </ul>
 
           <Link href="/auth" className="btn primary-filled btn-inline">
-            Scopri la Wine Box
+            Crea la tua degustazione
           </Link>
         </div>
 
         <div className={styles.wineBoxVisual}>
-          <img src="/img-wine-box.png" alt="Wine Box Indovinando" className={styles.wineBoxImage} />
+          <Image
+            src="/landing/box.png"
+            alt="Kit degustazione Indovinando"
+            className={styles.wineBoxImage}
+            width={1536}
+            height={1024}
+            sizes="(max-width: 900px) calc(100vw - 48px), 520px"
+          />
         </div>
       </div>
     </section>

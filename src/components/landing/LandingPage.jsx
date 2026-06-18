@@ -10,6 +10,7 @@ import LandingForWineShops from './LandingForWineShops'
 import LandingWineBox from './LandingWineBox'
 import LandingPartnersMap from './LandingPartnersMap'
 import LandingCTA from './LandingCTA'
+import LandingFAQ from './LandingFAQ'
 import CommunityHighlightsCard from '@/components/community/CommunityHighlightsCard'
 import GlobalStatsStrip from '@/components/stats/GlobalStatsStrip'
 import styles from './LandingPage.module.scss'
@@ -45,6 +46,7 @@ export default async function LandingPage() {
           disableTransition
         />
       </section>
+      <LandingFAQ text={text.faq || {}} />
       <LandingPartnersMap text={text.partners || {}} partners={partners} />
       <LandingCTA text={text.cta || {}} />
     </main>

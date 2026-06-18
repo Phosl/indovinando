@@ -121,23 +121,44 @@ export default function DashboardClient({dashboardDict, lang, userEmail}) {
           </Link>
 
           {isSuperAdmin && (
-            <Link
-              href="/admin"
-              className={`${styles.sectionCard} ${styles.sectionCardNeutral} ${styles.sectionCardBottomArrow}`}>
-              <div className={styles.sectionCardInfo}>
-                <h3>{dashboardDict.admin || 'Admin'}</h3>
-                <p>
-                  {lang === 'en'
-                    ? 'Catalog and course management tools.'
-                    : 'Strumenti gestione catalogo e corsi.'}
-                </p>
-              </div>
-              <div className={styles.sectionCardArrowRail} aria-hidden="true">
-                <span className={`btn icon-circle ${styles.sectionCardArrowBtn}`}>
-                  <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
-                </span>
-              </div>
-            </Link>
+            <>
+              <Link
+                href="/landingpage"
+                className={`${styles.sectionCard} ${styles.sectionCardPrimary} ${styles.sectionCardBottomArrow}`}>
+                <div className={styles.sectionCardInfo}>
+                  <h3>{dashboardDict.landingPreviewTitle || 'Landing page'}</h3>
+                  <p>
+                    {dashboardDict.landingPreviewDescription ||
+                      (lang === 'en'
+                        ? 'Preview the public landing while signed in.'
+                        : 'Vedi la landing pubblica anche da loggato.')}
+                  </p>
+                </div>
+                <div className={styles.sectionCardArrowRail} aria-hidden="true">
+                  <span className={`btn icon-circle ${styles.sectionCardArrowBtn}`}>
+                    <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
+                  </span>
+                </div>
+              </Link>
+
+              <Link
+                href="/admin"
+                className={`${styles.sectionCard} ${styles.sectionCardNeutral} ${styles.sectionCardBottomArrow}`}>
+                <div className={styles.sectionCardInfo}>
+                  <h3>{dashboardDict.admin || 'Admin'}</h3>
+                  <p>
+                    {lang === 'en'
+                      ? 'Catalog and course management tools.'
+                      : 'Strumenti gestione catalogo e corsi.'}
+                  </p>
+                </div>
+                <div className={styles.sectionCardArrowRail} aria-hidden="true">
+                  <span className={`btn icon-circle ${styles.sectionCardArrowBtn}`}>
+                    <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
+                  </span>
+                </div>
+              </Link>
+            </>
           )}
         </nav>
       </div>

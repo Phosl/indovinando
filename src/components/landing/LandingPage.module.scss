@@ -184,18 +184,50 @@
   }
 }
 
-.heroSection,
 .section {
   width: min(1200px, calc(100% - 48px));
   margin: 0 auto;
 }
 
 .heroSection {
-  min-height: calc(100vh - 48px);
-  padding: 56px 0 84px;
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
-  gap: 56px;
+  position: relative;
+  width: min(1440px, calc(100% - 32px));
+  min-height: min(760px, calc(100svh - 118px));
+  margin: 0 auto 28px;
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--primary-900);
+  display: flex;
+  align-items: stretch;
+}
+
+.heroMedia {
+  position: absolute;
+  inset: 0;
+}
+
+.heroBackground {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(12, 8, 22, 0.86) 0%, rgba(12, 8, 22, 0.56) 48%, rgba(12, 8, 22, 0.08) 100%),
+    linear-gradient(180deg, rgba(12, 8, 22, 0.12) 0%, rgba(12, 8, 22, 0.3) 100%);
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  width: min(1200px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 88px 0 72px;
+  display: flex;
   align-items: center;
 }
 
@@ -204,6 +236,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 24px;
+  width: min(650px, 100%);
 }
 
 .heroBadge,
@@ -215,7 +248,11 @@
   background: var(--primary-100);
   color: var(--primary-text);
   font-size: 0.78rem;
-  font-weight: 900;
+  font-weight: 800;
+}
+
+.heroBadge {
+  background: rgba(255, 255, 255, 0.92);
 }
 
 .eyebrow {
@@ -226,10 +263,10 @@
 .heroTitle {
   margin: 0;
   font-size: clamp(3.1rem, 6vw, 5.4rem);
-  line-height: 0.96;
-  font-weight: 900;
-  color: var(--primary-900);
-  max-width: 11ch;
+  line-height: 0.98;
+  font-weight: 800;
+  color: var(--white);
+  max-width: 12ch;
 }
 
 .heroSubtitle {
@@ -237,7 +274,7 @@
   max-width: 620px;
   font-size: 1.16rem;
   line-height: 1.75;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .heroActions,
@@ -248,22 +285,35 @@
   flex-wrap: wrap;
 }
 
-.heroVisual,
 .wineBoxVisual {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.heroImage,
 .wineBoxImage {
   width: 100%;
   height: auto;
 }
 
-.heroImage {
-  max-width: 560px;
-  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.15));
+.heroProofList {
+  list-style: none;
+  padding: 0;
+  margin: 2px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  li {
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.94);
+    font-size: 0.82rem;
+    font-weight: 800;
+    backdrop-filter: blur(10px);
+  }
 }
 
 .section {
@@ -279,7 +329,7 @@
     max-width: 16ch;
     font-size: clamp(2.1rem, 4.5vw, 3.15rem);
     line-height: 1.08;
-    font-weight: 900;
+    font-weight: 800;
     color: var(--primary-900);
   }
 }
@@ -341,7 +391,7 @@
     margin: 18px 0;
     font-size: clamp(2.25rem, 5vw, 3.5rem);
     line-height: 1.07;
-    font-weight: 900;
+    font-weight: 800;
     color: var(--primary-900);
     max-width: 14ch;
   }
@@ -372,6 +422,8 @@
 
 .wineBoxImage {
   max-width: 520px;
+  border-radius: 24px;
+  box-shadow: 0 22px 46px rgba(26, 34, 44, 0.16);
 }
 
 .partnerGrid {
@@ -493,6 +545,70 @@
   justify-content: center;
 }
 
+.faqList {
+  width: min(820px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 12px;
+}
+
+.faqItem {
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 18px;
+  background: var(--foreground);
+  box-shadow: 0 10px 28px rgba(26, 34, 44, 0.05);
+  overflow: hidden;
+
+  summary {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 20px;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 1.05rem;
+    font-weight: 800;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::after {
+    content: '+';
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    flex: 0 0 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-50);
+    color: var(--primary-text);
+    font-size: 1.15rem;
+    font-weight: 800;
+  }
+
+  p {
+    margin: -4px 0 0;
+    padding: 0 20px 20px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+}
+
+.faqItem[open] {
+  border-color: var(--primary-100);
+
+  summary::after {
+    content: '−';
+  }
+}
+
 .ctaCard {
   padding: 76px 40px;
   border-radius: 28px;
@@ -505,7 +621,7 @@
     max-width: 14ch;
     font-size: clamp(2.25rem, 5vw, 3.9rem);
     line-height: 1.08;
-    font-weight: 900;
+    font-weight: 800;
   }
 
   p {
@@ -534,16 +650,11 @@
   }
 
   .heroSection {
-    min-height: auto;
-    padding-top: 36px;
-    padding-bottom: 72px;
-    grid-template-columns: 1fr;
-    gap: 32px;
+    min-height: 620px;
   }
 
   .heroContent {
-    align-items: center;
-    text-align: center;
+    max-width: 560px;
   }
 
   .heroTitle,
@@ -577,6 +688,56 @@
   .heroSection,
   .section {
     width: min(1200px, calc(100% - 28px));
+  }
+
+  .heroSection {
+    width: min(1200px, calc(100% - 24px));
+    min-height: auto;
+    border-radius: 22px;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .heroBackground {
+    object-position: 58% center;
+  }
+
+  .heroMedia {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 22px;
+  }
+
+  .heroOverlay {
+    display: none;
+  }
+
+  .heroInner {
+    width: 100%;
+    padding: 24px 0 0;
+    color: var(--text-primary);
+  }
+
+  .heroContent {
+    gap: 18px;
+    width: 100%;
+  }
+
+  .heroBadge {
+    background: var(--primary-100);
+  }
+
+  .heroTitle {
+    color: var(--primary-900);
+  }
+
+  .heroSubtitle {
+    color: var(--text-secondary);
   }
 
   .navLinks {
@@ -617,6 +778,17 @@
     :global(.btn) {
       width: 100%;
       justify-content: center;
+    }
+  }
+
+  .heroProofList {
+    gap: 8px;
+
+    li {
+      border-color: var(--primary-100);
+      background: var(--primary-50);
+      color: var(--primary-text);
+      font-size: 0.78rem;
     }
   }
 

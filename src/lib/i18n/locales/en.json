@@ -58,6 +58,8 @@
     "communityEyebrow": "Community",
     "rankingsTitle": "Public rankings",
     "rankingsDescription": "See which wines are emerging from the community’s real tastings.",
+    "landingPreviewTitle": "Landing page",
+    "landingPreviewDescription": "Preview the public landing while signed in.",
     "myGamesCardDescription": "Create, manage and play with your tasting games.",
     "yourProgress": "Your progress",
     "courseStartedDescription": "Keep going with your wine path.",
@@ -90,51 +92,58 @@
       "login": "Log in"
     },
     "hero": {
-      "badge": "🍷 Wine Tasting Game",
-      "title": "Turn a wine tasting into a game.",
-      "subtitle": "Create blind tastings, challenge friends and customers, discover wines with AI, and learn while having fun.",
-      "primaryCta": "Start free",
-      "secondaryCta": "See how it works"
+      "badge": "Indovinando",
+      "title": "Create and organize blind wine tastings",
+      "subtitle": "Prepare the quiz, invite participants, and start the tasting.",
+      "primaryCta": "Try for free",
+      "secondaryCta": "See how it works",
+      "imageAlt": "Blind wine tasting with Indovinando",
+      "proofLabel": "What you can do with Indovinando",
+      "proofItems": [
+        "Guided quizzes",
+        "QR invitations",
+        "Final leaderboards"
+      ]
     },
     "features": {
       "eyebrow": "How it works",
-      "title": "From table to tasting game in under a minute",
+      "title": "From table to results, without loose papers",
       "items": [
         {
           "icon": "🍷",
-          "title": "Scan the bottles",
-          "description": "AI recognizes the label, producer, vintage, and key wine characteristics."
+          "title": "Prepare the bottles",
+          "description": "Upload wines or scan labels. Indovinando helps you create questions and materials."
         },
         {
-          "icon": "🎮",
-          "title": "Generate the quiz",
-          "description": "Create an interactive tasting quiz automatically in seconds."
+          "icon": "📝",
+          "title": "Invite with a QR code",
+          "description": "Participants join from their phone, play, and record their impressions."
         },
         {
           "icon": "🏆",
-          "title": "Play and compare results",
-          "description": "Challenge friends, customers, or event guests and see who really knows wine."
+          "title": "Read the results",
+          "description": "Leaderboards, preferences, and real ratings stay organized after the tasting."
         }
       ]
     },
     "audiences": {
       "eyebrow": "Who it’s for",
-      "title": "A platform for every tasting experience",
+      "title": "A different tasting for every table",
       "items": [
         {
           "icon": "🍷",
           "title": "For wine lovers",
-          "description": "Turn a simple tasting with friends into a fun and engaging challenge."
+          "description": "A night with friends becomes easy to prepare and fun to remember."
         },
         {
           "icon": "🏪",
           "title": "For wine shops",
-          "description": "Run guided tastings, events, and themed evenings without manually preparing quizzes and sheets."
+          "description": "Guided events, QR access, sheets, and feedback without preparing everything by hand."
         },
         {
           "icon": "📦",
           "title": "For wine boxes and brands",
-          "description": "Add an interactive layer to your tasting boxes and increase customer engagement."
+          "description": "Every box becomes an interactive experience, with real data on tastes and preferences."
         }
       ]
     },
@@ -159,10 +168,32 @@
       "scrollerLabel": "Featured public partners",
       "mapEmpty": "The map will be available as soon as public partners complete their location."
     },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Quick questions, clear answers",
+      "items": [
+        {
+          "question": "What is Indovinando?",
+          "answer": "A platform for creating blind wine tastings, playing them from a phone, and collecting leaderboards and real wine ratings."
+        },
+        {
+          "question": "Is it only for quizzes?",
+          "answer": "No. The game is one part of the experience: you can also print sheets, run events, use QR access, and read the results after the tasting."
+        },
+        {
+          "question": "Is it for wine shops or wine lovers?",
+          "answer": "Both. It works for nights with friends, wine shop events, sommeliers, and tasting boxes that want to add a guided experience."
+        },
+        {
+          "question": "What data does it collect?",
+          "answer": "It collects answers, scores, and blind ratings: useful data for understanding what tasters actually like, beyond what the label says."
+        }
+      ]
+    },
     "cta": {
       "eyebrow": "Start now",
-      "title": "Ready to create your first tasting?",
-      "description": "Create wine quizzes, run interactive tastings, and discover how much your friends or customers really know.",
+      "title": "Your next tasting can start here.",
+      "description": "Prepare the wines, share the QR code, and let Indovinando keep the game, sheets, leaderboards, and ratings together.",
       "primaryCta": "Start free",
       "secondaryCta": "See how it works"
     },

@@ -59,6 +59,8 @@
     "communityEyebrow": "Community",
     "rankingsTitle": "Classifiche pubbliche",
     "rankingsDescription": "Scopri i vini che stanno emergendo dalle degustazioni reali della community.",
+    "landingPreviewTitle": "Landing page",
+    "landingPreviewDescription": "Vedi la landing pubblica anche da loggato.",
     "myGamesCardDescription": "Crea, gestisci e gioca con le tue degustazioni.",
     "yourProgress": "I tuoi progressi",
     "courseStartedDescription": "Continua il tuo percorso nel mondo del vino.",
@@ -91,51 +93,58 @@
       "login": "Accedi"
     },
     "hero": {
-      "badge": "🍷 Wine Tasting Game",
-      "title": "Trasforma una degustazione di vino in un gioco.",
-      "subtitle": "Crea degustazioni alla cieca, sfida amici e clienti, scopri i vini con l'intelligenza artificiale e impara divertendoti.",
-      "primaryCta": "Inizia gratis",
-      "secondaryCta": "Scopri come funziona"
+      "badge": "Indovinando",
+      "title": "Crea e organizza degustazioni alla cieca",
+      "subtitle": "Prepara il quiz, invita i partecipanti e inizia la degustazione.",
+      "primaryCta": "Prova gratis",
+      "secondaryCta": "Scopri come funziona",
+      "imageAlt": "Degustazione alla cieca con Indovinando",
+      "proofLabel": "Cosa puoi fare con Indovinando",
+      "proofItems": [
+        "Quiz guidati",
+        "Invito con QR",
+        "Classifiche finali"
+      ]
     },
     "features": {
       "eyebrow": "Come funziona",
-      "title": "Dal tavolo alla degustazione in meno di un minuto",
+      "title": "Dal tavolo ai risultati, senza fogli sparsi",
       "items": [
         {
           "icon": "🍷",
-          "title": "Scansiona le bottiglie",
-          "description": "L'AI riconosce etichetta, produttore, annata e caratteristiche del vino."
+          "title": "Prepara le bottiglie",
+          "description": "Carica i vini o scansiona le etichette. Indovinando ti aiuta a creare domande e materiali."
         },
         {
-          "icon": "🎮",
-          "title": "Genera il quiz",
-          "description": "Crea automaticamente una degustazione interattiva in pochi secondi."
+          "icon": "📝",
+          "title": "Invita con un QR",
+          "description": "I partecipanti entrano dal telefono, giocano e segnano le proprie impressioni."
         },
         {
           "icon": "🏆",
-          "title": "Gioca e confronta i risultati",
-          "description": "Sfida amici, clienti o partecipanti e scopri chi conosce davvero il vino."
+          "title": "Leggi i risultati",
+          "description": "Classifiche, preferenze e valutazioni reali restano ordinate dopo la degustazione."
         }
       ]
     },
     "audiences": {
       "eyebrow": "A chi si rivolge",
-      "title": "Una piattaforma per ogni esperienza di degustazione",
+      "title": "Una degustazione diversa per ogni tavolo",
       "items": [
         {
           "icon": "🍷",
           "title": "Per appassionati",
-          "description": "Trasforma una semplice degustazione tra amici in una sfida divertente e coinvolgente."
+          "description": "Una serata tra amici diventa una sfida semplice da preparare e bella da ricordare."
         },
         {
           "icon": "🏪",
           "title": "Per enoteche",
-          "description": "Organizza degustazioni guidate, eventi e serate a tema senza preparare manualmente quiz e schede."
+          "description": "Eventi guidati, QR, schede e feedback raccolti senza preparare tutto a mano."
         },
         {
           "icon": "📦",
           "title": "Per wine box e aziende",
-          "description": "Aggiungi un’esperienza interattiva alle tue box degustazione e aumenta il coinvolgimento dei clienti."
+          "description": "Ogni box diventa un'esperienza interattiva, con dati reali su gusti e preferenze."
         }
       ]
     },
@@ -160,10 +169,32 @@
       "scrollerLabel": "Partner pubblici in evidenza",
       "mapEmpty": "La mappa sarà disponibile appena i partner pubblici completeranno la posizione."
     },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Domande veloci, risposte chiare",
+      "items": [
+        {
+          "question": "Cos'è Indovinando?",
+          "answer": "Una piattaforma per creare degustazioni alla cieca, giocarle dal telefono e raccogliere classifiche e valutazioni reali sui vini."
+        },
+        {
+          "question": "Serve solo per fare quiz?",
+          "answer": "No. Il gioco è una parte dell'esperienza: puoi anche stampare schede, gestire eventi, usare QR e leggere i risultati dopo la degustazione."
+        },
+        {
+          "question": "È pensato per enoteche o per appassionati?",
+          "answer": "Per entrambi. Funziona per una serata tra amici, per eventi in enoteca, per sommelier e per wine box che vogliono aggiungere un'esperienza guidata."
+        },
+        {
+          "question": "Che dati raccoglie?",
+          "answer": "Raccoglie risposte, punteggi e valutazioni alla cieca: dati utili per capire cosa piace davvero ai degustatori, non solo cosa dice l'etichetta."
+        }
+      ]
+    },
     "cta": {
       "eyebrow": "Inizia ora",
-      "title": "Pronto a creare la tua prima degustazione?",
-      "description": "Crea quiz sul vino, organizza degustazioni interattive e scopri quanto ne sanno davvero i tuoi amici o i tuoi clienti.",
+      "title": "La prossima degustazione può partire da qui.",
+      "description": "Prepara i vini, condividi il QR e lascia che Indovinando tenga insieme gioco, schede, classifiche e valutazioni.",
       "primaryCta": "Inizia gratis",
       "secondaryCta": "Guarda come funziona"
     },
