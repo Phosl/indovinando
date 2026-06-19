@@ -6,32 +6,29 @@
   ],
   "settings": {
     "workbench.colorTheme": "Dark 2026",
-"workbench.colorCustomizations": {
-  "titleBar.activeBackground": "#260429",
-  // "titleBar.activeForeground": "#ffc66d",
-  // "titleBar.inactiveBackground": "#252525",
-  // "titleBar.inactiveForeground": "#798b9c",
-  // "commandCenter.border": "#ffc66d",
-  // "commandCenter.background": "#ffc66d",
-  // "commandCenter.foreground": "#ffc66d",
-  // "commandCenter.activeBackground": "#ffc66d",
-  // "commandCenter.activeForeground": "#ffc66d",
-  // "sideBar.background": "#2b2b2b",
-  // "sideBar.foreground": "#e6e1dc",
-  // "sideBar.border": "#434343",
-  // "sideBarTitle.foreground": "#ffc66d",
-  // "sideBarSectionHeader.background": "#e61212",
-  // "sideBarSectionHeader.foreground": "#cc762e",
-  // "sideBarSectionHeader.border": "#434343",
-  // "activityBar.background": "#252525",
-  // "activityBar.foreground": "#ffc66d",
-  // "activityBar.inactiveForeground": "#798b9c",
-  // "activityBar.border": "#434343",
-  // "activityBarBadge.background": "#cc762e",
-  // "activityBarBadge.foreground": "#2b2b2b"
-}
-
+    "workbench.colorCustomizations": {
+      "titleBar.activeBackground": "#260429",
+      // "titleBar.activeForeground": "#ffc66d",
+      // "titleBar.inactiveBackground": "#252525",
+      // "titleBar.inactiveForeground": "#798b9c",
+      // "commandCenter.border": "#ffc66d",
+      // "commandCenter.background": "#ffc66d",
+      "commandCenter.foreground": "#f3b8e9",
+      // "commandCenter.activeBackground": "#ffc66d",
+      // "commandCenter.activeForeground": "#ffc66d",
+      // "sideBar.background": "#2b2b2b",
+      // "sideBar.foreground": "#e6e1dc",
+      // "sideBar.border": "#434343",
+      // "sideBarTitle.foreground": "#ffc66d",
+      // "sideBarSectionHeader.background": "#e61212",
+      // "sideBarSectionHeader.foreground": "#cc762e",
+      // "sideBarSectionHeader.border": "#434343",
+      // "activityBar.background": "#252525",
+      // "activityBar.foreground": "#ffc66d",
+      // "activityBar.inactiveForeground": "#798b9c",
+      // "activityBar.border": "#434343",
+      // "activityBarBadge.background": "#cc762e",
+      // "activityBarBadge.foreground": "#2b2b2b"
+    },
   },
 }
-
-
