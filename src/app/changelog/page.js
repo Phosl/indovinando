@@ -36,6 +36,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.46.2',
+    date: '19 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'vs code settings',
+    ],
+  },
+
+  {
     version: '1.46.1',
     date: '18 giugno 2026',
     label: 'Auto',
