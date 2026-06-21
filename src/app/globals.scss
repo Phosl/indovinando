@@ -113,6 +113,8 @@ body {
   --dark: #333;
   --dark-100: #f5f5f5;
   --dark-200: #e0e0e0;
+  --app-toast-top: max(18px, calc(env(safe-area-inset-top, 0px) + 84px));
+  --app-toast-z-index: 1500;
   position: relative;
 }
 

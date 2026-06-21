@@ -164,10 +164,10 @@
 
 .autoToastViewport {
   position: fixed;
-  top: max(18px, calc(env(safe-area-inset-top) + 10px));
+  top: var(--app-toast-top, max(18px, calc(env(safe-area-inset-top, 0px) + 84px)));
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1300;
+  z-index: var(--app-toast-z-index, 1500);
   width: min(calc(100vw - 24px), 460px);
   pointer-events: none;
 }

@@ -65,19 +65,29 @@ function normalizeBottle(bottle, index, questions) {
 
   const name = trimText(source.name)
   const producer = trimText(source.producer)
-  const year = trimText(source.year).slice(0, 4)
+  const year = trimText(source.year)
   const wineType = trimText(source.wineType)
 
-  if (!name || !producer || !year || !wineType) {
-    throw validationError(`Bottle ${index + 1} is missing required details`)
+  if (!name) {
+    throw validationError(`Bottle ${index + 1} is missing a name`)
+  }
+
+  if (name.length > MAX_TEXT_LENGTH || producer.length > MAX_TEXT_LENGTH || wineType.length > MAX_TEXT_LENGTH) {
+    throw validationError(`Bottle ${index + 1} has details that are too long`)
+  }
+
+  if (year.length > 4) {
+    throw validationError(`Bottle ${index + 1} year is too long`)
   }
 
   const answers = Array.isArray(source.answers) ? source.answers : []
-  if (answers.length !== questions.length) {
-    throw validationError(`Bottle ${index + 1} has incomplete answers`)
+  if (answers.length > questions.length) {
+    throw validationError(`Bottle ${index + 1} has too many answers`)
   }
 
   answers.forEach((answer, questionIndex) => {
+    if (answer === null || answer === undefined) return
+
     const question = questions[questionIndex]
     if (question.isNeutral) return
 

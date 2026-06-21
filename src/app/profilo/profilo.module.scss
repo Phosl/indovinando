@@ -627,9 +627,9 @@ a.avatarPickerBtn {
 .toastViewport {
   position: fixed;
   left: 50%;
-  top: max(18px, calc(env(safe-area-inset-top) + 10px));
+  top: var(--app-toast-top, max(18px, calc(env(safe-area-inset-top, 0px) + 84px)));
   transform: translateX(-50%);
-  z-index: 1200;
+  z-index: var(--app-toast-z-index, 1500);
   width: min(calc(100vw - 24px), 420px);
   pointer-events: none;
 }
