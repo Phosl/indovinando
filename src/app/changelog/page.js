@@ -36,6 +36,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.46.4',
+    date: '21 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Fix auto quiz save validation',
+    ],
+  },
+
+  {
     version: '1.46.3',
     date: '21 giugno 2026',
     label: 'Auto',
