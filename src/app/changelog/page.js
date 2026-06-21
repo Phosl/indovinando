@@ -36,6 +36,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.46.3',
+    date: '21 giugno 2026',
+    label: 'Auto',
+    changes: [
+      'Harden Supabase security advisor fixes',
+    ],
+  },
+
+  {
     version: '1.46.2',
     date: '19 giugno 2026',
     label: 'Auto',
