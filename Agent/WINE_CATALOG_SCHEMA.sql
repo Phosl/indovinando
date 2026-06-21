@@ -10,6 +10,7 @@ create extension if not exists pg_trgm;
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   new.updated_at = now();
@@ -233,7 +234,9 @@ alter table public.wine_import_staging
 -- Compatibility views (for existing pages / admin tools)
 -- ---------------------------------------------------------------------------
 
-create or replace view public.wine_catalog as
+create or replace view public.wine_catalog
+with (security_invoker = true)
+as
 select
   v.id,
   null::text as external_id,
@@ -280,7 +283,9 @@ from public.wine_vintages v
 join public.wine_labels wl on wl.id = v.wine_label_id
 left join public.wine_producers wp on wp.id = wl.producer_id;
 
-create or replace view public.wine_catalog_producer_stats as
+create or replace view public.wine_catalog_producer_stats
+with (security_invoker = true)
+as
 select
   coalesce(wp.name, 'Unknown') as producer,
   max(wl.country) as country,

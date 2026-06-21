@@ -1,20 +1,8 @@
 import {NextResponse} from 'next/server'
 import {createServerSupabase} from '@/lib/supabaseServer'
-import {createClient} from '@supabase/supabase-js'
+import {createAdminSupabaseOrFallback} from '@/lib/supabaseAdmin'
+import {normalizeGameSavePayload} from '@/lib/gameSaveValidation'
 import {buildCanonicalWineKey, parseNumericSnapshot} from '@/lib/wineIdentity'
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-function createWriteClient(fallbackClient) {
-  if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
-    return fallbackClient
-  }
-
-  return createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
-    auth: {persistSession: false, autoRefreshToken: false},
-  })
-}
 
 function normalizeYear(value) {
   return String(value ?? '')
@@ -29,17 +17,14 @@ function normalizeOptionalText(value) {
 
 export async function POST(request) {
   try {
-    const payload = await request.json()
-    const {mode, gameId, name, questions = [], bottles = [], status, coverIndex} = payload || {}
-
-    const trimmedName = String(name ?? '').trim()
-    if (!trimmedName) {
-      return NextResponse.json({error: 'Missing game name'}, {status: 400})
+    let rawPayload = null
+    try {
+      rawPayload = await request.json()
+    } catch {
+      return NextResponse.json({error: 'Invalid JSON payload'}, {status: 400})
     }
-
-    if (!Array.isArray(questions) || questions.length === 0) {
-      return NextResponse.json({error: 'Missing questions'}, {status: 400})
-    }
+    const {mode, gameId, name, questions, bottles, status, coverIndex} =
+      normalizeGameSavePayload(rawPayload)
 
     const supabase = await createServerSupabase()
     const {
@@ -50,17 +35,14 @@ export async function POST(request) {
       return NextResponse.json({error: 'Not authenticated'}, {status: 401})
     }
 
-    const db = createWriteClient(supabase)
-    let currentGameId =
-      typeof gameId === 'string' && gameId.trim() ? gameId.trim() : crypto.randomUUID()
+    const db = createAdminSupabaseOrFallback(supabase)
+    const hasExistingGameId = Boolean(gameId)
+    const currentGameId = hasExistingGameId ? gameId : crypto.randomUUID()
 
-    const normalizedStatus = status === 'published' ? 'published' : 'draft'
-    const normalizedCoverIndex = Number.isInteger(coverIndex) && coverIndex >= 0 ? coverIndex : null
-
-    if (mode === 'edit' || (mode !== 'create' && gameId)) {
+    if (mode === 'edit' || (mode !== 'create' && hasExistingGameId)) {
       const {data: updatedGame, error: updateError} = await db
         .from('games')
-        .update({name: trimmedName, status: normalizedStatus, cover_index: normalizedCoverIndex})
+        .update({name, status, cover_index: coverIndex})
         .eq('id', currentGameId)
         .eq('created_by', user.id)
         .select('id')
@@ -91,10 +73,10 @@ export async function POST(request) {
     } else {
       const {error: createError} = await db.from('games').insert({
         id: currentGameId,
-        name: trimmedName,
+        name,
         created_by: user.id,
-        status: normalizedStatus,
-        cover_index: normalizedCoverIndex,
+        status,
+        cover_index: coverIndex,
       })
 
       if (createError) {
@@ -218,6 +200,7 @@ export async function POST(request) {
 
     return NextResponse.json({id: currentGameId})
   } catch (error) {
-    return NextResponse.json({error: error?.message || 'Unexpected error'}, {status: 500})
+    const responseStatus = Number.isInteger(error?.status) ? error.status : 500
+    return NextResponse.json({error: error?.message || 'Unexpected error'}, {status: responseStatus})
   }
 }

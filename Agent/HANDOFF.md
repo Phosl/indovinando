@@ -1,6 +1,6 @@
 # Handoff — Indovinando
 
-Ultimo aggiornamento: 2026-06-16
+Ultimo aggiornamento: 2026-06-21
 
 ## Stato generale
 
@@ -13,6 +13,14 @@ Ultimo aggiornamento: 2026-06-16
   - `ns` = prossimo step.
 
 ## Feature implementate di recente
+
+### Checkpoint 2026-06-21
+
+- Landing pubblica aggiornata con hero più esplicita, FAQ e immagini da `public/landing`.
+- Aggiunta pagina interna `/landingpage` visibile anche da utenti loggati, con link dashboard solo super-admin.
+- Service worker reso più controllato: niente precache rigido della shell, runtime cache e avviso manuale nuova versione.
+- Avviato hardening tecnico sul salvataggio giochi: validazione payload dedicata e uso helper Supabase admin/fallback condiviso.
+- Aggiunto recap Supabase Security Advisor con SQL safe-first e note sui refactor RLS enoteca/table-live.
 
 ### Profili e business
 

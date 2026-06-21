@@ -98,6 +98,10 @@ begin
 end;
 $$;
 
+revoke execute on function public.handle_new_user_profile() from public;
+revoke execute on function public.handle_new_user_profile() from anon;
+revoke execute on function public.handle_new_user_profile() from authenticated;
+
 create or replace function public.consume_ai_scan_credits(p_user_id uuid, p_amount integer default 1)
 returns table (
   ai_scan_credits_total integer,
@@ -164,7 +168,10 @@ create policy "Users can update own profile"
   using (auth.uid() = id)
   with check (auth.uid() = id);
 
-grant execute on function public.consume_ai_scan_credits(uuid, integer) to authenticated;
+revoke execute on function public.consume_ai_scan_credits(uuid, integer) from public;
+revoke execute on function public.consume_ai_scan_credits(uuid, integer) from anon;
+revoke execute on function public.consume_ai_scan_credits(uuid, integer) from authenticated;
+grant execute on function public.consume_ai_scan_credits(uuid, integer) to service_role;
 
 -- --------------------------------------------------------------------------
 -- 2) Core game tables

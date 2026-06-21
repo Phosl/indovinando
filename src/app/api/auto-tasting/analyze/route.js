@@ -1,5 +1,6 @@
 import {NextResponse} from 'next/server'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {createAdminSupabase} from '@/lib/supabaseAdmin'
 import {normalizeAiScanCredits} from '@/lib/aiScanCredits'
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
@@ -1929,6 +1930,7 @@ export async function POST(request) {
     if (!user) {
       return NextResponse.json({error: 'Not authenticated'}, {status: 401})
     }
+    const adminSupabase = createAdminSupabase()
 
     const body = await request.json().catch(() => ({}))
     const imageId = String(body?.imageId ?? '').trim()
@@ -1970,7 +1972,7 @@ export async function POST(request) {
     }
 
     const requestedCredits = rows.length
-    const {data: creditData, error: creditError} = await supabase.rpc('consume_ai_scan_credits', {
+    const {data: creditData, error: creditError} = await adminSupabase.rpc('consume_ai_scan_credits', {
       p_user_id: user.id,
       p_amount: requestedCredits,
     })

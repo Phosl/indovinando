@@ -73,6 +73,7 @@ create policy "Users can read own ai credit ledger"
 create or replace function public.touch_ai_credit_purchase_orders_updated_at()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   new.updated_at = timezone('utc', now());
@@ -182,6 +183,51 @@ begin
   return v_order;
 end;
 $$;
+
+revoke execute on function public.grant_ai_credit_purchase(
+  text,
+  text,
+  text,
+  uuid,
+  text,
+  integer,
+  integer,
+  text,
+  jsonb
+) from public;
+revoke execute on function public.grant_ai_credit_purchase(
+  text,
+  text,
+  text,
+  uuid,
+  text,
+  integer,
+  integer,
+  text,
+  jsonb
+) from anon;
+revoke execute on function public.grant_ai_credit_purchase(
+  text,
+  text,
+  text,
+  uuid,
+  text,
+  integer,
+  integer,
+  text,
+  jsonb
+) from authenticated;
+grant execute on function public.grant_ai_credit_purchase(
+  text,
+  text,
+  text,
+  uuid,
+  text,
+  integer,
+  integer,
+  text,
+  jsonb
+) to service_role;
 
 comment on function public.grant_ai_credit_purchase(
   text,

@@ -1,6 +1,8 @@
 begin;
 
-create or replace view public.public_wine_rating_events as
+create or replace view public.public_wine_rating_events
+with (security_invoker = true)
+as
   with enoteca_events as (
     select
       'enoteca'::text as source_flow,

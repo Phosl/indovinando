@@ -15,22 +15,9 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('business-branding', 'business-branding', true)
 ON CONFLICT (id) DO NOTHING;
 
--- Policy lettura pubblica
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1
-    FROM pg_policies
-    WHERE schemaname = 'storage'
-      AND tablename = 'objects'
-      AND policyname = 'business-branding public read'
-  ) THEN
-    CREATE POLICY "business-branding public read"
-      ON storage.objects
-      FOR SELECT
-      USING (bucket_id = 'business-branding');
-  END IF;
-END $$;
+-- Il bucket e pubblico: gli URL pubblici funzionano senza una policy SELECT
+-- ampia su storage.objects. Evitiamo cosi il listing pubblico dei file.
+DROP POLICY IF EXISTS "business-branding public read" ON storage.objects;
 
 -- Policy upload owner path
 DO $$

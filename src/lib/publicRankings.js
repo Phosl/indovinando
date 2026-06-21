@@ -241,16 +241,16 @@ async function loadRealGlobalStatsSnapshot(supabase) {
   const activeUsersSince = new Date(Date.now() - ACTIVE_USERS_DAYS * 24 * 60 * 60 * 1000).toISOString()
 
   const [eventsResult, analyzedWinesResult, ratingsResult, activeUsersResult] = await Promise.all([
-    supabase.from('public_wine_rating_events').select('session_id, bottle_id'),
+    statsClient.from('public_wine_rating_events').select('session_id, bottle_id'),
     statsClient
       .from('tasting_bottle_images')
       .select('id', {count: 'exact', head: true})
       .eq('status', 'recognized'),
-    supabase
+    statsClient
       .from('public_wine_rating_events')
       .select('question_id', {count: 'exact', head: true})
       .eq('is_rating_question', true),
-    supabase
+    statsClient
       .from('public_wine_rating_events')
       .select('user_id')
       .not('user_id', 'is', null)
@@ -290,7 +290,8 @@ async function loadSectionRows(supabase, sectionId) {
 
   if (!config) return []
 
-  const {data, error} = await supabase
+  const rankingsClient = createRankingsClient(supabase)
+  const {data, error} = await rankingsClient
     .from('public_wine_rankings')
     .select(
       'wine_group_key, display_name, producer, region_label, appellation_label, blind_score, quality_price_score, surprise_score, divisive_score, avg_price_value, correctness_ratio, rating_count',
@@ -312,7 +313,8 @@ async function loadSectionRows(supabase, sectionId) {
 }
 
 async function loadUserRankingRows(supabase) {
-  const {data, error} = await supabase
+  const rankingsClient = createRankingsClient(supabase)
+  const {data, error} = await rankingsClient
     .from('public_user_rankings')
     .select(
       [
@@ -450,7 +452,8 @@ export async function getPublicWineDetailSnapshot(supabase, wineGroupKey, lang =
   const locale = lang === 'en' ? 'en-US' : 'it-IT'
 
   try {
-    const {data, error} = await supabase
+    const rankingsClient = createRankingsClient(supabase)
+    const {data, error} = await rankingsClient
       .from('public_wine_rankings')
       .select(
         [
