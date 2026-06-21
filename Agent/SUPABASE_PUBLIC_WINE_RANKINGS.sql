@@ -1,6 +1,8 @@
 begin;
 
-create or replace view public.public_wine_rankings as
+create or replace view public.public_wine_rankings
+with (security_invoker = true)
+as
   with grouped_events as (
     select
       coalesce(

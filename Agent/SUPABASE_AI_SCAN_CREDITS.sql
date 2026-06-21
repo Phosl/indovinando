@@ -61,4 +61,7 @@ begin
 end;
 $$;
 
-grant execute on function public.consume_ai_scan_credits(uuid, integer) to authenticated;
+revoke execute on function public.consume_ai_scan_credits(uuid, integer) from public;
+revoke execute on function public.consume_ai_scan_credits(uuid, integer) from anon;
+revoke execute on function public.consume_ai_scan_credits(uuid, integer) from authenticated;
+grant execute on function public.consume_ai_scan_credits(uuid, integer) to service_role;

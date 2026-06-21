@@ -69,7 +69,9 @@ create index if not exists wine_sources_data_source_idx
 -- ---------------------------------------------------------------------------
 -- 4) Update wine_catalog compatibility view (expose new label/vintage columns)
 -- ---------------------------------------------------------------------------
-create or replace view public.wine_catalog as
+create or replace view public.wine_catalog
+with (security_invoker = true)
+as
 select
   v.id,
   v.external_id,

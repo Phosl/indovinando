@@ -27,6 +27,25 @@ Panoramica aggiornata delle tabelle Supabase (PostgreSQL) usate dall'app.
 - `SUPABASE_TABLE_LIVE_ANSWER_REVEAL_MODE.sql` - modalita reveal risposte per table-live
 - `WINE_COURSE_MAX_SCORE_MIGRATION.sql` - allinea schema progresso corso con il client
 - `SUPABASE_WINE_COURSE_PROGRESS_CLEANUP.sql` - pulizia e deduplica sicura del progresso corso
+- `SUPABASE_SECURITY_ADVISOR_FIXES_2026_06_21.sql` - fix safe-first per Supabase Security Advisor
+- `SUPABASE_SECURITY_ADVISOR_RECAP_2026_06_21.md` - recap decisioni, impatti e warning rimasti
+
+## Security Advisor
+
+Checkpoint 2026-06-21:
+
+- Fix immediati preparati in `SUPABASE_SECURITY_ADVISOR_FIXES_2026_06_21.sql`.
+- Recap tecnico e ordine di test in `SUPABASE_SECURITY_ADVISOR_RECAP_2026_06_21.md`.
+- Le RPC `consume_ai_scan_credits` e `grant_ai_credit_purchase` devono essere chiamate solo server-side con `SUPABASE_SERVICE_ROLE_KEY`.
+- Le viste pubbliche ranking/catalogo vanno impostate `security_invoker = true`; le classifiche pubbliche usano il client server/admin quando disponibile.
+- I warning RLS su enoteca/table-live richiedono refactor dedicato: evitare fix cosmetici che cambiano `USING (true)` senza isolare davvero sessioni anonime.
+
+Applicazione consigliata:
+
+1. Eseguire `SUPABASE_SECURITY_ADVISOR_FIXES_2026_06_21.sql` nel SQL Editor Supabase.
+2. Ridare scan Security Advisor.
+3. Verificare crediti AI, webhook Stripe, classifiche pubbliche, admin catalogo vini e logo business.
+4. Lasciare i warning Enoteca/Table Live come TODO tecnico finché non viene introdotto un modello RLS basato su token sessione o write server-side.
 
 ## Diagramma ER (semplificato)
 

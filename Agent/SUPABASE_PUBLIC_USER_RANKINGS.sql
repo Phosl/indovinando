@@ -1,6 +1,8 @@
 begin;
 
-create or replace view public.public_user_rankings as
+create or replace view public.public_user_rankings
+with (security_invoker = true)
+as
   with base as (
     select
       pwre.user_id,
