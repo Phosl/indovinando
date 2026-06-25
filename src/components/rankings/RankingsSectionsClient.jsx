@@ -28,7 +28,7 @@ export default function RankingsSectionsClient({sections = [], text = {}}) {
       <section className={styles.sectionsGrid}>
         {sections.map((section) => (
           <article key={section.id} className={styles.sectionCard}>
-            <div className={styles.sectionHeader}> 
+            <div className={styles.sectionHeader}>
               <div className={styles.sectionHeadingWrap}>
                 <div className={styles.sectionTitleRow}>
                   <h2 className={styles.sectionTitle}>

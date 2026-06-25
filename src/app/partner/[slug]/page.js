@@ -68,6 +68,8 @@ export default async function PartnerDetailPage({params, searchParams}) {
         />
 
         <section className={styles.detailHero}>
+          <span className={styles.detailCategoryBadge}>{partner.category}</span>
+
           {partner.logoUrl ? (
             <div className={styles.detailLogoWrap}>
               <img src={partner.logoUrl} alt={partner.name} className={styles.detailLogo} />
@@ -75,7 +77,6 @@ export default async function PartnerDetailPage({params, searchParams}) {
           ) : null}
 
           <div className={styles.detailHeroMain}>
-            <span className={styles.eyebrow}>{partner.category}</span>
             <h1>{partner.name}</h1>
             {partner.description ? <p>{partner.description}</p> : null}
           </div>

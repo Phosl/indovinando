@@ -2,7 +2,7 @@ import {notFound} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {getPublicWineDetailSnapshot} from '@/lib/publicRankings'
-import SmartBackTopBar from '@/components/SmartBackTopBar'
+import PartnerPageHeader from '@/components/partner/PartnerPageHeader'
 import Icon from '@/components/Icon'
 import it from '@/lib/i18n/locales/it.json'
 import en from '@/lib/i18n/locales/en.json'
@@ -18,8 +18,13 @@ export default async function PublicWinePage({params}) {
   const lang = await getServerLanguage()
   const locale = lang === 'en' ? en : it
   const text = locale.rankingsWinePage || it.rankingsWinePage
+  const landingText = locale.landing || it.landing || {}
+  const commonText = locale.common || it.common || {}
   const resolvedParams = await params
   const wineKey = decodeURIComponent(resolvedParams?.wineKey || '')
+  const {
+    data: {user},
+  } = await supabase.auth.getUser()
 
   const detail = await getPublicWineDetailSnapshot(supabase, wineKey, lang)
   if (!detail) notFound()
@@ -27,7 +32,14 @@ export default async function PublicWinePage({params}) {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <SmartBackTopBar title={detail.name} fallbackHref="/classifiche" />
+        <PartnerPageHeader
+          isLoggedIn={Boolean(user)}
+          title={detail.name}
+          backHref="/classifiche"
+          navText={landingText.nav || {}}
+          landingBackHref="/classifiche"
+          landingBackLabel={commonText.back || 'Indietro'}
+        />
 
         <section className={styles.hero}>
           <div className={styles.heroTopRow}>

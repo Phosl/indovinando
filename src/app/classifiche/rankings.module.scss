@@ -225,7 +225,7 @@
 
 .sectionTitle {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
 }
 
@@ -234,6 +234,7 @@
   height: 22px;
   color: var(--primary-text);
   flex: 0 0 auto;
+  margin-top: 2px;
 }
 
 .sectionInfoBtn {

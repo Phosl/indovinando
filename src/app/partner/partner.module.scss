@@ -2,7 +2,6 @@
   min-height: 100dvh;
   background: var(--background);
   padding: 0 12px 40px;
-  padding-top: 40px;
 }
 
 .container {
@@ -93,6 +92,7 @@
 }
 
 .detailHero {
+  position: relative;
   padding: 32px 24px;
   display: flex;
   justify-content: space-between;
@@ -121,6 +121,23 @@
 
 .detailHeroMain {
   max-width: 720px;
+  padding-right: 150px;
+}
+
+.detailCategoryBadge {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--primary-100);
+  color: var(--primary-text);
+  font-size: 0.78rem;
+  font-weight: 900;
+  box-shadow: 0 8px 18px rgba(26, 34, 44, 0.08);
 }
 
 .detailActions {
@@ -186,6 +203,29 @@
   justify-content: flex-start;
 }
 
+.loadingTopBar {
+  height: 74px;
+  border-radius: 22px;
+}
+
+.loadingHero {
+  min-height: 190px;
+}
+
+.loadingGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.loadingCard {
+  min-height: 260px;
+}
+
+.loadingDetailCard {
+  min-height: 340px;
+}
+
 @media (max-width: 900px) {
   .grid,
   .detailGrid {
@@ -194,5 +234,19 @@
 
   .detailHero {
     flex-direction: column;
+  }
+
+  .detailHeroMain {
+    padding-right: 0;
+  }
+
+  .detailCategoryBadge {
+    position: static;
+    order: -1;
+    align-self: flex-end;
+  }
+
+  .loadingGrid {
+    grid-template-columns: 1fr;
   }
 }

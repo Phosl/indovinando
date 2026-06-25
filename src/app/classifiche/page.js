@@ -2,11 +2,9 @@ import Link from 'next/link'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {getPublicRankingsSnapshot} from '@/lib/publicRankings'
-import LandingNav from '@/components/landing/LandingNav'
 import GlobalStatsStrip from '@/components/stats/GlobalStatsStrip'
 import RankingsSectionsClient from '@/components/rankings/RankingsSectionsClient'
-import TopBarBack from '@/components/TopBarBack'
-import Icon from '@/components/Icon'
+import PartnerPageHeader from '@/components/partner/PartnerPageHeader'
 import it from '@/lib/i18n/locales/it.json'
 import en from '@/lib/i18n/locales/en.json'
 import styles from './rankings.module.scss'
@@ -37,19 +35,14 @@ export default async function RankingsPage({searchParams}) {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        {user ? (
-          <TopBarBack title={text.title} href={safeBackHref} />
-        ) : (
-          <>
-            <LandingNav text={landingText.nav || {}} />
-            <div className={styles.landingBackRow}>
-              <Link href="/" className={styles.landingBackLink}>
-                <Icon src="/icons/back-icon.svg" size={18} className={styles.landingBackIcon} />
-                <span>{commonText.back || 'Indietro'}</span>
-              </Link>
-            </div>
-          </>
-        )}
+        <PartnerPageHeader
+          isLoggedIn={Boolean(user)}
+          title={text.title}
+          backHref={safeBackHref}
+          navText={landingText.nav || {}}
+          landingBackHref="/"
+          landingBackLabel={commonText.back || 'Indietro'}
+        />
 
         <section className={styles.hero}>
           <div className={styles.heroTopRow}>

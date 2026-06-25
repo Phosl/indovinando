@@ -12,8 +12,9 @@ export default function PartnerPublicCard({partner, ctaLabel, compact = false}) 
         </div>
       ) : null}
 
+      <span className={styles.badge}>{partner.category}</span>
+
       <div className={styles.header}>
-        <span className={styles.badge}>{partner.category}</span>
         {partner.location ? <span className={styles.location}>{partner.location}</span> : null}
       </div>
 

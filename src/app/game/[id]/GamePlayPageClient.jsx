@@ -3,7 +3,6 @@
 import {useRouter} from 'next/navigation'
 import {useState} from 'react'
 import GamePlayView from '@/components/game/GamePlayView'
-import Icon from '@/components/Icon'
 import InfoModal from '@/components/InfoModal'
 import {useT} from '@/lib/i18n/useT'
 import styles from './GamePlayPage.module.scss'
@@ -74,7 +73,6 @@ export default function GamePlayPageClient({
           if (!isDeleting) setDeleteModalOpen(false)
         }}
         title={t('deleteModalTitle')}
-        icon={<Icon name="bucket" size={24} />}
         disableClose={isDeleting}>
         <p className={styles.deleteModalText}>{t('deleteConfirm')}</p>
         {deleteError ? <p className={styles.deleteError}>{deleteError}</p> : null}
