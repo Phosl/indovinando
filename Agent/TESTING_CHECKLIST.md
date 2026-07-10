@@ -121,10 +121,10 @@
 ## Demo pubblica (`/demo`)
 
 - [ ] Aprire la demo senza login dalla landing
-- [ ] Completare tutte e quattro le domande con risposte corrette e sbagliate
+- [ ] Completare le sei domande standard con risposte corrette, sbagliate e voto neutro
 - [ ] Verificare feedback, spiegazioni, punteggio e rivelazione finale
 - [ ] Aprire la classifica durante ogni domanda e verificare gli aggiornamenti degli avversari
-- [ ] Verificare ordinamento dinamico, posizione del giocatore e punteggio massimo di 40 punti
+- [ ] Verificare ordinamento dinamico, posizione del giocatore e punteggio massimo di 50 punti
 - [ ] Attivare/disattivare i suoni e verificare audio/vibrazione su risposta corretta, errata e fine bottiglia
 - [ ] Aprire “Esci”, annullare e poi confermare l’uscita
 - [ ] Rigiocare e verificare il reset completo della partita

@@ -238,7 +238,7 @@
       "description": "Segui gli indizi di un calice misterioso, scegli le risposte e scopri il vino alla fine.",
       "duration": "2 minuti",
       "noAccount": "Senza account",
-      "questions": "4 domande",
+      "questions": "6 domande",
       "notice": "Questa è una simulazione: in una degustazione reale avresti il vino nel calice e il questionario preparato dall'organizzatore.",
       "start": "Inizia la demo"
     },
@@ -252,68 +252,7 @@
       "correct": "Risposta corretta",
       "wrong": "La risposta corretta era: {answer}"
     },
-    "questions": [
-      {
-        "id": "appearance",
-        "icon": "tasting",
-        "stage": "1. Osserva",
-        "clue": "Nel calice vedi un colore rosso rubino di media intensità, con un bordo appena granato.",
-        "question": "Quale descrizione del colore è più corretta?",
-        "correctId": "ruby",
-        "explanation": "Il centro rubino e il bordo leggermente granato indicano un vino rosso non giovanissimo, ma ancora vivo.",
-        "options": [
-          {"id": "straw", "label": "Giallo paglierino"},
-          {"id": "ruby", "label": "Rosso rubino"},
-          {"id": "purple", "label": "Rosso porpora"},
-          {"id": "amber", "label": "Ambrato"}
-        ]
-      },
-      {
-        "id": "aromas",
-        "icon": "tasting",
-        "stage": "2. Annusa",
-        "clue": "Il profumo ricorda ciliegia, viola ed erbe mediterranee, con una nota leggermente terrosa.",
-        "question": "Qual è la famiglia aromatica dominante?",
-        "correctId": "redFruit",
-        "explanation": "Ciliegia e viola portano verso frutto rosso e note floreali, un profilo tipico di molti vini da Sangiovese.",
-        "options": [
-          {"id": "citrus", "label": "Agrumi e fiori bianchi"},
-          {"id": "tropical", "label": "Frutta tropicale"},
-          {"id": "redFruit", "label": "Frutto rosso e fiori"},
-          {"id": "oxidative", "label": "Frutta secca e ossidazione"}
-        ]
-      },
-      {
-        "id": "grape",
-        "icon": "question",
-        "stage": "3. Assaggia",
-        "clue": "Il sorso è fresco, di medio corpo, con tannino evidente ma fine e un finale sapido.",
-        "question": "Quale vitigno è il candidato più probabile?",
-        "correctId": "sangiovese",
-        "explanation": "Acidità vivace, tannino fine, ciliegia ed erbe sono indizi coerenti con il Sangiovese.",
-        "options": [
-          {"id": "merlot", "label": "Merlot"},
-          {"id": "sangiovese", "label": "Sangiovese"},
-          {"id": "primitivo", "label": "Primitivo"},
-          {"id": "moscato", "label": "Moscato"}
-        ]
-      },
-      {
-        "id": "origin",
-        "icon": "bottle",
-        "stage": "4. Indovina",
-        "clue": "Unisci tutti gli indizi: Sangiovese, acidità, ciliegia, viola, erbe e finale sapido.",
-        "question": "Da quale territorio potrebbe arrivare questo vino?",
-        "correctId": "tuscany",
-        "explanation": "Il profilo conduce alla Toscana e, in questa demo, a un Chianti Classico basato sul Sangiovese.",
-        "options": [
-          {"id": "tuscany", "label": "Toscana"},
-          {"id": "mosel", "label": "Mosella"},
-          {"id": "jerez", "label": "Jerez"},
-          {"id": "marlborough", "label": "Marlborough"}
-        ]
-      }
-    ],
+    "tastingClue": "Indizi del calice: rosso rubino, ciliegia e viola, acidità vivace, tannino fine e finale sapido.",
     "result": {
       "eyebrow": "Degustazione completata",
       "title": "Hai scoperto il calice misterioso",

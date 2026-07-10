@@ -17,11 +17,12 @@ Ultimo aggiornamento: 2026-07-10
 ### Checkpoint 2026-07-10 — demo pubblica
 
 - Aggiunta route pubblica `/demo`, disponibile senza login e senza scritture su database.
-- La demo simula una mini degustazione alla cieca in quattro passaggi: osserva, annusa, assaggia e indovina.
+- La demo usa direttamente le sei domande del questionario standard condiviso: Stato, Regione, Uvaggio, Anno, Voto e Prezzo.
+- Demo, creazione rapida e creazione automatica leggono lo stesso `getQuickTemplateQuestions`, senza copie parallele del template.
 - Il gioco riusa direttamente `TopBar`, `QuestionSlideScreen` e `ResultsScreen` del flusso table-live: grafica e interazioni restano identiche alla partita reale.
 - Audio, vibrazione, toggle suoni, classifica bottom-sheet e conferma uscita riusano `useGameAudio` e `GameOverlays` del table-live.
 - Cinque avversari simulati aggiornano i punteggi con tempi sfalsati durante le domande; la classifica aperta cambia in tempo reale.
-- Punteggio allineato al table-live: `10` punti per risposta corretta, `0` per risposta errata e nessuna combo.
+- Punteggio allineato al table-live: `10` punti per risposta oggettiva corretta, `0` per risposta errata o voto neutro, massimo `50` e nessuna combo.
 - Ogni risposta mostra il feedback reale del gioco; al termine vengono mostrati riepilogo, punteggio e vino rivelato.
 - Aggiunti accessi dalla landing, dal menu landing e dalla dashboard degli utenti registrati.
 - Aggiunta sezione promozionale subito sotto l'hero della landing, riusando `LandingCTA`, con vantaggi concreti e CTA primaria verso `/demo`.

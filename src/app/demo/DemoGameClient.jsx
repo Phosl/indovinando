@@ -3,7 +3,9 @@
 import {useEffect, useMemo, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import Icon from '@/components/Icon'
+import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useT} from '@/lib/i18n/useT'
+import {getQuickTemplateQuestions} from '@/app/game/create/autoTastingHelpers'
 import {QuestionSlideScreen} from '@/app/live/session/[sessionId]/play/components/QuestionSlideScreen'
 import {ResultsScreen} from '@/app/live/session/[sessionId]/play/components/ResultsScreen'
 import {TopBar as LiveTopBar} from '@/app/live/session/[sessionId]/play/components/TopBar'
@@ -13,41 +15,48 @@ import liveStyles from '@/app/live/session/[sessionId]/play/playerLive.module.sc
 import styles from './demo.module.scss'
 
 const POINTS_PER_ANSWER = 10
+const CORRECT_OPTION_INDEX_BY_QUESTION = {
+  'quick-country': 0,
+  'quick-region': 0,
+  'quick-grape': 1,
+  'quick-vintage': 4,
+  'quick-price': 2,
+}
 const DEMO_OPPONENTS = [
   {
     id: 'demo-luca',
     nickname: 'Luca',
     avatar_id: 2,
-    total_score: 30,
-    scoreSteps: [10, 10, 20, 30],
+    total_score: 40,
+    scoreSteps: [10, 10, 20, 30, 30, 40],
   },
   {
     id: 'demo-giulia',
     nickname: 'Giulia',
     avatar_id: 3,
-    total_score: 20,
-    scoreSteps: [0, 10, 20, 20],
+    total_score: 30,
+    scoreSteps: [0, 10, 20, 20, 20, 30],
   },
   {
     id: 'demo-marco',
     nickname: 'Marco',
     avatar_id: 4,
-    total_score: 20,
-    scoreSteps: [10, 10, 10, 20],
+    total_score: 30,
+    scoreSteps: [10, 10, 10, 20, 20, 30],
   },
   {
     id: 'demo-sara',
     nickname: 'Sara',
     avatar_id: 5,
-    total_score: 10,
-    scoreSteps: [0, 0, 10, 10],
+    total_score: 20,
+    scoreSteps: [0, 0, 10, 10, 10, 20],
   },
   {
     id: 'demo-anna',
     nickname: 'Anna',
     avatar_id: 6,
-    total_score: 0,
-    scoreSteps: [0, 0, 0, 0],
+    total_score: 10,
+    scoreSteps: [0, 0, 0, 10, 10, 10],
   },
 ]
 
@@ -58,22 +67,35 @@ function emptyOpponentScores() {
 export default function DemoGameClient() {
   const router = useRouter()
   const t = useT('demo')
+  const gameCreateT = useT('gameCreate')
+  const {lang} = useLanguage()
   const questions = useMemo(() => {
-    const localizedQuestions = t('questions')
-    if (!Array.isArray(localizedQuestions)) return []
-
-    return localizedQuestions.map((question) => ({
-      ...question,
-      text: `${question.clue}\n\n${question.question}`,
-      game_question_options: question.options.map((option, optionIndex) => ({
-        id: option.id,
-        text: option.label,
+    return getQuickTemplateQuestions(gameCreateT, lang).map((question) => {
+      const gameQuestionOptions = question.options.map((option, optionIndex) => ({
+        id: `${question.id}-option-${optionIndex}`,
+        text: option,
         option_order: optionIndex,
-      })),
-    }))
-  }, [t])
+      }))
+      const isNeutral = question.isNeutral === true || question.kind === 'rating'
+      const correctOptionIndex = CORRECT_OPTION_INDEX_BY_QUESTION[question.id]
+
+      return {
+        ...question,
+        text: `${t('tastingClue')}\n\n${question.text}`,
+        is_neutral: isNeutral,
+        game_question_options: gameQuestionOptions,
+        correctId:
+          !isNeutral && Number.isInteger(correctOptionIndex)
+            ? gameQuestionOptions[correctOptionIndex]?.id || null
+            : null,
+      }
+    })
+  }, [gameCreateT, lang, t])
   const correctOptionByQuestion = useMemo(
-    () => Object.fromEntries(questions.map((question) => [question.id, question.correctId])),
+    () =>
+      Object.fromEntries(
+        questions.filter((question) => question.correctId).map((question) => [question.id, question.correctId]),
+      ),
     [questions],
   )
   const playerData = useMemo(
@@ -93,6 +115,7 @@ export default function DemoGameClient() {
 
   const currentQuestion = questions[questionIndex]
   const correctAnswers = Object.values(answers).filter((answer) => answer.isCorrect).length
+  const objectiveQuestionCount = questions.filter((question) => !question.is_neutral).length
   const demoPlayers = useMemo(() => [playerData, ...DEMO_OPPONENTS], [playerData])
   const answersByPlayer = useMemo(
     () =>
@@ -168,7 +191,8 @@ export default function DemoGameClient() {
 
   const checkAnswer = (questionId, optionId) => {
     if (!optionId || questionId !== currentQuestion?.id || isChecked) return
-    const isCorrect = correctOptionByQuestion[questionId] === optionId
+    const isNeutral = currentQuestion.is_neutral === true
+    const isCorrect = isNeutral ? null : correctOptionByQuestion[questionId] === optionId
     const answer = {
       optionId,
       isCorrect,
@@ -180,7 +204,8 @@ export default function DemoGameClient() {
     setAnswers((currentAnswers) => ({...currentAnswers, [questionId]: answer}))
     setCheckResult(answer)
     setIsChecked(true)
-    playSound(isCorrect ? 'correct' : 'wrong')
+    if (isCorrect === true) playSound('correct')
+    else if (isCorrect === false) playSound('wrong')
   }
 
   const continueDemo = () => {
@@ -256,7 +281,7 @@ export default function DemoGameClient() {
       <ResultsScreen
         sessionId="demo"
         title={
-          correctAnswers === questions.length ? t('result.perfectTitle') : t('result.title')
+          correctAnswers === objectiveQuestionCount ? t('result.perfectTitle') : t('result.title')
         }
         subtitle={t('result.description')}
         currentBottle={{

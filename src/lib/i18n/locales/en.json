@@ -237,7 +237,7 @@
       "description": "Follow the clues from a mystery glass, choose your answers, and reveal the wine at the end.",
       "duration": "2 minutes",
       "noAccount": "No account",
-      "questions": "4 questions",
+      "questions": "6 questions",
       "notice": "This is a simulation: in a real tasting you would have wine in your glass and a questionnaire prepared by the organizer.",
       "start": "Start the demo"
     },
@@ -251,68 +251,7 @@
       "correct": "Correct answer",
       "wrong": "The correct answer was: {answer}"
     },
-    "questions": [
-      {
-        "id": "appearance",
-        "icon": "tasting",
-        "stage": "1. Look",
-        "clue": "The wine has a medium ruby-red color with a slightly garnet rim.",
-        "question": "Which color description is the best match?",
-        "correctId": "ruby",
-        "explanation": "The ruby center and slightly garnet rim suggest a red wine that is no longer very young, but still vibrant.",
-        "options": [
-          {"id": "straw", "label": "Straw yellow"},
-          {"id": "ruby", "label": "Ruby red"},
-          {"id": "purple", "label": "Purple red"},
-          {"id": "amber", "label": "Amber"}
-        ]
-      },
-      {
-        "id": "aromas",
-        "icon": "tasting",
-        "stage": "2. Smell",
-        "clue": "The aromas recall cherry, violet, Mediterranean herbs, and a slightly earthy note.",
-        "question": "Which aroma family is dominant?",
-        "correctId": "redFruit",
-        "explanation": "Cherry and violet point to red fruit and floral notes, a profile found in many Sangiovese wines.",
-        "options": [
-          {"id": "citrus", "label": "Citrus and white flowers"},
-          {"id": "tropical", "label": "Tropical fruit"},
-          {"id": "redFruit", "label": "Red fruit and flowers"},
-          {"id": "oxidative", "label": "Nuts and oxidation"}
-        ]
-      },
-      {
-        "id": "grape",
-        "icon": "question",
-        "stage": "3. Taste",
-        "clue": "The palate is fresh and medium-bodied, with noticeable but fine tannins and a savory finish.",
-        "question": "Which grape is the most likely candidate?",
-        "correctId": "sangiovese",
-        "explanation": "Bright acidity, fine tannins, cherry, and herbs are clues consistent with Sangiovese.",
-        "options": [
-          {"id": "merlot", "label": "Merlot"},
-          {"id": "sangiovese", "label": "Sangiovese"},
-          {"id": "primitivo", "label": "Primitivo"},
-          {"id": "moscato", "label": "Moscato"}
-        ]
-      },
-      {
-        "id": "origin",
-        "icon": "bottle",
-        "stage": "4. Guess",
-        "clue": "Combine the clues: Sangiovese, acidity, cherry, violet, herbs, and a savory finish.",
-        "question": "Which region could this wine come from?",
-        "correctId": "tuscany",
-        "explanation": "The profile points to Tuscany and, in this demo, to a Sangiovese-based Chianti Classico.",
-        "options": [
-          {"id": "tuscany", "label": "Tuscany"},
-          {"id": "mosel", "label": "Mosel"},
-          {"id": "jerez", "label": "Jerez"},
-          {"id": "marlborough", "label": "Marlborough"}
-        ]
-      }
-    ],
+    "tastingClue": "Glass clues: ruby red, cherry and violet, bright acidity, fine tannins, and a savory finish.",
     "result": {
       "eyebrow": "Tasting completed",
       "title": "You revealed the mystery glass",
