@@ -36,6 +36,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.47.1',
+    date: '10 luglio 2026',
+    label: 'Auto',
+    changes: [
+      'share the standard questionnaire with the demo',
+    ],
+  },
+
+  {
     version: '1.47.0',
     date: '10 luglio 2026',
     label: 'Auto',
