@@ -1,7 +1,9 @@
 'use client'
 
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import Image from 'next/image'
 import {useRouter} from 'next/navigation'
+import QRCode from 'qrcode'
 import {supabaseClient} from '@/lib/supabaseClient'
 import {useGameAudio} from '@/app/live/session/[sessionId]/play/hooks/useGameAudio'
 import {TopBar} from '@/app/live/session/[sessionId]/play/components/TopBar'
@@ -15,12 +17,6 @@ import {buildPublicAppUrl} from '@/lib/publicAppUrl'
 import {scrollPageTop} from '@/lib/scrollPageTop'
 import styles from '@/app/live/session/[sessionId]/play/playerLive.module.scss'
 import joinStyles from '@/app/live/session/[sessionId]/playerJoin.module.scss'
-
-const isNeutralQuestion = (question) =>
-  question?.isNeutral === true ||
-  String(question?.kind || '')
-    .trim()
-    .toLowerCase() === 'neutral'
 
 function getStoredPlayer(sessionId) {
   try {
@@ -65,6 +61,7 @@ export default function TableLiveSessionClient({sessionId}) {
   const [error, setError] = useState('')
   const [data, setData] = useState(null)
   const [playerAuth, setPlayerAuth] = useState(null)
+  const [playerAuthReady, setPlayerAuthReady] = useState(false)
   const [selectedAnswers, setSelectedAnswers] = useState({})
   const [checkedQuestions, setCheckedQuestions] = useState({})
   const [roundAnswers, setRoundAnswers] = useState({})
@@ -76,6 +73,8 @@ export default function TableLiveSessionClient({sessionId}) {
   const [leaderboardOpen, setLeaderboardOpen] = useState(false)
   const [exitModalOpen, setExitModalOpen] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [qrOpen, setQrOpen] = useState(false)
+  const [qrDataUrl, setQrDataUrl] = useState('')
   const [overlayStandings, setOverlayStandings] = useState([])
   const [isLoadingStandings, setIsLoadingStandings] = useState(false)
   const [playerMarkedNext, setPlayerMarkedNext] = useState(false)
@@ -87,10 +86,11 @@ export default function TableLiveSessionClient({sessionId}) {
 
   useEffect(() => {
     setPlayerAuth(getStoredPlayer(sessionId))
+    setPlayerAuthReady(true)
   }, [sessionId])
 
   const loadSession = useCallback(async () => {
-    if (inFlightRef.current) return
+    if (!playerAuthReady || inFlightRef.current) return
     inFlightRef.current = true
     try {
       const params = new URLSearchParams({sessionId})
@@ -103,6 +103,10 @@ export default function TableLiveSessionClient({sessionId}) {
       })
       const payload = await response.json().catch(() => null)
       if (!response.ok || !payload?.session) {
+        if (response.status === 403 && payload?.joinUrl) {
+          router.replace(payload.joinUrl)
+          return
+        }
         if (isMountedRef.current) setError(payload?.error || tJoin('sessionNotFound'))
         return
       }
@@ -121,15 +125,46 @@ export default function TableLiveSessionClient({sessionId}) {
         setData(payload)
         setError('')
         const index = payload.session.currentBottleIndex || 0
+        const restoredAnswers = payload.myAnswers || []
+        const restoredSelectedAnswers = {}
+        const restoredCheckedQuestions = {}
+        const restoredRoundAnswers = {}
+
+        for (const answer of restoredAnswers) {
+          restoredSelectedAnswers[answer.question_id] = answer.selected_option_id
+          restoredCheckedQuestions[answer.question_id] = true
+          restoredRoundAnswers[answer.question_id] = {
+            optionId: answer.selected_option_id,
+            isCorrect: answer.is_correct,
+            points: answer.points || 0,
+          }
+        }
+
         if (index !== lastBottleIndexSeen) {
+          const firstUnansweredIndex = (payload.questions || []).findIndex(
+            (question) => !restoredCheckedQuestions[question.id],
+          )
+          const completedRound =
+            restoredAnswers.length > 0 &&
+            firstUnansweredIndex === -1 &&
+            payload.questions?.length > 0
+
           setLastBottleIndexSeen(index)
-          setSlideIndex(0)
-          setClickedReady(false)
-          setSelectedAnswers({})
-          setCheckedQuestions({})
-          setRoundAnswers({})
+          setSlideIndex(
+            completedRound
+              ? Math.max(0, payload.questions.length - 1)
+              : Math.max(0, firstUnansweredIndex),
+          )
+          setClickedReady(completedRound)
+          setSelectedAnswers(restoredSelectedAnswers)
+          setCheckedQuestions(restoredCheckedQuestions)
+          setRoundAnswers(restoredRoundAnswers)
           setPlayerMarkedNext(false)
           setPendingAction('')
+        } else if (restoredAnswers.length > 0) {
+          setSelectedAnswers((current) => ({...current, ...restoredSelectedAnswers}))
+          setCheckedQuestions((current) => ({...current, ...restoredCheckedQuestions}))
+          setRoundAnswers((current) => ({...current, ...restoredRoundAnswers}))
         }
 
         if (payload.session.status === 'finished') {
@@ -142,7 +177,15 @@ export default function TableLiveSessionClient({sessionId}) {
       if (isMountedRef.current) setLoading(false)
       inFlightRef.current = false
     }
-  }, [sessionId, playerAuth?.playerId, playerAuth?.playerToken, lastBottleIndexSeen, tJoin])
+  }, [
+    sessionId,
+    playerAuth?.playerId,
+    playerAuth?.playerToken,
+    playerAuthReady,
+    lastBottleIndexSeen,
+    router,
+    tJoin,
+  ])
 
   useEffect(() => {
     isMountedRef.current = true
@@ -339,21 +382,7 @@ export default function TableLiveSessionClient({sessionId}) {
   const handleCheck = async (questionId, optionId) => {
     if (!playerAuth || !questionId || !optionId || checkedQuestions[questionId] || checking)
       return false
-    const currentQuestion = questions.find((question) => question.id === questionId)
-    const isNeutral = isNeutralQuestion(currentQuestion)
     setChecking(true)
-    const correctOptionId = data?.correctOptionByQuestion?.[questionId]
-    const isCorrect = isNeutral ? null : correctOptionId === optionId
-    const points = isCorrect === true ? 10 : 0
-    if (shouldRevealAnswersInstantly) {
-      if (isCorrect === true) playSound('correct')
-      else if (isCorrect === false) playSound('wrong')
-    }
-    setCheckedQuestions((prev) => ({...prev, [questionId]: true}))
-    setRoundAnswers((prev) => ({
-      ...prev,
-      [questionId]: {optionId, isCorrect, points},
-    }))
     try {
       const response = await fetch('/api/table-live/round-answer', {
         method: 'POST',
@@ -368,40 +397,34 @@ export default function TableLiveSessionClient({sessionId}) {
       })
       const payload = await response.json().catch(() => null)
       if (!response.ok) {
-        setCheckedQuestions((prev) => {
-          const next = {...prev}
-          delete next[questionId]
-          return next
-        })
-        setRoundAnswers((prev) => {
-          const next = {...prev}
-          delete next[questionId]
-          return next
-        })
         setError(payload?.error || tJoin('answerFailed'))
         return false
       }
+      if (shouldRevealAnswersInstantly) {
+        if (payload?.isCorrect === true) playSound('correct')
+        else if (payload?.isCorrect === false) playSound('wrong')
+      }
+      setCheckedQuestions((prev) => ({...prev, [questionId]: true}))
       setRoundAnswers((prev) => ({
         ...prev,
         [questionId]: {
           optionId,
           isCorrect: payload?.isCorrect ?? null,
-          points: payload?.points || points,
+          points: payload?.points || 0,
         },
       }))
-      loadSession()
+      if (payload?.correctOptionId) {
+        setData((currentData) => ({
+          ...currentData,
+          correctOptionByQuestion: {
+            ...(currentData?.correctOptionByQuestion || {}),
+            [questionId]: payload.correctOptionId,
+          },
+        }))
+      }
+      await loadSession()
       return true
     } catch {
-      setCheckedQuestions((prev) => {
-        const next = {...prev}
-        delete next[questionId]
-        return next
-      })
-      setRoundAnswers((prev) => {
-        const next = {...prev}
-        delete next[questionId]
-        return next
-      })
       setError(tJoin('networkError'))
       return false
     } finally {
@@ -423,7 +446,7 @@ export default function TableLiveSessionClient({sessionId}) {
   }
 
   const handleNextBottle = async () => {
-    if (!allPlayersCompletedThisRound || pendingAction) return
+    if (!allPlayersCompletedThisRound || pendingAction || !playerAuth) return
     if (!data?.me?.isHost) {
       setPlayerMarkedNext(true)
       return
@@ -431,18 +454,30 @@ export default function TableLiveSessionClient({sessionId}) {
     playSound('bottleCompleted')
     setPendingAction('nextBottle')
     try {
-      await fetch('/api/table-live/advance-auto', {
+      const response = await fetch('/api/table-live/advance-auto', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({sessionId}),
+        body: JSON.stringify({
+          sessionId,
+          playerId: playerAuth.playerId,
+          playerToken: playerAuth.playerToken,
+        }),
       })
+      const payload = await response.json().catch(() => null)
+      if (!response.ok || payload?.advanced !== true) {
+        setError(payload?.error || tJoin('advanceFailed'))
+        setPendingAction('')
+      }
     } catch {
-      if (isMountedRef.current) setPendingAction('')
+      if (isMountedRef.current) {
+        setError(tJoin('networkError'))
+        setPendingAction('')
+      }
     }
   }
 
   const handleFinalLeaderboard = async () => {
-    if (!allPlayersCompletedThisRound || pendingAction) return
+    if (!allPlayersCompletedThisRound || pendingAction || !playerAuth) return
     if (!data?.me?.isHost) {
       setPlayerMarkedNext(true)
       return
@@ -450,15 +485,25 @@ export default function TableLiveSessionClient({sessionId}) {
     playSound('bottleCompleted')
     setPendingAction('leaderboard')
     try {
-      await fetch('/api/table-live/advance-auto', {
+      const response = await fetch('/api/table-live/advance-auto', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({sessionId}),
+        body: JSON.stringify({
+          sessionId,
+          playerId: playerAuth.playerId,
+          playerToken: playerAuth.playerToken,
+        }),
       })
-    } catch {
-      // Fallback to leaderboard anyway so players can continue.
-    } finally {
+      const payload = await response.json().catch(() => null)
+      if (!response.ok || (payload?.advanced !== true && payload?.reason !== 'already_finished')) {
+        setError(payload?.error || tJoin('advanceFailed'))
+        setPendingAction('')
+        return
+      }
       router.push(`/table-live/session/${sessionId}/leaderboard`)
+    } catch {
+      setError(tJoin('networkError'))
+      setPendingAction('')
     }
   }
 
@@ -468,14 +513,42 @@ export default function TableLiveSessionClient({sessionId}) {
     }
   }, [data?.session?.status, router, sessionId])
 
+  useEffect(() => {
+    if (data?.session?.status !== 'expired') return
+    localStorage.removeItem(`table_live_player_${sessionId}`)
+    const slug = data?.event?.slug
+    router.replace(slug ? `/table-live/event/${slug}` : '/')
+  }, [data?.event?.slug, data?.session?.status, router, sessionId])
+
   const goEvent = () => {
     const slug = data?.event?.slug
     router.push(slug ? `/table-live/event/${slug}` : '/')
   }
   const sessionLink = useMemo(
-    () => buildPublicAppUrl(`/table-live/session/${sessionId}`),
-    [sessionId],
+    () =>
+      data?.event?.slug && data?.session?.joinCode
+        ? buildPublicAppUrl(
+            `/table-live/event/${data.event.slug}/join?code=${encodeURIComponent(data.session.joinCode)}`,
+          )
+        : buildPublicAppUrl(`/table-live/session/${sessionId}`),
+    [data?.event?.slug, data?.session?.joinCode, sessionId],
   )
+
+  useEffect(() => {
+    let cancelled = false
+
+    QRCode.toDataURL(sessionLink, {width: 320, margin: 1, errorCorrectionLevel: 'M'})
+      .then((url) => {
+        if (!cancelled) setQrDataUrl(url)
+      })
+      .catch(() => {
+        if (!cancelled) setQrDataUrl('')
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [sessionLink])
 
   const handleCopyLink = async () => {
     try {
@@ -509,9 +582,23 @@ export default function TableLiveSessionClient({sessionId}) {
     )
   }
 
-  const exitGame = () => {
-    localStorage.removeItem(`table_live_player_${sessionId}`)
-    goEvent()
+  const exitGame = async () => {
+    try {
+      if (playerAuth) {
+        await fetch('/api/table-live/session/leave', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            sessionId,
+            playerId: playerAuth.playerId,
+            playerToken: playerAuth.playerToken,
+          }),
+        })
+      }
+    } finally {
+      localStorage.removeItem(`table_live_player_${sessionId}`)
+      goEvent()
+    }
   }
 
   const overlays = topBarPlayer ? (
@@ -613,6 +700,9 @@ export default function TableLiveSessionClient({sessionId}) {
             <button className="btn neutral btn-small" onClick={handleShareLink}>
               {tJoin('shareLink')}
             </button>
+            <button className="btn neutral btn-small" onClick={() => setQrOpen(true)}>
+              {tJoin('qr')}
+            </button>
           </div>
           {data.players.length ? (
             <div className={styles.lobbyPlayersSection}>
@@ -650,6 +740,29 @@ export default function TableLiveSessionClient({sessionId}) {
             </div>
           </>
         ) : null}
+        {qrOpen ? (
+          <div className={joinStyles.qrOverlay} onClick={() => setQrOpen(false)}>
+            <div className={joinStyles.qrModal} onClick={(event) => event.stopPropagation()}>
+              <h3>{tJoin('qrTitle')}</h3>
+              {qrDataUrl ? (
+                <Image
+                  src={qrDataUrl}
+                  alt={tJoin('qrTitle')}
+                  className={joinStyles.qrImage}
+                  width={280}
+                  height={280}
+                  unoptimized
+                />
+              ) : (
+                <p className={joinStyles.qrHint}>{tJoin('qrLoading')}</p>
+              )}
+              <p className={joinStyles.qrLink}>{sessionLink}</p>
+              <button className="btn neutral btn-small" onClick={() => setQrOpen(false)}>
+                {tJoin('close')}
+              </button>
+            </div>
+          </div>
+        ) : null}
         {mergedOverlays}
       </div>
     )
@@ -681,6 +794,7 @@ export default function TableLiveSessionClient({sessionId}) {
         currentPlayerData={topBarPlayer}
         onNextBottle={() => {}}
         onViewLeaderboard={() => router.push(`/table-live/session/${sessionId}/leaderboard`)}
+        standingsEndpoint="/api/table-live/session/standings"
         topBar={
           <TopBar
             playerData={topBarPlayer}
@@ -728,6 +842,7 @@ export default function TableLiveSessionClient({sessionId}) {
         onNextBottle={handleNextBottle}
         onViewLeaderboard={handleFinalLeaderboard}
         isActionPending={Boolean(pendingAction)}
+        standingsEndpoint="/api/table-live/session/standings"
         topBar={
           <TopBar
             playerData={topBarPlayer}

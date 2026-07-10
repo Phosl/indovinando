@@ -103,6 +103,35 @@
 - [ ] Ordine per `liveTotalScore` decrescente
 - [ ] `roundPoints` > 0 solo durante `waiting_answers` / `showing_results`
 
+## Table-live end-to-end
+
+- [ ] Avviare l'app locale e scegliere uno slug evento attivo dedicato ai test
+- [ ] Eseguire `npm run check:table-live -- <event-slug> <base-url>`
+- [ ] Verificare esito `ok: true` per modalità `instant` e `end`
+- [ ] Verificare manualmente su mobile QR, condivisione, refresh e uscita dalla partita
+
+## Motion e skeleton
+
+- [ ] Dashboard → degustazioni → dettaglio: transizione fluida senza flash o scroll orizzontale
+- [ ] Classifiche → dettaglio vino → indietro: direzione avanti/indietro coerente
+- [ ] Profilo → crediti / partite / preferenze: top bar stabile e skeleton senza salti di layout
+- [ ] Table-live evento → join → sessione: loading coerente e bottom action non tagliata
+- [ ] Con “Riduci movimento” attivo: nessun movimento pagina o shimmer continuo
+
+## Demo pubblica (`/demo`)
+
+- [ ] Aprire la demo senza login dalla landing
+- [ ] Completare tutte e quattro le domande con risposte corrette e sbagliate
+- [ ] Verificare feedback, spiegazioni, punteggio e rivelazione finale
+- [ ] Aprire la classifica durante ogni domanda e verificare gli aggiornamenti degli avversari
+- [ ] Verificare ordinamento dinamico, posizione del giocatore e punteggio massimo di 40 punti
+- [ ] Attivare/disattivare i suoni e verificare audio/vibrazione su risposta corretta, errata e fine bottiglia
+- [ ] Aprire “Esci”, annullare e poi confermare l’uscita
+- [ ] Rigiocare e verificare il reset completo della partita
+- [ ] Cambiare lingua e verificare testi e domande in italiano/inglese
+- [ ] Da utente loggato aprire la demo dalla dashboard e tornare correttamente alla dashboard
+- [ ] CTA finale porta ad autenticazione/creazione degustazione
+
 ---
 
 ## 🎓 Corso Vino (`/corso-vino`)

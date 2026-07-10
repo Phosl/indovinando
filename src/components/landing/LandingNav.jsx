@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import {useEffect, useMemo, useRef, useState} from 'react'
 import {usePathname} from 'next/navigation'
 import styles from './LandingPage.module.scss'
@@ -49,6 +50,7 @@ export default function LandingNav({text = {}}) {
   const howItWorksActive = pathname === '/' && currentHash === '#come-funziona'
   const partnersActive = pathname === '/partner' || pathname.startsWith('/partner/')
   const rankingsActive = pathname === '/classifiche'
+  const demoActive = pathname === '/demo'
   const loginActive = pathname === '/auth'
 
   const navLinkClassName = (isActive) =>
@@ -62,7 +64,14 @@ export default function LandingNav({text = {}}) {
       <header ref={navWrapRef} className={styles.navWrap}>
         <div className={styles.navInner}>
           <Link href="/" className={styles.navBrand}>
-            <img src="/logo-header.svg" alt="Indovinando" className={styles.navLogo} />
+            <Image
+              src="/logo-header.svg"
+              alt="Indovinando"
+              className={styles.navLogo}
+              width={520}
+              height={153}
+              priority
+            />
           </Link>
 
           <button
@@ -82,7 +91,13 @@ export default function LandingNav({text = {}}) {
           <div className={styles.menuPanel}>
             <div className={styles.menuHeader}>
               <Link href="/" className={styles.navBrand} onClick={closeMenu}>
-                <img src="/logo-header.svg" alt="Indovinando" className={styles.navLogo} />
+                <Image
+                  src="/logo-header.svg"
+                  alt="Indovinando"
+                  className={styles.navLogo}
+                  width={520}
+                  height={153}
+                />
               </Link>
 
               <button
@@ -101,6 +116,9 @@ export default function LandingNav({text = {}}) {
                 onClick={closeMenu}>
                 {text.howItWorks || 'Come funziona'}
               </a>
+              <Link href="/demo" className={navLinkClassName(demoActive)} onClick={closeMenu}>
+                {text.demo || 'Demo'}
+              </Link>
               <Link
                 href="/partner"
                 className={navLinkClassName(partnersActive)}

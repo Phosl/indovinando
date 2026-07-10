@@ -30,6 +30,13 @@ export default async function LandingPage() {
     <main className={styles.landingPage}>
       <LandingNav text={text.nav || {}} />
       <LandingHero text={text.hero || {}} />
+      <LandingCTA
+        text={text.demoPromo || {}}
+        primaryHref="/demo"
+        secondaryHref="#come-funziona"
+        variant="demo"
+        sectionId="demo"
+      />
       <LandingFeatures text={text.features || {}} />
       <LandingForWineShops text={text.audiences || {}} />
       <LandingWineBox />

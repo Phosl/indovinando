@@ -64,7 +64,25 @@ export async function GET(request) {
     }
 
     const hostId = players?.[0]?.id || null
-    const rankedPlayers = [...(players || [])]
+    const me = (players || []).find(
+      (player) => player.id === playerId && player.player_token === playerToken,
+    )
+
+    if (!me) {
+      const eventSlug = session.table_live_events?.slug
+      const joinUrl = eventSlug
+        ? session.status === 'lobby'
+          ? `/table-live/event/${eventSlug}/join?code=${encodeURIComponent(session.join_code)}`
+          : `/table-live/event/${eventSlug}`
+        : null
+      return NextResponse.json(
+        {error: 'Player auth required', joinUrl},
+        {status: 403},
+      )
+    }
+
+    const visiblePlayers = (players || []).filter((player) => player.is_active)
+    const rankedPlayers = [...visiblePlayers]
       .sort((a, b) => {
         if ((b.total_score || 0) !== (a.total_score || 0)) return (b.total_score || 0) - (a.total_score || 0)
         return new Date(a.joined_at).getTime() - new Date(b.joined_at).getTime()
@@ -91,17 +109,6 @@ export async function GET(request) {
       .order('bottle_order')
 
     const currentBottle = (bottles || [])[session.current_bottle_index] || null
-    let correctOptionByQuestion = {}
-    if (currentBottle?.id) {
-      const {data: correctRows} = await db
-        .from('game_bottle_answers')
-        .select('question_id, option_id')
-        .eq('bottle_id', currentBottle.id)
-      correctOptionByQuestion = (correctRows || []).reduce((acc, row) => {
-        acc[row.question_id] = row.option_id
-        return acc
-      }, {})
-    }
 
     const {data: roundAnswersRows} = await db
       .from('table_live_round_answers')
@@ -109,24 +116,47 @@ export async function GET(request) {
       .eq('session_id', sessionId)
       .eq('bottle_index', session.current_bottle_index)
 
-    let myPlayer = null
-    let myAnswers = []
-    if (playerId && playerToken) {
-      const me = (players || []).find((p) => p.id === playerId && p.player_token === playerToken)
-      if (me) {
-        myPlayer = {
-          id: me.id,
-          nickname: me.nickname,
-          isHost: me.id === hostId,
+    const {data: answers} = await db
+      .from('table_live_round_answers')
+      .select('question_id, selected_option_id, is_correct, points')
+      .eq('session_id', sessionId)
+      .eq('player_id', me.id)
+      .eq('bottle_index', session.current_bottle_index)
+    const myAnswers = answers || []
+
+    const answeredQuestionIds = new Set(myAnswers.map((answer) => answer.question_id))
+    const answeredAllQuestions =
+      (questions || []).length > 0 &&
+      (questions || []).every((question) => answeredQuestionIds.has(question.id))
+    const revealAllCorrectAnswers =
+      session.status === 'finished' ||
+      (session.answer_reveal_mode === 'end' && answeredAllQuestions)
+    const revealMyResults =
+      session.answer_reveal_mode === 'instant' || revealAllCorrectAnswers
+    const visibleCorrectAnswerIds = revealAllCorrectAnswers
+      ? new Set((questions || []).map((question) => question.id))
+      : session.answer_reveal_mode === 'instant'
+        ? answeredQuestionIds
+        : new Set()
+
+    let correctOptionByQuestion = {}
+    if (currentBottle?.id && visibleCorrectAnswerIds.size > 0) {
+      const {data: correctRows} = await db
+        .from('game_bottle_answers')
+        .select('question_id, option_id')
+        .eq('bottle_id', currentBottle.id)
+      correctOptionByQuestion = (correctRows || []).reduce((acc, row) => {
+        if (visibleCorrectAnswerIds.has(row.question_id)) {
+          acc[row.question_id] = row.option_id
         }
-        const {data: answers} = await db
-          .from('table_live_round_answers')
-          .select('question_id, selected_option_id, is_correct, points')
-          .eq('session_id', sessionId)
-          .eq('player_id', me.id)
-          .eq('bottle_index', session.current_bottle_index)
-        myAnswers = answers || []
-      }
+        return acc
+      }, {})
+    }
+
+    const myPlayer = {
+      id: me.id,
+      nickname: me.nickname,
+      isHost: me.id === hostId,
     }
 
     return NextResponse.json({
@@ -168,10 +198,24 @@ export async function GET(request) {
           year: b.year,
           bottleOrder: b.bottle_order,
         })) || [],
-      roundAnswers: roundAnswersRows || [],
+      roundAnswers: (roundAnswersRows || []).map((answer) => ({
+        player_id: answer.player_id,
+        question_id: answer.question_id,
+        ...(answer.player_id === me.id
+          ? {
+              selected_option_id: answer.selected_option_id,
+              is_correct: revealMyResults ? answer.is_correct : null,
+              points: revealMyResults ? answer.points : 0,
+            }
+          : {}),
+      })),
       correctOptionByQuestion,
       me: myPlayer,
-      myAnswers,
+      myAnswers: myAnswers.map((answer) => ({
+        ...answer,
+        is_correct: revealMyResults ? answer.is_correct : null,
+        points: revealMyResults ? answer.points : 0,
+      })),
     })
   } catch (error) {
     return NextResponse.json({error: error?.message || 'Unexpected error'}, {status: 500})

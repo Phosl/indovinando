@@ -163,6 +163,7 @@ export default function ProfileClient({
     () => isBusinessProfile(effectiveProfile || {}),
     [effectiveProfile],
   )
+  const hasControlCenterAccess = effectiveProfile?.super_admin === true
 
   useEffect(() => {
     const saved = localStorage.getItem(AVATAR_STORAGE_KEY)
@@ -513,6 +514,22 @@ export default function ProfileClient({
             {t('showMatches')}
           </Link>
         </section>
+
+        {hasControlCenterAccess ? (
+          <section className={`${styles.card} ${styles.controlCenterCard}`}>
+            <div className={styles.controlCenterHeader}>
+              <div>
+                <span className={styles.controlCenterBadge}>{t('controlCenterBadge')}</span>
+                <h2>{t('controlCenterTitle')}</h2>
+              </div>
+              <span className={styles.controlCenterSignal} aria-hidden="true" />
+            </div>
+            <p className={styles.controlCenterHint}>{t('controlCenterHint')}</p>
+            <Link href="/profilo/centralina" className="btn primary btn-small">
+              {t('openControlCenter')}
+            </Link>
+          </section>
+        ) : null}
 
         {/* ── Livello + Statistiche ── */}
         <section className={styles.card}>

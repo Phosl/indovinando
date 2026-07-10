@@ -13,6 +13,8 @@ export const TopBar = memo(function TopBar({
   onToggleAudio,
   onOpenLeaderboard,
   onOpenExit,
+  showAudio = true,
+  showLeaderboard = true,
 }) {
   const t = useT('live.topBar')
 
@@ -26,23 +28,27 @@ export const TopBar = memo(function TopBar({
       </div>
 
       <div className={styles.topActions}>
-        <button
-          type="button"
-          className={styles.audioButton}
-          onClick={onToggleAudio}
-          aria-label={audioEnabled ? t('audioOn') : t('audioOff')}
-          title={audioEnabled ? t('audioOn') : t('audioOff')}>
-          <Icon
-            name={audioEnabled ? 'volumeOn' : 'volumeOff'}
-            size={20}
-            className={styles.topActionIcon}
-          />
-          <span>{audioEnabled ? t('audioOn') : t('audioOff')}</span>
-        </button>
-        <button type="button" className={styles.leaderboardButton} onClick={onOpenLeaderboard}>
-          <Icon name="crown" size={20} className={styles.topActionIcon} />
-          <span>{t('leaderboard')}</span>
-        </button>
+        {showAudio ? (
+          <button
+            type="button"
+            className={styles.audioButton}
+            onClick={onToggleAudio}
+            aria-label={audioEnabled ? t('audioOn') : t('audioOff')}
+            title={audioEnabled ? t('audioOn') : t('audioOff')}>
+            <Icon
+              name={audioEnabled ? 'volumeOn' : 'volumeOff'}
+              size={20}
+              className={styles.topActionIcon}
+            />
+            <span>{audioEnabled ? t('audioOn') : t('audioOff')}</span>
+          </button>
+        ) : null}
+        {showLeaderboard ? (
+          <button type="button" className={styles.leaderboardButton} onClick={onOpenLeaderboard}>
+            <Icon name="crown" size={20} className={styles.topActionIcon} />
+            <span>{t('leaderboard')}</span>
+          </button>
+        ) : null}
         <button
           type="button"
           className={styles.exitButton}

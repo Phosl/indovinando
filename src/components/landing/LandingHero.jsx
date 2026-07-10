@@ -42,9 +42,9 @@ export default function LandingHero({text = {}}) {
               {text.primaryCta || 'Prova gratis'}
             </Link>
 
-            <a href="#come-funziona" className="btn tertiary btn-inline">
-              {text.secondaryCta || 'Scopri come funziona'}
-            </a>
+            <Link href="/demo" className="btn tertiary btn-inline">
+              {text.secondaryCta || 'Gioca la demo'}
+            </Link>
           </div>
 
           <ul className={styles.heroProofList} aria-label={text.proofLabel || 'Cosa puoi fare con Indovinando'}>

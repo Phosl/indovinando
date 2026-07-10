@@ -15,7 +15,7 @@
     text-align: center;
     margin: 0;
     font-size: 1.6rem;
-    font-weight: 900;
+    font-weight: 800;
     color: var(--text-primary);
   }
 }
@@ -380,8 +380,75 @@
 
 .shareButtons {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
   margin-top: 12px;
   width: 100%;
+
+  button {
+    flex: 1 1 112px;
+    min-height: 46px;
+    padding: 11px 16px;
+    font-size: 0.95rem;
+    font-weight: 800;
+  }
+}
+
+.qrOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--app-toast-z-index, 1100);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(20, 20, 20, 0.55);
+}
+
+.qrModal {
+  width: min(420px, 100%);
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  padding: 22px;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 20px;
+  background: var(--foreground);
+  color: var(--text-primary);
+  box-shadow: 0 6px 0 var(--gray-light);
+  text-align: center;
+
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-primary);
+  }
+}
+
+.qrImage {
+  width: min(280px, 100%);
+  height: auto;
+  padding: 10px;
+  border: 1px solid var(--gray-light);
+  border-radius: 18px;
+  background: var(--white);
+}
+
+.qrHint {
+  margin: 0;
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.qrLink {
+  width: 100%;
+  margin: 0;
+  padding: 8px 10px;
+  overflow-wrap: anywhere;
+  border-radius: 10px;
+  background: var(--background);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 700;
 }

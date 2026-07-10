@@ -54,6 +54,26 @@ export default function DashboardClient({dashboardDict, lang, userEmail}) {
           />
 
           <Link
+            href="/demo"
+            className={`${styles.sectionCard} ${styles.sectionCardSecondary} ${styles.sectionCardBottomArrow}`}>
+            <div className={styles.sectionCardInfo}>
+              <span className={styles.sectionCardEyebrow}>
+                {dashboardDict.demoEyebrow || 'Gioca subito'}
+              </span>
+              <h3>{dashboardDict.demoTitle || 'Prova la demo'}</h3>
+              <p>
+                {dashboardDict.demoDescription ||
+                  'Scopri come funziona una degustazione alla cieca con una partita guidata.'}
+              </p>
+            </div>
+            <div className={styles.sectionCardArrowRail} aria-hidden="true">
+              <span className={`btn icon-circle ${styles.sectionCardArrowBtn}`}>
+                <Icon name="forward" size={22} className={styles.sectionCardArrowIcon} />
+              </span>
+            </div>
+          </Link>
+
+          <Link
             href="/corso-vino"
             className={`${styles.sectionCard} ${styles.sectionCardFifteenthary} ${styles.sectionCardBottomArrow}`}>
             <div className={styles.sectionCardInfo}>

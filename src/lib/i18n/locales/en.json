@@ -55,6 +55,9 @@
     "createGameCardTitle": "Create a new tasting",
     "createGameCardDescription": "Start creating your new tasting and share it with your friends.",
     "createGameCardAction": "Create",
+    "demoEyebrow": "Play now",
+    "demoTitle": "Try the demo",
+    "demoDescription": "See how a blind tasting works with a guided 2-minute game.",
     "communityEyebrow": "Community",
     "rankingsTitle": "Public rankings",
     "rankingsDescription": "See which wines are emerging from the community’s real tastings.",
@@ -87,6 +90,7 @@
     "nav": {
       "ariaLabel": "Landing menu",
       "howItWorks": "How it works",
+      "demo": "Demo",
       "partners": "Explore partners",
       "rankings": "Rankings",
       "login": "Log in"
@@ -96,7 +100,7 @@
       "title": "Create and organize blind wine tastings",
       "subtitle": "Prepare the quiz, invite participants, and start the tasting.",
       "primaryCta": "Try for free",
-      "secondaryCta": "See how it works",
+      "secondaryCta": "Play the demo",
       "imageAlt": "Blind wine tasting with Indovinando",
       "proofLabel": "What you can do with Indovinando",
       "proofItems": [
@@ -195,7 +199,20 @@
       "title": "Your next tasting can start here.",
       "description": "Prepare the wines, share the QR code, and let Indovinando keep the game, sheets, leaderboards, and ratings together.",
       "primaryCta": "Start free",
-      "secondaryCta": "See how it works"
+      "secondaryCta": "Play the demo"
+    },
+    "demoPromo": {
+      "eyebrow": "Try it now",
+      "title": "Understand Indovinando by playing",
+      "description": "Join a mini blind tasting and try the same experience as participants, with no account and nothing to prepare.",
+      "primaryCta": "Play the demo",
+      "secondaryCta": "How it works",
+      "proofItems": [
+        "2 minutes",
+        "5 simulated opponents",
+        "Live leaderboard",
+        "Sounds and instant feedback"
+      ]
     },
     "globalStats": {
       "eyebrow": "Community",
@@ -209,6 +226,104 @@
         "activeUsers": "active users",
         "analyzedWines": "wines analyzed by Indovinando AI"
       }
+    }
+  },
+  "demo": {
+    "title": "Demo",
+    "playerName": "Demo guest",
+    "intro": {
+      "eyebrow": "Interactive demo",
+      "title": "Try a blind wine tasting",
+      "description": "Follow the clues from a mystery glass, choose your answers, and reveal the wine at the end.",
+      "duration": "2 minutes",
+      "noAccount": "No account",
+      "questions": "4 questions",
+      "notice": "This is a simulation: in a real tasting you would have wine in your glass and a questionnaire prepared by the organizer.",
+      "start": "Start the demo"
+    },
+    "playing": {
+      "mysteryGlass": "Mystery glass",
+      "counter": "Question {current} of {total}",
+      "yourAnswer": "Your answer",
+      "confirm": "Confirm answer",
+      "continue": "Continue",
+      "showResult": "Reveal the wine",
+      "correct": "Correct answer",
+      "wrong": "The correct answer was: {answer}"
+    },
+    "questions": [
+      {
+        "id": "appearance",
+        "icon": "tasting",
+        "stage": "1. Look",
+        "clue": "The wine has a medium ruby-red color with a slightly garnet rim.",
+        "question": "Which color description is the best match?",
+        "correctId": "ruby",
+        "explanation": "The ruby center and slightly garnet rim suggest a red wine that is no longer very young, but still vibrant.",
+        "options": [
+          {"id": "straw", "label": "Straw yellow"},
+          {"id": "ruby", "label": "Ruby red"},
+          {"id": "purple", "label": "Purple red"},
+          {"id": "amber", "label": "Amber"}
+        ]
+      },
+      {
+        "id": "aromas",
+        "icon": "tasting",
+        "stage": "2. Smell",
+        "clue": "The aromas recall cherry, violet, Mediterranean herbs, and a slightly earthy note.",
+        "question": "Which aroma family is dominant?",
+        "correctId": "redFruit",
+        "explanation": "Cherry and violet point to red fruit and floral notes, a profile found in many Sangiovese wines.",
+        "options": [
+          {"id": "citrus", "label": "Citrus and white flowers"},
+          {"id": "tropical", "label": "Tropical fruit"},
+          {"id": "redFruit", "label": "Red fruit and flowers"},
+          {"id": "oxidative", "label": "Nuts and oxidation"}
+        ]
+      },
+      {
+        "id": "grape",
+        "icon": "question",
+        "stage": "3. Taste",
+        "clue": "The palate is fresh and medium-bodied, with noticeable but fine tannins and a savory finish.",
+        "question": "Which grape is the most likely candidate?",
+        "correctId": "sangiovese",
+        "explanation": "Bright acidity, fine tannins, cherry, and herbs are clues consistent with Sangiovese.",
+        "options": [
+          {"id": "merlot", "label": "Merlot"},
+          {"id": "sangiovese", "label": "Sangiovese"},
+          {"id": "primitivo", "label": "Primitivo"},
+          {"id": "moscato", "label": "Moscato"}
+        ]
+      },
+      {
+        "id": "origin",
+        "icon": "bottle",
+        "stage": "4. Guess",
+        "clue": "Combine the clues: Sangiovese, acidity, cherry, violet, herbs, and a savory finish.",
+        "question": "Which region could this wine come from?",
+        "correctId": "tuscany",
+        "explanation": "The profile points to Tuscany and, in this demo, to a Sangiovese-based Chianti Classico.",
+        "options": [
+          {"id": "tuscany", "label": "Tuscany"},
+          {"id": "mosel", "label": "Mosel"},
+          {"id": "jerez", "label": "Jerez"},
+          {"id": "marlborough", "label": "Marlborough"}
+        ]
+      }
+    ],
+    "result": {
+      "eyebrow": "Tasting completed",
+      "title": "You revealed the mystery glass",
+      "perfectTitle": "Perfect tasting",
+      "description": "You just tried the core of Indovinando: observe, answer, learn, and reveal the wine. The other five players in the leaderboard are simulated.",
+      "scoreLabel": "{correct} correct answers out of {total}",
+      "revealEyebrow": "The demo wine",
+      "wineName": "Chianti Classico DOCG",
+      "wineDetails": "Sangiovese · Tuscany · red wine",
+      "primaryCta": "Create your tasting",
+      "replay": "Play again"
     }
   },
   "partnerDirectory": {
@@ -1085,6 +1200,11 @@
       "copyLink": "Copy link",
       "copied": "Copied",
       "shareLink": "Share",
+      "qr": "QR",
+      "qrTitle": "Scan to join",
+      "qrLoading": "Loading QR...",
+      "close": "Close",
+      "advanceFailed": "Unable to advance the game. Try again.",
       "nicknameLabel": "Nickname",
       "nicknameMin": "Nickname must be at least 2 characters",
       "nicknameTaken": "This nickname is already used in this game!",
@@ -1261,6 +1381,10 @@
     "chooseAvatar": "Choose your avatar",
     "preferences": "Preferences",
     "credits": "Credits",
+    "controlCenterBadge": "Super admin",
+    "controlCenterTitle": "App control center",
+    "controlCenterHint": "Check services, configuration, operational metrics and critical tests from one place.",
+    "openControlCenter": "Open control center",
     "editPreferences": "Edit",
     "yourStats": "Your stats",
     "gamesCreated": "Games created",

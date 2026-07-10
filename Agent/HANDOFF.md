@@ -1,6 +1,6 @@
 # Handoff — Indovinando
 
-Ultimo aggiornamento: 2026-06-21
+Ultimo aggiornamento: 2026-07-10
 
 ## Stato generale
 
@@ -13,6 +13,59 @@ Ultimo aggiornamento: 2026-06-21
   - `ns` = prossimo step.
 
 ## Feature implementate di recente
+
+### Checkpoint 2026-07-10 — demo pubblica
+
+- Aggiunta route pubblica `/demo`, disponibile senza login e senza scritture su database.
+- La demo simula una mini degustazione alla cieca in quattro passaggi: osserva, annusa, assaggia e indovina.
+- Il gioco riusa direttamente `TopBar`, `QuestionSlideScreen` e `ResultsScreen` del flusso table-live: grafica e interazioni restano identiche alla partita reale.
+- Audio, vibrazione, toggle suoni, classifica bottom-sheet e conferma uscita riusano `useGameAudio` e `GameOverlays` del table-live.
+- Cinque avversari simulati aggiornano i punteggi con tempi sfalsati durante le domande; la classifica aperta cambia in tempo reale.
+- Punteggio allineato al table-live: `10` punti per risposta corretta, `0` per risposta errata e nessuna combo.
+- Ogni risposta mostra il feedback reale del gioco; al termine vengono mostrati riepilogo, punteggio e vino rivelato.
+- Aggiunti accessi dalla landing, dal menu landing e dalla dashboard degli utenti registrati.
+- Aggiunta sezione promozionale subito sotto l'hero della landing, riusando `LandingCTA`, con vantaggi concreti e CTA primaria verso `/demo`.
+- CTA finale verso la creazione di una degustazione e possibilità di rigiocare immediatamente.
+- Contenuti completi in italiano e inglese; UI responsive e compatibile con `prefers-reduced-motion`.
+- Build production, lint e validazione JSON completati senza errori.
+
+### Checkpoint 2026-07-10 — centralina super-admin
+
+- Aggiunta pagina protetta `/profilo/centralina`, visibile dal profilo solo ai super-admin.
+- La centralina mostra stato generale, versione deploy, ambiente e regione senza esporre secret.
+- Aggiunti controlli rapidi e approfonditi, tutti in sola lettura, per configurazione, database, Storage e servizi principali.
+- Aggiunte metriche operative su utenti, degustazioni, partner, partite live, scansioni AI e ordini crediti.
+- Integrato test on-demand di OpenAI Vision tramite endpoint super-admin già esistente.
+- Integrato il report table-live più recente e una checklist manuale mobile/PWA salvata localmente nel browser.
+- Aggiunti collegamenti rapidi ad amministrazione, crediti, landing interna e changelog.
+- Nuova API protetta `GET /api/admin/control-center?scope=quick|deep`; una richiesta non autenticata restituisce `403`.
+- Validazione completata con lint mirato, `git diff --check` e build production Next.js.
+
+### Checkpoint 2026-07-10 — motion e skeleton
+
+- Transizioni pagina uniformate con `transform` + `opacity`, easing condiviso e uscita breve prima della navigazione.
+- Navigazione con `prefers-reduced-motion` senza animazioni o ritardi artificiali.
+- Shimmer degli skeleton reso più morbido; card e frame entrano con una breve animazione condivisa.
+- Aggiunto `PageSkeleton` riutilizzabile per evitare nuovi loading duplicati.
+- Aggiunti loading dedicati a classifiche, dettaglio vino, sottosezioni profilo, table-live e area admin/corsi.
+- Build e lint mirato completati senza errori; resta il controllo visuale finale su iPhone/PWA reale.
+
+### Checkpoint 2026-07-10 — table-live
+
+Report completo: `Agent/TABLE_LIVE_TEST_REPORT_2026_07_10.md`.
+
+- Flusso table-live verificato end-to-end nelle modalità `instant` e `end` con host e guest.
+- Link e QR della lobby ora aprono direttamente il join dell'evento con codice partita già compilato.
+- Accesso diretto alla sessione senza token giocatore reindirizza al join senza esporre domande o soluzioni.
+- Risposte corrette non sono più disponibili prima del momento previsto dalla modalità scelta.
+- Invio risposta validato lato server: domanda e opzione devono appartenere al gioco; una risposta confermata non può essere cambiata.
+- Refresh durante la partita ripristina risposte, domanda corrente e riepilogo del round.
+- Avanzamento round consentito solo all'host e protetto contro chiamate duplicate concorrenti.
+- Nuovi partecipanti non possono entrare dopo l'avvio della partita.
+- Uscita volontaria guest aggiorna `is_active` e non blocca più il round; uscita host chiude la sessione.
+- Riepilogo table-live usa l'endpoint classifiche table-live invece di quello del vecchio live.
+- Aggiunto smoke test riutilizzabile `npm run check:table-live -- <event-slug> <base-url>` con cleanup automatico.
+- Scelta `risposte subito` / `risposte alla fine` ingrandita e resa più comoda su mobile.
 
 ### Checkpoint 2026-06-21
 
@@ -140,6 +193,7 @@ Nota: `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` è normale che sia visibile al browser, 
 ```bash
 npm run dev
 npm run build
+npm run check:table-live -- <event-slug> <base-url>
 npx eslint <file>
 git diff --check
 stripe listen --forward-to localhost:3000/api/stripe/webhook
@@ -193,7 +247,7 @@ Per Stripe locale:
 3. Valutare cleanup periodico immagini automatic tasting con TTL 1 giorno.
 4. Rimuovere definitivamente vecchi flussi live/enoteca quando la modalità unica è confermata.
 5. Aggiungere storico transazioni admin/super-admin solo se serve davvero.
-6. Migliorare opzione “risposte alla fine” nel table-live con reveal finale completo.
+6. Valutare una presenza/heartbeat per i giocatori che chiudono forzatamente la pagina senza usare “Esci”.
 7. Drag&drop bottiglie/domande: lasciare stabile la versione attuale, evitare nuove animazioni pesanti.
 
 ## Note operative

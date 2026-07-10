@@ -1,0 +1,284 @@
+.page {
+  min-height: 100dvh;
+  width: 100%;
+  padding: 0 20px 112px;
+  background: var(--background);
+}
+
+.container {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  display: grid;
+  gap: 16px;
+}
+
+.topBar {
+  min-height: 62px;
+  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 12px;
+}
+
+.topBarButton,
+.topBarAction {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+}
+
+.topBarTitle {
+  width: min(220px, 64%);
+  height: 20px;
+  margin: 0 auto;
+}
+
+.hero {
+  min-height: 188px;
+  padding: 24px;
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  border-radius: 20px;
+  animation-delay: 30ms;
+}
+
+.eyebrow {
+  width: 96px;
+  height: 12px;
+  border-radius: 999px;
+}
+
+.heroTitle {
+  width: min(440px, 76%);
+  height: 32px;
+}
+
+.heroLineWide,
+.cardLineWide {
+  width: min(620px, 92%);
+  height: 14px;
+}
+
+.heroLine,
+.cardLine {
+  width: min(480px, 72%);
+  height: 14px;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pill,
+.pillShort,
+.pillTiny {
+  height: 26px;
+  border-radius: 999px;
+}
+
+.pill {
+  width: 126px;
+}
+
+.pillShort {
+  width: 92px;
+}
+
+.pillTiny {
+  width: 64px;
+}
+
+.list,
+.grid {
+  display: grid;
+  gap: 14px;
+}
+
+.list > :nth-child(1),
+.grid > :nth-child(1) {
+  animation-delay: 45ms;
+}
+
+.list > :nth-child(2),
+.grid > :nth-child(2) {
+  animation-delay: 75ms;
+}
+
+.list > :nth-child(3),
+.grid > :nth-child(3) {
+  animation-delay: 105ms;
+}
+
+.list > :nth-child(n + 4),
+.grid > :nth-child(n + 4) {
+  animation-delay: 135ms;
+}
+
+.grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.card {
+  min-height: 132px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 16px;
+  border-radius: 18px;
+}
+
+.cardCompact {
+  min-height: 190px;
+  grid-template-columns: 1fr;
+}
+
+.cardMedia {
+  width: 88px;
+  height: 88px;
+  border-radius: 18px;
+}
+
+.cardCompact .cardMedia {
+  width: 64px;
+  height: 64px;
+}
+
+.cardContent {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: 10px;
+}
+
+.cardTitle {
+  width: min(280px, 68%);
+  height: 21px;
+}
+
+.detailCard {
+  min-height: 290px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: minmax(150px, 220px) minmax(0, 1fr);
+  gap: 20px;
+  border-radius: 20px;
+  animation-delay: 60ms;
+}
+
+.detailMedia {
+  width: 100%;
+  min-height: 248px;
+  border-radius: 18px;
+}
+
+.detailContent {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+}
+
+.detailTitle {
+  width: min(360px, 72%);
+  height: 28px;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.detailStat {
+  height: 72px;
+  border-radius: 14px;
+}
+
+.formCard {
+  padding: 22px;
+  display: grid;
+  gap: 18px;
+  border-radius: 20px;
+  animation-delay: 45ms;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.fieldLabel {
+  width: 120px;
+  height: 13px;
+}
+
+.fieldInput {
+  width: 100%;
+  height: 50px;
+  border-radius: 12px;
+}
+
+.formButton {
+  width: min(220px, 100%);
+  height: 48px;
+  border-radius: 999px;
+}
+
+.bottomAction {
+  position: fixed;
+  z-index: 35;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  border-radius: 18px 18px 0 0;
+}
+
+.bottomButton {
+  width: min(320px, 100%);
+  height: 52px;
+  margin-left: auto;
+  border-radius: 999px;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-inline: 12px;
+  }
+
+  .container {
+    gap: 12px;
+  }
+
+  .hero {
+    min-height: 164px;
+    padding: 20px 16px;
+  }
+
+  .heroTitle {
+    width: 86%;
+    height: 28px;
+  }
+
+  .card {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .cardMedia {
+    width: 72px;
+    height: 72px;
+  }
+
+  .detailCard {
+    grid-template-columns: 1fr;
+  }
+
+  .detailMedia {
+    min-height: 190px;
+  }
+}

@@ -48,7 +48,7 @@ export async function POST(request) {
       return NextResponse.json({error: 'Session not found'}, {status: 404})
     }
 
-    if (session.status === 'finished' || session.status === 'expired') {
+    if (session.status !== 'lobby') {
       return NextResponse.json({error: 'Session closed'}, {status: 409})
     }
 
@@ -65,6 +65,7 @@ export async function POST(request) {
       .select('id')
       .eq('session_id', session.id)
       .eq('nickname', nickname)
+      .eq('is_active', true)
       .maybeSingle()
 
     if (existingNick) {

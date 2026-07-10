@@ -3,8 +3,12 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {usePathname, useRouter} from 'next/navigation'
 
-const LEAVE_MS = 0
-const RECOVERY_MS = 1200
+const LEAVE_MS = 90
+const RECOVERY_MS = 1500
+
+function prefersReducedMotion() {
+  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true
+}
 
 function shouldIgnoreClick(event) {
   return (
@@ -132,6 +136,8 @@ export default function PageTransitionShell({children}) {
 
       queueDirection(anchor.dataset.navDirection)
       prefetchHref(nextHref)
+
+      if (prefersReducedMotion()) return
 
       event.preventDefault()
       transitionLockRef.current = true

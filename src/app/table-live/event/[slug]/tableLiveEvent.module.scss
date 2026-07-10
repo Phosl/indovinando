@@ -175,10 +175,10 @@
 
 .settingsCard {
   display: grid;
-  gap: 12px;
-  padding: 14px;
+  gap: 14px;
+  padding: 16px;
   border: 1px solid var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 18px;
   background: var(--background);
 }
 
@@ -195,40 +195,43 @@
 
 .settingsDescription {
   margin: 0;
-  font-size: 0.92rem;
+  font-size: 1rem;
   line-height: 1.45;
   color: var(--text-secondary);
 }
 
 .settingsOptions {
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .settingsOption {
   display: grid;
-  gap: 4px;
+  gap: 6px;
+  min-height: 96px;
   text-align: left;
   border: 2px solid var(--button-secondary-border);
-  border-radius: 14px;
+  border-radius: 18px;
   background: var(--foreground);
   color: var(--primary-text);
-  padding: 12px 14px;
+  padding: 16px;
   cursor: pointer;
+  box-shadow: 0 3px 0 var(--gray-light);
 }
 
 .settingsOptionActive {
   border-color: var(--success);
   background: var(--success-surface);
+  box-shadow: 0 3px 0 var(--success-text);
 }
 
 .settingsOptionTitle {
-  font-size: 0.95rem;
-  font-weight: 900;
+  font-size: 1.08rem;
+  font-weight: 800;
 }
 
 .settingsOptionText {
-  font-size: 0.88rem;
+  font-size: 0.96rem;
   line-height: 1.45;
   color: var(--text-secondary);
 }

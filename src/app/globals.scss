@@ -4,6 +4,10 @@
 :root {
   --app-background: #fcf9ef;
   --app-safe-top-background: #000;
+  --motion-duration-fast: 140ms;
+  --motion-duration-page: 260ms;
+  --motion-ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-ease-exit: cubic-bezier(0.4, 0, 1, 1);
 }
 
 body {
@@ -232,10 +236,21 @@ main.flex-container {
 /* ─── Skeleton loading ──────────────────────────────────── */
 @keyframes skeletonShimmer {
   0% {
-    background-position: 200% 0;
+    background-position: 180% 0;
   }
   100% {
-    background-position: -200% 0;
+    background-position: -180% 0;
+  }
+}
+
+@keyframes skeletonSurfaceIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
@@ -247,10 +262,11 @@ main.flex-container {
     var(--skeleton-highlight) 50%,
     var(--skeleton-base) 80%
   );
-  background-size: 200% 100%;
-  animation: skeletonShimmer 1.4s ease infinite;
+  background-size: 220% 100%;
+  animation: skeletonShimmer 1.65s linear infinite;
   border-radius: 8px;
   overflow: hidden;
+  contain: paint;
 }
 
 .skeleton-frame {
@@ -258,6 +274,7 @@ main.flex-container {
   border: 2px solid var(--button-secondary-border);
   border-radius: 12px;
   box-shadow: 0px 3px 0px 0px var(--gray-light);
+  animation: skeletonSurfaceIn var(--motion-duration-page) var(--motion-ease-standard) both;
 }
 
 .skeleton-card {
@@ -265,6 +282,7 @@ main.flex-container {
   border: 2px solid var(--button-secondary-border);
   border-radius: 12px;
   box-shadow: 0px 4px 0px 0px var(--gray-light);
+  animation: skeletonSurfaceIn var(--motion-duration-page) var(--motion-ease-standard) both;
 }
 
 .skeleton-pill {
@@ -281,23 +299,25 @@ main.flex-container {
   min-height: 100dvh;
   position: relative;
   background: var(--background);
-  will-change: opacity;
+  will-change: opacity, transform;
+  transform-origin: center top;
+  backface-visibility: hidden;
 }
 
 .route-shell.route-forward.is-leaving {
-  animation: routeLeaveLeft 0.22s ease forwards;
+  animation: routeLeaveLeft var(--motion-duration-fast) var(--motion-ease-exit) forwards;
 }
 
 .route-shell.route-forward.is-entering {
-  animation: routeEnterRight 0.22s ease;
+  animation: routeEnterRight var(--motion-duration-page) var(--motion-ease-standard) both;
 }
 
 .route-shell.route-back.is-leaving {
-  animation: routeLeaveRight 0.22s ease forwards;
+  animation: routeLeaveRight var(--motion-duration-fast) var(--motion-ease-exit) forwards;
 }
 
 .route-shell.route-back.is-entering {
-  animation: routeEnterLeft 0.22s ease;
+  animation: routeEnterLeft var(--motion-duration-page) var(--motion-ease-standard) both;
 }
 
 @keyframes routeLeaveLeft {
@@ -306,15 +326,15 @@ main.flex-container {
     transform: translate3d(0, 0, 0);
   }
   to {
-    opacity: 0;
-    transform: translate3d(-20px, 0, 0);
+    opacity: 0.72;
+    transform: translate3d(-12px, 0, 0);
   }
 }
 
 @keyframes routeEnterRight {
   from {
     opacity: 0;
-    transform: translate3d(20px, 0, 0);
+    transform: translate3d(18px, 0, 0);
   }
   to {
     opacity: 1;
@@ -328,15 +348,15 @@ main.flex-container {
     transform: translate3d(0, 0, 0);
   }
   to {
-    opacity: 0;
-    transform: translate3d(20px, 0, 0);
+    opacity: 0.72;
+    transform: translate3d(12px, 0, 0);
   }
 }
 
 @keyframes routeEnterLeft {
   from {
     opacity: 0;
-    transform: translate3d(-20px, 0, 0);
+    transform: translate3d(-18px, 0, 0);
   }
   to {
     opacity: 1;
@@ -346,8 +366,26 @@ main.flex-container {
 
 @media (prefers-reduced-motion: reduce) {
   .route-shell.is-leaving,
-  .route-shell.is-entering {
+  .route-shell.is-entering,
+  .skeleton-frame,
+  .skeleton-card,
+  .skeleton {
     animation: none;
+  }
+
+  .route-shell {
+    opacity: 1;
+    transform: none;
+  }
+
+  .skeleton {
+    background: var(--skeleton-base);
+  }
+}
+
+@media (prefers-reduced-data: reduce) {
+  .skeleton {
+    animation-duration: 2.4s;
   }
 }
 

@@ -1,4 +1,5 @@
 import {useMemo, useEffect, useCallback, memo, useRef} from 'react'
+import Image from 'next/image'
 import styles from '../playerLive.module.scss'
 import {useT} from '@/lib/i18n/useT'
 import Icon from '@/components/Icon'
@@ -102,7 +103,13 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
 
       {visibleCombo && (
         <div key={visibleCombo.key} className={styles.comboToast}>
-          <img className={styles.comboEmoji} src={visibleCombo.svg} alt="" />
+          <Image
+            className={styles.comboEmoji}
+            src={visibleCombo.svg}
+            alt=""
+            width={80}
+            height={80}
+          />
           <span className={styles.comboLabel}>{visibleCombo.label}</span>
         </div>
       )}
@@ -214,7 +221,7 @@ export const QuestionSlideScreen = memo(function QuestionSlideScreen({
                 ? onCheck(currentQuestion.id, selectedOption)
                 : onConfirmAndContinue(currentQuestion.id, selectedOption)
             }
-            disabled={isCheckingAnswer}>
+            disabled={isCheckingAnswer || !selectedOption}>
             {isCheckingAnswer
               ? t('checking')
               : shouldRevealAnswersInstantly

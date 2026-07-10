@@ -27,7 +27,7 @@ export async function GET(request) {
 
     const {data: session} = await db
       .from('table_live_sessions')
-      .select('id, round_status, current_bottle_index')
+      .select('id, status, round_status, current_bottle_index')
       .eq('id', sessionId)
       .maybeSingle()
 
@@ -37,12 +37,14 @@ export async function GET(request) {
       .from('table_live_players')
       .select('id, nickname, total_score, joined_at')
       .eq('session_id', sessionId)
+      .eq('is_active', true)
       .order('joined_at')
 
     if (!players?.length) return NextResponse.json({standings: []})
 
     const shouldProjectRound =
-      session.round_status === 'waiting_answers' || session.round_status === 'showing_results'
+      session.status === 'playing' &&
+      (session.round_status === 'waiting_answers' || session.round_status === 'showing_results')
 
     const roundPointsByPlayer = {}
     if (shouldProjectRound) {
@@ -78,4 +80,3 @@ export async function GET(request) {
     return NextResponse.json({error: error?.message || 'Internal error'}, {status: 500})
   }
 }
-

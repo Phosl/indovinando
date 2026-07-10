@@ -57,6 +57,7 @@ export default async function TableLiveLeaderboardPage({params}) {
     .from('table_live_players')
     .select('id, nickname, total_score, joined_at')
     .eq('session_id', sessionId)
+    .eq('is_active', true)
     .order('total_score', {ascending: false})
     .order('joined_at', {ascending: true})
 

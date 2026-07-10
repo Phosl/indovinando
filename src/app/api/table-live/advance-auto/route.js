@@ -21,6 +21,7 @@ async function persistFinalResults(db, sessionId, eventId) {
     .from('table_live_players')
     .select('id, total_score, joined_at')
     .eq('session_id', sessionId)
+    .eq('is_active', true)
     .order('total_score', {ascending: false})
     .order('joined_at', {ascending: true})
 
@@ -59,8 +60,10 @@ export async function POST(request) {
   try {
     const body = await request.json()
     const sessionId = String(body?.sessionId || '').trim()
-    if (!sessionId) {
-      return NextResponse.json({error: 'Missing sessionId'}, {status: 400})
+    const playerId = String(body?.playerId || '').trim()
+    const playerToken = String(body?.playerToken || '').trim()
+    if (!sessionId || !playerId || !playerToken) {
+      return NextResponse.json({error: 'Missing required fields'}, {status: 400})
     }
 
     const supabase = await createServerSupabase()
@@ -76,6 +79,26 @@ export async function POST(request) {
       return NextResponse.json({error: 'Session not found'}, {status: 404})
     }
 
+    const {data: sessionPlayers, error: sessionPlayersError} = await db
+      .from('table_live_players')
+      .select('id, player_token, joined_at')
+      .eq('session_id', sessionId)
+      .order('joined_at', {ascending: true})
+
+    if (sessionPlayersError || !sessionPlayers?.length) {
+      return NextResponse.json({error: 'No players in session'}, {status: 409})
+    }
+
+    const requester = sessionPlayers.find(
+      (player) => player.id === playerId && player.player_token === playerToken,
+    )
+    if (!requester) {
+      return NextResponse.json({error: 'Player auth failed'}, {status: 403})
+    }
+    if (sessionPlayers[0]?.id !== requester.id) {
+      return NextResponse.json({error: 'Only host can advance'}, {status: 403})
+    }
+
     if (session.status !== 'playing') {
       if (session.status === 'finished') {
         await persistFinalResults(db, sessionId, session.event_id)
@@ -88,14 +111,19 @@ export async function POST(request) {
       return NextResponse.json({ok: true, advanced: false, reason: 'already_advancing'})
     }
 
-    const {error: lockError} = await db
+    const {data: lockedSession, error: lockError} = await db
       .from('table_live_sessions')
       .update({round_status: 'advancing', updated_at: new Date().toISOString()})
       .eq('id', sessionId)
       .eq('round_status', 'waiting_answers')
+      .select('id')
+      .maybeSingle()
 
     if (lockError) {
       return NextResponse.json({error: lockError.message}, {status: 500})
+    }
+    if (!lockedSession) {
+      return NextResponse.json({ok: true, advanced: false, reason: 'already_advancing'})
     }
 
     const {data: activePlayers, error: playersError} = await db

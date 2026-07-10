@@ -26,45 +26,55 @@ export async function POST(request) {
       return NextResponse.json({error: 'Session not found'}, {status: 404})
     }
 
-    if (session.status !== 'lobby') {
-      return NextResponse.json({error: 'Session already started'}, {status: 409})
-    }
-
     const {data: players, error: playersError} = await db
       .from('table_live_players')
       .select('id, player_token, joined_at')
       .eq('session_id', sessionId)
-      .eq('is_active', true)
       .order('joined_at', {ascending: true})
 
     if (playersError || !players?.length) {
       return NextResponse.json({error: 'No players in session'}, {status: 409})
     }
 
-    const requester = players.find((p) => p.id === playerId && p.player_token === playerToken)
+    const requester = players.find(
+      (player) => player.id === playerId && player.player_token === playerToken,
+    )
     if (!requester) {
       return NextResponse.json({error: 'Player auth failed'}, {status: 403})
     }
 
-    const host = players[0]
-    if (!host || host.id !== playerId) {
-      return NextResponse.json({error: 'Only host can start'}, {status: 403})
+    const isHost = players[0]?.id === requester.id
+    const shouldCloseSession =
+      isHost && session.status !== 'finished' && session.status !== 'expired'
+
+    if (shouldCloseSession) {
+      const now = new Date().toISOString()
+      const {error: closeError} = await db
+        .from('table_live_sessions')
+        .update({status: 'expired', updated_at: now, last_activity_at: now})
+        .eq('id', sessionId)
+      if (closeError) {
+        return NextResponse.json({error: closeError.message}, {status: 500})
+      }
+
+      const {error: deactivateError} = await db
+        .from('table_live_players')
+        .update({is_active: false, last_seen_at: now})
+        .eq('session_id', sessionId)
+      if (deactivateError) {
+        return NextResponse.json({error: deactivateError.message}, {status: 500})
+      }
+    } else {
+      const {error: deactivateError} = await db
+        .from('table_live_players')
+        .update({is_active: false, last_seen_at: new Date().toISOString()})
+        .eq('id', requester.id)
+      if (deactivateError) {
+        return NextResponse.json({error: deactivateError.message}, {status: 500})
+      }
     }
 
-    const {error: updateError} = await db
-      .from('table_live_sessions')
-      .update({
-        status: 'playing',
-        updated_at: new Date().toISOString(),
-        last_activity_at: new Date().toISOString(),
-      })
-      .eq('id', sessionId)
-
-    if (updateError) {
-      return NextResponse.json({error: updateError.message}, {status: 500})
-    }
-
-    return NextResponse.json({ok: true})
+    return NextResponse.json({ok: true, sessionClosed: shouldCloseSession})
   } catch (error) {
     return NextResponse.json({error: error?.message || 'Unexpected error'}, {status: 500})
   }

@@ -32,6 +32,11 @@ export const ResultsScreen = memo(function ResultsScreen({
   onNextBottle,
   onViewLeaderboard,
   isActionPending = false,
+  standingsEndpoint = '/api/live/session/standings',
+  standingsPollingEnabled = true,
+  finalActionLabel,
+  secondaryActionLabel,
+  onSecondaryAction,
   topBar,
   overlays,
 }) {
@@ -41,11 +46,15 @@ export const ResultsScreen = memo(function ResultsScreen({
   const [serverStandings, setServerStandings] = useState([])
 
   useEffect(() => {
+    if (!standingsPollingEnabled) return undefined
+
     let cancelled = false
 
     const fetchStandings = async () => {
       try {
-        const res = await fetch(`/api/live/session/standings?sessionId=${sessionId}`)
+        const res = await fetch(
+          `${standingsEndpoint}?sessionId=${encodeURIComponent(sessionId)}`,
+        )
         if (!res.ok) return
         const payload = await res.json().catch(() => ({}))
         if (!cancelled && Array.isArray(payload?.standings)) {
@@ -65,7 +74,7 @@ export const ResultsScreen = memo(function ResultsScreen({
       cancelled = true
       clearInterval(intervalId)
     }
-  }, [sessionId])
+  }, [sessionId, standingsEndpoint, standingsPollingEnabled])
 
   // Projected standings: current DB total + points earned this round
   // We do NOT freeze the baseline because syncScoresFromAnswers has already
@@ -83,7 +92,7 @@ export const ResultsScreen = memo(function ResultsScreen({
       .sort((a, b) => b.projected - a.projected)
   }, [allPlayers, roundAnswersByPlayer])
 
-  const standings = serverStandings.length
+  const standings = standingsPollingEnabled && serverStandings.length
     ? serverStandings.map((player) => ({
         ...player,
         projected: player.liveTotalScore ?? player.total_score ?? 0,
@@ -242,12 +251,19 @@ export const ResultsScreen = memo(function ResultsScreen({
             <p className={styles.readyHint}>{t('waitingHostContinue')}</p>
           ) : null
         ) : isLastBottle ? (
-          <button
-            className={styles.continueButton}
-            onClick={onViewLeaderboard}
-            disabled={!allPlayersCompletedThisRound || isActionPending}>
-            {t('showFinalLeaderboard')}
-          </button>
+          <div className={styles.finalActions}>
+            {onSecondaryAction && secondaryActionLabel ? (
+              <button className={styles.secondaryButton} onClick={onSecondaryAction}>
+                {secondaryActionLabel}
+              </button>
+            ) : null}
+            <button
+              className={styles.continueButton}
+              onClick={onViewLeaderboard}
+              disabled={!allPlayersCompletedThisRound || isActionPending}>
+              {finalActionLabel || t('showFinalLeaderboard')}
+            </button>
+          </div>
         ) : (
           <button
             className={styles.continueButton}

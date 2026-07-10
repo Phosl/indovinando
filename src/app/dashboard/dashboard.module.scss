@@ -206,7 +206,7 @@
   background: rgba(255, 255, 255, 0.55);
   color: var(--white);
   font-size: 0.7rem;
-  font-weight: 900;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 3px 9px;
@@ -220,6 +220,23 @@
 
   h3 {
     color: var(--primary-text);
+  }
+}
+
+.sectionCardSecondary {
+  background: var(--secondary-100);
+  border-color: var(--secondary-200);
+
+  h3 {
+    color: var(--secondary-text);
+  }
+
+  .sectionCardEyebrow {
+    background: var(--secondary-text);
+  }
+
+  .sectionCardArrowIcon {
+    color: var(--secondary-text);
   }
 }
 .sectionCardNeutral {

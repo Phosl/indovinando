@@ -72,6 +72,62 @@
   overflow: hidden;
 }
 
+.controlCenterCard {
+  display: grid;
+  gap: 12px;
+  border-color: var(--primary-200);
+  background: var(--primary-25);
+
+  :global(.btn) {
+    width: 100%;
+  }
+}
+
+.controlCenterHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+
+  h2 {
+    margin: 5px 0 0;
+    color: var(--primary-text);
+    font-size: 1.2rem;
+    font-weight: 800;
+  }
+}
+
+.controlCenterBadge {
+  display: inline-flex;
+  padding: 5px 9px;
+  border: 1px solid var(--secondary-200);
+  border-radius: 999px;
+  background: var(--secondary-100);
+  color: var(--secondary-text);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.controlCenterSignal {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  margin: 5px;
+  border: 4px solid var(--success-100);
+  border-radius: 999px;
+  background: var(--success);
+  box-shadow: 0 0 0 4px var(--success-50);
+}
+
+.controlCenterHint {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
 .userRow {
   display: flex;
   align-items: center;
