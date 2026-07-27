@@ -39,6 +39,16 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.50.0',
+    date: '27 luglio 2026',
+    label: 'Auto',
+    changes: [
+      'update Next.js security release',
+      'streamline table-live sharing actions',
+    ],
+  },
+
+  {
     version: '1.49.1',
     date: '27 luglio 2026',
     label: 'Auto',
