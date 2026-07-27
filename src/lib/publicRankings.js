@@ -1,163 +1,31 @@
 import {createClient} from '@supabase/supabase-js'
 
-const FALLBACK_GLOBAL_STATS = [
-  {id: 'tastings', icon: '🍷', value: '12.458'},
-  {id: 'analyzedWines', icon: '🍇', value: '8.921'},
-  {id: 'ratings', icon: '⭐', value: '187.532'},
-  {id: 'activeUsers', icon: '👥', value: '4.120'},
-]
-
 const FALLBACK_SECTIONS = [
   {
     id: 'blind',
     emoji: '🏆',
-    items: [
-      {
-        id: 'blind-1',
-        wineGroupKey: 'blind-1',
-        name: 'Barolo Riserva XYZ',
-        producer: 'Cantina delle Colline',
-        region: 'Piemonte',
-        note: 'Punteggio medio altissimo nelle degustazioni alla cieca.',
-      },
-      {
-        id: 'blind-2',
-        wineGroupKey: 'blind-2',
-        name: 'Etna Rosso ABC',
-        producer: 'Tenuta del Vulcano',
-        region: 'Sicilia',
-        note: 'Molto riconosciuto per equilibrio e personalità.',
-      },
-      {
-        id: 'blind-3',
-        wineGroupKey: 'blind-3',
-        name: 'Verdicchio Classico GHI',
-        producer: 'Podere Adriatico',
-        region: 'Marche',
-        note: 'Sorprende spesso anche assaggiatori esperti.',
-      },
-    ],
+    items: [],
   },
   {
     id: 'qualityPrice',
     emoji: '💰',
-    items: [
-      {
-        id: 'qp-1',
-        wineGroupKey: 'qp-1',
-        name: 'Chianti Classico DEF',
-        producer: 'Fattoria del Borgo',
-        region: 'Toscana',
-        note: 'Ottima percezione qualitativa rispetto alla fascia prezzo.',
-      },
-      {
-        id: 'qp-2',
-        wineGroupKey: 'qp-2',
-        name: 'Montepulciano JKL',
-        producer: 'Cantina del Sole',
-        region: 'Abruzzo',
-        note: 'Apprezzato per immediatezza e convenienza.',
-      },
-      {
-        id: 'qp-3',
-        wineGroupKey: 'qp-3',
-        name: 'Soave MNO',
-        producer: 'Villa del Vento',
-        region: 'Veneto',
-        note: 'Molto scelto nei quiz come vino dal valore sorprendente.',
-      },
-    ],
+    items: [],
   },
   {
     id: 'surprising',
     emoji: '🍷',
-    items: [
-      {
-        id: 'surprise-1',
-        wineGroupKey: 'surprise-1',
-        name: 'Etna Rosso ABC',
-        producer: 'Tenuta del Vulcano',
-        region: 'Sicilia',
-        note: 'Ha superato spesso le aspettative dei partecipanti.',
-      },
-      {
-        id: 'surprise-2',
-        wineGroupKey: 'surprise-2',
-        name: 'Fiano PQR',
-        producer: 'Colli del Sud',
-        region: 'Campania',
-        note: 'Molto citato come vino rivelazione.',
-      },
-      {
-        id: 'surprise-3',
-        wineGroupKey: 'surprise-3',
-        name: 'Franciacorta STU',
-        producer: 'Metodo Vivo',
-        region: 'Lombardia',
-        note: 'Colpisce per finezza e resa in degustazione.',
-      },
-    ],
+    items: [],
   },
   {
     id: 'divisive',
     emoji: '🔥',
-    items: [
-      {
-        id: 'div-1',
-        wineGroupKey: 'div-1',
-        name: 'Orange Wine VWX',
-        producer: 'Terre Libere',
-        region: 'Friuli-Venezia Giulia',
-        note: 'Voti molto distanti: amato da alcuni, discusso da altri.',
-      },
-      {
-        id: 'div-2',
-        wineGroupKey: 'div-2',
-        name: 'Lambrusco YZA',
-        producer: 'Casa Emilia',
-        region: 'Emilia-Romagna',
-        note: 'Divide molto in base al contesto di degustazione.',
-      },
-      {
-        id: 'div-3',
-        wineGroupKey: 'div-3',
-        name: 'Aglianico BCD',
-        producer: 'Radici Antiche',
-        region: 'Basilicata',
-        note: 'Profilo intenso, con giudizi spesso estremi.',
-      },
-    ],
+    items: [],
   },
 ]
 
 const FALLBACK_USER_SECTION = {
   id: 'precision',
-  items: [
-    {
-      id: 'user-1',
-      name: 'Marco',
-      profileType: 'wine_lover',
-      accuracyRatio: 0.92,
-      sessionCount: 8,
-      objectiveAnswerCount: 34,
-    },
-    {
-      id: 'user-2',
-      name: 'Giulia',
-      profileType: 'sommelier',
-      accuracyRatio: 0.89,
-      sessionCount: 6,
-      objectiveAnswerCount: 28,
-    },
-    {
-      id: 'user-3',
-      name: 'Andrea',
-      profileType: 'professional',
-      accuracyRatio: 0.87,
-      sessionCount: 5,
-      objectiveAnswerCount: 24,
-    },
-  ],
+  items: [],
 }
 
 const ACTIVE_USERS_DAYS = 30
@@ -223,7 +91,7 @@ function buildNote(sectionId, row) {
 function buildFallbackGlobalStatsSnapshot() {
   return {
     isInitialData: true,
-    items: FALLBACK_GLOBAL_STATS,
+    items: [],
     meta: {
       activeUsersDays: ACTIVE_USERS_DAYS,
     },
@@ -349,46 +217,14 @@ export function getFallbackPublicRankingsSnapshot() {
     isInitialData: true,
     sectionsInitialData: true,
     userSectionInitialData: true,
+    hasRankingData: false,
     globalStats: buildFallbackGlobalStatsSnapshot(),
-    userSection: FALLBACK_USER_SECTION,
-    sections: FALLBACK_SECTIONS,
+    userSection: {...FALLBACK_USER_SECTION, items: []},
+    sections: FALLBACK_SECTIONS.map(({id, emoji}) => ({id, emoji, items: []})),
   }
 }
 
-function getFallbackPublicWineDetailSnapshot(wineGroupKey) {
-  if (!wineGroupKey) return null
-
-  for (const section of FALLBACK_SECTIONS) {
-    const itemIndex = section.items.findIndex(
-      (item) => item.wineGroupKey === wineGroupKey || item.id === wineGroupKey,
-    )
-
-    if (itemIndex === -1) continue
-
-    const item = section.items[itemIndex]
-    const placements = [{id: section.id, rank: itemIndex + 1}]
-
-    return {
-      wineGroupKey: item.wineGroupKey || item.id,
-      name: item.name || '—',
-      producer: item.producer || '—',
-      region: item.region || '—',
-      appellation: null,
-      averagePrice: null,
-      stats: {
-        blindScore: null,
-        qualityPriceScore: null,
-        surpriseScore: null,
-        divisiveScore: null,
-        ratingCount: 0,
-        tastingCount: 0,
-        recognitionRate: null,
-      },
-      placements,
-      isInitialData: true,
-    }
-  }
-
+function getFallbackPublicWineDetailSnapshot() {
   return null
 }
 
@@ -429,19 +265,41 @@ export async function getPublicRankingsSnapshot(supabase) {
 
     const sectionsInitialData = sections.some((section) => section.items.length === 0)
     const userSectionInitialData = userRankingItems.length === 0
+    const hasRankingData = sections.some((section) => section.items.length > 0)
 
     return {
       isInitialData: sectionsInitialData || userSectionInitialData,
       sectionsInitialData,
       userSectionInitialData,
+      hasRankingData,
       globalStats,
       userSection: userSectionInitialData
-        ? FALLBACK_USER_SECTION
+        ? {...FALLBACK_USER_SECTION, items: []}
         : {id: 'precision', items: userRankingItems},
-      sections: sectionsInitialData ? FALLBACK_SECTIONS : sections,
+      sections,
     }
   } catch {
     return getFallbackPublicRankingsSnapshot()
+  }
+}
+
+export async function listPublicWineKeys(supabase) {
+  if (!supabase) return []
+
+  try {
+    const rankingsClient = createRankingsClient(supabase)
+    const {data, error} = await rankingsClient
+      .from('public_wine_rankings')
+      .select('wine_group_key, rating_count')
+      .not('wine_group_key', 'is', null)
+      .gt('rating_count', 0)
+      .limit(5000)
+
+    if (error || !Array.isArray(data)) return []
+
+    return [...new Set(data.map((row) => String(row.wine_group_key || '').trim()).filter(Boolean))]
+  } catch {
+    return []
   }
 }
 

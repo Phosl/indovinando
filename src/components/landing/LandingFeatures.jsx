@@ -24,6 +24,10 @@ export default function LandingFeatures({text = {}}) {
       <div className={styles.sectionHeader}>
         <span className={styles.eyebrow}>{text.eyebrow || 'Come funziona'}</span>
         <h2>{text.title || 'Dal tavolo alla degustazione in meno di un minuto'}</h2>
+        <p className={styles.sectionDescription}>
+          {text.description ||
+            'Indovinando riunisce preparazione, gioco e risultati in un unico flusso per degustazioni alla cieca.'}
+        </p>
       </div>
 
       <div className={styles.featureGrid}>

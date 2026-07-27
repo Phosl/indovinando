@@ -1,9 +1,17 @@
+import {cache} from 'react'
 import {notFound} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {getPublicWineDetailSnapshot} from '@/lib/publicRankings'
 import PartnerPageHeader from '@/components/partner/PartnerPageHeader'
 import Icon from '@/components/Icon'
+import JsonLd from '@/components/JsonLd'
+import {
+  buildBreadcrumbStructuredData,
+  buildPageMetadata,
+  getSiteUrl,
+  SITE_NAME,
+} from '@/lib/seo'
 import it from '@/lib/i18n/locales/it.json'
 import en from '@/lib/i18n/locales/en.json'
 import styles from '../rankings.module.scss'
@@ -11,6 +19,39 @@ import autoStyles from '../../game/create/gameCreate.module.scss'
 
 function fillMetricLabel(template, value) {
   return String(template || '{value}').replace('{value}', value || '—')
+}
+
+const getCachedPublicWineDetail = cache(async (wineKey, lang) => {
+  const supabase = await createServerSupabase()
+  return getPublicWineDetailSnapshot(supabase, wineKey, lang)
+})
+
+export async function generateMetadata({params}) {
+  const resolvedParams = await params
+  const wineKey = decodeURIComponent(resolvedParams?.wineKey || '')
+  const lang = await getServerLanguage()
+  const detail = await getCachedPublicWineDetail(wineKey, lang)
+
+  if (!detail || detail.isInitialData) {
+    return buildPageMetadata({
+      title: lang === 'en' ? 'Wine not found' : 'Vino non trovato',
+      path: wineKey ? `/classifiche/${encodeURIComponent(wineKey)}` : '/classifiche',
+      lang,
+      noIndex: true,
+    })
+  }
+
+  const description =
+    lang === 'en'
+      ? `${detail.name} by ${detail.producer}: blind tasting ratings, recognition rate, average price, and public ranking positions.`
+      : `${detail.name} di ${detail.producer}: valutazioni alla cieca, riconoscibilità, prezzo medio e posizioni nelle classifiche pubbliche.`
+
+  return buildPageMetadata({
+    title: `${detail.name} · ${detail.producer}`,
+    description,
+    path: `/classifiche/${encodeURIComponent(detail.wineGroupKey)}`,
+    lang,
+  })
 }
 
 export default async function PublicWinePage({params}) {
@@ -26,11 +67,54 @@ export default async function PublicWinePage({params}) {
     data: {user},
   } = await supabase.auth.getUser()
 
-  const detail = await getPublicWineDetailSnapshot(supabase, wineKey, lang)
+  const detail = await getCachedPublicWineDetail(wineKey, lang)
   if (!detail) notFound()
+  const wineUrl = getSiteUrl(`/classifiche/${encodeURIComponent(detail.wineGroupKey)}`)
+  const structuredData = detail.isInitialData
+    ? null
+    : {
+        '@context': 'https://schema.org',
+        '@type': 'Dataset',
+        '@id': `${wineUrl}#blind-tasting-data`,
+        name:
+          lang === 'en'
+            ? `Blind tasting data for ${detail.name}`
+            : `Dati di degustazione alla cieca per ${detail.name}`,
+        description:
+          lang === 'en'
+            ? `Aggregated community results for ${detail.name} by ${detail.producer}.`
+            : `Risultati aggregati della community per ${detail.name} di ${detail.producer}.`,
+        url: wineUrl,
+        inLanguage: lang === 'en' ? 'en-US' : 'it-IT',
+        creator: {
+          '@type': 'Organization',
+          name: SITE_NAME,
+          url: getSiteUrl('/'),
+        },
+        isAccessibleForFree: true,
+        spatialCoverage: detail.region || undefined,
+        variableMeasured: [
+          text.stats.ratingCount,
+          text.stats.tastingCount,
+          text.stats.recognitionRate,
+          text.stats.averagePrice,
+        ],
+      }
+  const breadcrumbData = buildBreadcrumbStructuredData([
+    {name: 'Indovinando', path: '/'},
+    {
+      name: lang === 'en' ? 'Blind wine tasting rankings' : 'Classifiche vini alla cieca',
+      path: '/classifiche',
+    },
+    {
+      name: detail.name,
+      path: `/classifiche/${encodeURIComponent(detail.wineGroupKey)}`,
+    },
+  ])
 
   return (
     <main className={styles.page}>
+      <JsonLd data={structuredData ? [structuredData, breadcrumbData] : breadcrumbData} />
       <div className={styles.container}>
         <PartnerPageHeader
           isLoggedIn={Boolean(user)}

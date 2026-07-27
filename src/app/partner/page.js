@@ -4,10 +4,22 @@ import {getLocaleText} from '@/lib/i18n/getLocaleText'
 import {listPublicPartners} from '@/lib/partners'
 import PartnerPageHeader from '@/components/partner/PartnerPageHeader'
 import PartnerPublicCard from '@/components/partner/PartnerPublicCard'
+import JsonLd from '@/components/JsonLd'
+import {buildPageMetadata, getSiteUrl} from '@/lib/seo'
 import styles from './partner.module.scss'
 
-export const metadata = {
-  title: 'Partner',
+export async function generateMetadata() {
+  const lang = await getServerLanguage()
+
+  return buildPageMetadata({
+    title: lang === 'en' ? 'Wine tasting partners' : 'Partner per degustazioni',
+    description:
+      lang === 'en'
+        ? 'Discover wine shops, restaurants, wineries, and wine businesses using Indovinando for their tasting experiences.'
+        : 'Scopri enoteche, ristoranti, cantine e realtà del vino che usano Indovinando per organizzare esperienze di degustazione.',
+    path: '/partner',
+    lang,
+  })
 }
 
 export default async function PartnersPage() {
@@ -20,9 +32,22 @@ export default async function PartnersPage() {
   const landingText = getLocaleText(lang, 'landing', {})
   const commonText = getLocaleText(lang, 'common', {})
   const partners = await listPublicPartners(supabase, lang)
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: text.heading || 'Partner Indovinando',
+    numberOfItems: partners.length,
+    itemListElement: partners.map((partner, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: partner.name,
+      url: getSiteUrl(`/partner/${encodeURIComponent(partner.slug)}`),
+    })),
+  }
 
   return (
     <main className={styles.page}>
+      {partners.length ? <JsonLd data={structuredData} /> : null}
       <div className={styles.container}>
         <PartnerPageHeader
           isLoggedIn={Boolean(user)}

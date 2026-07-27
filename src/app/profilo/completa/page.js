@@ -1,5 +1,6 @@
 import {redirect} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
+import {getSafeInternalPath} from '@/lib/safeInternalPath'
 import ProfileSetupWizardClient from '@/components/profile/ProfileSetupWizardClient'
 
 export const metadata = {
@@ -17,7 +18,7 @@ export default async function ProfileSetupPage({searchParams}) {
   }
 
   const next = (await searchParams)?.next
-  const safeNextPath = typeof next === 'string' && next.startsWith('/') ? next : '/dashboard'
+  const safeNextPath = getSafeInternalPath(next, '/dashboard')
 
   const {data: profile} = await supabase
     .from('profiles')

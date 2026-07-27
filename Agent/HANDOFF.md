@@ -1,10 +1,10 @@
 # Handoff — Indovinando
 
-Ultimo aggiornamento: 2026-07-10
+Ultimo aggiornamento: 2026-07-27
 
 ## Stato generale
 
-- Branch/worktree pulito al momento della creazione di questo handoff.
+- `main` allineato a `origin/main` prima del checkpoint; modifiche motion e SEO/GEO validate e pronte per commit/deploy.
 - App in fase di polish pre-release/demo, con focus su UX mobile/PWA, performance percepita, flussi di creazione partita e stabilità dati.
 - Regole repo importanti:
   - riusare componenti esistenti prima di crearne nuovi;
@@ -13,6 +13,32 @@ Ultimo aggiornamento: 2026-07-10
   - `ns` = prossimo step.
 
 ## Feature implementate di recente
+
+### Checkpoint 2026-07-27 — link pubblico pronto alla condivisione
+
+- Link pubblico di riferimento: `https://indovinando.vercel.app/`.
+- Creata anteprima social JPEG dedicata 1200×630 da 238 KB, usata in modo uniforme da Open Graph e Twitter Card.
+- Le pagine partner non usano più loghi remoti SVG come `og:image`; titolo e descrizione restano specifici, l’immagine è quella affidabile del sito.
+- Eliminate letture duplicate delle statistiche in home e memoizzati per richiesta i dati pubblico vino/partner condivisi tra metadata e pagina.
+- Centralizzata la validazione dei redirect interni per impedire percorsi assoluti o protocol-relative nei parametri `next` e `back`.
+- Il fallback statico della sitemap produce ora un warning server sicuro e diagnosticabile.
+- Aggiunto smoke test riutilizzabile `npm run check:public -- <base-url>` per metadata, crawler WhatsApp, asset social, route pubbliche, noindex privati, robots, sitemap e dati fittizi.
+- Smoke locale superato con 44 URL in sitemap; table-live superato nelle modalità `instant` ed `end`, con cleanup delle sessioni QA.
+- Build production, lint mirato, lint completo senza errori, audit Next.js con 0 errori e `git diff --check` completati.
+
+### Checkpoint 2026-07-24 — SEO e GEO
+
+- Report completo: `Agent/SEO_GEO_AUDIT_2026_07_24.md`.
+- Audit production: la home non esponeva title/description e `/robots.txt` e `/sitemap.xml` restituivano `404`.
+- Aggiunta fonte condivisa per origin canonico, metadata pubblici, Open Graph, Twitter Card, robots e serializzazione JSON-LD.
+- Aggiunti metadata localizzati e canonical a home, demo, classifiche, vini, partner, corso e pagine informative.
+- Aggiunti dati strutturati coerenti con i contenuti visibili: Organization, WebSite, WebApplication, FAQ, CollectionPage, Dataset, LocalBusiness, Course e LearningResource.
+- Aggiunti `robots.txt`, sitemap dinamica per partner, vini reali e soli livelli/lezioni del corso accessibili senza login.
+- Le Preview Vercel vengono escluse dall'indicizzazione; le aree private e operative inviano anche `X-Robots-Tag: noindex, nofollow`.
+- `OAI-SearchBot` può leggere i contenuti pubblici; `GPTBot` è escluso e le API restano fuori dalla scansione.
+- Rimossi ranking, utenti, statistiche e partner fittizi dai fallback pubblici: se i dati reali non bastano, l'interfaccia mostra uno stato vuoto verificabile.
+- FAQ e sezione “Come funziona” rese più esplicite per rispondere alle domande principali su preparazione, QR, browser, demo e risultati.
+- Build production, lint mirato, validazione JSON e controllo HTTP locale completati.
 
 ### Checkpoint 2026-07-10 — demo pubblica
 
@@ -44,7 +70,7 @@ Ultimo aggiornamento: 2026-07-10
 
 ### Checkpoint 2026-07-10 — motion e skeleton
 
-- Transizioni pagina uniformate con `transform` + `opacity`, easing condiviso e uscita breve prima della navigazione.
+- Transizioni pagina ridotte a solo `translateX` orizzontale + `opacity`, con due keyframe condivisi per ingresso e uscita.
 - Navigazione con `prefers-reduced-motion` senza animazioni o ritardi artificiali.
 - Shimmer degli skeleton reso più morbido; card e frame entrano con una breve animazione condivisa.
 - Aggiunto `PageSkeleton` riutilizzabile per evitare nuovi loading duplicati.
@@ -194,6 +220,7 @@ Nota: `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` è normale che sia visibile al browser, 
 ```bash
 npm run dev
 npm run build
+npm run check:public -- <base-url>
 npm run check:table-live -- <event-slug> <base-url>
 npx eslint <file>
 git diff --check

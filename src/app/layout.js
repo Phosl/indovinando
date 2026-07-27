@@ -7,6 +7,13 @@ import AppleSplashLinks from '@/components/AppleSplashLinks'
 import AppShell from '@/components/AppShell'
 import BottomNav from '@/components/BottomNav'
 import {getServerLanguage} from '@/lib/i18n/server'
+import {
+  getSiteOrigin,
+  getSiteSocialImage,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_OG_IMAGE,
+} from '@/lib/seo'
 
 const isPreview = process.env.VERCEL_ENV === 'preview'
 const iconBase = isPreview ? '/app_icon_feature' : '/app_icon'
@@ -18,12 +25,46 @@ const nunito = Nunito({
 })
 
 export const metadata = {
-  applicationName: 'Indovinando',
+  metadataBase: new URL(getSiteOrigin()),
+  title: {
+    default: `${SITE_NAME} | Degustazioni alla cieca`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  category: 'wine tasting',
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
   manifest: '/manifest.json',
+  openGraph: {
+    type: 'website',
+    locale: 'it_IT',
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} | Degustazioni alla cieca`,
+    description: SITE_DESCRIPTION,
+    images: [getSiteSocialImage()],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${SITE_NAME} | Degustazioni alla cieca`,
+    description: SITE_DESCRIPTION,
+    images: [SITE_OG_IMAGE],
+  },
+  robots: {
+    index: !isPreview,
+    follow: !isPreview,
+    googleBot: {
+      index: !isPreview,
+      follow: !isPreview,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black',
-    title: 'Indovinando',
+    title: SITE_NAME,
   },
   icons: {
     icon: `${iconBase}/favicon.ico`,

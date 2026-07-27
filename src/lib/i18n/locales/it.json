@@ -113,6 +113,7 @@
     "features": {
       "eyebrow": "Come funziona",
       "title": "Dal tavolo ai risultati, senza fogli sparsi",
+      "description": "Indovinando è una piattaforma per creare e gestire degustazioni alla cieca: prepara quiz e schede, fa entrare i partecipanti con un QR e raccoglie classifiche e valutazioni reali sui vini.",
       "items": [
         {
           "icon": "🍷",
@@ -152,6 +153,19 @@
         }
       ]
     },
+    "wineBox": {
+      "eyebrow": "Kit degustazione",
+      "title": "Porta la degustazione alla cieca pronta sul tavolo",
+      "description": "Buste numerate, schede stampabili, QR partita e classifiche: tutto quello che serve per far giocare un gruppo e raccogliere valutazioni reali sui vini.",
+      "steps": [
+        "Prepara le bottiglie bendate",
+        "Stampa schede professionali",
+        "Condividi il QR dell'evento",
+        "Raccogli classifiche e valutazioni"
+      ],
+      "cta": "Crea la tua degustazione",
+      "imageAlt": "Kit per organizzare una degustazione alla cieca con Indovinando"
+    },
     "partners": {
       "eyebrow": "Partner",
       "title": "Enoteche e realtà che credono in Indovinando",
@@ -163,7 +177,7 @@
         "Degustazioni Milano",
         "Wine Hub"
       ],
-      "counter": "+20 enoteche e professionisti del vino stanno già utilizzando Indovinando",
+      "counter": "La directory cresce con le attività che rendono pubblico il proprio profilo.",
       "counterDynamic": "{count} partner business sono già visibili su Indovinando",
       "cardCta": "Apri scheda",
       "directoryCta": "Scopri tutti i partner",
@@ -182,6 +196,14 @@
           "answer": "Una piattaforma per creare degustazioni alla cieca, giocarle dal telefono e raccogliere classifiche e valutazioni reali sui vini."
         },
         {
+          "question": "Come si organizza una degustazione alla cieca con Indovinando?",
+          "answer": "Inserisci o scansiona le bottiglie, prepara il questionario, condividi il QR con i partecipanti e avvia la partita. Al termine trovi classifica, risposte e valutazioni in un unico posto."
+        },
+        {
+          "question": "I partecipanti devono installare un'app?",
+          "answer": "No. Possono aprire il link o inquadrare il QR dal telefono, scegliere il proprio nome e partecipare direttamente dal browser."
+        },
+        {
           "question": "Serve solo per fare quiz?",
           "answer": "No. Il gioco è una parte dell'esperienza: puoi anche stampare schede, gestire eventi, usare QR e leggere i risultati dopo la degustazione."
         },
@@ -192,6 +214,10 @@
         {
           "question": "Che dati raccoglie?",
           "answer": "Raccoglie risposte, punteggi e valutazioni alla cieca: dati utili per capire cosa piace davvero ai degustatori, non solo cosa dice l'etichetta."
+        },
+        {
+          "question": "Posso provarlo senza registrarmi?",
+          "answer": "Sì. La demo pubblica simula una degustazione con domande, avversari e classifica in tempo reale, senza creare un account."
         }
       ]
     },
@@ -1234,7 +1260,8 @@
       "Enoteca + Tavolo",
       "Aggiornamento progressivo"
     ],
-    "realDataNote": "Queste classifiche leggono i voti reali di enoteca e tavolo. Se una sezione ha ancora pochi dati, mostriamo un set iniziale temporaneo.",
+    "realDataNote": "Queste classifiche usano solo voti reali raccolti nelle degustazioni completate. Le sezioni si popolano quando raggiungono dati sufficienti.",
+    "emptySection": "Stiamo raccogliendo abbastanza valutazioni reali per pubblicare questa classifica.",
     "globalStats": {
       "eyebrow": "Community",
       "title": "I numeri della community",

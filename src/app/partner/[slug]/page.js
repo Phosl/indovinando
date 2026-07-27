@@ -1,17 +1,52 @@
 import Link from 'next/link'
+import Image from 'next/image'
+import {cache} from 'react'
 import {notFound} from 'next/navigation'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {getServerLanguage} from '@/lib/i18n/server'
 import {getLocaleText} from '@/lib/i18n/getLocaleText'
 import {getPublicPartnerBySlug, mapProfileToPublicPartner} from '@/lib/partners'
 import PartnerPageHeader from '@/components/partner/PartnerPageHeader'
+import JsonLd from '@/components/JsonLd'
+import {
+  buildBreadcrumbStructuredData,
+  buildPageMetadata,
+  getSiteUrl,
+} from '@/lib/seo'
 import styles from '../partner.module.scss'
+
+const getCachedPublicPartner = cache(async (slug, lang) => {
+  const supabase = await createServerSupabase()
+  return getPublicPartnerBySlug(supabase, slug, lang)
+})
 
 export async function generateMetadata({params}) {
   const {slug} = await params
-  return {
-    title: slug ? `Partner · ${slug}` : 'Partner',
+  const lang = await getServerLanguage()
+  const partner = slug ? await getCachedPublicPartner(slug, lang) : null
+
+  if (!partner) {
+    return buildPageMetadata({
+      title: lang === 'en' ? 'Partner not found' : 'Partner non trovato',
+      path: slug ? `/partner/${slug}` : '/partner',
+      lang,
+      noIndex: true,
+    })
   }
+
+  const location = partner.location ? ` a ${partner.location}` : ''
+  const description =
+    partner.description ||
+    (lang === 'en'
+      ? `${partner.name} is a ${partner.category.toLowerCase()} using Indovinando for wine tasting experiences.`
+      : `${partner.name} è ${partner.category.toLowerCase()}${location} e usa Indovinando per le proprie esperienze di degustazione.`)
+
+  return buildPageMetadata({
+    title: `${partner.name} · ${partner.category}`,
+    description,
+    path: `/partner/${partner.slug}`,
+    lang,
+  })
 }
 
 export default async function PartnerDetailPage({params, searchParams}) {
@@ -26,7 +61,7 @@ export default async function PartnerDetailPage({params, searchParams}) {
   const landingText = getLocaleText(lang, 'landing', {})
   const commonText = getLocaleText(lang, 'common', {})
   const previewMode = resolvedSearchParams?.preview === '1'
-  let partner = await getPublicPartnerBySlug(supabase, slug, lang)
+  let partner = await getCachedPublicPartner(slug, lang)
 
   if (!partner && previewMode && user) {
     const {data: ownProfile} = await supabase
@@ -54,9 +89,44 @@ export default async function PartnerDetailPage({params, searchParams}) {
   const mapLinkUrl = mapQuery
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`
     : ''
+  const partnerUrl = getSiteUrl(`/partner/${partner.slug}`)
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    '@id': `${partnerUrl}#business`,
+    name: partner.name,
+    description: partner.description || undefined,
+    url: partnerUrl,
+    image: partner.logoUrl || undefined,
+    telephone: partner.phone || undefined,
+    sameAs: partner.website ? [partner.website] : undefined,
+    address:
+      partner.address || partner.city || partner.province
+        ? {
+            '@type': 'PostalAddress',
+            streetAddress: partner.address || undefined,
+            addressLocality: partner.city || undefined,
+            addressRegion: partner.province || undefined,
+          }
+        : undefined,
+    geo:
+      partner.latitude !== null && partner.longitude !== null
+        ? {
+            '@type': 'GeoCoordinates',
+            latitude: partner.latitude,
+            longitude: partner.longitude,
+          }
+        : undefined,
+  }
+  const breadcrumbData = buildBreadcrumbStructuredData([
+    {name: 'Indovinando', path: '/'},
+    {name: text.topBarTitle || 'Partner', path: '/partner'},
+    {name: partner.name, path: `/partner/${partner.slug}`},
+  ])
 
   return (
     <main className={styles.page}>
+      <JsonLd data={[structuredData, breadcrumbData]} />
       <div className={styles.container}>
         <PartnerPageHeader
           isLoggedIn={Boolean(user)}
@@ -72,7 +142,14 @@ export default async function PartnerDetailPage({params, searchParams}) {
 
           {partner.logoUrl ? (
             <div className={styles.detailLogoWrap}>
-              <img src={partner.logoUrl} alt={partner.name} className={styles.detailLogo} />
+              <Image
+                src={partner.logoUrl}
+                alt={`Logo ${partner.name}`}
+                className={styles.detailLogo}
+                width={120}
+                height={120}
+                sizes="120px"
+              />
             </div>
           ) : null}
 

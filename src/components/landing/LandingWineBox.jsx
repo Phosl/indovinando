@@ -2,36 +2,42 @@ import Link from 'next/link'
 import Image from 'next/image'
 import styles from './LandingPage.module.scss'
 
-export default function LandingWineBox() {
+export default function LandingWineBox({text = {}}) {
+  const steps = text.steps || [
+    'Prepara le bottiglie bendate',
+    'Stampa schede professionali',
+    "Condividi il QR dell'evento",
+    'Raccogli classifiche e valutazioni',
+  ]
+
   return (
     <section className={styles.section}>
       <div className={styles.wineBoxContent}>
         <div className={styles.wineBoxInfo}>
-          <span className={styles.eyebrow}>Kit degustazione</span>
+          <span className={styles.eyebrow}>{text.eyebrow || 'Kit degustazione'}</span>
 
-          <h2>Porta la degustazione alla cieca pronta sul tavolo</h2>
+          <h2>{text.title || 'Porta la degustazione alla cieca pronta sul tavolo'}</h2>
 
           <p>
-            Buste numerate, schede stampabili, QR partita e classifiche: tutto quello che serve per
-            far giocare un gruppo e raccogliere valutazioni reali sui vini.
+            {text.description ||
+              'Buste numerate, schede stampabili, QR partita e classifiche: tutto quello che serve per far giocare un gruppo e raccogliere valutazioni reali sui vini.'}
           </p>
 
           <ul className={styles.wineBoxSteps}>
-            <li>Prepara le bottiglie bendate</li>
-            <li>Stampa schede professionali</li>
-            <li>Condividi il QR dell&apos;evento</li>
-            <li>Raccogli classifiche e valutazioni</li>
+            {steps.map((step) => (
+              <li key={step}>{step}</li>
+            ))}
           </ul>
 
           <Link href="/auth" className="btn primary-filled btn-inline">
-            Crea la tua degustazione
+            {text.cta || 'Crea la tua degustazione'}
           </Link>
         </div>
 
         <div className={styles.wineBoxVisual}>
           <Image
             src="/landing/box.png"
-            alt="Kit degustazione Indovinando"
+            alt={text.imageAlt || 'Kit degustazione Indovinando'}
             className={styles.wineBoxImage}
             width={1536}
             height={1024}

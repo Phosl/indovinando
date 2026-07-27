@@ -4,6 +4,7 @@ import {useEffect, useState, Suspense} from 'react'
 import {createClient, resetBrowserClient} from '@/lib/supabaseClient'
 import {useRouter, useSearchParams} from 'next/navigation'
 import {useT} from '@/lib/i18n/useT'
+import {getSafeInternalPath} from '@/lib/safeInternalPath'
 import styles from './AuthFormClient.module.scss'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -23,7 +24,7 @@ function AuthForm() {
   const t = useT('auth')
   const searchParams = useSearchParams()
   const nextPath = searchParams.get('next') || '/dashboard'
-  const safeNextPath = nextPath.startsWith('/') ? nextPath : '/dashboard'
+  const safeNextPath = getSafeInternalPath(nextPath, '/dashboard')
   const requestedMode = searchParams.get('mode')
   const defaultMode = requestedMode === 'register' ? 'register' : 'login'
 

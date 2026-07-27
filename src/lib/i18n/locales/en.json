@@ -112,6 +112,7 @@
     "features": {
       "eyebrow": "How it works",
       "title": "From table to results, without loose papers",
+      "description": "Indovinando is a platform for creating and managing blind wine tastings: prepare quizzes and sheets, let participants join with a QR code, and collect leaderboards and real wine ratings.",
       "items": [
         {
           "icon": "🍷",
@@ -151,6 +152,19 @@
         }
       ]
     },
+    "wineBox": {
+      "eyebrow": "Tasting kit",
+      "title": "Bring a complete blind tasting to the table",
+      "description": "Numbered bottle covers, printable tasting sheets, a game QR code, and leaderboards: everything a group needs to play and collect real wine ratings.",
+      "steps": [
+        "Prepare the covered bottles",
+        "Print professional tasting sheets",
+        "Share the event QR code",
+        "Collect leaderboards and ratings"
+      ],
+      "cta": "Create your tasting",
+      "imageAlt": "Blind wine tasting kit organized with Indovinando"
+    },
     "partners": {
       "eyebrow": "Partners",
       "title": "Wine shops and experiences that believe in Indovinando",
@@ -162,7 +176,7 @@
         "Milan Tastings",
         "Wine Hub"
       ],
-      "counter": "20+ wine shops and wine professionals are already using Indovinando",
+      "counter": "The directory grows as businesses make their profiles public.",
       "counterDynamic": "{count} business partners are already visible on Indovinando",
       "cardCta": "Open page",
       "directoryCta": "Explore all partners",
@@ -181,6 +195,14 @@
           "answer": "A platform for creating blind wine tastings, playing them from a phone, and collecting leaderboards and real wine ratings."
         },
         {
+          "question": "How do you organize a blind wine tasting with Indovinando?",
+          "answer": "Add or scan the bottles, prepare the questionnaire, share the QR code with participants, and start the game. At the end, rankings, answers, and ratings are available in one place."
+        },
+        {
+          "question": "Do participants need to install an app?",
+          "answer": "No. They can open the link or scan the QR code from their phone, choose a name, and join directly from the browser."
+        },
+        {
           "question": "Is it only for quizzes?",
           "answer": "No. The game is one part of the experience: you can also print sheets, run events, use QR access, and read the results after the tasting."
         },
@@ -191,6 +213,10 @@
         {
           "question": "What data does it collect?",
           "answer": "It collects answers, scores, and blind ratings: useful data for understanding what tasters actually like, beyond what the label says."
+        },
+        {
+          "question": "Can I try it without signing up?",
+          "answer": "Yes. The public demo simulates a tasting with questions, opponents, and a live leaderboard, without creating an account."
         }
       ]
     },
@@ -1228,7 +1254,8 @@
       "Enoteca + Table",
       "Growing over time"
     ],
-    "realDataNote": "These rankings read real ratings from enoteca and table flows. If a section still has too little data, we temporarily show starter data.",
+    "realDataNote": "These rankings use only real ratings from completed tastings. Each section appears as soon as it has enough data.",
+    "emptySection": "We are collecting enough real ratings to publish this ranking.",
     "globalStats": {
       "eyebrow": "Community",
       "title": "Community in numbers",

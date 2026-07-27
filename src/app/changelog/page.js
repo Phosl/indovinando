@@ -1,16 +1,19 @@
 import styles from './changelog.module.scss'
 import {getServerLanguage} from '@/lib/i18n/server'
+import {buildPageMetadata} from '@/lib/seo'
 
 export async function generateMetadata() {
   const lang = await getServerLanguage()
   const isEn = lang === 'en'
 
-  return {
-    title: isEn ? 'Changelog — Indovinando' : 'Changelog — Indovinando',
+  return buildPageMetadata({
+    title: 'Changelog',
     description: isEn
       ? 'History of Indovinando updates and versions.'
       : 'Cronologia degli aggiornamenti e delle versioni di Indovinando',
-  }
+    path: '/changelog',
+    lang,
+  })
 }
 
 const UI_TEXT = {

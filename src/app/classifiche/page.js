@@ -5,12 +5,25 @@ import {getPublicRankingsSnapshot} from '@/lib/publicRankings'
 import GlobalStatsStrip from '@/components/stats/GlobalStatsStrip'
 import RankingsSectionsClient from '@/components/rankings/RankingsSectionsClient'
 import PartnerPageHeader from '@/components/partner/PartnerPageHeader'
+import JsonLd from '@/components/JsonLd'
+import {buildPageMetadata, getSiteUrl, SITE_NAME} from '@/lib/seo'
+import {getSafeInternalPath} from '@/lib/safeInternalPath'
 import it from '@/lib/i18n/locales/it.json'
 import en from '@/lib/i18n/locales/en.json'
 import styles from './rankings.module.scss'
 
-export const metadata = {
-  title: 'Classifiche',
+export async function generateMetadata() {
+  const lang = await getServerLanguage()
+
+  return buildPageMetadata({
+    title: lang === 'en' ? 'Blind wine tasting rankings' : 'Classifiche vini alla cieca',
+    description:
+      lang === 'en'
+        ? 'Explore public wine rankings based on real ratings collected from completed blind wine tastings.'
+        : 'Scopri le classifiche pubbliche dei vini basate sulle valutazioni reali raccolte nelle degustazioni alla cieca completate.',
+    path: '/classifiche',
+    lang,
+  })
 }
 
 export default async function RankingsPage({searchParams}) {
@@ -24,16 +37,52 @@ export default async function RankingsPage({searchParams}) {
     data: {user},
   } = await supabase.auth.getUser()
   const snapshot = await getPublicRankingsSnapshot(supabase)
+  const rankingLists = snapshot.sections
+    .filter((section) => section.items.length > 0)
+    .map((section) => ({
+      '@type': 'ItemList',
+      '@id': `${getSiteUrl('/classifiche')}#${section.id}`,
+      name: text.sections?.[section.id] || section.id,
+      numberOfItems: section.items.length,
+      itemListElement: section.items.map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        url: getSiteUrl(`/classifiche/${encodeURIComponent(item.wineGroupKey)}`),
+        name: item.name,
+      })),
+    }))
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': getSiteUrl('/classifiche'),
+        name: text.heading,
+        description: text.description,
+        url: getSiteUrl('/classifiche'),
+        inLanguage: lang === 'en' ? 'en-US' : 'it-IT',
+        isPartOf: {'@id': `${getSiteUrl('/')}#website`},
+        about: {
+          '@type': 'Thing',
+          name: lang === 'en' ? 'Blind wine tasting' : 'Degustazione alla cieca',
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: SITE_NAME,
+          url: getSiteUrl('/'),
+        },
+      },
+      ...rankingLists,
+    ],
+  }
   const resolvedSearchParams = await searchParams
   const requestedBackHref =
     typeof resolvedSearchParams?.back === 'string' ? resolvedSearchParams.back : null
-  const safeBackHref =
-    requestedBackHref && requestedBackHref.startsWith('/') && !requestedBackHref.startsWith('//')
-      ? requestedBackHref
-      : '/dashboard'
+  const safeBackHref = getSafeInternalPath(requestedBackHref, '/dashboard')
 
   return (
     <main className={styles.page}>
+      <JsonLd data={structuredData} />
       <div className={styles.container}>
         <PartnerPageHeader
           isLoggedIn={Boolean(user)}
@@ -62,10 +111,12 @@ export default async function RankingsPage({searchParams}) {
           {text.realDataNote ? <div className={styles.heroNote}>{text.realDataNote}</div> : null}
         </section>
 
-        <GlobalStatsStrip
-          statsSnapshot={snapshot.globalStats}
-          text={text.globalStats || {stats: text.stats || {}}}
-        />
+        {snapshot.globalStats?.items?.length ? (
+          <GlobalStatsStrip
+            statsSnapshot={snapshot.globalStats}
+            text={text.globalStats || {stats: text.stats || {}}}
+          />
+        ) : null}
 
         {snapshot.userSection?.items?.length ? (
           <section className={styles.userSectionCard}>

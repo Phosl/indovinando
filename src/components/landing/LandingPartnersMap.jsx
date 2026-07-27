@@ -4,15 +4,7 @@ import PartnerPublicCard from '@/components/partner/PartnerPublicCard'
 import PartnerLandingMap from '@/components/partner/PartnerLandingMap'
 
 export default function LandingPartnersMap({text = {}, partners = []}) {
-  const fallbackPartners = (text.items || []).map((partner, index) => ({
-    id: `fallback-${index}`,
-    name: partner,
-    category: text.fallbackCategory || 'Partner',
-    description: '',
-    location: '',
-    slug: 'partner',
-  }))
-  const items = partners.length ? partners.slice(0, 6) : fallbackPartners
+  const items = partners.slice(0, 6)
 
   return (
     <section id="partner" className={styles.section}>
@@ -32,7 +24,7 @@ export default function LandingPartnersMap({text = {}, partners = []}) {
               String(partners.length),
             )
           : text.counter ||
-            '+20 enoteche e professionisti del vino stanno già utilizzando Indovinando'}
+            'La directory cresce con le attività che rendono pubblico il proprio profilo.'}
       </p>
 
       <div className={styles.partnerShowcase}>
@@ -51,17 +43,19 @@ export default function LandingPartnersMap({text = {}, partners = []}) {
           </div>
         </div>
 
-        <div className={styles.partnerScroller} aria-label={text.scrollerLabel || text.title}>
-          {items.map((partner) => (
-            <div key={partner.id} className={styles.partnerScrollerItem}>
-              <PartnerPublicCard
-                partner={partner}
-                ctaLabel={text.cardCta || 'Apri scheda'}
-                compact
-              />
-            </div>
-          ))}
-        </div>
+        {items.length ? (
+          <div className={styles.partnerScroller} aria-label={text.scrollerLabel || text.title}>
+            {items.map((partner) => (
+              <div key={partner.id} className={styles.partnerScrollerItem}>
+                <PartnerPublicCard
+                  partner={partner}
+                  ctaLabel={text.cardCta || 'Apri scheda'}
+                  compact
+                />
+              </div>
+            ))}
+          </div>
+        ) : null}
 
         <div className={styles.mapActions}>
           <Link href="/partner" className="btn primary btn-inline">

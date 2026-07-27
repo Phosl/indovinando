@@ -6,7 +6,8 @@ export default function manifest() {
   return {
     name: 'Indovinando',
     short_name: 'Indovinando',
-    description: "Quiz sul vino, gioco live, Enoteca e corso vino in un'unica app.",
+    description:
+      'Crea e organizza degustazioni alla cieca, invita con un QR e raccogli classifiche e valutazioni reali sui vini.',
     start_url: '/',
     display: 'standalone',
     background_color: themeColor,

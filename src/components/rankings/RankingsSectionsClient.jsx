@@ -51,6 +51,11 @@ export default function RankingsSectionsClient({sections = [], text = {}}) {
             </div>
 
             <div className={styles.rankingList}>
+              {!section.items.length ? (
+                <p className={styles.rankingEmpty}>
+                  {text.emptySection || 'Dati reali in raccolta.'}
+                </p>
+              ) : null}
               {section.items.map((item, index) => {
                 const content = (
                   <>

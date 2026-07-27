@@ -1,16 +1,19 @@
 import styles from './copyright.module.scss'
 import {getServerLanguage} from '@/lib/i18n/server'
+import {buildPageMetadata} from '@/lib/seo'
 
 export async function generateMetadata() {
   const lang = await getServerLanguage()
   const isEn = lang === 'en'
 
-  return {
-    title: isEn ? 'Copyright & IP Notice — Indovinando' : 'Copyright e tutela IP — Indovinando',
+  return buildPageMetadata({
+    title: isEn ? 'Copyright & IP notice' : 'Copyright e tutela IP',
     description: isEn
       ? 'Legal notice for the name, logo, idea, and contents of Indovinando.'
       : 'Informativa legale su nome, logo, idea e contenuti di Indovinando.',
-  }
+    path: '/copyright',
+    lang,
+  })
 }
 
 const UI_TEXT = {
