@@ -39,6 +39,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.49.0',
+    date: '27 luglio 2026',
+    label: 'Auto',
+    changes: [
+      'add professional landing footer',
+    ],
+  },
+
+  {
     version: '1.48.0',
     date: '27 luglio 2026',
     label: 'Auto',
