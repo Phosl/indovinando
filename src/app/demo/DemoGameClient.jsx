@@ -81,7 +81,7 @@ export default function DemoGameClient() {
 
       return {
         ...question,
-        text: `${t('tastingClue')}\n\n${question.text}`,
+        text: `${t('tastingClue')}\n${question.text}`,
         is_neutral: isNeutral,
         game_question_options: gameQuestionOptions,
         correctId:

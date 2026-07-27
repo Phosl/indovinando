@@ -38,11 +38,14 @@
   display: flex;
   flex-direction: column;
   height: 100dvh;
+  min-height: 0;
+  max-height: 100dvh;
   overflow: hidden;
   background: var(--background);
   max-width: 960px;
   margin: 0 auto;
   position: relative;
+  box-sizing: border-box;
   user-select: none; // prevent accidental text selection during gameplay
   overscroll-behavior: none; // block pull-to-refresh / bounce while playing
   -webkit-tap-highlight-color: transparent;
@@ -62,18 +65,16 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
-  background: white;
+  width: 100%;
+  padding: 16px 20px;
+  background: var(--foreground);
   box-shadow: 0px 4px 0px 0px var(--gray-light);
   border-radius: 12px;
-  padding: 16px 20px;
-  margin: 16px 16px 0;
-  max-width: calc(100% - 32px);
+  margin: 16px 0 0;
+
   @media (max-width: 768px) {
-    margin: 0px;
     margin-top: calc(env(safe-area-inset-top, 0px) + 12px);
     padding: 12px 16px;
-    max-width: 100%;
   }
 }
 
@@ -179,7 +180,10 @@
 // ── Scrollable question area ──────────────────────────────────
 .slideContent {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   padding: 20px 0px;
   display: flex;
   flex-direction: column;
@@ -1086,6 +1090,8 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  padding-top: max(12px, env(safe-area-inset-top, 0px));
+  overflow-y: auto;
   z-index: 40;
   animation: sheetBackdropIn 0.18s ease-out both;
 }
@@ -1257,6 +1263,10 @@
 
 .exitSheet {
   text-align: center;
+  max-height: calc(
+    100dvh - 24px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+  );
+  overscroll-behavior: contain;
 }
 
 .exitLottiePlaceholder {
@@ -1283,7 +1293,10 @@
 .exitActions {
   margin-top: 14px;
   display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 10px;
+
   :global(.danger) {
     width: auto;
   }
@@ -1301,11 +1314,96 @@
 // }
 
 .mobileCheckSpacing {
-  padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: 20px;
 }
 
 @media (max-width: 768px) {
   .exitActions {
     flex-direction: row;
+  }
+}
+
+@media (max-height: 600px) {
+  .fullPage {
+    padding-inline: 16px;
+  }
+
+  .topBar {
+    max-width: 100%;
+    margin: max(8px, env(safe-area-inset-top, 0px)) 0 0;
+    padding: 10px 14px;
+  }
+
+  .slideContent {
+    gap: 8px;
+    padding: 10px 0;
+  }
+
+  .bottleBadge {
+    padding-block: 2px;
+  }
+
+  .questionText {
+    font-size: clamp(1.05rem, 2.8vw, 1.25rem);
+    line-height: 1.25;
+  }
+
+  .optionsList {
+    gap: 6px;
+    margin-top: 0;
+  }
+
+  .optionButton {
+    min-height: 44px;
+    padding: 9px 14px;
+    font-size: 1rem;
+  }
+
+  .mobileCheckSpacing {
+    padding-bottom: 10px;
+  }
+
+  .bottomPanel {
+    margin-inline: -16px;
+    padding: 9px 16px calc(9px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .sheetBackdrop {
+    align-items: center;
+    padding: max(12px, env(safe-area-inset-top, 0px)) 12px
+      max(12px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .sheet {
+    width: min(640px, 100%);
+    max-height: calc(
+      100dvh - 24px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+    );
+    border-radius: 16px;
+    box-shadow: 0 4px 0 var(--gray-light);
+    padding: 10px 16px;
+
+    h3 {
+      margin: 4px 0 8px;
+      font-size: 1.4rem;
+    }
+  }
+
+  .exitLottiePlaceholder {
+    width: 72px;
+    height: 72px;
+    margin: 6px auto 8px;
+    border-radius: 16px;
+    font-size: 2rem;
+  }
+
+  .exitHint {
+    font-size: 0.95rem;
+    line-height: 1.35;
+  }
+
+  .exitActions {
+    justify-content: center;
+    margin-top: 10px;
   }
 }

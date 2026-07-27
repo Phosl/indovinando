@@ -110,13 +110,19 @@ export const GameOverlays = memo(function GameOverlays({
         <div className={styles.sheetBackdrop} onClick={onCloseExit}>
           <div
             className={`${styles.sheet} ${styles.exitSheet}`}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="leave-game-title"
+            aria-describedby="leave-game-description"
             onClick={(e) => e.stopPropagation()}>
             <div className={styles.sheetHandle} />
             <div className={styles.exitLottiePlaceholder} aria-hidden="true">
               😟
             </div>
-            <h3>{t('leaveGameTitle')}</h3>
-            <p className={styles.exitHint}>{t('leaveGameDesc')}</p>
+            <h3 id="leave-game-title">{t('leaveGameTitle')}</h3>
+            <p id="leave-game-description" className={styles.exitHint}>
+              {t('leaveGameDesc')}
+            </p>
             <div className={styles.exitActions}>
               <button className="btn warning" onClick={onCloseExit}>
                 {t('cancel')}
