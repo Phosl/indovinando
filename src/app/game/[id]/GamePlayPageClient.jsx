@@ -14,6 +14,8 @@ export default function GamePlayPageClient({
   historySessions,
   avatarOptions,
   isOwner,
+  tableLiveEvent,
+  branding,
   onDelete,
 }) {
   const router = useRouter()
@@ -50,6 +52,8 @@ export default function GamePlayPageClient({
           historySessions={historySessions}
           avatarOptions={avatarOptions}
           isOwner={isOwner}
+          tableLiveEvent={tableLiveEvent}
+          branding={branding}
         />
 
         {isOwner && (

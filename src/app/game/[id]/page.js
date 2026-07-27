@@ -4,6 +4,7 @@ import {createServerSupabase} from '@/lib/supabaseServer'
 import {getGameAvatarOptions} from '@/lib/gameAvatarOptions'
 import {getLocaleText} from '@/lib/i18n/getLocaleText'
 import {getServerLanguage} from '@/lib/i18n/server'
+import {getBusinessBranding} from '@/lib/businessBranding'
 import GamePlayPageClient from './GamePlayPageClient'
 import {deleteGame} from './actions'
 import styles from './GamePlayPage.module.scss'
@@ -74,11 +75,22 @@ export default async function GamePlayPage({params}) {
   const {data: hostedTableEvents} = isOwner
     ? await supabase
         .from('table_live_events')
-        .select('id, game_id')
+        .select('id, game_id, slug, title, status, created_at')
         .eq('created_by', user.id)
         .eq('game_id', game.id)
+        .order('created_at', {ascending: false})
         .limit(250)
     : {data: []}
+
+  const {data: ownerProfile} = isOwner
+    ? await supabase
+        .from('profiles')
+        .select(
+          'username, business_name, business_type, business_website, business_phone, business_address, business_logo_path, business_logo_url, city, province',
+        )
+        .eq('id', user.id)
+        .maybeSingle()
+    : {data: null}
 
   const tableEventIds = (hostedTableEvents || []).map((event) => event.id)
   const {data: tableSessions} =
@@ -223,6 +235,20 @@ export default async function GamePlayPage({params}) {
     .filter((session) => session.played_at)
     .sort((a, b) => new Date(b.played_at || 0).getTime() - new Date(a.played_at || 0).getTime())
     .slice(0, 100)
+  const activeTableEvent = (hostedTableEvents || []).find(
+    (event) => event.status === 'active' && event.slug,
+  )
+  const tableLiveEvent = activeTableEvent
+    ? {
+        id: activeTableEvent.id,
+        slug: activeTableEvent.slug,
+        title: activeTableEvent.title,
+        gameId: activeTableEvent.game_id,
+        status: activeTableEvent.status,
+        createdAt: activeTableEvent.created_at,
+        url: `/table-live/event/${activeTableEvent.slug}`,
+      }
+    : null
 
   return (
     <GamePlayPageClient
@@ -232,6 +258,8 @@ export default async function GamePlayPage({params}) {
       historySessions={mergedHistorySessions}
       avatarOptions={avatarOptions}
       isOwner={isOwner}
+      tableLiveEvent={tableLiveEvent}
+      branding={getBusinessBranding(ownerProfile || {})}
       onDelete={deleteGame}
     />
   )

@@ -1,15 +1,17 @@
 import {NextResponse} from 'next/server'
 import {createServerSupabase} from '@/lib/supabaseServer'
 import {createAdminSupabaseOrFallback} from '@/lib/supabaseAdmin'
+import {
+  ensureActiveTableLiveEvent,
+  getActiveTableLiveEvent,
+} from '@/lib/tableLiveEvents'
 
-function slugify(value) {
-  return String(value || '')
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
+function logEventError(operation, gameId, error) {
+  console.error('[table-live event]', {
+    operation,
+    gameId,
+    code: error?.code || 'UNKNOWN',
+  })
 }
 
 export async function POST(request) {
@@ -48,46 +50,28 @@ export async function POST(request) {
     }
 
     const db = createAdminSupabaseOrFallback(supabase)
-    const base = slugify(title) || 'evento'
+    const {event, error, created} = await ensureActiveTableLiveEvent(db, {
+      gameId,
+      createdBy: user.id,
+      title,
+      inactivityTimeoutMinutes,
+    })
 
-    let created = null
-    for (let i = 0; i < 20; i++) {
-      const suffix = i === 0 ? '' : `-${Math.floor(100 + Math.random() * 900)}`
-      const slug = `${base}${suffix}`
-      const {data, error} = await db
-        .from('table_live_events')
-        .insert({
-          slug,
-          title,
-          game_id: gameId,
-          created_by: user.id,
-          inactivity_timeout_minutes: inactivityTimeoutMinutes,
-          status: 'active',
-        })
-        .select('id, slug, title, game_id')
-        .maybeSingle()
-
-      if (!error && data) {
-        created = data
-        break
-      }
-
-      if (error && error.code !== '23505') {
-        return NextResponse.json({error: error.message}, {status: 500})
-      }
-    }
-
-    if (!created) {
-      return NextResponse.json({error: 'Unable to create event slug'}, {status: 500})
+    if (error || !event) {
+      logEventError('ensure', gameId, error)
+      return NextResponse.json({error: 'Unable to prepare this event'}, {status: 500})
     }
 
     return NextResponse.json({
-      id: created.id,
-      slug: created.slug,
-      url: `/table-live/event/${created.slug}`,
+      event,
+      id: event.id,
+      slug: event.slug,
+      url: event.url,
+      created,
     })
   } catch (error) {
-    return NextResponse.json({error: error?.message || 'Unexpected error'}, {status: 500})
+    logEventError('ensure-unexpected', null, error)
+    return NextResponse.json({error: 'Unable to prepare this event'}, {status: 500})
   }
 }
 
@@ -109,33 +93,23 @@ export async function GET(request) {
       return NextResponse.json({error: 'Not authenticated'}, {status: 401})
     }
 
-    const {data: event, error} = await supabase
-      .from('table_live_events')
-      .select('id, slug, title, game_id, status, created_at')
-      .eq('game_id', gameId)
-      .eq('created_by', user.id)
-      .eq('status', 'active')
-      .order('created_at', {ascending: false})
-      .limit(1)
-      .maybeSingle()
+    const {event, error} = await getActiveTableLiveEvent(supabase, {
+      gameId,
+      createdBy: user.id,
+    })
 
     if (error) {
-      return NextResponse.json({error: error.message}, {status: 500})
+      logEventError('find-active', gameId, error)
+      return NextResponse.json({error: 'Unable to load this event'}, {status: 500})
     }
 
     if (!event) {
       return NextResponse.json({event: null})
     }
 
-    return NextResponse.json({
-      event: {
-        id: event.id,
-        slug: event.slug,
-        title: event.title,
-        url: `/table-live/event/${event.slug}`,
-      },
-    })
+    return NextResponse.json({event})
   } catch (error) {
-    return NextResponse.json({error: error?.message || 'Unexpected error'}, {status: 500})
+    logEventError('find-active-unexpected', null, error)
+    return NextResponse.json({error: 'Unable to load this event'}, {status: 500})
   }
 }

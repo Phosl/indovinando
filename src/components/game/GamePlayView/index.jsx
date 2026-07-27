@@ -12,6 +12,7 @@ import {formatAppDate, formatAppDateTime} from '@/lib/dateFormat'
 import {watchMobileViewport} from '@/lib/deviceUtils'
 import {getGamePlayViewText} from '../utils/constants'
 import {isBottleComplete} from '../utils/validations'
+import TableLiveEventActions from '../TableLiveEventActions'
 import styles from './GamePlayView.module.scss'
 
 export default function GamePlayView({
@@ -21,6 +22,8 @@ export default function GamePlayView({
   historySessions = [],
   avatarOptions = [],
   isOwner,
+  tableLiveEvent = null,
+  branding = {},
 }) {
   const {lang} = useLanguage()
   const t = useT('gamePlayViewActions')
@@ -128,45 +131,54 @@ export default function GamePlayView({
           </div>
         </div>
         <div className={styles.actionsBar}>
-          {isReadyToPlay ? (
-            <ButtonLink
-              href={`/game/${game.id}/table-live`}
-              variant="success"
-              className={`btn-start ${styles.actionBtn}`}>
-              {t('startMatch')}
-            </ButtonLink>
-          ) : (
-            <div className={styles.setupCtaWrap}>
+          <div className={styles.primaryActions}>
+            {isReadyToPlay ? (
+              isOwner ? (
+                <TableLiveEventActions
+                  gameId={game.id}
+                  gameName={game.name}
+                  initialEvent={tableLiveEvent}
+                  branding={branding}
+                />
+              ) : (
+                <ButtonLink
+                  href={`/game/${game.id}/table-live`}
+                  variant="success"
+                  className={`btn-start ${styles.actionBtn}`}>
+                  {t('startMatch')}
+                </ButtonLink>
+              )
+            ) : (
               <ButtonLink
                 href={`/game/${game.id}/edit?step=4`}
                 variant="success"
                 className={`btn-start ${styles.actionBtn}`}>
                 {t('completeGame')}
               </ButtonLink>
-            </div>
-          )}
+            )}
 
-          {isOwner && hasIncompleteBottles ? (
-            <div className={styles.incompleteCtaRow}>
-              <ButtonLink
-                href={`/game/${game.id}/edit?step=4`}
-                variant="warning"
-                size={isMobileViewport ? 'small' : undefined}
-                className={styles.incompleteCtaBtn}>
-                <span className={styles.actionBtnContent}>
-                  <Icon name="warning" size={24} className={styles.actionBtnIcon} />
-                  <span>
-                    {t(
-                      incompleteBottlesCount === 1
-                        ? 'completeSingleBottle'
-                        : 'completeMultipleBottles',
-                      {count: String(incompleteBottlesCount)},
-                    )}
+            {isOwner && hasIncompleteBottles ? (
+              <div className={styles.incompleteCtaRow}>
+                <ButtonLink
+                  href={`/game/${game.id}/edit?step=4`}
+                  variant="warning"
+                  size={isMobileViewport ? 'small' : undefined}
+                  className={styles.incompleteCtaBtn}>
+                  <span className={styles.actionBtnContent}>
+                    <Icon name="warning" size={24} className={styles.actionBtnIcon} />
+                    <span>
+                      {t(
+                        incompleteBottlesCount === 1
+                          ? 'completeSingleBottle'
+                          : 'completeMultipleBottles',
+                        {count: String(incompleteBottlesCount)},
+                      )}
+                    </span>
                   </span>
-                </span>
-              </ButtonLink>
-            </div>
-          ) : null}
+                </ButtonLink>
+              </div>
+            ) : null}
+          </div>
 
           <div className={styles.actionsBtnBottom}>
             {isOwner && (

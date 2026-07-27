@@ -286,61 +286,153 @@
   border-top: 2px solid var(--button-secondary-border);
   padding-top: 16px;
   margin-top: 16px;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   margin-bottom: 24px;
 }
 
-.setupCtaWrap {
+.primaryActions {
+  min-width: 0;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.setupCtaHint {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  font-weight: 600;
+  display: grid;
+  gap: 10px;
 }
 
 .actionBtn {
+  width: 100%;
   min-width: 0;
   text-align: center;
   justify-content: center;
+  line-height: 1.2;
+  white-space: normal;
+
   &.btn-start {
     grid-column: 1 / -1;
   }
 }
 
+.tableLiveActions {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 10px;
+
+  .actionBtn {
+    min-height: 58px;
+  }
+}
+
+.tableLiveError {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--danger-border);
+  border-radius: 8px;
+  background: var(--danger-surface);
+  color: var(--danger-text);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
 .actionBtnContent {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
+  min-width: 0;
 }
 
 .actionBtnIcon {
+  flex: 0 0 auto;
   color: currentColor;
 }
 
 .actionsBtnBottom {
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 10px;
   justify-content: flex-end;
+
+  .actionBtn {
+    min-height: 58px;
+  }
 }
 
 .incompleteCtaRow {
-  margin-top: -8px;
-  margin-bottom: 18px;
   display: flex;
   width: 100%;
 }
 
 .incompleteCtaBtn {
   width: 100%;
+}
+
+.qrModalContent {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.qrLogo {
+  width: 84px;
+  height: auto;
+}
+
+.qrBrandName,
+.qrEventTitle,
+.qrHint,
+.qrEventLink {
+  margin: 0;
+}
+
+.qrBrandName {
+  color: var(--primary-text);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.qrEventTitle {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 900;
+}
+
+.qrHint {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.qrImage {
+  width: min(300px, 100%);
+  height: auto;
+}
+
+.qrEventLink {
+  max-width: 100%;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.qrModalActions {
+  width: min(330px, 100%);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+
+  :global(.btn) {
+    width: 100%;
+    min-width: 0;
+    line-height: 1.2;
+    white-space: normal;
+  }
 }
 
 .sliderSection {
@@ -589,8 +681,11 @@
 
 @media (max-width: 960px) {
   .actionsBar {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .actionsBtnBottom {
+    width: 100%;
   }
 }
 @media (max-width: 768px) {
@@ -603,6 +698,12 @@
     margin-bottom: 0px;
     margin-top: 0px;
   }
+
+  .tableLiveActions,
+  .actionsBtnBottom {
+    width: 100%;
+  }
+
   .incompleteCtaRow {
     margin-bottom: 0px;
   }
@@ -614,6 +715,21 @@
 
   .questionTitle {
     font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tableLiveActions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tableLiveActions .actionBtn,
+  .actionsBtnBottom .actionBtn {
+    min-height: 50px;
+  }
+
+  .qrModalActions {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
