@@ -300,67 +300,45 @@ main.flex-container {
   position: relative;
   background: var(--background);
   will-change: opacity, transform;
-  transform-origin: center top;
-  backface-visibility: hidden;
 }
 
-.route-shell.route-forward.is-leaving {
-  animation: routeLeaveLeft var(--motion-duration-fast) var(--motion-ease-exit) forwards;
+.route-shell.route-forward {
+  --route-enter-x: 16px;
+  --route-leave-x: -12px;
 }
 
-.route-shell.route-forward.is-entering {
-  animation: routeEnterRight var(--motion-duration-page) var(--motion-ease-standard) both;
+.route-shell.route-back {
+  --route-enter-x: -16px;
+  --route-leave-x: 12px;
 }
 
-.route-shell.route-back.is-leaving {
-  animation: routeLeaveRight var(--motion-duration-fast) var(--motion-ease-exit) forwards;
+.route-shell.is-leaving {
+  animation: routeLeave var(--motion-duration-fast) var(--motion-ease-exit) forwards;
 }
 
-.route-shell.route-back.is-entering {
-  animation: routeEnterLeft var(--motion-duration-page) var(--motion-ease-standard) both;
+.route-shell.is-entering {
+  animation: routeEnter var(--motion-duration-page) var(--motion-ease-standard) both;
 }
 
-@keyframes routeLeaveLeft {
+@keyframes routeLeave {
   from {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: translateX(0);
   }
   to {
-    opacity: 0.72;
-    transform: translate3d(-12px, 0, 0);
+    opacity: 0;
+    transform: translateX(var(--route-leave-x));
   }
 }
 
-@keyframes routeEnterRight {
+@keyframes routeEnter {
   from {
     opacity: 0;
-    transform: translate3d(18px, 0, 0);
+    transform: translateX(var(--route-enter-x));
   }
   to {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes routeLeaveRight {
-  from {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    opacity: 0.72;
-    transform: translate3d(12px, 0, 0);
-  }
-}
-
-@keyframes routeEnterLeft {
-  from {
-    opacity: 0;
-    transform: translate3d(-18px, 0, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: translateX(0);
   }
 }
 
