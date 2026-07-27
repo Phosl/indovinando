@@ -39,6 +39,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.51.2',
+    date: '27 luglio 2026',
+    label: 'Auto',
+    changes: [
+      'unify app loading skeletons',
+    ],
+  },
+
+  {
     version: '1.51.1',
     date: '27 luglio 2026',
     label: 'Auto',
