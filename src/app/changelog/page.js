@@ -39,6 +39,16 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.48.0',
+    date: '27 luglio 2026',
+    label: 'Auto',
+    changes: [
+      'prepare public experience for sharing',
+      'simplify page transition motion',
+    ],
+  },
+
+  {
     version: '1.47.1',
     date: '10 luglio 2026',
     label: 'Auto',
