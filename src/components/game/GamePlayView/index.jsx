@@ -185,7 +185,6 @@ export default function GamePlayView({
               <ButtonLink
                 href={`/game/${game.id}/edit`}
                 variant="neutral"
-                size={isMobileViewport ? 'small' : undefined}
                 className={styles.actionBtn}>
                 <span className={styles.actionBtnContent}>
                   <Icon name="edit" size={24} className={styles.actionBtnIcon} />
@@ -196,7 +195,6 @@ export default function GamePlayView({
             <ButtonLink
               href={`/game/${game.id}/print`}
               variant="neutral"
-              size={isMobileViewport ? 'small' : undefined}
               className={styles.actionBtn}>
               <span className={styles.actionBtnContent}>
                 <Icon name="print" size={24} className={styles.actionBtnIcon} />
