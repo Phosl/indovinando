@@ -2,6 +2,7 @@ import {memo, useState} from 'react'
 import styles from '../playerLive.module.scss'
 import {useT} from '@/lib/i18n/useT'
 import AvatarDisplay from '@/components/AvatarDisplay'
+import {SkeletonBone} from '@/components/ui/Skeleton'
 
 export const GameOverlays = memo(function GameOverlays({
   leaderboardOpen,
@@ -29,10 +30,10 @@ export const GameOverlays = memo(function GameOverlays({
               {isLoadingStandings && sortedLeaderboard.length === 0
                 ? [0, 1, 2].map((i) => (
                     <div key={i} className={styles.sheetRow}>
-                      <span className={`skeleton ${styles.standingSkeletonRank}`} />
-                      <span className={`skeleton ${styles.standingSkeletonAvatar}`} />
-                      <span className={`skeleton ${styles.standingSkeletonName}`} />
-                      <span className={`skeleton ${styles.standingSkeletonScore}`} />
+                      <SkeletonBone className={styles.standingSkeletonRank} />
+                      <SkeletonBone className={styles.standingSkeletonAvatar} />
+                      <SkeletonBone className={styles.standingSkeletonName} />
+                      <SkeletonBone className={styles.standingSkeletonScore} />
                     </div>
                   ))
                 : sortedLeaderboard.map((player, idx) => {

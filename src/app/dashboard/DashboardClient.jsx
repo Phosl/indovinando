@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import DashboardInfoFabWrapper from './DashboardInfoFabWrapper'
 import ProgressBar from '@/components/ui/ProgressBar'
+import {SkeletonBone} from '@/components/ui/Skeleton'
 import Icon from '@/components/Icon'
 import CreateGameCardLink from '@/components/CreateGameCardLink'
 import ProfileSetupPanel from '@/components/profile/ProfileSetupPanel'
@@ -93,7 +94,7 @@ export default function DashboardClient({dashboardDict, lang, userEmail}) {
               <div className={styles.courseProgressMeta}>
                 <span className={styles.courseProgressLessons}>
                   {courseIsLoading ? (
-                    <span className={`skeleton ${styles.courseProgressSkeleton}`} />
+                    <SkeletonBone className={styles.courseProgressSkeleton} />
                   ) : (
                     dashboardDict.completedLessonsLabel
                       .replace('{completed}', String(completedLessons))

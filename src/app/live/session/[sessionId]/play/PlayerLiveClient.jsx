@@ -2,7 +2,7 @@
 
 import {useCallback, useEffect, useState} from 'react'
 import {useRouter} from 'next/navigation'
-import Loader from '@/components/Loader'
+import PageSkeleton from '@/components/PageSkeleton'
 import styles from './playerLive.module.scss'
 
 import {useGameAudio} from './hooks/useGameAudio'
@@ -249,14 +249,7 @@ export default function PlayerLiveClient({
   }
 
   if (resolvingPlayer || loadingGameData) {
-    return (
-      <div className={styles.fullPage}>
-        <div className={styles.centeredCard}>
-          <Loader label={t('loadingGame')} />
-          <p className={styles.loadingHint}>{t('loadingGameDesc')}</p>
-        </div>
-      </div>
-    )
+    return <PageSkeleton variant="play" showHero={false} />
   }
 
   if (!playerData) {

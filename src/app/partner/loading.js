@@ -1,17 +1,5 @@
-import styles from './partner.module.scss'
+import PageSkeleton from '@/components/PageSkeleton'
 
 export default function PartnerLoading() {
-  return (
-    <main className={styles.page}>
-      <div className={styles.container}>
-        <div className={`skeleton skeleton-frame ${styles.loadingTopBar}`} />
-        <section className={`skeleton skeleton-card ${styles.loadingHero}`} />
-        <section className={styles.loadingGrid}>
-          <div className={`skeleton skeleton-card ${styles.loadingCard}`} />
-          <div className={`skeleton skeleton-card ${styles.loadingCard}`} />
-          <div className={`skeleton skeleton-card ${styles.loadingCard}`} />
-        </section>
-      </div>
-    </main>
-  )
+  return <PageSkeleton variant="grid" cards={4} />
 }

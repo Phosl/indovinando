@@ -6,6 +6,7 @@ import {supabaseAnonClient} from '@/lib/supabaseClient'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useT} from '@/lib/i18n/useT'
 import Icon from '@/components/Icon'
+import PageSkeleton from '@/components/PageSkeleton'
 // Reuse live-game stylesheet directly – no duplicate CSS
 import styles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
 import {useGameAudio} from '../../../live/session/[sessionId]/play/hooks/useGameAudio'
@@ -347,11 +348,7 @@ export default function EnotecaPlayClient({menuId, menuName, bottles, questions}
   }, [bottleIndex, questionIndex, screen])
 
   if (loading) {
-    return (
-      <div className={styles.fullPage} style={{alignItems: 'center', justifyContent: 'center'}}>
-        <p className={styles.readyHint}>{t('loading')}</p>
-      </div>
-    )
+    return <PageSkeleton variant="play" showHero={false} />
   }
 
   // ── Shared top bar ────────────────────────────────────────────────────────

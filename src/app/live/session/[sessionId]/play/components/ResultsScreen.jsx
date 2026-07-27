@@ -4,6 +4,7 @@ import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useT} from '@/lib/i18n/useT'
 import AvatarDisplay from '@/components/AvatarDisplay'
 import Icon from '@/components/Icon'
+import {SkeletonBone} from '@/components/ui/Skeleton'
 
 const isNeutralQuestion = (question) =>
   question?.is_neutral === true ||
@@ -186,10 +187,10 @@ export const ResultsScreen = memo(function ResultsScreen({
           {standings.length === 0
             ? [0, 1, 2].map((i) => (
                 <div key={i} className={styles.standingRow}>
-                  <span className={`skeleton ${styles.standingSkeletonRank}`} />
-                  <span className={`skeleton ${styles.standingSkeletonAvatar}`} />
-                  <span className={`skeleton ${styles.standingSkeletonName}`} />
-                  <span className={`skeleton ${styles.standingSkeletonScore}`} />
+                  <SkeletonBone className={styles.standingSkeletonRank} />
+                  <SkeletonBone className={styles.standingSkeletonAvatar} />
+                  <SkeletonBone className={styles.standingSkeletonName} />
+                  <SkeletonBone className={styles.standingSkeletonScore} />
                 </div>
               ))
             : standings.map((player, idx) => {

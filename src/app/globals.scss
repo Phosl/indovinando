@@ -285,14 +285,6 @@ main.flex-container {
   animation: skeletonSurfaceIn var(--motion-duration-page) var(--motion-ease-standard) both;
 }
 
-.skeleton-pill {
-  border-radius: 999px;
-}
-
-.skeleton-button {
-  border-radius: 12px;
-}
-
 /* ─── Route transitions ───────────────────────────────── */
 .route-shell {
   width: 100%;

@@ -8,6 +8,7 @@ import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
 import InfoModal from '@/components/InfoModal'
 import Icon from '@/components/Icon'
 import ProgressBar from '@/components/ui/ProgressBar'
+import {SkeletonBone} from '@/components/ui/Skeleton'
 import {useWineCourseProgress} from '@/app/corso-vino/hooks/useWineCourseProgress'
 import {supabaseClient, resetBrowserClient} from '@/lib/supabaseClient'
 import {useT} from '@/lib/i18n/useT'
@@ -544,7 +545,7 @@ export default function ProfileClient({
                 height={72}
               />
             ) : (
-              <div className={`skeleton ${styles.levelBadgeImgPlaceholder}`} />
+              <SkeletonBone as="div" className={styles.levelBadgeImgPlaceholder} />
             )}
             <div className={styles.levelInfo}>
               <p className={styles.levelNum}>Livello {loaded ? playerLevel.level.num : '…'}</p>

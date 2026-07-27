@@ -105,52 +105,6 @@
   display: inline-block;
 }
 
-.loadingWrap {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.skeletonItemCard {
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.skeletonLine {
-  height: 12px;
-}
-
-.skeletonLineWide {
-  width: 78%;
-}
-
-.skeletonLineMid {
-  width: 52%;
-}
-
-.skeletonPills {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.skeletonPillChip {
-  width: 98px;
-  height: 24px;
-}
-
-.skeletonGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.skeletonGridItem {
-  height: 40px;
-}
-
 @keyframes ringSpin {
   0% {
     transform: rotate(0deg);

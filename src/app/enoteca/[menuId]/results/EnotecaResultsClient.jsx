@@ -5,6 +5,7 @@ import {useRouter} from 'next/navigation'
 import {supabaseAnonClient} from '@/lib/supabaseClient'
 import TopBar from '@/components/TopBar'
 import Icon from '@/components/Icon'
+import PageSkeleton from '@/components/PageSkeleton'
 import {useT} from '@/lib/i18n/useT'
 import styles from '../../../live/session/[sessionId]/play/playerLive.module.scss'
 import xStyles from './enotecaResults.module.scss'
@@ -59,11 +60,7 @@ export default function EnotecaResultsClient({menuId, menuName, bottles, questio
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) {
-    return (
-      <div className={styles.fullPage} style={{alignItems: 'center', justifyContent: 'center'}}>
-        <p className={styles.readyHint}>{t('loading')}</p>
-      </div>
-    )
+    return <PageSkeleton variant="results" cards={4} showHero={false} />
   }
 
   const totalScore = answers.reduce((sum, a) => sum + (a.points ?? 0), 0)

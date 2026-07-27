@@ -13,6 +13,7 @@ import {GameOverlays} from '@/app/live/session/[sessionId]/play/components/GameO
 import {useT} from '@/lib/i18n/useT'
 import AvatarDisplay from '@/components/AvatarDisplay'
 import Loader from '@/components/Loader'
+import PageSkeleton from '@/components/PageSkeleton'
 import {buildPublicAppUrl} from '@/lib/publicAppUrl'
 import {scrollPageTop} from '@/lib/scrollPageTop'
 import styles from '@/app/live/session/[sessionId]/play/playerLive.module.scss'
@@ -635,7 +636,7 @@ export default function TableLiveSessionClient({sessionId}) {
   )
 
   if (loading) {
-    return <SessionLoadingScreen label={tPlayerLive('loadingGame')} hint={tJoin('gameStartingDesc')} />
+    return <PageSkeleton variant="play" showHero={false} />
   }
 
   if (!data) {
@@ -652,7 +653,7 @@ export default function TableLiveSessionClient({sessionId}) {
   }
 
   if (!data.me || !topBarPlayer) {
-    return <SessionLoadingScreen label={tJoin('joining')} hint={tJoin('gameStartingDesc')} />
+    return <PageSkeleton variant="play" showHero={false} />
   }
 
   if (starting || (data.session.status === 'playing' && !currentQuestion)) {

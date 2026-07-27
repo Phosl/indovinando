@@ -55,6 +55,27 @@
   color: var(--text-primary);
 }
 
+.restoringSkeleton {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+
+.restoringTitle {
+  width: min(240px, 72%);
+  height: 24px;
+}
+
+.restoringLine {
+  width: min(360px, 88%);
+  height: 14px;
+}
+
+.restoringLineShort {
+  width: min(260px, 64%);
+  height: 14px;
+}
+
 .waitingCard {
   text-align: center;
   padding: 40px 24px;

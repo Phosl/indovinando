@@ -9,7 +9,7 @@ import {GAME_AVATARS, profileAvatarToGameId} from '@/lib/avatarUtils'
 import {buildPublicAppUrl} from '@/lib/publicAppUrl'
 import styles from './playerJoin.module.scss'
 import {useT} from '@/lib/i18n/useT'
-import Loader from '@/components/Loader'
+import {SkeletonBone} from '@/components/ui/Skeleton'
 
 const AVATAR_SVG_LIST = GAME_AVATARS.filter((a) => a.type === 'img')
 const AVATAR_EMOJI_LIST = GAME_AVATARS.filter((a) => a.type === 'emoji')
@@ -276,9 +276,14 @@ export default function PlayerJoinClient({sessionId, gameName, existingPlayers, 
       ) : null}
 
       {restoring ? (
-        <div className={styles.waitingCard}>
-          <Loader label={t('restoringAccess')} />
-          <p>{t('restoringAccessHint')}</p>
+        <div
+          className={`${styles.waitingCard} ${styles.restoringSkeleton}`}
+          aria-busy="true"
+          aria-label={t('restoringAccess')}
+          role="status">
+          <SkeletonBone className={styles.restoringTitle} />
+          <SkeletonBone className={styles.restoringLine} />
+          <SkeletonBone className={styles.restoringLineShort} />
         </div>
       ) : gameStarted ? (
         <div className={styles.waitingCard}>

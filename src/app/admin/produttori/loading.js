@@ -1,16 +1,5 @@
-import CatalogLoadingState from '../catalog/CatalogLoadingState'
-import styles from '../catalog/catalog.module.scss'
+import PageSkeleton from '@/components/PageSkeleton'
 
 export default function AdminProduttoriLoading() {
-  return (
-    <main className={styles.page}>
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h2 className={styles.sectionTitle}>Lista produttori</h2>
-          <p className={styles.hint}>Caricamento risultati...</p>
-        </div>
-        <CatalogLoadingState />
-      </div>
-    </main>
-  )
+  return <PageSkeleton cards={5} showTopBar={false} showHero={false} />
 }

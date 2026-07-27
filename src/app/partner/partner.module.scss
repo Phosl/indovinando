@@ -203,29 +203,6 @@
   justify-content: flex-start;
 }
 
-.loadingTopBar {
-  height: 74px;
-  border-radius: 22px;
-}
-
-.loadingHero {
-  min-height: 190px;
-}
-
-.loadingGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-}
-
-.loadingCard {
-  min-height: 260px;
-}
-
-.loadingDetailCard {
-  min-height: 340px;
-}
-
 @media (max-width: 900px) {
   .grid,
   .detailGrid {
@@ -244,9 +221,5 @@
     position: static;
     order: -1;
     align-self: flex-end;
-  }
-
-  .loadingGrid {
-    grid-template-columns: 1fr;
   }
 }

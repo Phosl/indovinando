@@ -4,7 +4,7 @@ import {Suspense, useMemo, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import {createClient} from '@/lib/supabaseClient'
 import GameEditor from '@/components/game/GameEditor'
-import Loader from '@/components/Loader'
+import PageSkeleton from '@/components/PageSkeleton'
 import OnboardingModal from '@/components/game/OnboardingModal'
 import {useLanguage} from '@/components/i18n/LanguageProvider'
 import {useT} from '@/lib/i18n/useT'
@@ -124,7 +124,15 @@ export default function GameCreateClient({
           onDisable={handleDisableOnboarding}
         />
 
-        <Suspense fallback={<Loader label={t('loadingEditor')} />}>
+        <Suspense
+          fallback={
+            <PageSkeleton
+              embedded
+              variant="form"
+              showTopBar={false}
+              showHero={false}
+            />
+          }>
           {mode === 'quick' ? (
             <GameEditor
               initialQuestions={quickTemplateQuestions}

@@ -6,6 +6,7 @@ import QRCode from 'qrcode'
 import TopBar from '@/components/TopBar'
 import ShareDetailsTabs from '@/components/ShareDetailsTabs/ShareDetailsTabs'
 import AvatarDisplay from '@/components/AvatarDisplay'
+import PageSkeleton from '@/components/PageSkeleton'
 import {useT} from '@/lib/i18n/useT'
 import {supabaseClient} from '@/lib/supabaseClient'
 import {buildPublicAppUrl, getPublicAppOrigin} from '@/lib/publicAppUrl'
@@ -296,36 +297,7 @@ export default function LiveSessionClient({
   }
 
   if (loading) {
-    return (
-      <div className={styles.container}>
-        <TopBar title={t('creatingSession')} onBack={() => router.push(backHref)} safeAreaTop />
-        <div className={styles.progressBarTrack}>
-          <div className={styles.progressBarFill} />
-        </div>
-        <div className={styles.lobbyCard}>
-          <div className={styles.section}>
-            <span className={`skeleton ${styles.skeletonHeading}`} />
-            <div className={styles.linkBox}>
-              <span className={`skeleton ${styles.skeletonLinkInput}`} />
-              <span className={`skeleton ${styles.skeletonCopyBtn}`} />
-            </div>
-          </div>
-          <div className={styles.section}>
-            <span className={`skeleton ${styles.skeletonHeading}`} />
-            <span className={`skeleton ${styles.skeletonInfo}`} />
-          </div>
-          <div className={styles.section}>
-            <span className={`skeleton ${styles.skeletonSubheading}`} />
-            <span className={`skeleton ${styles.skeletonListItem}`} />
-            <span className={`skeleton ${styles.skeletonListItem}`} />
-          </div>
-          <div className={styles.actions}>
-            <span className={`skeleton ${styles.skeletonStartBtn}`} />
-            <span className={`skeleton ${styles.skeletonCancelBtn}`} />
-          </div>
-        </div>
-      </div>
-    )
+    return <PageSkeleton variant="play" showHero={false} />
   }
 
   return (
