@@ -14,7 +14,7 @@
 .container {
   max-width: 960px;
   margin: 0 auto;
-  padding: 10px 12px 16px;
+  padding: 10px 12px calc(env(safe-area-inset-bottom, 0px) + 64px);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -91,7 +91,7 @@
   border: 2px solid var(--primary-100);
   box-shadow: 0 2px 10px rgba(32, 34, 44, 0.06);
   border-radius: 16px;
-  padding: 24px;
+  padding: clamp(16px, 5vw, 24px);
 
   h2 {
     margin: 0 0 6px;
@@ -120,6 +120,38 @@
       font-weight: 600;
     }
   }
+}
+
+.createSection,
+.joinSection {
+  display: grid;
+  gap: 10px;
+}
+
+.createSectionCopy {
+  display: grid;
+  gap: 6px;
+  text-align: center;
+
+  h2,
+  p {
+    margin: 0;
+  }
+
+  p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+}
+
+.codeLabel {
+  margin: 0;
+  color: var(--primary-text);
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
 }
 
 .stepHeader {
@@ -323,13 +355,17 @@
 }
 
 .codeInputGroup {
+  width: min(100%, 318px);
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 72px));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
   justify-content: center;
+  justify-self: center;
 }
 
 .codeDigitInput {
+  width: 100%;
+  min-width: 0;
   border: 2px solid var(--button-secondary-border);
   border-radius: 14px;
   min-height: 72px;
@@ -353,10 +389,10 @@
 }
 
 .orSeparator {
-  margin-top: 12px;
-  margin-bottom: 12px;
+  margin: 12px 0;
   position: relative;
   text-align: center;
+
   span {
     margin: 0 auto;
     display: inline-block;
@@ -365,7 +401,10 @@
     z-index: 1;
     padding: 0 8px;
     color: var(--gray-200);
+    font-size: 0.85rem;
+    font-weight: 700;
   }
+
   &:after {
     content: '';
     position: absolute;

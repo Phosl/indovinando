@@ -132,45 +132,67 @@ export default function TableLiveEventHomeClient({
         </header>
 
         <section className={styles.card}>
-          <label className={error ? styles.codeLabelError : ''}>
-            {error || t('joinCodeLabel')}
-          </label>
-          <div className={styles.codeInputGroup} aria-label={t('joinCodeAria')}>
-            {joinCodeDigits.map((digit, index) => (
-              <input
-                key={index}
-                ref={(node) => {
-                  joinCodeInputRefs.current[index] = node
-                }}
-                value={digit}
-                onChange={(e) => updateJoinCodeDigit(index, e.target.value)}
-                onKeyDown={(e) => handleJoinCodeKeyDown(index, e)}
-                onPaste={(e) => {
-                  e.preventDefault()
-                  updateJoinCodeDigit(index, e.clipboardData.getData('text'))
-                }}
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                placeholder={index === 0 ? '4' : ''}
-                maxLength={1}
-                className={styles.codeDigitInput}
-              />
-            ))}
+          <div className={styles.createSection} aria-labelledby="create-session-title">
+            <div className={styles.createSectionCopy}>
+              <h2 id="create-session-title">{t('createSessionTitle')}</h2>
+              <p>{t('createSessionDescription')}</p>
+            </div>
+            <Button variant="secondary" type="button" onClick={goToCreate}>
+              <Icon name="plus" size={36} />
+              {t('createSessionAction')}
+            </Button>
           </div>
-          <p className={styles.codeHint}>{t('joinCodeHint')}</p>
-          <Button variant="primary-filled" type="button" onClick={goToJoin} disabled={validatingJoinCode}>
-            <Icon name="enter" size={36} />
-            {validatingJoinCode ? t('joinCodeChecking') : t('joinSessionAction')}
-          </Button>
 
           <div className={styles.orSeparator}>
             <span>{t('orLabel')}</span>
           </div>
 
-          <button className="btn secondary" type="button" onClick={goToCreate}>
-            <Icon name="plus" size={36} />
-            {t('createSessionAction')}
-          </button>
+          <div className={styles.joinSection} aria-labelledby="join-code-label">
+            <p
+              id="join-code-label"
+              className={`${styles.codeLabel} ${error ? styles.codeLabelError : ''}`}
+              role={error ? 'alert' : undefined}>
+              {error || t('joinCodeLabel')}
+            </p>
+            <div
+              className={styles.codeInputGroup}
+              role="group"
+              aria-labelledby="join-code-label"
+              aria-describedby="join-code-hint">
+              {joinCodeDigits.map((digit, index) => (
+                <input
+                  key={index}
+                  ref={(node) => {
+                    joinCodeInputRefs.current[index] = node
+                  }}
+                  value={digit}
+                  onChange={(e) => updateJoinCodeDigit(index, e.target.value)}
+                  onKeyDown={(e) => handleJoinCodeKeyDown(index, e)}
+                  onPaste={(e) => {
+                    e.preventDefault()
+                    updateJoinCodeDigit(index, e.clipboardData.getData('text'))
+                  }}
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  placeholder={index === 0 ? '4' : ''}
+                  maxLength={1}
+                  aria-label={t('joinCodeDigitAria', {position: index + 1})}
+                  className={styles.codeDigitInput}
+                />
+              ))}
+            </div>
+            <p id="join-code-hint" className={styles.codeHint}>
+              {t('joinCodeHint')}
+            </p>
+            <Button
+              variant="primary-filled"
+              type="button"
+              onClick={goToJoin}
+              disabled={validatingJoinCode}>
+              <Icon name="enter" size={36} />
+              {validatingJoinCode ? t('joinCodeChecking') : t('joinSessionAction')}
+            </Button>
+          </div>
         </section>
 
         <p className={styles.hint}>{t('eventLabel', {title})}</p>
