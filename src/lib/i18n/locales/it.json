@@ -253,6 +253,31 @@
         "activeUsers": "utenti attivi",
         "analyzedWines": "vini analizzati da Indovinando AI"
       }
+    },
+    "footer": {
+      "homeLabel": "Indovinando — Home",
+      "description": "La piattaforma per creare, condividere e vivere degustazioni alla cieca, dal primo QR alla classifica finale.",
+      "exploreTitle": "Esplora",
+      "exploreLinks": {
+        "howItWorks": "Come funziona",
+        "demo": "Demo",
+        "partners": "Partner",
+        "rankings": "Classifiche",
+        "course": "Corso vino"
+      },
+      "projectTitle": "Progetto",
+      "projectLinks": {
+        "info": "Informazioni",
+        "changelog": "Novità",
+        "copyright": "Copyright"
+      },
+      "studioTitle": "Studio",
+      "studioCredit": "Design e sviluppo di",
+      "studioName": "Hari Hari Studio",
+      "studioLinkLabel": "Hari Hari Studio, apre in una nuova scheda",
+      "address": "Via Apiro 18, Roma",
+      "rights": "Indovinando — Tutti i diritti riservati.",
+      "backHome": "Torna alla home"
     }
   },
   "demo": {

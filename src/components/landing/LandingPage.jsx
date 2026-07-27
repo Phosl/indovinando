@@ -11,6 +11,7 @@ import LandingWineBox from './LandingWineBox'
 import LandingPartnersMap from './LandingPartnersMap'
 import LandingCTA from './LandingCTA'
 import LandingFAQ from './LandingFAQ'
+import LandingFooter from './LandingFooter'
 import CommunityHighlightsCard from '@/components/community/CommunityHighlightsCard'
 import GlobalStatsStrip from '@/components/stats/GlobalStatsStrip'
 import JsonLd from '@/components/JsonLd'
@@ -68,6 +69,7 @@ export default async function LandingPage({includeStructuredData = true}) {
         <LandingFAQ text={text.faq || {}} />
         <LandingPartnersMap text={text.partners || {}} partners={partners} />
         <LandingCTA text={text.cta || {}} />
+        <LandingFooter text={text.footer || {}} />
       </main>
     </>
   )

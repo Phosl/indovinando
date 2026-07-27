@@ -252,6 +252,31 @@
         "activeUsers": "active users",
         "analyzedWines": "wines analyzed by Indovinando AI"
       }
+    },
+    "footer": {
+      "homeLabel": "Indovinando — Home",
+      "description": "The platform for creating, sharing, and enjoying blind wine tastings, from the first QR code to the final leaderboard.",
+      "exploreTitle": "Explore",
+      "exploreLinks": {
+        "howItWorks": "How it works",
+        "demo": "Demo",
+        "partners": "Partners",
+        "rankings": "Rankings",
+        "course": "Wine course"
+      },
+      "projectTitle": "Project",
+      "projectLinks": {
+        "info": "About",
+        "changelog": "What's new",
+        "copyright": "Copyright"
+      },
+      "studioTitle": "Studio",
+      "studioCredit": "Designed and developed by",
+      "studioName": "Hari Hari Studio",
+      "studioLinkLabel": "Hari Hari Studio, opens in a new tab",
+      "address": "Via Apiro 18, Roma",
+      "rights": "Indovinando — All rights reserved.",
+      "backHome": "Back to home"
     }
   },
   "demo": {

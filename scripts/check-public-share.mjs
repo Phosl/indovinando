@@ -94,17 +94,56 @@ function assertHomeMetadata(html, lang) {
   }
 }
 
+function assertLandingFooter(html, lang) {
+  const expectedRights =
+    lang === 'en' ? 'Indovinando — All rights reserved.' : 'Indovinando — Tutti i diritti riservati.'
+  const expectedAddress = 'Via Apiro 18, Roma'
+  const expectedLinks = [
+    '/#come-funziona',
+    '/demo',
+    '/partner',
+    '/classifiche',
+    '/corso-vino',
+    '/info',
+    '/changelog',
+    '/copyright',
+  ]
+
+  const studioLink = getTags(html, 'a').find(
+    (tag) => getAttribute(tag, 'href') === 'https://harihari-studio.vercel.app/',
+  )
+
+  assert(getTags(html, 'footer').length === 1, `Unexpected ${lang} footer count`)
+  assert(html.includes('Hari Hari Studio'), `Missing ${lang} studio credit`)
+  assert(studioLink, `Missing ${lang} Hari Hari Studio link`)
+  assert(getAttribute(studioLink, 'target') === '_blank', `Invalid ${lang} studio link target`)
+  assert(
+    getAttribute(studioLink, 'rel').includes('noopener') &&
+      getAttribute(studioLink, 'rel').includes('noreferrer'),
+    `Unsafe ${lang} studio link`,
+  )
+  assert(getTags(html, 'address').length === 1, `Missing ${lang} semantic address`)
+  assert(html.includes(expectedAddress), `Missing ${lang} studio address`)
+  assert(html.includes(expectedRights), `Missing ${lang} footer rights`)
+
+  for (const href of expectedLinks) {
+    assert(html.includes(`href="${href}"`), `Missing ${lang} footer link: ${href}`)
+  }
+}
+
 const homeIt = await request('/', {
   headers: {'Accept-Language': 'it-IT,it;q=0.9'},
 })
 assertStatus(homeIt)
 assertHomeMetadata(homeIt.body, 'it')
+assertLandingFooter(homeIt.body, 'it')
 
 const homeEn = await request('/', {
   headers: {'Accept-Language': 'en-US,en;q=0.9'},
 })
 assertStatus(homeEn)
 assertHomeMetadata(homeEn.body, 'en')
+assertLandingFooter(homeEn.body, 'en')
 
 const socialCrawler = await request('/', {
   headers: {
@@ -120,7 +159,17 @@ const publicPaths = ['/demo', '/auth?mode=register', '/partner', '/classifiche',
 for (const path of publicPaths) {
   const result = await request(path, {headers: {'Accept-Language': 'it-IT,it;q=0.9'}})
   assertStatus(result)
+  assert(
+    !result.body.includes('https://harihari-studio.vercel.app/'),
+    `${path} unexpectedly includes the landing footer`,
+  )
 }
+
+const landingPreview = await request('/landingpage', {
+  headers: {'Accept-Language': 'it-IT,it;q=0.9'},
+})
+assertStatus(landingPreview)
+assertLandingFooter(landingPreview.body, 'it')
 
 const privatePaths = ['/dashboard', '/landingpage', '/api/app-data']
 for (const path of privatePaths) {
