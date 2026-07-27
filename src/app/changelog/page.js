@@ -39,6 +39,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.51.0',
+    date: '27 luglio 2026',
+    label: 'Auto',
+    changes: [
+      'prioritize host event setup',
+    ],
+  },
+
+  {
     version: '1.50.0',
     date: '27 luglio 2026',
     label: 'Auto',
