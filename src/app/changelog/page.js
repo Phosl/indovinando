@@ -39,6 +39,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.49.1',
+    date: '27 luglio 2026',
+    label: 'Auto',
+    changes: [
+      'improve game layout on short screens',
+    ],
+  },
+
+  {
     version: '1.49.0',
     date: '27 luglio 2026',
     label: 'Auto',
