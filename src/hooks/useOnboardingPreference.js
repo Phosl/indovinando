@@ -32,7 +32,7 @@ const SERVER_STATUS = 'pending'
 const disabledInMemory = new Set()
 const seenInMemory = new Set()
 const remotelyPersisted = new Set()
-const remoteSyncInFlight = new Set()
+const remoteSyncInFlight = new Map()
 
 function getServerStatus() {
   return SERVER_STATUS
@@ -42,6 +42,32 @@ function notifyPreferenceChange() {
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new Event(PREFERENCE_CHANGE_EVENT))
   }
+}
+
+function persistRemotePreference(syncKey, persistDisable) {
+  if (!persistDisable) return Promise.resolve(false)
+  if (remotelyPersisted.has(syncKey)) return Promise.resolve(true)
+
+  const existingRequest = remoteSyncInFlight.get(syncKey)
+  if (existingRequest) return existingRequest
+
+  const request = Promise.resolve()
+    .then(() => persistDisable())
+    .then((persisted) => {
+      if (persisted === false) {
+        throw new Error('ONBOARDING_PREFERENCE_NOT_PERSISTED')
+      }
+      remotelyPersisted.add(syncKey)
+      return true
+    })
+    .finally(() => {
+      if (remoteSyncInFlight.get(syncKey) === request) {
+        remoteSyncInFlight.delete(syncKey)
+      }
+    })
+
+  remoteSyncInFlight.set(syncKey, request)
+  return request
 }
 
 export default function useOnboardingPreference({
@@ -146,20 +172,12 @@ export default function useOnboardingPreference({
       return
     }
 
-    remoteSyncInFlight.add(syncKey)
-    Promise.resolve(persistDisable())
-      .then((persisted) => {
-        if (persisted === false) {
-          throw new Error('ONBOARDING_PREFERENCE_NOT_PERSISTED')
-        }
-        remotelyPersisted.add(syncKey)
+    persistRemotePreference(syncKey, persistDisable)
+      .then(() => {
         setPersistenceError(false)
       })
       .catch(() => {
         setPersistenceError(true)
-      })
-      .finally(() => {
-        remoteSyncInFlight.delete(syncKey)
       })
   }, [initiallyVisible, isDisabled, isReady, persistDisable, syncKey])
 
@@ -187,19 +205,22 @@ export default function useOnboardingPreference({
       : disableAllOnboarding(userId)
 
     let persistedRemotely = false
-    try {
-      if (persistDisable) {
-        persistedRemotely = (await persistDisable()) !== false
+    if (persistDisable) {
+      try {
+        persistedRemotely = await persistRemotePreference(syncKey, persistDisable)
+      } catch {
+        persistedRemotely = false
       }
+    }
 
-      const persistenceSucceeded = persistDisable ? persistedRemotely : persistedOnDevice
+    try {
+      const persistenceSucceeded = persistedOnDevice || persistedRemotely
 
       if (!persistenceSucceeded) {
         throw new Error('ONBOARDING_PREFERENCE_NOT_PERSISTED')
       }
 
       disabledInMemory.add(syncKey)
-      if (persistDisable) remotelyPersisted.add(syncKey)
       seenInMemory.add(preferenceKey)
       markOnboardingSeenThisSession(preferenceKey)
       setVisibilityOverride({preferenceKey, value: false})
