@@ -20,6 +20,7 @@ import {
   migrateLegacyOnboardingPreference,
   ONBOARDING_GUIDES,
 } from '@/lib/onboardingPreferences.mjs'
+import {onboardingRemotePersistence} from '@/lib/onboardingRemotePersistence.mjs'
 
 const GUIDE_BY_PREFERENCE = Object.freeze({
   createOverview: ONBOARDING_GUIDES.all,
@@ -32,8 +33,6 @@ const PREFERENCE_CHANGE_EVENT = 'indovinando:onboarding-preference-change'
 const SERVER_STATUS = 'pending'
 const disabledInMemory = new Set()
 const seenInMemory = new Set()
-const remotelyPersisted = new Set()
-const remoteSyncInFlight = new Map()
 
 function getServerStatus() {
   return SERVER_STATUS
@@ -43,32 +42,6 @@ function notifyPreferenceChange() {
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new Event(PREFERENCE_CHANGE_EVENT))
   }
-}
-
-function persistRemotePreference(syncKey, persistDisable) {
-  if (!persistDisable) return Promise.resolve(false)
-  if (remotelyPersisted.has(syncKey)) return Promise.resolve(true)
-
-  const existingRequest = remoteSyncInFlight.get(syncKey)
-  if (existingRequest) return existingRequest
-
-  const request = Promise.resolve()
-    .then(() => persistDisable())
-    .then((persisted) => {
-      if (persisted === false) {
-        throw new Error('ONBOARDING_PREFERENCE_NOT_PERSISTED')
-      }
-      remotelyPersisted.add(syncKey)
-      return true
-    })
-    .finally(() => {
-      if (remoteSyncInFlight.get(syncKey) === request) {
-        remoteSyncInFlight.delete(syncKey)
-      }
-    })
-
-  remoteSyncInFlight.set(syncKey, request)
-  return request
 }
 
 export default function useOnboardingPreference({
@@ -167,13 +140,14 @@ export default function useOnboardingPreference({
       !isReady ||
       !isDisabled ||
       !persistDisable ||
-      remotelyPersisted.has(syncKey) ||
-      remoteSyncInFlight.has(syncKey)
+      onboardingRemotePersistence.hasPersisted(syncKey) ||
+      onboardingRemotePersistence.hasRequestInFlight(syncKey)
     ) {
       return
     }
 
-    persistRemotePreference(syncKey, persistDisable)
+    onboardingRemotePersistence
+      .persist(syncKey, persistDisable)
       .then(() => {
         setPersistenceError(false)
       })
@@ -208,7 +182,10 @@ export default function useOnboardingPreference({
     let persistedRemotely = false
     if (persistDisable) {
       try {
-        persistedRemotely = await persistRemotePreference(syncKey, persistDisable)
+        persistedRemotely = await onboardingRemotePersistence.persist(
+          syncKey,
+          persistDisable,
+        )
       } catch {
         persistedRemotely = false
       }

@@ -14,6 +14,9 @@ import {
   ONBOARDING_GUIDES,
   restoreOnboardingPreferences,
 } from '../src/lib/onboardingPreferences.mjs'
+import {
+  createOnboardingRemotePersistenceCoordinator,
+} from '../src/lib/onboardingRemotePersistence.mjs'
 
 class MemoryStorage {
   constructor(entries = []) {
@@ -343,5 +346,61 @@ assert.equal(
   false,
   'a device-only preference must not claim success without local persistence',
 )
+
+const remoteCoordinator = createOnboardingRemotePersistenceCoordinator()
+let remoteCalls = 0
+let resolveRemoteRequest
+const pendingRemoteRequest = new Promise((resolve) => {
+  resolveRemoteRequest = resolve
+})
+const firstRemoteRequest = remoteCoordinator.persist('user-a:all', () => {
+  remoteCalls += 1
+  return pendingRemoteRequest
+})
+const duplicateRemoteRequest = remoteCoordinator.persist('user-a:all', () => {
+  remoteCalls += 1
+  return Promise.resolve(true)
+})
+
+assert.equal(
+  firstRemoteRequest,
+  duplicateRemoteRequest,
+  'concurrent preference writes must share the same request',
+)
+assert.equal(remoteCalls, 0, 'the remote write starts in the next microtask')
+resolveRemoteRequest(true)
+assert.deepEqual(await Promise.all([firstRemoteRequest, duplicateRemoteRequest]), [
+  true,
+  true,
+])
+assert.equal(remoteCalls, 1, 'concurrent preference writes must call the server once')
+assert.equal(remoteCoordinator.hasPersisted('user-a:all'), true)
+assert.equal(remoteCoordinator.hasRequestInFlight('user-a:all'), false)
+
+await remoteCoordinator.persist('user-a:all', () => {
+  remoteCalls += 1
+  return Promise.resolve(true)
+})
+assert.equal(remoteCalls, 1, 'a confirmed remote preference must not be written twice')
+
+let failedRemoteCalls = 0
+await assert.rejects(
+  remoteCoordinator.persist('user-b:all', () => {
+    failedRemoteCalls += 1
+    return Promise.resolve(false)
+  }),
+  /ONBOARDING_PREFERENCE_NOT_PERSISTED/,
+)
+assert.equal(remoteCoordinator.hasPersisted('user-b:all'), false)
+assert.equal(remoteCoordinator.hasRequestInFlight('user-b:all'), false)
+assert.equal(
+  await remoteCoordinator.persist('user-b:all', () => {
+    failedRemoteCalls += 1
+    return Promise.resolve(true)
+  }),
+  true,
+  'a failed remote preference must remain retryable',
+)
+assert.equal(failedRemoteCalls, 2)
 
 console.log('Onboarding preference checks passed.')
