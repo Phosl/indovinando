@@ -1,10 +1,9 @@
 'use client'
 
-import Link from 'next/link'
 import {useEffect, useId, useMemo, useRef, useState} from 'react'
 import {usePathname} from 'next/navigation'
 import {useAppData} from '@/components/AppDataContext'
-import {Button} from '@/components/ui/Button'
+import {Button, ButtonLink} from '@/components/ui/Button'
 import {useT} from '@/lib/i18n/useT'
 import {dismissProfileSetupPrompt} from '@/lib/profileOnboardingClient'
 import {
@@ -152,11 +151,13 @@ export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
       ) : null}
 
       <div className={`${styles.actions} ${canDismiss ? '' : styles.actionsSingle}`}>
-        <Link
+        <ButtonLink
           href={setupHref}
-          className={`btn ${isComplete ? 'primary' : 'primary-filled'} btn-small ${styles.actionBtn}`}>
+          variant={isComplete ? 'primary' : 'primary-filled'}
+          size="small"
+          className={styles.actionBtn}>
           {isComplete ? t('editAction') : t('completeAction')}
-        </Link>
+        </ButtonLink>
         {canDismiss ? (
           <Button
             variant="neutral"

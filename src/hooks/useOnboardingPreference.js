@@ -172,7 +172,9 @@ export default function useOnboardingPreference({
       }
     }
 
-    if (!persistedOnDevice && !persistedRemotely) {
+    const persistenceSucceeded = persistDisable ? persistedRemotely : persistedOnDevice
+
+    if (!persistenceSucceeded) {
       retryStartedForKeyRef.current = ''
       setPersistenceError(true)
       setVisibilityOverride({preferenceKey, value: true})
