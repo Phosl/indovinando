@@ -30,6 +30,8 @@ export default function OnboardingModal({
   const [step, setStep] = useState(1)
   const t = useT(translationKey)
   const modalRef = useRef(null)
+  const isDisablingRef = useRef(isDisabling)
+  const onCloseRef = useRef(onClose)
   const titleId = useId()
   const descriptionId = useId()
   const translatedSteps = t('steps')
@@ -60,6 +62,14 @@ export default function OnboardingModal({
   }
 
   useEffect(() => {
+    isDisablingRef.current = isDisabling
+  }, [isDisabling])
+
+  useEffect(() => {
+    onCloseRef.current = onClose
+  }, [onClose])
+
+  useEffect(() => {
     const previousActiveElement = document.activeElement
     const previousOverflow = document.body.style.overflow
     const focusTimer = window.requestAnimationFrame(() => modalRef.current?.focus())
@@ -67,7 +77,7 @@ export default function OnboardingModal({
     function handleKeyDown(event) {
       if (event.key === 'Escape') {
         event.preventDefault()
-        if (!isDisabling) onClose()
+        if (!isDisablingRef.current) onCloseRef.current()
         return
       }
 
@@ -109,7 +119,7 @@ export default function OnboardingModal({
       window.removeEventListener('keydown', handleKeyDown)
       previousActiveElement?.focus?.()
     }
-  }, [isDisabling, onClose])
+  }, [])
 
   if (typeof document === 'undefined' || !currentStep) return null
 

@@ -3,6 +3,7 @@
 import {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {usePathname} from 'next/navigation'
 import {createAppDataSessionGuard} from '@/lib/appDataSessionGuard.mjs'
+import {createClient} from '@/lib/supabaseClient'
 
 const AppDataContext = createContext(null)
 
@@ -30,11 +31,14 @@ export function AppDataProvider({children}) {
   const hasLoadedRef = useRef(false)
   const inFlightRef = useRef(null)
   const wasLoadableRef = useRef(false)
+  const canLoadRef = useRef(false)
+  const authIdentityRef = useRef({initialized: false, userId: null})
   const sessionGuardRef = useRef(null)
   if (!sessionGuardRef.current) {
     sessionGuardRef.current = createAppDataSessionGuard()
   }
   const canLoad = shouldLoadAppData(pathname)
+  canLoadRef.current = canLoad
 
   const invalidate = useCallback((options = {}) => {
     sessionGuardRef.current.invalidate(options)
@@ -128,6 +132,29 @@ export function AppDataProvider({children}) {
     wasLoadableRef.current = true
     refresh({force: isEnteringDataArea})
   }, [canLoad, invalidate, refresh])
+
+  useEffect(() => {
+    const supabase = createClient()
+    const {
+      data: {subscription},
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      const nextUserId = session?.user?.id || null
+      const previousIdentity = authIdentityRef.current
+
+      if (previousIdentity.initialized && previousIdentity.userId === nextUserId) {
+        return
+      }
+
+      authIdentityRef.current = {initialized: true, userId: nextUserId}
+      invalidate({expectedUserId: nextUserId})
+
+      if (canLoadRef.current) {
+        void refresh({force: true})
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [invalidate, refresh])
 
   const value = useMemo(
     () => ({

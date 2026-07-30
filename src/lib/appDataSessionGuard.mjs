@@ -5,7 +5,7 @@ function normalizeUserId(userId) {
 
 export function createAppDataSessionGuard() {
   let generation = 0
-  let expectedUserId
+  let constrainedUserId
 
   return Object.freeze({
     beginRequest() {
@@ -14,7 +14,7 @@ export function createAppDataSessionGuard() {
 
     invalidate(options = {}) {
       generation += 1
-      expectedUserId = Object.prototype.hasOwnProperty.call(options, 'expectedUserId')
+      constrainedUserId = Object.prototype.hasOwnProperty.call(options, 'expectedUserId')
         ? normalizeUserId(options.expectedUserId)
         : undefined
       return generation
@@ -25,16 +25,17 @@ export function createAppDataSessionGuard() {
     },
 
     matchesExpectedUser(userId) {
-      return expectedUserId === undefined || normalizeUserId(userId) === expectedUserId
+      return constrainedUserId === undefined || normalizeUserId(userId) === constrainedUserId
     },
 
     accept(requestGeneration, userId) {
       if (requestGeneration !== generation) return false
-      if (expectedUserId !== undefined && normalizeUserId(userId) !== expectedUserId) {
+      const normalizedUserId = normalizeUserId(userId)
+      if (constrainedUserId !== undefined && normalizedUserId !== constrainedUserId) {
         return false
       }
 
-      expectedUserId = undefined
+      constrainedUserId = normalizedUserId
       return true
     },
   })

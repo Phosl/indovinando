@@ -23,6 +23,11 @@ assert.equal(
   true,
   'the expected account response must be accepted',
 )
+assert.equal(
+  guard.accept(newUserRequest, 'user-a'),
+  false,
+  'an accepted account must remain the identity constraint for the current generation',
+)
 
 const logoutRequest = guard.invalidate({expectedUserId: null})
 assert.equal(
@@ -41,6 +46,11 @@ assert.equal(
   guard.accept(unrestrictedRequest, 'user-c'),
   true,
   'a normal route re-entry may establish the current authenticated account',
+)
+assert.equal(
+  guard.accept(unrestrictedRequest, 'user-d'),
+  false,
+  'an unrestricted request must bind later responses to the first accepted account',
 )
 
 console.log('App data session checks passed.')
