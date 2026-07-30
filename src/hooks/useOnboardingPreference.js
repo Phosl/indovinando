@@ -14,6 +14,7 @@ import {
   getOnboardingPreferenceKey,
   hasSeenOnboardingThisSession,
   isOnboardingDisabled,
+  isOnboardingPersistenceConfirmed,
   LEGACY_ONBOARDING_KEYS,
   markOnboardingSeenThisSession,
   migrateLegacyOnboardingPreference,
@@ -214,7 +215,11 @@ export default function useOnboardingPreference({
     }
 
     try {
-      const persistenceSucceeded = persistedOnDevice || persistedRemotely
+      const persistenceSucceeded = isOnboardingPersistenceConfirmed({
+        requiresRemote: Boolean(persistDisable),
+        persistedOnDevice,
+        persistedRemotely,
+      })
 
       if (!persistenceSucceeded) {
         throw new Error('ONBOARDING_PREFERENCE_NOT_PERSISTED')
@@ -223,6 +228,7 @@ export default function useOnboardingPreference({
       disabledInMemory.add(syncKey)
       seenInMemory.add(preferenceKey)
       markOnboardingSeenThisSession(preferenceKey)
+      setPersistenceError(false)
       setVisibilityOverride({preferenceKey, value: false})
       notifyPreferenceChange()
       return true

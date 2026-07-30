@@ -7,6 +7,7 @@ import {
   getOnboardingPreferenceKey,
   hasSeenOnboardingThisSession,
   isOnboardingDisabled,
+  isOnboardingPersistenceConfirmed,
   LEGACY_ONBOARDING_KEYS,
   markOnboardingSeenThisSession,
   migrateLegacyOnboardingPreference,
@@ -305,5 +306,42 @@ assert.doesNotThrow(() =>
   }),
 )
 delete globalThis.document
+
+assert.equal(
+  isOnboardingPersistenceConfirmed({
+    requiresRemote: true,
+    persistedOnDevice: true,
+    persistedRemotely: false,
+  }),
+  false,
+  'an account preference must not report success when only device storage succeeded',
+)
+assert.equal(
+  isOnboardingPersistenceConfirmed({
+    requiresRemote: true,
+    persistedOnDevice: false,
+    persistedRemotely: true,
+  }),
+  true,
+  'a verified account write must remain authoritative when browser storage is blocked',
+)
+assert.equal(
+  isOnboardingPersistenceConfirmed({
+    requiresRemote: false,
+    persistedOnDevice: true,
+    persistedRemotely: false,
+  }),
+  true,
+  'a device-only preference must require a confirmed device write',
+)
+assert.equal(
+  isOnboardingPersistenceConfirmed({
+    requiresRemote: false,
+    persistedOnDevice: false,
+    persistedRemotely: true,
+  }),
+  false,
+  'a device-only preference must not claim success without local persistence',
+)
 
 console.log('Onboarding preference checks passed.')

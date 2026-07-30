@@ -242,3 +242,11 @@ export function restoreOnboardingPreferences(
   }
   return restored
 }
+
+export function isOnboardingPersistenceConfirmed({
+  requiresRemote,
+  persistedOnDevice,
+  persistedRemotely,
+}) {
+  return requiresRemote ? persistedRemotely === true : persistedOnDevice === true
+}
