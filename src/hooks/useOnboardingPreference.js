@@ -14,13 +14,15 @@ import {
   getOnboardingPreferenceKey,
   hasSeenOnboardingThisSession,
   isOnboardingDisabled,
-  isOnboardingPersistenceConfirmed,
   LEGACY_ONBOARDING_KEYS,
   markOnboardingSeenThisSession,
   migrateLegacyOnboardingPreference,
   ONBOARDING_GUIDES,
 } from '@/lib/onboardingPreferences.mjs'
-import {onboardingRemotePersistence} from '@/lib/onboardingRemotePersistence.mjs'
+import {
+  onboardingRemotePersistence,
+  persistOnboardingDismissal,
+} from '@/lib/onboardingRemotePersistence.mjs'
 
 const GUIDE_BY_PREFERENCE = Object.freeze({
   createOverview: ONBOARDING_GUIDES.all,
@@ -175,27 +177,14 @@ export default function useOnboardingPreference({
     setIsPersisting(true)
     setPersistenceError(false)
 
-    const persistedOnDevice = isStandaloneGuide
-      ? disableOnboarding(preferenceKey)
-      : disableAllOnboarding(userId)
-
-    let persistedRemotely = false
-    if (persistDisable) {
-      try {
-        persistedRemotely = await onboardingRemotePersistence.persist(
-          syncKey,
-          persistDisable,
-        )
-      } catch {
-        persistedRemotely = false
-      }
-    }
-
     try {
-      const persistenceSucceeded = isOnboardingPersistenceConfirmed({
-        requiresRemote: Boolean(persistDisable),
-        persistedOnDevice,
-        persistedRemotely,
+      const persistenceSucceeded = await persistOnboardingDismissal({
+        syncKey,
+        persistRemotely: persistDisable,
+        persistOnDevice: () =>
+          isStandaloneGuide
+            ? disableOnboarding(preferenceKey)
+            : disableAllOnboarding(userId),
       })
 
       if (!persistenceSucceeded) {

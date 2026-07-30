@@ -1,3 +1,5 @@
+import {isOnboardingPersistenceConfirmed} from './onboardingPreferences.mjs'
+
 export function createOnboardingRemotePersistenceCoordinator() {
   const persistedKeys = new Set()
   const requestsInFlight = new Map()
@@ -21,7 +23,7 @@ export function createOnboardingRemotePersistenceCoordinator() {
       const request = Promise.resolve()
         .then(() => persistPreference())
         .then((persisted) => {
-          if (persisted === false) {
+          if (persisted !== true) {
             throw new Error('ONBOARDING_PREFERENCE_NOT_PERSISTED')
           }
 
@@ -42,3 +44,30 @@ export function createOnboardingRemotePersistenceCoordinator() {
 
 export const onboardingRemotePersistence =
   createOnboardingRemotePersistenceCoordinator()
+
+export async function persistOnboardingDismissal({
+  syncKey,
+  persistOnDevice,
+  persistRemotely,
+  remotePersistence = onboardingRemotePersistence,
+}) {
+  const requiresRemote = typeof persistRemotely === 'function'
+  let persistedRemotely = false
+
+  if (requiresRemote) {
+    persistedRemotely = await remotePersistence.persist(syncKey, persistRemotely)
+  }
+
+  let persistedOnDevice = false
+  try {
+    persistedOnDevice = persistOnDevice?.() === true
+  } catch {
+    persistedOnDevice = false
+  }
+
+  return isOnboardingPersistenceConfirmed({
+    requiresRemote,
+    persistedOnDevice,
+    persistedRemotely,
+  })
+}

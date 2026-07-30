@@ -248,8 +248,5 @@ export function isOnboardingPersistenceConfirmed({
   persistedOnDevice,
   persistedRemotely,
 }) {
-  return (
-    persistedOnDevice === true ||
-    (requiresRemote === true && persistedRemotely === true)
-  )
+  return requiresRemote ? persistedRemotely === true : persistedOnDevice === true
 }

@@ -16,6 +16,7 @@ import {
 } from '../src/lib/onboardingPreferences.mjs'
 import {
   createOnboardingRemotePersistenceCoordinator,
+  persistOnboardingDismissal,
 } from '../src/lib/onboardingRemotePersistence.mjs'
 
 class MemoryStorage {
@@ -316,8 +317,8 @@ assert.equal(
     persistedOnDevice: true,
     persistedRemotely: false,
   }),
-  true,
-  'an account preference must accept verified device storage while remote sync retries',
+  false,
+  'an account preference must not report success when only device storage succeeded',
 )
 assert.equal(
   isOnboardingPersistenceConfirmed({
@@ -402,5 +403,47 @@ assert.equal(
   'a failed remote preference must remain retryable',
 )
 assert.equal(failedRemoteCalls, 2)
+
+let deviceWritesAfterRemoteFailure = 0
+await assert.rejects(
+  persistOnboardingDismissal({
+    syncKey: 'user-c:all',
+    persistOnDevice() {
+      deviceWritesAfterRemoteFailure += 1
+      return true
+    },
+    persistRemotely() {
+      return Promise.resolve(false)
+    },
+    remotePersistence: createOnboardingRemotePersistenceCoordinator(),
+  }),
+  /ONBOARDING_PREFERENCE_NOT_PERSISTED/,
+)
+assert.equal(
+  deviceWritesAfterRemoteFailure,
+  0,
+  'a failed account write must not leave a device preference that hides the guide after reload',
+)
+
+let deviceWritesAfterRemoteSuccess = 0
+assert.equal(
+  await persistOnboardingDismissal({
+    syncKey: 'user-d:all',
+    persistOnDevice() {
+      deviceWritesAfterRemoteSuccess += 1
+      return true
+    },
+    persistRemotely() {
+      return Promise.resolve(true)
+    },
+    remotePersistence: createOnboardingRemotePersistenceCoordinator(),
+  }),
+  true,
+)
+assert.equal(
+  deviceWritesAfterRemoteSuccess,
+  1,
+  'a verified account write must persist the matching device preference once',
+)
 
 console.log('Onboarding preference checks passed.')
