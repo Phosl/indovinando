@@ -21,7 +21,7 @@ function formatList(values, labelFor) {
 export default function ProfileSetupPanel({profile, mode = 'dashboard', onDismissed}) {
   const t = useT('profileSetup')
   const pathname = usePathname()
-  const {refresh: refreshAppData} = useAppData()
+  const {applyVerifiedProfilePatch, user} = useAppData()
   const [isDismissing, setIsDismissing] = useState(false)
   const [isDismissed, setIsDismissed] = useState(false)
   const [dismissError, setDismissError] = useState('')
@@ -65,14 +65,20 @@ export default function ProfileSetupPanel({profile, mode = 'dashboard', onDismis
   async function handleDismiss() {
     if (isDismissing) return
 
+    const expectedUserId = user?.id
     setIsDismissing(true)
     setDismissError('')
 
     try {
-      await dismissProfileSetupPrompt()
+      const dismissedAt = await dismissProfileSetupPrompt(expectedUserId)
+      const applied = applyVerifiedProfilePatch(
+        {profile_prompt_dismissed_at: dismissedAt},
+        {expectedUserId},
+      )
+      if (!applied) throw new Error('PROFILE_AUTH_IDENTITY_CHANGED')
+
       setIsDismissed(true)
       onDismissed?.()
-      await refreshAppData({force: true})
     } catch (error) {
       setDismissError(
         error?.message === 'PROFILE_SAVE_TIMEOUT' ? t('errors.timeout') : t('errors.generic'),

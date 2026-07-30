@@ -3,6 +3,44 @@ function normalizeUserId(userId) {
   return normalized || null
 }
 
+export function patchAppDataProfileSnapshot(snapshot, profilePatch, expectedUserId) {
+  const normalizedExpectedUserId = normalizeUserId(expectedUserId)
+  if (
+    !normalizedExpectedUserId ||
+    normalizeUserId(snapshot?.user?.id) !== normalizedExpectedUserId ||
+    !profilePatch ||
+    typeof profilePatch !== 'object' ||
+    Array.isArray(profilePatch)
+  ) {
+    return snapshot
+  }
+
+  return {
+    ...snapshot,
+    profile: {
+      ...(snapshot.profile || {}),
+      ...profilePatch,
+    },
+  }
+}
+
+export function isAppDataProfilePatchSatisfied(snapshot, profilePatch, expectedUserId) {
+  const normalizedExpectedUserId = normalizeUserId(expectedUserId)
+  if (
+    !normalizedExpectedUserId ||
+    normalizeUserId(snapshot?.user?.id) !== normalizedExpectedUserId ||
+    !profilePatch ||
+    typeof profilePatch !== 'object' ||
+    Array.isArray(profilePatch)
+  ) {
+    return false
+  }
+
+  return Object.entries(profilePatch).every(([key, value]) =>
+    Object.is(snapshot.profile?.[key], value),
+  )
+}
+
 export function createAppDataSessionGuard() {
   let generation = 0
   let constrainedUserId

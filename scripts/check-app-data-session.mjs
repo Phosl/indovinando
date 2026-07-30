@@ -2,6 +2,8 @@ import assert from 'node:assert/strict'
 import {
   createAppDataRequestCoordinator,
   createAppDataSessionGuard,
+  isAppDataProfilePatchSatisfied,
+  patchAppDataProfileSnapshot,
 } from '../src/lib/appDataSessionGuard.mjs'
 
 function createDeferred() {
@@ -13,6 +15,63 @@ function createDeferred() {
   })
   return {promise, reject, resolve}
 }
+
+const staleProfileSnapshot = {
+  user: {id: 'user-a'},
+  profile: {username: 'Andrea', profile_prompt_dismissed_at: null},
+}
+const confirmedDismissal = {profile_prompt_dismissed_at: '2026-07-30T12:00:00.000Z'}
+const patchedProfileSnapshot = patchAppDataProfileSnapshot(
+  staleProfileSnapshot,
+  confirmedDismissal,
+  'user-a',
+)
+
+assert.notEqual(
+  patchedProfileSnapshot,
+  staleProfileSnapshot,
+  'a verified profile patch must create a new app-data snapshot',
+)
+assert.equal(
+  patchedProfileSnapshot.profile.profile_prompt_dismissed_at,
+  confirmedDismissal.profile_prompt_dismissed_at,
+  'a verified dismissal must replace a stale cached reminder value',
+)
+assert.equal(
+  patchAppDataProfileSnapshot(
+    {user: {id: 'user-b'}, profile: null},
+    confirmedDismissal,
+    'user-b',
+  )
+    .profile.profile_prompt_dismissed_at,
+  confirmedDismissal.profile_prompt_dismissed_at,
+  'a verified patch must also seed a missing profile cache',
+)
+assert.equal(
+  patchAppDataProfileSnapshot(null, confirmedDismissal, 'user-a'),
+  null,
+  'a profile patch must not invent an app-data identity',
+)
+assert.equal(
+  patchAppDataProfileSnapshot(staleProfileSnapshot, confirmedDismissal, 'user-b'),
+  staleProfileSnapshot,
+  'a verified patch must never cross an authenticated identity boundary',
+)
+assert.equal(
+  isAppDataProfilePatchSatisfied(patchedProfileSnapshot, confirmedDismissal, 'user-a'),
+  true,
+  'a matching server snapshot may retire its verified profile patch',
+)
+assert.equal(
+  isAppDataProfilePatchSatisfied(staleProfileSnapshot, confirmedDismissal, 'user-a'),
+  false,
+  'a stale response must keep the verified profile patch active',
+)
+assert.equal(
+  isAppDataProfilePatchSatisfied(patchedProfileSnapshot, confirmedDismissal, 'user-b'),
+  false,
+  'a patch must never be satisfied by another authenticated identity',
+)
 
 const guard = createAppDataSessionGuard()
 const oldUserRequest = guard.beginRequest()

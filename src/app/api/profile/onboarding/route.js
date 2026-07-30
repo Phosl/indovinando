@@ -52,7 +52,12 @@ async function persistPreference({supabase, userId, preference}) {
     )
   }
 
-  return NextResponse.json({ok: true})
+  return NextResponse.json({
+    ok: true,
+    userId,
+    preference,
+    value: data?.[verificationColumn],
+  })
 }
 
 async function handlePreferenceRequest(request, {legacy = false} = {}) {
@@ -73,6 +78,13 @@ async function handlePreferenceRequest(request, {legacy = false} = {}) {
       preference = payload?.preference
       if (!SUPPORTED_PREFERENCES.has(preference)) {
         return NextResponse.json({error: 'Invalid preference'}, {status: 400})
+      }
+
+      if (
+        preference === 'profile-reminder' &&
+        String(payload?.expectedUserId || '').trim() !== user.id
+      ) {
+        return NextResponse.json({error: 'Authentication identity changed'}, {status: 409})
       }
     }
 

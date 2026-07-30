@@ -5,6 +5,8 @@ import {usePathname, useRouter} from 'next/navigation'
 import {
   createAppDataRequestCoordinator,
   createAppDataSessionGuard,
+  isAppDataProfilePatchSatisfied,
+  patchAppDataProfileSnapshot,
 } from '@/lib/appDataSessionGuard.mjs'
 import {createClient} from '@/lib/supabaseClient'
 
@@ -39,6 +41,7 @@ export function AppDataProvider({children}) {
   const loadedAuthRevisionRef = useRef(-1)
   const routerRefreshTimerRef = useRef(null)
   const authIdentityRef = useRef({initialized: false, userId: null})
+  const verifiedProfilePatchRef = useRef(null)
   const sessionGuardRef = useRef(null)
   if (!sessionGuardRef.current) {
     sessionGuardRef.current = createAppDataSessionGuard()
@@ -63,10 +66,29 @@ export function AppDataProvider({children}) {
     [],
   )
 
-  const invalidate = useCallback((options = {}) => {
-    sessionGuardRef.current.invalidate(options)
-    clearSnapshot()
-  }, [clearSnapshot])
+  const invalidate = useCallback(
+    (options = {}) => {
+      const hasExpectedUserId = Object.prototype.hasOwnProperty.call(
+        options,
+        'expectedUserId',
+      )
+      const nextExpectedUserId = hasExpectedUserId
+        ? String(options.expectedUserId || '').trim() || null
+        : undefined
+      const pendingPatch = verifiedProfilePatchRef.current
+
+      if (
+        pendingPatch &&
+        (!hasExpectedUserId || pendingPatch.userId !== nextExpectedUserId)
+      ) {
+        verifiedProfilePatchRef.current = null
+      }
+
+      sessionGuardRef.current.invalidate(options)
+      clearSnapshot()
+    },
+    [clearSnapshot],
+  )
 
   const refresh = useCallback(async ({force = false} = {}) => {
     const requestGeneration = sessionGuardRef.current.beginRequest()
@@ -101,6 +123,7 @@ export function AppDataProvider({children}) {
               ? null
               : new Error('APP_DATA_USER_MISMATCH')
 
+            if (accepted) verifiedProfilePatchRef.current = null
             clearSnapshot({
               nextError: identityError,
               nextStatus: accepted ? 'unauthenticated' : 'error',
@@ -110,6 +133,10 @@ export function AppDataProvider({children}) {
           }
 
           const payload = await response.json().catch(() => null)
+          if (!sessionGuardRef.current.isCurrent(requestGeneration)) {
+            return snapshotRef.current
+          }
+
           if (!response.ok || !payload) {
             throw new Error(payload?.error || 'Unable to load app data')
           }
@@ -123,11 +150,33 @@ export function AppDataProvider({children}) {
             return null
           }
 
+          const pendingPatch = verifiedProfilePatchRef.current
+          let nextPayload = payload
+          if (pendingPatch?.userId === payload.user.id) {
+            if (
+              isAppDataProfilePatchSatisfied(
+                payload,
+                pendingPatch.profile,
+                pendingPatch.userId,
+              )
+            ) {
+              if (verifiedProfilePatchRef.current === pendingPatch) {
+                verifiedProfilePatchRef.current = null
+              }
+            } else {
+              nextPayload = patchAppDataProfileSnapshot(
+                payload,
+                pendingPatch.profile,
+                pendingPatch.userId,
+              )
+            }
+          }
+
           hasLoadedRef.current = true
-          snapshotRef.current = payload
-          setSnapshot(payload)
+          snapshotRef.current = nextPayload
+          setSnapshot(nextPayload)
           setStatus('ready')
-          return payload
+          return nextPayload
         } catch (nextError) {
           if (!sessionGuardRef.current.isCurrent(requestGeneration)) {
             return snapshotRef.current
@@ -140,6 +189,71 @@ export function AppDataProvider({children}) {
       },
     })
   }, [clearSnapshot])
+
+  const applyVerifiedProfilePatch = useCallback(
+    (profilePatch, {expectedUserId} = {}) => {
+      const normalizedExpectedUserId = String(expectedUserId || '').trim()
+      const currentIdentity = authIdentityRef.current
+      const snapshotUserId = String(snapshotRef.current?.user?.id || '').trim()
+
+      if (
+        !normalizedExpectedUserId ||
+        !profilePatch ||
+        typeof profilePatch !== 'object' ||
+        Array.isArray(profilePatch) ||
+        (currentIdentity.initialized &&
+          currentIdentity.userId !== normalizedExpectedUserId) ||
+        (snapshotUserId && snapshotUserId !== normalizedExpectedUserId)
+      ) {
+        return false
+      }
+
+      const pendingPatch = verifiedProfilePatchRef.current
+      verifiedProfilePatchRef.current = {
+        userId: normalizedExpectedUserId,
+        profile:
+          pendingPatch?.userId === normalizedExpectedUserId
+            ? {...pendingPatch.profile, ...profilePatch}
+            : {...profilePatch},
+      }
+
+      const updateSnapshot = () => {
+        const activePatch = verifiedProfilePatchRef.current
+        if (activePatch?.userId !== normalizedExpectedUserId) {
+          return snapshotRef.current
+        }
+
+        const currentSnapshot = snapshotRef.current
+        const nextSnapshot = patchAppDataProfileSnapshot(
+          currentSnapshot,
+          activePatch.profile,
+          normalizedExpectedUserId,
+        )
+
+        if (nextSnapshot === currentSnapshot) return currentSnapshot
+
+        snapshotRef.current = nextSnapshot
+        setSnapshot(nextSnapshot)
+        return nextSnapshot
+      }
+
+      updateSnapshot()
+
+      void (async () => {
+        try {
+          await refresh({force: true})
+        } catch {
+          // The mutation is already verified by its write endpoint. Keep the
+          // confirmed fields locally when background revalidation is unavailable.
+        }
+
+        updateSnapshot()
+      })()
+
+      return true
+    },
+    [refresh],
+  )
 
   useEffect(() => {
     if (!canLoad) {
@@ -213,10 +327,11 @@ export function AppDataProvider({children}) {
       refreshing: status === 'refreshing',
       ready: status === 'ready',
       error,
+      applyVerifiedProfilePatch,
       invalidate,
       refresh,
     }),
-    [error, invalidate, refresh, snapshot, status],
+    [applyVerifiedProfilePatch, error, invalidate, refresh, snapshot, status],
   )
 
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>

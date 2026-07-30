@@ -27,9 +27,11 @@ function getWelcomeTitle({dashboardDict, profile, userEmail}) {
 }
 
 export default function DashboardClient({dashboardDict, lang, userEmail}) {
-  const {profile, courseProgress, appVersion} = useAppData()
-  const [profileReminderDismissedInSession, setProfileReminderDismissedInSession] =
-    useState(false)
+  const {profile, courseProgress, appVersion, user} = useAppData()
+  const [profileReminderDismissedForUserId, setProfileReminderDismissedForUserId] =
+    useState(null)
+  const profileReminderDismissedInSession =
+    Boolean(user?.id) && profileReminderDismissedForUserId === user.id
   const isSuperAdmin = profile?.super_admin === true
   const showProfileSetupPanel =
     Boolean(profile) &&
@@ -54,9 +56,10 @@ export default function DashboardClient({dashboardDict, lang, userEmail}) {
 
         {(showProfileSetupPanel || profileReminderDismissedInSession) && (
           <ProfileSetupPanel
+            key={user?.id || 'profile-reminder'}
             profile={profile || {}}
             mode="dashboard"
-            onDismissed={() => setProfileReminderDismissedInSession(true)}
+            onDismissed={() => setProfileReminderDismissedForUserId(user?.id || null)}
           />
         )}
         <nav className={styles.menuGrid}>

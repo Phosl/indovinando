@@ -23,7 +23,7 @@ import styles from './ProfileSetupWizardClient.module.scss'
 export default function ProfileSetupWizardClient({userId, profile, nextPath = '/dashboard'}) {
   const router = useRouter()
   const t = useT('profileSetup')
-  const {refresh: refreshAppData} = useAppData()
+  const {applyVerifiedProfilePatch, refresh: refreshAppData} = useAppData()
   const [form, setForm] = useState(() => normalizeProfileSetup(profile))
   const [stepIndex, setStepIndex] = useState(0)
   const [error, setError] = useState('')
@@ -191,8 +191,8 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
     }
   }, [])
 
-  const persistReminderDismissal = useCallback(async () => {
-    await dismissProfileSetupPrompt()
+  const persistReminderDismissal = useCallback(async (expectedUserId) => {
+    return dismissProfileSetupPrompt(expectedUserId)
   }, [])
 
   const handleNext = useCallback(async () => {
@@ -275,8 +275,13 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
     setErrorField('')
 
     try {
-      await persistReminderDismissal()
-      await refreshAppData({force: true})
+      const dismissedAt = await persistReminderDismissal(userId)
+      const applied = applyVerifiedProfilePatch(
+        {profile_prompt_dismissed_at: dismissedAt},
+        {expectedUserId: userId},
+      )
+      if (!applied) throw new Error('PROFILE_AUTH_IDENTITY_CHANGED')
+
       router.replace(nextPath)
       router.refresh()
     } catch (dismissError) {
@@ -289,7 +294,15 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
       setIsDismissing(false)
       setIsSaving(false)
     }
-  }, [isSaving, nextPath, persistReminderDismissal, refreshAppData, router, t])
+  }, [
+    applyVerifiedProfilePatch,
+    isSaving,
+    nextPath,
+    persistReminderDismissal,
+    router,
+    t,
+    userId,
+  ])
 
   const handleBack = useCallback(() => {
     if (stepIndex === 0) {
