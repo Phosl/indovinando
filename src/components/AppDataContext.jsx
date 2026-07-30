@@ -1,8 +1,11 @@
 'use client'
 
 import {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
-import {usePathname} from 'next/navigation'
-import {createAppDataSessionGuard} from '@/lib/appDataSessionGuard.mjs'
+import {usePathname, useRouter} from 'next/navigation'
+import {
+  createAppDataRequestCoordinator,
+  createAppDataSessionGuard,
+} from '@/lib/appDataSessionGuard.mjs'
 import {createClient} from '@/lib/supabaseClient'
 
 const AppDataContext = createContext(null)
@@ -24,114 +27,142 @@ function shouldLoadAppData(pathname = '') {
 
 export function AppDataProvider({children}) {
   const pathname = usePathname()
+  const router = useRouter()
   const [snapshot, setSnapshot] = useState(null)
   const [status, setStatus] = useState('idle')
   const [error, setError] = useState(null)
+  const [authRevision, setAuthRevision] = useState(0)
   const snapshotRef = useRef(null)
   const hasLoadedRef = useRef(false)
-  const inFlightRef = useRef(null)
   const wasLoadableRef = useRef(false)
   const canLoadRef = useRef(false)
+  const loadedAuthRevisionRef = useRef(-1)
+  const routerRefreshTimerRef = useRef(null)
   const authIdentityRef = useRef({initialized: false, userId: null})
   const sessionGuardRef = useRef(null)
   if (!sessionGuardRef.current) {
     sessionGuardRef.current = createAppDataSessionGuard()
   }
+  const requestCoordinatorRef = useRef(null)
+  if (!requestCoordinatorRef.current) {
+    requestCoordinatorRef.current = createAppDataRequestCoordinator({
+      isCurrent: (generation) => sessionGuardRef.current.isCurrent(generation),
+    })
+  }
   const canLoad = shouldLoadAppData(pathname)
   canLoadRef.current = canLoad
 
+  const clearSnapshot = useCallback(
+    ({nextError = null, nextStatus = 'idle', markLoaded = false} = {}) => {
+      hasLoadedRef.current = markLoaded
+      snapshotRef.current = null
+      setSnapshot(null)
+      setStatus(nextStatus)
+      setError(nextError)
+    },
+    [],
+  )
+
   const invalidate = useCallback((options = {}) => {
     sessionGuardRef.current.invalidate(options)
-    hasLoadedRef.current = false
-    inFlightRef.current = null
-    snapshotRef.current = null
-    setSnapshot(null)
-    setStatus('idle')
-    setError(null)
-  }, [])
+    clearSnapshot()
+  }, [clearSnapshot])
 
   const refresh = useCallback(async ({force = false} = {}) => {
     const requestGeneration = sessionGuardRef.current.beginRequest()
-    const activeRequest = inFlightRef.current
-    if (activeRequest?.generation === requestGeneration) {
-      return activeRequest.promise
+    if (
+      !requestCoordinatorRef.current.hasActive(requestGeneration) &&
+      hasLoadedRef.current &&
+      !force
+    ) {
+      return snapshotRef.current
     }
-    if (hasLoadedRef.current && !force) return snapshotRef.current
 
-    let request
-    request = (async () => {
-      setStatus(snapshotRef.current ? 'refreshing' : 'loading')
-      setError(null)
+    return requestCoordinatorRef.current.run({
+      generation: requestGeneration,
+      force,
+      load: async () => {
+        setStatus(snapshotRef.current ? 'refreshing' : 'loading')
+        setError(null)
 
-      try {
-        const response = await fetch('/api/app-data', {
-          cache: 'no-store',
-          headers: {'Accept': 'application/json'},
-        })
+        try {
+          const response = await fetch('/api/app-data', {
+            cache: 'no-store',
+            headers: {'Accept': 'application/json'},
+          })
 
-        if (!sessionGuardRef.current.isCurrent(requestGeneration)) {
-          return snapshotRef.current
-        }
+          if (!sessionGuardRef.current.isCurrent(requestGeneration)) {
+            return snapshotRef.current
+          }
 
-        if (response.status === 401) {
-          if (!sessionGuardRef.current.accept(requestGeneration, null)) {
-            throw new Error('APP_DATA_USER_MISMATCH')
+          if (response.status === 401) {
+            const accepted = sessionGuardRef.current.accept(requestGeneration, null)
+            const identityError = accepted
+              ? null
+              : new Error('APP_DATA_USER_MISMATCH')
+
+            clearSnapshot({
+              nextError: identityError,
+              nextStatus: accepted ? 'unauthenticated' : 'error',
+              markLoaded: accepted,
+            })
+            return null
+          }
+
+          const payload = await response.json().catch(() => null)
+          if (!response.ok || !payload) {
+            throw new Error(payload?.error || 'Unable to load app data')
+          }
+
+          if (
+            !payload.user?.id ||
+            !sessionGuardRef.current.accept(requestGeneration, payload.user.id)
+          ) {
+            const identityError = new Error('APP_DATA_USER_MISMATCH')
+            clearSnapshot({nextError: identityError, nextStatus: 'error'})
+            return null
           }
 
           hasLoadedRef.current = true
-          snapshotRef.current = null
-          setSnapshot(null)
-          setStatus('unauthenticated')
-          return null
-        }
+          snapshotRef.current = payload
+          setSnapshot(payload)
+          setStatus('ready')
+          return payload
+        } catch (nextError) {
+          if (!sessionGuardRef.current.isCurrent(requestGeneration)) {
+            return snapshotRef.current
+          }
 
-        const payload = await response.json().catch(() => null)
-        if (!response.ok || !payload) {
-          throw new Error(payload?.error || 'Unable to load app data')
-        }
-
-        if (
-          !payload.user?.id ||
-          !sessionGuardRef.current.accept(requestGeneration, payload.user.id)
-        ) {
-          throw new Error('APP_DATA_USER_MISMATCH')
-        }
-
-        hasLoadedRef.current = true
-        snapshotRef.current = payload
-        setSnapshot(payload)
-        setStatus('ready')
-        return payload
-      } catch (nextError) {
-        if (!sessionGuardRef.current.isCurrent(requestGeneration)) {
+          setError(nextError)
+          setStatus(snapshotRef.current ? 'ready' : 'error')
           return snapshotRef.current
         }
-
-        setError(nextError)
-        setStatus(snapshotRef.current ? 'ready' : 'error')
-        return snapshotRef.current
-      } finally {
-        if (inFlightRef.current?.promise === request) {
-          inFlightRef.current = null
-        }
-      }
-    })()
-
-    inFlightRef.current = {generation: requestGeneration, promise: request}
-    return request
-  }, [])
+      },
+    })
+  }, [clearSnapshot])
 
   useEffect(() => {
     if (!canLoad) {
-      if (wasLoadableRef.current) invalidate()
+      if (wasLoadableRef.current) {
+        const identity = authIdentityRef.current
+        invalidate(
+          identity.initialized
+            ? {expectedUserId: identity.userId}
+            : {},
+        )
+      }
       wasLoadableRef.current = false
       return
     }
 
+    if (!authIdentityRef.current.initialized) return
+
     const isEnteringDataArea = !wasLoadableRef.current
+    const identityChanged = loadedAuthRevisionRef.current !== authRevision
     wasLoadableRef.current = true
-    refresh({force: isEnteringDataArea})
-  }, [canLoad, invalidate, refresh])
+    loadedAuthRevisionRef.current = authRevision
+    void refresh({force: isEnteringDataArea || identityChanged})
+  }, [authRevision, canLoad, invalidate, refresh])
 
   useEffect(() => {
     const supabase = createClient()
@@ -147,14 +178,27 @@ export function AppDataProvider({children}) {
 
       authIdentityRef.current = {initialized: true, userId: nextUserId}
       invalidate({expectedUserId: nextUserId})
+      setAuthRevision((current) => current + 1)
 
-      if (canLoadRef.current) {
-        void refresh({force: true})
+      if (previousIdentity.initialized && canLoadRef.current) {
+        if (routerRefreshTimerRef.current !== null) {
+          window.clearTimeout(routerRefreshTimerRef.current)
+        }
+        routerRefreshTimerRef.current = window.setTimeout(() => {
+          routerRefreshTimerRef.current = null
+          router.refresh()
+        }, 0)
       }
     })
 
-    return () => subscription.unsubscribe()
-  }, [invalidate, refresh])
+    return () => {
+      subscription.unsubscribe()
+      if (routerRefreshTimerRef.current !== null) {
+        window.clearTimeout(routerRefreshTimerRef.current)
+        routerRefreshTimerRef.current = null
+      }
+    }
+  }, [invalidate, router])
 
   const value = useMemo(
     () => ({

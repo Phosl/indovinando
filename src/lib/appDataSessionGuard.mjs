@@ -40,3 +40,61 @@ export function createAppDataSessionGuard() {
     },
   })
 }
+
+export function createAppDataRequestCoordinator({isCurrent}) {
+  let activeRequest = null
+  let queuedForceRequest = null
+
+  function start({generation, load}) {
+    let promise
+    promise = Promise.resolve()
+      .then(load)
+      .finally(() => {
+        if (activeRequest?.promise === promise) {
+          activeRequest = null
+        }
+      })
+
+    activeRequest = {generation, promise}
+    return promise
+  }
+
+  function run({generation, force = false, load}) {
+    if (force && queuedForceRequest?.generation === generation) {
+      return queuedForceRequest.promise
+    }
+
+    if (activeRequest?.generation !== generation) {
+      return start({generation, load})
+    }
+
+    if (!force) return activeRequest.promise
+
+    const currentRequest = activeRequest.promise
+    let promise
+    promise = currentRequest
+      .catch(() => undefined)
+      .then(() => {
+        if (!isCurrent(generation)) return undefined
+        if (activeRequest?.generation === generation) {
+          return activeRequest.promise
+        }
+        return start({generation, load})
+      })
+      .finally(() => {
+        if (queuedForceRequest?.promise === promise) {
+          queuedForceRequest = null
+        }
+      })
+
+    queuedForceRequest = {generation, promise}
+    return promise
+  }
+
+  return Object.freeze({
+    hasActive(generation) {
+      return activeRequest?.generation === generation
+    },
+    run,
+  })
+}
