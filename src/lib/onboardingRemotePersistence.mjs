@@ -49,12 +49,15 @@ export async function persistOnboardingDismissal({
   syncKey,
   persistOnDevice,
   persistRemotely,
+  requiresRemote = typeof persistRemotely === 'function',
   remotePersistence = onboardingRemotePersistence,
 }) {
-  const requiresRemote = typeof persistRemotely === 'function'
   let persistedRemotely = false
 
   if (requiresRemote) {
+    if (typeof persistRemotely !== 'function') {
+      throw new Error('ONBOARDING_REMOTE_PERSISTENCE_NOT_CONFIGURED')
+    }
     persistedRemotely = await remotePersistence.persist(syncKey, persistRemotely)
   }
 

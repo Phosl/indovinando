@@ -426,6 +426,25 @@ assert.equal(
   'a failed account write must not leave a device preference that hides the guide after reload',
 )
 
+let deviceWritesWithoutRemotePersistence = 0
+await assert.rejects(
+  persistOnboardingDismissal({
+    syncKey: 'user-missing-remote:all',
+    requiresRemote: true,
+    persistOnDevice() {
+      deviceWritesWithoutRemotePersistence += 1
+      return true
+    },
+    remotePersistence: createOnboardingRemotePersistenceCoordinator(),
+  }),
+  /ONBOARDING_REMOTE_PERSISTENCE_NOT_CONFIGURED/,
+)
+assert.equal(
+  deviceWritesWithoutRemotePersistence,
+  0,
+  'an account guide must stay visible when its remote persistence callback is missing',
+)
+
 let deviceWritesAfterRemoteSuccess = 0
 assert.equal(
   await persistOnboardingDismissal({

@@ -62,6 +62,9 @@ export default function useOnboardingPreference({
     [userId],
   )
   const isStandaloneGuide = guideId === ONBOARDING_GUIDES.courseGuest
+  const requiresRemotePersistence = !isStandaloneGuide
+  const hasRequiredPersistence =
+    !requiresRemotePersistence || typeof persistDisable === 'function'
   const syncKey = isStandaloneGuide ? preferenceKey : globalPreferenceKey
   const [visibilityOverride, setVisibilityOverride] = useState({
     preferenceKey: '',
@@ -74,6 +77,7 @@ export default function useOnboardingPreference({
   const getStatus = useCallback(() => {
     const globallyDisabled =
       !isStandaloneGuide &&
+      hasRequiredPersistence &&
       (disabledInMemory.has(globalPreferenceKey) ||
         isOnboardingDisabled(globalPreferenceKey, {
           legacyStorageKey: LEGACY_ONBOARDING_KEYS.all,
@@ -81,10 +85,11 @@ export default function useOnboardingPreference({
     const guideDisabled =
       guideId === ONBOARDING_GUIDES.all
         ? globallyDisabled
-        : disabledInMemory.has(preferenceKey) ||
-          isOnboardingDisabled(preferenceKey, {
-            legacyStorageKey: LEGACY_ONBOARDING_KEYS[guideId],
-          })
+        : hasRequiredPersistence &&
+          (disabledInMemory.has(preferenceKey) ||
+            isOnboardingDisabled(preferenceKey, {
+              legacyStorageKey: LEGACY_ONBOARDING_KEYS[guideId],
+            }))
 
     if (globallyDisabled || guideDisabled) return 'disabled'
     if (
@@ -94,7 +99,13 @@ export default function useOnboardingPreference({
       return 'seen'
     }
     return 'available'
-  }, [globalPreferenceKey, guideId, isStandaloneGuide, preferenceKey])
+  }, [
+    globalPreferenceKey,
+    guideId,
+    hasRequiredPersistence,
+    isStandaloneGuide,
+    preferenceKey,
+  ])
 
   const subscribe = useCallback((onStoreChange) => {
     if (typeof window === 'undefined') return () => {}
@@ -180,6 +191,7 @@ export default function useOnboardingPreference({
     try {
       const persistenceSucceeded = await persistOnboardingDismissal({
         syncKey,
+        requiresRemote: requiresRemotePersistence,
         persistRemotely: persistDisable,
         persistOnDevice: () =>
           isStandaloneGuide
@@ -206,7 +218,14 @@ export default function useOnboardingPreference({
       persistenceInFlightRef.current = false
       setIsPersisting(false)
     }
-  }, [isStandaloneGuide, persistDisable, preferenceKey, syncKey, userId])
+  }, [
+    isStandaloneGuide,
+    persistDisable,
+    preferenceKey,
+    requiresRemotePersistence,
+    syncKey,
+    userId,
+  ])
 
   return {
     canOpenAutomatically: status === 'available',
