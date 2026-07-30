@@ -39,6 +39,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.52.9',
+    date: '30 luglio 2026',
+    label: 'Auto',
+    changes: [
+      'harden onboarding persistence and layout',
+    ],
+  },
+
+  {
     version: '1.52.8',
     date: '30 luglio 2026',
     label: 'Auto',
