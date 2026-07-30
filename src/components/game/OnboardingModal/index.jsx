@@ -128,6 +128,7 @@ export default function OnboardingModal({
         className={modalClassName}
         role="dialog"
         aria-modal="true"
+        aria-busy={isDisabling}
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         tabIndex={-1}>

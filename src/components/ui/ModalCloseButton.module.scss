@@ -30,6 +30,12 @@
   transform: translateY(0);
 }
 
+.button:disabled {
+  cursor: wait;
+  opacity: 0.62;
+  transform: none;
+}
+
 .button:focus-visible {
   outline: 3px solid var(--selected);
   outline-offset: 3px;
