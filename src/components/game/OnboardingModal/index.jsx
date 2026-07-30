@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useId, useRef, useState} from 'react'
+import {useEffect, useEffectEvent, useId, useRef, useState} from 'react'
 import {createPortal} from 'react-dom'
 import styles from './OnboardingModal.module.scss'
 import {useT} from '@/lib/i18n/useT'
@@ -30,8 +30,6 @@ export default function OnboardingModal({
   const [step, setStep] = useState(1)
   const t = useT(translationKey)
   const modalRef = useRef(null)
-  const isDisablingRef = useRef(isDisabling)
-  const onCloseRef = useRef(onClose)
   const titleId = useId()
   const descriptionId = useId()
   const translatedSteps = t('steps')
@@ -61,13 +59,9 @@ export default function OnboardingModal({
     persistenceError: labels.persistenceError || t('persistenceError'),
   }
 
-  useEffect(() => {
-    isDisablingRef.current = isDisabling
-  }, [isDisabling])
-
-  useEffect(() => {
-    onCloseRef.current = onClose
-  }, [onClose])
+  const handleEscape = useEffectEvent(() => {
+    if (!isDisabling) onClose()
+  })
 
   useEffect(() => {
     const previousActiveElement = document.activeElement
@@ -77,7 +71,7 @@ export default function OnboardingModal({
     function handleKeyDown(event) {
       if (event.key === 'Escape') {
         event.preventDefault()
-        if (!isDisablingRef.current) onCloseRef.current()
+        handleEscape()
         return
       }
 
@@ -97,14 +91,22 @@ export default function OnboardingModal({
 
       const firstElement = focusableElements[0]
       const lastElement = focusableElements[focusableElements.length - 1]
+      const activeElement = document.activeElement
+
+      if (!modalRef.current.contains(activeElement)) {
+        event.preventDefault()
+        const focusTarget = event.shiftKey ? lastElement : firstElement
+        focusTarget.focus()
+        return
+      }
 
       if (
         event.shiftKey &&
-        (document.activeElement === firstElement || document.activeElement === modalRef.current)
+        (activeElement === firstElement || activeElement === modalRef.current)
       ) {
         event.preventDefault()
         lastElement.focus()
-      } else if (!event.shiftKey && document.activeElement === lastElement) {
+      } else if (!event.shiftKey && activeElement === lastElement) {
         event.preventDefault()
         firstElement.focus()
       }
