@@ -313,8 +313,8 @@ assert.equal(
     persistedOnDevice: true,
     persistedRemotely: false,
   }),
-  false,
-  'an account preference must not report success when only device storage succeeded',
+  true,
+  'an account preference must accept verified device storage while remote sync retries',
 )
 assert.equal(
   isOnboardingPersistenceConfirmed({
