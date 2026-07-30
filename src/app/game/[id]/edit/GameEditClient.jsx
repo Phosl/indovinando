@@ -1,6 +1,7 @@
 'use client'
 
 import GameEditor from '@/components/game/GameEditor'
+import {disableCreateOnboarding} from '@/lib/profileOnboardingClient'
 
 export default function GameEditClient({
   gameId,
@@ -23,6 +24,7 @@ export default function GameEditClient({
           avatarOptions={avatarOptions}
           userId={userId}
           onGameSaved={onGameSaved}
+          onDisableOnboarding={disableCreateOnboarding}
         />
       </div>
     </main>
