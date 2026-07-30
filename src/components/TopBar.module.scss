@@ -66,8 +66,8 @@
 
 .backBtn {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 100px;
   border: 2px solid var(--gray);
   background: var(--white);
@@ -142,5 +142,16 @@
     left: 0;
     right: 0;
     height: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progressFill,
+  .backBtn {
+    transition: none;
+  }
+
+  .backBtn:active {
+    transform: none;
   }
 }

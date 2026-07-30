@@ -14,6 +14,7 @@
   display: block;
   margin: 0 auto 6px;
   width: fit-content;
+  min-height: 44px;
   margin-top: 14px;
 }
 
@@ -44,6 +45,16 @@
 .modeCard:active {
   transform: translateY(3px);
   box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modeCard {
+    transition: none;
+  }
+
+  .modeCard:active {
+    transform: none;
+  }
 }
 
 .modeCardEmoji {

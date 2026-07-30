@@ -111,6 +111,22 @@
   grid-template-columns: minmax(0, 220px);
 }
 
+.dismissConfirmation {
+  border: 2px solid var(--success);
+  border-radius: 16px;
+  background: var(--success-50);
+  color: var(--success-text);
+  padding: 14px 16px;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.4;
+
+  &:focus {
+    outline: 3px solid var(--selected);
+    outline-offset: 3px;
+  }
+}
+
 .error {
   border: 2px solid var(--danger-border);
   border-radius: 14px;

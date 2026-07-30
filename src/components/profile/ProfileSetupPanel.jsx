@@ -18,7 +18,7 @@ function formatList(values, labelFor) {
   return values.map(labelFor).join(', ')
 }
 
-export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
+export default function ProfileSetupPanel({profile, mode = 'dashboard', onDismissed}) {
   const t = useT('profileSetup')
   const pathname = usePathname()
   const {refresh: refreshAppData} = useAppData()
@@ -27,6 +27,7 @@ export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
   const [dismissError, setDismissError] = useState('')
   const dismissErrorId = useId()
   const dismissErrorRef = useRef(null)
+  const dismissConfirmationRef = useRef(null)
   const normalizedProfile = useMemo(() => normalizeProfileSetup(profile), [profile])
   const isComplete = useMemo(() => isProfileComplete(normalizedProfile), [normalizedProfile])
   const completionCount = useMemo(
@@ -52,6 +53,15 @@ export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
     return () => window.cancelAnimationFrame(animationFrame)
   }, [dismissError])
 
+  useEffect(() => {
+    if (!isDismissed) return undefined
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      dismissConfirmationRef.current?.focus()
+    })
+    return () => window.cancelAnimationFrame(animationFrame)
+  }, [isDismissed])
+
   async function handleDismiss() {
     if (isDismissing) return
 
@@ -61,6 +71,7 @@ export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
     try {
       await dismissProfileSetupPrompt()
       setIsDismissed(true)
+      onDismissed?.()
       await refreshAppData({force: true})
     } catch (error) {
       setDismissError(
@@ -71,7 +82,19 @@ export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
     }
   }
 
-  if (isDismissed) return null
+  if (isDismissed) {
+    return (
+      <div
+        ref={dismissConfirmationRef}
+        className={styles.dismissConfirmation}
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        tabIndex={-1}>
+        {t('dismissedConfirmation')}
+      </div>
+    )
+  }
 
   return (
     <section

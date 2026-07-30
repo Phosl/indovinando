@@ -2,6 +2,7 @@
 
 import {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {usePathname} from 'next/navigation'
+import {createAppDataSessionGuard} from '@/lib/appDataSessionGuard.mjs'
 
 const AppDataContext = createContext(null)
 
@@ -25,16 +26,37 @@ export function AppDataProvider({children}) {
   const [snapshot, setSnapshot] = useState(null)
   const [status, setStatus] = useState('idle')
   const [error, setError] = useState(null)
+  const snapshotRef = useRef(null)
   const hasLoadedRef = useRef(false)
   const inFlightRef = useRef(null)
+  const wasLoadableRef = useRef(false)
+  const sessionGuardRef = useRef(null)
+  if (!sessionGuardRef.current) {
+    sessionGuardRef.current = createAppDataSessionGuard()
+  }
   const canLoad = shouldLoadAppData(pathname)
 
-  const refresh = useCallback(async ({force = false} = {}) => {
-    if (inFlightRef.current) return inFlightRef.current
-    if (hasLoadedRef.current && !force) return snapshot
+  const invalidate = useCallback((options = {}) => {
+    sessionGuardRef.current.invalidate(options)
+    hasLoadedRef.current = false
+    inFlightRef.current = null
+    snapshotRef.current = null
+    setSnapshot(null)
+    setStatus('idle')
+    setError(null)
+  }, [])
 
-    const request = (async () => {
-      setStatus(snapshot ? 'refreshing' : 'loading')
+  const refresh = useCallback(async ({force = false} = {}) => {
+    const requestGeneration = sessionGuardRef.current.beginRequest()
+    const activeRequest = inFlightRef.current
+    if (activeRequest?.generation === requestGeneration) {
+      return activeRequest.promise
+    }
+    if (hasLoadedRef.current && !force) return snapshotRef.current
+
+    let request
+    request = (async () => {
+      setStatus(snapshotRef.current ? 'refreshing' : 'loading')
       setError(null)
 
       try {
@@ -43,8 +65,17 @@ export function AppDataProvider({children}) {
           headers: {'Accept': 'application/json'},
         })
 
+        if (!sessionGuardRef.current.isCurrent(requestGeneration)) {
+          return snapshotRef.current
+        }
+
         if (response.status === 401) {
+          if (!sessionGuardRef.current.accept(requestGeneration, null)) {
+            throw new Error('APP_DATA_USER_MISMATCH')
+          }
+
           hasLoadedRef.current = true
+          snapshotRef.current = null
           setSnapshot(null)
           setStatus('unauthenticated')
           return null
@@ -55,27 +86,48 @@ export function AppDataProvider({children}) {
           throw new Error(payload?.error || 'Unable to load app data')
         }
 
+        if (
+          !payload.user?.id ||
+          !sessionGuardRef.current.accept(requestGeneration, payload.user.id)
+        ) {
+          throw new Error('APP_DATA_USER_MISMATCH')
+        }
+
         hasLoadedRef.current = true
+        snapshotRef.current = payload
         setSnapshot(payload)
         setStatus('ready')
         return payload
       } catch (nextError) {
+        if (!sessionGuardRef.current.isCurrent(requestGeneration)) {
+          return snapshotRef.current
+        }
+
         setError(nextError)
-        setStatus(snapshot ? 'ready' : 'error')
-        return snapshot
+        setStatus(snapshotRef.current ? 'ready' : 'error')
+        return snapshotRef.current
       } finally {
-        inFlightRef.current = null
+        if (inFlightRef.current?.promise === request) {
+          inFlightRef.current = null
+        }
       }
     })()
 
-    inFlightRef.current = request
+    inFlightRef.current = {generation: requestGeneration, promise: request}
     return request
-  }, [snapshot])
+  }, [])
 
   useEffect(() => {
-    if (!canLoad) return
-    refresh()
-  }, [canLoad, refresh])
+    if (!canLoad) {
+      if (wasLoadableRef.current) invalidate()
+      wasLoadableRef.current = false
+      return
+    }
+
+    const isEnteringDataArea = !wasLoadableRef.current
+    wasLoadableRef.current = true
+    refresh({force: isEnteringDataArea})
+  }, [canLoad, invalidate, refresh])
 
   const value = useMemo(
     () => ({
@@ -90,9 +142,10 @@ export function AppDataProvider({children}) {
       refreshing: status === 'refreshing',
       ready: status === 'ready',
       error,
+      invalidate,
       refresh,
     }),
-    [error, refresh, snapshot, status],
+    [error, invalidate, refresh, snapshot, status],
   )
 
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>

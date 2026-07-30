@@ -5,6 +5,7 @@ import {createClient, resetBrowserClient} from '@/lib/supabaseClient'
 import {useRouter, useSearchParams} from 'next/navigation'
 import {useT} from '@/lib/i18n/useT'
 import {getSafeInternalPath} from '@/lib/safeInternalPath'
+import {useAppData} from '@/components/AppDataContext'
 import styles from './AuthFormClient.module.scss'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -22,6 +23,7 @@ function wait(ms) {
 function AuthForm() {
   const router = useRouter()
   const t = useT('auth')
+  const {invalidate: invalidateAppData} = useAppData()
   const searchParams = useSearchParams()
   const nextPath = searchParams.get('next') || '/dashboard'
   const safeNextPath = getSafeInternalPath(nextPath, '/dashboard')
@@ -37,6 +39,9 @@ function AuthForm() {
   const [info, setInfo] = useState('')
   const isLogin = mode === 'login'
   const isForgot = mode === 'forgot'
+  const prepareAppDataForUser = (userId) => {
+    invalidateAppData(userId ? {expectedUserId: userId} : {})
+  }
 
   useEffect(() => {
     router.prefetch(safeNextPath)
@@ -99,7 +104,7 @@ function AuthForm() {
       }
 
       if (isLogin) {
-        const {error: loginError} = await Promise.race([
+        const {data: loginData, error: loginError} = await Promise.race([
           supabase.auth.signInWithPassword({email, password}),
           new Promise((_, reject) => {
             setTimeout(() => reject(new Error('LOGIN_TIMEOUT')), LOGIN_TIMEOUT_MS)
@@ -109,6 +114,7 @@ function AuthForm() {
           setError(loginError.message)
           return
         }
+        prepareAppDataForUser(loginData?.user?.id)
         router.push(safeNextPath)
       } else {
         const normalizedUsername = username.trim()
@@ -129,17 +135,20 @@ function AuthForm() {
         setEmail('')
         setPassword('')
         if (data?.session) {
+          prepareAppDataForUser(data.user?.id)
           router.push(safeNextPath)
           return
         }
-        const {error: loginAfterSignupError} = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        })
+        const {data: loginAfterSignupData, error: loginAfterSignupError} =
+          await supabase.auth.signInWithPassword({
+            email,
+            password,
+          })
         if (loginAfterSignupError) {
           setInfo(t('registrationComplete'))
           return
         }
+        prepareAppDataForUser(loginAfterSignupData?.user?.id)
         router.push(safeNextPath)
       }
     } catch (err) {
@@ -153,6 +162,7 @@ function AuthForm() {
           } = await recoveryClient.auth.getSession()
 
           if (session) {
+            prepareAppDataForUser(session.user?.id)
             router.replace(safeNextPath)
             router.refresh()
             return

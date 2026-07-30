@@ -172,7 +172,7 @@ export default function InfoClient() {
       <main className={styles.page}>
         <div className={styles.container}>
           <section className={`${styles.card} ${styles.emptyCard}`}>
-            <h2>{t('title')}</h2>
+            <h1>{t('title')}</h1>
           </section>
         </div>
       </main>
@@ -257,9 +257,9 @@ export default function InfoClient() {
 
               <div className={styles.copy}>
                 {currentSlide.kicker && <p className={styles.kicker}>{currentSlide.kicker}</p>}
-                <h2 id={slideTitleId} className={styles.title}>
+                <h1 id={slideTitleId} className={styles.title}>
                   {currentSlide.title}
-                </h2>
+                </h1>
                 <p className={styles.description}>{currentSlide.description}</p>
 
                 {Array.isArray(currentSlide.points) && currentSlide.points.length > 0 && (

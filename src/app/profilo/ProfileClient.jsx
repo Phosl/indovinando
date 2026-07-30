@@ -143,6 +143,7 @@ export default function ProfileClient({
     credits: sharedCredits,
     gamesCount: sharedGamesCount,
     refresh: refreshAppData,
+    invalidate: invalidateAppData,
   } = useAppData()
   const {progress, loaded} = useWineCourseProgress()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
@@ -245,6 +246,7 @@ export default function ProfileClient({
   const handleLogout = useCallback(async () => {
     if (isLoggingOut) return
     setIsLoggingOut(true)
+    invalidateAppData({expectedUserId: null})
 
     const clearClientMemory = async () => {
       try {
@@ -315,7 +317,7 @@ export default function ProfileClient({
       router.refresh()
       setIsLoggingOut(false)
     }
-  }, [router, isLoggingOut, userId])
+  }, [invalidateAppData, router, isLoggingOut, userId])
 
   const handleInstallApp = useCallback(async () => {
     if (deferredInstallPrompt) {

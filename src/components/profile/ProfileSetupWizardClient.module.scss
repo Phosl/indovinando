@@ -23,6 +23,10 @@
   gap: 20px;
 }
 
+.topBarTitle {
+  min-width: 0;
+}
+
 .hero {
   display: grid;
   gap: 12px;
@@ -524,6 +528,17 @@
 
   .card {
     border-radius: 18px;
+  }
+}
+
+@media (max-width: 520px) {
+  .topBarTitle {
+    overflow: visible;
+    font-size: 1rem;
+    line-height: 1.15;
+    text-overflow: clip;
+    white-space: normal;
+    text-wrap: balance;
   }
 }
 

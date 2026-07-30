@@ -386,6 +386,12 @@
   .preference p {
     text-align: left;
   }
+
+  .preference .preferenceError {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    text-align: center;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1499,6 +1499,7 @@
     "skipAction": "Skip",
     "dontShowAgainAction": "Do not show again",
     "dismissingAction": "Hiding...",
+    "dismissedConfirmation": "The profile guide will no longer be shown.",
     "skipShortAction": "Skip",
     "closeAction": "Close",
     "backAction": "Back",

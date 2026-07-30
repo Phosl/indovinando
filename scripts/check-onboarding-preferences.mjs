@@ -18,6 +18,7 @@ import {
   createOnboardingRemotePersistenceCoordinator,
   persistOnboardingDismissal,
 } from '../src/lib/onboardingRemotePersistence.mjs'
+import {shouldAutoOpenCreateOnboarding} from '../src/lib/createOnboardingGate.mjs'
 
 class MemoryStorage {
   constructor(entries = []) {
@@ -444,6 +445,81 @@ assert.equal(
   deviceWritesAfterRemoteSuccess,
   1,
   'a verified account write must persist the matching device preference once',
+)
+
+assert.equal(
+  shouldAutoOpenCreateOnboarding({
+    profile: {onboarding: true},
+    createdGamesCount: 0,
+  }),
+  true,
+  'the create onboarding may open only from an explicit profile preference and a verified zero count',
+)
+assert.equal(
+  shouldAutoOpenCreateOnboarding({
+    profile: {onboarding: false},
+    createdGamesCount: 0,
+  }),
+  false,
+  'a disabled server preference must keep onboarding closed',
+)
+assert.equal(
+  shouldAutoOpenCreateOnboarding({
+    profile: {onboarding: true},
+    createdGamesCount: 1,
+  }),
+  false,
+  'existing games must keep onboarding closed',
+)
+assert.equal(
+  shouldAutoOpenCreateOnboarding({
+    profile: null,
+    createdGamesCount: 0,
+  }),
+  false,
+  'a missing profile must fail closed',
+)
+assert.equal(
+  shouldAutoOpenCreateOnboarding({
+    profile: {onboarding: null},
+    createdGamesCount: 0,
+  }),
+  false,
+  'an unverified profile preference must fail closed',
+)
+assert.equal(
+  shouldAutoOpenCreateOnboarding({
+    profile: {onboarding: true},
+    profileError: {code: 'PROFILE_READ_FAILED'},
+    createdGamesCount: 0,
+  }),
+  false,
+  'a profile query error must fail closed even when partial data is present',
+)
+assert.equal(
+  shouldAutoOpenCreateOnboarding({
+    profile: {onboarding: true},
+    createdGamesCount: null,
+  }),
+  false,
+  'a missing exact count must fail closed',
+)
+assert.equal(
+  shouldAutoOpenCreateOnboarding({
+    profile: {onboarding: true},
+    createdGamesCount: 0,
+    gamesCountError: {code: 'COUNT_FAILED'},
+  }),
+  false,
+  'a count query error must fail closed',
+)
+assert.equal(
+  shouldAutoOpenCreateOnboarding({
+    profile: {onboarding: true},
+    createdGamesCount: '0',
+  }),
+  false,
+  'a non-numeric count must not be treated as verified',
 )
 
 console.log('Onboarding preference checks passed.')

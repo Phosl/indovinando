@@ -556,6 +556,7 @@ export default function ProfileSetupWizardClient({userId, profile, nextPath = '/
           title={t('modalTitle')}
           onBack={handleBack}
           maxWidth="760px"
+          titleClassName={styles.topBarTitle}
         />
 
         <div className={styles.hero}>

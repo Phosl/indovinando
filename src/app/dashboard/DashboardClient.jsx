@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import {useState} from 'react'
 import DashboardInfoFabWrapper from './DashboardInfoFabWrapper'
 import ProgressBar from '@/components/ui/ProgressBar'
 import {SkeletonBone} from '@/components/ui/Skeleton'
@@ -27,6 +28,8 @@ function getWelcomeTitle({dashboardDict, profile, userEmail}) {
 
 export default function DashboardClient({dashboardDict, lang, userEmail}) {
   const {profile, courseProgress, appVersion} = useAppData()
+  const [profileReminderDismissedInSession, setProfileReminderDismissedInSession] =
+    useState(false)
   const isSuperAdmin = profile?.super_admin === true
   const showProfileSetupPanel =
     Boolean(profile) &&
@@ -49,7 +52,13 @@ export default function DashboardClient({dashboardDict, lang, userEmail}) {
           </div>
         </section>
 
-        {showProfileSetupPanel && <ProfileSetupPanel profile={profile || {}} mode="dashboard" />}
+        {(showProfileSetupPanel || profileReminderDismissedInSession) && (
+          <ProfileSetupPanel
+            profile={profile || {}}
+            mode="dashboard"
+            onDismissed={() => setProfileReminderDismissedInSession(true)}
+          />
+        )}
         <nav className={styles.menuGrid}>
           <CreateGameCardLink
             title={dashboardDict.createGameCardTitle}
