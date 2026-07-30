@@ -44,6 +44,7 @@ const CHANGELOG = [
     label: 'Auto',
     changes: [
       'polish onboarding and persist dismissals',
+      'confirm onboarding dismissal before closing',
     ],
   },
 
