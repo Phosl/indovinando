@@ -17,6 +17,7 @@ function CreateOnboardingModal({
   showOnboarding,
   onClose,
   onDisable,
+  isDisabling,
   persistenceError,
   variant = 'modal',
   translationKey = 'onboarding',
@@ -26,6 +27,7 @@ function CreateOnboardingModal({
     <OnboardingModal
       onClose={onClose}
       onDisable={onDisable}
+      isDisabling={isDisabling}
       persistenceError={persistenceError}
       variant={variant}
       translationKey={translationKey}
@@ -74,6 +76,7 @@ export default function GameCreateClient({
           showOnboarding={onboarding.isVisible}
           onClose={onboarding.close}
           onDisable={onboarding.disable}
+          isDisabling={onboarding.isPersisting}
           persistenceError={onboarding.persistenceError}
           variant="page"
         />
@@ -89,6 +92,7 @@ export default function GameCreateClient({
           showOnboarding={onboarding.isVisible}
           onClose={onboarding.close}
           onDisable={onboarding.disable}
+          isDisabling={onboarding.isPersisting}
           persistenceError={onboarding.persistenceError}
           translationKey="automaticOnboarding"
         />
@@ -109,6 +113,7 @@ export default function GameCreateClient({
           showOnboarding={onboarding.isVisible}
           onClose={onboarding.close}
           onDisable={onboarding.disable}
+          isDisabling={onboarding.isPersisting}
           persistenceError={onboarding.persistenceError}
         />
 

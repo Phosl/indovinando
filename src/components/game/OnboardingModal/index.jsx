@@ -24,6 +24,7 @@ export default function OnboardingModal({
   disableHint,
   renderStepContent,
   actions,
+  isDisabling = false,
   persistenceError = false,
 }) {
   const [step, setStep] = useState(1)
@@ -53,6 +54,7 @@ export default function OnboardingModal({
     next: labels.next || t('next'),
     start: labels.start || finishLabel || t('start'),
     disable: labels.disable || disableLabel || t('disable'),
+    disabling: labels.disabling || t('disabling'),
     disableHint: labels.disableHint || disableHint || t('disableHint'),
     persistenceError: labels.persistenceError || t('persistenceError'),
   }
@@ -65,7 +67,7 @@ export default function OnboardingModal({
     function handleKeyDown(event) {
       if (event.key === 'Escape') {
         event.preventDefault()
-        onClose()
+        if (!isDisabling) onClose()
         return
       }
 
@@ -107,7 +109,7 @@ export default function OnboardingModal({
       window.removeEventListener('keydown', handleKeyDown)
       previousActiveElement?.focus?.()
     }
-  }, [onClose])
+  }, [isDisabling, onClose])
 
   if (typeof document === 'undefined' || !currentStep) return null
 
@@ -118,7 +120,7 @@ export default function OnboardingModal({
         isPage
           ? undefined
           : (event) => {
-              if (event.target === event.currentTarget) onClose()
+              if (!isDisabling && event.target === event.currentTarget) onClose()
             }
       }>
       <div
@@ -138,7 +140,11 @@ export default function OnboardingModal({
               </span>
             ) : null}
           </div>
-          <ModalCloseButton className={styles.closeBtn} onClick={onClose} />
+          <ModalCloseButton
+            className={styles.closeBtn}
+            onClick={onClose}
+            disabled={isDisabling}
+          />
         </div>
 
         {hasMultipleSteps ? (
@@ -186,7 +192,7 @@ export default function OnboardingModal({
                   variant="neutral"
                   className={styles.backBtn}
                   onClick={() => setStep((current) => Math.max(1, current - 1))}
-                  disabled={isFirstStep}
+                  disabled={isFirstStep || isDisabling}
                   aria-label={copy.back}
                   type="button">
                   <Icon name="back" size={22} />
@@ -202,6 +208,7 @@ export default function OnboardingModal({
                     ? onClose
                     : () => setStep((current) => Math.min(steps.length, current + 1))
                 }
+                disabled={isDisabling}
                 type="button">
                 {isLastStep ? copy.start : copy.next}
               </Button>
@@ -215,8 +222,10 @@ export default function OnboardingModal({
                 size="small"
                 className={styles.disableBtn}
                 onClick={onDisable}
+                disabled={isDisabling}
+                aria-busy={isDisabling}
                 type="button">
-                {copy.disable}
+                {isDisabling ? copy.disabling : copy.disable}
               </Button>
               {copy.disableHint ? <p>{copy.disableHint}</p> : null}
               {persistenceError ? (

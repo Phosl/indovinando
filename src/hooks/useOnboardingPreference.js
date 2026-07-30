@@ -29,6 +29,10 @@ const GUIDE_BY_PREFERENCE = Object.freeze({
 })
 const PREFERENCE_CHANGE_EVENT = 'indovinando:onboarding-preference-change'
 const SERVER_STATUS = 'pending'
+const disabledInMemory = new Set()
+const seenInMemory = new Set()
+const remotelyPersisted = new Set()
+const remoteSyncInFlight = new Set()
 
 function getServerStatus() {
   return SERVER_STATUS
@@ -56,28 +60,37 @@ export default function useOnboardingPreference({
     [userId],
   )
   const isStandaloneGuide = guideId === ONBOARDING_GUIDES.courseGuest
+  const syncKey = isStandaloneGuide ? preferenceKey : globalPreferenceKey
   const [visibilityOverride, setVisibilityOverride] = useState({
     preferenceKey: '',
     value: null,
   })
+  const [isPersisting, setIsPersisting] = useState(false)
   const [persistenceError, setPersistenceError] = useState(false)
-  const retryStartedForKeyRef = useRef('')
+  const persistenceInFlightRef = useRef(false)
 
   const getStatus = useCallback(() => {
     const globallyDisabled =
       !isStandaloneGuide &&
-      isOnboardingDisabled(globalPreferenceKey, {
-        legacyStorageKey: LEGACY_ONBOARDING_KEYS.all,
-      })
+      (disabledInMemory.has(globalPreferenceKey) ||
+        isOnboardingDisabled(globalPreferenceKey, {
+          legacyStorageKey: LEGACY_ONBOARDING_KEYS.all,
+        }))
     const guideDisabled =
       guideId === ONBOARDING_GUIDES.all
         ? globallyDisabled
-        : isOnboardingDisabled(preferenceKey, {
+        : disabledInMemory.has(preferenceKey) ||
+          isOnboardingDisabled(preferenceKey, {
             legacyStorageKey: LEGACY_ONBOARDING_KEYS[guideId],
           })
 
     if (globallyDisabled || guideDisabled) return 'disabled'
-    if (hasSeenOnboardingThisSession(preferenceKey)) return 'seen'
+    if (
+      seenInMemory.has(preferenceKey) ||
+      hasSeenOnboardingThisSession(preferenceKey)
+    ) {
+      return 'seen'
+    }
     return 'available'
   }, [globalPreferenceKey, guideId, isStandaloneGuide, preferenceKey])
 
@@ -127,23 +140,28 @@ export default function useOnboardingPreference({
       !isReady ||
       !isDisabled ||
       !persistDisable ||
-      retryStartedForKeyRef.current === preferenceKey
+      remotelyPersisted.has(syncKey) ||
+      remoteSyncInFlight.has(syncKey)
     ) {
       return
     }
 
-    retryStartedForKeyRef.current = preferenceKey
+    remoteSyncInFlight.add(syncKey)
     Promise.resolve(persistDisable())
       .then((persisted) => {
         if (persisted === false) {
           throw new Error('ONBOARDING_PREFERENCE_NOT_PERSISTED')
         }
+        remotelyPersisted.add(syncKey)
+        setPersistenceError(false)
       })
       .catch(() => {
-        retryStartedForKeyRef.current = ''
         setPersistenceError(true)
       })
-  }, [initiallyVisible, isDisabled, isReady, persistDisable, preferenceKey])
+      .finally(() => {
+        remoteSyncInFlight.delete(syncKey)
+      })
+  }, [initiallyVisible, isDisabled, isReady, persistDisable, syncKey])
 
   const open = useCallback(() => {
     setPersistenceError(false)
@@ -151,47 +169,58 @@ export default function useOnboardingPreference({
   }, [preferenceKey])
 
   const close = useCallback(() => {
+    seenInMemory.add(preferenceKey)
     markOnboardingSeenThisSession(preferenceKey)
     setVisibilityOverride({preferenceKey, value: false})
     notifyPreferenceChange()
   }, [preferenceKey])
 
   const disable = useCallback(async () => {
-    retryStartedForKeyRef.current = preferenceKey
+    if (persistenceInFlightRef.current) return false
+
+    persistenceInFlightRef.current = true
+    setIsPersisting(true)
+    setPersistenceError(false)
+
     const persistedOnDevice = isStandaloneGuide
       ? disableOnboarding(preferenceKey)
       : disableAllOnboarding(userId)
-    setPersistenceError(false)
 
     let persistedRemotely = false
-    if (persistDisable) {
-      try {
+    try {
+      if (persistDisable) {
         persistedRemotely = (await persistDisable()) !== false
-      } catch {
-        persistedRemotely = false
       }
-    }
 
-    const persistenceSucceeded = persistDisable ? persistedRemotely : persistedOnDevice
+      const persistenceSucceeded = persistDisable ? persistedRemotely : persistedOnDevice
 
-    if (!persistenceSucceeded) {
-      retryStartedForKeyRef.current = ''
+      if (!persistenceSucceeded) {
+        throw new Error('ONBOARDING_PREFERENCE_NOT_PERSISTED')
+      }
+
+      disabledInMemory.add(syncKey)
+      if (persistDisable) remotelyPersisted.add(syncKey)
+      seenInMemory.add(preferenceKey)
+      markOnboardingSeenThisSession(preferenceKey)
+      setVisibilityOverride({preferenceKey, value: false})
+      notifyPreferenceChange()
+      return true
+    } catch {
       setPersistenceError(true)
       setVisibilityOverride({preferenceKey, value: true})
       return false
+    } finally {
+      persistenceInFlightRef.current = false
+      setIsPersisting(false)
     }
-
-    markOnboardingSeenThisSession(preferenceKey)
-    setVisibilityOverride({preferenceKey, value: false})
-    notifyPreferenceChange()
-    return true
-  }, [isStandaloneGuide, persistDisable, preferenceKey, userId])
+  }, [isStandaloneGuide, persistDisable, preferenceKey, syncKey, userId])
 
   return {
     canOpenAutomatically: status === 'available',
     close,
     disable,
     isDisabled,
+    isPersisting,
     isReady,
     isVisible,
     open,

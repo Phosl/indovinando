@@ -48,6 +48,7 @@ function QuestionnaireIntroModal({
   disableLabel,
   disableHint,
   eyebrow,
+  isDisabling,
   persistenceError,
 }) {
   if (!isOpen) return null
@@ -56,6 +57,7 @@ function QuestionnaireIntroModal({
     <OnboardingModal
       onClose={onClose}
       onDisable={onDisable}
+      isDisabling={isDisabling}
       persistenceError={persistenceError}
       steps={[{title, description, icon: '❓'}]}
       labels={{
@@ -94,6 +96,7 @@ function BottlesIntroModal({
   disableLabel,
   disableHint,
   eyebrow,
+  isDisabling,
   persistenceError,
 }) {
   if (!isOpen) return null
@@ -102,6 +105,7 @@ function BottlesIntroModal({
     <OnboardingModal
       onClose={onClose}
       onDisable={onDisable}
+      isDisabling={isDisabling}
       persistenceError={persistenceError}
       steps={[{title, description, icon: '🍷'}]}
       labels={{
@@ -1238,6 +1242,7 @@ export default function GameEditor({
         disableLabel={t('dontShowAgain')}
         disableHint={tOnboarding('disableHint')}
         eyebrow={tOnboarding('eyebrow')}
+        isDisabling={questionnaireOnboarding.isPersisting}
         persistenceError={questionnaireOnboarding.persistenceError}
       />
       <BottlesIntroModal
@@ -1250,6 +1255,7 @@ export default function GameEditor({
         disableLabel={t('dontShowAgain')}
         disableHint={tOnboarding('disableHint')}
         eyebrow={tOnboarding('eyebrow')}
+        isDisabling={bottlesOnboarding.isPersisting}
         persistenceError={bottlesOnboarding.persistenceError}
       />
 
