@@ -39,6 +39,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.52.12',
+    date: '30 luglio 2026',
+    label: 'Auto',
+    changes: [
+      'keep onboarding focus trap stable',
+    ],
+  },
+
+  {
     version: '1.52.11',
     date: '30 luglio 2026',
     label: 'Auto',
