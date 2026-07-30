@@ -39,6 +39,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.52.8',
+    date: '30 luglio 2026',
+    label: 'Auto',
+    changes: [
+      'persist onboarding preferences from game editor',
+    ],
+  },
+
+  {
     version: '1.52.7',
     date: '30 luglio 2026',
     label: 'Auto',
