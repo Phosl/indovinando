@@ -39,6 +39,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.52.11',
+    date: '30 luglio 2026',
+    label: 'Auto',
+    changes: [
+      'require remote onboarding persistence',
+    ],
+  },
+
+  {
     version: '1.52.10',
     date: '30 luglio 2026',
     label: 'Auto',
