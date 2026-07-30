@@ -692,16 +692,19 @@
     "loadingBottle": "Updating bottle preview..."
   },
   "onboarding": {
+    "eyebrow": "Quick guide",
     "step": "Step",
     "of": "of",
     "back": "Back",
-    "disable": "Do not show again",
+    "disable": "Do not show guides again",
+    "disableHint": "You can reopen them at any time from the help buttons.",
+    "persistenceError": "We could not save this choice. Please try again shortly.",
     "next": "Next",
     "start": "Start",
     "steps": [
       {
         "title": "Welcome",
-        "description": "You are about to create an amazing wine game for your friends.",
+        "description": "You are about to create a blind tasting to share with guests, customers, or friends.",
         "icon": "🎮"
       },
       {
@@ -716,7 +719,7 @@
       },
       {
         "title": "Invite Friends",
-        "description": "Once done, publish the game and invite your friends to play! They will try to guess the right answers.",
+        "description": "Publish the tasting and invite participants: they will play from their own device and try to guess the right answers.",
         "icon": "👥"
       },
       {
@@ -727,10 +730,13 @@
     ]
   },
   "automaticOnboarding": {
+    "eyebrow": "Automatic creation",
     "step": "Step",
     "of": "of",
     "back": "Back",
-    "disable": "Do not show again",
+    "disable": "Do not show guides again",
+    "disableHint": "You can reopen them at any time from the help buttons.",
+    "persistenceError": "We could not save this choice. Please try again shortly.",
     "next": "Next",
     "start": "Start",
     "steps": [
@@ -953,7 +959,7 @@
     "questionnaireGuideAriaLabel": "Questionnaire guide",
     "bottlesGuideAriaLabel": "Bottles guide",
     "step4Title": "Add bottle",
-    "dontShowAgain": "Don't show again",
+    "dontShowAgain": "Do not show guides again",
     "steps": [
       {
         "id": 1,
@@ -1489,6 +1495,8 @@
     "completeAction": "Complete profile",
     "editAction": "Edit profile",
     "skipAction": "Skip",
+    "dontShowAgainAction": "Do not show again",
+    "dismissingAction": "Hiding...",
     "skipShortAction": "Skip",
     "closeAction": "Close",
     "backAction": "Back",
@@ -1688,6 +1696,7 @@
     "accessPanelCta": "Sign up",
     "lessons": "lessons",
     "guest": {
+      "eyebrow": "Before you begin",
       "title": "Guest mode active",
       "desc": "Your course progress stays saved only on this device. If you switch browsers, clear data, or use another device, you may lose it.",
       "continueAsGuest": "CONTINUE",
@@ -1708,10 +1717,10 @@
     "slides": [
       {
         "image": "/onboarding/onboarding_01.svg",
-        "imageAlt": "What IndoVinando is",
-        "kicker": "What is IndoVinando?",
+        "imageAlt": "What Indovinando is",
+        "kicker": "What is Indovinando?",
         "title": "Taste. Play. Guess.",
-        "description": "IndoVinando is a blind tasting game: taste covered bottles and answer a quiz to discover how much you really know about wine."
+        "description": "Indovinando is a blind tasting game: taste covered bottles and answer a quiz to discover how much you really know about wine."
       },
       {
         "image": "/onboarding/onboarding_02.svg",
@@ -1725,7 +1734,7 @@
         "imageAlt": "Create your tasting",
         "kicker": "Create your tasting",
         "title": "Choose bottles and questions",
-        "description": "Add bottles, create questions and save the correct answers. IndoVinando handles the rest."
+        "description": "Add bottles, create questions and save the correct answers. Indovinando handles the rest."
       },
       {
         "image": "/onboarding/onboarding_04.svg",
@@ -1744,7 +1753,7 @@
       {
         "image": "/onboarding/onboarding_06.svg",
         "imageAlt": "Ready to start",
-        "kicker": "6. Ready to start?",
+        "kicker": "Ready to start?",
         "title": "Ready to start?",
         "description": "Create your first tasting or join an existing match."
       }

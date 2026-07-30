@@ -39,6 +39,8 @@ export default function BusinessLocationPicker({
   onAddressChange,
   onLatitudeChange,
   onLongitudeChange,
+  validationError = '',
+  errorId,
 }) {
   const t = useT('profileSetup')
   const inputRef = useRef(null)
@@ -110,6 +112,8 @@ export default function BusinessLocationPicker({
           ref={inputRef}
           type="text"
           value={address}
+          aria-invalid={validationError === 'address'}
+          aria-describedby={validationError === 'address' ? errorId : undefined}
           onChange={(event) => onAddressChange(event.target.value)}
           placeholder={t('businessPlaceholders.address')}
         />
@@ -124,6 +128,8 @@ export default function BusinessLocationPicker({
         <input
           type="number"
           value={latitude ?? ''}
+          aria-invalid={validationError === 'coordinates'}
+          aria-describedby={validationError === 'coordinates' ? errorId : undefined}
           onChange={(event) =>
             onLatitudeChange(event.target.value === '' ? null : Number(event.target.value))
           }
@@ -135,6 +141,8 @@ export default function BusinessLocationPicker({
         <input
           type="number"
           value={longitude ?? ''}
+          aria-invalid={validationError === 'coordinates'}
+          aria-describedby={validationError === 'coordinates' ? errorId : undefined}
           onChange={(event) =>
             onLongitudeChange(event.target.value === '' ? null : Number(event.target.value))
           }

@@ -8,13 +8,14 @@ import modalStyles from './QuestionnaireIntroModal.module.scss'
 import {Button} from '@/components/ui/Button'
 import Icon from '@/components/Icon'
 import {useT} from '@/lib/i18n/useT'
+import useOnboardingPreference from '@/hooks/useOnboardingPreference'
 import {createClient} from '@/lib/supabaseClient'
 import QuestionsList from '../QuestionsList'
 import QuestionModal from '../QuestionModal'
 import GameStepsBreadcrumbs from '../GameStepsBreadcrumbs'
 import BottlesList from '../BottlesList'
 import BottleModal from '../BottleModal'
-import ModalCloseButton from '@/components/ui/ModalCloseButton'
+import OnboardingModal from '../OnboardingModal'
 import {
   isBottleComplete,
   validateGameName,
@@ -45,42 +46,41 @@ function QuestionnaireIntroModal({
   questionFallbackLabel,
   closeLabel,
   disableLabel,
+  disableHint,
+  eyebrow,
+  persistenceError,
 }) {
   if (!isOpen) return null
-  return (
-    <div className={modalStyles.modalOverlay}>
-      <div className={modalStyles.modalContent}>
-        <ModalCloseButton className={modalStyles.closeBtn} onClick={onClose} />
-        <div className={modalStyles.modalBody}>
-          <h2 className={modalStyles.modalTitle}>{title}</h2>
-          <p className={modalStyles.modalDescription}>{description}</p>
-          {isQuickCreate && questions?.length > 0 && (
-            <div className={modalStyles.quickListBox}>
-              <b>{questionsLabel}</b>
-              <ul className={modalStyles.quickList}>
-                {questions.map((q, i) => (
-                  <li key={i} className={modalStyles.quickListItem}>
-                    {q.text || `${questionFallbackLabel} ${i + 1}`}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-        <div className={modalStyles.bottomActionBar}>
-          <div className={modalStyles.buttonContainer}>
-            <Button variant="success" onClick={onClose}>
-              {closeLabel}
-            </Button>
 
-            <Button variant="neutral" size="small" onClick={onDisable}>
-              <Icon name="removeSmall" size={18} />
-              {disableLabel}
-            </Button>
+  return (
+    <OnboardingModal
+      onClose={onClose}
+      onDisable={onDisable}
+      persistenceError={persistenceError}
+      steps={[{title, description, icon: '❓'}]}
+      labels={{
+        eyebrow,
+        start: closeLabel,
+        disable: disableLabel,
+        disableHint,
+      }}
+      renderStepContent={() =>
+        isQuickCreate && questions?.length > 0 ? (
+          <div className={modalStyles.quickListBox}>
+            <strong>{questionsLabel}</strong>
+            <ul className={modalStyles.quickList}>
+              {questions.map((question, index) => (
+                <li
+                  key={question.id || `${question.text}-${index}`}
+                  className={modalStyles.quickListItem}>
+                  {question.text || `${questionFallbackLabel} ${index + 1}`}
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
-      </div>
-    </div>
+        ) : null
+      }
+    />
   )
 }
 
@@ -92,30 +92,25 @@ function BottlesIntroModal({
   description,
   closeLabel,
   disableLabel,
+  disableHint,
+  eyebrow,
+  persistenceError,
 }) {
   if (!isOpen) return null
 
   return (
-    <div className={modalStyles.modalOverlay}>
-      <div className={modalStyles.modalContent}>
-        <ModalCloseButton className={modalStyles.closeBtn} onClick={onClose} />
-        <div className={modalStyles.modalBody}>
-          <h2 className={modalStyles.modalTitle}>{title}</h2>
-          <p className={modalStyles.modalDescription}>{description}</p>
-        </div>
-        <div className={modalStyles.bottomActionBar}>
-          <div className={modalStyles.buttonContainer}>
-            <Button variant="success" onClick={onClose}>
-              {closeLabel}
-            </Button>
-            <Button variant="neutral" size="small" onClick={onDisable}>
-              <Icon name="removeSmall" size={18} />
-              {disableLabel}
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <OnboardingModal
+      onClose={onClose}
+      onDisable={onDisable}
+      persistenceError={persistenceError}
+      steps={[{title, description, icon: '🍷'}]}
+      labels={{
+        eyebrow,
+        start: closeLabel,
+        disable: disableLabel,
+        disableHint,
+      }}
+    />
   )
 }
 
@@ -434,9 +429,12 @@ export default function GameEditor({
   avatarOptions = [],
   isQuickCreate = false,
   onBack,
+  automaticGuidesEnabled = false,
+  onDisableOnboarding,
 }) {
   const {lang} = useLanguage()
   const t = useT('gameEditor')
+  const tOnboarding = useT('onboarding')
   const tCommon = useT('common')
   const router = useRouter()
   const pathname = usePathname()
@@ -461,37 +459,18 @@ export default function GameEditor({
   const [activeBottleIndex, setActiveBottleIndex] = useState(null)
   const [isSaving, setIsSaving] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  // Stato per la modale intro questionario
-  const [showQuestionnaireIntro, setShowQuestionnaireIntro] = useState(false)
-  const [showBottlesIntro, setShowBottlesIntro] = useState(false)
-  // Mostra la modale intro solo la prima volta che si entra nello step 2, se non disabilitata
-  useEffect(() => {
-    if (step === 2) {
-      const disabled = window?.localStorage?.getItem('hideQuestionnaireIntro') === '1'
-      if (!disabled) setShowQuestionnaireIntro(true)
-    } else {
-      setShowQuestionnaireIntro(false)
-    }
-  }, [step])
-
-  useEffect(() => {
-    if (step === 4) {
-      const disabled = window?.localStorage?.getItem('hideBottlesIntro') === '1'
-      if (!disabled) setShowBottlesIntro(true)
-    } else {
-      setShowBottlesIntro(false)
-    }
-  }, [step])
-
-  function handleDisableIntro() {
-    window?.localStorage?.setItem('hideQuestionnaireIntro', '1')
-    setShowQuestionnaireIntro(false)
-  }
-
-  function handleDisableBottlesIntro() {
-    window?.localStorage?.setItem('hideBottlesIntro', '1')
-    setShowBottlesIntro(false)
-  }
+  const questionnaireOnboarding = useOnboardingPreference({
+    preference: 'editorQuestionnaire',
+    userId,
+    initiallyVisible: automaticGuidesEnabled && !isEditMode && step === 2,
+    persistDisable: onDisableOnboarding,
+  })
+  const bottlesOnboarding = useOnboardingPreference({
+    preference: 'editorBottles',
+    userId,
+    initiallyVisible: automaticGuidesEnabled && !isEditMode && step === 4,
+    persistDisable: onDisableOnboarding,
+  })
   const [bottleModalResetToken, setBottleModalResetToken] = useState(0)
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false)
   const [editingQuestionIndex, setEditingQuestionIndex] = useState(null)
@@ -1102,7 +1081,7 @@ export default function GameEditor({
         onReorderQuestions={handleReorderQuestions}
         onSaveQuestionnaire={saveQuestionnaire}
         onBack={() => goToStep(1)}
-        onShowIntro={() => setShowQuestionnaireIntro(true)}
+        onShowIntro={questionnaireOnboarding.open}
         introAriaLabel={t('questionnaireGuideAriaLabel')}
       />
     )
@@ -1127,7 +1106,7 @@ export default function GameEditor({
         onDeleteBottle={deleteBottle}
         onRequestDeleteBottle={requestDeleteBottle}
         onReorderBottles={handleReorderBottles}
-        onShowInfo={() => setShowBottlesIntro(true)}
+        onShowInfo={bottlesOnboarding.open}
         onBack={() => goToStep(3)}
         onPublish={publishGame}
         isSaving={isSaving}
@@ -1246,9 +1225,9 @@ export default function GameEditor({
 
       {/* Modale intro questionario */}
       <QuestionnaireIntroModal
-        isOpen={showQuestionnaireIntro}
-        onClose={() => setShowQuestionnaireIntro(false)}
-        onDisable={handleDisableIntro}
+        isOpen={questionnaireOnboarding.isVisible}
+        onClose={questionnaireOnboarding.close}
+        onDisable={questionnaireOnboarding.disable}
         isQuickCreate={isQuickCreate}
         questions={questionDraft}
         title={questionnaireIntroTitle}
@@ -1257,15 +1236,21 @@ export default function GameEditor({
         questionFallbackLabel={t('questionFallbackLabel')}
         closeLabel={tCommon('done')}
         disableLabel={t('dontShowAgain')}
+        disableHint={tOnboarding('disableHint')}
+        eyebrow={tOnboarding('eyebrow')}
+        persistenceError={questionnaireOnboarding.persistenceError}
       />
       <BottlesIntroModal
-        isOpen={showBottlesIntro}
-        onClose={() => setShowBottlesIntro(false)}
-        onDisable={handleDisableBottlesIntro}
+        isOpen={bottlesOnboarding.isVisible}
+        onClose={bottlesOnboarding.close}
+        onDisable={bottlesOnboarding.disable}
         title={bottlesIntroTitle}
         description={bottlesIntroDescription}
         closeLabel={tCommon('done')}
         disableLabel={t('dontShowAgain')}
+        disableHint={tOnboarding('disableHint')}
+        eyebrow={tOnboarding('eyebrow')}
+        persistenceError={bottlesOnboarding.persistenceError}
       />
 
       <BottleModal

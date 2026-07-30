@@ -17,6 +17,11 @@ import {isBusinessProfile, isProfileComplete} from '@/lib/profileSetup'
 import CommunityHighlightsCard from '@/components/community/CommunityHighlightsCard'
 import {normalizeAiScanCredits} from '@/lib/aiScanCredits'
 import {useAppData} from '@/components/AppDataContext'
+import {
+  captureOnboardingPreferences,
+  ONBOARDING_COOKIE_PREFIX,
+  restoreOnboardingPreferences,
+} from '@/lib/onboardingPreferences.mjs'
 import styles from './profilo.module.scss'
 // ── Player rank levels ────────────────────────────────────────────────────────
 const PLAYER_LEVELS = [
@@ -243,7 +248,9 @@ export default function ProfileClient({
 
     const clearClientMemory = async () => {
       try {
+        const onboardingPreferences = captureOnboardingPreferences(localStorage, {userId})
         localStorage.clear()
+        restoreOnboardingPreferences(onboardingPreferences, localStorage)
       } catch {}
 
       try {
@@ -256,7 +263,7 @@ export default function ProfileClient({
         cookies.forEach((cookie) => {
           const eqPos = cookie.indexOf('=')
           const name = (eqPos > -1 ? cookie.slice(0, eqPos) : cookie).trim()
-          if (!name) return
+          if (!name || name.startsWith(ONBOARDING_COOKIE_PREFIX)) return
           document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`
           document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=${window.location.pathname}`
         })
@@ -308,7 +315,7 @@ export default function ProfileClient({
       router.refresh()
       setIsLoggingOut(false)
     }
-  }, [router, isLoggingOut])
+  }, [router, isLoggingOut, userId])
 
   const handleInstallApp = useCallback(async () => {
     if (deferredInstallPrompt) {

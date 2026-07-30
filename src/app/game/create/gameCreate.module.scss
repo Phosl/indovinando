@@ -162,6 +162,36 @@
   line-height: 1.55;
 }
 
+.autoTopBarActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.autoTopBarGuide {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 999px;
+  background: var(--foreground);
+  color: var(--primary-text);
+  font-size: 1rem;
+  font-weight: 900;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--primary);
+    background: var(--primary-50);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--selected);
+    outline-offset: 3px;
+  }
+}
+
 .autoToastViewport {
   position: fixed;
   top: var(--app-toast-top, max(18px, calc(env(safe-area-inset-top, 0px) + 84px)));

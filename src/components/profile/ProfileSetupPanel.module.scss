@@ -1,15 +1,17 @@
 .card {
   background: var(--foreground);
-  border: 1px solid var(--button-secondary-border);
-  border-radius: 16px;
-  padding: 16px;
+  border: 2px solid var(--button-secondary-border);
+  border-radius: 20px;
+  box-shadow: 0 4px 0 var(--gray-light);
+  padding: clamp(18px, 3vw, 24px);
   display: grid;
-  gap: 16px;
+  gap: 18px;
 }
 
 .cardDashboard {
   background: linear-gradient(135deg, var(--success-50), var(--foreground));
-  border-color: var(--success-100);
+  border-color: var(--success);
+  box-shadow: 0 4px 0 var(--success-100);
 }
 
 .cardHeader {
@@ -17,6 +19,10 @@
   justify-content: space-between;
   gap: 12px;
   align-items: flex-start;
+}
+
+.cardCopy {
+  min-width: 0;
 }
 
 .eyebrow {
@@ -31,16 +37,20 @@
 
 .title {
   margin: 0;
-  font-size: 24px;
+  font-size: clamp(24px, 4vw, 30px);
   line-height: 1.15;
-  color: var(--primary-text);
+  color: var(--primary-900);
+  text-wrap: balance;
 }
 
 .description {
-  margin: 8px 0 0;
+  max-width: 62ch;
+  margin: 10px 0 0;
   font-size: 16px;
-  line-height: 1.45;
+  font-weight: 600;
+  line-height: 1.5;
   color: var(--text-secondary);
+  text-wrap: pretty;
 }
 
 .progressBadge {
@@ -52,16 +62,6 @@
   padding: 8px 12px;
   font-size: 13px;
   font-weight: 800;
-}
-
-.checkList {
-  margin: 0;
-  padding-left: 20px;
-  display: grid;
-  gap: 8px;
-  color: var(--text-secondary);
-  font-size: 16px;
-  line-height: 1.45;
 }
 
 .summaryGrid {
@@ -94,12 +94,43 @@
 }
 
 .actions {
-  display: flex;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .actionBtn {
-  width: auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 52px;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.actionsSingle {
+  grid-template-columns: minmax(0, 220px);
+}
+
+.error {
+  border: 2px solid var(--danger-border);
+  border-radius: 14px;
+  background: var(--danger-surface);
+  color: var(--danger-text);
+  padding: 12px 14px;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.4;
+
+  &:focus {
+    outline: 3px solid var(--danger-border);
+    outline-offset: 3px;
+  }
+}
+
+.card :global(button:focus-visible),
+.card :global(a:focus-visible) {
+  outline: 3px solid var(--selected);
+  outline-offset: 3px;
 }
 
 @media (max-width: 768px) {
@@ -113,5 +144,27 @@
 
   .progressBadge {
     width: fit-content;
+  }
+}
+
+@media (max-width: 420px) {
+  .card {
+    border-radius: 18px;
+    padding: 16px;
+  }
+
+  .actions {
+    gap: 8px;
+  }
+
+  .actionBtn {
+    min-height: 50px;
+    padding-inline: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .actionBtn {
+    transition: none;
   }
 }

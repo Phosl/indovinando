@@ -1,40 +1,40 @@
 'use client'
 
-import Link from 'next/link'
-import styles from './GuestWarningModal.module.scss'
 import {useT} from '@/lib/i18n/useT'
-import ModalCloseButton from '@/components/ui/ModalCloseButton'
+import OnboardingModal from '@/components/game/OnboardingModal'
+import {Button, ButtonLink} from '@/components/ui/Button'
 
 /**
  * GuestWarningModal component - displays a warning for guest users about progress loss
  * @param {boolean} isOpen - Whether the modal is open
  * @param {Function} onClose - Callback when closing the modal
  */
-export default function GuestWarningModal({isOpen, onClose}) {
+export default function GuestWarningModal({isOpen, onClose, signUpHref}) {
   const t = useT('course')
 
   if (!isOpen) return null
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <ModalCloseButton className={styles.closeBtn} onClick={onClose} />
-
-        <div className={styles.content}>
-          <div className={styles.icon}>👤</div>
-          <h2>{t('guest.title')}</h2>
-          <p>{t('guest.desc')}</p>
-        </div>
-
-        <div className={styles.actions}>
-          <Link href="/?next=/corso-vino" className="btn success">
-            {t('guest.signUp')}
-          </Link>
-          <button className="btn tertiary btn-small" onClick={onClose}>
+    <OnboardingModal
+      onClose={onClose}
+      steps={[
+        {
+          icon: '👤',
+          title: t('guest.title'),
+          description: t('guest.desc'),
+        },
+      ]}
+      labels={{eyebrow: t('guest.eyebrow')}}
+      actions={
+        <>
+          <Button variant="neutral" onClick={onClose}>
             {t('guest.continueAsGuest')}
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+          <ButtonLink href={signUpHref} variant="primary-filled" onClick={onClose}>
+            {t('guest.signUp')}
+          </ButtonLink>
+        </>
+      }
+    />
   )
 }

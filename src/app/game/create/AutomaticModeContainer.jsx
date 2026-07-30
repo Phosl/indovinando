@@ -48,7 +48,12 @@ import {useAutoTastingDraftPersistence} from './useAutoTastingDraftPersistence'
 import {useAutoTastingImages} from './useAutoTastingImages'
 import styles from './gameCreate.module.scss'
 
-export default function AutomaticModeContainer({onBack, userId, initialAiScanCredits}) {
+export default function AutomaticModeContainer({
+  onBack,
+  onOpenGuide,
+  userId,
+  initialAiScanCredits,
+}) {
   const router = useRouter()
   const t = useT('gameCreate')
   const {lang} = useLanguage()
@@ -566,6 +571,22 @@ export default function AutomaticModeContainer({onBack, userId, initialAiScanCre
     ),
     [creditsConfettiPieces, displayedAiCredits, isCreditsSpendAnimating, t],
   )
+  const topBarActions = useMemo(
+    () => (
+      <div className={styles.autoTopBarActions}>
+        <button
+          type="button"
+          className={styles.autoTopBarGuide}
+          onClick={onOpenGuide}
+          aria-label={t('openGuide')}
+          title={t('openGuide')}>
+          ?
+        </button>
+        {topBarCredits}
+      </div>
+    ),
+    [onOpenGuide, t, topBarCredits],
+  )
 
   const getBottleCoreData = useCallback(
     (image) => {
@@ -891,9 +912,9 @@ export default function AutomaticModeContainer({onBack, userId, initialAiScanCre
     () => ({
       title: automaticPageTitle,
       onBack: handleTopBack,
-      actions: topBarCredits,
+      actions: topBarActions,
     }),
-    [automaticPageTitle, handleTopBack, topBarCredits],
+    [automaticPageTitle, handleTopBack, topBarActions],
   )
 
   useAppShellTopBar(shellTopBar)

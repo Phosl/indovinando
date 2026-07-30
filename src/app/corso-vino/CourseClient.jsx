@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import {useState, useMemo, useCallback} from 'react'
+import {useMemo, useCallback} from 'react'
 import {useRouter} from 'next/navigation'
 import Icon from '@/components/Icon'
 import GuestWarningModal from '@/components/course/GuestWarningModal'
@@ -10,6 +10,7 @@ import ProgressBar from '@/components/ui/ProgressBar'
 import {useWineCourseProgress} from './hooks/useWineCourseProgress'
 import {computeUserLevelProgress} from '@/lib/playerLevelUtils'
 import {canAccessLevel, getAuthRedirectPath, getLockedReason} from '@/lib/courseAccess'
+import useOnboardingPreference from '@/hooks/useOnboardingPreference'
 import styles from './course.module.scss'
 import {useT} from '@/lib/i18n/useT'
 
@@ -20,7 +21,6 @@ export default function CourseClient({levels, isAdmin = false, viewer, lang = 'i
   const {loaded, authChecked, userId, getLevelCompletedCount, getLessonProgress, getLessonStatus} =
     useWineCourseProgress()
   const t = useT('course')
-  const [guestWarningDismissed, setGuestWarningDismissed] = useState(false)
   const effectiveViewer = useMemo(
     () => ({
       ...viewer,
@@ -30,8 +30,10 @@ export default function CourseClient({levels, isAdmin = false, viewer, lang = 'i
     }),
     [userId, viewer],
   )
-  const showGuestWarning =
-    loaded && authChecked && !effectiveViewer.isRegistered && !guestWarningDismissed
+  const guestWarning = useOnboardingPreference({
+    preference: 'courseGuestWarning',
+    initiallyVisible: loaded && authChecked && !effectiveViewer.isRegistered,
+  })
 
   const handleLevelClick = useCallback(
     (level) => {
@@ -113,7 +115,11 @@ export default function CourseClient({levels, isAdmin = false, viewer, lang = 'i
         </div>
       </div>
 
-      <GuestWarningModal isOpen={showGuestWarning} onClose={() => setGuestWarningDismissed(true)} />
+      <GuestWarningModal
+        isOpen={guestWarning.isVisible}
+        onClose={guestWarning.close}
+        signUpHref={getAuthRedirectPath('/corso-vino', lang)}
+      />
 
       {!effectiveViewer.isRegistered && (
         <section className={styles.accessPanel}>

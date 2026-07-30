@@ -1,24 +1,21 @@
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(12, 10, 28, 0.62);
+  inset: 0;
+  background: color-mix(in srgb, var(--primary-900) 68%, transparent);
   display: flex;
-  align-items: stretch;
-  justify-content: stretch;
+  align-items: center;
+  justify-content: center;
   z-index: 1200;
-  animation: fadeIn 0.3s ease-in-out;
+  padding: max(12px, env(safe-area-inset-top)) 12px
+    max(12px, env(safe-area-inset-bottom));
+  animation: fadeIn var(--motion-duration-fast) ease-out;
 }
 
 .overlayPage {
-  position: fixed;
-  inset: 0;
   background: var(--background);
-  display: flex;
   align-items: stretch;
   justify-content: stretch;
+  padding: 0;
   animation: none;
 }
 
@@ -32,155 +29,372 @@
 }
 
 .modal {
-  background: white;
-  border-radius: 0;
-  padding: max(28px, calc(env(safe-area-inset-top) + 16px)) 20px
-    max(24px, calc(env(safe-area-inset-bottom) + 18px));
-  width: 100%;
-  min-height: 100dvh;
-  box-shadow: none;
+  background: var(--foreground);
+  border: 2px solid var(--primary-100);
+  border-radius: 28px;
+  width: min(100%, 720px);
+  max-height: calc(
+    100dvh - max(24px, env(safe-area-inset-top)) - max(24px, env(safe-area-inset-bottom))
+  );
+  box-shadow: 0 28px 80px color-mix(in srgb, var(--primary-900) 30%, transparent);
   position: relative;
-  animation: slideUp 0.3s ease-in-out;
+  animation: slideUp var(--motion-duration-page) var(--motion-ease-standard);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  overflow: hidden;
+  outline: none;
 }
 
 .modalPage {
   width: 100%;
   max-width: none;
   min-height: 100dvh;
+  max-height: 100dvh;
   margin: 0;
+  border: 0;
   border-radius: 0;
-  padding: max(28px, calc(env(safe-area-inset-top) + 16px)) 20px
-    max(24px, calc(env(safe-area-inset-bottom) + 18px));
   box-shadow: none;
   animation: none;
 }
 
 @keyframes slideUp {
   from {
-    transform: translateY(30px);
+    transform: translateY(26px) scale(0.985);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
 }
 
+.header {
+  min-height: 78px;
+  padding: 18px 22px 14px;
+  padding-top: max(18px, calc(env(safe-area-inset-top) + 10px));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex: 0 0 auto;
+}
+
+.headerCopy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.eyebrow {
+  color: var(--primary-text);
+  font-size: 0.75rem;
+  line-height: 1.2;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stepIndicator {
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+  line-height: 1.3;
+  font-weight: 800;
+}
+
 .closeBtn {
-  position: absolute;
-  top: max(16px, calc(env(safe-area-inset-top) + 4px));
-  right: 16px;
-  z-index: 2;
+  flex: 0 0 auto;
+}
+
+.progressTrack {
+  height: 8px;
+  margin: 0 22px;
+  border-radius: 999px;
+  background: var(--primary-50);
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.progressFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--primary), var(--selected));
+  transition: width var(--motion-duration-page) var(--motion-ease-standard);
+}
+
+.body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  display: grid;
+  place-items: center;
+  padding: 24px 32px;
 }
 
 .content {
   text-align: center;
-  margin: auto 0;
-  padding: 24px 0 32px;
-  max-width: 680px;
-  align-self: center;
+  width: min(100%, 580px);
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+}
+
+.iconFrame {
+  width: clamp(84px, 13vw, 118px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--primary-100);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 30% 20%, var(--foreground) 0 24%, transparent 25%),
+    linear-gradient(145deg, var(--primary-50), var(--selected-extra-light));
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--primary-900) 12%, transparent);
+}
+
+.iconFrame span {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  line-height: 1;
 }
 
 .content h2 {
-  margin: 0 0 12px 0;
-  font-size: clamp(30px, 4vw, 42px);
-  font-weight: 800;
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1.04;
+  font-weight: 900;
+  letter-spacing: -0.025em;
   color: var(--text-primary);
+  text-wrap: balance;
 }
 
 .content p {
   margin: 0;
-  font-size: clamp(18px, 2.2vw, 22px);
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.55;
+  text-wrap: pretty;
 }
 
-.topProgress {
-  margin: 6px 0 12px;
+.extraContent {
+  width: 100%;
+  margin-top: 4px;
 }
 
-.stepIndicator {
-  font-size: 14px;
-  color: var(--text-secondary);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
-  text-align: center;
-}
-
-.progress {
-  height: 10px;
-  margin-bottom: 0;
-}
-
-.buttons {
+.footer {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  max-width: 680px;
-  align-self: center;
+  padding: 16px 22px max(18px, calc(env(safe-area-inset-bottom) + 12px));
+  border-top: 1px solid var(--button-secondary-border);
+  background: color-mix(in srgb, var(--foreground) 94%, var(--primary-50));
 }
 
 .primaryActions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
+  width: min(100%, 580px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+
+  :global(.btn) {
+    width: 100%;
+    min-height: 56px;
+    padding: 13px 18px;
+    font-size: 1rem;
+  }
 }
 
-.backBtn {
-  width: auto;
-  min-width: 56px;
+.primaryActionsSingle {
+  grid-template-columns: 1fr;
 }
 
-.nextBtn {
-  min-width: 220px;
+.customActions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.backBtn:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+.preference {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
 }
 
 .disableBtn {
-  margin-top: 12px;
-  align-self: center;
+  width: auto !important;
+  min-height: 44px !important;
   border-radius: 999px;
-  font-size: 0.92rem;
+  font-size: 0.86rem !important;
+  letter-spacing: 0.01em;
+}
+
+.preference p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.preference .preferenceError {
+  color: var(--danger);
   font-weight: 800;
 }
 
+.modal :global(.btn):focus-visible,
+.closeBtn:focus-visible {
+  outline: 3px solid var(--tertiary);
+  outline-offset: 3px;
+}
+
 @media (max-width: 480px) {
-  .modal {
-    padding: max(20px, calc(env(safe-area-inset-top) + 12px)) 16px
-      max(22px, calc(env(safe-area-inset-bottom) + 14px));
+  .overlay {
+    align-items: stretch;
+    padding: 0;
   }
 
+  .modal,
   .modalPage {
+    width: 100%;
     min-height: 100dvh;
-    padding: max(20px, calc(env(safe-area-inset-top) + 12px)) 16px
-      max(22px, calc(env(safe-area-inset-bottom) + 14px));
+    max-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .header {
+    min-height: 68px;
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .progressTrack {
+    margin: 0 16px;
+  }
+
+  .body {
+    padding: 18px;
+  }
+
+  .content {
+    gap: 12px;
   }
 
   .content h2 {
-    font-size: 24px;
+    font-size: clamp(1.75rem, 9vw, 2.25rem);
   }
 
   .content p {
-    font-size: 17px;
+    font-size: 1rem;
   }
 
-  .primaryActions {
-    justify-content: stretch;
+  .footer {
+    padding-right: 16px;
+    padding-left: 16px;
   }
 
-  .backBtn,
-  .nextBtn {
+  .primaryActions :global(.btn) {
     min-width: 0;
-    flex: 1;
+    min-height: 52px;
+    padding: 11px 12px;
+  }
+}
+
+@media (max-height: 540px) and (orientation: landscape) {
+  .overlay {
+    padding: 8px max(12px, env(safe-area-inset-right)) 8px
+      max(12px, env(safe-area-inset-left));
   }
 
-  .disableBtn {
-    width: 100%;
+  .modal,
+  .modalPage {
+    width: min(100%, 820px);
+    min-height: 0;
+    height: calc(100dvh - 16px);
+    max-height: calc(100dvh - 16px);
+    border: 2px solid var(--primary-100);
+    border-radius: 22px;
+  }
+
+  .header {
+    min-height: 58px;
+    padding: 10px 18px 8px;
+  }
+
+  .progressTrack {
+    margin: 0 18px;
+    height: 6px;
+  }
+
+  .body {
+    padding: 10px 24px;
+  }
+
+  .content {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 20px;
+    row-gap: 8px;
+    text-align: left;
+    justify-items: start;
+    width: min(100%, 720px);
+  }
+
+  .iconFrame {
+    grid-row: 1 / span 3;
+    width: 84px;
+    border-radius: 22px;
+  }
+
+  .content h2 {
+    font-size: 1.75rem;
+  }
+
+  .content p {
+    font-size: 0.98rem;
+    line-height: 1.4;
+  }
+
+  .extraContent {
+    grid-column: 2;
+  }
+
+  .footer {
+    padding: 10px 18px max(10px, env(safe-area-inset-bottom));
+    gap: 6px;
+  }
+
+  .primaryActions :global(.btn) {
+    min-height: 46px;
+    padding: 8px 14px;
+  }
+
+  .preference {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .preference p {
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .modal {
+    animation: none;
+  }
+
+  .progressFill {
+    transition: none;
   }
 }

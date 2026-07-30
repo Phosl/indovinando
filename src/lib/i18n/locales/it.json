@@ -698,16 +698,19 @@
     "loadingBottle": "Aggiorno anteprima bottiglia..."
   },
   "onboarding": {
+    "eyebrow": "Guida rapida",
     "step": "Passo",
     "of": "di",
     "back": "Indietro",
-    "disable": "Non mostrare più",
+    "disable": "Non mostrare più le guide",
+    "disableHint": "Puoi riaprirle in qualsiasi momento dai pulsanti di aiuto.",
+    "persistenceError": "Non siamo riusciti a salvare la scelta. Riprova tra poco.",
     "next": "Avanti",
     "start": "Inizia",
     "steps": [
       {
         "title": "Benvenuto",
-        "description": "Stai per creare un incredibile gioco per scoprire il vino con i tuoi amici.",
+        "description": "Stai per creare una degustazione alla cieca da condividere con ospiti, clienti o amici.",
         "icon": "🎮"
       },
       {
@@ -722,7 +725,7 @@
       },
       {
         "title": "Invita gli Amici",
-        "description": "Una volta finito, pubblica il gioco e invita i tuoi amici a partecipare. Loro cercheranno di indovinare le risposte corrette.",
+        "description": "Pubblica la degustazione e invita i partecipanti: giocheranno dal proprio dispositivo cercando di indovinare le risposte corrette.",
         "icon": "👥"
       },
       {
@@ -733,10 +736,13 @@
     ]
   },
   "automaticOnboarding": {
+    "eyebrow": "Creazione automatica",
     "step": "Passo",
     "of": "di",
     "back": "Indietro",
-    "disable": "Non mostrare più",
+    "disable": "Non mostrare più le guide",
+    "disableHint": "Puoi riaprirle in qualsiasi momento dai pulsanti di aiuto.",
+    "persistenceError": "Non siamo riusciti a salvare la scelta. Riprova tra poco.",
     "next": "Avanti",
     "start": "Inizia",
     "steps": [
@@ -959,7 +965,7 @@
     "questionnaireGuideAriaLabel": "Guida questionario",
     "bottlesGuideAriaLabel": "Guida bottiglie",
     "step4Title": "Aggiungi bottiglia",
-    "dontShowAgain": "Non mostrare più",
+    "dontShowAgain": "Non mostrare più le guide",
     "steps": [
       {
         "id": 1,
@@ -1495,6 +1501,8 @@
     "completeAction": "Completa profilo",
     "editAction": "Modifica profilo",
     "skipAction": "Salta",
+    "dontShowAgainAction": "Non mostrare più",
+    "dismissingAction": "Nascondo...",
     "skipShortAction": "Salta",
     "closeAction": "Chiudi",
     "backAction": "Indietro",
@@ -1694,6 +1702,7 @@
     "accessPanelCta": "Registrati",
     "lessons": "lezioni",
     "guest": {
+      "eyebrow": "Prima di iniziare",
       "title": "Modalità ospite attiva",
       "desc": "I progressi del corso restano salvati solo su questo dispositivo. Se cambi browser, svuoti i dati o usi un altro device, potresti perderli.",
       "continueAsGuest": "CONTINUA",
@@ -1714,10 +1723,10 @@
     "slides": [
       {
         "image": "/onboarding/onboarding_01.svg",
-        "imageAlt": "Cos'è IndoVinando",
-        "kicker": "Cos'è IndoVinando?",
+        "imageAlt": "Cos'è Indovinando",
+        "kicker": "Cos'è Indovinando?",
         "title": "Degusta. Gioca. Indovina.",
-        "description": "IndoVinando è un gioco per degustazioni alla cieca: assaggi bottiglie coperte e rispondi a un quiz per scoprire quanto ne sai davvero di vino."
+        "description": "Indovinando è un gioco per degustazioni alla cieca: assaggi bottiglie coperte e rispondi a un quiz per scoprire quanto ne sai davvero di vino."
       },
       {
         "image": "/onboarding/onboarding_02.svg",
@@ -1731,7 +1740,7 @@
         "imageAlt": "Crea la tua degustazione",
         "kicker": "Crea la tua degustazione",
         "title": "Scegli bottiglie e domande",
-        "description": "Inserisci le bottiglie, crea le domande e salva le risposte corrette. IndoVinando farà il resto."
+        "description": "Inserisci le bottiglie, crea le domande e salva le risposte corrette. Indovinando farà il resto."
       },
       {
         "image": "/onboarding/onboarding_04.svg",

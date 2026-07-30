@@ -1,67 +1,35 @@
 .modalOverlay {
   position: fixed;
   z-index: 1000;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(12, 15, 14, 0.56);
+  inset: 0;
+  background: color-mix(in srgb, var(--primary-900) 60%, transparent);
   display: flex;
-  align-items: stretch;
+  align-items: center;
   justify-content: center;
-}
-
-.modalContent {
-  background: #fff;
-  border-radius: 0;
-  width: 100%;
-  max-width: 560px;
-  box-shadow: 0 8px 32px #0003;
-  text-align: center;
-  position: relative;
-  animation: modalSlideUp 0.32s cubic-bezier(0.33, 1.02, 0.6, 1.01) both;
-  display: flex;
-  flex-direction: column;
-  min-height: 100dvh;
-}
-
-.closeBtn {
-  position: absolute;
-  top: max(14px, env(safe-area-inset-top));
-  right: 14px;
-  z-index: 2;
-}
-
-.modalBody {
-  flex: 1;
-  overflow-y: auto;
-  padding: 32px 20px 24px;
-  padding-top: max(64px, calc(env(safe-area-inset-top) + 44px));
-}
-
-.modalTitle {
-  margin: 0 0 12px;
-}
-
-.modalDescription {
-  margin: 0 0 16px;
+  padding: max(12px, env(safe-area-inset-top)) 12px
+    max(12px, env(safe-area-inset-bottom));
 }
 
 .quickListBox {
   text-align: left;
-  margin: 0 auto 16px;
-  background: #f7f7f7;
-  border-radius: 8px;
-  padding: 12px;
+  margin: 0 auto;
+  background: var(--gray-50);
+  border: 1px solid var(--button-secondary-border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  color: var(--text-primary);
 }
 
 .quickList {
-  margin: 8px 0 0 16px;
-  padding: 0;
+  margin: 10px 0 0;
+  padding-left: 22px;
+  display: grid;
+  gap: 5px;
 }
 
 .quickListItem {
-  font-size: 15px;
+  font-size: 0.92rem;
+  line-height: 1.4;
 }
 
 @keyframes modalSlideUp {
@@ -75,48 +43,29 @@
   }
 }
 
-.bottomActionBar {
-  position: sticky;
-  bottom: 0;
-  background: linear-gradient(to top, #fff 72%, rgba(255, 255, 255, 0.96) 100%);
-  padding: 14px 20px calc(14px + env(safe-area-inset-bottom) + 40px);
-  border-top: 1px solid #e8ece9;
-}
-
-.buttonContainer {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  flex-direction: column;
-
-  :global(.btn) {
-    width: 100%;
-  }
-}
-
 .confirmDialog {
   width: min(calc(100% - 24px), 420px);
-  margin: auto 12px;
   padding: 22px 18px 18px;
   border-radius: 18px;
-  background: #fff;
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+  background: var(--foreground);
+  border: 2px solid var(--button-secondary-border);
+  box-shadow: 0 18px 44px color-mix(in srgb, var(--primary-900) 22%, transparent);
   text-align: center;
-  animation: modalSlideUp 0.22s ease both;
+  animation: modalSlideUp var(--motion-duration-fast) var(--motion-ease-standard) both;
 }
 
 .confirmTitle {
   margin: 0 0 10px;
   font-size: 1.1rem;
   font-weight: 900;
-  color: #23312f;
+  color: var(--text-primary);
 }
 
 .confirmDescription {
   margin: 0;
   font-size: 0.96rem;
   line-height: 1.45;
-  color: #5f6d68;
+  color: var(--text-secondary);
 }
 
 .confirmActions {
@@ -126,5 +75,18 @@
 
   :global(.btn) {
     flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .confirmActions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confirmDialog {
+    animation: none;
   }
 }

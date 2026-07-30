@@ -1,9 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import {useMemo} from 'react'
+import {useEffect, useId, useMemo, useRef, useState} from 'react'
 import {usePathname} from 'next/navigation'
+import {useAppData} from '@/components/AppDataContext'
+import {Button} from '@/components/ui/Button'
 import {useT} from '@/lib/i18n/useT'
+import {dismissProfileSetupPrompt} from '@/lib/profileOnboardingClient'
 import {
   getProfileCompletionCount,
   isBusinessProfile,
@@ -19,6 +22,12 @@ function formatList(values, labelFor) {
 export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
   const t = useT('profileSetup')
   const pathname = usePathname()
+  const {refresh: refreshAppData} = useAppData()
+  const [isDismissing, setIsDismissing] = useState(false)
+  const [isDismissed, setIsDismissed] = useState(false)
+  const [dismissError, setDismissError] = useState('')
+  const dismissErrorId = useId()
+  const dismissErrorRef = useRef(null)
   const normalizedProfile = useMemo(() => normalizeProfileSetup(profile), [profile])
   const isComplete = useMemo(() => isProfileComplete(normalizedProfile), [normalizedProfile])
   const completionCount = useMemo(
@@ -33,20 +42,53 @@ export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
   const labelForExperience = (value) => t(`experienceLevels.${value}`)
   const labelForWineType = (value) => t(`wineTypes.${value}`)
   const labelForCountry = (value) => t(`countries.${value}`)
+  const canDismiss = mode === 'dashboard' && !isComplete
+
+  useEffect(() => {
+    if (!dismissError) return undefined
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      dismissErrorRef.current?.focus()
+    })
+    return () => window.cancelAnimationFrame(animationFrame)
+  }, [dismissError])
+
+  async function handleDismiss() {
+    if (isDismissing) return
+
+    setIsDismissing(true)
+    setDismissError('')
+
+    try {
+      await dismissProfileSetupPrompt()
+      setIsDismissed(true)
+      await refreshAppData({force: true})
+    } catch (error) {
+      setDismissError(
+        error?.message === 'PROFILE_SAVE_TIMEOUT' ? t('errors.timeout') : t('errors.generic'),
+      )
+    } finally {
+      setIsDismissing(false)
+    }
+  }
+
+  if (isDismissed) return null
 
   return (
-    <section className={`${styles.card} ${mode === 'dashboard' ? styles.cardDashboard : ''}`}>
+    <section
+      className={`${styles.card} ${mode === 'dashboard' ? styles.cardDashboard : ''}`}
+      aria-busy={isDismissing}>
       <div className={styles.cardHeader}>
-        <div>
+        <div className={styles.cardCopy}>
           <span className={styles.eyebrow}>
             {isComplete ? t('summaryEyebrow') : t('reminderEyebrow')}
           </span>
           <h2 className={styles.title}>{isComplete ? t('summaryTitle') : t('reminderTitle')}</h2>
-          {/* <p className={styles.description}>
+          <p className={styles.description}>
             {isComplete ? t('summaryDescription') : t('reminderDescription')}
-          </p> */}
+          </p>
         </div>
-        <div className={styles.progressBadge}>
+        <div className={styles.progressBadge} role="status">
           {t('progressLabel', {current: completionCount, total: totalFields})}
         </div>
       </div>
@@ -96,23 +138,36 @@ export default function ProfileSetupPanel({profile, mode = 'dashboard'}) {
             </>
           ) : null}
         </div>
-      ) : (
-        ''
-        // <ul className={styles.checkList}>
-        //   <li>{t('checklist.profileType')}</li>
-        //   <li>{t('checklist.experience')}</li>
-        //   <li>{t('checklist.preferences')}</li>
-        //   <li>{t('checklist.location')}</li>
-        //   {isBusinessProfile(normalizedProfile) ? <li>{t('checklist.business')}</li> : null}
-        // </ul>
-      )}
+      ) : null}
 
-      <div className={styles.actions}>
+      {dismissError ? (
+        <div
+          id={dismissErrorId}
+          ref={dismissErrorRef}
+          className={styles.error}
+          role="alert"
+          tabIndex={-1}>
+          {dismissError}
+        </div>
+      ) : null}
+
+      <div className={`${styles.actions} ${canDismiss ? '' : styles.actionsSingle}`}>
         <Link
           href={setupHref}
-          className={`btn ${isComplete ? 'primary' : 'success-filled'} btn-small ${styles.actionBtn}`}>
+          className={`btn ${isComplete ? 'primary' : 'primary-filled'} btn-small ${styles.actionBtn}`}>
           {isComplete ? t('editAction') : t('completeAction')}
         </Link>
+        {canDismiss ? (
+          <Button
+            variant="neutral"
+            size="small"
+            className={styles.actionBtn}
+            onClick={handleDismiss}
+            disabled={isDismissing}
+            aria-describedby={dismissError ? dismissErrorId : undefined}>
+            {isDismissing ? t('dismissingAction') : t('dontShowAgainAction')}
+          </Button>
+        ) : null}
       </div>
     </section>
   )

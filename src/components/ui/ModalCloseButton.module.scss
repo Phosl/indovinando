@@ -1,6 +1,8 @@
 .button {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 999px;
   border: 2px solid var(--button-secondary-border);
   background: var(--background);
@@ -26,4 +28,20 @@
 
 .button:active {
   transform: translateY(0);
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--selected);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+
+  .button:hover,
+  .button:active {
+    transform: none;
+  }
 }

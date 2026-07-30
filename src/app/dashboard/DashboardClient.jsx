@@ -28,7 +28,10 @@ function getWelcomeTitle({dashboardDict, profile, userEmail}) {
 export default function DashboardClient({dashboardDict, lang, userEmail}) {
   const {profile, courseProgress, appVersion} = useAppData()
   const isSuperAdmin = profile?.super_admin === true
-  const showProfileSetupPanel = Boolean(profile) && !isProfileComplete(profile || {})
+  const showProfileSetupPanel =
+    Boolean(profile) &&
+    !isProfileComplete(profile || {}) &&
+    !profile?.profile_prompt_dismissed_at
   const courseIsLoading = !courseProgress
   const completedLessons = courseProgress?.completedLessons || 0
   const totalLessons = courseProgress?.totalLessons || 0
