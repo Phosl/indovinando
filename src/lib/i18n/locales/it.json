@@ -286,7 +286,7 @@
     "intro": {
       "eyebrow": "Demo interattiva",
       "title": "Prova una degustazione alla cieca",
-      "description": "Segui gli indizi di un calice misterioso, scegli le risposte e scopri il vino alla fine.",
+      "description": "Rispondi a sei domande semplici sul calice misterioso e scopri il vino alla fine.",
       "duration": "2 minuti",
       "noAccount": "Senza account",
       "questions": "6 domande",
@@ -303,7 +303,6 @@
       "correct": "Risposta corretta",
       "wrong": "La risposta corretta era: {answer}"
     },
-    "tastingClue": "Indizi del calice: rosso rubino, ciliegia e viola, acidità vivace, tannino fine e finale sapido.",
     "result": {
       "eyebrow": "Degustazione completata",
       "title": "Hai scoperto il calice misterioso",
@@ -1396,7 +1395,7 @@
     "languageSwitchingHint": "Un attimo e ricarico i testi del profilo.",
     "optionsSection": "Opzioni",
     "howTheAppWorks": "Come funziona l'app",
-    "howTheAppWorksDesc": "Apri la guida onboarding con slide su Crea Gioco, Gioco Veloce, Enoteca, Live e Corso Vino.",
+    "howTheAppWorksDesc": "Apri la guida completa con video, degustazioni, crediti AI, corso vino e soluzioni business.",
     "openAppGuide": "Apri guida app",
     "chooseAvatar": "Scegli il tuo avatar",
     "preferences": "Preferenze",
@@ -1719,54 +1718,320 @@
     "review": "Da ripassare"
   },
   "info": {
-    "title": "Info App",
+    "title": "Guida Indovinando",
     "slide": "Slide",
     "goToSlide": "Vai alla slide",
     "swipeHint": "Scorri a destra o sinistra per cambiare slide.",
+    "navigationLabel": "Sezioni della guida",
+    "hero": {
+      "eyebrow": "Presentazione e guida completa",
+      "title": "Dalla prima bottiglia alla classifica finale",
+      "description": "Indovinando trasforma una degustazione alla cieca in un’esperienza guidata: prepari le bottiglie, crei il questionario, condividi un QR e raccogli risposte, punteggi e valutazioni reali.",
+      "proofItems": [
+        "Funziona dal browser",
+        "QR e più tavoli",
+        "Italiano e inglese"
+      ],
+      "primaryCta": "Guarda il video",
+      "secondaryCta": "Prova la demo"
+    },
+    "navigation": [
+      {
+        "id": "presentation",
+        "label": "Presentazione"
+      },
+      {
+        "id": "video",
+        "label": "Video"
+      },
+      {
+        "id": "tasting",
+        "label": "Degustazione"
+      },
+      {
+        "id": "credits",
+        "label": "Crediti"
+      },
+      {
+        "id": "learning",
+        "label": "Corso e risultati"
+      },
+      {
+        "id": "business",
+        "label": "Business"
+      }
+    ],
+    "presentation": {
+      "eyebrow": "Presentazione rapida",
+      "title": "Indovinando in sei passaggi",
+      "description": "Una panoramica scorrevole dell’esperienza, dalla creazione della degustazione alle opportunità per attività e partner.",
+      "complete": "Continua la guida"
+    },
     "slides": [
       {
         "image": "/onboarding/onboarding_01.svg",
         "imageAlt": "Cos'è Indovinando",
         "kicker": "Cos'è Indovinando?",
         "title": "Degusta. Gioca. Indovina.",
-        "description": "Indovinando è un gioco per degustazioni alla cieca: assaggi bottiglie coperte e rispondi a un quiz per scoprire quanto ne sai davvero di vino."
+        "description": "Indovinando unisce degustazione alla cieca, gioco e apprendimento. Ogni partecipante assaggia bottiglie coperte e risponde dal proprio telefono."
       },
       {
         "image": "/onboarding/onboarding_02.svg",
-        "imageAlt": "Tutto in una sola app",
-        "kicker": "Tutto in una sola app",
-        "title": "Degustazioni, corso e classifiche",
-        "description": "Crea degustazioni personalizzate, sfida gli amici, segui il corso gratuito e monitora i tuoi progressi."
+        "imageAlt": "Tre modi per creare una degustazione",
+        "kicker": "Preparazione",
+        "title": "Automatica, rapida o personalizzata",
+        "description": "Scansiona le etichette con l’AI, parti dal template standard oppure costruisci domande e risposte su misura."
       },
       {
         "image": "/onboarding/onboarding_03.svg",
-        "imageAlt": "Crea la tua degustazione",
-        "kicker": "Crea la tua degustazione",
-        "title": "Scegli bottiglie e domande",
-        "description": "Inserisci le bottiglie, crea le domande e salva le risposte corrette. Indovinando farà il resto."
+        "imageAlt": "Evento condiviso con link e QR",
+        "kicker": "Condivisione",
+        "title": "Un QR porta tutti alla partita",
+        "description": "L’host prepara l’evento e condivide link o QR. Ogni tavolo entra con nickname, avatar e un codice dedicato."
       },
       {
         "image": "/onboarding/onboarding_04.svg",
-        "imageAlt": "Gioca da solo o con amici",
-        "kicker": "Gioca da solo o con gli amici",
-        "title": "Single Player o Multiplayer",
-        "description": "Allenati da solo oppure crea una partita live e sfida amici, clienti o partecipanti alla degustazione."
+        "imageAlt": "Partita multiplayer dal telefono",
+        "kicker": "Table Live",
+        "title": "Domande, rivelazione e classifica",
+        "description": "I partecipanti rispondono dal telefono, l’host guida i round e la classifica si aggiorna durante la degustazione."
       },
       {
         "image": "/onboarding/onboarding_05.svg",
-        "imageAlt": "Impara il vino gratuitamente",
-        "kicker": "Impara il vino gratuitamente",
-        "title": "Corso vino con attestato finale",
-        "description": "Lezioni brevi, quiz interattivi e progressione a livelli. Completa il corso e ottieni il tuo attestato."
+        "imageAlt": "Corso vino e risultati",
+        "kicker": "Dopo la partita",
+        "title": "Impara dai risultati",
+        "description": "Storico, valutazioni e classifiche raccontano cosa è successo. Il corso vino aggiunge lezioni brevi, quiz e progressi salvati."
       },
       {
         "image": "/onboarding/onboarding_06.svg",
-        "imageAlt": "Pronto a iniziare",
-        "kicker": "Pronto a iniziare?",
-        "title": "Pronto a iniziare?",
-        "description": "Crea la tua prima degustazione oppure entra in una partita esistente."
+        "imageAlt": "Indovinando per privati e attività",
+        "kicker": "Per privati e attività",
+        "title": "Un prodotto, più contesti",
+        "description": "Serate tra amici, enoteche, ristoranti, eventi e wine box possono usare lo stesso flusso, con profilo attività e branding dove serve."
       }
-    ]
+    ],
+    "video": {
+      "eyebrow": "Video guida",
+      "title": "Indovinando in meno di un minuto",
+      "description": "Un riepilogo visivo, senza audio, del percorso principale: prepara, condividi, gioca e impara.",
+      "playerLabel": "Video guida di Indovinando",
+      "unsupported": "Il browser non supporta la riproduzione video.",
+      "caption": "Il video non contiene audio. Tutte le informazioni sono disponibili anche nella trascrizione accanto al player.",
+      "transcriptTitle": "Nel video",
+      "steps": [
+        {
+          "title": "Prepara",
+          "description": "Scansiona le etichette oppure usa il template standard."
+        },
+        {
+          "title": "Condividi",
+          "description": "Apri l’evento e invita tutti con un link o un QR."
+        },
+        {
+          "title": "Gioca",
+          "description": "Ogni tavolo risponde dal proprio telefono."
+        },
+        {
+          "title": "Impara",
+          "description": "Leggi risultati, classifiche e continua nel corso vino."
+        }
+      ]
+    },
+    "tasting": {
+      "eyebrow": "La degustazione",
+      "title": "Come si svolge, dall’inizio alla fine",
+      "description": "L’host prepara il contenuto una volta. Durante l’evento, Indovinando tiene insieme accessi, domande, tempi, rivelazioni e risultati.",
+      "steps": [
+        {
+          "title": "Prepara le bottiglie",
+          "description": "Copri le etichette, ordina i vini e decidi quali informazioni far indovinare."
+        },
+        {
+          "title": "Crea il questionario",
+          "description": "Usa l’AI, il template standard oppure domande completamente personalizzate."
+        },
+        {
+          "title": "Apri l’evento",
+          "description": "Indovinando genera link e QR. Più tavoli possono giocare nello stesso evento."
+        },
+        {
+          "title": "Guida i round",
+          "description": "I partecipanti rispondono e l’host decide quando mostrare soluzioni e vino."
+        },
+        {
+          "title": "Leggi i risultati",
+          "description": "La classifica finale e lo storico conservano punteggi e valutazioni della degustazione."
+        }
+      ]
+    },
+    "creation": {
+      "eyebrow": "Tre modi per iniziare",
+      "title": "Scegli quanto vuoi automatizzare",
+      "description": "Le modalità condividono lo stesso gioco finale, ma cambiano il tempo di preparazione e il livello di controllo.",
+      "modes": [
+        {
+          "icon": "⚡",
+          "label": "Senza crediti AI",
+          "title": "Rapida",
+          "description": "Parti da domande semplici già pronte e inserisci soltanto le risposte corrette per ogni bottiglia.",
+          "points": [
+            "Template standard",
+            "Preparazione veloce",
+            "Domande modificabili"
+          ]
+        },
+        {
+          "icon": "📷",
+          "label": "Usa crediti AI",
+          "title": "Automatica",
+          "description": "Carica le foto delle etichette, controlla i dati trovati e genera il questionario dalla lista delle bottiglie.",
+          "points": [
+            "Riconoscimento etichetta",
+            "Match con il catalogo",
+            "Ricerca web facoltativa"
+          ]
+        },
+        {
+          "icon": "✍️",
+          "label": "Massimo controllo",
+          "title": "Personalizzata",
+          "description": "Costruisci da zero domande, opzioni e risposte corrette per un evento o un tema specifico.",
+          "points": [
+            "Quiz su misura",
+            "Ordine libero",
+            "Nessun consumo AI"
+          ]
+        }
+      ]
+    },
+    "credits": {
+      "eyebrow": "Crediti AI",
+      "title": "Paghi solo le azioni automatiche",
+      "description": "I crediti servono per le operazioni che usano l’intelligenza artificiale. La creazione rapida e quella personalizzata restano disponibili senza consumarli.",
+      "rules": [
+        {
+          "icon": "📷",
+          "title": "Analisi bottiglia",
+          "description": "1 credito per riconoscere una bottiglia dalla foto."
+        },
+        {
+          "icon": "🌐",
+          "title": "Ricerca web",
+          "description": "1 credito aggiuntivo quando chiedi di cercare dati e fonti sul web."
+        },
+        {
+          "icon": "🧩",
+          "title": "Modalità manuali",
+          "description": "Template rapido e quiz personalizzato non consumano crediti AI."
+        }
+      ],
+      "points": [
+        "Il saldo è sempre visibile nel profilo e nel flusso automatico.",
+        "Le ricariche sono pacchetti una tantum, senza abbonamento.",
+        "Lo storico mostra gli acquisti confermati."
+      ],
+      "note": "Il checkout Stripe è integrato. La disponibilità dei pacchetti dipende dalla configurazione dell’ambiente di pagamento.",
+      "cta": "Gestisci i crediti"
+    },
+    "learning": {
+      "eyebrow": "Oltre la partita",
+      "title": "Corso, storico e community",
+      "description": "La degustazione non finisce con l’ultima risposta: puoi ripassare, confrontare i risultati e scoprire i vini che emergono dai dati reali.",
+      "items": [
+        {
+          "icon": "🎓",
+          "title": "Corso vino",
+          "description": "I primi due capitoli sono accessibili senza account; registrandoti continui il percorso e salvi i progressi.",
+          "href": "/corso-vino",
+          "cta": "Apri il corso"
+        },
+        {
+          "icon": "🏆",
+          "title": "Classifiche",
+          "description": "Le valutazioni delle degustazioni alimentano classifiche pubbliche basate su dati reali quando disponibili.",
+          "href": "/classifiche",
+          "cta": "Vedi le classifiche"
+        },
+        {
+          "icon": "🕘",
+          "title": "Storico",
+          "description": "Gli utenti registrati ritrovano partite concluse, partecipanti, punteggi e podio nel proprio profilo.",
+          "href": "/profilo/partite",
+          "cta": "Apri lo storico"
+        }
+      ]
+    },
+    "audiences": {
+      "eyebrow": "A chi serve",
+      "title": "La stessa piattaforma, esperienze diverse",
+      "description": "Indovinando parte dal gioco tra amici e arriva agli eventi professionali senza cambiare il gesto centrale: assaggiare senza vedere l’etichetta.",
+      "items": [
+        {
+          "icon": "🍷",
+          "title": "Appassionati e gruppi",
+          "description": "Serate private, allenamento e degustazioni guidate con una preparazione semplice."
+        },
+        {
+          "icon": "🏪",
+          "title": "Enoteche e ristoranti",
+          "description": "Eventi a più tavoli, QR, branding dell’attività, risultati e scheda partner pubblica."
+        },
+        {
+          "icon": "📦",
+          "title": "Wine box, brand e formazione",
+          "description": "Un livello digitale per accompagnare selezioni di vino, attivazioni e percorsi didattici."
+        }
+      ]
+    },
+    "business": {
+      "eyebrow": "Modelli di business",
+      "title": "Cosa è attivo oggi e cosa viene dopo",
+      "description": "Il modello economico segue lo stato reale del prodotto: monetizzazione già implementata, strumenti B2B disponibili e ipotesi future ancora da validare.",
+      "models": [
+        {
+          "status": "Attivo oggi",
+          "tone": "active",
+          "title": "Gratuito + crediti AI",
+          "description": "Demo, creazione manuale e accesso iniziale al corso fanno conoscere il prodotto. Le azioni AI si sostengono con ricariche a consumo.",
+          "points": [
+            "Nessun abbonamento obbligatorio",
+            "Pacchetti una tantum",
+            "Costo legato all’uso dell’AI"
+          ]
+        },
+        {
+          "status": "Prodotto pronto",
+          "tone": "ready",
+          "title": "Eventi e partner B2B",
+          "description": "Profili attività, branding, directory e Table Live sono già presenti. Il pacchetto commerciale non è ancora associato a un prezzo o a un paywall.",
+          "points": [
+            "Enoteche e ristoranti",
+            "Attivazioni e wine box",
+            "Ipotesi: fee evento o pacchetto partner"
+          ]
+        },
+        {
+          "status": "Da validare",
+          "tone": "future",
+          "title": "Pro, Business ed Event Pass",
+          "description": "Possibili evoluzioni ricorrenti o per singolo evento. Non sono offerte acquistabili oggi e richiedono validazione con utenti reali.",
+          "points": [
+            "Pro con vantaggi e crediti periodici",
+            "Business per uso professionale",
+            "Pass una tantum per grandi eventi"
+          ]
+        }
+      ],
+      "note": "Le etichette “Prodotto pronto” e “Da validare” descrivono opportunità commerciali, non piani già in vendita."
+    },
+    "finalCta": {
+      "eyebrow": "Provalo dal vivo",
+      "title": "La guida migliore è una degustazione",
+      "description": "Gioca la demo senza account oppure registrati per creare una degustazione e condividerla con il tuo gruppo.",
+      "primaryCta": "Gioca la demo",
+      "secondaryCta": "Crea una degustazione"
+    }
   },
   "communityWidget": {
     "eyebrow": "Community",

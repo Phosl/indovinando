@@ -11,6 +11,7 @@
     "check:public": "node scripts/check-public-share.mjs",
     "check:onboarding": "node scripts/check-onboarding-preferences.mjs",
     "check:table-live": "node --env-file=.env.local scripts/check-table-live-flow.mjs",
+    "guide:video": "node scripts/generate-guide-videos.mjs",
     "install:hooks": "node scripts/install-git-hooks.mjs",
     "changelog:auto": "node scripts/update-changelog-from-commits.mjs",
     "wine:import:storage": "node scripts/import-wine-chunks-from-storage.mjs"

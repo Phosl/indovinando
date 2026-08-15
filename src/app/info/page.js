@@ -6,11 +6,11 @@ export async function generateMetadata() {
   const lang = await getServerLanguage()
 
   return buildPageMetadata({
-    title: lang === 'en' ? 'About the app' : 'Informazioni sull’app',
+    title: lang === 'en' ? 'App guide' : 'Guida all’app',
     description:
       lang === 'en'
-        ? 'Learn what Indovinando is and how the platform supports blind wine tastings.'
-        : 'Scopri cos’è Indovinando e come la piattaforma aiuta a creare e gestire degustazioni alla cieca.',
+        ? 'The complete Indovinando guide: video, blind tastings, game modes, AI credits, wine course, and business solutions.'
+        : 'La guida completa a Indovinando: video, degustazioni alla cieca, modalità di gioco, crediti AI, corso vino e soluzioni business.',
     path: '/info',
     lang,
   })

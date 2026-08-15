@@ -285,7 +285,7 @@
     "intro": {
       "eyebrow": "Interactive demo",
       "title": "Try a blind wine tasting",
-      "description": "Follow the clues from a mystery glass, choose your answers, and reveal the wine at the end.",
+      "description": "Answer six simple questions about a mystery glass and reveal the wine at the end.",
       "duration": "2 minutes",
       "noAccount": "No account",
       "questions": "6 questions",
@@ -302,7 +302,6 @@
       "correct": "Correct answer",
       "wrong": "The correct answer was: {answer}"
     },
-    "tastingClue": "Glass clues: ruby red, cherry and violet, bright acidity, fine tannins, and a savory finish.",
     "result": {
       "eyebrow": "Tasting completed",
       "title": "You revealed the mystery glass",
@@ -1390,7 +1389,7 @@
     "languageSwitchingHint": "One moment while we refresh the profile text.",
     "optionsSection": "Options",
     "howTheAppWorks": "How the app works",
-    "howTheAppWorksDesc": "Open the onboarding guide with slides for Create Game, Quick Game, Enoteca, Live and Wine Course.",
+    "howTheAppWorksDesc": "Open the complete guide with video, tastings, AI credits, wine course, and business solutions.",
     "openAppGuide": "Open app guide",
     "chooseAvatar": "Choose your avatar",
     "preferences": "Preferences",
@@ -1713,54 +1712,320 @@
     "review": "Review"
   },
   "info": {
-    "title": "App Info",
+    "title": "Indovinando Guide",
     "slide": "Slide",
     "goToSlide": "Go to slide",
     "swipeHint": "Swipe left or right to change slide.",
+    "navigationLabel": "Guide sections",
+    "hero": {
+      "eyebrow": "Presentation and complete guide",
+      "title": "From the first bottle to the final leaderboard",
+      "description": "Indovinando turns a blind tasting into a guided experience: prepare the bottles, create the questionnaire, share a QR code, and collect real answers, scores, and ratings.",
+      "proofItems": [
+        "Works in the browser",
+        "QR code and multiple tables",
+        "Italian and English"
+      ],
+      "primaryCta": "Watch the video",
+      "secondaryCta": "Try the demo"
+    },
+    "navigation": [
+      {
+        "id": "presentation",
+        "label": "Presentation"
+      },
+      {
+        "id": "video",
+        "label": "Video"
+      },
+      {
+        "id": "tasting",
+        "label": "Tasting"
+      },
+      {
+        "id": "credits",
+        "label": "Credits"
+      },
+      {
+        "id": "learning",
+        "label": "Course and results"
+      },
+      {
+        "id": "business",
+        "label": "Business"
+      }
+    ],
+    "presentation": {
+      "eyebrow": "Quick presentation",
+      "title": "Indovinando in six steps",
+      "description": "A swipeable overview of the experience, from creating a tasting to opportunities for businesses and partners.",
+      "complete": "Continue the guide"
+    },
     "slides": [
       {
         "image": "/onboarding/onboarding_01.svg",
         "imageAlt": "What Indovinando is",
         "kicker": "What is Indovinando?",
         "title": "Taste. Play. Guess.",
-        "description": "Indovinando is a blind tasting game: taste covered bottles and answer a quiz to discover how much you really know about wine."
+        "description": "Indovinando brings together blind tasting, play, and learning. Each participant tastes covered bottles and answers from their own phone."
       },
       {
         "image": "/onboarding/onboarding_02.svg",
-        "imageAlt": "All in one app",
-        "kicker": "Everything in one app",
-        "title": "Tastings, course and leaderboards",
-        "description": "Create custom tastings, challenge friends, follow the free wine course and track your progress."
+        "imageAlt": "Three ways to create a tasting",
+        "kicker": "Preparation",
+        "title": "Automatic, quick, or custom",
+        "description": "Scan labels with AI, start from the standard template, or build custom questions and answers."
       },
       {
         "image": "/onboarding/onboarding_03.svg",
-        "imageAlt": "Create your tasting",
-        "kicker": "Create your tasting",
-        "title": "Choose bottles and questions",
-        "description": "Add bottles, create questions and save the correct answers. Indovinando handles the rest."
+        "imageAlt": "Shared event with link and QR code",
+        "kicker": "Sharing",
+        "title": "One QR code brings everyone into the game",
+        "description": "The host prepares the event and shares a link or QR code. Each table joins with a nickname, avatar, and dedicated code."
       },
       {
         "image": "/onboarding/onboarding_04.svg",
-        "imageAlt": "Play solo or with friends",
-        "kicker": "Play solo or with friends",
-        "title": "Single Player or Multiplayer",
-        "description": "Train by yourself or start a live match and challenge friends, customers or tasting participants."
+        "imageAlt": "Multiplayer game from a phone",
+        "kicker": "Table Live",
+        "title": "Questions, reveals, and leaderboard",
+        "description": "Participants answer from their phones, the host guides each round, and the leaderboard updates throughout the tasting."
       },
       {
         "image": "/onboarding/onboarding_05.svg",
-        "imageAlt": "Learn wine for free",
-        "kicker": "Learn wine for free",
-        "title": "Wine course with final certificate",
-        "description": "Short lessons, interactive quizzes and level-based progression. Complete the course and get your certificate."
+        "imageAlt": "Wine course and results",
+        "kicker": "After the game",
+        "title": "Learn from the results",
+        "description": "History, ratings, and rankings explain what happened. The wine course adds short lessons, quizzes, and saved progress."
       },
       {
         "image": "/onboarding/onboarding_06.svg",
-        "imageAlt": "Ready to start",
-        "kicker": "Ready to start?",
-        "title": "Ready to start?",
-        "description": "Create your first tasting or join an existing match."
+        "imageAlt": "Indovinando for individuals and businesses",
+        "kicker": "For individuals and businesses",
+        "title": "One product, many contexts",
+        "description": "Friends, wine shops, restaurants, events, and wine boxes can use the same flow, with business profiles and branding when needed."
       }
-    ]
+    ],
+    "video": {
+      "eyebrow": "Video guide",
+      "title": "Indovinando in under a minute",
+      "description": "A silent visual summary of the main flow: prepare, share, play, and learn.",
+      "playerLabel": "Indovinando video guide",
+      "unsupported": "Your browser does not support video playback.",
+      "caption": "The video has no audio. All information is also available in the transcript next to the player.",
+      "transcriptTitle": "In the video",
+      "steps": [
+        {
+          "title": "Prepare",
+          "description": "Scan the labels or use the standard template."
+        },
+        {
+          "title": "Share",
+          "description": "Open the event and invite everyone with a link or QR code."
+        },
+        {
+          "title": "Play",
+          "description": "Each table answers from its own phone."
+        },
+        {
+          "title": "Learn",
+          "description": "Review results and rankings, then continue in the wine course."
+        }
+      ]
+    },
+    "tasting": {
+      "eyebrow": "The tasting",
+      "title": "How it works, from start to finish",
+      "description": "The host prepares the content once. During the event, Indovinando keeps access, questions, timing, reveals, and results together.",
+      "steps": [
+        {
+          "title": "Prepare the bottles",
+          "description": "Cover the labels, order the wines, and choose which details participants should guess."
+        },
+        {
+          "title": "Create the questionnaire",
+          "description": "Use AI, the standard template, or completely custom questions."
+        },
+        {
+          "title": "Open the event",
+          "description": "Indovinando creates the link and QR code. Multiple tables can play in the same event."
+        },
+        {
+          "title": "Guide the rounds",
+          "description": "Participants answer while the host decides when to reveal solutions and the wine."
+        },
+        {
+          "title": "Review the results",
+          "description": "The final leaderboard and history preserve tasting scores and ratings."
+        }
+      ]
+    },
+    "creation": {
+      "eyebrow": "Three ways to start",
+      "title": "Choose how much to automate",
+      "description": "All modes lead to the same final game, but they offer different preparation times and levels of control.",
+      "modes": [
+        {
+          "icon": "⚡",
+          "label": "No AI credits",
+          "title": "Quick",
+          "description": "Start from simple ready-made questions and add only the correct answers for each bottle.",
+          "points": [
+            "Standard template",
+            "Fast preparation",
+            "Editable questions"
+          ]
+        },
+        {
+          "icon": "📷",
+          "label": "Uses AI credits",
+          "title": "Automatic",
+          "description": "Upload label photos, review the collected data, and generate the questionnaire from your bottle list.",
+          "points": [
+            "Label recognition",
+            "Catalog matching",
+            "Optional web search"
+          ]
+        },
+        {
+          "icon": "✍️",
+          "label": "Maximum control",
+          "title": "Custom",
+          "description": "Build questions, options, and correct answers from scratch for a specific event or theme.",
+          "points": [
+            "Tailored quiz",
+            "Flexible order",
+            "No AI usage"
+          ]
+        }
+      ]
+    },
+    "credits": {
+      "eyebrow": "AI credits",
+      "title": "Pay only for automated actions",
+      "description": "Credits power operations that use artificial intelligence. Quick and custom creation remain available without consuming them.",
+      "rules": [
+        {
+          "icon": "📷",
+          "title": "Bottle analysis",
+          "description": "1 credit to recognize one bottle from a photo."
+        },
+        {
+          "icon": "🌐",
+          "title": "Web search",
+          "description": "1 additional credit when you request more data and sources from the web."
+        },
+        {
+          "icon": "🧩",
+          "title": "Manual modes",
+          "description": "The quick template and custom quiz do not consume AI credits."
+        }
+      ],
+      "points": [
+        "Your balance is always visible in the profile and automatic flow.",
+        "Top-ups are one-time packs with no subscription.",
+        "Purchase history shows confirmed orders."
+      ],
+      "note": "Stripe Checkout is integrated. Pack availability depends on the payment environment configuration.",
+      "cta": "Manage credits"
+    },
+    "learning": {
+      "eyebrow": "Beyond the game",
+      "title": "Course, history, and community",
+      "description": "The tasting does not end with the last answer: review what happened, compare results, and discover wines emerging from real data.",
+      "items": [
+        {
+          "icon": "🎓",
+          "title": "Wine course",
+          "description": "The first two chapters are available without an account; sign up to continue and save your progress.",
+          "href": "/corso-vino",
+          "cta": "Open the course"
+        },
+        {
+          "icon": "🏆",
+          "title": "Rankings",
+          "description": "Tasting ratings feed public rankings based on real data whenever enough information is available.",
+          "href": "/classifiche",
+          "cta": "View rankings"
+        },
+        {
+          "icon": "🕘",
+          "title": "History",
+          "description": "Registered users can revisit completed games, participants, scores, and podiums from their profile.",
+          "href": "/profilo/partite",
+          "cta": "Open history"
+        }
+      ]
+    },
+    "audiences": {
+      "eyebrow": "Who it is for",
+      "title": "The same platform, different experiences",
+      "description": "Indovinando starts with a game among friends and scales to professional events without changing the central gesture: tasting without seeing the label.",
+      "items": [
+        {
+          "icon": "🍷",
+          "title": "Wine lovers and groups",
+          "description": "Private evenings, training, and guided tastings with simple preparation."
+        },
+        {
+          "icon": "🏪",
+          "title": "Wine shops and restaurants",
+          "description": "Multi-table events, QR codes, business branding, results, and a public partner page."
+        },
+        {
+          "icon": "📦",
+          "title": "Wine boxes, brands, and education",
+          "description": "A digital layer for curated wines, activations, and educational programs."
+        }
+      ]
+    },
+    "business": {
+      "eyebrow": "Business models",
+      "title": "What is active today and what comes next",
+      "description": "The business model follows the real product status: implemented monetization, available B2B tools, and future hypotheses still requiring validation.",
+      "models": [
+        {
+          "status": "Active today",
+          "tone": "active",
+          "title": "Free access + AI credits",
+          "description": "The demo, manual creation, and initial course access introduce the product. Pay-as-you-go top-ups support AI actions.",
+          "points": [
+            "No required subscription",
+            "One-time credit packs",
+            "Cost linked to AI usage"
+          ]
+        },
+        {
+          "status": "Product ready",
+          "tone": "ready",
+          "title": "B2B events and partners",
+          "description": "Business profiles, branding, the directory, and Table Live already exist. The commercial package has no price or paywall yet.",
+          "points": [
+            "Wine shops and restaurants",
+            "Activations and wine boxes",
+            "Hypothesis: event fee or partner pack"
+          ]
+        },
+        {
+          "status": "To validate",
+          "tone": "future",
+          "title": "Pro, Business, and Event Pass",
+          "description": "Possible recurring or single-event evolutions. They are not available for purchase today and need validation with real users.",
+          "points": [
+            "Pro with benefits and recurring credits",
+            "Business for professional use",
+            "One-time pass for larger events"
+          ]
+        }
+      ],
+      "note": "The “Product ready” and “To validate” labels describe business opportunities, not plans already on sale."
+    },
+    "finalCta": {
+      "eyebrow": "Try it live",
+      "title": "The best guide is a tasting",
+      "description": "Play the demo without an account or sign up to create a tasting and share it with your group.",
+      "primaryCta": "Play the demo",
+      "secondaryCta": "Create a tasting"
+    }
   },
   "communityWidget": {
     "eyebrow": "Community",

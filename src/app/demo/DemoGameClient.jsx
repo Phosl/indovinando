@@ -81,7 +81,6 @@ export default function DemoGameClient() {
 
       return {
         ...question,
-        text: `${t('tastingClue')}\n${question.text}`,
         is_neutral: isNeutral,
         game_question_options: gameQuestionOptions,
         correctId:
@@ -90,7 +89,7 @@ export default function DemoGameClient() {
             : null,
       }
     })
-  }, [gameCreateT, lang, t])
+  }, [gameCreateT, lang])
   const correctOptionByQuestion = useMemo(
     () =>
       Object.fromEntries(
