@@ -1,0 +1,15 @@
+# Local configuration and generated directories
+.env*
+.vercel
+.next
+node_modules
+.git
+
+# Source design files are not required by the deployed app
+*.psd
+*.ai
+*.sketch
+
+# Local workspace metadata
+.DS_Store
+*.code-workspace
