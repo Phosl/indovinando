@@ -39,6 +39,15 @@ const UI_TEXT = {
 
 const CHANGELOG = [
   {
+    version: '1.53.1',
+    date: '15 agosto 2026',
+    label: 'Auto',
+    changes: [
+      'exclude source assets from Vercel uploads',
+    ],
+  },
+
+  {
     version: '1.53.0',
     date: '15 agosto 2026',
     label: 'Auto',
